@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>HyperUI 交互式组件预览</title>
+    <style>
+        html,
+        body,
+        #hyper-ui-preview-root {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            overflow: hidden;
+            background: transparent;
+        }
+
+        #hyper-ui-preview-root {
+            position: relative;
+        }
+
+        #hyper-ui-preview-root > canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div id="hyper-ui-preview-root" aria-label="HyperUI 交互式组件预览"></div>
+<script src="./hyper-ui-preview.js"></script>
+</body>
+</html>

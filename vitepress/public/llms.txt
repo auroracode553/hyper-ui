@@ -1,0 +1,46 @@
+# HyperUI
+
+> Android Jetpack Compose UI component library. Read these semantic documentation pages instead of inferring APIs from the Wasm preview.
+
+- Package: `hyper_ui`
+- Maven: `com.hyperui:hyper-ui:1.0.0`
+- Minimum Android SDK: 30
+
+## Start
+
+- [Documentation index](./index.html)
+- [Getting started](./getting-started.html)
+- [Theme and colors](./theme.html)
+- [State and architecture](./state-model.html)
+- [Component index](./component-index.html)
+
+## Components
+
+- [HyperButton](./components/basic/hyper-button.html)
+- [HyperIconButton](./components/basic/hyper-icon-button.html)
+- [HyperTextField](./components/form/hyper-text-field.html)
+- [HyperSearchField](./components/form/hyper-search-field.html)
+- [HyperSwitch](./components/form/hyper-switch.html)
+- [HyperCheckbox](./components/form/hyper-checkbox.html)
+- [HyperRadioButton](./components/form/hyper-radio-button.html)
+- [HyperPanel](./components/container/hyper-panel.html)
+- [HyperColorPicker](./components/container/hyper-color-picker.html)
+- [HyperTopBar](./components/navigation/hyper-top-bar.html)
+- [HyperDrawer](./components/navigation/hyper-drawer.html)
+- [HyperBottomBar](./components/navigation/hyper-bottom-bar.html)
+- [HyperLazyList](./components/list/hyper-lazy-list.html)
+- [HyperList](./components/list/hyper-list.html)
+- [HyperListItem](./components/list/hyper-list-item.html)
+- [HyperMenuGroup](./components/list/hyper-menu-group.html)
+- [HyperDropdownMenu](./components/feedback/hyper-dropdown-menu.html)
+- [HyperProgressBar](./components/feedback/hyper-progress-bar.html)
+- [HyperDialog](./components/feedback/hyper-dialog.html)
+- [HyperConfirmDialog](./components/feedback/hyper-confirm-dialog.html)
+
+## Rules
+
+- Public package: `hyper_ui`.
+- Caller owns business state.
+- Do not import `hyper_ui.core.*`.
+- Dialogs, menus, and drawers render no scrim or overlay.
+- Wasm is an interactive preview, not an API documentation source.
