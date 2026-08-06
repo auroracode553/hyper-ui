@@ -3,7 +3,7 @@ name: 部署 VitePress 到 GitHub Pages
 on:
   push:
     branches:
-      - "wasm文档"
+      - "main"
     paths:
       - 'vitepress/docs/**'
       - 'vitepress/**'
@@ -41,7 +41,7 @@ jobs:
       - name: 构建 VitePress
         working-directory: vitepress
         env:
-          VITEPRESS_BASE: /hyper-ui-doc/
+          VITEPRESS_BASE: /hyper-ui/
         run: npm run build
 
       - name: 设置 Pages

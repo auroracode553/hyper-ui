@@ -2,7 +2,7 @@
 
 > 本目录是 HyperUI 面向开发者、AI 与代码生成工具的权威使用文档。Markdown 正文是事实来源；VitePress 只负责把这些文件渲染为网页，Wasm 只负责提供可交互预览。
 >
-> **GitHub 仓库**: [auroracode553/hyper-ui-doc](https://github.com/auroracode553/hyper-ui-doc) · **在线文档**: [auroracode553.github.io/hyper-ui-doc/](https://auroracode553.github.io/hyper-ui-doc/)
+> **GitHub 仓库**: [auroracode553/hyper-ui](https://github.com/auroracode553/hyper-ui) · **在线文档**: [auroracode553.github.io/hyper-ui](https://auroracode553.github.io/hyper-ui)
 
 ## 一句话说明
 

@@ -1,12 +1,12 @@
 # HyperUI
 
-[![在线文档](https://img.shields.io/badge/%F0%9F%93%96-在线文档-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)](https://auroracode553.github.io/hyper-ui-doc/)
+[![在线文档](https://img.shields.io/badge/%F0%9F%93%96-在线文档-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)](https://auroracode553.github.io/hyper-ui)
 
 > Android Jetpack Compose UI 组件库，专注提供 HyperOS 风格的基础界面组件，不承载业务逻辑。
 
 **源码仓库**: `git@gitee.com:my_new_way/hyper_ui.git`
 
-**在线文档**: [auroracode553.github.io/hyper-ui-doc/](https://auroracode553.github.io/hyper-ui-doc/)
+**在线文档**: [auroracode553.github.io/hyper-ui](https://auroracode553.github.io/hyper-ui)
 
 ## 先看结论
 
