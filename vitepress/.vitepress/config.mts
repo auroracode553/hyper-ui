@@ -4,6 +4,8 @@ import { defineConfig } from 'vitepress'
 
 const siteBase = env.VITEPRESS_BASE || '/'
 const publicDirectory = fileURLToPath(new URL('../public', import.meta.url))
+// 动态获取当前年份，避免版权年份写死
+const currentYear = new Date().getFullYear()
 
 export default defineConfig({
   srcDir: 'docs',
@@ -18,6 +20,23 @@ export default defineConfig({
     publicDir: publicDirectory
   },
   themeConfig: {
+    // 仓库地址配置
+    repo: 'auroracode553/hyper-ui',
+    repoLabel: 'GitHub',
+    // 编辑链接配置：点击可直接跳转到 GitHub 编辑当前文档页
+    editLink: {
+      pattern: 'https://github.com/auroracode553/hyper-ui/edit/main/vitepress/docs/:path',
+      text: '在 GitHub 上编辑此页'
+    },
+    // 社交链接：导航栏右侧显示 GitHub 图标，点击跳转仓库
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/auroracode553/hyper-ui' }
+    ],
+    // 页脚配置
+    footer: {
+      message: '基于 Compose Multiplatform 构建的跨平台 UI 组件库',
+      copyright: `Copyright © ${currentYear} HyperUI`
+    },
     nav: [
       { text: '指南', link: '/getting-started' },
       { text: '组件', link: '/component-index' },

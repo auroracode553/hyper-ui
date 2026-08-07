@@ -48,13 +48,20 @@ jobs:
         working-directory: vitepress
         run: npm ci
 
+      - name: 验证 Gradle Wrapper 完整性
+        working-directory: preview
+        run: |
+          ls -la gradle/wrapper/
+          file gradle/wrapper/gradle-wrapper.jar
+          jar tf gradle/wrapper/gradle-wrapper.jar | grep -i manifest
+
       - name: 赋予 Gradle Wrapper 执行权限
         working-directory: preview
         run: chmod +x gradlew
 
       - name: 构建 Wasm 预览产物
         working-directory: preview
-        run: ./gradlew publishWasmToVitePress
+        run: ./gradlew publishWasmToVitePress --no-daemon --stacktrace
 
       - name: 构建 VitePress
         working-directory: vitepress
