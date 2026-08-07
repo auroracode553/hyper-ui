@@ -7,6 +7,8 @@ on:
     paths:
       - 'vitepress/docs/**'
       - 'vitepress/**'
+      - 'preview/src/**'
+      - 'library/src/**'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -29,6 +31,12 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
 
+      - name: 设置 JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
@@ -36,9 +44,17 @@ jobs:
           cache: npm
           cache-dependency-path: vitepress/package-lock.json
 
-      - name: 安装依赖
+      - name: 安装 VitePress 依赖
         working-directory: vitepress
         run: npm ci
+
+      - name: 赋予 Gradle Wrapper 执行权限
+        working-directory: preview
+        run: chmod +x gradlew
+
+      - name: 构建 Wasm 预览产物
+        working-directory: preview
+        run: ./gradlew publishWasmToVitePress
 
       - name: 构建 VitePress
         working-directory: vitepress
