@@ -20,11 +20,9 @@ permissions:
 jobs:
   tag:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -50,7 +48,7 @@ jobs:
           git push origin "$TAG"
 
       - name: 创建 GitHub Release（触发 JitPack 构建）
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.tag.outputs.next }}
           name: ${{ steps.tag.outputs.next }}
