@@ -79,6 +79,8 @@ dependencies {
 
 如果使用 JitPack，仓库地址通常为 `https://jitpack.io`，依赖坐标会改为 JitPack 生成的 `com.github.<user>:<repo>:<tag>` 格式，不能继续假设一定是 `com.hyperui:hyper-ui:1.0.0`。
 
+本项目的 JitPack 地址：[https://jitpack.io/#auroracode553/hyper-ui](https://jitpack.io/#auroracode553/hyper-ui)
+
 ### 方式二：源码模块
 
 适合本地联调或需要直接改组件源码的场景。
