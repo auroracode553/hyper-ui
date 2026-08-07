@@ -59,6 +59,10 @@ jobs:
         working-directory: preview
         run: chmod +x gradlew
 
+      - name: 升级 Kotlin/Wasm npm 锁文件
+        working-directory: preview
+        run: ./gradlew kotlinWasmUpgradePackageLock --no-daemon
+
       - name: 构建 Wasm 预览产物
         working-directory: preview
         run: ./gradlew publishWasmToVitePress --no-daemon --stacktrace
