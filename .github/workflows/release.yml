@@ -1,7 +1,7 @@
 name: Auto Tag & Release
 
 # 推送代码到 main 即自动发布：
-#   基于最新 tag 自增 patch 版本（v1.0.0 → v1.0.1）→ 创建 tag + GitHub Release → 触发 JitPack 构建
+#   基于最新 tag 自增 patch 版本（1.0.0 → 1.0.1）→ 创建 tag + GitHub Release → 触发 JitPack 构建
 on:
   push:
     branches: [ main ]
@@ -22,12 +22,12 @@ jobs:
       - name: 计算下一个自增 tag
         id: tag
         run: |
-          LATEST=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          LATEST=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
           echo "当前最新 tag: $LATEST"
           VERSION=${LATEST#v}
           IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
           PATCH=$((PATCH + 1))
-          NEXT="v$MAJOR.$MINOR.$PATCH"
+          NEXT="$MAJOR.$MINOR.$PATCH"
           echo "next=$NEXT" >> "$GITHUB_OUTPUT"
           echo "下一个 tag: $NEXT"
 
