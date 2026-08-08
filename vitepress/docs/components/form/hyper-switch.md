@@ -45,7 +45,7 @@ object HyperSwitchDefaults {
 | `modifier` | `Modifier` | 否 | `Modifier` | 调整外层布局。 |
 | `enabled` | `Boolean` | 否 | `true` | 调用方控制可用态；为 `false` 时不回调。 |
 | `checkedTrackColor` | `Color` | 否 | `Color.Unspecified` | 选中轨道色；未指定时使用 `HyperColors.accent`。 |
-| `uncheckedTrackColor` | `Color` | 否 | `Color.Unspecified` | 未选中轨道色；未指定时使用 `HyperColors.softContainer`。 |
+| `uncheckedTrackColor` | `Color` | 否 | `Color.Unspecified` | 未选中轨道色；未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘）。 |
 | `checkedThumbColor` | `Color` | 否 | `rgba(255, 255, 255, 1f)` | 选中滑块色。 |
 | `uncheckedThumbColor` | `Color` | 否 | `rgba(255, 255, 255, 1f)` | 未选中滑块色。 |
 

@@ -1,5 +1,6 @@
 package hyper_ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,11 +21,27 @@ fun HyperTopBar(
     title: String,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
+    containerColor: Color = Color.Unspecified,
     rightSlot: (@Composable () -> Unit)? = null
 ) {
+    val usesDefaultContainerColor = containerColor == Color.Unspecified
+    val resolvedContainerColor = if (usesDefaultContainerColor) {
+        Color.Transparent
+    } else {
+        containerColor
+    }
+    val hasVisibleBackground = resolvedContainerColor.alpha > 0f
+    val highlightModifier = if (hasVisibleBackground) {
+        Modifier.background(HyperColors.glassHighlightBrush)
+    } else {
+        Modifier
+    }
+
     Row(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(resolvedContainerColor)
+            .then(highlightModifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (onBack != null) {

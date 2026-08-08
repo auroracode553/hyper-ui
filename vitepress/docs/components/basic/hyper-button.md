@@ -87,8 +87,9 @@ HyperButton(
 
 ## 约束与行为
 
-- `Default` 为透明背景加边框；其余变体使用实色背景。
+- `Default` 为透明背景加边框；其余变体使用主题/语义色容器，并统一叠加 `glassHighlightBrush` 顶部玻璃高光（对齐 `HyperIconButton` 托盘风格）。
 - `Primary` 读取 HyperUI 主题强调色，`Success` 读取成功色，`Danger` 读取 `MaterialTheme.colorScheme.error`。
+- 非 `Default` 变体使用默认颜色时，`enabled = false` 会回退到 `HyperColors.disabledContainer`；自定义颜色按 `HyperStyleDefaults.DisabledAlpha` 缩放透明度。
 - 组件只接受字符串文案；图标应放入 `leadingIcon` 或 `trailingIcon`，不要假设存在 `content` 参数。
 - 不要把网络请求、数据库访问或导航规则写入组件实现；这些逻辑放在 `onClick` 中调用业务层。
 - 项目颜色规范禁止十六进制硬编码；自定义颜色使用项目允许的 RGBA 写法。
@@ -107,6 +108,9 @@ HyperButton(onClick = { }) { Text("保存") }
 - `HyperButtonVariant`
 - `HyperThemeConfig`
 - `HyperColors`
+- `HyperColors.elevatedContainer`
+- `HyperColors.disabledContainer`
+- `HyperColors.glassHighlightBrush`
 
 ## 交互预览
 

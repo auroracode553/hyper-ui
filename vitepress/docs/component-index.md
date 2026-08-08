@@ -18,6 +18,7 @@
 | [HyperSwitch](components/form/hyper-switch.md) | 开关 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选项 | 调用方提供 `checked` |
 | [HyperRadioButton](components/form/hyper-radio-button.md) | 单选项 | 调用方提供 `selected` |
+| [HyperFilterChip](components/form/hyper-filter-chip.md) | 横向滚动筛选标签与标签栏 | 调用方提供 `selectedKey` |
 
 ## 容器组件
 

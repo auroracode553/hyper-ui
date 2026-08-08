@@ -61,6 +61,13 @@ fun HyperTextField(
             )
         }
 
+        val containerHasVisibleBackground = visuals.containerColor.alpha > 0f
+        val containerHighlightModifier = if (containerHasVisibleBackground) {
+            Modifier.background(HyperColors.glassHighlightBrush)
+        } else {
+            Modifier
+        }
+
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
@@ -85,6 +92,7 @@ fun HyperTextField(
                         .clip(shape)
                         .background(visuals.containerColor)
                         .background(visuals.focusOverlayColor)
+                        .then(containerHighlightModifier)
                         .border(
                             width = visuals.outlineWidth,
                             color = visuals.outlineColor,

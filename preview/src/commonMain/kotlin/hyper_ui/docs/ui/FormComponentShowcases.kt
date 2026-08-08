@@ -189,6 +189,52 @@ fun SwitchDemo() {
 }
 
 @Composable
+fun FilterChipDemo() {
+    val categories = remember {
+        listOf(
+            null to "全部",
+            "malicious" to "恶意网址",
+            "ad" to "广告",
+            "redirect" to "恶意跳转",
+            "app" to "打开应用"
+        )
+    }
+    val counts = remember {
+        mapOf<String?, Int>(
+            null to 128,
+            "malicious" to 12,
+            "ad" to 86,
+            "redirect" to 24,
+            "app" to 6
+        )
+    }
+    var selected by remember { mutableStateOf<String?>(null) }
+
+    Column(
+        modifier = Modifier.widthIn(max = 520.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        HyperFilterChipBar(
+            items = categories.map { (key, label) ->
+                HyperFilterChipItem(
+                    key = key,
+                    label = label,
+                    count = counts[key]
+                )
+            },
+            selectedKey = selected,
+            onSelected = { selected = it }
+        )
+        Text(
+            text = "当前选中：${selected ?: "全部"}",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
+            lineHeight = 18.sp
+        )
+    }
+}
+
+@Composable
 private fun FormControlGroup(
     content: @Composable () -> Unit
 ) {

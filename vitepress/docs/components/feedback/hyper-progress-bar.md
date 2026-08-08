@@ -40,7 +40,7 @@ fun HyperLoadingProgress(
 | `modifier` | `Modifier` | 根进度轨道修饰符 |
 | `height` | `4.dp` | 进度条高度 |
 | `shape` | 50% 圆角 | 轨道和进度形状 |
-| `trackColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.softContainer` |
+| `trackColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘） |
 | `progressColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.accent` |
 
 ## 最小用法

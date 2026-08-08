@@ -23,6 +23,7 @@ fun <T> HyperList(
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     itemContent: @Composable (item: T) -> Unit
 ) {
+    val hasVisibleBackground = HyperColors.elevatedContainer.alpha > 0f
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(LazyListCornerRadius))
@@ -37,7 +38,8 @@ fun <T> HyperList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(listItemShape(isFirst, isLast))
-                    .background(HyperColors.cardContainer)
+                    .background(HyperColors.elevatedContainer)
+                    .then(if (hasVisibleBackground) Modifier.background(HyperColors.glassHighlightBrush) else Modifier)
             ) {
                 itemContent(item)
             }

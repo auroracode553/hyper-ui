@@ -44,7 +44,7 @@ object HyperRadioDefaults {
 | `modifier` | `Modifier` | 否 | `Modifier` | 调整外层布局。 |
 | `enabled` | `Boolean` | 否 | `true` | 调用方控制可用态。 |
 | `selectedColor` | `Color` | 否 | `Color.Unspecified` | 选中背景色；未指定时使用 `HyperColors.accent`。 |
-| `unselectedColor` | `Color` | 否 | `Color.Unspecified` | 未选中背景色；未指定时使用 `HyperColors.cardContainer`。 |
+| `unselectedColor` | `Color` | 否 | `Color.Unspecified` | 未选中背景色；未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘）。 |
 | `unselectedBorderColor` | `Color` | 否 | `Color.Unspecified` | 未选中描边色；未指定时使用 `HyperColors.accent`。 |
 | `innerDotColor` | `Color` | 否 | `rgba(255, 255, 255, 1f)` | 选中态内部圆点颜色。 |
 

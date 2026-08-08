@@ -46,7 +46,7 @@ fun HyperDrawer(
 | `drawerWidth` | `320.dp` | 左右抽屉请求宽度，最多占容器宽度 88% |
 | `drawerHeight` | `320.dp` | 上下抽屉请求高度，最多占容器高度 88% |
 | `contentPadding` | 垂直 `16.dp` | 抽屉内容内边距 |
-| `containerColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.cardContainer` |
+| `containerColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘） |
 | `scrimColor` | `Color.Transparent` | 仅为源码兼容保留，当前实现不读取该值，也不绘制遮罩 |
 | `dismissOnClickOutside` | `false` | 为 `true` 时，点击抽屉外透明区域请求关闭 |
 | `drawerContent` | 必填 | 抽屉面板内容 |

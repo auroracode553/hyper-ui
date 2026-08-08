@@ -51,6 +51,12 @@ fun HyperDropdownMenu(
     }
 
     val shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
+    val hasVisibleBackground = HyperColors.elevatedContainer.alpha > 0f
+    val highlightModifier = if (hasVisibleBackground) {
+        Modifier.background(HyperColors.glassHighlightBrush)
+    } else {
+        Modifier
+    }
     val intOffset = LocalDensity.current.run {
         IntOffset(offset.x.roundToPx(), offset.y.roundToPx())
     }
@@ -67,7 +73,8 @@ fun HyperDropdownMenu(
                     .width(width)
                     .heightIn(max = maxHeight)
                     .clip(shape)
-                    .background(HyperColors.cardContainer)
+                    .background(HyperColors.elevatedContainer)
+                    .then(highlightModifier)
                     .verticalScroll(rememberScrollState())
                     .padding(vertical = 8.dp)
             ) {

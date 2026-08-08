@@ -82,7 +82,8 @@ HyperTextField(
 
 ## 约束与行为
 
-- `enabled = false` 时不接受文本编辑，仍需传入 `onValueChange`。
+- `enabled = false` 时不接受文本编辑，仍需传入 `onValueChange`；容器使用默认背景时透明度降至 `0.72f`，内容整体按 `HyperStyleDefaults.DisabledAlpha` 淡化。
+- 输入容器默认使用 `HyperColors.elevatedContainer` 半透明玻璃托盘，叠加 `glassHighlightBrush` 顶部高光（与 `HyperIconButton` 一致）；聚焦时额外叠一层 `accent` 8% 覆盖层并切换描边粗细与颜色。
 - `keyboardOptions`、`keyboardActions` 和 `visualTransformation` 使用 Compose 标准类型，不属于 `hyper_ui` 包。
 - 组件没有 `isError`、`supportingText` 或自动校验参数；错误状态需要由调用方在组件外组合展示。
 - `visualTransformation` 只改变显示，不替调用方保存或保护敏感数据。

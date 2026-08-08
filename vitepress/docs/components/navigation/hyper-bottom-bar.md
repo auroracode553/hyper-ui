@@ -104,7 +104,8 @@ fun MainBottomBar(onNavigate: (String) -> Unit) {
 
 - `selectedItemId` 不会在组件内部自动更新。
 - `onItemClick` 不会自动导航；导航由调用方执行。
-- `backgroundAlpha` 和 `unselectedContentAlpha` 建议保持在 `0f..1f`。
+- 底栏容器默认使用 `HyperColors.elevatedContainer` 半透明玻璃托盘，并叠加 `glassHighlightBrush` 顶部高光（与 `HyperIconButton` 一致）。
+- `backgroundAlpha` 当前实现不再作为底栏背景透明度读取，保留为源码兼容字段；`unselectedContentAlpha` 仍生效，建议保持在 `0f..1f`。
 
 ## 交互预览
 

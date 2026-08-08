@@ -38,8 +38,9 @@ fun HyperProgressBar(
     progressColor: Color = Color.Unspecified
 ) {
     val coercedProgress = progress?.coerceIn(0f, 1f)
-    val resolvedTrackColor = if (trackColor == Color.Unspecified) {
-        HyperColors.softContainer
+    val usesDefaultTrackColor = trackColor == Color.Unspecified
+    val resolvedTrackColor = if (usesDefaultTrackColor) {
+        HyperColors.elevatedContainer
     } else {
         trackColor
     }
@@ -47,6 +48,18 @@ fun HyperProgressBar(
         HyperColors.accent
     } else {
         progressColor
+    }
+    val trackHasVisibleBackground = resolvedTrackColor.alpha > 0f
+    val trackHighlightModifier = if (trackHasVisibleBackground) {
+        Modifier.background(HyperColors.glassHighlightBrush)
+    } else {
+        Modifier
+    }
+    val progressHasVisibleBackground = resolvedProgressColor.alpha > 0f
+    val progressHighlightModifier = if (progressHasVisibleBackground) {
+        Modifier.background(HyperColors.glassHighlightBrush)
+    } else {
+        Modifier
     }
     val animatedProgress by animateFloatAsState(
         targetValue = coercedProgress ?: 0f,
@@ -68,6 +81,7 @@ fun HyperProgressBar(
             .fillMaxWidth()
             .clip(shape)
             .background(resolvedTrackColor)
+            .then(trackHighlightModifier)
             .semantics {
                 progressBarRangeInfo = semanticsInfo
             }
@@ -76,7 +90,8 @@ fun HyperProgressBar(
             IndeterminateProgressSegment(
                 progressColor = resolvedProgressColor,
                 segmentWidth = maxWidth * HyperProgressBarDefaults.IndeterminateSegmentFraction,
-                segmentShape = shape
+                segmentShape = shape,
+                highlightModifier = progressHighlightModifier
             )
         } else {
             Box(
@@ -85,6 +100,7 @@ fun HyperProgressBar(
                     .fillMaxWidth(animatedProgress)
                     .clip(shape)
                     .background(resolvedProgressColor)
+                    .then(progressHighlightModifier)
             )
         }
     }
@@ -112,7 +128,8 @@ fun HyperLoadingProgress(
 private fun IndeterminateProgressSegment(
     progressColor: Color,
     segmentWidth: Dp,
-    segmentShape: Shape
+    segmentShape: Shape,
+    highlightModifier: Modifier = Modifier
 ) {
     val transition = rememberInfiniteTransition(label = "hyperLoadingProgressTransition")
     val offsetProgress by transition.animateFloat(
@@ -140,6 +157,7 @@ private fun IndeterminateProgressSegment(
                 .offset(x = maxWidth * offsetProgress)
                 .clip(segmentShape)
                 .background(progressColor)
+                .then(highlightModifier)
         )
     }
 }

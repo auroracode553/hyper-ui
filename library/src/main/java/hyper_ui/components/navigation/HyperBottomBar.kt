@@ -81,10 +81,11 @@ fun HyperBottomBar(
     } else {
         rgba(255, 255, 255, config.unselectedContentAlpha)
     }
-    val backgroundColor = if (isLight) {
-        rgba(255, 255, 255, config.backgroundAlpha)
+    val hasVisibleBackground = HyperColors.elevatedContainer.alpha > 0f
+    val highlightModifier = if (hasVisibleBackground) {
+        Modifier.background(HyperColors.glassHighlightBrush)
     } else {
-        rgba(0, 0, 0, config.backgroundAlpha)
+        Modifier
     }
 
     Box(
@@ -92,7 +93,8 @@ fun HyperBottomBar(
             .then(config.bottomBarModifier)
             .fillMaxWidth()
             .height(config.height)
-            .background(backgroundColor)
+            .background(HyperColors.elevatedContainer)
+            .then(highlightModifier)
     ) {
         Row(
             modifier = Modifier

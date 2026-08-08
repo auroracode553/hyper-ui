@@ -78,10 +78,17 @@ fun HyperDialog(
         return
     }
 
-    val resolvedContainerColor = if (containerColor == Color.Unspecified) {
-        HyperColors.cardContainer
+    val usesDefaultContainerColor = containerColor == Color.Unspecified
+    val resolvedContainerColor = if (usesDefaultContainerColor) {
+        HyperColors.elevatedContainer
     } else {
         containerColor
+    }
+    val hasVisibleBackground = resolvedContainerColor.alpha > 0f
+    val highlightModifier = if (hasVisibleBackground) {
+        Modifier.background(HyperColors.glassHighlightBrush)
+    } else {
+        Modifier
     }
     val scrollState = rememberScrollState()
 
@@ -121,6 +128,7 @@ fun HyperDialog(
                         }
                         .shadow(elevation, shape)
                         .background(resolvedContainerColor, shape)
+                        .then(highlightModifier)
                         .padding(contentPadding),
                     horizontalAlignment = horizontalAlignment,
                     verticalArrangement = Arrangement.spacedBy(HyperDialogDefaults.ContentSpacing)

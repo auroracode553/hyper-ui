@@ -29,7 +29,7 @@ fun HyperPanel(
 | 参数 | 类型 | 必填 | 默认值 | 状态归属 / 作用 |
 | --- | --- | --- | --- | --- |
 | `modifier` | `Modifier` | 否 | `Modifier` | 调整面板外层布局。 |
-| `containerColor` | `Color` | 否 | `Color.Unspecified` | 面板背景色；未指定时使用 `HyperColors.cardContainer`。 |
+| `containerColor` | `Color` | 否 | `Color.Unspecified` | 面板背景色；未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘）。 |
 | `contentPadding` | `PaddingValues` | 否 | `PaddingValues(20.dp)` | 内容内边距。 |
 | `verticalArrangement` | `Arrangement.Vertical` | 否 | `Arrangement.spacedBy(12.dp)` | `Column` 内子项的垂直排列。 |
 | `content` | `@Composable ColumnScope.() -> Unit` | 是 | 无 | 面板内容插槽，可使用 `ColumnScope` 能力。 |
@@ -82,7 +82,7 @@ HyperPanel(onClick = onOpen) {
 
 ## 相关 API
 
-- `HyperColors.cardContainer`
+- `HyperColors.elevatedContainer`（默认玻璃托盘容器）
 - `HyperStyleDefaults.LargeCornerRadius`
 
 ## 交互预览

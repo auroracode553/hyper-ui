@@ -1,6 +1,7 @@
 package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.CheckboxDemo
+import hyper_ui.docs.ui.FilterChipDemo
 import hyper_ui.docs.ui.RadioDemo
 import hyper_ui.docs.ui.SearchFieldDemo
 import hyper_ui.docs.ui.SwitchDemo
@@ -157,5 +158,26 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         content = { SwitchDemo() }
+    ),
+    ComponentDemo(
+        id = "filter_chip",
+        group = GROUP_FORM,
+        title = "HyperFilterChip",
+        description = "横向滚动筛选标签栏，适合分类过滤场景，选中态由调用方维护，支持计数显示。",
+        code = """
+            var selected by remember { mutableStateOf<String?>("ad") }
+
+            HyperFilterChipBar(
+                items = listOf(
+                    HyperFilterChipItem(key = null, label = "全部", count = 128),
+                    HyperFilterChipItem(key = "malicious", label = "恶意网址", count = 12),
+                    HyperFilterChipItem(key = "ad", label = "广告", count = 86),
+                    HyperFilterChipItem(key = "redirect", label = "恶意跳转", count = 24)
+                ),
+                selectedKey = selected,
+                onSelected = { selected = it }
+            )
+        """.trimIndent(),
+        content = { FilterChipDemo() }
     )
 )

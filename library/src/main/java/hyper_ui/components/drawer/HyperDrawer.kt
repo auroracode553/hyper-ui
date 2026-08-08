@@ -67,10 +67,17 @@ fun HyperDrawer(
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val resolvedContainerColor = if (containerColor == Color.Unspecified) {
-        HyperColors.cardContainer
+    val usesDefaultContainerColor = containerColor == Color.Unspecified
+    val resolvedContainerColor = if (usesDefaultContainerColor) {
+        HyperColors.elevatedContainer
     } else {
         containerColor
+    }
+    val hasVisibleBackground = resolvedContainerColor.alpha > 0f
+    val highlightModifier = if (hasVisibleBackground) {
+        Modifier.background(HyperColors.glassHighlightBrush)
+    } else {
+        Modifier
     }
     val drawerAlignment = when (position) {
         HyperDrawerPosition.Left -> Alignment.CenterStart
@@ -121,6 +128,7 @@ fun HyperDrawer(
                     modifier = drawerSizeModifier
                         .clip(drawerShape(position))
                         .background(resolvedContainerColor)
+                        .then(highlightModifier)
                         .padding(contentPadding),
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     content = drawerContent

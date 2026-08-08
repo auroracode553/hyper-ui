@@ -36,7 +36,7 @@ fun HyperMenuItem(
 | 参数 | 默认值 | 说明 |
 | --- | --- | --- |
 | `modifier` | `Modifier` | 分组根 `Column` 修饰符 |
-| `containerColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.cardContainer` |
+| `containerColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘） |
 | `content` | 必填 | 分组内通常放多个 `HyperMenuItem` |
 
 `HyperMenuItem` 的布局参数与 [HyperListItem](hyper-list-item.md) 基本一致，但它设计为直接放在 `HyperMenuGroup` 中。

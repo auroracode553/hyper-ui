@@ -48,14 +48,34 @@ fun HyperButton(
     trailingIcon: (@Composable RowScope.() -> Unit)? = null
 ) {
     val shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
-    val enabledAlpha = if (enabled) 1f else HyperStyleDefaults.DisabledAlpha
-    val containerColor = when (variant) {
+    // 对齐 HyperIconButton 玻璃托盘范式：
+    // 1. 标记是否使用默认背景 → 禁用态使用 disabledContainer 回退
+    // 2. 背景可见（alpha > 0）时叠加 glassHighlightBrush 顶部高光
+    val usesDefaultContainerColor = when (variant) {
+        HyperButtonVariant.Default -> false // Default 本身是透明 + 描边语义，不走默认容器回退
+        else -> true
+    }
+    val resolvedContainerColor = when (variant) {
         HyperButtonVariant.Default -> Color.Transparent
         HyperButtonVariant.Primary -> HyperColors.accent
         HyperButtonVariant.Success -> HyperColors.success
         HyperButtonVariant.Info -> rgba(144, 147, 153, 1f)
         HyperButtonVariant.Warning -> rgba(230, 162, 60, 1f)
         HyperButtonVariant.Danger -> MaterialTheme.colorScheme.error
+    }
+    val enabledAlpha = if (enabled) 1f else HyperStyleDefaults.DisabledAlpha
+    val containerColor = if (enabled) {
+        resolvedContainerColor
+    } else if (usesDefaultContainerColor) {
+        HyperColors.disabledContainer
+    } else {
+        resolvedContainerColor.copy(alpha = resolvedContainerColor.alpha * enabledAlpha)
+    }
+    val hasVisibleBackground = resolvedContainerColor.alpha > 0f
+    val highlightModifier = if (hasVisibleBackground) {
+        Modifier.background(HyperColors.glassHighlightBrush)
+    } else {
+        Modifier
     }
     val resolvedDefaultBorderColor = if (defaultBorderColor == Color.Unspecified) {
         HyperColors.accent.copy(alpha = 0.50f)
@@ -77,7 +97,8 @@ fun HyperButton(
     val rowModifier = modifier
         .heightIn(min = minHeight)
         .clip(shape)
-        .background(containerColor.copy(alpha = if (variant == HyperButtonVariant.Default) 0f else enabledAlpha))
+        .background(containerColor)
+        .then(highlightModifier)
         .let { base ->
             if (borderStroke != null) {
                 base.border(borderStroke, shape)

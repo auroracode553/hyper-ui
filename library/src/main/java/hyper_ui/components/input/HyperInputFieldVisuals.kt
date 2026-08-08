@@ -23,7 +23,7 @@ internal fun hyperInputFieldVisuals(
     val focusedAndEnabled = focused && enabled
 
     return HyperInputFieldVisuals(
-        containerColor = HyperColors.fieldContainer.copy(alpha = containerAlpha),
+        containerColor = HyperColors.elevatedContainer.copy(alpha = containerAlpha),
         focusOverlayColor = if (focusedAndEnabled) {
             HyperColors.accent.copy(alpha = 0.08f)
         } else {

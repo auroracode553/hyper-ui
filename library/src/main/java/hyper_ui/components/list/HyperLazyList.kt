@@ -25,6 +25,7 @@ fun <T> HyperLazyList(
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     itemContent: @Composable (item: T) -> Unit
 ) {
+    val hasVisibleBackground = HyperColors.elevatedContainer.alpha > 0f
     LazyColumn(
         modifier = modifier.clip(RoundedCornerShape(LazyListCornerRadius)),
         contentPadding = contentPadding,
@@ -42,7 +43,8 @@ fun <T> HyperLazyList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(listItemShape(isFirst, isLast))
-                    .background(HyperColors.cardContainer)
+                    .background(HyperColors.elevatedContainer)
+                    .then(if (hasVisibleBackground) Modifier.background(HyperColors.glassHighlightBrush) else Modifier)
             ) {
                 itemContent(item)
             }

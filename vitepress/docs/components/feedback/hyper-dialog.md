@@ -43,7 +43,7 @@ fun HyperDialog(
 | `minWidth` / `maxWidth` | `280.dp` / `340.dp` | 面板宽度约束 |
 | `maxHeight` | `480.dp` | 面板最大高度 |
 | `elevation` | `8.dp` | 面板阴影高度 |
-| `containerColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.cardContainer` |
+| `containerColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘） |
 | `contentPadding` | 水平 `24.dp`、垂直 `22.dp` | 面板内边距 |
 | `showScrollIndicator` | `true` | 内容溢出时是否显示内部滚动指示条 |
 | `actions` | `null` | 固定在可滚动内容下方的操作区 |

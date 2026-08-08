@@ -10,11 +10,11 @@
 ## 公开签名
 
 ```kotlin
-@Composable
 fun HyperTopBar(
     title: String,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
+    containerColor: Color = Color.Unspecified,
     rightSlot: (@Composable () -> Unit)? = null
 )
 ```
@@ -26,6 +26,7 @@ fun HyperTopBar(
 | `title` | `String` | 必填 | 标题文本 |
 | `modifier` | `Modifier` | `Modifier` | 根 `Row` 的修饰符 |
 | `onBack` | `(() -> Unit)?` | `null` | 非空时显示内置返回图标按钮，点击后调用该回调 |
+| `containerColor` | `Color` | `Color.Unspecified` | 顶栏背景色；未指定时为透明（不叠加玻璃高光）；传 `HyperColors.elevatedContainer` 可启用玻璃托盘并叠加 `glassHighlightBrush`。 |
 | `rightSlot` | `(@Composable () -> Unit)?` | `null` | 标题右侧内容，可放按钮或状态信息 |
 
 ## 最小用法

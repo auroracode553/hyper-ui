@@ -23,10 +23,17 @@ fun HyperPanel(
     content: @Composable ColumnScope.() -> Unit
 ) {
     val shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
-    val resolvedContainerColor = if (containerColor == Color.Unspecified) {
-        HyperColors.cardContainer
+    val usesDefaultContainerColor = containerColor == Color.Unspecified
+    val resolvedContainerColor = if (usesDefaultContainerColor) {
+        HyperColors.elevatedContainer
     } else {
         containerColor
+    }
+    val hasVisibleBackground = resolvedContainerColor.alpha > 0f
+    val highlightModifier = if (hasVisibleBackground) {
+        Modifier.background(HyperColors.glassHighlightBrush)
+    } else {
+        Modifier
     }
 
     Column(
@@ -34,6 +41,7 @@ fun HyperPanel(
             .fillMaxWidth()
             .clip(shape)
             .background(resolvedContainerColor)
+            .then(highlightModifier)
             .padding(contentPadding),
         verticalArrangement = verticalArrangement,
         content = content
