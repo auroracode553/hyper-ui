@@ -48,7 +48,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "基础对话框容器默认带轻描边，只负责浮层、尺寸、滚动内容和底部 action slot，无遮罩。",
+        description = "基础对话框容器默认使用不透明卡片面板，只负责浮层、尺寸、滚动内容和底部 action slot，无遮罩。",
         code = """
             HyperDialog(
                 visible = visible,
@@ -71,7 +71,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dialog",
         group = GROUP_FEEDBACK,
         title = "HyperAlertDialog",
-        description = "Alert 结构化对话框继承默认轻描边面板。标题、正文和按钮均为 slot。",
+        description = "Alert 结构化对话框继承默认不透明卡片面板。标题、正文和按钮均为 slot。",
         code = """
             HyperAlertDialog(
                 visible = visible,

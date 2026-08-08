@@ -145,7 +145,7 @@ fun App() {
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`（输入框和开关默认带轻描边/阴影轮廓；搜索框、地址栏通过 `HyperTextField` 的 leading/trailing slots 组合）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperLazyList`, `HyperList`, `HyperListItem`, `HyperMenuGroup`, `HyperMenuItem`（列表/菜单分组外层默认带轻描边，行内容仍通过分割线表达层级）
-- 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperDropdownMenu`（弹窗与菜单面板默认带轻描边，且不渲染遮罩）
+- 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperDropdownMenu`（弹窗默认不透明卡片面板，菜单默认带轻描边，且不渲染遮罩）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
 - 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（抽屉和底栏默认带轻描边；`HyperGroupMenus` 用于横向分组菜单；`HyperBottomBar` 支持完整内容 slot 与泛型 items 两种入口，页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
@@ -155,7 +155,7 @@ fun App() {
 - 组件不持有业务状态。
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
-- `HyperDialog` 正文内容由 slot 渲染，长内容在内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。默认从屏幕居中弹出，带淡入+缩放动画，无遮罩，面板有阴影浮层效果；弹窗内容会隔离外层文本选择容器，支持放入输入框。
+- `HyperDialog` 正文内容由 slot 渲染，长内容在内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。默认以 92% 屏宽从屏幕居中弹出，带淡入+缩放动画，无遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 轻描边；slot 内容默认继承深浅色自适应文字色，支持放入输入框。
 - 组件内部只处理焦点、动画、禁用透明度、描边/阴影等视觉反馈 UI 状态；`HyperTextField` 聚焦时不改变容器背景。
 
 示例：

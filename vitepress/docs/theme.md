@@ -66,7 +66,6 @@ object HyperStyleDefaults {
     val ExtraLargeCornerRadius = 28.dp
 
     val CardElevation = 4.dp
-    val DialogElevation = 16.dp
 }
 ```
 

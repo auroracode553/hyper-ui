@@ -270,12 +270,14 @@ fun HyperDialogDemo() {
         horizontalAlignment = Alignment.Start,
         actionContent = {
             HyperButton(
+                modifier = Modifier.weight(1f),
                 tone = HyperButtonTone.Outline,
                 onClick = { showDialog = false }
             ) {
                 Text(text = "取消")
             }
             HyperButton(
+                modifier = Modifier.weight(1f),
                 onClick = {
                     savedNote = draftNote.ifBlank { "未填写备注" }
                     showDialog = false

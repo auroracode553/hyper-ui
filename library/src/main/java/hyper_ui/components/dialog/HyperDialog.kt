@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -26,7 +27,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
@@ -58,7 +62,6 @@ fun HyperDialog(
     maxWidth: Dp = HyperDialogDefaults.MaxWidth,
     maxHeight: Dp = HyperDialogDefaults.MaxHeight,
     shape: Shape = HyperDialogDefaults.Shape,
-    elevation: Dp = HyperDialogDefaults.Elevation,
     colors: HyperDialogColors = HyperDialogDefaults.colors(),
     contentPadding: PaddingValues = HyperDialogDefaults.ContentPadding,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
@@ -113,60 +116,59 @@ fun HyperDialog(
             ) {
                 Column(
                     modifier = modifier
+                        .fillMaxWidth(HyperDialogDefaults.WidthFraction)
                         .widthIn(min = minWidth, max = maxWidth)
-                        .fillMaxWidth()
                         .heightIn(max = maxHeight)
                         .graphicsLayer {
                             alpha = animationProgress.value
                             scaleX = 0.8f + 0.2f * animationProgress.value
                             scaleY = 0.8f + 0.2f * animationProgress.value
                         }
-                        .hyperGlassSurface(
-                            containerColor = colors.containerColor,
-                            shape = shape,
-                            elevation = elevation,
-                            border = border
-                        )
+                        .clip(shape)
+                        .background(color = colors.containerColor, shape = shape)
+                        .then(if (border != null) Modifier.border(border, shape) else Modifier)
                         .padding(contentPadding),
                     horizontalAlignment = horizontalAlignment,
                     verticalArrangement = Arrangement.spacedBy(HyperDialogDefaults.ContentSpacing)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, fill = false)
-                    ) {
-                        Column(
+                    CompositionLocalProvider(LocalContentColor provides HyperColors.primaryText) {
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(
-                                    end = if (showScrollIndicator) {
-                                        HyperDialogDefaults.ScrollIndicatorContentPadding
-                                    } else {
-                                        0.dp
-                                    }
-                                )
-                                .verticalScroll(scrollState),
-                            horizontalAlignment = horizontalAlignment,
-                            verticalArrangement = verticalArrangement,
-                            content = content
-                        )
+                                .weight(1f, fill = false)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        end = if (showScrollIndicator) {
+                                            HyperDialogDefaults.ScrollIndicatorContentPadding
+                                        } else {
+                                            0.dp
+                                        }
+                                    )
+                                    .verticalScroll(scrollState),
+                                horizontalAlignment = horizontalAlignment,
+                                verticalArrangement = verticalArrangement,
+                                content = content
+                            )
 
-                        if (showScrollIndicator) {
-                            HyperDialogScrollIndicator(
-                                scrollState = scrollState,
-                                modifier = Modifier.align(Alignment.CenterEnd)
+                            if (showScrollIndicator) {
+                                HyperDialogScrollIndicator(
+                                    scrollState = scrollState,
+                                    modifier = Modifier.align(Alignment.CenterEnd)
+                                )
+                            }
+                        }
+
+                        if (actionContent != null) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = actionArrangement,
+                                verticalAlignment = Alignment.CenterVertically,
+                                content = actionContent
                             )
                         }
-                    }
-
-                    if (actionContent != null) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = actionArrangement,
-                            verticalAlignment = Alignment.CenterVertically,
-                            content = actionContent
-                        )
                     }
                 }
             }
@@ -218,11 +220,11 @@ private fun HyperDialogScrollIndicator(
 
 object HyperDialogDefaults {
     val MinWidth = 280.dp
-    val MaxWidth = 340.dp
+    const val WidthFraction = 0.92f
+    val MaxWidth = 360.dp
     val MaxHeight = 480.dp
-    val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
-    val Elevation = 8.dp
-    val ContentPadding = PaddingValues(horizontal = 24.dp, vertical = 22.dp)
+    val Shape: Shape = RoundedCornerShape(20.dp)
+    val ContentPadding = PaddingValues(20.dp)
     val ContentSpacing = 16.dp
     val ActionSpacing = 12.dp
     const val ShowScrollIndicator = true
@@ -234,7 +236,7 @@ object HyperDialogDefaults {
     fun colors(containerColor: Color = Color.Unspecified): HyperDialogColors = HyperDialogColors(
         containerColor = resolveHyperContainerColor(
             containerColor = containerColor,
-            fallbackColor = HyperColors.elevatedContainer
+            fallbackColor = HyperColors.cardContainer
         )
     )
 
