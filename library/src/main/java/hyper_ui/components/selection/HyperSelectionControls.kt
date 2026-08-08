@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -42,6 +43,7 @@ fun HyperSwitch(
     uncheckedThumbColor: Color = rgba(255, 255, 255, 1f)
 ) {
     val enabledAlpha = if (enabled) 1f else HyperStyleDefaults.DisabledAlpha
+    val trackShape = RoundedCornerShape(percent = 50)
     // 对齐 HyperIconButton 玻璃托盘范式：
     // 标记使用默认背景 → 禁用态 disabledContainer 回退；track/thumb 可见背景叠 glass 高光
     val usesDefaultCheckedTrack = checkedTrackColor == Color.Unspecified
@@ -75,17 +77,37 @@ fun HyperSwitch(
     val trackHasVisibleBackground =
         (if (checked) resolvedCheckedTrackColor else resolvedUncheckedTrackColor).alpha > 0f
     val trackHighlightModifier = if (trackHasVisibleBackground) {
-        Modifier.background(HyperColors.glassHighlightBrush)
+        Modifier.background(
+            brush = HyperColors.glassHighlightBrush,
+            shape = trackShape
+        )
     } else {
         Modifier
     }
     val thumbHasVisibleBackground =
         (if (checked) checkedThumbColor else uncheckedThumbColor).alpha > 0f
     val thumbHighlightModifier = if (thumbHasVisibleBackground) {
-        Modifier.background(HyperColors.glassHighlightBrush)
+        Modifier.background(
+            brush = HyperColors.glassHighlightBrush,
+            shape = CircleShape
+        )
     } else {
         Modifier
     }
+    val switchBorderBaseColor = HyperColors.fieldBorder
+    val switchBorderAlphaRatio = if (enabled) 1f else 0.72f
+    val trackBorderColor by animateColorAsState(
+        targetValue = switchBorderBaseColor.copy(
+            alpha = switchBorderBaseColor.alpha * switchBorderAlphaRatio
+        ),
+        label = "hyperSwitchTrackBorderColor"
+    )
+    val thumbBorderColor by animateColorAsState(
+        targetValue = switchBorderBaseColor.copy(
+            alpha = switchBorderBaseColor.alpha * if (enabled) 0.88f else 0.48f
+        ),
+        label = "hyperSwitchThumbBorderColor"
+    )
     val thumbProgress by animateFloatAsState(
         targetValue = if (checked) 1f else 0f,
         animationSpec = spring(
@@ -99,9 +121,20 @@ fun HyperSwitch(
         modifier = modifier
             .width(HyperSwitchDefaults.TrackWidth)
             .height(HyperSwitchDefaults.TrackHeight)
-            .clip(RoundedCornerShape(percent = 50))
-            .background(trackColor)
+            .shadow(
+                elevation = HyperSwitchDefaults.TrackElevation,
+                shape = trackShape,
+                clip = false
+            )
+            .background(trackColor, trackShape)
             .then(trackHighlightModifier)
+            .border(
+                border = BorderStroke(
+                    width = HyperSwitchDefaults.TrackBorderWidth,
+                    color = trackBorderColor
+                ),
+                shape = trackShape
+            )
             .hyperNoRippleClickable(
                 enabled = enabled,
                 role = Role.Switch,
@@ -109,13 +142,29 @@ fun HyperSwitch(
             ),
         contentAlignment = Alignment.CenterStart
     ) {
+        val thumbTravel = HyperSwitchDefaults.TrackWidth -
+            HyperSwitchDefaults.ThumbSize -
+            HyperSwitchDefaults.TrackPadding * 2f
+
         Box(
             modifier = Modifier
-                .offset(x = (HyperSwitchDefaults.TrackWidth - HyperSwitchDefaults.ThumbSize) * thumbProgress)
+                .offset(x = HyperSwitchDefaults.TrackPadding + thumbTravel * thumbProgress)
                 .size(HyperSwitchDefaults.ThumbSize)
+                .shadow(
+                    elevation = HyperSwitchDefaults.ThumbElevation,
+                    shape = CircleShape,
+                    clip = false
+                )
                 .clip(CircleShape)
                 .background(thumbColor)
                 .then(thumbHighlightModifier)
+                .border(
+                    border = BorderStroke(
+                        width = HyperSwitchDefaults.ThumbBorderWidth,
+                        color = thumbBorderColor
+                    ),
+                    shape = CircleShape
+                )
         )
     }
 }
@@ -332,8 +381,12 @@ fun HyperRadioButton(
 object HyperSwitchDefaults {
     val TrackWidth = 54.dp
     val TrackHeight = 32.dp
+    val TrackPadding = 2.dp
+    val TrackElevation = 1.dp
+    val TrackBorderWidth = 1.dp
     val ThumbSize = 28.dp
     val ThumbElevation = 2.dp
+    val ThumbBorderWidth = 1.dp
 }
 
 object HyperCheckboxDefaults {

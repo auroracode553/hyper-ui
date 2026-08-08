@@ -39,7 +39,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "text_field",
         group = GROUP_FORM,
         title = "HyperTextField",
-        description = "Slot-first 输入框，label、placeholder、supporting、leading、trailing 均由调用方渲染。",
+        description = "Slot-first 输入框，默认带轻描边和阴影，label、placeholder、supporting、leading、trailing 均由调用方渲染。",
         code = """
             HyperTextField(
                 value = value,
@@ -80,7 +80,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "switch",
         group = GROUP_FORM,
         title = "HyperSwitch",
-        description = "开关组件，适合二元状态设置。",
+        description = "开关组件，轨道和滑块默认带轮廓层次，适合二元状态设置。",
         code = """
             HyperSwitch(
                 checked = enabled,

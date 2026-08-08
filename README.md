@@ -142,7 +142,7 @@ fun App() {
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
 - 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；视觉通过 `tone`、`colors`、`shape`、`border` 控制）
-- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`（搜索框、地址栏通过 `HyperTextField` 的 leading/trailing slots 组合）
+- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`（输入框和开关默认带轻描边/阴影轮廓；搜索框、地址栏通过 `HyperTextField` 的 leading/trailing slots 组合）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（主题色选择板，选中状态由调用方管理）
 - 列表组件：`HyperLazyList`, `HyperList`, `HyperListItem`, `HyperMenuGroup`, `HyperMenuItem`
 - 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperDropdownMenu`
@@ -156,7 +156,7 @@ fun App() {
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
 - `HyperDialog` 正文内容由 slot 渲染，长内容在内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。默认从屏幕居中弹出，带淡入+缩放动画，无遮罩，面板有阴影浮层效果；弹窗内容会隔离外层文本选择容器，支持放入输入框。
-- 组件内部只处理焦点、动画、禁用透明度、视觉反馈等 UI 状态；`HyperTextField` 聚焦时不改变容器背景。
+- 组件内部只处理焦点、动画、禁用透明度、描边/阴影等视觉反馈 UI 状态；`HyperTextField` 聚焦时不改变容器背景。
 
 示例：
 

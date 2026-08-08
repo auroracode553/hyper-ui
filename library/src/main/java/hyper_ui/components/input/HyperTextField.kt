@@ -1,5 +1,6 @@
 package hyper_ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -98,7 +99,12 @@ fun HyperTextField(
                         .heightIn(min = minHeight)
                         .hyperGlassSurface(
                             containerColor = visuals.containerColor,
-                            shape = shape
+                            shape = shape,
+                            elevation = HyperTextFieldDefaults.ContainerElevation,
+                            border = BorderStroke(
+                                width = HyperTextFieldDefaults.BorderWidth,
+                                color = visuals.borderColor
+                            )
                         )
                         .padding(contentPadding),
                     verticalAlignment = verticalAlignment
@@ -150,6 +156,8 @@ object HyperTextFieldDefaults {
     val MinHeight = 52.dp
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
     val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 14.dp)
+    val ContainerElevation = 1.dp
+    val BorderWidth = 1.dp
 
     @Composable
     fun colors(
