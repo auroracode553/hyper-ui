@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -59,9 +58,9 @@ fun HyperButton(
         HyperButtonVariant.Default -> Color.Transparent
         HyperButtonVariant.Primary -> HyperColors.accent
         HyperButtonVariant.Success -> HyperColors.success
-        HyperButtonVariant.Info -> rgba(144, 147, 153, 1f)
-        HyperButtonVariant.Warning -> rgba(230, 162, 60, 1f)
-        HyperButtonVariant.Danger -> MaterialTheme.colorScheme.error
+        HyperButtonVariant.Info -> HyperColors.info
+        HyperButtonVariant.Warning -> HyperColors.warning
+        HyperButtonVariant.Danger -> HyperColors.danger
     }
     val enabledAlpha = if (enabled) 1f else HyperStyleDefaults.DisabledAlpha
     val containerColor = if (enabled) {

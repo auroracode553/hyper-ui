@@ -1,7 +1,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -116,20 +115,17 @@ private fun ColorPickItem(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val borderColor = if (selected) {
-            HyperColors.secondaryText.copy(alpha = 0.5f)
-        } else {
-            Color.Transparent
-        }
+        // 选中时用 accent 色环形描边：外层固定尺寸 + accent 背景，内层色块小一圈形成"环"
+        val ringWidth = 2.dp
+        val ringColor = if (selected) HyperColors.accent else Color.Transparent
 
         Box(
             modifier = Modifier
-                .size(colorSize)
+                .size(colorSize + ringWidth * 2)
                 .clip(CircleShape)
-                .background(option.color)
                 .then(
-                    if (borderColor != Color.Transparent) {
-                        Modifier.border(width = 2.dp, color = borderColor, shape = CircleShape)
+                    if (selected) {
+                        Modifier.background(ringColor)
                     } else {
                         Modifier
                     }
@@ -137,13 +133,21 @@ private fun ColorPickItem(
                 .hyperNoRippleClickable(onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
-            if (selected) {
-                Box(
-                    modifier = Modifier
-                        .size(colorSize * 0.42f)
-                        .clip(CircleShape)
-                        .background(Color.White.copy(alpha = 0.9f))
-                )
+            Box(
+                modifier = Modifier
+                    .size(colorSize)
+                    .clip(CircleShape)
+                    .background(option.color),
+                contentAlignment = Alignment.Center
+            ) {
+                if (selected) {
+                    Box(
+                        modifier = Modifier
+                            .size(colorSize * 0.42f)
+                            .clip(CircleShape)
+                            .background(Color.White.copy(alpha = 0.9f))
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(labelTopSpacing))

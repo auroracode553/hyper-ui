@@ -128,6 +128,7 @@ HyperColorPicker(
 - 组件使用 `FlowRow` 响应式换行，并在水平方向居中排列。
 - 选中判断只比较 `option.id == selectedId`；自定义选项的 ID 应稳定且唯一。
 - `selectedId` 不在 `options` 中时不会有任何选项呈现选中态。
+- 选中态使用 `accent` 色环形描边：外层固定尺寸（`colorSize + 4dp`）+ `accent` 背景形成环，内层为色块本体 + 中心白色指示点；未选中时外层透明，避免选中时布局抖动。
 - 组件没有 `enabled` 参数；如需业务禁用策略，由调用方决定是否接受 `onSelected` 的结果。
 - `onSelected` 返回完整 `HyperColorOption`，不要把它当作只返回 ID 或 `Color`。
 - 项目颜色规范禁止十六进制硬编码；自定义选项使用项目允许的 RGBA 写法。

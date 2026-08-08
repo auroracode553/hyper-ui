@@ -58,6 +58,9 @@ object HyperTheme {
 object HyperStyleDefaults {
     val DefaultThemeColor = rgba(255, 103, 0, 1f)
     val SuccessColor = rgba(52, 199, 89, 1f)
+    val InfoColor = rgba(144, 147, 153, 1f)
+    val WarningColor = rgba(230, 162, 60, 1f)
+    val DangerColor = rgba(255, 59, 48, 1f)
     val DisabledAlpha = 0.42f
 
     val SmallCornerRadius = 12.dp
@@ -77,6 +80,18 @@ object HyperColors {
     val success: Color
         @Composable @ReadOnlyComposable
         get() = HyperTheme.colors.successColor
+
+    val info: Color
+        @Composable @ReadOnlyComposable
+        get() = if (isLight) HyperStyleDefaults.InfoColor else rgba(142, 142, 147, 1f)
+
+    val warning: Color
+        @Composable @ReadOnlyComposable
+        get() = if (isLight) HyperStyleDefaults.WarningColor else rgba(255, 159, 10, 1f)
+
+    val danger: Color
+        @Composable @ReadOnlyComposable
+        get() = if (isLight) HyperStyleDefaults.DangerColor else rgba(255, 69, 58, 1f)
 
     val isLight: Boolean
         @Composable @ReadOnlyComposable
