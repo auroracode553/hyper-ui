@@ -7,6 +7,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -45,7 +46,8 @@ fun HyperLinearProgressIndicator(
     modifier: Modifier = Modifier,
     height: Dp = HyperProgressIndicatorDefaults.LinearHeight,
     shape: Shape = HyperProgressIndicatorDefaults.LinearShape,
-    colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors()
+    colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors(),
+    trackBorder: BorderStroke? = HyperProgressIndicatorDefaults.linearTrackBorder()
 ) {
     val coercedProgress = progress?.coerceIn(0f, 1f)
     val animatedProgress by animateFloatAsState(
@@ -68,7 +70,8 @@ fun HyperLinearProgressIndicator(
             .fillMaxWidth()
             .hyperGlassSurface(
                 containerColor = colors.trackColor,
-                shape = shape
+                shape = shape,
+                border = trackBorder
             )
             .semantics {
                 progressBarRangeInfo = semanticsInfo
@@ -224,4 +227,7 @@ object HyperProgressIndicatorDefaults {
         trackColor = resolveHyperContainerColor(trackColor, HyperColors.elevatedContainer),
         indicatorColor = resolveHyperContainerColor(indicatorColor, HyperColors.accent)
     )
+
+    @Composable
+    fun linearTrackBorder(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
 }

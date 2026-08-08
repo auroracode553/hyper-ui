@@ -10,7 +10,7 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         id = "color-picker",
         group = GROUP_CONTAINER,
         title = "HyperColorPicker",
-        description = "主题色选择板，选中状态由调用方管理。",
+        description = "主题色选择板，色块默认带细描边，选中状态由调用方管理。",
         code = """
             HyperColorPicker(
                 selectedId = selectedColorId,
@@ -23,13 +23,12 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         id = "panel",
         group = GROUP_CONTAINER,
         title = "HyperPanel",
-        description = "通用 slot 容器，支持 colors、shape、elevation、border、padding 和 clipContent。",
+        description = "通用 slot 容器，默认带轻描边，支持 colors、shape、elevation、border、padding 和 clipContent。",
         code = """
             HyperPanel(
                 colors = HyperPanelDefaults.colors(
                     containerColor = MaterialTheme.colorScheme.surface
-                ),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                )
             ) {
                 Text("系统状态")
                 Text("运行正常")

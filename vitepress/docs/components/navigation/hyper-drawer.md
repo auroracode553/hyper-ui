@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/drawer/HyperDrawer.kt`
 - 预览：`drawer`
 
-`HyperDrawer` 是四方向抽屉容器，无遮罩。`HyperDrawerHeader` 与 `HyperDrawerItem` 都采用 slot-first API。
+`HyperDrawer` 是四方向抽屉容器，无遮罩。抽屉面板默认带 1dp 轻描边，`HyperDrawerHeader` 与 `HyperDrawerItem` 都采用 slot-first API。
 
 ## 公开签名
 
@@ -22,6 +22,7 @@ fun HyperDrawer(
     contentPadding: PaddingValues = HyperDrawerDefaults.ContentPadding,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = false,
+    border: BorderStroke? = HyperDrawerDefaults.border(),
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 )
@@ -50,6 +51,15 @@ fun HyperDrawerItem(
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null
 )
+```
+
+## 关键公开类型
+
+```kotlin
+object HyperDrawerDefaults {
+    @Composable
+    fun border(color: Color = Color.Unspecified): BorderStroke
+}
 ```
 
 ## 最小用法
@@ -82,5 +92,6 @@ HyperDrawer(
 - 不存在 `scrimColor`，抽屉不渲染遮罩。
 - Header/Item 不提供 `title`、`description`、`leadingIcon` 参数。
 - `open`、选中项和路由由调用方持有。
+- 默认描边来自 `HyperDrawerDefaults.border()`，内部使用 `HyperColors.panelBorder`；如需无边框，传入 `border = null`。
 
 <WasmPreview demo="drawer" title="HyperDrawer 交互预览" />

@@ -12,7 +12,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dropdown",
         group = GROUP_FEEDBACK,
         title = "HyperDropdownMenu",
-        description = "浮层菜单容器，菜单项内容使用 slot 渲染，可配置点击后是否关闭。",
+        description = "浮层菜单容器默认带轻描边，菜单项内容使用 slot 渲染，可配置点击后是否关闭。",
         code = """
             HyperDropdownMenu(
                 expanded = expanded,
@@ -35,7 +35,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "progress",
         group = GROUP_FEEDBACK,
         title = "HyperProgressIndicator",
-        description = "线性与圆形进度指示器。progress 为 null 时表示不确定加载。",
+        description = "线性轨道默认带轻描边；progress 为 null 时表示不确定加载。",
         code = """
             HyperLinearProgressIndicator(progress = progress)
             HyperLinearProgressIndicator(progress = null)
@@ -48,7 +48,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "基础对话框容器，只负责浮层、尺寸、滚动内容和底部 action slot，无遮罩。",
+        description = "基础对话框容器默认带轻描边，只负责浮层、尺寸、滚动内容和底部 action slot，无遮罩。",
         code = """
             HyperDialog(
                 visible = visible,
@@ -71,7 +71,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dialog",
         group = GROUP_FEEDBACK,
         title = "HyperAlertDialog",
-        description = "Alert 结构化对话框。标题、正文和按钮均为 slot，不内置确认/取消业务文案。",
+        description = "Alert 结构化对话框继承默认轻描边面板。标题、正文和按钮均为 slot。",
         code = """
             HyperAlertDialog(
                 visible = visible,

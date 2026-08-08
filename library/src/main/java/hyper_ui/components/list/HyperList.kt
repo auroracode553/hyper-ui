@@ -1,6 +1,8 @@
 package hyper_ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -21,12 +25,15 @@ fun <T> HyperList(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
+    border: BorderStroke? = HyperListDefaults.border(),
     itemContent: @Composable (item: T) -> Unit
 ) {
     val hasVisibleBackground = HyperColors.elevatedContainer.alpha > 0f
+    val shape = HyperListDefaults.Shape
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(LazyListCornerRadius))
+            .then(if (border != null) Modifier.border(border, shape) else Modifier)
+            .clip(shape)
             .verticalScroll(rememberScrollState())
             .padding(contentPadding),
         verticalArrangement = verticalArrangement
@@ -45,4 +52,11 @@ fun <T> HyperList(
             }
         }
     }
+}
+
+object HyperListDefaults {
+    val Shape: Shape = RoundedCornerShape(LazyListCornerRadius)
+
+    @Composable
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
 }

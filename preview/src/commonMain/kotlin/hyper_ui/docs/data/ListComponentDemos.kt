@@ -11,7 +11,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "lazy_list",
         group = GROUP_LIST,
         title = "HyperLazyList",
-        description = "懒加载列表容器，子项内容完全由调用方决定。",
+        description = "懒加载列表容器，外层默认带轻描边，子项内容完全由调用方决定。",
         code = """
             HyperLazyList(items = items) { item ->
                 HyperListItem(
@@ -28,7 +28,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_list",
         group = GROUP_LIST,
         title = "HyperList",
-        description = "非懒加载列表容器，适合少量静态数据。",
+        description = "非懒加载列表容器，外层默认带轻描边，适合少量静态数据。",
         code = """
             HyperList(items = items) { item ->
                 HyperListItem(
@@ -43,7 +43,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "menu_group",
         group = GROUP_LIST,
         title = "HyperMenuGroup",
-        description = "菜单分组容器；菜单项使用 leading/headline/supporting/trailing slots。",
+        description = "菜单分组容器默认带轻描边；菜单项使用 leading/headline/supporting/trailing slots。",
         code = """
             HyperMenuGroup {
                 HyperMenuItem(

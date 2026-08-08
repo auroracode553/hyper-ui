@@ -36,7 +36,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "drawer",
         group = GROUP_NAVIGATION,
         title = "HyperDrawer",
-        description = "抽屉容器，支持四个方向。Header 和 Item 均使用 slot 渲染，无遮罩。",
+        description = "抽屉容器默认带轻描边，支持四个方向。Header 和 Item 均使用 slot 渲染，无遮罩。",
         code = """
             HyperDrawer(
                 open = open,
@@ -65,7 +65,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "group-menus",
         group = GROUP_NAVIGATION,
         title = "HyperGroupMenus",
-        description = "横向分组菜单。组件只负责选中态、点击和滚动布局，菜单文字、计数或图标由 item slot 渲染。",
+        description = "横向分组菜单。未选中项默认带细描边，菜单文字、计数或图标由 item slot 渲染。",
         code = """
             HyperGroupMenus(
                 items = categories,
@@ -81,7 +81,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "bottom-bar",
         group = GROUP_NAVIGATION,
         title = "HyperBottomBar",
-        description = "底部栏容器。调用方可以传入完整内容 slot，也可以使用泛型 items 入口。",
+        description = "底部栏容器默认带轻描边。调用方可以传入完整内容 slot，也可以使用泛型 items 入口。",
         code = """
             HyperBottomBar(
                 contentPadding = PaddingValues(horizontal = 16.dp)

@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/dialog/HyperAlertDialog.kt`
 - 预览：`dialog`
 
-`HyperAlertDialog` 是基于 `HyperDialog` 的结构化弹窗。它只提供 title、body、action 三个 slot 区域，不内置确认、取消、危险操作等业务按钮。
+`HyperAlertDialog` 是基于 `HyperDialog` 的结构化弹窗。它只提供 title、body、action 三个 slot 区域，不内置确认、取消、危险操作等业务按钮，并继承 `HyperDialog` 的默认轻描边面板。
 
 ## 公开签名
 
@@ -43,5 +43,6 @@ HyperAlertDialog(
 - 不存在 `title`、`message`、`confirmText`、`cancelText` 字符串参数。
 - 如果项目需要二次确认语义，应该在业务项目中封装项目级 ConfirmDialog。
 - 弹窗不渲染遮罩或半透明蒙层。
+- 面板描边由内部 `HyperDialog` 默认值提供；当前 `HyperAlertDialog` 不单独暴露 `border` 参数。
 
 <WasmPreview demo="dialog" title="HyperAlertDialog 交互预览" />

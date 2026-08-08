@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/menu/HyperGroupMenus.kt`
 - 预览：`group-menus`
 
-`HyperGroupMenus` 是 slot-first 横向分组菜单，适合页面顶部分类、筛选分组和同级视图切换。组件只负责滚动布局、选中态、禁用态和点击边界；菜单文字、计数、图标和业务筛选规则都由调用方渲染与维护。
+`HyperGroupMenus` 是 slot-first 横向分组菜单，适合页面顶部分类、筛选分组和同级视图切换。组件只负责滚动布局、选中态、禁用态、点击边界和未选中项轻描边；菜单文字、计数、图标和业务筛选规则都由调用方渲染与维护。
 
 ## 公开签名
 
@@ -36,6 +36,14 @@ fun <T> HyperGroupMenus(
 )
 ```
 
+## 关键公开类型
+
+```kotlin
+object HyperGroupMenusDefaults {
+    val ItemBorderWidth = 1.dp
+}
+```
+
 ## 最小用法
 
 ```kotlin
@@ -54,5 +62,6 @@ HyperGroupMenus(
 - 需要计数、图标或复杂内容时直接放入 `itemContent`。
 - `HyperGroupMenusItemScope` 暴露 `selected` 和 `enabled`，slot 可据此渲染字体、徽标或辅助状态。
 - 单个独立菜单项可直接使用 `HyperGroupMenuItem`，不需要横向列表时无需包一层组容器。
+- 未选中项默认使用 `HyperColors.fieldBorder` 细描边；选中项为主题色背景时描边透明，避免颜色发脏。
 
 <WasmPreview demo="group-menus" title="HyperGroupMenus 交互预览" />

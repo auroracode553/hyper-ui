@@ -53,7 +53,7 @@ fun HyperBottomBar(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     shape: Shape = HyperBottomBarDefaults.Shape,
-    border: BorderStroke? = null,
+    border: BorderStroke? = HyperBottomBarDefaults.border(),
     colors: HyperBottomBarColors = HyperBottomBarDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
@@ -101,7 +101,7 @@ fun <T> HyperBottomBar(
     itemSlotAlignment: Alignment = Alignment.Center,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     shape: Shape = HyperBottomBarDefaults.Shape,
-    border: BorderStroke? = null,
+    border: BorderStroke? = HyperBottomBarDefaults.border(),
     colors: HyperBottomBarColors = HyperBottomBarDefaults.colors(),
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperBottomBarItemScope.(item: T) -> Unit
@@ -246,4 +246,7 @@ object HyperBottomBarDefaults {
             )
         )
     }
+
+    @Composable
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
 }

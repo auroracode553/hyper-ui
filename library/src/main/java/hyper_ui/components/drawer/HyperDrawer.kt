@@ -8,6 +8,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -68,6 +69,7 @@ fun HyperDrawer(
     contentPadding: PaddingValues = HyperDrawerDefaults.ContentPadding,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = false,
+    border: BorderStroke? = HyperDrawerDefaults.border(),
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
@@ -120,7 +122,8 @@ fun HyperDrawer(
                     modifier = drawerSizeModifier
                         .hyperGlassSurface(
                             containerColor = colors.containerColor,
-                            shape = drawerShape(position)
+                            shape = drawerShape(position),
+                            border = border
                         )
                         .padding(contentPadding),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -349,4 +352,7 @@ object HyperDrawerDefaults {
             dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
         )
     }
+
+    @Composable
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
 }

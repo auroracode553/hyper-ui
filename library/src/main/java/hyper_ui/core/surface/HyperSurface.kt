@@ -32,6 +32,16 @@ internal fun resolveHyperDisabledContainerColor(
 
 @Composable
 @PublishedApi
+internal fun hyperPanelBorder(
+    color: Color = Color.Unspecified
+): BorderStroke = if (color == Color.Unspecified) {
+    HyperColors.panelBorder
+} else {
+    BorderStroke(width = 1.dp, color = color)
+}
+
+@Composable
+@PublishedApi
 internal fun Modifier.hyperGlassSurface(
     containerColor: Color,
     shape: Shape,

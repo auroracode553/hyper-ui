@@ -1,5 +1,6 @@
 package hyper_ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -52,6 +53,7 @@ fun HyperDropdownMenu(
     shape: Shape = HyperDropdownMenuDefaults.Shape,
     colors: HyperDropdownMenuColors = HyperDropdownMenuDefaults.colors(),
     contentPadding: PaddingValues = HyperDropdownMenuDefaults.MenuPadding,
+    border: BorderStroke? = HyperDropdownMenuDefaults.border(),
     content: @Composable HyperDropdownMenuScope.() -> Unit
 ) {
     if (!expanded) {
@@ -74,7 +76,8 @@ fun HyperDropdownMenu(
                 .heightIn(max = maxHeight)
                 .hyperGlassSurface(
                     containerColor = colors.containerColor,
-                    shape = shape
+                    shape = shape,
+                    border = border
                 )
                 .verticalScroll(rememberScrollState())
                 .padding(contentPadding)
@@ -165,4 +168,7 @@ object HyperDropdownMenuDefaults {
             dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
         )
     }
+
+    @Composable
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
 }

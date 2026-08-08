@@ -28,7 +28,7 @@ fun HyperPanel(
     colors: HyperPanelColors = HyperPanelDefaults.colors(),
     shape: Shape = HyperPanelDefaults.Shape,
     elevation: Dp = HyperPanelDefaults.Elevation,
-    border: BorderStroke? = null,
+    border: BorderStroke? = HyperPanelDefaults.border(),
     clipContent: Boolean = true,
     contentPadding: PaddingValues = HyperPanelDefaults.ContentPadding,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperPanelDefaults.ContentSpacing),
@@ -65,4 +65,7 @@ object HyperPanelDefaults {
             fallbackColor = HyperColors.elevatedContainer
         )
     )
+
+    @Composable
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
 }

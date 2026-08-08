@@ -37,6 +37,7 @@ object HyperColorPickerDefaults {
     val horizontalSpacing = 10.dp
     val verticalSpacing = 14.dp
     val labelTopSpacing = 5.dp
+    val colorBorderWidth = 1.dp
     val presetOptions: List<HyperColorOption>
 }
 ```
@@ -126,6 +127,7 @@ HyperColorPicker(
 ## 约束与行为
 
 - 组件使用 `FlowRow` 响应式换行，并在水平方向居中排列。
+- 每个色块默认带 `colorBorderWidth` 细描边，调用方传入白色或浅色自定义选项时仍能看清边界。
 - 选中判断只比较 `option.id == selectedId`；自定义选项的 ID 应稳定且唯一。
 - `selectedId` 不在 `options` 中时不会有任何选项呈现选中态。
 - 选中态使用 `accent` 色环形描边：外层固定尺寸（`colorSize + 4dp`）+ `accent` 背景形成环，内层为色块本体 + 中心白色指示点；未选中时外层透明，避免选中时布局抖动。

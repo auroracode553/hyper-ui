@@ -22,32 +22,32 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperPanel](components/container/hyper-panel.md) | 圆角内容面板 | 无业务状态 |
-| [HyperColorPicker](components/container/hyper-color-picker.md) | 响应式颜色选择板 | 调用方提供 `selectedId` |
+| [HyperPanel](components/container/hyper-panel.md) | 圆角内容面板，默认带轻描边 | 无业务状态 |
+| [HyperColorPicker](components/container/hyper-color-picker.md) | 响应式颜色选择板，色块默认带细描边 | 调用方提供 `selectedId` |
 
 ## 导航组件
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperTopBar](components/navigation/hyper-top-bar.md) | 顶部栏三段 slot 容器 | 调用方处理事件 |
-| [HyperDrawer](components/navigation/hyper-drawer.md) | 四方向 slot 抽屉 | 调用方提供 `open` 与选中态 |
-| [HyperGroupMenus](components/navigation/hyper-group-menus.md) | 横向分组菜单 | 调用方提供 `selectedItem` |
-| [HyperBottomBar](components/navigation/hyper-bottom-bar.md) | 底部栏容器与完整内容 slot | 调用方处理内容、选择与导航 |
+| [HyperDrawer](components/navigation/hyper-drawer.md) | 四方向 slot 抽屉，默认带轻描边 | 调用方提供 `open` 与选中态 |
+| [HyperGroupMenus](components/navigation/hyper-group-menus.md) | 横向分组菜单，未选中项默认带细描边 | 调用方提供 `selectedItem` |
+| [HyperBottomBar](components/navigation/hyper-bottom-bar.md) | 底部栏容器与完整内容 slot，默认带轻描边 | 调用方处理内容、选择与导航 |
 
 ## 列表组件
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperLazyList](components/list/hyper-lazy-list.md) | 大量动态数据的懒加载列表 | 调用方提供数据 |
-| [HyperList](components/list/hyper-list.md) | 少量静态数据的滚动列表 | 调用方提供数据 |
+| [HyperLazyList](components/list/hyper-lazy-list.md) | 大量动态数据的懒加载列表，外层默认带轻描边 | 调用方提供数据 |
+| [HyperList](components/list/hyper-list.md) | 少量静态数据的滚动列表，外层默认带轻描边 | 调用方提供数据 |
 | [HyperListItem](components/list/hyper-list-item.md) | 列表行内容 | 调用方处理点击和尾部状态 |
-| [HyperMenuGroup](components/list/hyper-menu-group.md) | 设置类菜单分组与菜单项 | 调用方处理点击和尾部状态 |
+| [HyperMenuGroup](components/list/hyper-menu-group.md) | 设置类菜单分组与菜单项，分组默认带轻描边 | 调用方处理点击和尾部状态 |
 
 ## 反馈组件
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperDropdownMenu](components/feedback/hyper-dropdown-menu.md) | Popup 浮层菜单 | 调用方提供 `expanded` |
-| [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 线性/圆形进度指示器 | 调用方提供 `progress` |
-| [HyperDialog](components/feedback/hyper-dialog.md) | 自定义内容弹窗 | 调用方提供 `visible` 和内容状态 |
-| [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | Slot-first Alert 弹窗结构 | 调用方提供 `visible` 并处理结果 |
+| [HyperDropdownMenu](components/feedback/hyper-dropdown-menu.md) | Popup 浮层菜单，默认带轻描边 | 调用方提供 `expanded` |
+| [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 线性/圆形进度指示器，线性轨道默认带轻描边 | 调用方提供 `progress` |
+| [HyperDialog](components/feedback/hyper-dialog.md) | 自定义内容弹窗，默认带轻描边 | 调用方提供 `visible` 和内容状态 |
+| [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | Slot-first Alert 弹窗结构，继承弹窗描边 | 调用方提供 `visible` 并处理结果 |

@@ -2,6 +2,7 @@ package hyper_ui
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -70,6 +71,7 @@ fun HyperDialog(
     dismissOnClickOutside: Boolean = false,
     showScrollIndicator: Boolean = HyperDialogDefaults.ShowScrollIndicator,
     actionContent: (@Composable RowScope.() -> Unit)? = null,
+    border: BorderStroke? = HyperDialogDefaults.border(),
     content: @Composable ColumnScope.() -> Unit
 ) {
     var isFullyDismissed by remember { mutableStateOf(!visible) }
@@ -122,7 +124,8 @@ fun HyperDialog(
                         .hyperGlassSurface(
                             containerColor = colors.containerColor,
                             shape = shape,
-                            elevation = elevation
+                            elevation = elevation,
+                            border = border
                         )
                         .padding(contentPadding),
                     horizontalAlignment = horizontalAlignment,
@@ -234,4 +237,7 @@ object HyperDialogDefaults {
             fallbackColor = HyperColors.elevatedContainer
         )
     )
+
+    @Composable
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
 }

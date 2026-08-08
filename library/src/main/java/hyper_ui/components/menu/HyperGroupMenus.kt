@@ -3,6 +3,7 @@ package hyper_ui
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -68,6 +69,12 @@ fun HyperGroupMenuItem(
         selected -> colors.selectedContentColor
         else -> colors.unselectedContentColor
     }
+    val defaultBorderColor = HyperColors.fieldBorder
+    val targetBorderColor = when {
+        selected -> Color.Transparent
+        enabled -> defaultBorderColor
+        else -> defaultBorderColor.copy(alpha = defaultBorderColor.alpha * 0.72f)
+    }
     val containerColor by animateColorAsState(
         targetValue = targetContainerColor,
         animationSpec = spring(
@@ -84,6 +91,14 @@ fun HyperGroupMenuItem(
         ),
         label = "hyperGroupMenuItemContent"
     )
+    val borderColor by animateColorAsState(
+        targetValue = targetBorderColor,
+        animationSpec = spring(
+            stiffness = Spring.StiffnessMedium,
+            dampingRatio = Spring.DampingRatioNoBouncy
+        ),
+        label = "hyperGroupMenuItemBorder"
+    )
     val scope = HyperGroupMenusItemScope(selected = selected, enabled = enabled)
 
     Row(
@@ -91,7 +106,11 @@ fun HyperGroupMenuItem(
             .heightIn(min = minHeight)
             .hyperGlassSurface(
                 containerColor = containerColor,
-                shape = shape
+                shape = shape,
+                border = BorderStroke(
+                    width = HyperGroupMenusDefaults.ItemBorderWidth,
+                    color = borderColor
+                )
             )
             .hyperNoRippleClickable(
                 enabled = enabled,
@@ -148,6 +167,7 @@ object HyperGroupMenusDefaults {
     val ItemGap = 8.dp
     val ItemContentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
     val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    val ItemBorderWidth = 1.dp
     val Shape: Shape = RoundedCornerShape(percent = 50)
 
     @Composable

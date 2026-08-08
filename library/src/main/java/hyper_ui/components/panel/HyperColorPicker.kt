@@ -1,6 +1,8 @@
 package hyper_ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +37,7 @@ object HyperColorPickerDefaults {
     val horizontalSpacing = 10.dp
     val verticalSpacing = 14.dp
     val labelTopSpacing = 5.dp
+    val colorBorderWidth = 1.dp
 
     val presetOptions: List<HyperColorOption> = listOf(
         HyperColorOption("classic_red", "经典红", rgba(231, 76, 60, 1f)),
@@ -137,7 +140,14 @@ private fun ColorPickItem(
                 modifier = Modifier
                     .size(colorSize)
                     .clip(CircleShape)
-                    .background(option.color),
+                    .background(option.color)
+                    .border(
+                        border = BorderStroke(
+                            width = HyperColorPickerDefaults.colorBorderWidth,
+                            color = HyperColors.fieldBorder
+                        ),
+                        shape = CircleShape
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 if (selected) {

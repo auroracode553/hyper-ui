@@ -26,7 +26,7 @@ fun HyperMenuGroup(
     colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
     shape: Shape = HyperMenuGroupDefaults.Shape,
     elevation: Dp = HyperMenuGroupDefaults.Elevation,
-    border: BorderStroke? = null,
+    border: BorderStroke? = HyperMenuGroupDefaults.border(),
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
@@ -84,4 +84,7 @@ object HyperMenuGroupDefaults {
             fallbackColor = HyperColors.elevatedContainer
         )
     )
+
+    @Composable
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
 }

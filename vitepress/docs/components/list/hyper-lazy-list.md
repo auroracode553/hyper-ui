@@ -5,7 +5,7 @@
 - 状态归属：调用方提供列表数据
 - Preview ID：`lazy_list`
 
-基于 `LazyColumn` 的懒加载列表，适合数量较多或动态变化的数据。列表自动计算首尾圆角与卡片背景。
+基于 `LazyColumn` 的懒加载列表，适合数量较多或动态变化的数据。列表自动计算首尾圆角、卡片背景与外层轻描边。
 
 ## 公开签名
 
@@ -17,8 +17,20 @@ fun <T> HyperLazyList(
     key: ((item: T) -> Any)? = null,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
+    border: BorderStroke? = HyperListDefaults.border(),
     itemContent: @Composable (item: T) -> Unit
 )
+```
+
+## 关键公开类型
+
+```kotlin
+object HyperListDefaults {
+    val Shape: Shape
+
+    @Composable
+    fun border(color: Color = Color.Unspecified): BorderStroke
+}
 ```
 
 ## 参数
@@ -30,6 +42,7 @@ fun <T> HyperLazyList(
 | `key` | `((T) -> Any)?` | `null` | 可选稳定键，动态列表建议提供 |
 | `contentPadding` | `PaddingValues` | `PaddingValues(0.dp)` | 列表内容内边距 |
 | `verticalArrangement` | `Arrangement.Vertical` | 间距 `0.dp` | 条目纵向排列 |
+| `border` | `BorderStroke?` | `HyperListDefaults.border()` | 列表外层描边；传 `null` 可关闭 |
 | `itemContent` | `@Composable (T) -> Unit` | 必填 | 每项内容，只接收当前项目，不接收索引 |
 
 ## 最小用法
@@ -54,8 +67,9 @@ fun AccountList(accounts: List<String>) {
 ## 约束
 
 - `itemContent` 的参数是项目本身，不是索引。
-- 首尾圆角与项目背景由列表自动处理，不要在每项重复计算外层形状。
+- 首尾圆角、项目背景与外层描边由列表自动处理，不要在每项重复计算外层形状。
 - 分割线仍由条目内容决定；使用 `HyperListItem.dividerVisible` 时由调用方根据业务数据设置。
+- 默认描边来自 `HyperListDefaults.border()`，内部使用 `HyperColors.panelBorder`。
 - 少量、固定数据可使用 [HyperList](hyper-list.md)。
 
 ## 交互预览
