@@ -37,11 +37,8 @@ export default defineConfig({
       message: '基于 Compose Multiplatform 构建的跨平台 UI 组件库',
       copyright: `Copyright © ${currentYear} HyperUI`
     },
-    nav: [
-      { text: '指南', link: '/getting-started' },
-      { text: '组件', link: '/component-index' },
-      { text: '交互预览', link: '/preview' }
-    ],
+    // top navigation removed because the sidebar already provides menu navigation
+    nav: [],
     sidebar: [
       {
         text: '开始使用',
