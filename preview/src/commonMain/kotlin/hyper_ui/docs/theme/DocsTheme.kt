@@ -1,3 +1,4 @@
+/** 文件职责：在 hyper_ui 中负责维护 preview/src/commonMain/kotlin/hyper_ui/docs/theme/DocsTheme 的主题、样式与布局规范。 */
 package hyper_ui.docs.theme
 
 import hyper_ui.*

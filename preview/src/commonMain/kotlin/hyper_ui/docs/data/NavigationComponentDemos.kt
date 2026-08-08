@@ -1,3 +1,4 @@
+/** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/data/NavigationComponentDemos 可复用界面组件及交互封装。 */
 package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.BottomBarDemo

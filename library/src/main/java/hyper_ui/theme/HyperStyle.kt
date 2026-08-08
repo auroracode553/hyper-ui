@@ -1,3 +1,4 @@
+/** 文件职责：在 hyper_ui 中负责维护 library/src/main/java/hyper_ui/theme/HyperStyle 的主题、样式与布局规范。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke

@@ -1,3 +1,4 @@
+<!-- 文件职责：在 hyper_ui 中负责实现 vitepress/.vitepress/theme/components/WasmPreview 页面展示、状态呈现与用户交互编排。 -->
 <script setup lang="ts">
 import { withBase } from 'vitepress'
 import { computed } from 'vue'

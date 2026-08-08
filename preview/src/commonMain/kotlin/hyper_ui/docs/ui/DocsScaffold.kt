@@ -1,3 +1,4 @@
+/** 文件职责：在 hyper_ui 中负责承载 preview/src/commonMain/kotlin/hyper_ui/docs/ui/DocsScaffold 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui.docs.ui
 
 import hyper_ui.*

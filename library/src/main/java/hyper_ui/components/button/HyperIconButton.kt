@@ -1,3 +1,4 @@
+/** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/button/HyperIconButton 可复用界面组件及交互封装。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
