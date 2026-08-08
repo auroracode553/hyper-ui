@@ -1,6 +1,8 @@
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,6 +23,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
@@ -74,11 +77,9 @@ fun HyperDropdownMenu(
             modifier = modifier
                 .width(width)
                 .heightIn(max = maxHeight)
-                .hyperGlassSurface(
-                    containerColor = colors.containerColor,
-                    shape = shape,
-                    border = border
-                )
+                .clip(shape)
+                .background(color = colors.containerColor, shape = shape)
+                .then(if (border != null) Modifier.border(border, shape) else Modifier)
                 .verticalScroll(rememberScrollState())
                 .padding(contentPadding)
         ) {
@@ -145,7 +146,7 @@ object HyperDropdownMenuDefaults {
     val MaxHeight = 420.dp
     val ItemHeight = 48.dp
     val AnchorOffsetY = 52.dp
-    val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
+    val Shape: Shape = RoundedCornerShape(20.dp)
     val MenuPadding = PaddingValues(vertical = 8.dp)
     val ItemPadding = PaddingValues(horizontal = 20.dp)
 
@@ -159,7 +160,7 @@ object HyperDropdownMenuDefaults {
         val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
 
         return HyperDropdownMenuColors(
-            containerColor = resolveHyperContainerColor(containerColor, HyperColors.elevatedContainer),
+            containerColor = resolveHyperContainerColor(containerColor, HyperColors.cardContainer),
             contentColor = resolvedContentColor,
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,

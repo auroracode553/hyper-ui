@@ -12,7 +12,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dropdown",
         group = GROUP_FEEDBACK,
         title = "HyperDropdownMenu",
-        description = "浮层菜单容器默认带轻描边，菜单项内容使用 slot 渲染，可配置点击后是否关闭。",
+        description = "浮层菜单容器默认使用不透明卡片面板，菜单项内容使用 slot 渲染，可配置点击后是否关闭。",
         code = """
             HyperDropdownMenu(
                 expanded = expanded,

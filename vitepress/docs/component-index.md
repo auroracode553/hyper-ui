@@ -47,7 +47,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperDropdownMenu](components/feedback/hyper-dropdown-menu.md) | Popup 浮层菜单，默认带轻描边 | 调用方提供 `expanded` |
+| [HyperDropdownMenu](components/feedback/hyper-dropdown-menu.md) | Popup 浮层菜单，默认不透明卡片面板 | 调用方提供 `expanded` |
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 线性/圆形进度指示器，线性轨道默认带轻描边 | 调用方提供 `progress` |
 | [HyperDialog](components/feedback/hyper-dialog.md) | 自定义内容弹窗，默认不透明卡片面板 | 调用方提供 `visible` 和内容状态 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | Slot-first Alert 弹窗结构，继承不透明弹窗面板 | 调用方提供 `visible` 并处理结果 |

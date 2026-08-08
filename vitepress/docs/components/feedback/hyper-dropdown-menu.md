@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/menu/HyperDropdownMenu.kt`
 - 预览：`dropdown`
 
-`HyperDropdownMenu` 是 Popup 菜单容器。菜单项内容使用 slot 渲染，组件只负责浮层、尺寸、滚动、点击关闭和分割线；菜单面板默认带 1dp 轻描边。
+`HyperDropdownMenu` 是 Popup 菜单容器。菜单项内容使用 slot 渲染，组件只负责浮层、尺寸、滚动、点击关闭和分割线；菜单面板默认使用不透明卡片背景、20dp 圆角和 1dp 轻描边，避免页面内容透到菜单内部。
 
 ## 公开签名
 
@@ -45,6 +45,20 @@ class HyperDropdownMenuScope {
 
 ```kotlin
 object HyperDropdownMenuDefaults {
+    val MenuWidth = 184.dp
+    val MaxHeight = 420.dp
+    val ItemHeight = 48.dp
+    val AnchorOffsetY = 52.dp
+    val Shape: Shape = RoundedCornerShape(20.dp)
+    val MenuPadding = PaddingValues(vertical = 8.dp)
+    val ItemPadding = PaddingValues(horizontal = 20.dp)
+    @Composable
+    fun colors(
+        containerColor: Color = Color.Unspecified,
+        contentColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified,
+        dividerColor: Color = Color.Unspecified
+    ): HyperDropdownMenuColors
     @Composable
     fun border(color: Color = Color.Unspecified): BorderStroke
 }
@@ -74,6 +88,7 @@ HyperDropdownMenu(
 - 不存在 `text`、`leadingIcon`、`textColor` 参数。
 - 菜单不渲染遮罩。
 - 如果点击菜单项后不希望关闭，设置 `closeOnClick = false`。
+- 默认背景来自 `HyperDropdownMenuDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.cardContainer`，保持不透明卡片效果。
 - 默认描边来自 `HyperDropdownMenuDefaults.border()`，内部使用 `HyperColors.panelBorder`；如需无边框，传入 `border = null`。
 
 <WasmPreview demo="dropdown" title="HyperDropdownMenu 交互预览" />
