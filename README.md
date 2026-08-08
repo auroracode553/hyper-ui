@@ -156,7 +156,7 @@ fun App() {
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
 - `HyperDialog` 正文内容由 slot 渲染，长内容在内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。默认从屏幕居中弹出，带淡入+缩放动画，无遮罩，面板有阴影浮层效果；弹窗内容会隔离外层文本选择容器，支持放入输入框。
-- 组件内部只处理焦点、动画、禁用透明度、视觉反馈等 UI 状态。
+- 组件内部只处理焦点、动画、禁用透明度、视觉反馈等 UI 状态；`HyperTextField` 聚焦时不改变容器背景。
 
 示例：
 

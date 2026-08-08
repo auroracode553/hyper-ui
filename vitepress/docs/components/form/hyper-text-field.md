@@ -75,6 +75,7 @@ HyperTextField(
 
 - 不存在 `label`、`placeholder`、`errorText` 字符串参数；可见文本全部通过 slot 渲染。
 - `inputModifier` 用于传入 `focusRequester` 等需要作用在 `BasicTextField` 上的修饰符。
+- 聚焦时不改变输入框容器背景；容器只区分普通、错误和禁用状态。
 - 错误态通过 `isError` 和 `supportingContent` 组合表达。
 
 <WasmPreview demo="text_field" title="HyperTextField 交互预览" />

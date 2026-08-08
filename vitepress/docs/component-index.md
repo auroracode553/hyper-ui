@@ -13,7 +13,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperTextField](components/form/hyper-text-field.md) | 文本输入 | 调用方提供 `value` |
+| [HyperTextField](components/form/hyper-text-field.md) | 文本输入，聚焦不改变容器背景 | 调用方提供 `value` |
 | [HyperSwitch](components/form/hyper-switch.md) | 开关 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选项 | 调用方提供 `checked` |
 | [HyperRadioButton](components/form/hyper-radio-button.md) | 单选项 | 调用方提供 `selected` |

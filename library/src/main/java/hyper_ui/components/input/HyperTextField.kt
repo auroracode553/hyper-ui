@@ -1,7 +1,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -19,7 +18,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,9 +59,7 @@ fun HyperTextField(
     trailingContent: (@Composable RowScope.() -> Unit)? = null,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null
 ) {
-    val focused by interactionSource.collectIsFocusedAsState()
     val visuals = hyperInputFieldVisuals(
-        focused = focused,
         enabled = enabled,
         isError = isError,
         colors = colors
@@ -158,7 +154,6 @@ object HyperTextFieldDefaults {
     @Composable
     fun colors(
         containerColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
-        focusedContainerColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
         errorContainerColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
         contentColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
         placeholderColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
@@ -175,10 +170,6 @@ object HyperTextFieldDefaults {
 
         return HyperTextFieldColors(
             containerColor = resolveHyperContainerColor(containerColor, HyperColors.elevatedContainer),
-            focusedContainerColor = resolveHyperContainerColor(
-                focusedContainerColor,
-                HyperColors.accent.copy(alpha = 0.14f)
-            ),
             errorContainerColor = resolveHyperContainerColor(
                 errorContainerColor,
                 resolvedErrorColor.copy(alpha = 0.12f)

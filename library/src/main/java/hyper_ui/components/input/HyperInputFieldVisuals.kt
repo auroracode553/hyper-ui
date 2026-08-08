@@ -7,7 +7,6 @@ import androidx.compose.ui.graphics.Color
 @Immutable
 data class HyperTextFieldColors(
     val containerColor: Color,
-    val focusedContainerColor: Color,
     val errorContainerColor: Color,
     val contentColor: Color,
     val placeholderColor: Color,
@@ -30,7 +29,6 @@ internal data class HyperInputFieldVisuals(
 
 @Composable
 internal fun hyperInputFieldVisuals(
-    focused: Boolean,
     enabled: Boolean,
     isError: Boolean,
     colors: HyperTextFieldColors
@@ -38,7 +36,6 @@ internal fun hyperInputFieldVisuals(
     val containerColor = when {
         !enabled -> colors.disabledContainerColor
         isError -> colors.errorContainerColor
-        focused -> colors.focusedContainerColor
         else -> colors.containerColor
     }
 
