@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
 @Immutable
-data class HyperChipColors(
+data class HyperGroupMenusColors(
     val selectedContainerColor: Color,
     val unselectedContainerColor: Color,
     val selectedContentColor: Color,
@@ -35,23 +35,28 @@ data class HyperChipColors(
     val disabledContentColor: Color
 )
 
-class HyperChipScope internal constructor(
+class HyperGroupMenusItemScope internal constructor(
     val selected: Boolean,
     val enabled: Boolean
 )
 
+/**
+ * 分组菜单单项容器。
+ *
+ * UI 库只负责选中/禁用视觉、点击边界和基础布局；文字、计数、图标等业务内容由 content slot 渲染。
+ */
 @Composable
-fun HyperChip(
+fun HyperGroupMenuItem(
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = HyperChipDefaults.Shape,
-    minHeight: androidx.compose.ui.unit.Dp = HyperChipDefaults.MinHeight,
-    contentPadding: PaddingValues = HyperChipDefaults.ContentPadding,
-    colors: HyperChipColors = HyperChipDefaults.colors(),
+    shape: Shape = HyperGroupMenusDefaults.Shape,
+    minHeight: androidx.compose.ui.unit.Dp = HyperGroupMenusDefaults.MinHeight,
+    contentPadding: PaddingValues = HyperGroupMenusDefaults.ItemContentPadding,
+    colors: HyperGroupMenusColors = HyperGroupMenusDefaults.colors(),
     role: Role = Role.Tab,
-    content: @Composable HyperChipScope.() -> Unit
+    content: @Composable HyperGroupMenusItemScope.() -> Unit
 ) {
     val targetContainerColor = when {
         !enabled -> colors.disabledContainerColor
@@ -69,7 +74,7 @@ fun HyperChip(
             stiffness = Spring.StiffnessMedium,
             dampingRatio = Spring.DampingRatioNoBouncy
         ),
-        label = "hyperChipContainer"
+        label = "hyperGroupMenuItemContainer"
     )
     val contentColor by animateColorAsState(
         targetValue = targetContentColor,
@@ -77,9 +82,9 @@ fun HyperChip(
             stiffness = Spring.StiffnessMedium,
             dampingRatio = Spring.DampingRatioNoBouncy
         ),
-        label = "hyperChipContent"
+        label = "hyperGroupMenuItemContent"
     )
-    val scope = HyperChipScope(selected = selected, enabled = enabled)
+    val scope = HyperGroupMenusItemScope(selected = selected, enabled = enabled)
 
     Row(
         modifier = modifier
@@ -95,7 +100,7 @@ fun HyperChip(
             )
             .padding(contentPadding),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(HyperChipDefaults.ContentGap)
+        horizontalArrangement = Arrangement.spacedBy(HyperGroupMenusDefaults.ItemContentGap)
     ) {
         CompositionLocalProvider(LocalContentColor provides contentColor) {
             scope.content()
@@ -103,15 +108,21 @@ fun HyperChip(
     }
 }
 
+/**
+ * 横向分组菜单。
+ *
+ * 典型用于页面顶部分类、筛选分组或同级视图切换；组件不内置 label/count 模型，业务内容通过 itemContent slot 传入。
+ */
 @Composable
-fun <T> HyperChipRow(
+fun <T> HyperGroupMenus(
     items: List<T>,
-    selectedItem: T?,
+    selectedItem: T,
     onSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = HyperChipDefaults.RowPadding,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperChipDefaults.RowGap),
-    chipContent: @Composable HyperChipScope.(item: T) -> Unit
+    contentPadding: PaddingValues = HyperGroupMenusDefaults.ContentPadding,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperGroupMenusDefaults.ItemGap),
+    itemEnabled: (T) -> Boolean = { true },
+    itemContent: @Composable HyperGroupMenusItemScope.(item: T) -> Unit
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -119,22 +130,24 @@ fun <T> HyperChipRow(
         horizontalArrangement = horizontalArrangement
     ) {
         items(items) { item ->
-            HyperChip(
+            val enabled = itemEnabled(item)
+            HyperGroupMenuItem(
                 selected = item == selectedItem,
+                enabled = enabled,
                 onClick = { onSelected(item) }
             ) {
-                chipContent(item)
+                itemContent(item)
             }
         }
     }
 }
 
-object HyperChipDefaults {
+object HyperGroupMenusDefaults {
     val MinHeight = 32.dp
-    val ContentGap = 6.dp
-    val RowGap = 8.dp
-    val ContentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
-    val RowPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    val ItemContentGap = 6.dp
+    val ItemGap = 8.dp
+    val ItemContentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+    val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     val Shape: Shape = RoundedCornerShape(percent = 50)
 
     @Composable
@@ -145,13 +158,13 @@ object HyperChipDefaults {
         unselectedContentColor: Color = Color.Unspecified,
         disabledContainerColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
-    ): HyperChipColors {
+    ): HyperGroupMenusColors {
         val resolvedUnselectedContentColor = resolveHyperContainerColor(
             unselectedContentColor,
             HyperColors.primaryText
         )
 
-        return HyperChipColors(
+        return HyperGroupMenusColors(
             selectedContainerColor = resolveHyperContainerColor(selectedContainerColor, HyperColors.accent),
             unselectedContainerColor = resolveHyperContainerColor(
                 unselectedContainerColor,

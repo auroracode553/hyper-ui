@@ -17,7 +17,6 @@
 | [HyperSwitch](components/form/hyper-switch.md) | 开关 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选项 | 调用方提供 `checked` |
 | [HyperRadioButton](components/form/hyper-radio-button.md) | 单选项 | 调用方提供 `selected` |
-| [HyperChip](components/form/hyper-chip.md) | Slot-first 标签与标签栏 | 调用方提供 `selectedItem` |
 
 ## 容器组件
 
@@ -32,6 +31,7 @@
 | --- | --- | --- |
 | [HyperTopBar](components/navigation/hyper-top-bar.md) | 顶部栏三段 slot 容器 | 调用方处理事件 |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 四方向 slot 抽屉 | 调用方提供 `open` 与选中态 |
+| [HyperGroupMenus](components/navigation/hyper-group-menus.md) | 横向分组菜单 | 调用方提供 `selectedItem` |
 | [HyperBottomBar](components/navigation/hyper-bottom-bar.md) | 泛型底部栏容器 | 调用方处理选择与导航 |
 
 ## 列表组件

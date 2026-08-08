@@ -2,6 +2,7 @@ package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.BottomBarDemo
 import hyper_ui.docs.ui.DrawerDemo
+import hyper_ui.docs.ui.GroupMenusDemo
 import hyper_ui.docs.ui.TopBarDemo
 
 private const val GROUP_NAVIGATION = "导航组件"
@@ -59,6 +60,22 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         content = { DrawerDemo() }
+    ),
+    ComponentDemo(
+        id = "group-menus",
+        group = GROUP_NAVIGATION,
+        title = "HyperGroupMenus",
+        description = "横向分组菜单。组件只负责选中态、点击和滚动布局，菜单文字、计数或图标由 item slot 渲染。",
+        code = """
+            HyperGroupMenus(
+                items = categories,
+                selectedItem = selected,
+                onSelected = { selected = it }
+            ) { item ->
+                Text(item)
+            }
+        """.trimIndent(),
+        content = { GroupMenusDemo() }
     ),
     ComponentDemo(
         id = "bottom-bar",

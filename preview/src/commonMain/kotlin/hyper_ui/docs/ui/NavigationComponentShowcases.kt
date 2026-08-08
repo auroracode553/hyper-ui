@@ -45,6 +45,7 @@ import hyper_ui.HyperDrawer
 import hyper_ui.HyperDrawerHeader
 import hyper_ui.HyperDrawerItem
 import hyper_ui.HyperDrawerPosition
+import hyper_ui.HyperGroupMenus
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
 import hyper_ui.HyperPanel
@@ -216,6 +217,34 @@ fun DrawerDemo() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun GroupMenusDemo() {
+    val categories = remember {
+        listOf("全部", "恶意网址", "广告", "恶意跳转", "打开应用")
+    }
+    var selected by remember { mutableStateOf("全部") }
+
+    Column(
+        modifier = Modifier.widthIn(max = 520.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // 示例只把分类文本交给 slot；组件本身不拥有分类、计数或业务筛选规则。
+        HyperGroupMenus(
+            items = categories,
+            selectedItem = selected,
+            onSelected = { selected = it }
+        ) { item ->
+            Text(text = item, fontSize = 13.sp)
+        }
+        Text(
+            text = "当前选中：$selected",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
+            lineHeight = 18.sp
+        )
     }
 }
 

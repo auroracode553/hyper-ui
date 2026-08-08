@@ -1,7 +1,6 @@
 package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.CheckboxDemo
-import hyper_ui.docs.ui.FilterChipDemo
 import hyper_ui.docs.ui.RadioDemo
 import hyper_ui.docs.ui.SearchFieldDemo
 import hyper_ui.docs.ui.SwitchDemo
@@ -89,21 +88,5 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         content = { SwitchDemo() }
-    ),
-    ComponentDemo(
-        id = "chip",
-        group = GROUP_FORM,
-        title = "HyperChip",
-        description = "Slot-first Chip 和横向 ChipRow，chip 内文字、计数或图标均由调用方传入。",
-        code = """
-            HyperChipRow(
-                items = categories,
-                selectedItem = selected,
-                onSelected = { selected = it }
-            ) { item ->
-                Text(item)
-            }
-        """.trimIndent(),
-        content = { FilterChipDemo() }
     )
 )

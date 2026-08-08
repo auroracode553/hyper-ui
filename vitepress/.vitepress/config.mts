@@ -67,8 +67,7 @@ export default defineConfig({
           { text: 'HyperTextField', link: '/components/form/hyper-text-field' },
           { text: 'HyperSwitch', link: '/components/form/hyper-switch' },
           { text: 'HyperCheckbox', link: '/components/form/hyper-checkbox' },
-          { text: 'HyperRadioButton', link: '/components/form/hyper-radio-button' },
-          { text: 'HyperChip', link: '/components/form/hyper-chip' }
+          { text: 'HyperRadioButton', link: '/components/form/hyper-radio-button' }
         ]
       },
       {
@@ -83,6 +82,7 @@ export default defineConfig({
         items: [
           { text: 'HyperTopBar', link: '/components/navigation/hyper-top-bar' },
           { text: 'HyperDrawer', link: '/components/navigation/hyper-drawer' },
+          { text: 'HyperGroupMenus', link: '/components/navigation/hyper-group-menus' },
           { text: 'HyperBottomBar', link: '/components/navigation/hyper-bottom-bar' }
         ]
       },
