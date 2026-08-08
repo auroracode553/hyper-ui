@@ -26,9 +26,8 @@ kotlin-js-store/
 
 # VitePress 相关
 node_modules
-components-tmp
-.vitepress/cache/
-.vitepress/dist/
+**/.vitepress/cache/
+**/.vitepress/dist/
 
 # 日志
 *.log
