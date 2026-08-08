@@ -28,6 +28,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -43,6 +45,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -57,6 +62,7 @@ data class HyperDialogColors(
 fun HyperDialog(
     visible: Boolean,
     onDismissRequest: () -> Unit,
+    title: String? = null,
     modifier: Modifier = Modifier,
     minWidth: Dp = HyperDialogDefaults.MinWidth,
     maxWidth: Dp = HyperDialogDefaults.MaxWidth,
@@ -89,6 +95,7 @@ fun HyperDialog(
         return
     }
 
+    val resolvedTitle = title?.trim()?.takeIf { it.isNotEmpty() }
     val scrollState = rememberScrollState()
     val animationProgress = remember { Animatable(0f) }
 
@@ -132,6 +139,10 @@ fun HyperDialog(
                     verticalArrangement = Arrangement.spacedBy(HyperDialogDefaults.ContentSpacing)
                 ) {
                     CompositionLocalProvider(LocalContentColor provides HyperColors.primaryText) {
+                        if (resolvedTitle != null) {
+                            HyperDialogTitle(title = resolvedTitle)
+                        }
+
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -174,6 +185,20 @@ fun HyperDialog(
             }
         }
     }
+}
+
+@Composable
+private fun HyperDialogTitle(title: String) {
+    Text(
+        text = title,
+        modifier = Modifier.fillMaxWidth(),
+        color = HyperColors.primaryText,
+        style = MaterialTheme.typography.titleLarge,
+        fontWeight = FontWeight.SemiBold,
+        textAlign = TextAlign.Center,
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis
+    )
 }
 
 @Composable

@@ -210,7 +210,7 @@ fun DialogDemo() {
     HyperAlertDialog(
         visible = showDialog,
         onDismissRequest = { showDialog = false },
-        titleContent = { DialogTitle("确认删除") },
+        title = "确认删除",
         bodyContent = { DialogBody("删除后无法恢复，是否继续？") },
         actionContent = {
             HyperButton(
@@ -267,6 +267,7 @@ fun HyperDialogDemo() {
     HyperDialog(
         visible = showDialog,
         onDismissRequest = { showDialog = false },
+        title = "编辑备注",
         horizontalAlignment = Alignment.Start,
         actionContent = {
             HyperButton(
@@ -297,14 +298,7 @@ private fun ColumnScope.dialogContent(
     onValueChange: (String) -> Unit
 ) {
     Text(
-        text = "编辑备注",
-        color = MaterialTheme.colorScheme.onSurface,
-        fontSize = 18.sp,
-        fontWeight = FontWeight.SemiBold,
-        lineHeight = 24.sp
-    )
-    Text(
-        text = "标题、输入框和按钮均由调用方通过 slot 传入。",
+        text = "标题固定在顶部，正文内容和输入框在中间区域滚动。",
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         fontSize = 13.sp,
         lineHeight = 18.sp
@@ -325,19 +319,6 @@ private fun ColumnScope.dialogContent(
         minLines = 3,
         maxLines = 6,
         minHeight = 88.dp
-    )
-}
-
-@Composable
-private fun DialogTitle(text: String) {
-    Text(
-        text = text,
-        color = MaterialTheme.colorScheme.onSurface,
-        fontSize = 20.sp,
-        lineHeight = 26.sp,
-        fontWeight = FontWeight.Bold,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth()
     )
 }
 

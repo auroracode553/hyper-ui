@@ -44,7 +44,8 @@ var showDialog by remember { mutableStateOf(false) }
 
 HyperDialog(
     visible = showDialog,
-    onDismissRequest = { showDialog = false }
+    onDismissRequest = { showDialog = false },
+    title = "编辑"
 ) {
     // 内容
 }

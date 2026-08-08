@@ -155,7 +155,7 @@ fun App() {
 - 组件不持有业务状态。
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
-- `HyperDialog` 正文内容由 slot 渲染，长内容在内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。默认以 92% 屏宽从屏幕居中弹出，带淡入+缩放动画，无遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 轻描边；slot 内容默认继承深浅色自适应文字色，支持放入输入框。
+- `HyperDialog` 标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。默认以 92% 屏宽从屏幕居中弹出，带淡入+缩放动画，无遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 轻描边；slot 内容默认继承深浅色自适应文字色，支持放入输入框。
 - 组件内部只处理焦点、动画、禁用透明度和描边等视觉反馈 UI 状态；`HyperTextField` 聚焦时不改变容器背景。
 
 示例：

@@ -27,6 +27,7 @@ fun EditNoteAction() {
     HyperDialog(
         visible = showDialog,
         onDismissRequest = { showDialog = false },
+        title = "编辑备注",
         actionContent = {
             HyperButton(
                 tone = HyperButtonTone.Outline,

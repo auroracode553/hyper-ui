@@ -14,26 +14,21 @@ import androidx.compose.ui.unit.dp
 fun HyperAlertDialog(
     visible: Boolean,
     onDismissRequest: () -> Unit,
+    title: String? = null,
     modifier: Modifier = Modifier,
-    titleContent: (@Composable ColumnScope.() -> Unit)? = null,
     bodyContent: (@Composable ColumnScope.() -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null
 ) {
     HyperDialog(
         visible = visible,
         onDismissRequest = onDismissRequest,
+        title = title,
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         actionContent = actionContent
     ) {
         val dialogColumnScope = this
-
-        titleContent?.let { title ->
-            CompositionLocalProvider(LocalContentColor provides HyperColors.primaryText) {
-                title.invoke(dialogColumnScope)
-            }
-        }
 
         bodyContent?.let { body ->
             CompositionLocalProvider(LocalContentColor provides HyperColors.secondaryText) {

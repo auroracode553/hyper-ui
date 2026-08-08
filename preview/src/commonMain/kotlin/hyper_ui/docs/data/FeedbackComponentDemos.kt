@@ -48,17 +48,17 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "基础对话框容器默认使用不透明卡片面板，只负责浮层、尺寸、滚动内容和底部 action slot，无遮罩。",
+        description = "基础对话框容器默认使用不透明卡片面板；title 存在时固定在顶部，未提供时不占标题空间，正文滚动，底部 action 固定。",
         code = """
             HyperDialog(
                 visible = visible,
                 onDismissRequest = onDismiss,
+                title = "编辑备注",
                 actionContent = {
                     HyperButton(onClick = onCancel) { Text("取消") }
                     HyperButton(onClick = onSave) { Text("保存") }
                 }
             ) {
-                Text("编辑备注")
                 HyperTextField(
                     value = value,
                     onValueChange = onValueChange
@@ -71,12 +71,12 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dialog",
         group = GROUP_FEEDBACK,
         title = "HyperAlertDialog",
-        description = "Alert 结构化对话框继承默认不透明卡片面板。标题、正文和按钮均为 slot。",
+        description = "Alert 结构化对话框通过可选 title 属性固定标题；未提供时不占标题空间，正文和按钮均为 slot。",
         code = """
             HyperAlertDialog(
                 visible = visible,
                 onDismissRequest = onDismiss,
-                titleContent = { Text("确认删除") },
+                title = "确认删除",
                 bodyContent = { Text("删除后无法恢复，是否继续？") },
                 actionContent = {
                     HyperButton(onClick = onDismiss) { Text("取消") }
