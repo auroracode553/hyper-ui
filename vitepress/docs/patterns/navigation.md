@@ -1,6 +1,6 @@
 # 底部导航
 
-`HyperBottomBar` 不依赖任何导航框架。它报告被点击的项目，由调用方更新选中项并决定是否导航。
+`HyperBottomBar` 不依赖任何导航框架。需要完全自定义按钮、徽标、输入框或快捷功能时，直接使用完整内容 slot；需要统一处理项目点击和选中颜色时，可使用泛型 items 入口。
 
 ```kotlin
 import androidx.compose.material.icons.Icons

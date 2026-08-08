@@ -2,9 +2,11 @@ package hyper_ui.docs.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -285,34 +287,52 @@ fun BottomBarDemo() {
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "HyperBottomBar 只负责容器、布局、点击和选中颜色；图标文字由 item slot 决定。",
+                        text = "HyperBottomBar 可以只负责底栏容器，按钮布局、选中态和点击逻辑都由调用方在 slot 中组合。",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     )
                 }
                 HyperBottomBar(
-                    items = bottomItems,
-                    itemSelected = { it.id == selectedItemId },
-                    onItemClick = { item -> selectedItemId = item.id }
-                ) { item ->
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.label,
-                            tint = LocalContentColor.current,
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = item.label,
-                            color = LocalContentColor.current,
-                            fontSize = 12.sp,
-                            lineHeight = 14.sp,
-                            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
-                        )
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    bottomItems.forEach { item ->
+                        val selected = item.id == selectedItemId
+                        val itemColor = if (selected) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            LocalContentColor.current
+                        }
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(64.dp)
+                                .clip(RoundedCornerShape(18.dp))
+                                .background(
+                                    if (selected) {
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+                                    } else {
+                                        androidx.compose.ui.graphics.Color.Transparent
+                                    }
+                                )
+                                .clickable { selectedItemId = item.id },
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.label,
+                                tint = itemColor,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = item.label,
+                                color = itemColor,
+                                fontSize = 12.sp,
+                                lineHeight = 14.sp,
+                                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+                            )
+                        }
                     }
                 }
             }

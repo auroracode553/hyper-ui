@@ -44,6 +44,49 @@ class HyperBottomBarItemScope internal constructor(
 )
 
 @Composable
+fun HyperBottomBar(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    height: Dp = HyperBottomBarDefaults.Height,
+    contentHeight: Dp = HyperBottomBarDefaults.ContentHeight,
+    contentPadding: PaddingValues = HyperBottomBarDefaults.ContentPadding,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    shape: Shape = HyperBottomBarDefaults.Shape,
+    border: BorderStroke? = null,
+    colors: HyperBottomBarColors = HyperBottomBarDefaults.colors(),
+    content: @Composable RowScope.() -> Unit
+) {
+    val contentColor = if (enabled) {
+        colors.unselectedContentColor
+    } else {
+        colors.disabledContentColor
+    }
+
+    HyperBottomBarSurface(
+        modifier = modifier,
+        height = height,
+        shape = shape,
+        border = border,
+        colors = colors
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(contentHeight)
+                .padding(contentPadding),
+            horizontalArrangement = horizontalArrangement,
+            verticalAlignment = verticalAlignment
+        ) {
+            // Slot 模式只提供底栏外壳和默认内容色；具体点击、选中与禁用逻辑由调用方组合。
+            CompositionLocalProvider(LocalContentColor provides contentColor) {
+                content()
+            }
+        }
+    }
+}
+
+@Composable
 fun <T> HyperBottomBar(
     items: List<T>,
     onItemClick: (T) -> Unit,
@@ -63,6 +106,77 @@ fun <T> HyperBottomBar(
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperBottomBarItemScope.(item: T) -> Unit
 ) {
+    HyperBottomBar(
+        modifier = modifier,
+        enabled = enabled,
+        height = height,
+        contentHeight = contentHeight,
+        contentPadding = contentPadding,
+        horizontalArrangement = if (itemLayout == HyperBottomBarItemLayout.Equal) {
+            Arrangement.Start
+        } else {
+            horizontalArrangement
+        },
+        shape = shape,
+        border = border,
+        colors = colors
+    ) {
+        items.forEach { item ->
+            val selected = itemSelected(item)
+            val actualEnabled = enabled && itemEnabled(item)
+            val scope = HyperBottomBarItemScope(
+                selected = selected,
+                enabled = actualEnabled
+            )
+            val contentColor = when {
+                !actualEnabled -> colors.disabledContentColor
+                selected -> colors.selectedContentColor
+                else -> colors.unselectedContentColor
+            }
+
+            if (itemLayout == HyperBottomBarItemLayout.Equal) {
+                HyperBottomBarItemContainer(
+                    onClick = { onItemClick(item) },
+                    enabled = actualEnabled,
+                    contentColor = contentColor,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(contentHeight),
+                    contentAlignment = itemSlotAlignment
+                ) {
+                    Box(
+                        modifier = Modifier.width(itemWidth),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        scope.itemContent(item)
+                    }
+                }
+            } else {
+                HyperBottomBarItemContainer(
+                    onClick = { onItemClick(item) },
+                    enabled = actualEnabled,
+                    contentColor = contentColor,
+                    modifier = Modifier
+                        .width(itemWidth)
+                        .height(contentHeight),
+                    contentAlignment = itemSlotAlignment
+                ) {
+                    scope.itemContent(item)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HyperBottomBarSurface(
+    modifier: Modifier,
+    height: Dp,
+    shape: Shape,
+    border: BorderStroke?,
+    colors: HyperBottomBarColors,
+    content: @Composable BoxScope.() -> Unit
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -73,63 +187,7 @@ fun <T> HyperBottomBar(
                 border = border
             )
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(contentHeight)
-                .padding(contentPadding),
-            horizontalArrangement = if (itemLayout == HyperBottomBarItemLayout.Equal) {
-                Arrangement.Start
-            } else {
-                horizontalArrangement
-            },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            items.forEach { item ->
-                val selected = itemSelected(item)
-                val actualEnabled = enabled && itemEnabled(item)
-                val scope = HyperBottomBarItemScope(
-                    selected = selected,
-                    enabled = actualEnabled
-                )
-                val contentColor = when {
-                    !actualEnabled -> colors.disabledContentColor
-                    selected -> colors.selectedContentColor
-                    else -> colors.unselectedContentColor
-                }
-
-                if (itemLayout == HyperBottomBarItemLayout.Equal) {
-                    HyperBottomBarItemContainer(
-                        onClick = { onItemClick(item) },
-                        enabled = actualEnabled,
-                        contentColor = contentColor,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(contentHeight),
-                        contentAlignment = itemSlotAlignment
-                    ) {
-                        Box(
-                            modifier = Modifier.width(itemWidth),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            scope.itemContent(item)
-                        }
-                    }
-                } else {
-                    HyperBottomBarItemContainer(
-                        onClick = { onItemClick(item) },
-                        enabled = actualEnabled,
-                        contentColor = contentColor,
-                        modifier = Modifier
-                            .width(itemWidth)
-                            .height(contentHeight),
-                        contentAlignment = itemSlotAlignment
-                    ) {
-                        scope.itemContent(item)
-                    }
-                }
-            }
-        }
+        content()
     }
 }
 

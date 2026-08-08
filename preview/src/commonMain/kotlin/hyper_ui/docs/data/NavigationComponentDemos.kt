@@ -81,16 +81,19 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "bottom-bar",
         group = GROUP_NAVIGATION,
         title = "HyperBottomBar",
-        description = "泛型底部栏。组件只负责布局、点击和选中颜色，item 内容由调用方 slot 渲染。",
+        description = "底部栏容器。调用方可以传入完整内容 slot，也可以使用泛型 items 入口。",
         code = """
             HyperBottomBar(
-                items = bottomItems,
-                itemSelected = { it.id == selectedItemId },
-                onItemClick = { selectedItemId = it.id }
-            ) { item ->
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(item.icon, contentDescription = item.label)
-                    Text(item.label)
+                contentPadding = PaddingValues(horizontal = 16.dp)
+            ) {
+                bottomItems.forEach { item ->
+                    Column(
+                        modifier = Modifier.weight(1f).clickable { selectedItemId = item.id },
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(item.icon, contentDescription = item.label)
+                        Text(item.label)
+                    }
                 }
             }
         """.trimIndent(),

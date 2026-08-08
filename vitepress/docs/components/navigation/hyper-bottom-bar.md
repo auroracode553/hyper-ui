@@ -4,12 +4,27 @@
 - 源码：`library/src/main/java/hyper_ui/components/navigation/HyperBottomBar.kt`
 - 预览：`bottom-bar`
 
-`HyperBottomBar` 是泛型底部栏容器。组件负责底栏面板、横向布局、点击区域和选中/未选中内容色；具体图标、文字、徽标或布局由 item slot 渲染。
+`HyperBottomBar` 是底部栏容器。组件负责底栏面板与横向布局；调用方可以直接传入完整内容 slot，也可以使用泛型 items 入口让组件统一处理单项点击、选中/未选中内容色和禁用状态。
 
 ## 公开签名
 
 ```kotlin
 enum class HyperBottomBarItemLayout { Equal, Packed }
+
+@Composable
+fun HyperBottomBar(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    height: Dp = HyperBottomBarDefaults.Height,
+    contentHeight: Dp = HyperBottomBarDefaults.ContentHeight,
+    contentPadding: PaddingValues = HyperBottomBarDefaults.ContentPadding,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    shape: Shape = HyperBottomBarDefaults.Shape,
+    border: BorderStroke? = null,
+    colors: HyperBottomBarColors = HyperBottomBarDefaults.colors(),
+    content: @Composable RowScope.() -> Unit
+)
 
 @Composable
 fun <T> HyperBottomBar(
@@ -35,6 +50,24 @@ fun <T> HyperBottomBar(
 
 ## 最小用法
 
+完整内容 slot：
+
+```kotlin
+HyperBottomBar(
+    contentPadding = PaddingValues(horizontal = 16.dp)
+) {
+    HyperIconButton(onClick = onBack) {
+        Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+    }
+    Spacer(modifier = Modifier.weight(1f))
+    HyperIconButton(onClick = onMore) {
+        Icon(Icons.Default.MoreVert, contentDescription = "更多")
+    }
+}
+```
+
+泛型 items：
+
 ```kotlin
 HyperBottomBar(
     items = bottomItems,
@@ -51,7 +84,8 @@ HyperBottomBar(
 ## 约束
 
 - 不存在 `HyperBottomBarItem`、`selectedItemId`、`HyperBottomBarConfig`。
-- 页面切换和导航由调用方在 `onItemClick` 中完成。
+- 泛型 items 入口的页面切换和导航由调用方在 `onItemClick` 中完成。
+- 完整内容 slot 只提供底栏外壳和默认内容色；点击、选中、禁用与内部布局由调用方自行组合。
 - 单项可用状态由 `itemEnabled` 决定，全局禁用仍使用 `enabled`。
 - `HyperBottomBarItemScope` 暴露 `selected` 与 `enabled`，slot 可据此渲染字体、徽标或动画。
 

@@ -32,7 +32,7 @@
 | [HyperTopBar](components/navigation/hyper-top-bar.md) | 顶部栏三段 slot 容器 | 调用方处理事件 |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 四方向 slot 抽屉 | 调用方提供 `open` 与选中态 |
 | [HyperGroupMenus](components/navigation/hyper-group-menus.md) | 横向分组菜单 | 调用方提供 `selectedItem` |
-| [HyperBottomBar](components/navigation/hyper-bottom-bar.md) | 泛型底部栏容器 | 调用方处理选择与导航 |
+| [HyperBottomBar](components/navigation/hyper-bottom-bar.md) | 底部栏容器与完整内容 slot | 调用方处理内容、选择与导航 |
 
 ## 列表组件
 
