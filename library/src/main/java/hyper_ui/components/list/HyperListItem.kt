@@ -107,7 +107,8 @@ private fun HyperListItemLeadingIcon(
         modifier = Modifier
             .size(36.dp)
             .clip(RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius))
-            .background(HyperColors.accent.copy(alpha = 0.10f)),
+            .background(HyperColors.accent.copy(alpha = 0.10f))
+            .background(HyperColors.glassHighlightBrush),
         contentAlignment = Alignment.Center
     ) {
         Icon(

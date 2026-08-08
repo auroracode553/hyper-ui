@@ -197,6 +197,11 @@ fun HyperDrawerItem(
     } else {
         Color.Transparent
     }
+    val itemHighlightModifier = if (selected) {
+        Modifier.background(HyperColors.glassHighlightBrush)
+    } else {
+        Modifier
+    }
     val titleColor = if (selected) HyperColors.accent else HyperColors.primaryText
     val rowClickModifier = if (onClick != null) {
         Modifier.hyperNoRippleClickable(
@@ -215,6 +220,7 @@ fun HyperDrawerItem(
                 .padding(horizontal = 12.dp)
                 .clip(RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius))
                 .background(itemBackground)
+                .then(itemHighlightModifier)
                 .then(rowClickModifier)
                 .heightIn(min = HyperDrawerDefaults.ItemMinHeight)
                 .padding(horizontal = 12.dp, vertical = 10.dp),
@@ -274,7 +280,8 @@ private fun DrawerIconBadge(
         modifier = Modifier
             .size(42.dp)
             .clip(RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius))
-            .background(HyperColors.accent.copy(alpha = 0.12f)),
+            .background(HyperColors.accent.copy(alpha = 0.12f))
+            .background(HyperColors.glassHighlightBrush),
         contentAlignment = Alignment.Center
     ) {
         Icon(
