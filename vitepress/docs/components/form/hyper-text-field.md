@@ -5,7 +5,7 @@
 - 预览：`text_field`、`search`
 
 `HyperTextField` 是 slot-first 输入框。搜索框、地址栏、页内查找栏和普通表单输入都通过同一个组件组合；UI 库不再提供固定搜索图标或固定清空按钮。
-默认容器带 1dp 描边和轻微阴影，白色背景下也能分辨输入框边界。
+默认容器使用不透明输入背景和 1dp 描边，不叠加玻璃高光或阴影，避免内容区出现直角浅色块。
 
 ## 公开签名
 
@@ -46,7 +46,6 @@ object HyperTextFieldDefaults {
     val MinHeight = 52.dp
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
     val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 14.dp)
-    val ContainerElevation = 1.dp
     val BorderWidth = 1.dp
 }
 ```
@@ -89,8 +88,8 @@ HyperTextField(
 - 不存在 `label`、`placeholder`、`errorText` 字符串参数；可见文本全部通过 slot 渲染。
 - `inputModifier` 用于传入 `focusRequester` 等需要作用在 `BasicTextField` 上的修饰符。
 - 聚焦时不改变输入框容器背景；容器只区分普通、错误和禁用状态。
+- 默认背景来自 `HyperTextFieldDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.fieldContainer`，保持不透明输入区域。
 - 默认描边来自 `HyperColors.fieldBorder`；错误态描边使用 `errorColor` 的弱化透明度。
-- 默认阴影来自 `HyperTextFieldDefaults.ContainerElevation`，只负责白底可辨识的轻微浮起感。
 - 错误态通过 `isError` 和 `supportingContent` 组合表达。
 
 <WasmPreview demo="text_field" title="HyperTextField 交互预览" />

@@ -1,6 +1,8 @@
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
@@ -97,14 +100,14 @@ fun HyperTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = minHeight)
-                        .hyperGlassSurface(
-                            containerColor = visuals.containerColor,
-                            shape = shape,
-                            elevation = HyperTextFieldDefaults.ContainerElevation,
+                        .clip(shape)
+                        .background(color = visuals.containerColor, shape = shape)
+                        .border(
                             border = BorderStroke(
                                 width = HyperTextFieldDefaults.BorderWidth,
                                 color = visuals.borderColor
-                            )
+                            ),
+                            shape = shape
                         )
                         .padding(contentPadding),
                     verticalAlignment = verticalAlignment
@@ -156,7 +159,6 @@ object HyperTextFieldDefaults {
     val MinHeight = 52.dp
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
     val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 14.dp)
-    val ContainerElevation = 1.dp
     val BorderWidth = 1.dp
 
     @Composable
@@ -177,10 +179,10 @@ object HyperTextFieldDefaults {
         val resolvedErrorColor = resolveHyperContainerColor(errorColor, HyperColors.danger)
 
         return HyperTextFieldColors(
-            containerColor = resolveHyperContainerColor(containerColor, HyperColors.elevatedContainer),
+            containerColor = resolveHyperContainerColor(containerColor, HyperColors.fieldContainer),
             errorContainerColor = resolveHyperContainerColor(
                 errorContainerColor,
-                resolvedErrorColor.copy(alpha = 0.12f)
+                HyperColors.fieldContainer
             ),
             contentColor = resolvedContentColor,
             placeholderColor = resolvedPlaceholderColor,
@@ -190,7 +192,7 @@ object HyperTextFieldDefaults {
             cursorColor = resolveHyperContainerColor(cursorColor, HyperColors.accent),
             disabledContainerColor = resolveHyperContainerColor(
                 disabledContainerColor,
-                HyperColors.elevatedContainer.copy(alpha = 0.72f)
+                HyperColors.fieldContainer
             ),
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,

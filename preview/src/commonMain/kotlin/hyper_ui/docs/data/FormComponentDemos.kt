@@ -39,7 +39,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "text_field",
         group = GROUP_FORM,
         title = "HyperTextField",
-        description = "Slot-first 输入框，默认带轻描边和阴影，label、placeholder、supporting、leading、trailing 均由调用方渲染。",
+        description = "Slot-first 输入框，默认使用不透明输入背景和轻描边，label、placeholder、supporting、leading、trailing 均由调用方渲染。",
         code = """
             HyperTextField(
                 value = value,
