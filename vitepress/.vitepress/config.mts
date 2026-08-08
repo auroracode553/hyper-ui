@@ -88,8 +88,7 @@ export default defineConfig({
         items: [
           { text: 'HyperLazyList', link: '/components/list/hyper-lazy-list' },
           { text: 'HyperList', link: '/components/list/hyper-list' },
-          { text: 'HyperListItem', link: '/components/list/hyper-list-item' },
-          { text: 'HyperMenuGroup', link: '/components/list/hyper-menu-group' }
+          { text: 'HyperListItem', link: '/components/list/hyper-list-item' }
         ]
       },
       {

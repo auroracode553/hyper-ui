@@ -31,7 +31,6 @@
 - [HyperLazyList](./components/list/hyper-lazy-list.html)
 - [HyperList](./components/list/hyper-list.html)
 - [HyperListItem](./components/list/hyper-list-item.html)
-- [HyperMenuGroup](./components/list/hyper-menu-group.html)
 - [HyperDropdownMenu](./components/feedback/hyper-dropdown-menu.html)
 - [HyperProgressIndicator](./components/feedback/hyper-progress-indicator.html)
 - [HyperDialog](./components/feedback/hyper-dialog.html)

@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -35,28 +33,69 @@ import hyper_ui.HyperCheckbox
 import hyper_ui.HyperLazyList
 import hyper_ui.HyperList
 import hyper_ui.HyperListItem
-import hyper_ui.HyperMenuGroup
-import hyper_ui.HyperMenuGroupDefaults
-import hyper_ui.HyperMenuItem
 import hyper_ui.HyperRadioButton
 import hyper_ui.HyperSwitch
 
 @Composable
 fun HyperListDemo() {
     val items = listOf("系统设置", "通知权限", "同步策略", "安全中心")
+    var pushEnabled by remember { mutableStateOf(true) }
+    var autoSync by remember { mutableStateOf(false) }
+    var performanceMode by remember { mutableStateOf(false) }
 
-    Box(
-        modifier = Modifier
-            .widthIn(max = 560.dp)
-            .height(280.dp)
+    Column(
+        modifier = Modifier.widthIn(max = 560.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        HyperList(items = items) { item ->
+        Box(modifier = Modifier.height(220.dp)) {
+            HyperList(items = items) { item ->
+                HyperListItem(
+                    leadingContent = { ListIcon(iconFor(item)) },
+                    headlineContent = { ListTitle(item) },
+                    supportingContent = { ListDescription("点击查看配置") },
+                    dividerVisible = item != items.last(),
+                    dividerInset = 70.dp
+                )
+            }
+        }
+
+        HyperList {
             HyperListItem(
-                leadingContent = { ListIcon(iconFor(item)) },
-                headlineContent = { ListTitle(item) },
-                supportingContent = { ListDescription("点击查看配置") },
-                dividerVisible = item != items.last(),
-                dividerInset = 70.dp
+                leadingContent = { ListIcon(Icons.Default.Notifications) },
+                headlineContent = { Text("推送通知") },
+                supportingContent = { Text("接收系统消息提醒") },
+                dividerVisible = true,
+                dividerInset = 70.dp,
+                trailingContent = {
+                    HyperSwitch(
+                        checked = pushEnabled,
+                        onCheckedChange = { pushEnabled = it }
+                    )
+                }
+            )
+            HyperListItem(
+                leadingContent = { ListIcon(Icons.Default.Check) },
+                headlineContent = { Text("自动同步") },
+                supportingContent = { Text("网络可用时自动刷新数据") },
+                dividerVisible = true,
+                dividerInset = 70.dp,
+                trailingContent = {
+                    HyperCheckbox(
+                        checked = autoSync,
+                        onCheckedChange = { autoSync = it }
+                    )
+                }
+            )
+            HyperListItem(
+                leadingContent = { ListIcon(Icons.Default.Settings) },
+                headlineContent = { Text("性能模式") },
+                supportingContent = { Text("优先保证流畅度") },
+                trailingContent = {
+                    HyperRadioButton(
+                        selected = performanceMode,
+                        onClick = { performanceMode = true }
+                    )
+                }
             )
         }
     }
@@ -80,113 +119,6 @@ fun LazyListDemo() {
                 dividerInset = 70.dp
             )
         }
-    }
-}
-
-@Composable
-fun MenuDemo() {
-    var selectedMenu by remember { mutableStateOf("尚未选择菜单") }
-    var pushEnabled by remember { mutableStateOf(true) }
-    var autoSync by remember { mutableStateOf(false) }
-    var mode by remember { mutableStateOf("balanced") }
-
-    Column(
-        modifier = Modifier.widthIn(max = 560.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        HyperMenuGroup(
-            colors = HyperMenuGroupDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
-        ) {
-            HyperMenuItem(
-                leadingContent = { ListIcon(Icons.Default.Lock) },
-                headlineContent = { ListTitle("安全中心") },
-                supportingContent = { ListDescription("登录保护和设备管理") },
-                dividerVisible = true,
-                dividerInset = 70.dp,
-                onClick = { selectedMenu = "安全中心" },
-                trailingContent = {
-                    Text(
-                        text = "已开启",
-                        color = MaterialTheme.colorScheme.secondary,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            )
-            HyperMenuItem(
-                leadingContent = { ListIcon(Icons.Default.Settings) },
-                headlineContent = { ListTitle("主题外观") },
-                supportingContent = { ListDescription("颜色、圆角和显示密度") },
-                dividerVisible = true,
-                dividerInset = 70.dp,
-                onClick = { selectedMenu = "主题外观" }
-            )
-            HyperMenuItem(
-                leadingContent = { ListIcon(Icons.Default.Info) },
-                headlineContent = { ListTitle("关于应用") },
-                dividerVisible = true,
-                dividerInset = 70.dp,
-                onClick = { selectedMenu = "关于应用" }
-            )
-            HyperMenuItem(
-                leadingContent = { ListIcon(Icons.Default.Notifications) },
-                headlineContent = { ListTitle("推送通知") },
-                supportingContent = { ListDescription("接收系统消息提醒") },
-                dividerVisible = true,
-                dividerInset = 70.dp,
-                trailingContent = {
-                    HyperSwitch(
-                        checked = pushEnabled,
-                        onCheckedChange = { pushEnabled = it }
-                    )
-                }
-            )
-            HyperMenuItem(
-                leadingContent = { ListIcon(Icons.Default.Check) },
-                headlineContent = { ListTitle("自动同步") },
-                supportingContent = { ListDescription("网络可用时自动刷新数据") },
-                dividerVisible = true,
-                dividerInset = 70.dp,
-                trailingContent = {
-                    HyperCheckbox(
-                        checked = autoSync,
-                        onCheckedChange = { autoSync = it }
-                    )
-                }
-            )
-            HyperMenuItem(
-                leadingContent = { ListIcon(Icons.Default.Settings) },
-                headlineContent = { ListTitle("均衡模式") },
-                supportingContent = { ListDescription("平衡性能与续航") },
-                dividerVisible = true,
-                dividerInset = 70.dp,
-                trailingContent = {
-                    HyperRadioButton(
-                        selected = mode == "balanced",
-                        onClick = { mode = "balanced" }
-                    )
-                }
-            )
-            HyperMenuItem(
-                leadingContent = { ListIcon(Icons.Default.Star) },
-                headlineContent = { ListTitle("性能模式") },
-                supportingContent = { ListDescription("优先保证流畅度") },
-                trailingContent = {
-                    HyperRadioButton(
-                        selected = mode == "performance",
-                        onClick = { mode = "performance" }
-                    )
-                }
-            )
-        }
-
-        Text(
-            text = selectedMenu,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 13.sp
-        )
     }
 }
 

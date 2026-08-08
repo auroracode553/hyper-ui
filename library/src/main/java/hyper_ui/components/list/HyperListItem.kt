@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -20,8 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
 @Immutable
@@ -69,7 +73,10 @@ fun HyperListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (leadingContent != null) {
-                CompositionLocalProvider(LocalContentColor provides contentColor) {
+                CompositionLocalProvider(
+                    LocalContentColor provides contentColor,
+                    LocalTextStyle provides HyperListItemDefaults.LeadingTextStyle
+                ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         content = leadingContent
@@ -86,18 +93,28 @@ fun HyperListItem(
                     ),
                 verticalArrangement = Arrangement.spacedBy(3.dp)
             ) {
-                CompositionLocalProvider(LocalContentColor provides contentColor) {
+                // 为裸 Text(...) 提供稳定的列表层级，调用方显式 style 仍可覆盖。
+                CompositionLocalProvider(
+                    LocalContentColor provides contentColor,
+                    LocalTextStyle provides HyperListItemDefaults.HeadlineTextStyle
+                ) {
                     headlineContent()
                 }
                 if (supportingContent != null) {
-                    CompositionLocalProvider(LocalContentColor provides supportingColor) {
+                    CompositionLocalProvider(
+                        LocalContentColor provides supportingColor,
+                        LocalTextStyle provides HyperListItemDefaults.SupportingTextStyle
+                    ) {
                         supportingContent()
                     }
                 }
             }
 
             if (trailingContent != null) {
-                CompositionLocalProvider(LocalContentColor provides contentColor) {
+                CompositionLocalProvider(
+                    LocalContentColor provides contentColor,
+                    LocalTextStyle provides HyperListItemDefaults.TrailingTextStyle
+                ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         content = trailingContent
@@ -124,6 +141,30 @@ object HyperListItemDefaults {
     val ContentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp)
     val DividerInset = 20.dp
     val DividerHeight = 1.dp
+
+    val LeadingTextStyle: TextStyle
+        @Composable get() = MaterialTheme.typography.bodyMedium.copy(
+            fontSize = 15.sp,
+            lineHeight = 20.sp
+        )
+
+    val HeadlineTextStyle: TextStyle
+        @Composable get() = MaterialTheme.typography.bodyLarge.copy(
+            fontSize = 16.sp,
+            lineHeight = 22.sp
+        )
+
+    val SupportingTextStyle: TextStyle
+        @Composable get() = MaterialTheme.typography.bodyMedium.copy(
+            fontSize = 13.sp,
+            lineHeight = 18.sp
+        )
+
+    val TrailingTextStyle: TextStyle
+        @Composable get() = MaterialTheme.typography.labelMedium.copy(
+            fontSize = 13.sp,
+            lineHeight = 18.sp
+        )
 
     @Composable
     fun colors(

@@ -26,9 +26,11 @@ fun <T> HyperLazyList(
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperListDefaults.border(),
+    colors: HyperListColors = HyperListDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
 ) {
-    val hasVisibleBackground = HyperColors.elevatedContainer.alpha > 0f
+    val containerColor = colors.containerColor
+    val hasVisibleBackground = containerColor.alpha > 0f
     val shape = HyperListDefaults.Shape
     LazyColumn(
         modifier = modifier
@@ -49,7 +51,7 @@ fun <T> HyperLazyList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(listItemShape(isFirst, isLast))
-                    .background(HyperColors.elevatedContainer)
+                    .background(containerColor)
                     .then(if (hasVisibleBackground) Modifier.background(HyperColors.glassHighlightBrush) else Modifier)
             ) {
                 itemContent(item)

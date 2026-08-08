@@ -39,9 +39,8 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperLazyList](components/list/hyper-lazy-list.md) | 大量动态数据的懒加载列表，外层默认带轻描边 | 调用方提供数据 |
-| [HyperList](components/list/hyper-list.md) | 少量静态数据的滚动列表，外层默认带轻描边 | 调用方提供数据 |
+| [HyperList](components/list/hyper-list.md) | 少量静态数据和设置分组列表，外层默认带轻描边 | 调用方提供数据或内容 |
 | [HyperListItem](components/list/hyper-list-item.md) | 列表行内容 | 调用方处理点击和尾部状态 |
-| [HyperMenuGroup](components/list/hyper-menu-group.md) | 设置类菜单分组与菜单项，分组默认带轻描边 | 调用方处理点击和尾部状态 |
 
 ## 反馈组件
 

@@ -18,6 +18,7 @@ fun <T> HyperLazyList(
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperListDefaults.border(),
+    colors: HyperListColors = HyperListDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
 )
 ```
@@ -25,8 +26,15 @@ fun <T> HyperLazyList(
 ## 关键公开类型
 
 ```kotlin
+data class HyperListColors(
+    val containerColor: Color
+)
+
 object HyperListDefaults {
     val Shape: Shape
+
+    @Composable
+    fun colors(containerColor: Color = Color.Unspecified): HyperListColors
 
     @Composable
     fun border(color: Color = Color.Unspecified): BorderStroke
@@ -43,6 +51,7 @@ object HyperListDefaults {
 | `contentPadding` | `PaddingValues` | `PaddingValues(0.dp)` | 列表内容内边距 |
 | `verticalArrangement` | `Arrangement.Vertical` | 间距 `0.dp` | 条目纵向排列 |
 | `border` | `BorderStroke?` | `HyperListDefaults.border()` | 列表外层描边；传 `null` 可关闭 |
+| `colors` | `HyperListColors` | `HyperListDefaults.colors()` | 列表容器颜色，默认使用 `HyperColors.elevatedContainer` |
 | `itemContent` | `@Composable (T) -> Unit` | 必填 | 每项内容，只接收当前项目，不接收索引 |
 
 ## 最小用法
