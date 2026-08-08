@@ -44,7 +44,9 @@ fun AccountList(accounts: List<String>) {
         items = accounts,
         key = { account -> account }
     ) { account ->
-        HyperListItem(title = account)
+        HyperListItem(
+            headlineContent = { Text(account) }
+        )
     }
 }
 ```
@@ -53,7 +55,7 @@ fun AccountList(accounts: List<String>) {
 
 - `itemContent` 的参数是项目本身，不是索引。
 - 首尾圆角与项目背景由列表自动处理，不要在每项重复计算外层形状。
-- 分割线仍由条目内容决定；使用 `HyperListItem.showDivider` 时由调用方根据业务数据设置。
+- 分割线仍由条目内容决定；使用 `HyperListItem.dividerVisible` 时由调用方根据业务数据设置。
 - 少量、固定数据可使用 [HyperList](hyper-list.md)。
 
 ## 交互预览

@@ -1,15 +1,17 @@
 package hyper_ui.docs.ui
 
-import hyper_ui.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hyper_ui.HyperButton
+import hyper_ui.HyperButtonDefaults
+import hyper_ui.HyperButtonTone
+import hyper_ui.HyperIconButton
+import hyper_ui.HyperIconButtonDefaults
 
 @Composable
 fun ButtonDemo() {
@@ -33,59 +40,70 @@ fun ButtonDemo() {
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
-                text = "默认按钮",
                 onClick = { clicks += 1 },
-                variant = HyperButtonVariant.Default
-            )
+                tone = HyperButtonTone.Outline
+            ) {
+                Text(text = "轮廓")
+            }
+            HyperButton(onClick = { clicks += 1 }) {
+                Text(text = "主要")
+            }
             HyperButton(
-                text = "主要按钮",
                 onClick = { clicks += 1 },
-                variant = HyperButtonVariant.Primary
-            )
-            HyperButton(
-                text = "成功按钮",
-                onClick = { clicks += 1 },
-                variant = HyperButtonVariant.Success
-            )
+                tone = HyperButtonTone.Tonal
+            ) {
+                Text(text = "弱强调")
+            }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
-                text = "信息按钮",
                 onClick = { clicks += 1 },
-                variant = HyperButtonVariant.Info
-            )
+                tone = HyperButtonTone.Secondary
+            ) {
+                Text(text = "次要")
+            }
             HyperButton(
-                text = "警告按钮",
                 onClick = { clicks += 1 },
-                variant = HyperButtonVariant.Warning
-            )
+                tone = HyperButtonTone.Success
+            ) {
+                Text(text = "成功")
+            }
             HyperButton(
-                text = "危险按钮",
                 onClick = { clicks = 0 },
-                variant = HyperButtonVariant.Danger
-            )
+                tone = HyperButtonTone.Danger
+            ) {
+                Text(text = "危险")
+            }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
-                text = "禁用默认",
+                onClick = { clicks += 1 }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Text(text = "搜索")
+            }
+            HyperButton(
                 onClick = {},
                 enabled = false,
-                variant = HyperButtonVariant.Default
-            )
-            HyperButton(
-                text = "禁用主要",
-                onClick = {},
-                enabled = false
-            )
+                tone = HyperButtonTone.Outline
+            ) {
+                Text(text = "禁用")
+            }
         }
         HyperButton(
-            text = "小按钮",
             onClick = { clicks += 1 },
             minHeight = 32.dp,
-            horizontalPadding = 10.dp,
-            verticalPadding = 5.dp,
-            fontSize = 13.sp
-        )
+            contentPadding = HyperButtonDefaults.ContentPadding
+        ) {
+            Text(
+                text = "小尺寸 slot",
+                fontSize = 13.sp
+            )
+        }
         Text(
             text = "点击次数：$clicks",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -109,32 +127,57 @@ fun IconButtonDemo() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             HyperIconButton(
-                imageVector = Icons.Default.Search,
-                contentDescription = "搜索",
                 onClick = { selectedAction = "搜索" },
-                backgroundColor = MaterialTheme.colorScheme.surface
-            )
+                colors = HyperIconButtonDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "搜索",
+                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                )
+            }
             HyperIconButton(
-                imageVector = Icons.Default.Notifications,
-                contentDescription = "通知",
                 onClick = { selectedAction = "通知" },
-                tint = MaterialTheme.colorScheme.primary,
-                backgroundColor = MaterialTheme.colorScheme.primaryContainer
-            )
+                colors = HyperIconButtonDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Notifications,
+                    contentDescription = "通知",
+                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                )
+            }
             HyperIconButton(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "删除",
                 onClick = { selectedAction = "删除" },
-                tint = MaterialTheme.colorScheme.error,
-                backgroundColor = MaterialTheme.colorScheme.errorContainer
-            )
+                shape = RoundedCornerShape(12.dp),
+                colors = HyperIconButtonDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "删除",
+                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                )
+            }
             HyperIconButton(
-                imageVector = Icons.Default.Close,
-                contentDescription = "关闭",
                 onClick = {},
                 enabled = false,
-                backgroundColor = MaterialTheme.colorScheme.surface
-            )
+                colors = HyperIconButtonDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "关闭",
+                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                )
+            }
         }
         Text(
             text = selectedAction,

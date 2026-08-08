@@ -65,11 +65,10 @@ export default defineConfig({
         text: '表单组件',
         items: [
           { text: 'HyperTextField', link: '/components/form/hyper-text-field' },
-          { text: 'HyperSearchField', link: '/components/form/hyper-search-field' },
           { text: 'HyperSwitch', link: '/components/form/hyper-switch' },
           { text: 'HyperCheckbox', link: '/components/form/hyper-checkbox' },
           { text: 'HyperRadioButton', link: '/components/form/hyper-radio-button' },
-          { text: 'HyperFilterChip', link: '/components/form/hyper-filter-chip' }
+          { text: 'HyperChip', link: '/components/form/hyper-chip' }
         ]
       },
       {
@@ -100,9 +99,9 @@ export default defineConfig({
         text: '反馈组件',
         items: [
           { text: 'HyperDropdownMenu', link: '/components/feedback/hyper-dropdown-menu' },
-          { text: 'HyperProgressBar', link: '/components/feedback/hyper-progress-bar' },
+          { text: 'HyperProgressIndicator', link: '/components/feedback/hyper-progress-indicator' },
           { text: 'HyperDialog', link: '/components/feedback/hyper-dialog' },
-          { text: 'HyperConfirmDialog', link: '/components/feedback/hyper-confirm-dialog' }
+          { text: 'HyperAlertDialog', link: '/components/feedback/hyper-alert-dialog' }
         ]
       },
       {

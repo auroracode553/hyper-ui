@@ -1,45 +1,53 @@
 package hyper_ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
-/**
- * 输入框视觉参数。
- *
- * 澎湃OS4 风格：无硬描边，靠玻璃托盘容器色温变化体现聚焦态。
- *
- * - 未聚焦：`HyperColors.elevatedContainer` 半透明玻璃托盘，无描边。
- * - 聚焦：在容器上叠一层主题色覆盖层 [focusOverlayColor]，容器色温融入主题色，无硬描边。
- * - 禁用：容器透明度降至 0.72，内容整体按 DisabledAlpha 淡化。
- */
-internal data class HyperInputFieldVisuals(
+@Immutable
+data class HyperTextFieldColors(
     val containerColor: Color,
-    val focusOverlayColor: Color,
-    val contentAlpha: Float
+    val focusedContainerColor: Color,
+    val errorContainerColor: Color,
+    val contentColor: Color,
+    val placeholderColor: Color,
+    val labelColor: Color,
+    val supportingColor: Color,
+    val errorColor: Color,
+    val cursorColor: Color,
+    val disabledContainerColor: Color,
+    val disabledContentColor: Color
 )
 
-/**
- * 计算输入框视觉参数。
- *
- * @param focused 是否聚焦
- * @param enabled 是否可用
- */
+internal data class HyperInputFieldVisuals(
+    val containerColor: Color,
+    val contentColor: Color,
+    val placeholderColor: Color,
+    val labelColor: Color,
+    val supportingColor: Color,
+    val cursorColor: Color
+)
+
 @Composable
 internal fun hyperInputFieldVisuals(
     focused: Boolean,
-    enabled: Boolean
+    enabled: Boolean,
+    isError: Boolean,
+    colors: HyperTextFieldColors
 ): HyperInputFieldVisuals {
-    val contentAlpha = if (enabled) 1f else HyperStyleDefaults.DisabledAlpha
-    val containerAlpha = if (enabled) 1f else 0.72f
-    val focusedAndEnabled = focused && enabled
+    val containerColor = when {
+        !enabled -> colors.disabledContainerColor
+        isError -> colors.errorContainerColor
+        focused -> colors.focusedContainerColor
+        else -> colors.containerColor
+    }
 
     return HyperInputFieldVisuals(
-        containerColor = HyperColors.elevatedContainer.copy(alpha = containerAlpha),
-        focusOverlayColor = if (focusedAndEnabled) {
-            HyperColors.accent.copy(alpha = 0.14f)
-        } else {
-            Color.Transparent
-        },
-        contentAlpha = contentAlpha
+        containerColor = containerColor,
+        contentColor = if (enabled) colors.contentColor else colors.disabledContentColor,
+        placeholderColor = if (enabled) colors.placeholderColor else colors.disabledContentColor,
+        labelColor = if (isError) colors.errorColor else if (enabled) colors.labelColor else colors.disabledContentColor,
+        supportingColor = if (isError) colors.errorColor else if (enabled) colors.supportingColor else colors.disabledContentColor,
+        cursorColor = if (isError) colors.errorColor else colors.cursorColor
     )
 }

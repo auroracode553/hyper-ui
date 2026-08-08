@@ -70,7 +70,7 @@ src/main/java/hyper_ui/
 
 ## 技术栈
 
-- AGP 9.1.1
-- Kotlin 2.3.21（Compose 插件由 AGP 内置）
-- Compose BOM 2025.05.00
-- minSdk 30 / compileSdk 36
+- AGP 9.3.1
+- Kotlin 2.4.10（Compose 插件与 Kotlin 版本一致）
+- Compose BOM 2026.06.01
+- minSdk 30 / compileSdk 37

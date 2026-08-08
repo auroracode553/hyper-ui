@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import hyper_ui.*
@@ -27,13 +28,12 @@ fun ProfileForm(onSave: (String) -> Unit) {
         HyperTextField(
             value = name,
             onValueChange = { name = it },
-            label = "昵称",
-            placeholder = "请输入昵称"
+            labelContent = { Text("昵称") },
+            placeholderContent = { Text("请输入昵称") }
         )
-        HyperButton(
-            text = "保存",
-            onClick = { onSave(name) }
-        )
+        HyperButton(onClick = { onSave(name) }) {
+            Text("保存")
+        }
     }
 }
 ```

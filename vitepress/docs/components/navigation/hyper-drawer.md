@@ -2,25 +2,15 @@
 
 - 包名：`hyper_ui`
 - 源码：`library/src/main/java/hyper_ui/components/drawer/HyperDrawer.kt`
-- 状态归属：调用方提供打开状态、方向和条目选中态
-- Preview ID：`drawer`
+- 预览：`drawer`
 
-在业务内容上方显示左、右、上或下方向的抽屉面板。组件不绘制遮罩。
+`HyperDrawer` 是四方向抽屉容器，无遮罩。`HyperDrawerHeader` 与 `HyperDrawerItem` 都采用 slot-first API。
 
-## 公开类型
-
-```kotlin
-enum class HyperDrawerPosition {
-    Left,
-    Right,
-    Top,
-    Bottom
-}
-```
-
-## `HyperDrawer` 公开签名
+## 公开签名
 
 ```kotlin
+enum class HyperDrawerPosition { Left, Right, Top, Bottom }
+
 @Composable
 fun HyperDrawer(
     open: Boolean,
@@ -29,109 +19,68 @@ fun HyperDrawer(
     position: HyperDrawerPosition = HyperDrawerPosition.Left,
     drawerWidth: Dp = HyperDrawerDefaults.Width,
     drawerHeight: Dp = HyperDrawerDefaults.Height,
-    contentPadding: PaddingValues = PaddingValues(vertical = 16.dp),
-    containerColor: Color = Color.Unspecified,
-    scrimColor: Color = Color.Transparent,
+    contentPadding: PaddingValues = HyperDrawerDefaults.ContentPadding,
+    colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = false,
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 )
-```
 
-| 参数 | 默认值 | 说明 |
-| --- | --- | --- |
-| `open` | 必填 | 是否显示抽屉，由调用方持有 |
-| `onDismissRequest` | 必填 | 外部点击等关闭请求 |
-| `position` | `Left` | 弹出方向 |
-| `drawerWidth` | `320.dp` | 左右抽屉请求宽度，最多占容器宽度 88% |
-| `drawerHeight` | `320.dp` | 上下抽屉请求高度，最多占容器高度 88% |
-| `contentPadding` | 垂直 `16.dp` | 抽屉内容内边距 |
-| `containerColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘） |
-| `scrimColor` | `Color.Transparent` | 仅为源码兼容保留，当前实现不读取该值，也不绘制遮罩 |
-| `dismissOnClickOutside` | `false` | 为 `true` 时，点击抽屉外透明区域请求关闭 |
-| `drawerContent` | 必填 | 抽屉面板内容 |
-| `content` | 必填 | 页面业务内容 |
-
-## 辅助组件
-
-```kotlin
 @Composable
 fun HyperDrawerHeader(
-    title: String,
     modifier: Modifier = Modifier,
-    description: String? = null,
-    leadingIcon: ImageVector? = null
+    contentPadding: PaddingValues = HyperDrawerDefaults.HeaderPadding,
+    leadingContent: (@Composable RowScope.() -> Unit)? = null,
+    headlineContent: @Composable ColumnScope.() -> Unit,
+    supportingContent: (@Composable ColumnScope.() -> Unit)? = null
 )
 
 @Composable
 fun HyperDrawerItem(
-    title: String,
     modifier: Modifier = Modifier,
     selected: Boolean = false,
-    description: String? = null,
-    leadingIcon: ImageVector? = null,
     enabled: Boolean = true,
-    showDivider: Boolean = false,
+    dividerVisible: Boolean = false,
+    minHeight: Dp = HyperDrawerDefaults.ItemMinHeight,
+    contentPadding: PaddingValues = HyperDrawerDefaults.ItemPadding,
+    colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     onClick: (() -> Unit)? = null,
-    trailing: @Composable RowScope.() -> Unit = {}
+    leadingContent: (@Composable RowScope.() -> Unit)? = null,
+    headlineContent: @Composable ColumnScope.() -> Unit,
+    supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
+    trailingContent: (@Composable RowScope.() -> Unit)? = null
 )
 ```
 
 ## 最小用法
 
 ```kotlin
-var open by remember { mutableStateOf(false) }
-
 HyperDrawer(
     open = open,
     onDismissRequest = { open = false },
-    dismissOnClickOutside = true,
+    position = HyperDrawerPosition.Left,
     drawerContent = {
-        HyperDrawerHeader(title = "HyperUI")
+        HyperDrawerHeader(
+            leadingContent = { Icon(Icons.Default.Menu, null) },
+            headlineContent = { Text("HyperUI") },
+            supportingContent = { Text("左侧抽屉") }
+        )
         HyperDrawerItem(
-            title = "首页",
-            selected = true,
-            onClick = { open = false }
+            selected = selectedPageId == "home",
+            onClick = { selectedPageId = "home" },
+            leadingContent = { Icon(Icons.Default.Home, null) },
+            headlineContent = { Text("首页") }
         )
     }
 ) {
-    HyperButton(
-        text = "打开抽屉",
-        onClick = { open = true }
-    )
+    content()
 }
 ```
-
-## 默认值
-
-```kotlin
-object HyperDrawerDefaults {
-    val Width = 320.dp
-    val Height = 320.dp
-    val ItemMinHeight = 54.dp
-
-    @Deprecated("HyperDrawer no longer renders a scrim; kept only for source compatibility.")
-    val ScrimColor = Color.Transparent
-
-    const val MaxWidthFraction = 0.88f
-    const val MaxHeightFraction = 0.88f
-    const val AnimationMillis = 240
-
-    @Deprecated("HyperDrawer no longer renders a scrim; kept only for source compatibility.")
-    const val ScrimZIndex = 8f
-
-    const val DrawerZIndex = 9f
-}
-```
-
-`ScrimColor` 和 `ScrimZIndex` 已废弃，仅用于源码兼容。
 
 ## 约束
 
-- 应将 `HyperDrawer` 放在页面根容器附近，使 `content` 与 `drawerContent` 共享覆盖范围。
-- 不要通过 `scrimColor` 尝试添加蒙层；该参数无效果。
-- `HyperDrawerItem.selected` 和 `open` 都由调用方更新。
-
-## 交互预览
+- 不存在 `scrimColor`，抽屉不渲染遮罩。
+- Header/Item 不提供 `title`、`description`、`leadingIcon` 参数。
+- `open`、选中项和路由由调用方持有。
 
 <WasmPreview demo="drawer" title="HyperDrawer 交互预览" />

@@ -1,6 +1,5 @@
 package hyper_ui.docs.ui
 
-import hyper_ui.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -22,6 +23,8 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,12 +32,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hyper_ui.HyperBottomBar
+import hyper_ui.HyperButton
+import hyper_ui.HyperButtonTone
+import hyper_ui.HyperDrawer
+import hyper_ui.HyperDrawerHeader
+import hyper_ui.HyperDrawerItem
+import hyper_ui.HyperDrawerPosition
+import hyper_ui.HyperIconButton
+import hyper_ui.HyperIconButtonDefaults
+import hyper_ui.HyperPanel
+import hyper_ui.HyperPanelDefaults
+import hyper_ui.HyperTopBar
 import hyper_ui.docs.theme.DocsBorder
+
+private data class DemoNavItem(
+    val id: String,
+    val label: String,
+    val icon: androidx.compose.ui.graphics.vector.ImageVector
+)
 
 @Composable
 fun TopBarDemo() {
@@ -44,126 +66,51 @@ fun TopBarDemo() {
         modifier = Modifier.widthIn(max = 640.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // 场景 1：无后退按钮（onBack 为 null）
-        HyperPanel(containerColor = MaterialTheme.colorScheme.surface) {
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Text(
-                    text = "onBack = null → 不显示后退按钮",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp
-                )
-                HyperTopBar(title = "无返回按钮")
-                HyperTopBar(
-                    title = "仅右侧操作",
-                    rightSlot = {
-                        HyperIconButton(
+        HyperPanel(
+            colors = HyperPanelDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
+        ) {
+            HyperTopBar(
+                navigationContent = if (showBack) {
+                    {
+                        TopBarIconButton(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "返回",
+                            onClick = {}
+                        )
+                    }
+                } else {
+                    null
+                },
+                titleContent = {
+                    Text(
+                        text = if (showBack) "可返回页面" else "一级页面",
+                        fontSize = 28.sp,
+                        lineHeight = 34.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                actionContent = {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        TopBarIconButton(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "搜索",
+                            onClick = {}
+                        )
+                        TopBarIconButton(
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = "更多",
                             onClick = {}
                         )
                     }
-                )
-            }
-        }
-
-        // 场景 2：可交互切换后退按钮的显示/隐藏
-        HyperPanel(containerColor = MaterialTheme.colorScheme.surface) {
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Text(
-                    text = if (showBack)
-                        "onBack = {} → 显示后退按钮"
-                    else
-                        "onBack = null → 不显示后退按钮",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp
-                )
-                HyperTopBar(
-                    title = "可切换示例",
-                    onBack = if (showBack) ({}) else null,
-                    rightSlot = {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            HyperIconButton(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "搜索",
-                                onClick = {}
-                            )
-                            HyperIconButton(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = "更多",
-                                onClick = {}
-                            )
-                        }
-                    }
-                )
-                HyperButton(
-                    text = if (showBack) "隐藏后退按钮" else "显示后退按钮",
-                    onClick = { showBack = !showBack },
-                    minHeight = 36.dp,
-                    horizontalPadding = 12.dp,
-                    fontSize = 13.sp
-                )
-            }
-        }
-
-        // 场景 3：完整示例（有后退按钮 + 右侧操作）
-        HyperPanel(containerColor = MaterialTheme.colorScheme.surface) {
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Text(
-                    text = "onBack = {} → 显示后退按钮（右侧双操作）",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp
-                )
-                HyperTopBar(
-                    title = "通知设置",
-                    onBack = {},
-                    rightSlot = {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            HyperIconButton(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "搜索",
-                                onClick = {}
-                            )
-                            HyperIconButton(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = "更多",
-                                onClick = {}
-                            )
-                        }
-                    }
-                )
-            }
-        }
-
-        // 说明卡片
-        HyperPanel(containerColor = MaterialTheme.colorScheme.surface) {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = "后退按钮显示逻辑",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = "HyperTopBar 的后退按钮不是自动显示的，而是通过 onBack 参数由调用方控制：",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp,
-                    lineHeight = 18.sp
-                )
-                Text(
-                    text = "• onBack = null（默认值）→ 不显示后退按钮\n• onBack 传入回调函数 → 显示后退按钮",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp,
-                    lineHeight = 18.sp
-                )
-                Text(
-                    text = "组件不内置任何导航逻辑（如 popBackStack），后退点击行为完全由调用方在 onBack 中自行实现。",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp,
-                    lineHeight = 18.sp
-                )
+                }
+            )
+            HyperButton(
+                onClick = { showBack = !showBack },
+                tone = HyperButtonTone.Tonal
+            ) {
+                Text(text = if (showBack) "隐藏返回 slot" else "显示返回 slot")
             }
         }
     }
@@ -174,7 +121,12 @@ fun DrawerDemo() {
     var open by remember { mutableStateOf(false) }
     var selectedPageId by remember { mutableStateOf("home") }
     var drawerPosition by remember { mutableStateOf(HyperDrawerPosition.Left) }
-    var dismissOnClickOutside by remember { mutableStateOf(true) }
+    val items = listOf(
+        DemoNavItem("home", "首页", Icons.Default.Home),
+        DemoNavItem("notice", "通知", Icons.Default.Notifications),
+        DemoNavItem("settings", "设置", Icons.Default.Settings),
+        DemoNavItem("about", "关于", Icons.Default.Info)
+    )
 
     Box(
         modifier = Modifier
@@ -188,54 +140,64 @@ fun DrawerDemo() {
             open = open,
             onDismissRequest = { open = false },
             position = drawerPosition,
-            dismissOnClickOutside = dismissOnClickOutside,
+            dismissOnClickOutside = true,
             drawerContent = {
                 HyperDrawerHeader(
-                    title = "HyperUI",
-                    description = "${drawerPosition.label()}抽屉",
-                    leadingIcon = Icons.Default.Menu
-                )
-                HyperDrawerItem(
-                    title = "首页",
-                    description = "组件概览",
-                    leadingIcon = Icons.Default.Home,
-                    selected = selectedPageId == "home",
-                    onClick = {
-                        selectedPageId = "home"
-                        open = false
+                    leadingContent = {
+                        DrawerBadge {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = null,
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
+                    },
+                    headlineContent = {
+                        Text(
+                            text = "HyperUI",
+                            fontSize = 20.sp,
+                            lineHeight = 26.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    supportingContent = {
+                        Text(
+                            text = "${drawerPosition.label()}抽屉",
+                            fontSize = 13.sp,
+                            lineHeight = 18.sp
+                        )
                     }
                 )
-                HyperDrawerItem(
-                    title = "通知",
-                    description = "Toast 与提醒",
-                    leadingIcon = Icons.Default.Notifications,
-                    selected = selectedPageId == "notice",
-                    onClick = {
-                        selectedPageId = "notice"
-                        open = false
-                    }
-                )
-                HyperDrawerItem(
-                    title = "设置",
-                    leadingIcon = Icons.Default.Settings,
-                    selected = selectedPageId == "settings",
-                    showDivider = true,
-                    onClick = {
-                        selectedPageId = "settings"
-                        open = false
-                    }
-                )
-                HyperDrawerItem(
-                    title = "关于",
-                    leadingIcon = Icons.Default.Info,
-                    enabled = false
-                )
+                items.forEachIndexed { index, item ->
+                    HyperDrawerItem(
+                        selected = selectedPageId == item.id,
+                        dividerVisible = index == 2,
+                        onClick = {
+                            selectedPageId = item.id
+                            open = false
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = null,
+                                modifier = Modifier.size(22.dp)
+                            )
+                        },
+                        headlineContent = {
+                            Text(
+                                text = item.label,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    )
+                }
             }
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(HyperColors.pageBackground)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(14.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -245,20 +207,13 @@ fun DrawerDemo() {
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                Text(
-                    text = if (dismissOnClickOutside) "点击抽屉外部可关闭" else "仅点击菜单项可关闭",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp,
-                    lineHeight = 18.sp
-                )
                 DrawerPositionSelector(
                     selected = drawerPosition,
                     onSelect = { drawerPosition = it }
                 )
-                HyperButton(
-                    text = "打开${drawerPosition.label()}抽屉",
-                    onClick = { open = true }
-                )
+                HyperButton(onClick = { open = true }) {
+                    Text(text = "打开${drawerPosition.label()}抽屉")
+                }
             }
         }
     }
@@ -268,21 +223,12 @@ fun DrawerDemo() {
 fun BottomBarDemo() {
     var selectedItemId by remember { mutableStateOf("home") }
     val bottomItems = listOf(
-        HyperBottomBarItem("home", "首页", Icons.Default.Home),
-        HyperBottomBarItem("recent", "最近", Icons.Default.Info),
-        HyperBottomBarItem("settings", "设置", Icons.Default.Settings)
+        DemoNavItem("home", "首页", Icons.Default.Home),
+        DemoNavItem("recent", "最近", Icons.Default.Info),
+        DemoNavItem("settings", "设置", Icons.Default.Settings)
     )
-    val selectedTitle = when (selectedItemId) {
-        "home" -> "首页"
-        "recent" -> "最近"
-        else -> "设置"
-    }
-    val bottomBarConfig = HyperBottomBarConfig(
-        height = 72.dp,
-        contentHeight = 64.dp,
-        horizontalPadding = 28.dp,
-        backgroundAlpha = 0.90f
-    )
+    val selectedTitle = bottomItems.first { it.id == selectedItemId }.label
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -310,7 +256,7 @@ fun BottomBarDemo() {
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "HyperBottomBar 只渲染底栏并发出点击事件，页面状态由调用方维护。",
+                        text = "HyperBottomBar 只负责容器、布局、点击和选中颜色；图标文字由 item slot 决定。",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         lineHeight = 20.sp
@@ -318,18 +264,58 @@ fun BottomBarDemo() {
                 }
                 HyperBottomBar(
                     items = bottomItems,
-                    selectedItemId = selectedItemId,
-                    config = bottomBarConfig,
+                    itemSelected = { it.id == selectedItemId },
                     onItemClick = { item -> selectedItemId = item.id }
-                )
+                ) { item ->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.label,
+                            tint = LocalContentColor.current,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = item.label,
+                            color = LocalContentColor.current,
+                            fontSize = 12.sp,
+                            lineHeight = 14.sp,
+                            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+                        )
+                    }
+                }
             }
         }
-        Text(
-            text = "说明：组件不内置页面切换逻辑；如需跳转，请在 onItemClick 中由调用方调用自己的导航系统。",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 12.sp,
-            lineHeight = 16.sp
+    }
+}
+
+@Composable
+private fun TopBarIconButton(
+    imageVector: androidx.compose.ui.graphics.vector.ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit
+) {
+    HyperIconButton(onClick = onClick) {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = contentDescription,
+            modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
         )
+    }
+}
+
+@Composable
+private fun DrawerBadge(content: @Composable () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(42.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)),
+        contentAlignment = Alignment.Center
+    ) {
+        content()
     }
 }
 
@@ -373,13 +359,15 @@ private fun DrawerPositionButton(
     onClick: () -> Unit
 ) {
     HyperButton(
-        text = text,
         onClick = onClick,
         minHeight = 36.dp,
-        horizontalPadding = 12.dp,
-        fontSize = 13.sp,
-        variant = if (selected) HyperButtonVariant.Primary else HyperButtonVariant.Default
-    )
+        tone = if (selected) HyperButtonTone.Primary else HyperButtonTone.Outline
+    ) {
+        Text(
+            text = text,
+            fontSize = 13.sp
+        )
+    }
 }
 
 private fun HyperDrawerPosition.label(): String = when (this) {

@@ -59,6 +59,11 @@ jobs:
         working-directory: preview
         run: chmod +x gradlew
 
+      - name: GitHub Actions 使用官方 Gradle 分发包
+        working-directory: preview
+        run: |
+          sed -i -E 's#^distributionUrl=.*gradle-([0-9.]+)-bin\.zip#distributionUrl=https\\://services.gradle.org/distributions/gradle-\1-bin.zip#' gradle/wrapper/gradle-wrapper.properties
+
       - name: 升级 Kotlin/Wasm npm 锁文件
         working-directory: preview
         run: ./gradlew kotlinWasmUpgradePackageLock --no-daemon

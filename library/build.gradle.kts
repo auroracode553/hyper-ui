@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "hyper_ui"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 30
@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-    api(platform("androidx.compose:compose-bom:2025.05.00"))
+    api(platform(libs.androidx.compose.bom))
     api("androidx.compose.animation:animation")
     api("androidx.compose.foundation:foundation")
     api("androidx.compose.runtime:runtime")

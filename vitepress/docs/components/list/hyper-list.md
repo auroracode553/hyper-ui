@@ -37,7 +37,7 @@ fun <T> HyperList(
 fun StaticOptions(options: List<String>) {
     HyperList(items = options) { option ->
         HyperListItem(
-            title = option,
+            headlineContent = { Text(option) },
             onClick = { /* 由调用方处理 */ }
         )
     }

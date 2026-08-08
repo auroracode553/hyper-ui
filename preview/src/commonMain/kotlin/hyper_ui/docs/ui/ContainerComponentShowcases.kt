@@ -76,7 +76,9 @@ fun PanelDemo() {
 
     HyperPanel(
         modifier = Modifier.widthIn(max = 520.dp),
-        containerColor = MaterialTheme.colorScheme.surface
+        colors = HyperPanelDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -105,14 +107,16 @@ fun PanelDemo() {
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
-                text = "查看详情",
                 onClick = { acknowledged = true }
-            )
+            ) {
+                Text(text = "查看详情")
+            }
             HyperButton(
-                text = "重置",
                 onClick = { acknowledged = false },
-                variant = HyperButtonVariant.Default
-            )
+                tone = HyperButtonTone.Outline
+            ) {
+                Text(text = "重置")
+            }
         }
     }
 }

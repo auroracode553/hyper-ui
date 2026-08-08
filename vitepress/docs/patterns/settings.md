@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import hyper_ui.*
@@ -24,12 +25,14 @@ fun SettingsScreen() {
         modifier = Modifier.fillMaxSize().padding(18.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        HyperTopBar(title = "设置")
+        HyperTopBar(
+            titleContent = { Text("设置") }
+        )
         HyperMenuGroup {
             HyperMenuItem(
-                title = "推送通知",
-                description = "接收重要消息提醒",
-                trailing = {
+                headlineContent = { Text("推送通知") },
+                supportingContent = { Text("接收重要消息提醒") },
+                trailingContent = {
                     HyperSwitch(
                         checked = pushEnabled,
                         onCheckedChange = { pushEnabled = it }

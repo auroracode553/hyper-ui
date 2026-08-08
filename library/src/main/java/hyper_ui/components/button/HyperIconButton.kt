@@ -1,74 +1,107 @@
 package hyper_ui
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
-@Suppress("UNUSED_PARAMETER")
+@Immutable
+data class HyperIconButtonColors(
+    val containerColor: Color,
+    val contentColor: Color,
+    val disabledContainerColor: Color,
+    val disabledContentColor: Color
+)
+
 @Composable
 fun HyperIconButton(
-    imageVector: ImageVector,
-    contentDescription: String?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    tint: Color = Color.Unspecified,
-    backgroundColor: Color = Color.Unspecified,
     enabled: Boolean = true,
-    size: Dp = 40.dp,
-    iconSize: Dp = 22.dp,
-    showBorder: Boolean = true
+    size: Dp = HyperIconButtonDefaults.Size,
+    shape: Shape = HyperIconButtonDefaults.Shape,
+    colors: HyperIconButtonColors = HyperIconButtonDefaults.colors(),
+    border: BorderStroke? = null,
+    contentAlignment: Alignment = Alignment.Center,
+    content: @Composable BoxScope.() -> Unit
 ) {
-    val usesDefaultBackground = backgroundColor == Color.Unspecified
-    val resolvedBackground = if (usesDefaultBackground) {
-        HyperColors.elevatedContainer
-    } else {
-        backgroundColor
-    }
-    val contentAlpha = if (enabled) 1f else HyperStyleDefaults.DisabledAlpha
-    val resolvedTint = if (tint == Color.Unspecified) {
-        HyperColors.primaryText
-    } else {
-        tint
-    }
-    val containerColor = if (enabled) {
-        resolvedBackground
-    } else if (usesDefaultBackground) {
-        HyperColors.disabledContainer
-    } else {
-        resolvedBackground.copy(alpha = resolvedBackground.alpha * contentAlpha)
-    }
-    val hasVisibleBackground = resolvedBackground.alpha > 0f
-    val highlightModifier = if (hasVisibleBackground) {
-        Modifier.background(HyperColors.glassHighlightBrush)
-    } else {
-        Modifier
-    }
+    val containerColor = if (enabled) colors.containerColor else colors.disabledContainerColor
+    val contentColor = if (enabled) colors.contentColor else colors.disabledContentColor
 
     Box(
         modifier = modifier
             .size(size)
-            .clip(CircleShape)
-            .background(containerColor)
-            .then(highlightModifier)
-            .hyperNoRippleClickable(enabled = enabled, onClick = onClick),
-        contentAlignment = Alignment.Center
+            .hyperGlassSurface(
+                containerColor = containerColor,
+                shape = shape,
+                border = border
+            )
+            .hyperNoRippleClickable(
+                enabled = enabled,
+                role = Role.Button,
+                onClick = onClick
+            ),
+        contentAlignment = contentAlignment
     ) {
-        Icon(
-            imageVector = imageVector,
-            contentDescription = contentDescription,
-            tint = resolvedTint.copy(alpha = resolvedTint.alpha * contentAlpha),
-            modifier = Modifier.size(iconSize)
+        CompositionLocalProvider(LocalContentColor provides contentColor) {
+            content()
+        }
+    }
+}
+
+object HyperIconButtonDefaults {
+    val Size = 40.dp
+    val IconSize = 22.dp
+    val Shape: Shape = CircleShape
+
+    @Composable
+    fun colors(
+        containerColor: Color = Color.Unspecified,
+        contentColor: Color = Color.Unspecified,
+        disabledContainerColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified
+    ): HyperIconButtonColors {
+        val resolvedContainerColor = resolveHyperContainerColor(
+            containerColor = containerColor,
+            fallbackColor = HyperColors.elevatedContainer
+        )
+        val resolvedContentColor = resolveHyperContainerColor(
+            containerColor = contentColor,
+            fallbackColor = HyperColors.primaryText
+        )
+        val resolvedDisabledContainerColor = if (disabledContainerColor == Color.Unspecified) {
+            resolveHyperDisabledContainerColor(
+                containerColor = resolvedContainerColor,
+                usesDefaultContainerColor = containerColor == Color.Unspecified,
+                fallbackDisabledColor = HyperColors.disabledContainer
+            )
+        } else {
+            disabledContainerColor
+        }
+        val resolvedDisabledContentColor = if (disabledContentColor == Color.Unspecified) {
+            resolvedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+        } else {
+            disabledContentColor
+        }
+
+        return HyperIconButtonColors(
+            containerColor = resolvedContainerColor,
+            contentColor = resolvedContentColor,
+            disabledContainerColor = resolvedDisabledContainerColor,
+            disabledContentColor = resolvedDisabledContentColor
         )
     }
 }

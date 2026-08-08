@@ -5,7 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +23,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import hyper_ui.*
+import hyper_ui.HyperCheckbox
+import hyper_ui.HyperChip
+import hyper_ui.HyperChipRow
+import hyper_ui.HyperIconButton
+import hyper_ui.HyperIconButtonDefaults
+import hyper_ui.HyperRadioButton
+import hyper_ui.HyperStyleDefaults
+import hyper_ui.HyperSwitch
+import hyper_ui.HyperTextField
 
 @Composable
 fun RadioDemo() {
@@ -96,6 +110,7 @@ fun CheckboxDemo() {
 fun TextFieldDemo() {
     var name by remember { mutableStateOf("HyperUI") }
     var note by remember { mutableStateOf("") }
+    val isNoteError = note.length > 80
 
     Column(
         modifier = Modifier.widthIn(max = 520.dp),
@@ -104,21 +119,25 @@ fun TextFieldDemo() {
         HyperTextField(
             value = name,
             onValueChange = { name = it },
-            label = "组件名称",
-            placeholder = "请输入名称"
+            labelContent = { FieldLabel("组件名称") },
+            placeholderContent = { FieldPlaceholder("请输入名称") }
         )
         HyperTextField(
             value = note,
             onValueChange = { note = it },
-            label = "备注",
-            placeholder = "写一点说明",
+            labelContent = { FieldLabel("备注") },
+            placeholderContent = { FieldPlaceholder("写一点说明") },
+            supportingContent = { FieldSupporting("${note.length}/80") },
             singleLine = false,
-            minHeight = 92.dp
+            minLines = 3,
+            maxLines = 5,
+            minHeight = 92.dp,
+            isError = isNoteError
         )
         HyperTextField(
             value = "不可编辑内容",
             onValueChange = {},
-            label = "禁用态",
+            labelContent = { FieldLabel("禁用态") },
             enabled = false
         )
     }
@@ -132,15 +151,34 @@ fun SearchFieldDemo() {
         modifier = Modifier.widthIn(max = 520.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        HyperSearchField(
+        HyperTextField(
             value = keyword,
             onValueChange = { keyword = it },
-            placeholder = "搜索组件"
-        )
-        HyperSearchField(
-            value = "",
-            onValueChange = {},
-            placeholder = "空状态"
+            placeholderContent = { FieldPlaceholder("搜索组件") },
+            leadingContent = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    tint = LocalContentColor.current,
+                    modifier = Modifier.size(20.dp)
+                )
+            },
+            trailingContent = if (keyword.isNotEmpty()) {
+                {
+                    HyperIconButton(
+                        onClick = { keyword = "" },
+                        size = 32.dp
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "清空搜索",
+                            modifier = Modifier.size(HyperIconButtonDefaults.IconSize - 4.dp)
+                        )
+                    }
+                }
+            } else {
+                null
+            }
         )
         Text(
             text = if (keyword.isBlank()) "当前未输入关键词" else "当前关键词：$keyword",
@@ -191,47 +229,73 @@ fun SwitchDemo() {
 @Composable
 fun FilterChipDemo() {
     val categories = remember {
-        listOf(
-            null to "全部",
-            "malicious" to "恶意网址",
-            "ad" to "广告",
-            "redirect" to "恶意跳转",
-            "app" to "打开应用"
-        )
+        listOf("全部", "恶意网址", "广告", "恶意跳转", "打开应用")
     }
-    val counts = remember {
-        mapOf<String?, Int>(
-            null to 128,
-            "malicious" to 12,
-            "ad" to 86,
-            "redirect" to 24,
-            "app" to 6
-        )
-    }
-    var selected by remember { mutableStateOf<String?>(null) }
+    var selected by remember { mutableStateOf("全部") }
 
     Column(
         modifier = Modifier.widthIn(max = 520.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        HyperFilterChipBar(
-            items = categories.map { (key, label) ->
-                HyperFilterChipItem(
-                    key = key,
-                    label = label,
-                    count = counts[key]
-                )
-            },
-            selectedKey = selected,
+        HyperChipRow(
+            items = categories,
+            selectedItem = selected,
             onSelected = { selected = it }
-        )
+        ) { item ->
+            Text(text = item, fontSize = 13.sp)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperChip(
+                selected = false,
+                onClick = {}
+            ) {
+                Text(text = "只读样式", fontSize = 13.sp)
+            }
+            HyperChip(
+                selected = false,
+                onClick = {},
+                enabled = false
+            ) {
+                Text(text = "禁用", fontSize = 13.sp)
+            }
+        }
         Text(
-            text = "当前选中：${selected ?: "全部"}",
+            text = "当前选中：$selected",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp
         )
     }
+}
+
+@Composable
+private fun FieldLabel(text: String) {
+    Text(
+        text = text,
+        color = LocalContentColor.current,
+        fontSize = 13.sp,
+        lineHeight = 18.sp
+    )
+}
+
+@Composable
+private fun FieldPlaceholder(text: String) {
+    Text(
+        text = text,
+        color = LocalContentColor.current,
+        fontSize = 16.sp,
+        lineHeight = 22.sp
+    )
+}
+
+@Composable
+private fun FieldSupporting(text: String) {
+    Text(
+        text = text,
+        color = LocalContentColor.current,
+        fontSize = 12.sp,
+        lineHeight = 16.sp
+    )
 }
 
 @Composable
@@ -271,7 +335,7 @@ private fun FormControlOption(
         )
         Text(
             text = text,
-            color = HyperColors.primaryText.copy(alpha = contentAlpha),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = contentAlpha),
             fontSize = 15.sp,
             lineHeight = 20.sp
         )

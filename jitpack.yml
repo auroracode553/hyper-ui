@@ -2,8 +2,8 @@ jdk:
   - openjdk17
 
 before_install:
-  - sdk install gradle 9.3.1
-  - sdk use gradle 9.3.1
+  - sdk install gradle 9.7.0
+  - sdk use gradle 9.7.0
 
 install:
-  - cd library && gradle clean build publishToMavenLocal
+  - cd library && CI=true gradle clean build publishToMavenLocal

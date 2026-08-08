@@ -11,28 +11,15 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "lazy_list",
         group = GROUP_LIST,
         title = "HyperLazyList",
-        description = "懒加载列表，适合大量动态数据并保留首尾圆角。",
+        description = "懒加载列表容器，子项内容完全由调用方决定。",
         code = """
-            val items = listOf("系统设置", "通知权限", "同步策略", "安全中心")
-
-            Box(
-                modifier = Modifier
-                    .widthIn(max = 560.dp)
-                    .height(280.dp)
-            ) {
-                HyperLazyList(items = items) { item ->
-                    HyperListItem(
-                        title = item,
-                        description = "点击查看配置",
-                        leadingIcon = when (item) {
-                            "系统设置" -> Icons.Default.Settings
-                            "通知权限" -> Icons.Default.Notifications
-                            "同步策略" -> Icons.Default.Check
-                            else -> Icons.Default.Lock
-                        },
-                        showDivider = item != items.last()
-                    )
-                }
+            HyperLazyList(items = items) { item ->
+                HyperListItem(
+                    leadingContent = { Icon(item.icon, null) },
+                    headlineContent = { Text(item.title) },
+                    supportingContent = { Text(item.description) },
+                    dividerVisible = item != items.last()
+                )
             }
         """.trimIndent(),
         content = { LazyListDemo() }
@@ -41,28 +28,13 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_list",
         group = GROUP_LIST,
         title = "HyperList",
-        description = "非懒加载列表，适合少量静态数据，一次性渲染全部子项。",
+        description = "非懒加载列表容器，适合少量静态数据。",
         code = """
-            val items = listOf("系统设置", "通知权限", "同步策略", "安全中心")
-
-            Box(
-                modifier = Modifier
-                    .widthIn(max = 560.dp)
-                    .height(280.dp)
-            ) {
-                HyperList(items = items) { item ->
-                    HyperListItem(
-                        title = item,
-                        description = "点击查看配置",
-                        leadingIcon = when (item) {
-                            "系统设置" -> Icons.Default.Settings
-                            "通知权限" -> Icons.Default.Notifications
-                            "同步策略" -> Icons.Default.Check
-                            else -> Icons.Default.Lock
-                        },
-                        showDivider = item != items.last()
-                    )
-                }
+            HyperList(items = items) { item ->
+                HyperListItem(
+                    headlineContent = { Text(item.title) },
+                    trailingContent = { Text(item.value) }
+                )
             }
         """.trimIndent(),
         content = { HyperListDemo() }
@@ -71,99 +43,19 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "menu_group",
         group = GROUP_LIST,
         title = "HyperMenuGroup",
-        description = "菜单分组容器，通过 HyperMenuItem 承载文本、图标、点击操作，以及 Switch、Checkbox、RadioButton 等右侧控件。",
+        description = "菜单分组容器；菜单项使用 leading/headline/supporting/trailing slots。",
         code = """
-            var selectedMenu by remember { mutableStateOf("尚未选择菜单") }
-            var pushEnabled by remember { mutableStateOf(true) }
-            var autoSync by remember { mutableStateOf(false) }
-            var mode by remember { mutableStateOf("balanced") }
-
-            Column(
-                modifier = Modifier.widthIn(max = 560.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                HyperMenuGroup(containerColor = MaterialTheme.colorScheme.surface) {
-                    HyperMenuItem(
-                        title = "安全中心",
-                        description = "登录保护和设备管理",
-                        leadingIcon = Icons.Default.Lock,
-                        showDivider = true,
-                        onClick = { selectedMenu = "安全中心" },
-                        trailing = {
-                            Text(
-                                text = "已开启",
-                                color = MaterialTheme.colorScheme.secondary,
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                    )
-                    HyperMenuItem(
-                        title = "主题外观",
-                        description = "颜色、圆角和显示密度",
-                        leadingIcon = Icons.Default.Settings,
-                        showDivider = true,
-                        onClick = { selectedMenu = "主题外观" }
-                    )
-                    HyperMenuItem(
-                        title = "关于应用",
-                        leadingIcon = Icons.Default.Info,
-                        showDivider = true,
-                        onClick = { selectedMenu = "关于应用" }
-                    )
-                    HyperMenuItem(
-                        title = "推送通知",
-                        description = "接收系统消息提醒",
-                        leadingIcon = Icons.Default.Notifications,
-                        showDivider = true,
-                        trailing = {
-                            HyperSwitch(
-                                checked = pushEnabled,
-                                onCheckedChange = { pushEnabled = it }
-                            )
-                        }
-                    )
-                    HyperMenuItem(
-                        title = "自动同步",
-                        description = "网络可用时自动刷新数据",
-                        leadingIcon = Icons.Default.Check,
-                        showDivider = true,
-                        trailing = {
-                            HyperCheckbox(
-                                checked = autoSync,
-                                onCheckedChange = { autoSync = it }
-                            )
-                        }
-                    )
-                    HyperMenuItem(
-                        title = "均衡模式",
-                        description = "平衡性能与续航",
-                        leadingIcon = Icons.Default.Settings,
-                        showDivider = true,
-                        trailing = {
-                            HyperRadioButton(
-                                selected = mode == "balanced",
-                                onClick = { mode = "balanced" }
-                            )
-                        }
-                    )
-                    HyperMenuItem(
-                        title = "性能模式",
-                        description = "优先保证流畅度",
-                        leadingIcon = Icons.Default.Star,
-                        trailing = {
-                            HyperRadioButton(
-                                selected = mode == "performance",
-                                onClick = { mode = "performance" }
-                            )
-                        }
-                    )
-                }
-
-                Text(
-                    text = selectedMenu,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp
+            HyperMenuGroup {
+                HyperMenuItem(
+                    leadingContent = { Icon(Icons.Default.Settings, null) },
+                    headlineContent = { Text("主题外观") },
+                    supportingContent = { Text("颜色、圆角和显示密度") },
+                    trailingContent = {
+                        HyperSwitch(
+                            checked = enabled,
+                            onCheckedChange = { enabled = it }
+                        )
+                    }
                 )
             }
         """.trimIndent(),

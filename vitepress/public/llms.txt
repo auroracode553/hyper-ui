@@ -19,10 +19,10 @@
 - [HyperButton](./components/basic/hyper-button.html)
 - [HyperIconButton](./components/basic/hyper-icon-button.html)
 - [HyperTextField](./components/form/hyper-text-field.html)
-- [HyperSearchField](./components/form/hyper-search-field.html)
 - [HyperSwitch](./components/form/hyper-switch.html)
 - [HyperCheckbox](./components/form/hyper-checkbox.html)
 - [HyperRadioButton](./components/form/hyper-radio-button.html)
+- [HyperChip](./components/form/hyper-chip.html)
 - [HyperPanel](./components/container/hyper-panel.html)
 - [HyperColorPicker](./components/container/hyper-color-picker.html)
 - [HyperTopBar](./components/navigation/hyper-top-bar.html)
@@ -33,9 +33,9 @@
 - [HyperListItem](./components/list/hyper-list-item.html)
 - [HyperMenuGroup](./components/list/hyper-menu-group.html)
 - [HyperDropdownMenu](./components/feedback/hyper-dropdown-menu.html)
-- [HyperProgressBar](./components/feedback/hyper-progress-bar.html)
+- [HyperProgressIndicator](./components/feedback/hyper-progress-indicator.html)
 - [HyperDialog](./components/feedback/hyper-dialog.html)
-- [HyperConfirmDialog](./components/feedback/hyper-confirm-dialog.html)
+- [HyperAlertDialog](./components/feedback/hyper-alert-dialog.html)
 
 ## Rules
 

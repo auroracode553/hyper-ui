@@ -1,20 +1,21 @@
 package hyper_ui.docs.ui
 
-import hyper_ui.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,8 +27,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hyper_ui.HyperAlertDialog
+import hyper_ui.HyperButton
+import hyper_ui.HyperButtonTone
+import hyper_ui.HyperDialog
+import hyper_ui.HyperDropdownMenu
+import hyper_ui.HyperLinearProgressIndicator
+import hyper_ui.HyperCircularProgressIndicator
+import hyper_ui.HyperProgressIndicatorDefaults
+import hyper_ui.HyperProgressIndicatorDefaults.colors
+import hyper_ui.HyperTextField
 
 @Composable
 fun DropdownMenuDemo() {
@@ -45,10 +57,11 @@ fun DropdownMenuDemo() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             HyperButton(
-                text = "打开菜单",
                 onClick = { expanded = true },
-                variant = HyperButtonVariant.Default
-            )
+                tone = HyperButtonTone.Outline
+            ) {
+                Text(text = "打开菜单")
+            }
             Text(
                 text = selectedAction,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -61,23 +74,22 @@ fun DropdownMenuDemo() {
             onDismissRequest = { expanded = false },
             alignment = Alignment.TopCenter
         ) {
-            Item(
-                text = "标记完成",
-                leadingIcon = Icons.Default.Check,
-                onClick = { selectedAction = "标记完成" }
-            )
-            Item(
-                text = "查看详情",
-                leadingIcon = Icons.Default.Info,
-                onClick = { selectedAction = "查看详情" }
-            )
+            Item(onClick = { selectedAction = "标记完成" }) {
+                MenuIcon(Icons.Default.Check)
+                Text(text = "标记完成")
+            }
+            Item(onClick = { selectedAction = "查看详情" }) {
+                MenuIcon(Icons.Default.Info)
+                Text(text = "查看详情")
+            }
             Divider()
-            Item(
-                text = "删除",
-                leadingIcon = Icons.Default.Delete,
-                textColor = MaterialTheme.colorScheme.error,
-                onClick = { selectedAction = "删除" }
-            )
+            Item(onClick = { selectedAction = "删除" }) {
+                MenuIcon(Icons.Default.Delete)
+                Text(
+                    text = "删除",
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
         }
     }
 }
@@ -108,17 +120,24 @@ fun ProgressDemo() {
                     fontSize = 13.sp
                 )
             }
-            HyperProgressBar(progress = progress)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            HyperLinearProgressIndicator(progress = progress)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HyperCircularProgressIndicator(progress = progress)
+                HyperCircularProgressIndicator(progress = null)
                 HyperButton(
-                    text = "减少",
-                    variant = HyperButtonVariant.Default,
+                    tone = HyperButtonTone.Outline,
                     onClick = { progress = (progress - 0.1f).coerceAtLeast(0f) }
-                )
+                ) {
+                    Text(text = "减少")
+                }
                 HyperButton(
-                    text = "增加",
                     onClick = { progress = (progress + 0.1f).coerceAtMost(1f) }
-                )
+                ) {
+                    Text(text = "增加")
+                }
             }
         }
 
@@ -129,37 +148,27 @@ fun ProgressDemo() {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
-            Text(
-                text = "可以通过 color 设置进度条的颜色，color 可以接受颜色字符串，函数和数组。",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp
+            HyperLinearProgressIndicator(
+                progress = 0.7f,
+                colors = colors(
+                    indicatorColor = Color(0.12f, 0.50f, 1f, 1f)
+                )
             )
-            var customProgress by remember { mutableStateOf(0.7f) }
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                HyperProgressBar(
-                    progress = customProgress,
-                    progressColor = Color(0.12f, 0.50f, 1f, 1f)
+            HyperLinearProgressIndicator(
+                progress = null,
+                height = 8.dp,
+                colors = colors(
+                    indicatorColor = Color(0.03f, 0.76f, 0.38f, 1f)
                 )
-                HyperProgressBar(
-                    progress = customProgress,
-                    progressColor = Color(0.32f, 0.77f, 0.10f, 1f)
+            )
+            HyperCircularProgressIndicator(
+                progress = null,
+                size = 44.dp,
+                strokeWidth = 4.dp,
+                colors = HyperProgressIndicatorDefaults.colors(
+                    indicatorColor = MaterialTheme.colorScheme.primary
                 )
-                HyperProgressBar(
-                    progress = customProgress,
-                    progressColor = MaterialTheme.colorScheme.primary
-                )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                HyperButton(
-                    text = "-",
-                    variant = HyperButtonVariant.Default,
-                    onClick = { customProgress = (customProgress - 0.1f).coerceAtLeast(0f) }
-                )
-                HyperButton(
-                    text = "+",
-                    onClick = { customProgress = (customProgress + 0.1f).coerceAtMost(1f) }
-                )
-            }
+            )
         }
     }
 }
@@ -170,32 +179,8 @@ fun LoadingProgressDemo() {
         modifier = Modifier.widthIn(max = 560.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(
-                text = "默认加载",
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            HyperLoadingProgress()
-        }
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(
-                text = "自定义样式",
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            HyperLoadingProgress(
-                height = 4.dp,
-                trackColor = MaterialTheme.colorScheme.outlineVariant,
-                progressColor = Color(0.03f, 0.76f, 0.38f, 1f)
-            )
-            HyperLoadingProgress(
-                height = 8.dp,
-                progressColor = Color(0.12f, 0.50f, 1f, 1f)
-            )
-        }
+        HyperLinearProgressIndicator(progress = null)
+        HyperCircularProgressIndicator(progress = null)
     }
 }
 
@@ -210,10 +195,11 @@ fun DialogDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HyperButton(
-            text = "删除数据",
-            variant = HyperButtonVariant.Danger,
+            tone = HyperButtonTone.Danger,
             onClick = { showDialog = true }
-        )
+        ) {
+            Text(text = "删除数据")
+        }
         Text(
             text = resultText,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -221,19 +207,32 @@ fun DialogDemo() {
         )
     }
 
-    HyperConfirmDialog(
-        show = showDialog,
-        title = "确认删除",
-        message = "删除后无法恢复，是否继续？",
-        confirmText = "继续删除",
-        cancelText = "取消",
-        onConfirm = {
-            resultText = "已确认删除"
-            showDialog = false
-        },
-        onCancel = {
-            resultText = "已取消"
-            showDialog = false
+    HyperAlertDialog(
+        visible = showDialog,
+        onDismissRequest = { showDialog = false },
+        titleContent = { DialogTitle("确认删除") },
+        bodyContent = { DialogBody("删除后无法恢复，是否继续？") },
+        actionContent = {
+            HyperButton(
+                modifier = Modifier.weight(1f),
+                tone = HyperButtonTone.Outline,
+                onClick = {
+                    resultText = "已取消"
+                    showDialog = false
+                }
+            ) {
+                Text(text = "取消")
+            }
+            HyperButton(
+                modifier = Modifier.weight(1f),
+                tone = HyperButtonTone.Danger,
+                onClick = {
+                    resultText = "已确认删除"
+                    showDialog = false
+                }
+            ) {
+                Text(text = "继续删除")
+            }
         }
     )
 }
@@ -250,12 +249,13 @@ fun HyperDialogDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HyperButton(
-            text = "编辑备注",
             onClick = {
                 draftNote = savedNote
                 showDialog = true
             }
-        )
+        ) {
+            Text(text = "编辑备注")
+        }
         Text(
             text = "当前备注：$savedNote",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -265,22 +265,24 @@ fun HyperDialogDemo() {
     }
 
     HyperDialog(
-        show = showDialog,
+        visible = showDialog,
         onDismissRequest = { showDialog = false },
         horizontalAlignment = Alignment.Start,
-        actions = {
+        actionContent = {
             HyperButton(
-                text = "取消",
-                variant = HyperButtonVariant.Default,
+                tone = HyperButtonTone.Outline,
                 onClick = { showDialog = false }
-            )
+            ) {
+                Text(text = "取消")
+            }
             HyperButton(
-                text = "保存",
                 onClick = {
                     savedNote = draftNote.ifBlank { "未填写备注" }
                     showDialog = false
                 }
-            )
+            ) {
+                Text(text = "保存")
+            }
         }
     ) {
         dialogContent(draftNote) { draftNote = it }
@@ -311,8 +313,50 @@ private fun ColumnScope.dialogContent(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 88.dp, max = 220.dp),
-        placeholder = "请输入备注",
+        placeholderContent = {
+            Text(
+                text = "请输入备注",
+                color = LocalContentColor.current
+            )
+        },
         singleLine = false,
+        minLines = 3,
+        maxLines = 6,
         minHeight = 88.dp
+    )
+}
+
+@Composable
+private fun DialogTitle(text: String) {
+    Text(
+        text = text,
+        color = MaterialTheme.colorScheme.onSurface,
+        fontSize = 20.sp,
+        lineHeight = 26.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun DialogBody(text: String) {
+    Text(
+        text = text,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        fontSize = 16.sp,
+        lineHeight = 22.sp,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun MenuIcon(imageVector: androidx.compose.ui.graphics.vector.ImageVector) {
+    Icon(
+        imageVector = imageVector,
+        contentDescription = null,
+        tint = LocalContentColor.current,
+        modifier = Modifier.size(22.dp)
     )
 }

@@ -1,144 +1,132 @@
 package hyper_ui
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
-data class HyperBottomBarItem(
-    val id: String,
-    val title: String,
-    val icon: ImageVector
-)
-
-/**
- * 底部导航菜单的横向分布方式。
- */
-enum class HyperBottomMenuLayout {
-    /**
-     * 每个菜单项占用同等宽度槽位，槽内位置由 itemSlotAlignment 控制。
-     */
+enum class HyperBottomBarItemLayout {
     Equal,
-
-    /**
-     * 菜单项直接交给 Row 的 horizontalArrangement 排列。
-     */
-    Arrangement
+    Packed
 }
 
-/**
- * 底部导航栏视觉配置。
- */
-data class HyperBottomBarConfig(
-    val height: Dp = 70.dp,
-    val contentHeight: Dp = 64.dp,
-    val horizontalPadding: Dp = 24.dp,
-    val itemWidth: Dp = 60.dp,
-    val iconSize: Dp = 24.dp,
-    val labelFontSize: TextUnit = 12.sp,
-    val labelLineHeight: TextUnit = 14.sp,
-    val backgroundAlpha: Float = 0.94f,
-    val unselectedContentAlpha: Float = 0.72f,
-    val horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
-    val menuLayout: HyperBottomMenuLayout = HyperBottomMenuLayout.Equal,
-    val itemSlotAlignment: Alignment = Alignment.Center,
-    val bottomBarModifier: Modifier = Modifier,
-    val contentModifier: Modifier = Modifier,
-    val itemModifier: Modifier = Modifier
+@Immutable
+data class HyperBottomBarColors(
+    val containerColor: Color,
+    val selectedContentColor: Color,
+    val unselectedContentColor: Color,
+    val disabledContentColor: Color
+)
+
+class HyperBottomBarItemScope internal constructor(
+    val selected: Boolean,
+    val enabled: Boolean
 )
 
 @Composable
-fun HyperBottomBar(
-    items: List<HyperBottomBarItem>,
-    selectedItemId: String?,
-    onItemClick: (HyperBottomBarItem) -> Unit,
+fun <T> HyperBottomBar(
+    items: List<T>,
+    onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
-    config: HyperBottomBarConfig = HyperBottomBarConfig()
+    enabled: Boolean = true,
+    itemLayout: HyperBottomBarItemLayout = HyperBottomBarItemLayout.Equal,
+    itemSelected: (T) -> Boolean = { false },
+    height: Dp = HyperBottomBarDefaults.Height,
+    contentHeight: Dp = HyperBottomBarDefaults.ContentHeight,
+    contentPadding: PaddingValues = HyperBottomBarDefaults.ContentPadding,
+    itemWidth: Dp = HyperBottomBarDefaults.ItemWidth,
+    itemSlotAlignment: Alignment = Alignment.Center,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
+    shape: Shape = HyperBottomBarDefaults.Shape,
+    border: BorderStroke? = null,
+    colors: HyperBottomBarColors = HyperBottomBarDefaults.colors(),
+    itemEnabled: (T) -> Boolean = { true },
+    itemContent: @Composable HyperBottomBarItemScope.(item: T) -> Unit
 ) {
-    val isLight = HyperColors.isLight
-    val selectedColor = HyperColors.accent
-    val unselectedColor = if (isLight) {
-        rgba(0, 0, 0, config.unselectedContentAlpha)
-    } else {
-        rgba(255, 255, 255, config.unselectedContentAlpha)
-    }
-    val hasVisibleBackground = HyperColors.elevatedContainer.alpha > 0f
-    val highlightModifier = if (hasVisibleBackground) {
-        Modifier.background(HyperColors.glassHighlightBrush)
-    } else {
-        Modifier
-    }
-
     Box(
         modifier = modifier
-            .then(config.bottomBarModifier)
             .fillMaxWidth()
-            .height(config.height)
-            .background(HyperColors.elevatedContainer)
-            .then(highlightModifier)
+            .height(height)
+            .hyperGlassSurface(
+                containerColor = colors.containerColor,
+                shape = shape,
+                border = border
+            )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(config.contentHeight)
-                .padding(horizontal = config.horizontalPadding)
-                .then(config.contentModifier),
-            horizontalArrangement = if (config.menuLayout == HyperBottomMenuLayout.Equal) {
+                .height(contentHeight)
+                .padding(contentPadding),
+            horizontalArrangement = if (itemLayout == HyperBottomBarItemLayout.Equal) {
                 Arrangement.Start
             } else {
-                config.horizontalArrangement
+                horizontalArrangement
             },
             verticalAlignment = Alignment.CenterVertically
         ) {
             items.forEach { item ->
-                val selected = selectedItemId == item.id
-                val itemClick = { onItemClick(item) }
+                val selected = itemSelected(item)
+                val actualEnabled = enabled && itemEnabled(item)
+                val scope = HyperBottomBarItemScope(
+                    selected = selected,
+                    enabled = actualEnabled
+                )
+                val contentColor = when {
+                    !actualEnabled -> colors.disabledContentColor
+                    selected -> colors.selectedContentColor
+                    else -> colors.unselectedContentColor
+                }
 
-                if (config.menuLayout == HyperBottomMenuLayout.Equal) {
-                    HyperBottomBarItemContent(
-                        item = item,
-                        selected = selected,
-                        selectedColor = selectedColor,
-                        unselectedColor = unselectedColor,
-                        config = config,
-                        onClick = itemClick,
+                if (itemLayout == HyperBottomBarItemLayout.Equal) {
+                    HyperBottomBarItemContainer(
+                        onClick = { onItemClick(item) },
+                        enabled = actualEnabled,
+                        contentColor = contentColor,
                         modifier = Modifier
                             .weight(1f)
-                            .height(config.contentHeight),
-                        contentModifier = config.itemModifier.width(config.itemWidth),
-                        contentAlignment = config.itemSlotAlignment
-                    )
+                            .height(contentHeight),
+                        contentAlignment = itemSlotAlignment
+                    ) {
+                        Box(
+                            modifier = Modifier.width(itemWidth),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            scope.itemContent(item)
+                        }
+                    }
                 } else {
-                    HyperBottomBarItemContent(
-                        item = item,
-                        selected = selected,
-                        selectedColor = selectedColor,
-                        unselectedColor = unselectedColor,
-                        config = config,
-                        onClick = itemClick,
-                        modifier = config.itemModifier
-                            .width(config.itemWidth)
-                            .height(config.contentHeight)
-                    )
+                    HyperBottomBarItemContainer(
+                        onClick = { onItemClick(item) },
+                        enabled = actualEnabled,
+                        contentColor = contentColor,
+                        modifier = Modifier
+                            .width(itemWidth)
+                            .height(contentHeight),
+                        contentAlignment = itemSlotAlignment
+                    ) {
+                        scope.itemContent(item)
+                    }
                 }
             }
         }
@@ -146,41 +134,58 @@ fun HyperBottomBar(
 }
 
 @Composable
-private fun HyperBottomBarItemContent(
-    item: HyperBottomBarItem,
-    selected: Boolean,
-    selectedColor: Color,
-    unselectedColor: Color,
-    config: HyperBottomBarConfig,
+private fun RowScope.HyperBottomBarItemContainer(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier,
-    contentAlignment: Alignment = Alignment.Center
+    enabled: Boolean,
+    contentColor: Color,
+    modifier: Modifier,
+    contentAlignment: Alignment,
+    content: @Composable BoxScope.() -> Unit
 ) {
-    val contentColor = if (selected) selectedColor else unselectedColor
-
     Box(
-        modifier = modifier.hyperNoRippleClickable(onClick = onClick),
+        modifier = modifier.hyperNoRippleClickable(
+            enabled = enabled,
+            role = Role.Button,
+            onClick = onClick
+        ),
         contentAlignment = contentAlignment
     ) {
-        Column(
-            modifier = contentModifier,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = item.icon,
-                contentDescription = item.title,
-                tint = contentColor,
-                modifier = Modifier.size(config.iconSize)
-            )
-            Text(
-                text = item.title,
-                color = contentColor,
-                fontSize = config.labelFontSize,
-                lineHeight = config.labelLineHeight,
-                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
-            )
+        CompositionLocalProvider(LocalContentColor provides contentColor) {
+            content()
         }
+    }
+}
+
+object HyperBottomBarDefaults {
+    val Height = 70.dp
+    val ContentHeight = 64.dp
+    val ContentPadding = PaddingValues(horizontal = 24.dp)
+    val ItemWidth = 60.dp
+    val Shape: Shape = RoundedCornerShape(0.dp)
+
+    @Composable
+    fun colors(
+        containerColor: Color = Color.Unspecified,
+        selectedContentColor: Color = Color.Unspecified,
+        unselectedContentColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified
+    ): HyperBottomBarColors {
+        val defaultUnselectedColor = if (HyperColors.isLight) {
+            rgba(0, 0, 0, 0.72f)
+        } else {
+            rgba(255, 255, 255, 0.72f)
+        }
+        val resolvedSelectedColor = resolveHyperContainerColor(selectedContentColor, HyperColors.accent)
+        val resolvedUnselectedColor = resolveHyperContainerColor(unselectedContentColor, defaultUnselectedColor)
+
+        return HyperBottomBarColors(
+            containerColor = resolveHyperContainerColor(containerColor, HyperColors.elevatedContainer),
+            selectedContentColor = resolvedSelectedColor,
+            unselectedContentColor = resolvedUnselectedColor,
+            disabledContentColor = resolveHyperContainerColor(
+                disabledContentColor,
+                resolvedUnselectedColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+            )
+        )
     }
 }

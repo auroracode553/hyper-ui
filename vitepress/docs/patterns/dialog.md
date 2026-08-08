@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.material3.Text
 import hyper_ui.*
 
 @Composable
@@ -16,36 +17,38 @@ fun EditNoteAction() {
     var draft by remember { mutableStateOf(note) }
     var showDialog by remember { mutableStateOf(false) }
 
-    HyperButton(
-        text = "编辑备注",
-        onClick = {
-            draft = note
-            showDialog = true
-        }
-    )
+    HyperButton(onClick = {
+        draft = note
+        showDialog = true
+    }) {
+        Text("编辑备注")
+    }
 
     HyperDialog(
-        show = showDialog,
+        visible = showDialog,
         onDismissRequest = { showDialog = false },
-        actions = {
+        actionContent = {
             HyperButton(
-                text = "取消",
-                variant = HyperButtonVariant.Default,
+                tone = HyperButtonTone.Outline,
                 onClick = { showDialog = false }
-            )
+            ) {
+                Text("取消")
+            }
             HyperButton(
-                text = "保存",
                 onClick = {
                     note = draft
                     showDialog = false
                 }
-            )
+            ) {
+                Text("保存")
+            }
         }
     ) {
         HyperTextField(
             value = draft,
             onValueChange = { draft = it },
-            singleLine = false
+            singleLine = false,
+            minLines = 3
         )
     }
 }

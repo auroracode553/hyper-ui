@@ -1,11 +1,10 @@
-# HyperMenuGroup 与 HyperMenuItem
+# HyperMenuGroup
 
 - 包名：`hyper_ui`
 - 源码：`library/src/main/java/hyper_ui/components/menu/HyperMenuGroup.kt`
-- 状态归属：调用方处理点击与尾部内容状态
-- Preview ID：`menu_group`
+- 预览：`menu_group`
 
-面向设置页的菜单分组容器和菜单行。`HyperMenuGroup` 提供统一卡片背景，`HyperMenuItem` 提供标题、描述、图标、分割线和尾部 slot。
+`HyperMenuGroup` 是菜单分组容器。`HyperMenuItem` 与 `HyperListItem` 使用同一套 slot-first 行模型，适合放在设置页、弹出菜单面板或侧栏分组中。
 
 ## 公开签名
 
@@ -13,50 +12,42 @@
 @Composable
 fun HyperMenuGroup(
     modifier: Modifier = Modifier,
-    containerColor: Color = Color.Unspecified,
+    colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
+    shape: Shape = HyperMenuGroupDefaults.Shape,
+    elevation: Dp = HyperMenuGroupDefaults.Elevation,
+    border: BorderStroke? = null,
     content: @Composable ColumnScope.() -> Unit
 )
 
 @Composable
 fun HyperMenuItem(
-    title: String,
     modifier: Modifier = Modifier,
-    description: String? = null,
-    leadingIcon: ImageVector? = null,
-    minHeight: Dp = 68.dp,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
-    showDivider: Boolean = false,
+    enabled: Boolean = true,
+    minHeight: Dp = HyperListItemDefaults.MinHeight,
+    contentPadding: PaddingValues = HyperListItemDefaults.ContentPadding,
+    dividerVisible: Boolean = false,
+    dividerInset: Dp = HyperListItemDefaults.DividerInset,
+    colors: HyperListItemColors = HyperListItemDefaults.colors(),
     onClick: (() -> Unit)? = null,
-    trailing: @Composable RowScope.() -> Unit = {}
+    leadingContent: (@Composable RowScope.() -> Unit)? = null,
+    headlineContent: @Composable ColumnScope.() -> Unit,
+    supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
+    trailingContent: (@Composable RowScope.() -> Unit)? = null
 )
 ```
-
-## 容器参数
-
-| 参数 | 默认值 | 说明 |
-| --- | --- | --- |
-| `modifier` | `Modifier` | 分组根 `Column` 修饰符 |
-| `containerColor` | `Color.Unspecified` | 未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘） |
-| `content` | 必填 | 分组内通常放多个 `HyperMenuItem` |
-
-`HyperMenuItem` 的布局参数与 [HyperListItem](hyper-list-item.md) 基本一致，但它设计为直接放在 `HyperMenuGroup` 中。
 
 ## 最小用法
 
 ```kotlin
 HyperMenuGroup {
     HyperMenuItem(
-        title = "安全中心",
-        description = "密码与登录设备",
-        showDivider = true,
-        onClick = onSecurityClick
-    )
-    HyperMenuItem(
-        title = "推送通知",
-        trailing = {
+        leadingContent = { Icon(Icons.Default.Settings, null) },
+        headlineContent = { Text("主题外观") },
+        supportingContent = { Text("颜色、圆角和显示密度") },
+        trailingContent = {
             HyperSwitch(
-                checked = notificationsEnabled,
-                onCheckedChange = onNotificationsEnabledChange
+                checked = enabled,
+                onCheckedChange = { enabled = it }
             )
         }
     )
@@ -65,10 +56,8 @@ HyperMenuGroup {
 
 ## 约束
 
-- `HyperMenuGroup` 不保存菜单选择或开关状态。
-- 分割线由每个 `HyperMenuItem.showDivider` 控制。
-- `containerColor` 必须使用 Compose `Color`；组件源码颜色遵循 RGBA 规范。
-
-## 交互预览
+- 分组不保存选择、开关或点击状态。
+- 菜单项不提供 `title`、`description`、`leadingIcon` 字符串/图标参数。
+- `dividerVisible` 与 `dividerInset` 由调用方按数据位置决定。
 
 <WasmPreview demo="menu_group" title="HyperMenuGroup 交互预览" />

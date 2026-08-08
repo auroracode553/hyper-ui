@@ -1,153 +1,87 @@
 package hyper_ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import hyper_ui.core.interaction.hyperNoRippleClickable
+
+@Immutable
+data class HyperMenuGroupColors(
+    val containerColor: Color
+)
 
 @Composable
 fun HyperMenuGroup(
     modifier: Modifier = Modifier,
-    containerColor: Color = Color.Unspecified,
+    colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
+    shape: Shape = HyperMenuGroupDefaults.Shape,
+    elevation: Dp = HyperMenuGroupDefaults.Elevation,
+    border: BorderStroke? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
-    val usesDefaultContainerColor = containerColor == Color.Unspecified
-    val resolvedContainerColor = if (usesDefaultContainerColor) {
-        HyperColors.elevatedContainer
-    } else {
-        containerColor
-    }
-    val hasVisibleBackground = resolvedContainerColor.alpha > 0f
-    val highlightModifier = if (hasVisibleBackground) {
-        Modifier.background(HyperColors.glassHighlightBrush)
-    } else {
-        Modifier
-    }
-
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(shape)
-            .background(resolvedContainerColor)
-            .then(highlightModifier),
+            .hyperGlassSurface(
+                containerColor = colors.containerColor,
+                shape = shape,
+                elevation = elevation,
+                border = border
+            ),
         content = content
     )
 }
 
 @Composable
 fun HyperMenuItem(
-    title: String,
     modifier: Modifier = Modifier,
-    description: String? = null,
-    leadingIcon: ImageVector? = null,
-    minHeight: Dp = 68.dp,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
-    showDivider: Boolean = false,
+    enabled: Boolean = true,
+    minHeight: Dp = HyperListItemDefaults.MinHeight,
+    contentPadding: PaddingValues = HyperListItemDefaults.ContentPadding,
+    dividerVisible: Boolean = false,
+    dividerInset: Dp = HyperListItemDefaults.DividerInset,
+    colors: HyperListItemColors = HyperListItemDefaults.colors(),
     onClick: (() -> Unit)? = null,
-    trailing: @Composable RowScope.() -> Unit = {}
+    leadingContent: (@Composable RowScope.() -> Unit)? = null,
+    headlineContent: @Composable ColumnScope.() -> Unit,
+    supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
+    trailingContent: (@Composable RowScope.() -> Unit)? = null
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        val rowClickModifier = if (onClick != null) {
-            Modifier.hyperNoRippleClickable(onClick = onClick)
-        } else {
-            Modifier
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = minHeight)
-                .then(rowClickModifier)
-                .padding(contentPadding),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (leadingIcon != null) {
-                HyperListLeadingIcon(imageVector = leadingIcon)
-                Spacer(modifier = Modifier.width(14.dp))
-            }
-
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(3.dp)
-            ) {
-                Text(
-                    text = title,
-                    color = HyperColors.primaryText,
-                    fontSize = 17.sp,
-                    lineHeight = 22.sp,
-                    fontWeight = FontWeight.Medium
-                )
-                if (!description.isNullOrBlank()) {
-                    Text(
-                        text = description,
-                        color = HyperColors.secondaryText,
-                        fontSize = 14.sp,
-                        lineHeight = 19.sp
-                    )
-                }
-            }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                content = trailing
-            )
-        }
-
-        if (showDivider) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = if (leadingIcon == null) 20.dp else 70.dp)
-                    .height(1.dp)
-                    .background(HyperColors.divider)
-            )
-        }
-    }
+    HyperListItem(
+        modifier = modifier,
+        enabled = enabled,
+        minHeight = minHeight,
+        contentPadding = contentPadding,
+        dividerVisible = dividerVisible,
+        dividerInset = dividerInset,
+        colors = colors,
+        onClick = onClick,
+        leadingContent = leadingContent,
+        headlineContent = headlineContent,
+        supportingContent = supportingContent,
+        trailingContent = trailingContent
+    )
 }
 
-@Composable
-private fun HyperListLeadingIcon(
-    imageVector: ImageVector
-) {
-    Box(
-        modifier = Modifier
-            .size(36.dp)
-            .clip(RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius))
-            .background(HyperColors.accent.copy(alpha = 0.10f))
-            .background(HyperColors.glassHighlightBrush),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = imageVector,
-            contentDescription = null,
-            tint = HyperColors.accent,
-            modifier = Modifier.size(20.dp)
+object HyperMenuGroupDefaults {
+    val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
+    val Elevation = 0.dp
+
+    @Composable
+    fun colors(containerColor: Color = Color.Unspecified): HyperMenuGroupColors = HyperMenuGroupColors(
+        containerColor = resolveHyperContainerColor(
+            containerColor = containerColor,
+            fallbackColor = HyperColors.elevatedContainer
         )
-    }
+    )
 }

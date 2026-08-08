@@ -1,74 +1,75 @@
 package hyper_ui
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+
+@Immutable
+data class HyperTopBarColors(
+    val containerColor: Color,
+    val contentColor: Color
+)
 
 @Composable
 fun HyperTopBar(
-    title: String,
     modifier: Modifier = Modifier,
-    onBack: (() -> Unit)? = null,
-    containerColor: Color = Color.Unspecified,
-    rightSlot: (@Composable () -> Unit)? = null
+    minHeight: androidx.compose.ui.unit.Dp = HyperTopBarDefaults.MinHeight,
+    contentPadding: PaddingValues = HyperTopBarDefaults.ContentPadding,
+    colors: HyperTopBarColors = HyperTopBarDefaults.colors(),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperTopBarDefaults.ContentGap),
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    navigationContent: (@Composable RowScope.() -> Unit)? = null,
+    titleContent: @Composable RowScope.() -> Unit,
+    actionContent: (@Composable RowScope.() -> Unit)? = null
 ) {
-    val usesDefaultContainerColor = containerColor == Color.Unspecified
-    val resolvedContainerColor = if (usesDefaultContainerColor) {
-        Color.Transparent
-    } else {
-        containerColor
-    }
-    val hasVisibleBackground = resolvedContainerColor.alpha > 0f
-    val highlightModifier = if (hasVisibleBackground) {
-        Modifier.background(HyperColors.glassHighlightBrush)
-    } else {
-        Modifier
-    }
-
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(resolvedContainerColor)
-            .then(highlightModifier),
-        verticalAlignment = Alignment.CenterVertically
+            .heightIn(min = minHeight)
+            .hyperGlassSurface(
+                containerColor = colors.containerColor,
+                shape = HyperTopBarDefaults.Shape
+            )
+            .padding(contentPadding),
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = verticalAlignment
     ) {
-        if (onBack != null) {
-            HyperTopBarBackButton(onClick = onBack)
-            Spacer(modifier = Modifier.width(4.dp))
+        CompositionLocalProvider(LocalContentColor provides colors.contentColor) {
+            navigationContent?.invoke(this)
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = verticalAlignment,
+                content = titleContent
+            )
+            actionContent?.invoke(this)
         }
-
-        Text(
-            text = title,
-            modifier = Modifier.weight(1f),
-            color = HyperColors.primaryText,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            lineHeight = 34.sp
-        )
-
-        rightSlot?.invoke()
     }
 }
 
-@Composable
-private fun HyperTopBarBackButton(
-    onClick: () -> Unit
-) {
-    HyperIconButton(
-        imageVector = Icons.Default.ArrowBack,
-        contentDescription = "返回",
-        onClick = onClick
+object HyperTopBarDefaults {
+    val MinHeight = 56.dp
+    val ContentGap = 8.dp
+    val ContentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp)
+    val Shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
+
+    @Composable
+    fun colors(
+        containerColor: Color = Color.Transparent,
+        contentColor: Color = Color.Unspecified
+    ): HyperTopBarColors = HyperTopBarColors(
+        containerColor = containerColor,
+        contentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
     )
 }

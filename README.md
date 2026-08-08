@@ -81,22 +81,28 @@ dependencies {
 
 本项目的 JitPack 地址：[https://jitpack.io/#auroracode553/hyper-ui](https://jitpack.io/#auroracode553/hyper-ui)
 
-### 方式二：源码模块
+### 方式二：本地源码联调
 
-适合本地联调或需要直接改组件源码的场景。
+适合本地联调或需要直接改组件源码的场景。推荐使用 Gradle composite build，在调用方仍保留正式 Maven/JitPack 坐标，本地存在源码仓库时由 Gradle 自动替换为本地工程。
 
 调用方 `settings.gradle.kts`：
 
 ```kotlin
-include(":hyper_ui")
-project(":hyper_ui").projectDir = file("../hyper_ui_repo/library")
+val hyperUiLocal = file("../hyper_ui/library")
+if (hyperUiLocal.exists()) {
+    includeBuild(hyperUiLocal) {
+        dependencySubstitution {
+            substitute(module("com.github.auroracode553:hyper-ui")).using(project(":"))
+        }
+    }
+}
 ```
 
 调用方模块依赖：
 
 ```kotlin
 dependencies {
-    implementation(project(":hyper_ui"))
+    implementation("com.github.auroracode553:hyper-ui:0.0.4")
 }
 ```
 
@@ -123,10 +129,9 @@ import hyper_ui.*
 fun App() {
     MaterialTheme {
         HyperThemeConfig(themeColor = rgba(255, 103, 0)) {
-            HyperButton(
-                text = "保存",
-                onClick = { /* 调用方处理业务逻辑 */ }
-            )
+            HyperButton(onClick = { /* 调用方处理业务逻辑 */ }) {
+                Text("保存")
+            }
         }
     }
 }
@@ -136,21 +141,21 @@ fun App() {
 
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
-- 基础组件：`HyperButton`, `HyperIconButton`（其中 `HyperButton` 默认最小高度为 `40.dp`，Default 为透明背景 + 1dp 描边，可通过 `minHeight` / `horizontalPadding` / `verticalPadding` / `fontSize` 调整尺寸）
-- 表单组件：`HyperSearchField`, `HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`（`HyperSwitch` 默认选中轨道色跟随主题色）
-- 容器组件：`HyperPanel`, `HyperColorPicker`（主题色选择板，32 种精选颜色，选中状态由调用方管理）
+- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；视觉通过 `tone`、`colors`、`shape`、`border` 控制）
+- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperChip`, `HyperChipRow`（搜索框、地址栏通过 `HyperTextField` 的 leading/trailing slots 组合）
+- 容器组件：`HyperPanel`, `HyperColorPicker`（主题色选择板，选中状态由调用方管理）
 - 列表组件：`HyperLazyList`, `HyperList`, `HyperListItem`, `HyperMenuGroup`, `HyperMenuItem`
-- 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperConfirmDialog`, `HyperDropdownMenu`
-- 加载反馈：`HyperProgressBar`, `HyperLoadingProgress`（均支持 `height` / `shape` / 颜色与 `Modifier` 自定义外观）
-- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperBottomBar`, `HyperBottomBarItem`, `HyperBottomBarConfig`, `HyperBottomMenuLayout`（`HyperDrawer` 可通过 `dismissOnClickOutside` 配置点击空白区域关闭；`HyperBottomBar` 只渲染底部栏并发出点击事件，页面切换由调用方处理）
+- 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperDropdownMenu`
+- 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载）
+- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperDrawer` 可通过 `dismissOnClickOutside` 配置点击空白区域关闭；`HyperBottomBar` 只渲染底栏容器并发出点击事件，页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
 ## 状态管理原则
 
 - 组件不持有业务状态。
-- `value`、`checked`、`selected`、`show` 等状态由调用方管理。
-- 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest`、`onConfirm`、`onCancel` 等回调通知调用方。
-- `HyperDialog` 正文内容由 slot 渲染，长内容在内容区滚动并显示滚动指示条，固定底部操作放入 `actions`。默认从屏幕居中弹出，带淡入+缩放动画，无遮罩，面板有阴影浮层效果；弹窗内容会隔离外层文本选择容器，支持放入输入框。
+- `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
+- 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
+- `HyperDialog` 正文内容由 slot 渲染，长内容在内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。默认从屏幕居中弹出，带淡入+缩放动画，无遮罩，面板有阴影浮层效果；弹窗内容会隔离外层文本选择容器，支持放入输入框。
 - 组件内部只处理焦点、动画、禁用透明度、视觉反馈等 UI 状态。
 
 示例：
@@ -158,10 +163,13 @@ fun App() {
 ```kotlin
 var keyword by remember { mutableStateOf("") }
 
-HyperSearchField(
+HyperTextField(
     value = keyword,
     onValueChange = { keyword = it },
-    placeholder = "搜索"
+    placeholderContent = { Text("搜索") },
+    leadingContent = {
+        Icon(Icons.Default.Search, contentDescription = null)
+    }
 )
 ```
 

@@ -1,117 +1,58 @@
 # HyperButton
 
-- 分类：基础组件
 - 包名：`hyper_ui`
-- 状态模型：无业务状态；点击事件由调用方处理
 - 源码：`library/src/main/java/hyper_ui/components/button/HyperButton.kt`
-- Preview 注册：`preview/src/commonMain/kotlin/hyper_ui/docs/data/BasicComponentDemos.kt`
-- Preview 交互：`preview/src/commonMain/kotlin/hyper_ui/docs/ui/BasicComponentShowcases.kt`
+- 预览：`button`
 
-## 公开 API
+`HyperButton` 是 slot-first 按钮容器。组件只负责点击、禁用态、tone、颜色、边框、形状和内容排列；按钮里的文字、图标、计数或加载状态全部由调用方通过 `content` slot 渲染。
+
+## 公开签名
 
 ```kotlin
+enum class HyperButtonTone {
+    Primary, Secondary, Tonal, Outline, Plain, Success, Info, Warning, Danger
+}
+
+data class HyperButtonColors(
+    val containerColor: Color,
+    val contentColor: Color,
+    val disabledContainerColor: Color,
+    val disabledContentColor: Color
+)
+
 @Composable
 fun HyperButton(
-    text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    variant: HyperButtonVariant = HyperButtonVariant.Primary,
-    minHeight: Dp = 40.dp,
-    horizontalPadding: Dp = 14.dp,
-    fontSize: TextUnit = 15.sp,
-    verticalPadding: Dp = 8.dp,
-    defaultBorderColor: Color = Color.Unspecified,
-    leadingIcon: (@Composable RowScope.() -> Unit)? = null,
-    trailingIcon: (@Composable RowScope.() -> Unit)? = null
+    tone: HyperButtonTone = HyperButtonTone.Primary,
+    colors: HyperButtonColors = HyperButtonDefaults.colors(tone),
+    border: BorderStroke? = HyperButtonDefaults.border(tone),
+    shape: Shape = HyperButtonDefaults.Shape,
+    minHeight: Dp = HyperButtonDefaults.MinHeight,
+    contentPadding: PaddingValues = HyperButtonDefaults.ContentPadding,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
+        HyperButtonDefaults.ContentSpacing,
+        Alignment.CenterHorizontally
+    ),
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    content: @Composable RowScope.() -> Unit
 )
 ```
-
-## 关键公开类型
-
-```kotlin
-enum class HyperButtonVariant {
-    Default,
-    Primary,
-    Success,
-    Info,
-    Warning,
-    Danger
-}
-```
-
-## 参数
-
-| 参数 | 类型 | 必填 | 默认值 | 状态归属 / 作用 |
-| --- | --- | --- | --- | --- |
-| `text` | `String` | 是 | 无 | 调用方提供的按钮文案。 |
-| `onClick` | `() -> Unit` | 是 | 无 | 调用方处理点击后的业务逻辑。 |
-| `modifier` | `Modifier` | 否 | `Modifier` | 调整按钮外层布局。 |
-| `enabled` | `Boolean` | 否 | `true` | 调用方控制可用态；为 `false` 时不触发 `onClick`。 |
-| `variant` | `HyperButtonVariant` | 否 | `HyperButtonVariant.Primary` | 选择六种视觉变体之一。 |
-| `minHeight` | `Dp` | 否 | `40.dp` | 按钮最小高度。 |
-| `horizontalPadding` | `Dp` | 否 | `14.dp` | 水平内边距。 |
-| `fontSize` | `TextUnit` | 否 | `15.sp` | 文案字号。 |
-| `verticalPadding` | `Dp` | 否 | `8.dp` | 垂直内边距。 |
-| `defaultBorderColor` | `Color` | 否 | `Color.Unspecified` | 仅 `Default` 变体使用；未指定时取主题强调色的 50% 透明度。 |
-| `leadingIcon` | `@Composable RowScope.() -> Unit` | 否 | `null` | 文案前方的可组合插槽。 |
-| `trailingIcon` | `@Composable RowScope.() -> Unit` | 否 | `null` | 文案后方的可组合插槽。 |
-
-## 状态归属
-
-- 组件只处理按压、禁用透明度和颜色等 UI 表现。
-- 点击次数、加载状态、提交结果、页面跳转等均由调用方持有。
-- 需要防止重复提交时，由调用方通过 `enabled` 或自己的提交状态控制。
 
 ## 最小用法
 
 ```kotlin
-HyperButton(
-    text = "保存",
-    onClick = { /* 调用应用自己的保存逻辑 */ }
-)
+HyperButton(onClick = onSave) {
+    Icon(Icons.Default.Search, contentDescription = null)
+    Text("搜索")
+}
 ```
 
-带调用方状态：
+## 约束
 
-```kotlin
-var submitting by remember { mutableStateOf(false) }
-
-HyperButton(
-    text = if (submitting) "保存中" else "保存",
-    enabled = !submitting,
-    onClick = { submitting = true },
-    variant = HyperButtonVariant.Primary
-)
-```
-
-## 约束与行为
-
-- `Default` 为透明背景加边框；其余变体使用主题/语义色容器，并统一叠加 `glassHighlightBrush` 顶部玻璃高光（对齐 `HyperIconButton` 托盘风格）。
-- `Primary` 读取 HyperUI 主题强调色（`HyperColors.accent`），`Success` 读取成功色（`HyperColors.success`），`Info`/`Warning`/`Danger` 分别读取 `HyperColors.info`/`HyperColors.warning`/`HyperColors.danger` 语义色，深浅色模式下自动切换对应色值。
-- 非 `Default` 变体使用默认颜色时，`enabled = false` 会回退到 `HyperColors.disabledContainer`；自定义颜色按 `HyperStyleDefaults.DisabledAlpha` 缩放透明度。
-- 组件只接受字符串文案；图标应放入 `leadingIcon` 或 `trailingIcon`，不要假设存在 `content` 参数。
-- 不要把网络请求、数据库访问或导航规则写入组件实现；这些逻辑放在 `onClick` 中调用业务层。
-- 项目颜色规范禁止十六进制硬编码；自定义颜色使用项目允许的 RGBA 写法。
-
-## 常见误用
-
-```kotlin
-// 错误：HyperButton 没有自动提交状态，也没有 content 参数。
-HyperButton(onClick = { }) { Text("保存") }
-```
-
-应显式传入 `text`，并由调用方管理提交状态。
-
-## 相关 API
-
-- `HyperButtonVariant`
-- `HyperThemeConfig`
-- `HyperColors`
-- `HyperColors.elevatedContainer`
-- `HyperColors.disabledContainer`
-- `HyperColors.glassHighlightBrush`
-
-## 交互预览
+- 不存在 `text`、`leadingIcon`、`trailingIcon` 参数；这些内容必须由调用方放入 `content`。
+- `LocalContentColor` 会传递给 slot 内的 `Text` 与 `Icon`。
+- `Plain` 与 `Outline` 默认透明背景；`Outline` 默认有 1.dp 边框。
 
 <WasmPreview demo="button" title="HyperButton 交互预览" />
