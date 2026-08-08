@@ -34,7 +34,7 @@ fun HyperIconButton(
     size: Dp = HyperIconButtonDefaults.Size,
     shape: Shape = HyperIconButtonDefaults.Shape,
     colors: HyperIconButtonColors = HyperIconButtonDefaults.colors(),
-    border: BorderStroke? = null,
+    border: BorderStroke? = HyperIconButtonDefaults.border(),
     contentAlignment: Alignment = Alignment.Center,
     content: @Composable BoxScope.() -> Unit
 ) {
@@ -66,6 +66,7 @@ object HyperIconButtonDefaults {
     val Size = 40.dp
     val IconSize = 22.dp
     val Shape: Shape = CircleShape
+    val BorderWidth = 1.dp
 
     @Composable
     fun colors(
@@ -104,4 +105,16 @@ object HyperIconButtonDefaults {
             disabledContentColor = resolvedDisabledContentColor
         )
     }
+
+    @Composable
+    fun border(
+        color: Color = Color.Unspecified
+    ): BorderStroke = BorderStroke(
+        width = BorderWidth,
+        color = if (color == Color.Unspecified) {
+            HyperColors.fieldBorder
+        } else {
+            color
+        }
+    )
 }

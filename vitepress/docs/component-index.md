@@ -7,7 +7,7 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperButton](components/basic/hyper-button.md) | Slot-first 按钮容器 | 调用方处理点击 |
-| [HyperIconButton](components/basic/hyper-icon-button.md) | Slot-first 图标按钮容器 | 调用方处理点击 |
+| [HyperIconButton](components/basic/hyper-icon-button.md) | Slot-first 图标按钮容器，默认带轻描边 | 调用方处理点击 |
 
 ## 表单组件
 

@@ -30,7 +30,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         id = "icon_button",
         group = GROUP_BASIC,
         title = "HyperIconButton",
-        description = "Slot-first 图标按钮容器。形状、颜色和尺寸归组件，图标内容由调用方传入。",
+        description = "Slot-first 图标按钮容器。默认带轻描边，形状、颜色和尺寸归组件，图标内容由调用方传入。",
         code = """
             HyperIconButton(
                 onClick = onSearch,

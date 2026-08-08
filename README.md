@@ -141,7 +141,7 @@ fun App() {
 
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
-- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；视觉通过 `tone`、`colors`、`shape`、`border` 控制）
+- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；`HyperIconButton` 默认带轻描边，视觉通过 `tone`、`colors`、`shape`、`border` 控制）
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`（输入框和开关默认带轻描边/阴影轮廓；搜索框、地址栏通过 `HyperTextField` 的 leading/trailing slots 组合）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（主题色选择板，选中状态由调用方管理）
 - 列表组件：`HyperLazyList`, `HyperList`, `HyperListItem`, `HyperMenuGroup`, `HyperMenuItem`
