@@ -1,7 +1,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -70,11 +69,6 @@ fun HyperSearchField(
                     .background(visuals.containerColor)
                     .background(visuals.focusOverlayColor)
                     .then(containerHighlightModifier)
-                    .border(
-                        width = visuals.outlineWidth,
-                        color = visuals.outlineColor,
-                        shape = shape
-                    )
                     .padding(start = 16.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {

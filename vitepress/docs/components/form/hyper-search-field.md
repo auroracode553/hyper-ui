@@ -55,6 +55,7 @@ HyperSearchField(
 ## 约束与行为
 
 - 输入固定为单行。
+- 输入容器采用澎湃OS4 风格：无硬描边，默认使用 `HyperColors.elevatedContainer` 半透明玻璃托盘 + `glassHighlightBrush` 顶部高光；聚焦时叠一层 `accent` 14% 主题色覆盖层，色温融入主题色，不切换硬描边。
 - 当 `value` 非空时显示清空按钮；点击后调用 `onValueChange("")`。
 - 组件没有 `onSearch`、`keyboardOptions`、`keyboardActions`、自定义前后插槽或多行参数。
 - `enabled = false` 会禁用文本编辑；但当前源码中的内置清空按钮仍使用默认 `enabled = true`。若禁用态必须完全不可变，调用方应在回调中拒绝更新，或在值为空后再禁用。

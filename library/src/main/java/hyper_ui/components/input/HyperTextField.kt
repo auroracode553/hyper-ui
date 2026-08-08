@@ -1,7 +1,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -93,11 +92,6 @@ fun HyperTextField(
                         .background(visuals.containerColor)
                         .background(visuals.focusOverlayColor)
                         .then(containerHighlightModifier)
-                        .border(
-                            width = visuals.outlineWidth,
-                            color = visuals.outlineColor,
-                            shape = shape
-                        )
                         .padding(horizontal = 18.dp, vertical = 14.dp),
                     verticalAlignment = verticalAlignment
                 ) {
