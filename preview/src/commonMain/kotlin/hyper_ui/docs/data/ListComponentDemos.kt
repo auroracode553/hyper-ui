@@ -11,7 +11,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_list",
         group = GROUP_LIST,
         title = "HyperList",
-        description = "轻圆角页面级列表容器，支持切换懒加载、普通列表渲染和容器形状。",
+        description = "不透明实色的轻圆角页面级列表，支持切换懒加载、普通列表渲染和容器形状。",
         code = """
             HyperList(
                 items = items,
@@ -46,7 +46,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_menu_list",
         group = GROUP_LIST,
         title = "HyperMenuList",
-        description = "圆角菜单列表容器，适合少量静态菜单、设置分组和操作入口。",
+        description = "不透明实色的圆角菜单列表，适合少量静态菜单、设置分组和操作入口。",
         code = """
             HyperMenuList(items = items) { item ->
                 HyperListItem(

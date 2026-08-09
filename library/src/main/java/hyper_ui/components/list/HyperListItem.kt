@@ -55,8 +55,23 @@ fun HyperListItem(
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null
 ) {
-    val contentColor = if (enabled) colors.contentColor else colors.disabledContentColor
-    val supportingColor = if (enabled) colors.supportingColor else colors.disabledContentColor
+    val requestedContentColor = if (enabled) colors.contentColor else colors.disabledContentColor
+    val requestedSupportingColor = if (enabled) colors.supportingColor else colors.disabledContentColor
+    val contentColor = resolveHyperOpaqueColor(
+        color = requestedContentColor,
+        fallbackColor = if (enabled) HyperColors.primaryText else HyperColors.secondaryText,
+        backgroundColor = HyperColors.cardContainer
+    )
+    val supportingColor = resolveHyperOpaqueColor(
+        color = requestedSupportingColor,
+        fallbackColor = HyperColors.secondaryText,
+        backgroundColor = HyperColors.cardContainer
+    )
+    val dividerColor = resolveHyperOpaqueColor(
+        color = colors.dividerColor,
+        fallbackColor = HyperColors.divider,
+        backgroundColor = HyperColors.cardContainer
+    )
     val shouldShowDivider = dividerVisible && !LocalHyperListItemDividerSuppressed.current
     val clickModifier = if (onClick != null) {
         Modifier.hyperNoRippleClickable(
@@ -134,7 +149,7 @@ fun HyperListItem(
                     .fillMaxWidth()
                     .padding(start = dividerInset)
                     .height(HyperListItemDefaults.DividerHeight)
-                    .background(colors.dividerColor)
+                    .background(dividerColor)
             )
         }
     }
@@ -178,16 +193,29 @@ object HyperListItemDefaults {
         disabledContentColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
     ): HyperListItemColors {
-        val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
+        val resolvedContentColor = resolveHyperOpaqueColor(
+            color = contentColor,
+            fallbackColor = HyperColors.primaryText,
+            backgroundColor = HyperColors.cardContainer
+        )
 
         return HyperListItemColors(
             contentColor = resolvedContentColor,
-            supportingColor = resolveHyperContainerColor(supportingColor, HyperColors.secondaryText),
-            disabledContentColor = resolveHyperContainerColor(
-                disabledContentColor,
-                resolvedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+            supportingColor = resolveHyperOpaqueColor(
+                color = supportingColor,
+                fallbackColor = HyperColors.secondaryText,
+                backgroundColor = HyperColors.cardContainer
             ),
-            dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
+            disabledContentColor = resolveHyperOpaqueColor(
+                color = disabledContentColor,
+                fallbackColor = HyperColors.secondaryText,
+                backgroundColor = HyperColors.cardContainer
+            ),
+            dividerColor = resolveHyperOpaqueColor(
+                color = dividerColor,
+                fallbackColor = HyperColors.divider,
+                backgroundColor = HyperColors.cardContainer
+            )
         )
     }
 }

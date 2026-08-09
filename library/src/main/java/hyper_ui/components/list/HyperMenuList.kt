@@ -3,7 +3,6 @@ package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,14 +39,20 @@ fun <T> HyperMenuList(
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
 ) {
-    val containerColor = colors.containerColor
-    val hasVisibleBackground = containerColor.alpha > 0f
+    val containerColor = resolveHyperOpaqueColor(
+        color = colors.containerColor,
+        fallbackColor = HyperColors.cardContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
     val shape = HyperMenuListDefaults.Shape
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .then(if (border != null) Modifier.border(border, shape) else Modifier)
-            .clip(shape)
+            .hyperSolidSurface(
+                containerColor = containerColor,
+                shape = shape,
+                border = border
+            )
             .verticalScroll(rememberScrollState())
             .padding(contentPadding),
         verticalArrangement = verticalArrangement
@@ -60,7 +65,6 @@ fun <T> HyperMenuList(
                     .fillMaxWidth()
                     .clip(menuListItemShape(isFirst, isLast))
                     .background(containerColor)
-                    .then(if (hasVisibleBackground) Modifier.background(HyperColors.glassHighlightBrush) else Modifier)
             ) {
                 CompositionLocalProvider(
                     LocalHyperListItemDividerSuppressed provides isLast
@@ -81,12 +85,17 @@ fun HyperMenuList(
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val containerColor = resolveHyperOpaqueColor(
+        color = colors.containerColor,
+        fallbackColor = HyperColors.cardContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
     CompositionLocalProvider(LocalHyperListItemDividerSuppressed provides false) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .hyperGlassSurface(
-                    containerColor = colors.containerColor,
+                .hyperSolidSurface(
+                    containerColor = containerColor,
                     shape = HyperMenuListDefaults.Shape,
                     border = border
                 )
@@ -102,14 +111,18 @@ object HyperMenuListDefaults {
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperMenuListColors = HyperMenuListColors(
-        containerColor = resolveHyperContainerColor(
-            containerColor = containerColor,
-            fallbackColor = HyperColors.elevatedContainer
+        containerColor = resolveHyperOpaqueColor(
+            color = containerColor,
+            fallbackColor = HyperColors.cardContainer,
+            backgroundColor = HyperColors.pageBackground
         )
     )
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
+        color = color,
+        backgroundColor = HyperColors.cardContainer
+    )
 }
 
 internal fun menuListItemShape(

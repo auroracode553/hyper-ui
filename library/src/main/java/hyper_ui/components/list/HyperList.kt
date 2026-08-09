@@ -48,7 +48,11 @@ fun <T> HyperList(
     colors: HyperListColors = HyperListDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
 ) {
-    val containerColor = colors.containerColor
+    val containerColor = resolveHyperOpaqueColor(
+        color = colors.containerColor,
+        fallbackColor = HyperColors.cardContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
     val containerModifier = modifier.hyperListContainer(
         containerColor = containerColor,
         shape = shape,
@@ -111,7 +115,11 @@ fun HyperList(
     colors: HyperListColors = HyperListDefaults.colors(),
     content: LazyListScope.() -> Unit
 ) {
-    val containerColor = colors.containerColor
+    val containerColor = resolveHyperOpaqueColor(
+        color = colors.containerColor,
+        fallbackColor = HyperColors.cardContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
     CompositionLocalProvider(LocalHyperListItemDividerSuppressed provides false) {
         LazyColumn(
             modifier = modifier.hyperListContainer(
@@ -132,14 +140,18 @@ object HyperListDefaults {
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperListColors = HyperListColors(
-        containerColor = resolveHyperContainerColor(
-            containerColor = containerColor,
-            fallbackColor = HyperColors.cardContainer
+        containerColor = resolveHyperOpaqueColor(
+            color = containerColor,
+            fallbackColor = HyperColors.cardContainer,
+            backgroundColor = HyperColors.pageBackground
         )
     )
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
+        color = color,
+        backgroundColor = HyperColors.cardContainer
+    )
 }
 
 private fun Modifier.hyperListContainer(

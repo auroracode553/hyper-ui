@@ -5,7 +5,7 @@
 - 状态归属：调用方提供菜单数据或内容
 - Preview ID：`hyper_menu_list`
 
-圆角菜单列表容器，适合少量静态菜单、设置分组和操作入口。它默认带圆角、卡片背景和 1dp 轻描边；数据项入口基于 `Column` 与 `verticalScroll` 一次组合全部项目，并会自动抑制最后一项的 `HyperListItem` 分割线；slot 分组入口不额外添加滚动，适合放在页面级滚动容器中。
+圆角菜单列表容器，适合少量静态菜单、设置分组和操作入口。它默认带圆角、不透明实色卡片背景和 1dp 实色轻描边，不再叠加玻璃高光；数据项入口基于 `Column` 与 `verticalScroll` 一次组合全部项目，并会自动抑制最后一项的 `HyperListItem` 分割线；slot 分组入口不额外添加滚动，适合放在页面级滚动容器中。
 
 ## 公开签名
 
@@ -59,7 +59,7 @@ object HyperMenuListDefaults {
 | `contentPadding` | `PaddingValues` | `PaddingValues(0.dp)` | 容器内容内边距 |
 | `verticalArrangement` | `Arrangement.Vertical` | 间距 `0.dp` | 条目纵向排列 |
 | `border` | `BorderStroke?` | `HyperMenuListDefaults.border()` | 菜单外层描边；传 `null` 可关闭 |
-| `colors` | `HyperMenuListColors` | `HyperMenuListDefaults.colors()` | 菜单容器颜色，默认使用 `HyperColors.elevatedContainer` |
+| `colors` | `HyperMenuListColors` | `HyperMenuListDefaults.colors()` | 菜单容器颜色，默认使用不透明的 `HyperColors.cardContainer` |
 | `itemContent` | `@Composable (T) -> Unit` | 必填 | 每项菜单内容 |
 | `content` | `@Composable ColumnScope.() -> Unit` | slot 入口必填 | 直接放置 `HyperListItem` 等内容，适合设置分组 |
 
@@ -97,6 +97,7 @@ fun SettingsGroup(enabled: Boolean, onEnabledChange: (Boolean) -> Unit) {
 ## 约束
 
 - `HyperMenuList` 用于菜单、设置分组和少量操作入口；页面级列表使用 [HyperList](hyper-list.md)。
+- 容器不绘制透明层或玻璃高光；含 alpha 的自定义容器颜色会先与页面背景合成为实色。
 - `contentPadding` 位于圆角背景和 border 内部；底栏避让等页面级留白应通过外层 `modifier` 或父布局约束实现，避免 border 包住留白区域。
 - `items` 数据入口内部自带纵向滚动；放入另一个同方向无界滚动容器前，应明确尺寸约束。
 - `items` 数据入口会自动隐藏最后一项的 `HyperListItem` 分割线，调用方只需表达普通行是否需要分割线。

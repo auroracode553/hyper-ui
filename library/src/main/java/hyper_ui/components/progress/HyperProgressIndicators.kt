@@ -51,6 +51,16 @@ fun HyperLinearProgressIndicator(
     trackBorder: BorderStroke? = HyperProgressIndicatorDefaults.linearTrackBorder()
 ) {
     val coercedProgress = progress?.coerceIn(0f, 1f)
+    val resolvedTrackColor = resolveHyperOpaqueColor(
+        color = colors.trackColor,
+        fallbackColor = HyperColors.softContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
+    val resolvedIndicatorColor = resolveHyperOpaqueColor(
+        color = colors.indicatorColor,
+        fallbackColor = HyperColors.accent,
+        backgroundColor = resolvedTrackColor
+    )
     val animatedProgress by animateFloatAsState(
         targetValue = coercedProgress ?: 0f,
         animationSpec = tween(
@@ -69,8 +79,8 @@ fun HyperLinearProgressIndicator(
         modifier = modifier
             .height(height)
             .fillMaxWidth()
-            .hyperGlassSurface(
-                containerColor = colors.trackColor,
+            .hyperSolidSurface(
+                containerColor = resolvedTrackColor,
                 shape = shape,
                 border = trackBorder
             )
@@ -80,7 +90,7 @@ fun HyperLinearProgressIndicator(
     ) {
         if (coercedProgress == null) {
             IndeterminateLinearSegment(
-                indicatorColor = colors.indicatorColor,
+                indicatorColor = resolvedIndicatorColor,
                 segmentWidth = maxWidth * HyperProgressIndicatorDefaults.IndeterminateSegmentFraction,
                 segmentShape = shape
             )
@@ -89,8 +99,8 @@ fun HyperLinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(animatedProgress)
-                    .hyperGlassSurface(
-                        containerColor = colors.indicatorColor,
+                    .hyperSolidSurface(
+                        containerColor = resolvedIndicatorColor,
                         shape = shape
                     )
             )
@@ -107,6 +117,16 @@ fun HyperCircularProgressIndicator(
     colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors()
 ) {
     val coercedProgress = progress?.coerceIn(0f, 1f)
+    val resolvedTrackColor = resolveHyperOpaqueColor(
+        color = colors.trackColor,
+        fallbackColor = HyperColors.softContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
+    val resolvedIndicatorColor = resolveHyperOpaqueColor(
+        color = colors.indicatorColor,
+        fallbackColor = HyperColors.accent,
+        backgroundColor = resolvedTrackColor
+    )
     val transition = rememberInfiniteTransition(label = "hyperCircularProgressTransition")
     val indeterminateRotation by transition.animateFloat(
         initialValue = 0f,
@@ -155,12 +175,12 @@ fun HyperCircularProgressIndicator(
         }
 
         drawCircle(
-            color = colors.trackColor,
+            color = resolvedTrackColor,
             radius = (this.size.minDimension - strokePx) / 2f,
             style = Stroke(width = strokePx, cap = StrokeCap.Round)
         )
         drawArc(
-            color = colors.indicatorColor,
+            color = resolvedIndicatorColor,
             startAngle = startAngle,
             sweepAngle = sweepAngle,
             useCenter = false,
@@ -201,7 +221,7 @@ private fun IndeterminateLinearSegment(
                 .fillMaxHeight()
                 .width(segmentWidth)
                 .offset(x = maxWidth * offsetProgress)
-                .hyperGlassSurface(
+                .hyperSolidSurface(
                     containerColor = indicatorColor,
                     shape = segmentShape
                 )
@@ -224,11 +244,25 @@ object HyperProgressIndicatorDefaults {
     fun colors(
         trackColor: Color = Color.Unspecified,
         indicatorColor: Color = Color.Unspecified
-    ): HyperProgressIndicatorColors = HyperProgressIndicatorColors(
-        trackColor = resolveHyperContainerColor(trackColor, HyperColors.elevatedContainer),
-        indicatorColor = resolveHyperContainerColor(indicatorColor, HyperColors.accent)
-    )
+    ): HyperProgressIndicatorColors {
+        val resolvedTrackColor = resolveHyperOpaqueColor(
+            color = trackColor,
+            fallbackColor = HyperColors.softContainer,
+            backgroundColor = HyperColors.pageBackground
+        )
+        return HyperProgressIndicatorColors(
+            trackColor = resolvedTrackColor,
+            indicatorColor = resolveHyperOpaqueColor(
+                color = indicatorColor,
+                fallbackColor = HyperColors.accent,
+                backgroundColor = resolvedTrackColor
+            )
+        )
+    }
 
     @Composable
-    fun linearTrackBorder(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
+    fun linearTrackBorder(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
+        color = color,
+        backgroundColor = HyperColors.softContainer
+    )
 }

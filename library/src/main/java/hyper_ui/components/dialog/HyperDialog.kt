@@ -111,6 +111,11 @@ fun HyperDialog(
     val requestedMaxWidth = maxWidth
     val requestedMaxHeight = maxHeight
     val layoutDirection = LocalLayoutDirection.current
+    val containerColor = resolveHyperOpaqueColor(
+        color = colors.containerColor,
+        fallbackColor = HyperColors.cardContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
 
     LaunchedEffect(visible) {
         if (visible) {
@@ -155,12 +160,11 @@ fun HyperDialog(
                         .heightIn(max = resolvedMaxHeight)
                         .then(modifier)
                         .graphicsLayer {
-                            alpha = animationProgress.value
                             scaleX = 0.8f + 0.2f * animationProgress.value
                             scaleY = 0.8f + 0.2f * animationProgress.value
                         }
                         .clip(shape)
-                        .background(color = colors.containerColor, shape = shape)
+                        .background(color = containerColor, shape = shape)
                         .then(if (border != null) Modifier.border(border, shape) else Modifier)
                         .padding(contentPadding),
                     horizontalAlignment = horizontalAlignment,
@@ -239,6 +243,11 @@ private fun HyperDialogScrollIndicator(
     }
 
     val density = LocalDensity.current
+    val indicatorColor = resolveHyperOpaqueColor(
+        color = HyperColors.divider,
+        fallbackColor = HyperColors.divider,
+        backgroundColor = HyperColors.cardContainer
+    )
 
     BoxWithConstraints(
         modifier = modifier
@@ -266,7 +275,7 @@ private fun HyperDialogScrollIndicator(
                 .offset(y = with(density) { thumbOffsetPx.toDp() })
                 .width(HyperDialogDefaults.ScrollIndicatorWidth)
                 .height(with(density) { thumbHeightPx.toDp() })
-                .background(HyperColors.divider, RoundedCornerShape(percent = 50))
+                .background(indicatorColor, RoundedCornerShape(percent = 50))
         )
     }
 }
@@ -288,12 +297,16 @@ object HyperDialogDefaults {
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperDialogColors = HyperDialogColors(
-        containerColor = resolveHyperContainerColor(
-            containerColor = containerColor,
-            fallbackColor = HyperColors.cardContainer
+        containerColor = resolveHyperOpaqueColor(
+            color = containerColor,
+            fallbackColor = HyperColors.cardContainer,
+            backgroundColor = HyperColors.pageBackground
         )
     )
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
+        color = color,
+        backgroundColor = HyperColors.cardContainer
+    )
 }

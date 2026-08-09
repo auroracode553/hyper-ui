@@ -59,13 +59,24 @@ fun HyperButton(
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     content: @Composable RowScope.() -> Unit
 ) {
-    val containerColor = if (enabled) colors.containerColor else colors.disabledContainerColor
-    val contentColor = if (enabled) colors.contentColor else colors.disabledContentColor
+    val surfaceColor = HyperColors.cardContainer
+    val requestedContainerColor = if (enabled) colors.containerColor else colors.disabledContainerColor
+    val requestedContentColor = if (enabled) colors.contentColor else colors.disabledContentColor
+    val containerColor = resolveHyperOpaqueColor(
+        color = requestedContainerColor,
+        fallbackColor = if (enabled) HyperColors.accent else HyperColors.softContainer,
+        backgroundColor = surfaceColor
+    )
+    val contentColor = resolveHyperOpaqueColor(
+        color = requestedContentColor,
+        fallbackColor = if (enabled) HyperColors.primaryText else HyperColors.secondaryText,
+        backgroundColor = containerColor
+    )
 
     Row(
         modifier = modifier
             .heightIn(min = minHeight)
-            .hyperGlassSurface(
+            .hyperSolidSurface(
                 containerColor = containerColor,
                 shape = shape,
                 border = border
@@ -99,12 +110,22 @@ object HyperButtonDefaults {
         disabledContainerColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
     ): HyperButtonColors {
+        val surfaceColor = HyperColors.cardContainer
+        val accentColor = resolveHyperOpaqueColor(
+            color = HyperColors.accent,
+            fallbackColor = HyperColors.accent,
+            backgroundColor = surfaceColor
+        )
         val defaultContainerColor = when (tone) {
-            HyperButtonTone.Primary -> HyperColors.accent
+            HyperButtonTone.Primary -> accentColor
             HyperButtonTone.Secondary -> HyperColors.softContainer
-            HyperButtonTone.Tonal -> HyperColors.accent.copy(alpha = 0.14f)
-            HyperButtonTone.Outline -> Color.Transparent
-            HyperButtonTone.Plain -> Color.Transparent
+            HyperButtonTone.Tonal -> blendHyperOpaqueColors(
+                backgroundColor = surfaceColor,
+                foregroundColor = accentColor,
+                foregroundFraction = 0.14f
+            )
+            HyperButtonTone.Outline,
+            HyperButtonTone.Plain -> surfaceColor
             HyperButtonTone.Success -> HyperColors.success
             HyperButtonTone.Info -> HyperColors.info
             HyperButtonTone.Warning -> HyperColors.warning
@@ -121,29 +142,26 @@ object HyperButtonDefaults {
             HyperButtonTone.Outline,
             HyperButtonTone.Plain -> HyperColors.primaryText
         }
-        val resolvedContainerColor = resolveHyperContainerColor(
-            containerColor = containerColor,
-            fallbackColor = defaultContainerColor
+        val resolvedContainerColor = resolveHyperOpaqueColor(
+            color = containerColor,
+            fallbackColor = defaultContainerColor,
+            backgroundColor = surfaceColor
         )
-        val resolvedContentColor = resolveHyperContainerColor(
-            containerColor = contentColor,
-            fallbackColor = defaultContentColor
+        val resolvedContentColor = resolveHyperOpaqueColor(
+            color = contentColor,
+            fallbackColor = defaultContentColor,
+            backgroundColor = resolvedContainerColor
         )
-        val usesDefaultContainerColor = containerColor == Color.Unspecified
-        val resolvedDisabledContainerColor = if (disabledContainerColor == Color.Unspecified) {
-            resolveHyperDisabledContainerColor(
-                containerColor = resolvedContainerColor,
-                usesDefaultContainerColor = usesDefaultContainerColor,
-                fallbackDisabledColor = HyperColors.disabledContainer
-            )
-        } else {
-            disabledContainerColor
-        }
-        val resolvedDisabledContentColor = if (disabledContentColor == Color.Unspecified) {
-            resolvedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
-        } else {
-            disabledContentColor
-        }
+        val resolvedDisabledContainerColor = resolveHyperOpaqueColor(
+            color = disabledContainerColor,
+            fallbackColor = HyperColors.softContainer,
+            backgroundColor = surfaceColor
+        )
+        val resolvedDisabledContentColor = resolveHyperOpaqueColor(
+            color = disabledContentColor,
+            fallbackColor = HyperColors.secondaryText,
+            backgroundColor = resolvedDisabledContainerColor
+        )
 
         return HyperButtonColors(
             containerColor = resolvedContainerColor,
@@ -160,11 +178,11 @@ object HyperButtonDefaults {
     ): BorderStroke? = when (tone) {
         HyperButtonTone.Outline -> BorderStroke(
             width = 1.dp,
-            color = if (color == Color.Unspecified) {
-                HyperColors.accent.copy(alpha = 0.50f)
-            } else {
-                color
-            }
+            color = resolveHyperOpaqueColor(
+                color = color,
+                fallbackColor = HyperColors.accent,
+                backgroundColor = HyperColors.cardContainer
+            )
         )
         else -> null
     }
