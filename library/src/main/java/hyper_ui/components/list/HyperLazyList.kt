@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/list/HyperLazyList 模块实现，并集中维护其依赖协作与核心逻辑。 */
+/** 文件职责：在 hyper_ui 中负责承载页面级懒加载列表 HyperLazyList，并集中维护其视觉默认值。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -13,14 +13,18 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 
-internal val LazyListCornerRadius = HyperStyleDefaults.LargeCornerRadius
+@Immutable
+data class HyperLazyListColors(
+    val containerColor: Color
+)
 
 @Composable
 fun <T> HyperLazyList(
@@ -29,17 +33,16 @@ fun <T> HyperLazyList(
     key: ((item: T) -> Any)? = null,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    border: BorderStroke? = HyperListDefaults.border(),
-    colors: HyperListColors = HyperListDefaults.colors(),
+    border: BorderStroke? = null,
+    colors: HyperLazyListColors = HyperLazyListDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
 ) {
     val containerColor = colors.containerColor
-    val hasVisibleBackground = containerColor.alpha > 0f
-    val shape = HyperListDefaults.Shape
     LazyColumn(
         modifier = modifier
-            .then(if (border != null) Modifier.border(border, shape) else Modifier)
-            .clip(shape),
+            .fillMaxWidth()
+            .background(containerColor)
+            .then(if (border != null) Modifier.border(border, RectangleShape) else Modifier),
         contentPadding = contentPadding,
         verticalArrangement = verticalArrangement
     ) {
@@ -49,14 +52,11 @@ fun <T> HyperLazyList(
                 { _: Int, item: T -> itemKey(item) }
             }
         ) { index, item ->
-            val isFirst = index == 0
             val isLast = index == items.lastIndex
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(listItemShape(isFirst, isLast))
                     .background(containerColor)
-                    .then(if (hasVisibleBackground) Modifier.background(HyperColors.glassHighlightBrush) else Modifier)
             ) {
                 CompositionLocalProvider(
                     LocalHyperListItemDividerSuppressed provides isLast
@@ -71,7 +71,7 @@ fun <T> HyperLazyList(
 /**
  * 面向异构项目、分组和分页内容的懒列表入口。
  *
- * 列表状态与内容 DSL 由调用方持有，容器背景、圆角和描边仍由 HyperUI 统一提供。
+ * 列表状态与内容 DSL 由调用方持有，容器只提供页面级平铺背景，不添加圆角。
  */
 @Composable
 fun HyperLazyList(
@@ -79,19 +79,17 @@ fun HyperLazyList(
     state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    border: BorderStroke? = HyperListDefaults.border(),
-    colors: HyperListColors = HyperListDefaults.colors(),
+    border: BorderStroke? = null,
+    colors: HyperLazyListColors = HyperLazyListDefaults.colors(),
     content: LazyListScope.() -> Unit
 ) {
+    val containerColor = colors.containerColor
     CompositionLocalProvider(LocalHyperListItemDividerSuppressed provides false) {
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
-                .hyperGlassSurface(
-                    containerColor = colors.containerColor,
-                    shape = HyperListDefaults.Shape,
-                    border = border
-                ),
+                .background(containerColor)
+                .then(if (border != null) Modifier.border(border, RectangleShape) else Modifier),
             state = state,
             contentPadding = contentPadding,
             verticalArrangement = verticalArrangement,
@@ -100,12 +98,15 @@ fun HyperLazyList(
     }
 }
 
-internal fun listItemShape(
-    isFirst: Boolean,
-    isLast: Boolean
-) = RoundedCornerShape(
-    topStart = if (isFirst) LazyListCornerRadius else 0.dp,
-    topEnd = if (isFirst) LazyListCornerRadius else 0.dp,
-    bottomEnd = if (isLast) LazyListCornerRadius else 0.dp,
-    bottomStart = if (isLast) LazyListCornerRadius else 0.dp
-)
+object HyperLazyListDefaults {
+    @Composable
+    fun colors(containerColor: Color = Color.Unspecified): HyperLazyListColors = HyperLazyListColors(
+        containerColor = resolveHyperContainerColor(
+            containerColor = containerColor,
+            fallbackColor = HyperColors.cardContainer
+        )
+    )
+
+    @Composable
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
+}

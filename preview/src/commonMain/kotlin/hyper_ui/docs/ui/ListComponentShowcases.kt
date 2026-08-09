@@ -32,13 +32,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
 import hyper_ui.HyperLazyList
-import hyper_ui.HyperList
 import hyper_ui.HyperListItem
+import hyper_ui.HyperMenuList
 import hyper_ui.HyperRadioButton
 import hyper_ui.HyperSwitch
 
 @Composable
-fun HyperListDemo() {
+fun HyperMenuListDemo() {
     val items = listOf("系统设置", "通知权限", "同步策略", "安全中心")
     var pushEnabled by remember { mutableStateOf(true) }
     var autoSync by remember { mutableStateOf(false) }
@@ -49,7 +49,7 @@ fun HyperListDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Box(modifier = Modifier.height(220.dp)) {
-            HyperList(items = items) { item ->
+            HyperMenuList(items = items) { item ->
                 HyperListItem(
                     leadingContent = { ListIcon(iconFor(item)) },
                     headlineContent = { ListTitle(item) },
@@ -60,7 +60,7 @@ fun HyperListDemo() {
             }
         }
 
-        HyperList {
+        HyperMenuList {
             HyperListItem(
                 leadingContent = { ListIcon(Icons.Default.Notifications) },
                 headlineContent = { Text("推送通知") },
@@ -104,7 +104,16 @@ fun HyperListDemo() {
 
 @Composable
 fun LazyListDemo() {
-    val items = listOf("系统设置", "通知权限", "同步策略", "安全中心")
+    val items = listOf(
+        "系统设置",
+        "通知权限",
+        "同步策略",
+        "安全中心",
+        "账户资料",
+        "登录设备",
+        "隐私权限",
+        "数据备份"
+    )
 
     Box(
         modifier = Modifier

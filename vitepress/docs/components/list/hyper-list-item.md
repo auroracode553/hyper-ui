@@ -46,8 +46,8 @@ HyperListItem(
 
 - 不存在 `title`、`description`、`leadingIcon`、`trailing` 参数。
 - `headlineContent` 默认使用 16sp/22sp，`supportingContent` 默认使用 13sp/18sp；调用方显式传入 `style` 或 `fontSize` 时以调用方为准。
-- `dividerVisible = true` 时会绘制分割线；放入 `HyperList(items)` 或 `HyperLazyList(items)` 的最后一项时，父列表会自动隐藏该分割线。
+- `dividerVisible = true` 时会绘制分割线；放入 `HyperMenuList(items)` 或 `HyperLazyList(items)` 的最后一项时，父列表会自动隐藏该分割线。
 - 行点击和 trailing 控件点击是否独立，由调用方在 slot 中组合。
-- 放入 `HyperList` 或 `HyperLazyList` 时，列表容器负责外层圆角背景。
+- 放入 `HyperMenuList` 时，菜单容器负责外层圆角背景；放入 `HyperLazyList` 时保持页面列表的无圆角平铺效果。
 
 <WasmPreview demo="lazy_list" title="HyperListItem 交互预览" />

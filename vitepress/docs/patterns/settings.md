@@ -28,7 +28,7 @@ fun SettingsScreen() {
         HyperTopBar(
             titleContent = { Text("设置") }
         )
-        HyperList {
+        HyperMenuList {
             HyperListItem(
                 headlineContent = { Text("推送通知") },
                 supportingContent = { Text("接收重要消息提醒") },
