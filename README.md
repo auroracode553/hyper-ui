@@ -155,7 +155,7 @@ fun App() {
 
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
-- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；`HyperIconButton` 默认是半透明圆形控制按钮，深浅色自适应，视觉通过 `colors`、`shape` 和 `size` 控制）
+- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；`HyperIconButton` 浅色模式沿用既有填充与描边，深色模式默认是半透明圆形控制按钮，视觉通过 `colors`、`shape`、`size` 和描边颜色控制）
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperSlider`（输入框默认使用不透明背景和轻描边；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 是无圆角页面列表，可通过 `lazyLoading` 开关选择懒加载或普通列表；`HyperMenuList` 是圆角菜单列表和设置分组；数据入口自动隐藏最后一项分割线）

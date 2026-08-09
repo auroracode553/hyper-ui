@@ -169,11 +169,7 @@ fun IconButtonDemo() {
             }
             HyperIconButton(
                 onClick = {},
-                enabled = false,
-                colors = HyperIconButtonDefaults.colors(
-                    containerColor = rgba(255, 255, 255, 0.18f),
-                    contentColor = rgba(255, 255, 255, 1f)
-                )
+                enabled = false
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
@@ -192,7 +188,10 @@ fun IconButtonDemo() {
                 colors = HyperIconButtonDefaults.colors(
                     containerColor = rgba(255, 255, 255, 0.18f),
                     pressedContainerColor = rgba(255, 255, 255, 0.28f),
-                    contentColor = rgba(255, 255, 255, 1f)
+                    contentColor = rgba(255, 255, 255, 1f),
+                    outlineColor = rgba(255, 255, 255, 0f),
+                    pressedOutlineColor = rgba(255, 255, 255, 0f),
+                    disabledOutlineColor = rgba(255, 255, 255, 0f)
                 )
             ) {
                 Icon(

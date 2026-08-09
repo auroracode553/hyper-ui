@@ -31,7 +31,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         id = "icon_button",
         group = GROUP_BASIC,
         title = "HyperIconButton",
-        description = "Slot-first 圆形图标按钮容器。默认半透明控制按钮样式，深浅色自适应，颜色和按压态由调用方配置。",
+        description = "Slot-first 圆形图标按钮容器。浅色模式恢复既有填充与描边，深色模式默认使用半透明控制按钮样式。",
         code = """
             HyperIconButton(
                 onClick = onSearch
@@ -49,7 +49,10 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
                 colors = HyperIconButtonDefaults.colors(
                     containerColor = rgba(255, 255, 255, 0.18f),
                     pressedContainerColor = rgba(255, 255, 255, 0.28f),
-                    contentColor = rgba(255, 255, 255, 1f)
+                    contentColor = rgba(255, 255, 255, 1f),
+                    outlineColor = rgba(255, 255, 255, 0f),
+                    pressedOutlineColor = rgba(255, 255, 255, 0f),
+                    disabledOutlineColor = rgba(255, 255, 255, 0f)
                 )
             ) {
                 Icon(Icons.Default.PlayArrow, contentDescription = "播放")

@@ -4,6 +4,7 @@ package hyper_ui
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -33,8 +34,11 @@ data class HyperIconButtonColors(
     val contentColor: Color,
     val pressedContainerColor: Color,
     val pressedContentColor: Color,
+    val outlineColor: Color,
+    val pressedOutlineColor: Color,
     val disabledContainerColor: Color,
-    val disabledContentColor: Color
+    val disabledContentColor: Color,
+    val disabledOutlineColor: Color
 )
 
 @Composable
@@ -60,6 +64,11 @@ fun HyperIconButton(
         pressed -> colors.pressedContentColor
         else -> colors.contentColor
     }
+    val targetOutlineColor = when {
+        !enabled -> colors.disabledOutlineColor
+        pressed -> colors.pressedOutlineColor
+        else -> colors.outlineColor
+    }
     val animatedContainerColor by animateColorAsState(
         targetValue = targetContainerColor,
         label = "hyper-icon-button-container"
@@ -67,6 +76,10 @@ fun HyperIconButton(
     val animatedContentColor by animateColorAsState(
         targetValue = targetContentColor,
         label = "hyper-icon-button-content"
+    )
+    val animatedOutlineColor by animateColorAsState(
+        targetValue = targetOutlineColor,
+        label = "hyper-icon-button-outline"
     )
     val animatedScale by animateFloatAsState(
         targetValue = if (enabled && pressed) HyperIconButtonDefaults.PressedScale else 1f,
@@ -82,6 +95,17 @@ fun HyperIconButton(
             }
             .clip(shape)
             .background(animatedContainerColor, shape)
+            .then(
+                if (animatedOutlineColor.alpha > 0f) {
+                    Modifier.border(
+                        width = HyperIconButtonDefaults.OutlineWidth,
+                        color = animatedOutlineColor,
+                        shape = shape
+                    )
+                } else {
+                    Modifier
+                }
+            )
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -101,6 +125,7 @@ object HyperIconButtonDefaults {
     val Size = 48.dp
     val IconSize = 24.dp
     val Shape: Shape = CircleShape
+    val OutlineWidth = 1.dp
     const val PressedScale = 0.92f
 
     @Composable
@@ -109,23 +134,31 @@ object HyperIconButtonDefaults {
         contentColor: Color = Color.Unspecified,
         pressedContainerColor: Color = Color.Unspecified,
         pressedContentColor: Color = Color.Unspecified,
+        outlineColor: Color = Color.Unspecified,
+        pressedOutlineColor: Color = Color.Unspecified,
         disabledContainerColor: Color = Color.Unspecified,
-        disabledContentColor: Color = Color.Unspecified
+        disabledContentColor: Color = Color.Unspecified,
+        disabledOutlineColor: Color = Color.Unspecified
     ): HyperIconButtonColors {
         val defaultContainerColor = if (HyperColors.isLight) {
-            rgba(0, 0, 0, 0.08f)
+            HyperColors.elevatedContainer
         } else {
             rgba(255, 255, 255, 0.16f)
         }
         val defaultContentColor = if (HyperColors.isLight) {
-            rgba(28, 28, 30, 1f)
+            HyperColors.primaryText
         } else {
             rgba(255, 255, 255, 1f)
         }
         val defaultPressedContainerColor = if (HyperColors.isLight) {
-            rgba(0, 0, 0, 0.14f)
+            HyperColors.fieldContainer
         } else {
             rgba(255, 255, 255, 0.24f)
+        }
+        val defaultOutlineColor = if (HyperColors.isLight) {
+            HyperColors.fieldBorder
+        } else {
+            rgba(255, 255, 255, 0f)
         }
         val resolvedContainerColor = resolveHyperContainerColor(
             containerColor = containerColor,
@@ -143,9 +176,19 @@ object HyperIconButtonDefaults {
             containerColor = pressedContentColor,
             fallbackColor = resolvedContentColor
         )
+        val resolvedOutlineColor = resolveHyperContainerColor(
+            containerColor = outlineColor,
+            fallbackColor = defaultOutlineColor
+        )
+        val resolvedPressedOutlineColor = resolveHyperContainerColor(
+            containerColor = pressedOutlineColor,
+            fallbackColor = resolvedOutlineColor
+        )
         val resolvedDisabledContainerColor = if (disabledContainerColor == Color.Unspecified) {
-            resolvedContainerColor.copy(
-                alpha = resolvedContainerColor.alpha * HyperStyleDefaults.DisabledAlpha
+            resolveHyperDisabledContainerColor(
+                containerColor = resolvedContainerColor,
+                usesDefaultContainerColor = containerColor == Color.Unspecified,
+                fallbackDisabledColor = HyperColors.disabledContainer
             )
         } else {
             disabledContainerColor
@@ -155,14 +198,22 @@ object HyperIconButtonDefaults {
         } else {
             disabledContentColor
         }
+        val resolvedDisabledOutlineColor = if (disabledOutlineColor == Color.Unspecified) {
+            resolvedOutlineColor.copy(alpha = resolvedOutlineColor.alpha * HyperStyleDefaults.DisabledAlpha)
+        } else {
+            disabledOutlineColor
+        }
 
         return HyperIconButtonColors(
             containerColor = resolvedContainerColor,
             contentColor = resolvedContentColor,
             pressedContainerColor = resolvedPressedContainerColor,
             pressedContentColor = resolvedPressedContentColor,
+            outlineColor = resolvedOutlineColor,
+            pressedOutlineColor = resolvedPressedOutlineColor,
             disabledContainerColor = resolvedDisabledContainerColor,
-            disabledContentColor = resolvedDisabledContentColor
+            disabledContentColor = resolvedDisabledContentColor,
+            disabledOutlineColor = resolvedDisabledOutlineColor
         )
     }
 }
