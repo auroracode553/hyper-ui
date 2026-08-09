@@ -31,17 +31,28 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         id = "icon_button",
         group = GROUP_BASIC,
         title = "HyperIconButton",
-        description = "Slot-first 图标按钮容器。默认带轻描边，形状、颜色和尺寸归组件，图标内容由调用方传入。",
+        description = "Slot-first 圆形图标按钮容器。默认半透明控制按钮样式，深浅色自适应，颜色和按压态由调用方配置。",
         code = """
             HyperIconButton(
-                onClick = onSearch,
-                shape = CircleShape
+                onClick = onSearch
             ) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "搜索",
                     modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
                 )
+            }
+
+            HyperIconButton(
+                onClick = onPlay,
+                size = 56.dp,
+                colors = HyperIconButtonDefaults.colors(
+                    containerColor = rgba(255, 255, 255, 0.18f),
+                    pressedContainerColor = rgba(255, 255, 255, 0.28f),
+                    contentColor = rgba(255, 255, 255, 1f)
+                )
+            ) {
+                Icon(Icons.Default.PlayArrow, contentDescription = "播放")
             }
         """.trimIndent(),
         content = { IconButtonDemo() }

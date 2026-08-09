@@ -70,7 +70,10 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                     Icon(Icons.Default.Search, contentDescription = null)
                 },
                 trailingContent = {
-                    HyperIconButton(onClick = { keyword = "" }) {
+                    HyperIconButton(
+                        onClick = { keyword = "" },
+                        size = 32.dp
+                    ) {
                         Icon(Icons.Default.Close, contentDescription = "清空")
                     }
                 }

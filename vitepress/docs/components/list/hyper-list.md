@@ -127,7 +127,6 @@ HyperList(state = listState) {
 - `lazyLoading = false` 会一次组合全部项目，适合少量稳定数据或需要普通 `Column` 行为的场景。
 - DSL 入口固定使用 `LazyListScope`，无法推断最后一个子项；使用 `HyperListItem.dividerVisible` 时仍由调用方控制最后一项是否显示。
 - 需要圆角菜单、设置分组或少量操作入口时，使用 [HyperMenuList](hyper-menu-list.md)。
-- `HyperLazyList` 已作为迁移兼容入口保留并标记废弃，新代码应使用 `HyperList`。
 - 放入另一个同方向无界滚动容器前，应明确尺寸约束。
 
 ## 交互预览

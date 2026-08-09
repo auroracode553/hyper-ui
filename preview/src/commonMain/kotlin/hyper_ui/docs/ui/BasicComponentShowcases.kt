@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +30,7 @@ import hyper_ui.HyperButtonDefaults
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
+import hyper_ui.rgba
 
 @Composable
 fun ButtonDemo() {
@@ -128,10 +130,7 @@ fun IconButtonDemo() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             HyperIconButton(
-                onClick = { selectedAction = "搜索" },
-                colors = HyperIconButtonDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                onClick = { selectedAction = "搜索" }
             ) {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -142,7 +141,8 @@ fun IconButtonDemo() {
             HyperIconButton(
                 onClick = { selectedAction = "通知" },
                 colors = HyperIconButtonDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.16f),
+                    pressedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.26f),
                     contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
@@ -156,7 +156,8 @@ fun IconButtonDemo() {
                 onClick = { selectedAction = "删除" },
                 shape = RoundedCornerShape(12.dp),
                 colors = HyperIconButtonDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.14f),
+                    pressedContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.24f),
                     contentColor = MaterialTheme.colorScheme.error
                 )
             ) {
@@ -170,12 +171,48 @@ fun IconButtonDemo() {
                 onClick = {},
                 enabled = false,
                 colors = HyperIconButtonDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = rgba(255, 255, 255, 0.18f),
+                    contentColor = rgba(255, 255, 255, 1f)
                 )
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "关闭",
+                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                )
+            }
+        }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            HyperIconButton(
+                onClick = { selectedAction = "媒体控制" },
+                size = 56.dp,
+                colors = HyperIconButtonDefaults.colors(
+                    containerColor = rgba(255, 255, 255, 0.18f),
+                    pressedContainerColor = rgba(255, 255, 255, 0.28f),
+                    contentColor = rgba(255, 255, 255, 1f)
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.PlayArrow,
+                    contentDescription = "媒体控制",
+                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                )
+            }
+            HyperIconButton(
+                onClick = { selectedAction = "浅色自定义" },
+                size = 56.dp,
+                colors = HyperIconButtonDefaults.colors(
+                    containerColor = rgba(28, 28, 30, 0.10f),
+                    pressedContainerColor = rgba(28, 28, 30, 0.18f),
+                    contentColor = rgba(28, 28, 30, 1f)
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "浅色自定义",
                     modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
                 )
             }
