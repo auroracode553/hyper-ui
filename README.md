@@ -41,7 +41,11 @@ https://gitee.com/my_new_way/hyper_ui/blob/master/vitepress/docs/index.md
 ```markdown
 ## HyperUI
 
-本项目使用 HyperUI：`com.hyperui:hyper-ui:1.0.0`
+本项目使用 HyperUI。
+
+添加或更新依赖前，请从以下任一线上入口读取最新可用 tag，不要在项目文档中保存固定版本号：
+- https://jitpack.io/#auroracode553/hyper-ui
+- https://github.com/auroracode553/hyper-ui/tags
 
 AI 编写 HyperUI 代码前，请优先参考：
 https://gitee.com/my_new_way/hyper_ui/blob/master/vitepress/docs/index.md
@@ -64,11 +68,11 @@ HyperUI 面向 Android Compose 项目，提供按钮、输入框、列表分组�
 
 ## 接入方式
 
-### 方式一：Maven 依赖
+### 方式一：JitPack 依赖
 
-在调用方项目的 `settings.gradle.kts` 中加入实际发布使用的 Maven 仓库。仓库地址取决于发布方案，例如 Maven Central、JitPack、GitHub Pages / 对象存储静态 Maven、GitHub Packages 或私有制品库。
+先从 [JitPack](https://jitpack.io/#auroracode553/hyper-ui) 或 [GitHub Tags](https://github.com/auroracode553/hyper-ui/tags) 读取最新可用 tag。文档不记录固定版本号，避免依赖示例与实际发布状态不一致。
 
-如果发布到普通公开 Maven 仓库或静态 Maven 仓库，常见格式如下：
+在调用方项目的 `settings.gradle.kts` 中添加 JitPack 仓库：
 
 ```kotlin
 dependencyResolutionManagement {
@@ -76,22 +80,20 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://你的-maven-仓库地址/")
+        maven("https://jitpack.io")
     }
 }
 ```
 
-在调用方模块的 `build.gradle.kts` 中加入依赖：
+在调用方模块的 `build.gradle.kts` 中加入依赖，并将 `<latest-tag>` 替换为线上查询到的完整 tag：
 
 ```kotlin
 dependencies {
-    implementation("com.hyperui:hyper-ui:1.0.0")
+    implementation("com.github.auroracode553:hyper-ui:<latest-tag>")
 }
 ```
 
-如果使用 JitPack，仓库地址通常为 `https://jitpack.io`，依赖坐标会改为 JitPack 生成的 `com.github.<user>:<repo>:<tag>` 格式，不能继续假设一定是 `com.hyperui:hyper-ui:1.0.0`。
-
-本项目的 JitPack 地址：[https://jitpack.io/#auroracode553/hyper-ui](https://jitpack.io/#auroracode553/hyper-ui)
+JitPack 坐标格式为 `com.github.<user>:<repo>:<tag>`；tag 是否带 `v` 前缀，以线上实际名称为准。
 
 ### 方式二：本地源码联调
 
@@ -114,7 +116,7 @@ if (hyperUiLocal.exists()) {
 
 ```kotlin
 dependencies {
-    implementation("com.github.auroracode553:hyper-ui:0.0.4")
+    implementation("com.github.auroracode553:hyper-ui:<latest-tag>")
 }
 ```
 
@@ -331,5 +333,4 @@ cd library
 ```text
 groupId:    com.hyperui
 artifactId: hyper-ui
-version:    1.0.0
 ```

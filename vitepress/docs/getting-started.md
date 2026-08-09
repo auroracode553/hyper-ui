@@ -6,15 +6,31 @@
 - 调用方 `minSdk` 不低于 30。
 - HyperUI 只提供 UI，不要求调用方采用特定导航、网络或状态管理框架。
 
-## Maven 依赖
+## JitPack 依赖
+
+先从 [JitPack](https://jitpack.io/#auroracode553/hyper-ui) 或 [GitHub Tags](https://github.com/auroracode553/hyper-ui/tags) 读取最新可用 tag。文档不保存固定版本号。
+
+在调用方 `settings.gradle.kts` 中添加 JitPack 仓库：
 
 ```kotlin
-dependencies {
-    implementation("com.hyperui:hyper-ui:1.0.0")
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven("https://jitpack.io")
+    }
 }
 ```
 
-仓库地址取决于实际发布位置。调用方需要在 `settings.gradle.kts` 中自行配置对应 Maven 仓库；JitPack 坐标不能直接套用以上坐标。
+在调用方模块中添加依赖，将 `<latest-tag>` 替换为线上查询到的完整 tag：
+
+```kotlin
+dependencies {
+    implementation("com.github.auroracode553:hyper-ui:<latest-tag>")
+}
+```
+
+tag 是否带 `v` 前缀，以 JitPack 或仓库 Tags 页面显示的实际名称为准。
 
 ## 推荐 imports
 

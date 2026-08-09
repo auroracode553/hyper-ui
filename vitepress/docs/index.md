@@ -19,6 +19,7 @@ HyperUI 是 Android Jetpack Compose UI 组件库。它负责组件样式与交�
 
 AI 生成代码时必须遵守：
 
+- 生成或更新依赖声明前，从 [JitPack](https://jitpack.io/#auroracode553/hyper-ui) 或 [GitHub Tags](https://github.com/auroracode553/hyper-ui/tags) 读取最新可用 tag；文档不提供固定版本号。
 - 公开 API 统一从 `hyper_ui` 包导入；不要导入 `hyper_ui.core.*`。
 - 只使用具体组件页“公开签名”中存在的参数，不根据其他 Compose 库猜测参数名。
 - `value`、`checked`、`selected`、`show`、`open`、`expanded`、进度和导航选择等业务状态均由调用方持有。
@@ -37,11 +38,11 @@ AI 生成代码时必须遵守：
 | Wasm preview | 浏览器访问者 | 在文档页中操作跨平台预览 | 否 |
 | `hyper_ui` 源码 | 维护者 | 最终实现 | 文档冲突时以当前源码为准并修正文档 |
 
-## 平台与版本
+## 平台信息
 
 - 使用平台：Android
 - UI 技术：Jetpack Compose / Material 3
-- Maven 坐标：`com.hyperui:hyper-ui:1.0.0`
+- JitPack 坐标格式：`com.github.auroracode553:hyper-ui:<tag>`
 - `minSdk`：30
 - `compileSdk`：36
 - 公开包：`hyper_ui`

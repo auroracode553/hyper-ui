@@ -25,34 +25,34 @@ git commit -m "初始提交"
 git push -u origin main
 ```
 
-### 第二步：打版本 Tag
+### 第二步：打发布 Tag
 
 在 `library/` 目录下：
 
 ```powershell
-git tag v1.0.0
-git push origin v1.0.0
+git tag <tag>
+git push origin <tag>
 ```
 
-Tag 命名用 `v` + 版本号，与 `library/build.gradle.kts` 中 `publishing.version` 保持一致。
+Tag 名称与 `library/build.gradle.kts` 中的 `publishing.version` 保持一致。
 
 ### 第三步：JitPack 构建
 
 1. 打开 [https://jitpack.io](https://jitpack.io)
 2. 输入 GitHub 仓库地址：`https://github.com/auroracode553/hyper-ui`
 3. 点击 **Look up**
-4. 在 **Releases** 列表中选择刚推送的 tag（如 `v1.0.0`）
+4. 在 **Releases** 列表中选择刚推送的 tag
 5. 点击 **Get it**，等待构建完成
 
 构建日志显示绿色即表示成功。失败时点击日志图标查看 `build.log`。
 
-### 更新版本
+### 发布后续 Tag
 
 1. 修改 `library/build.gradle.kts` 中 `publishing.version`
 2. 在 `library/` 目录下打新 tag 并推送：
    ```powershell
-   git tag v1.0.1
-   git push origin v1.0.1
+   git tag <tag>
+   git push origin <tag>
    ```
 3. 在 JitPack 网站对新 tag 点击 **Get it**
 
@@ -75,22 +75,17 @@ dependencyResolutionManagement {
 
 ### 添加依赖
 
+先从 [JitPack](https://jitpack.io/#auroracode553/hyper-ui) 或 [GitHub Tags](https://github.com/auroracode553/hyper-ui/tags) 读取最新可用 tag。文档不固定记录发布版本，避免与线上状态不一致。将 `<latest-tag>` 替换为查询到的完整 tag：
+
 调用方模块的 `build.gradle.kts`：
 
 ```kotlin
 dependencies {
-    implementation("com.github.auroracode553:hyper-ui:v1.0.0")
+    implementation("com.github.auroracode553:hyper-ui:<latest-tag>")
 }
 ```
 
 > JitPack 坐标格式：`com.github.<用户名>:<仓库名>:<tag>`
-
-### 版本号对照
-
-| 发布方式 | 坐标 |
-|---------|------|
-| 本地 Maven | `com.hyperui:hyper-ui:1.0.0` |
-| JitPack | `com.github.auroracode553:hyper-ui:v1.0.0` |
 
 ## 本地调试（不通过 JitPack）
 
@@ -114,7 +109,7 @@ cd library
 .\gradlew.bat publishToMavenLocal
 ```
 
-然后调用方添加 `mavenLocal()` 仓库，使用 `com.hyperui:hyper-ui:1.0.0` 坐标。
+然后调用方添加 `mavenLocal()` 仓库，并从 `library/build.gradle.kts` 的 `publishing` 配置读取本地发布坐标，不在文档中重复维护固定值。
 
 ## 构建失败排查
 
