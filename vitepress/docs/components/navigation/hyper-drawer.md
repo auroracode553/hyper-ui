@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/drawer/HyperDrawer.kt`
 - 预览：`drawer`
 
-`HyperDrawer` 是四方向抽屉容器，无遮罩。抽屉面板默认带 1dp 轻描边，`HyperDrawerHeader` 与 `HyperDrawerItem` 都采用 slot-first API。
+`HyperDrawer` 是四方向抽屉容器，无遮罩。抽屉面板使用不透明实色卡片背景和实色轻描边，不再叠加玻璃高光；打开与关闭只做滑入滑出动画，不再改变面板透明度。`HyperDrawerHeader` 与 `HyperDrawerItem` 都采用 slot-first API。
 
 ## 公开签名
 
@@ -103,8 +103,10 @@ HyperDrawer(
 ## 约束
 
 - 不存在 `scrimColor`，抽屉不渲染遮罩。
+- 默认面板背景使用不透明的 `HyperColors.cardContainer`；通过 `HyperDrawerColors` 或 `HyperDrawerDefaults.colors(...)` 传入含 alpha 的容器色时，会先与页面背景合成为实色。
+- 抽屉进出场只使用滑动动画，不使用淡入淡出；四个方向的面板均全程不透明。
 - Header/Item 不提供 `title`、`description`、`leadingIcon` 参数。
 - `open`、选中项和路由由调用方持有。
-- 默认描边来自 `HyperDrawerDefaults.border()`，内部使用 `HyperColors.panelBorder`；如需无边框，传入 `border = null`。
+- 默认描边来自 `HyperDrawerDefaults.border()`，使用合成后的实色轻描边；如需无边框，传入 `border = null`。
 
 <WasmPreview demo="drawer" title="HyperDrawer 交互预览" />

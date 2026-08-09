@@ -3,8 +3,6 @@ package hyper_ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
@@ -74,6 +72,11 @@ fun HyperDrawer(
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
+    val containerColor = resolveHyperOpaqueColor(
+        color = colors.containerColor,
+        fallbackColor = HyperColors.cardContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
     val drawerAlignment = when (position) {
         HyperDrawerPosition.Left -> Alignment.CenterStart
         HyperDrawerPosition.Right -> Alignment.CenterEnd
@@ -121,8 +124,8 @@ fun HyperDrawer(
             ) {
                 Column(
                     modifier = drawerSizeModifier
-                        .hyperGlassSurface(
-                            containerColor = colors.containerColor,
+                        .hyperSolidSurface(
+                            containerColor = containerColor,
                             shape = drawerShape(position),
                             border = border
                         )
@@ -292,7 +295,7 @@ private fun drawerEnterTransition(position: HyperDrawerPosition) = when (positio
         animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
         initialOffsetY = { fullHeight -> fullHeight }
     )
-} + fadeIn(animationSpec = tween(HyperDrawerDefaults.AnimationMillis))
+}
 
 private fun drawerExitTransition(position: HyperDrawerPosition) = when (position) {
     HyperDrawerPosition.Left -> slideOutHorizontally(
@@ -311,7 +314,7 @@ private fun drawerExitTransition(position: HyperDrawerPosition) = when (position
         animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
         targetOffsetY = { fullHeight -> fullHeight }
     )
-} + fadeOut(animationSpec = tween(HyperDrawerDefaults.AnimationMillis))
+}
 
 object HyperDrawerDefaults {
     val Width = 320.dp
@@ -338,7 +341,11 @@ object HyperDrawerDefaults {
         val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
 
         return HyperDrawerColors(
-            containerColor = resolveHyperContainerColor(containerColor, HyperColors.elevatedContainer),
+            containerColor = resolveHyperOpaqueColor(
+                color = containerColor,
+                fallbackColor = HyperColors.cardContainer,
+                backgroundColor = HyperColors.pageBackground
+            ),
             contentColor = resolvedContentColor,
             supportingColor = resolveHyperContainerColor(supportingColor, HyperColors.secondaryText),
             selectedContainerColor = resolveHyperContainerColor(
@@ -355,5 +362,8 @@ object HyperDrawerDefaults {
     }
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
+        color = color,
+        backgroundColor = HyperColors.cardContainer
+    )
 }

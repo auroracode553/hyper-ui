@@ -206,6 +206,12 @@ fun DrawerDemo() {
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
+                Text(
+                    text = "抽屉面板全程使用不透明实色，仅做滑入滑出动画，外部区域不绘制遮罩。",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 13.sp,
+                    lineHeight = 18.sp
+                )
                 DrawerPositionSelector(
                     selected = drawerPosition,
                     onSelect = { drawerPosition = it }

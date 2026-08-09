@@ -37,7 +37,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "drawer",
         group = GROUP_NAVIGATION,
         title = "HyperDrawer",
-        description = "抽屉容器默认带轻描边，支持四个方向。Header 和 Item 均使用 slot 渲染，无遮罩。",
+        description = "抽屉使用不透明实色面板和纯滑动动画，支持四个方向；Header 和 Item 使用 slot 渲染，无遮罩。",
         code = """
             HyperDrawer(
                 open = open,
