@@ -2,18 +2,21 @@
 package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.HyperMenuListDemo
-import hyper_ui.docs.ui.LazyListDemo
+import hyper_ui.docs.ui.HyperListDemo
 
 private const val GROUP_LIST = "列表组件"
 
 internal fun listComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
-        id = "lazy_list",
+        id = "hyper_list",
         group = GROUP_LIST,
-        title = "HyperLazyList",
-        description = "页面级懒加载列表容器，支持同构数据和异构内容 DSL，默认无圆角和外层描边。",
+        title = "HyperList",
+        description = "页面级列表容器，支持通过 lazyLoading 开关选择懒加载或普通列表渲染。",
         code = """
-            HyperLazyList(items = items) { item ->
+            HyperList(
+                items = items,
+                lazyLoading = true
+            ) { item ->
                 HyperListItem(
                     leadingContent = { Icon(item.icon, null) },
                     headlineContent = { Text(item.title) },
@@ -22,14 +25,21 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
                 )
             }
 
-            HyperLazyList(state = listState) {
+            HyperList(
+                items = items,
+                lazyLoading = false
+            ) { item ->
+                HyperListItem(headlineContent = { Text(item.title) })
+            }
+
+            HyperList(state = listState) {
                 item { HyperListItem(headlineContent = { Text("概览") }) }
                 items(items, key = { it.id }) { item ->
                     HyperListItem(headlineContent = { Text(item.title) })
                 }
             }
         """.trimIndent(),
-        content = { LazyListDemo() }
+        content = { HyperListDemo() }
     ),
     ComponentDemo(
         id = "hyper_menu_list",

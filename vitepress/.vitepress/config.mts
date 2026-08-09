@@ -91,7 +91,7 @@ export default defineConfig({
       {
         text: '列表组件',
         items: [
-          { text: 'HyperLazyList', link: '/components/list/hyper-lazy-list' },
+          { text: 'HyperList', link: '/components/list/hyper-list' },
           { text: 'HyperMenuList', link: '/components/list/hyper-menu-list' },
           { text: 'HyperListItem', link: '/components/list/hyper-list-item' }
         ]

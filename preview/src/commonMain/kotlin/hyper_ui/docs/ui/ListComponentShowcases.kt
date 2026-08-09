@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
-import hyper_ui.HyperLazyList
+import hyper_ui.HyperList
 import hyper_ui.HyperListItem
 import hyper_ui.HyperMenuList
 import hyper_ui.HyperRadioButton
@@ -103,7 +105,7 @@ fun HyperMenuListDemo() {
 }
 
 @Composable
-fun LazyListDemo() {
+fun HyperListDemo() {
     val items = listOf(
         "系统设置",
         "通知权限",
@@ -114,20 +116,43 @@ fun LazyListDemo() {
         "隐私权限",
         "数据备份"
     )
+    var lazyLoading by remember { mutableStateOf(true) }
 
-    Box(
+    Column(
         modifier = Modifier
-            .widthIn(max = 560.dp)
-            .height(280.dp)
+            .widthIn(max = 560.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        HyperLazyList(items = items) { item ->
-            HyperListItem(
-                leadingContent = { ListIcon(iconFor(item)) },
-                headlineContent = { ListTitle(item) },
-                supportingContent = { ListDescription("点击查看配置") },
-                dividerVisible = true,
-                dividerInset = 70.dp
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = if (lazyLoading) "懒加载开启" else "普通列表渲染",
+                color = LocalContentColor.current,
+                fontSize = 14.sp,
+                lineHeight = 20.sp
             )
+            HyperSwitch(
+                checked = lazyLoading,
+                onCheckedChange = { lazyLoading = it }
+            )
+        }
+
+        Box(modifier = Modifier.height(280.dp)) {
+            HyperList(
+                items = items,
+                lazyLoading = lazyLoading
+            ) { item ->
+                HyperListItem(
+                    leadingContent = { ListIcon(iconFor(item)) },
+                    headlineContent = { ListTitle(item) },
+                    supportingContent = { ListDescription("点击查看配置") },
+                    dividerVisible = true,
+                    dividerInset = 70.dp
+                )
+            }
         }
     }
 }

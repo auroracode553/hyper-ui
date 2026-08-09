@@ -39,7 +39,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperLazyList](components/list/hyper-lazy-list.md) | 页面级懒加载列表，默认无圆角和外层描边 | 调用方提供数据 |
+| [HyperList](components/list/hyper-list.md) | 页面级列表，可通过 `lazyLoading` 开关选择懒加载或普通列表 | 调用方提供数据 |
 | [HyperMenuList](components/list/hyper-menu-list.md) | 圆角菜单列表和设置分组，数据入口自动隐藏最后一项分割线 | 调用方提供数据或内容 |
 | [HyperListItem](components/list/hyper-list-item.md) | 列表行内容 | 调用方处理点击和尾部状态 |
 

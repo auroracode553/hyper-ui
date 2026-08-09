@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中负责承载菜单列表容器 HyperMenuList，并提供 HyperList 迁移兼容入口。 */
+/** 文件职责：在 hyper_ui 中负责承载菜单列表容器 HyperMenuList。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -121,68 +121,3 @@ internal fun menuListItemShape(
     bottomEnd = if (isLast) MenuListCornerRadius else 0.dp,
     bottomStart = if (isLast) MenuListCornerRadius else 0.dp
 )
-
-@Deprecated(
-    message = "HyperList 已更名为 HyperMenuList；页面级列表请使用 HyperLazyList。",
-    replaceWith = ReplaceWith("HyperMenuList(items, modifier, contentPadding, verticalArrangement, border, colors, itemContent)")
-)
-@Composable
-fun <T> HyperList(
-    items: List<T>,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    border: BorderStroke? = HyperMenuListDefaults.border(),
-    colors: HyperListColors = HyperMenuListDefaults.colors(),
-    itemContent: @Composable (item: T) -> Unit
-) {
-    HyperMenuList(
-        items = items,
-        modifier = modifier,
-        contentPadding = contentPadding,
-        verticalArrangement = verticalArrangement,
-        border = border,
-        colors = colors,
-        itemContent = itemContent
-    )
-}
-
-@Deprecated(
-    message = "HyperList 已更名为 HyperMenuList；页面级列表请使用 HyperLazyList。",
-    replaceWith = ReplaceWith("HyperMenuList(modifier, contentPadding, verticalArrangement, border, colors, content)")
-)
-@Composable
-fun HyperList(
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    border: BorderStroke? = HyperMenuListDefaults.border(),
-    colors: HyperListColors = HyperMenuListDefaults.colors(),
-    content: @Composable ColumnScope.() -> Unit
-) {
-    HyperMenuList(
-        modifier = modifier,
-        contentPadding = contentPadding,
-        verticalArrangement = verticalArrangement,
-        border = border,
-        colors = colors,
-        content = content
-    )
-}
-
-@Deprecated("HyperListColors 已更名为 HyperMenuListColors。", ReplaceWith("HyperMenuListColors"))
-typealias HyperListColors = HyperMenuListColors
-
-@Deprecated("HyperListDefaults 已更名为 HyperMenuListDefaults。", ReplaceWith("HyperMenuListDefaults"))
-object HyperListDefaults {
-    val Shape: Shape
-        get() = HyperMenuListDefaults.Shape
-
-    @Composable
-    fun colors(containerColor: Color = Color.Unspecified): HyperMenuListColors =
-        HyperMenuListDefaults.colors(containerColor)
-
-    @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke =
-        HyperMenuListDefaults.border(color)
-}
