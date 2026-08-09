@@ -243,6 +243,7 @@ fun HyperDialogDemo() {
     var showDialog by remember { mutableStateOf(false) }
     var savedNote by remember { mutableStateOf("默认备注") }
     var draftNote by remember { mutableStateOf(savedNote) }
+    var useResponsiveWidth by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier.widthIn(max = 420.dp),
@@ -257,6 +258,12 @@ fun HyperDialogDemo() {
         ) {
             Text(text = "编辑备注")
         }
+        HyperButton(
+            tone = HyperButtonTone.Outline,
+            onClick = { useResponsiveWidth = !useResponsiveWidth }
+        ) {
+            Text(text = if (useResponsiveWidth) "宽度：响应式 90%" else "宽度：填满可用区域")
+        }
         Text(
             text = "当前备注：$savedNote",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -264,7 +271,7 @@ fun HyperDialogDemo() {
             lineHeight = 18.sp
         )
         Text(
-            text = "可缩放预览窗口验证：弹窗最大宽度为 360dp，四周至少保留 16dp 间距。",
+            text = "可缩放预览窗口验证：弹窗使用 90% 可用宽度，限制在 280–360dp，并保留 16dp 窗口间距。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp,
@@ -276,6 +283,7 @@ fun HyperDialogDemo() {
         visible = showDialog,
         onDismissRequest = { showDialog = false },
         title = "编辑备注",
+        widthFraction = if (useResponsiveWidth) 0.9f else 1f,
         horizontalAlignment = Alignment.Start,
         actionContent = {
             HyperButton(

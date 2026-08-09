@@ -49,5 +49,5 @@
 | --- | --- | --- |
 | [HyperDropdownMenu](components/feedback/hyper-dropdown-menu.md) | Popup 浮层菜单，默认不透明卡片面板 | 调用方提供 `expanded` |
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 线性/圆形进度指示器，线性轨道默认带轻描边 | 调用方提供 `progress` |
-| [HyperDialog](components/feedback/hyper-dialog.md) | 自适应窗口边界、可选固定标题的内容弹窗 | 调用方提供 `visible` 和内容状态 |
+| [HyperDialog](components/feedback/hyper-dialog.md) | 默认按 90% 可用宽度自适应、可选固定标题的内容弹窗 | 调用方提供 `visible` 和内容状态 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 可选固定标题的 Slot-first Alert 弹窗 | 调用方提供 `visible` 并处理结果 |

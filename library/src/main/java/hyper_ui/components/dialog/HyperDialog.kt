@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
@@ -67,6 +66,7 @@ fun HyperDialog(
     modifier: Modifier = Modifier,
     minWidth: Dp = HyperDialogDefaults.MinWidth,
     maxWidth: Dp = HyperDialogDefaults.MaxWidth,
+    widthFraction: Float = HyperDialogDefaults.WidthFraction,
     maxHeight: Dp = HyperDialogDefaults.MaxHeight,
     windowPadding: PaddingValues = HyperDialogDefaults.WindowPadding,
     shape: Shape = HyperDialogDefaults.Shape,
@@ -85,6 +85,13 @@ fun HyperDialog(
     border: BorderStroke? = HyperDialogDefaults.border(),
     content: @Composable ColumnScope.() -> Unit
 ) {
+    require(widthFraction > 0f && widthFraction <= 1f) {
+        "widthFraction must be greater than 0 and less than or equal to 1"
+    }
+    require(minWidth <= maxWidth) {
+        "minWidth must be less than or equal to maxWidth"
+    }
+
     var isFullyDismissed by remember { mutableStateOf(!visible) }
 
     LaunchedEffect(visible) {
@@ -100,6 +107,8 @@ fun HyperDialog(
     val resolvedTitle = title?.trim()?.takeIf { it.isNotEmpty() }
     val scrollState = rememberScrollState()
     val animationProgress = remember { Animatable(0f) }
+    val requestedMinWidth = minWidth
+    val requestedMaxWidth = maxWidth
 
     LaunchedEffect(visible) {
         if (visible) {
@@ -119,16 +128,21 @@ fun HyperDialog(
                 dismissOnClickOutside = dismissOnClickOutside
             )
         ) {
-            Box(
+            BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(windowPadding),
                 contentAlignment = Alignment.Center
             ) {
+                val resolvedMaxWidth = requestedMaxWidth.coerceAtMost(this.maxWidth)
+                val resolvedMinWidth = requestedMinWidth.coerceAtMost(resolvedMaxWidth)
+                // 先按窗口比例收窄，再应用尺寸边界，兼顾竖屏留白与小窗口不越界。
+                val resolvedWidth = (this.maxWidth * widthFraction)
+                    .coerceIn(resolvedMinWidth, resolvedMaxWidth)
+
                 Column(
                     modifier = Modifier
-                        .widthIn(min = minWidth, max = maxWidth)
-                        .fillMaxWidth()
+                        .width(resolvedWidth)
                         .heightIn(max = maxHeight)
                         .then(modifier)
                         .graphicsLayer {
@@ -251,6 +265,7 @@ private fun HyperDialogScrollIndicator(
 object HyperDialogDefaults {
     val MinWidth = 280.dp
     val MaxWidth = 360.dp
+    const val WidthFraction = 0.9f
     val MaxHeight = 480.dp
     val WindowPadding = PaddingValues(16.dp)
     val Shape: Shape = RoundedCornerShape(20.dp)

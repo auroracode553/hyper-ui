@@ -49,12 +49,13 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "基础对话框容器默认最大宽度 360dp，并保留 16dp 窗口间距；title 固定在顶部，正文滚动，底部 action 固定。",
+        description = "基础对话框默认取窗口可用宽度的 90%，并受 280–360dp 范围和 16dp 窗口间距约束；title 固定在顶部，正文滚动。",
         code = """
             HyperDialog(
                 visible = visible,
                 onDismissRequest = onDismiss,
                 title = "编辑备注",
+                widthFraction = 0.9f,
                 actionContent = {
                     HyperButton(onClick = onCancel) { Text("取消") }
                     HyperButton(onClick = onSave) { Text("保存") }

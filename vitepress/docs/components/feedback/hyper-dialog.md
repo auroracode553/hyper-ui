@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/dialog/HyperDialog.kt`
 - 预览：`custom_dialog`
 
-`HyperDialog` 是基础弹窗容器，只负责居中浮层、可选固定顶部标题、尺寸、滚动内容区、底部 action slot 和动画。面板默认限制为 360dp 最大宽度、480dp 最大高度，并在窗口四周保留 16dp 间距，因此横屏或低高度窗口不会贴边铺满。弹窗不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 轻描边，避免页面内容透到弹窗内部。
+`HyperDialog` 是基础弹窗容器，只负责居中浮层、可选固定顶部标题、尺寸、滚动内容区、底部 action slot 和动画。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为 480dp，并在窗口四周保留 16dp 间距。该策略会适度收窄竖屏弹窗，同时让横屏和大屏继续受最大宽度约束。弹窗不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 轻描边，避免页面内容透到弹窗内部。
 
 ## 公开签名
 
@@ -17,6 +17,7 @@ fun HyperDialog(
     modifier: Modifier = Modifier,
     minWidth: Dp = HyperDialogDefaults.MinWidth,
     maxWidth: Dp = HyperDialogDefaults.MaxWidth,
+    widthFraction: Float = HyperDialogDefaults.WidthFraction,
     maxHeight: Dp = HyperDialogDefaults.MaxHeight,
     windowPadding: PaddingValues = HyperDialogDefaults.WindowPadding,
     shape: Shape = HyperDialogDefaults.Shape,
@@ -43,6 +44,7 @@ fun HyperDialog(
 object HyperDialogDefaults {
     val MinWidth = 280.dp
     val MaxWidth = 360.dp
+    const val WidthFraction = 0.9f
     val MaxHeight = 480.dp
     val WindowPadding = PaddingValues(16.dp)
     val Shape: Shape = RoundedCornerShape(20.dp)
@@ -82,7 +84,8 @@ HyperDialog(
 - 不渲染遮罩或半透明蒙层。
 - 标题通过 `title` 属性提供，由组件固定渲染在顶部，不参与正文滚动；`title = null`、空字符串或全空白字符串时不渲染标题槽位，也不预留标题高度。
 - 默认背景来自 `HyperDialogDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.cardContainer`，保持不透明卡片效果。
-- `minWidth`、`maxWidth` 和 `maxHeight` 约束面板尺寸；默认 `windowPadding` 确保面板与窗口四周至少保留 16dp 间距。窗口小于默认最小宽度时，以窗口可用宽度为准，不会越界。
+- `widthFraction` 必须在 `(0, 1]` 范围内，默认取扣除 `windowPadding` 后可用宽度的 `90%`；结果继续受 `minWidth`、`maxWidth` 约束。`maxHeight` 约束面板高度。
+- 默认 `windowPadding` 确保面板与窗口四周至少保留 16dp 间距。窗口不足以容纳默认最小宽度时，以窗口可用宽度为准，不会越界。
 - slot 内容默认继承 `HyperColors.primaryText`，裸 `Text` 在深色模式下也会使用浅色文字；调用方显式传入 `color` 时以调用方为准。
 - 默认描边来自 `HyperDialogDefaults.border()`，内部使用 `HyperColors.panelBorder`；如需无边框，传入 `border = null`。
 
