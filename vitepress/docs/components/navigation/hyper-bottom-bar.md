@@ -62,15 +62,24 @@ object HyperBottomBarDefaults {
 完整内容 slot：
 
 ```kotlin
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
+
 HyperBottomBar(
     contentPadding = PaddingValues(horizontal = 16.dp)
 ) {
     HyperIconButton(onClick = onBack) {
-        Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+        Icon(
+            painter = painterResource(LucideR.drawable.lucide_ic_arrow_left),
+            contentDescription = "返回"
+        )
     }
     Spacer(modifier = Modifier.weight(1f))
     HyperIconButton(onClick = onMore) {
-        Icon(Icons.Default.MoreVert, contentDescription = "更多")
+        Icon(
+            painter = painterResource(LucideR.drawable.lucide_ic_ellipsis_vertical),
+            contentDescription = "更多"
+        )
     }
 }
 ```

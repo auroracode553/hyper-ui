@@ -77,3 +77,7 @@ src/main/java/hyper_ui/
 - Kotlin 2.4.10（Compose 插件与 Kotlin 版本一致）
 - Compose BOM 2026.06.01
 - minSdk 30 / compileSdk 37
+
+## 图标依赖策略
+
+HyperUI 不传递图标库依赖，图标由调用方通过组件 slot 提供。Android 调用方需要通用图标时，优先推荐可按资源引用裁剪的 `com.composables:icons-lucide-android:2.2.1`；完整依赖方式和示例见 [接入与最小配置](../vitepress/docs/getting-started.md#推荐图标方案android)。

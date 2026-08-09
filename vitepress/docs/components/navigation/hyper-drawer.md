@@ -65,20 +65,33 @@ object HyperDrawerDefaults {
 ## 最小用法
 
 ```kotlin
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
+
 HyperDrawer(
     open = open,
     onDismissRequest = { open = false },
     position = HyperDrawerPosition.Left,
     drawerContent = {
         HyperDrawerHeader(
-            leadingContent = { Icon(Icons.Default.Menu, null) },
+            leadingContent = {
+                Icon(
+                    painter = painterResource(LucideR.drawable.lucide_ic_menu),
+                    contentDescription = null
+                )
+            },
             headlineContent = { Text("HyperUI") },
             supportingContent = { Text("左侧抽屉") }
         )
         HyperDrawerItem(
             selected = selectedPageId == "home",
             onClick = { selectedPageId = "home" },
-            leadingContent = { Icon(Icons.Default.Home, null) },
+            leadingContent = {
+                Icon(
+                    painter = painterResource(LucideR.drawable.lucide_ic_house),
+                    contentDescription = null
+                )
+            },
             headlineContent = { Text("首页") }
         )
     }

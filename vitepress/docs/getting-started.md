@@ -40,7 +40,7 @@ HyperUI 的公开 API 都声明在根包：
 import hyper_ui.*
 ```
 
-Compose 状态、布局和 Material Icons 仍使用各自的标准包。例如：
+Compose 状态、布局和图标仍使用各自的标准包。例如：
 
 ```kotlin
 import androidx.compose.foundation.layout.Column
@@ -52,6 +52,51 @@ import androidx.compose.runtime.setValue
 ```
 
 禁止在调用方导入 `hyper_ui.core.*`，该目录仅供组件内部复用。
+
+## 推荐图标方案（Android）
+
+HyperUI 通过 slot 接收图标内容，本身不传递图标库。Android 调用方需要通用图标时，默认推荐 `icons-lucide-android`：
+
+```kotlin
+dependencies {
+    implementation("com.composables:icons-lucide-android:2.2.1")
+}
+```
+
+它提供 Android `VectorDrawable` 资源，可直接交给 Compose 的 `painterResource`：
+
+```kotlin
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
+import hyper_ui.*
+
+HyperIconButton(onClick = onSearch) {
+    Icon(
+        painter = painterResource(LucideR.drawable.lucide_ic_search),
+        contentDescription = "搜索",
+        modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+    )
+}
+```
+
+在使用 AGP 9.x 的调用方 Release 构建中开启统一优化：
+
+```kotlin
+android {
+    buildTypes {
+        release {
+            optimization {
+                enable = true
+            }
+        }
+    }
+}
+```
+
+代码与资源裁剪启用后，未引用的 Lucide drawable 可以从最终产物中移除。该依赖只添加到需要图标的 Android 应用模块，不添加到 HyperUI；除非现有项目已经使用，否则不要为少量图标引入 `material-icons-extended`。其他 AGP 版本应使用该版本对应的代码压缩和资源缩减配置。
 
 ## 应用根节点
 

@@ -63,9 +63,15 @@ object HyperIconButtonDefaults {
 ## 最小用法
 
 ```kotlin
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
+
 HyperIconButton(onClick = onSearch) {
     Icon(
-        imageVector = Icons.Default.Search,
+        painter = painterResource(LucideR.drawable.lucide_ic_search),
         contentDescription = "搜索",
         modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
     )
@@ -87,13 +93,17 @@ HyperIconButton(
         disabledOutlineColor = rgba(255, 255, 255, 0f)
     )
 ) {
-    Icon(Icons.Default.PlayArrow, contentDescription = "播放")
+    Icon(
+        painter = painterResource(LucideR.drawable.lucide_ic_play),
+        contentDescription = "播放"
+    )
 }
 ```
 
 ## 约束
 
 - 不存在 `imageVector`、`contentDescription`、`tint`、`backgroundColor` 参数；这些通过 slot 或 `colors` 表达。
+- Android 调用方需要通用图标时，优先使用可通过资源裁剪按引用保留的 `com.composables:icons-lucide-android:2.2.1`；HyperUI 不传递该可选依赖。
 - 默认浅色配色沿用 `HyperColors.elevatedContainer`、`HyperColors.primaryText` 与 `HyperColors.fieldBorder`，保证白色页面上仍有清晰边界；默认深色配色使用半透明亮色容器且描边透明。
 - 圆形和圆角矩形按钮都通过 `shape` 配置；描边颜色通过 `outlineColor`、`pressedOutlineColor` 与 `disabledOutlineColor` 配置。
 - 如需完全透明图标按钮，需要把 `containerColor`、`pressedContainerColor`、`outlineColor` 与 `pressedOutlineColor` 都传为透明色。

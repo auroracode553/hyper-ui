@@ -26,16 +26,25 @@ fun HyperTopBar(
 ## 最小用法
 
 ```kotlin
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
+
 HyperTopBar(
     navigationContent = {
         HyperIconButton(onClick = onBack) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+            Icon(
+                painter = painterResource(LucideR.drawable.lucide_ic_arrow_left),
+                contentDescription = "返回"
+            )
         }
     },
     titleContent = { Text("通知设置") },
     actionContent = {
         HyperIconButton(onClick = onSearch) {
-            Icon(Icons.Default.Search, contentDescription = "搜索")
+            Icon(
+                painter = painterResource(LucideR.drawable.lucide_ic_search),
+                contentDescription = "搜索"
+            )
         }
     }
 )

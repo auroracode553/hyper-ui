@@ -29,8 +29,16 @@ fun HyperListItem(
 ## 最小用法
 
 ```kotlin
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
+
 HyperListItem(
-    leadingContent = { Icon(Icons.Default.Settings, contentDescription = null) },
+    leadingContent = {
+        Icon(
+            painter = painterResource(LucideR.drawable.lucide_ic_settings),
+            contentDescription = null
+        )
+    },
     headlineContent = { Text("主题外观") },
     supportingContent = { Text("颜色、圆角和显示密度") },
     trailingContent = {

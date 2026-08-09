@@ -25,7 +25,9 @@ AI 生成代码时必须遵守：
 - `value`、`checked`、`selected`、`show`、`open`、`expanded`、进度和导航选择等业务状态均由调用方持有。
 - 不把网络请求、数据库访问、权限申请、路由实现或 ViewModel 写入 HyperUI 组件。
 - 弹窗、菜单、抽屉不渲染遮罩或半透明蒙层。
-- 文档示例中的 Compose、Material Icons 和状态 API 仍需按 AndroidX 标准包导入。
+- HyperUI 不强制绑定图标库；Android 项目需要图标时，默认优先推荐 `com.composables:icons-lucide-android:2.2.1`，通过 `painterResource` 使用其 VectorDrawable 资源。
+- 除非调用方已有明确依赖，否则不要为少量图标引入 `material-icons-extended`；Release 构建应开启代码与资源裁剪。
+- 文档示例中的 Compose、图标和状态 API 仍需从各自标准包导入。
 - `preview/` 与 Wasm 预览是文档演示工程，不是调用方依赖。
 
 ## 文档与预览的职责

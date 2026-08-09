@@ -53,6 +53,9 @@ object HyperTextFieldDefaults {
 ## 最小用法
 
 ```kotlin
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
+
 HyperTextField(
     value = value,
     onValueChange = { value = it },
@@ -73,14 +76,20 @@ HyperTextField(
     onValueChange = { keyword = it },
     placeholderContent = { Text("搜索或输入网址") },
     leadingContent = {
-        Icon(Icons.Default.Search, contentDescription = null)
+        Icon(
+            painter = painterResource(LucideR.drawable.lucide_ic_search),
+            contentDescription = null
+        )
     },
     trailingContent = {
         HyperIconButton(
             onClick = { keyword = "" },
             size = 32.dp
         ) {
-            Icon(Icons.Default.Close, contentDescription = "清空")
+            Icon(
+                painter = painterResource(LucideR.drawable.lucide_ic_x),
+                contentDescription = "清空"
+            )
         }
     }
 )

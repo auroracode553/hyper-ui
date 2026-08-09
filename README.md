@@ -13,6 +13,7 @@
 - 调用方可以通过 Maven 坐标、源码模块或 AAR 引入 HyperUI。
 - 当前项目使用 AGP 9.1.1，Kotlin Android 支持由 AGP 内置，不再额外应用 `org.jetbrains.kotlin.android` 插件。
 - 当前库的 `minSdk` 为 `30`，调用方应用的 `minSdk` 不能低于 30。
+- HyperUI 不强制绑定图标库；Android 调用方需要图标时，优先推荐轻量的 `com.composables:icons-lucide-android:2.2.1`，不要默认引入 `material-icons-extended`。
 - AI 或新调用者应优先阅读 [vitepress/docs/index.md](vitepress/docs/index.md)，再按 [组件索引](vitepress/docs/component-index.md) 打开具体组件页。
 - `vitepress/docs/` 是权威 Markdown 文档，`vitepress/` 负责网页渲染，`preview/` 负责 Desktop 与 Wasm 交互预览。
 
@@ -54,6 +55,7 @@ https://gitee.com/my_new_way/hyper_ui/blob/master/vitepress/docs/index.md
 - HyperUI 公开 API 统一在 `hyper_ui` 包，可使用 `import hyper_ui.*`。
 - 使用前包裹 `HyperThemeConfig`。
 - 组件不持有业务状态，状态由调用方管理。
+- Android 项目需要图标时优先推荐 `com.composables:icons-lucide-android:2.2.1`；它以 VectorDrawable 资源供 `painterResource` 使用，并适合配合 Release 资源裁剪。
 ```
 
 ## 适用范围
@@ -151,6 +153,35 @@ fun App() {
 }
 ```
 
+## 推荐图标方案（Android）
+
+HyperUI 的按钮、列表项和导航组件通过 slot 接收图标内容，不把任何大型图标集合强制传递给调用方。Android 项目需要通用图标时，默认推荐 [Lucide Android](https://github.com/composablehorizons/compose-icons/tree/main/icons-lucide-android)：
+
+```kotlin
+dependencies {
+    implementation("com.composables:icons-lucide-android:2.2.1")
+}
+```
+
+```kotlin
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
+import hyper_ui.*
+
+HyperIconButton(onClick = onSearch) {
+    Icon(
+        painter = painterResource(LucideR.drawable.lucide_ic_search),
+        contentDescription = "搜索",
+        modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+    )
+}
+```
+
+该 Android artifact 使用 `VectorDrawable` 资源，适合配合调用方 Release 构建的代码与资源裁剪，仅保留实际引用的图标。它是可选依赖，不会进入 HyperUI 本身；除非现有项目已经依赖，否则不要为了少量图标引入 `material-icons-extended`。
+
 ## 组件范围
 
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
@@ -182,7 +213,10 @@ HyperTextField(
     onValueChange = { keyword = it },
     placeholderContent = { Text("搜索") },
     leadingContent = {
-        Icon(Icons.Default.Search, contentDescription = null)
+        Icon(
+            painter = painterResource(LucideR.drawable.lucide_ic_search),
+            contentDescription = null
+        )
     }
 )
 ```

@@ -67,17 +67,26 @@ object HyperDropdownMenuDefaults {
 ## 最小用法
 
 ```kotlin
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
+
 HyperDropdownMenu(
     expanded = expanded,
     onDismissRequest = { expanded = false }
 ) {
     Item(onClick = onOpenDetail) {
-        Icon(Icons.Default.Info, contentDescription = null)
+        Icon(
+            painter = painterResource(LucideR.drawable.lucide_ic_info),
+            contentDescription = null
+        )
         Text("查看详情")
     }
     Divider()
     Item(onClick = onDelete) {
-        Icon(Icons.Default.Delete, contentDescription = null)
+        Icon(
+            painter = painterResource(LucideR.drawable.lucide_ic_trash_2),
+            contentDescription = null
+        )
         Text("删除")
     }
 }

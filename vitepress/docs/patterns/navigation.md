@@ -3,12 +3,8 @@
 `HyperBottomBar` 不依赖任何导航框架。需要完全自定义按钮、徽标、输入框或快捷功能时，直接使用完整内容 slot；需要统一处理项目点击和选中颜色时，可使用泛型 items 入口。
 
 ```kotlin
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,20 +12,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
 import hyper_ui.*
 
 data class AppDestination(
     val id: String,
     val label: String,
-    val icon: ImageVector
+    @DrawableRes val iconRes: Int
 )
 
 @Composable
 fun MainBottomBar(onDestinationSelected: (String) -> Unit) {
     var selectedId by remember { mutableStateOf("home") }
     val items = listOf(
-        AppDestination("home", "首页", Icons.Default.Home),
-        AppDestination("settings", "设置", Icons.Default.Settings)
+        AppDestination("home", "首页", LucideR.drawable.lucide_ic_house),
+        AppDestination("settings", "设置", LucideR.drawable.lucide_ic_settings)
     )
 
     HyperBottomBar(
@@ -41,7 +40,10 @@ fun MainBottomBar(onDestinationSelected: (String) -> Unit) {
         }
     ) { item ->
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(item.icon, contentDescription = item.label)
+            Icon(
+                painter = painterResource(item.iconRes),
+                contentDescription = item.label
+            )
             Text(item.label)
         }
     }

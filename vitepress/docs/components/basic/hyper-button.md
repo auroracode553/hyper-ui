@@ -43,8 +43,14 @@ fun HyperButton(
 ## 最小用法
 
 ```kotlin
+import androidx.compose.ui.res.painterResource
+import com.composables.icons.lucide.R as LucideR
+
 HyperButton(onClick = onSave) {
-    Icon(Icons.Default.Search, contentDescription = null)
+    Icon(
+        painter = painterResource(LucideR.drawable.lucide_ic_search),
+        contentDescription = null
+    )
     Text("搜索")
 }
 ```
