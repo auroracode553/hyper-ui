@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/dialog/HyperDialog.kt`
 - 预览：`custom_dialog`
 
-`HyperDialog` 是基础弹窗容器，只负责居中浮层、可选固定顶部标题、尺寸、滚动内容区、底部 action slot 和动画。点击面板外的空白区域默认通过 `onDismissRequest` 请求关闭，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为 480dp，并在窗口四周保留 16dp 间距。弹窗不渲染遮罩，面板全程使用不透明卡片背景和实色描边，显示与关闭时只做缩放动画。
+`HyperDialog` 是基础弹窗容器，只负责居中浮层、可选固定顶部标题、尺寸、滚动内容区和底部 action slot。点击面板外的空白区域默认通过 `onDismissRequest` 请求关闭，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为 480dp，并在窗口四周保留 16dp 间距。弹窗不渲染遮罩，也不使用显示或关闭动画；面板使用不透明卡片背景和实色描边。
 
 ## 公开签名
 
@@ -85,7 +85,8 @@ HyperDialog(
 - `dismissOnClickOutside` 默认为 `true`，点击面板外空白区域会调用 `onDismissRequest`；传入 `false` 后空白区域点击不会请求关闭。
 - 标题通过 `title` 属性提供，由组件固定渲染在顶部，不参与正文滚动；`title = null`、空字符串或全空白字符串时不渲染标题槽位，也不预留标题高度。
 - 默认背景来自 `HyperDialogDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.cardContainer`，保持不透明卡片效果。
-- 面板动画只改变缩放，不改变 alpha；通过 `HyperDialogColors` 或 `HyperDialogDefaults.colors(...)` 传入含 alpha 的容器色时，会先与页面背景合成为实色。
+- `visible` 直接控制弹窗是否渲染，显示与关闭均不执行动画。
+- 通过 `HyperDialogColors` 或 `HyperDialogDefaults.colors(...)` 传入含 alpha 的容器色时，会先与页面背景合成为实色。
 - `widthFraction` 必须在 `(0, 1]` 范围内，默认取扣除 `windowPadding` 后可用宽度的 `90%`；结果继续受 `minWidth`、`maxWidth` 约束。`maxHeight` 约束面板高度。
 - 默认 `windowPadding` 确保面板与窗口四周至少保留 16dp 间距。窗口不足以容纳默认最小宽度时，以窗口可用宽度为准，不会越界。
 - slot 内容默认继承 `HyperColors.primaryText`，裸 `Text` 在深色模式下也会使用浅色文字；调用方显式传入 `color` 时以调用方为准。

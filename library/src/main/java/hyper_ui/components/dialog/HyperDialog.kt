@@ -1,8 +1,6 @@
 /** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/dialog/HyperDialog 可复用界面组件及交互封装。 */
 package hyper_ui
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -32,17 +30,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
@@ -92,21 +84,12 @@ fun HyperDialog(
         "minWidth must be less than or equal to maxWidth"
     }
 
-    var isFullyDismissed by remember { mutableStateOf(!visible) }
-
-    LaunchedEffect(visible) {
-        if (visible) {
-            isFullyDismissed = false
-        }
-    }
-
-    if (!visible && isFullyDismissed) {
+    if (!visible) {
         return
     }
 
     val resolvedTitle = title?.trim()?.takeIf { it.isNotEmpty() }
     val scrollState = rememberScrollState()
-    val animationProgress = remember { Animatable(0f) }
     val requestedMinWidth = minWidth
     val requestedMaxWidth = maxWidth
     val requestedMaxHeight = maxHeight
@@ -116,15 +99,6 @@ fun HyperDialog(
         fallbackColor = HyperColors.cardContainer,
         backgroundColor = HyperColors.pageBackground
     )
-
-    LaunchedEffect(visible) {
-        if (visible) {
-            animationProgress.animateTo(1f, animationSpec = tween(durationMillis = 300))
-        } else {
-            animationProgress.animateTo(0f, animationSpec = tween(durationMillis = 300))
-            isFullyDismissed = true
-        }
-    }
 
     DisableSelection {
         // Popup 仅包裹面板，避免全屏内容把空白区域算作内部点击。
@@ -159,10 +133,6 @@ fun HyperDialog(
                         .width(resolvedWidth)
                         .heightIn(max = resolvedMaxHeight)
                         .then(modifier)
-                        .graphicsLayer {
-                            scaleX = 0.8f + 0.2f * animationProgress.value
-                            scaleY = 0.8f + 0.2f * animationProgress.value
-                        }
                         .clip(shape)
                         .background(color = containerColor, shape = shape)
                         .then(if (border != null) Modifier.border(border, shape) else Modifier)

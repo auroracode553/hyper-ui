@@ -309,7 +309,7 @@ fun HyperDialogDemo() {
             textAlign = TextAlign.Center
         )
         Text(
-            text = "显示与关闭只做缩放动画，面板全程保持不透明。",
+            text = "显示与关闭均无动画，面板保持不透明。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center

@@ -63,7 +63,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "基础对话框全程使用不透明实色面板和缩放动画；支持响应式宽度、固定标题与正文滚动。",
+        description = "基础对话框无显示或关闭动画，使用不透明实色面板；支持响应式宽度、固定标题与正文滚动。",
         code = """
             HyperDialog(
                 visible = visible,

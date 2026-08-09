@@ -200,7 +200,7 @@ HyperIconButton(onClick = onSearch) {
 - 组件不持有业务状态。
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
-- `HyperDialog` 标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度 480dp，并在窗口四周保留 16dp 间距；弹窗只做缩放动画，无遮罩，面板全程使用不透明卡片背景、20dp 圆角和 1dp 实色轻描边。
+- `HyperDialog` 标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度 480dp，并在窗口四周保留 16dp 间距；弹窗不使用显示或关闭动画，也不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 实色轻描边。
 - 组件内部只处理焦点、动画、禁用态和描边等视觉反馈 UI 状态；`HyperButton`、列表、菜单、进度与弹窗不通过透明度表达状态。
 
 示例：

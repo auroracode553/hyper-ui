@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/dialog/HyperAlertDialog.kt`
 - 预览：`dialog`
 
-`HyperAlertDialog` 是基于 `HyperDialog` 的结构化弹窗。它通过可选 `title` 属性固定渲染顶部标题，只提供 body、action 两个 slot 区域，不内置确认、取消、危险操作等业务按钮。面板全程不透明，显示与关闭只继承缩放动画；点击面板外的空白区域默认请求关闭，也可通过 `dismissOnClickOutside = false` 禁用。
+`HyperAlertDialog` 是基于 `HyperDialog` 的结构化弹窗。它通过可选 `title` 属性固定渲染顶部标题，只提供 body、action 两个 slot 区域，不内置确认、取消、危险操作等业务按钮。面板全程不透明，显示与关闭均不执行动画；点击面板外的空白区域默认请求关闭，也可通过 `dismissOnClickOutside = false` 禁用。
 
 ## 公开签名
 
