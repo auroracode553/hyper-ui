@@ -17,13 +17,15 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
 @Immutable
@@ -41,6 +43,7 @@ fun <T> HyperList(
     scrollState: ScrollState = rememberScrollState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
+    shape: Shape = HyperListDefaults.Shape,
     border: BorderStroke? = null,
     colors: HyperListColors = HyperListDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
@@ -48,6 +51,7 @@ fun <T> HyperList(
     val containerColor = colors.containerColor
     val containerModifier = modifier.hyperListContainer(
         containerColor = containerColor,
+        shape = shape,
         border = border
     )
 
@@ -102,6 +106,7 @@ fun HyperList(
     state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
+    shape: Shape = HyperListDefaults.Shape,
     border: BorderStroke? = null,
     colors: HyperListColors = HyperListDefaults.colors(),
     content: LazyListScope.() -> Unit
@@ -111,6 +116,7 @@ fun HyperList(
         LazyColumn(
             modifier = modifier.hyperListContainer(
                 containerColor = containerColor,
+                shape = shape,
                 border = border
             ),
             state = state,
@@ -122,6 +128,8 @@ fun HyperList(
 }
 
 object HyperListDefaults {
+    val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius)
+
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperListColors = HyperListColors(
         containerColor = resolveHyperContainerColor(
@@ -136,11 +144,13 @@ object HyperListDefaults {
 
 private fun Modifier.hyperListContainer(
     containerColor: Color,
+    shape: Shape,
     border: BorderStroke?
 ): Modifier = this
     .fillMaxWidth()
-    .background(containerColor)
-    .then(if (border != null) Modifier.border(border, RectangleShape) else Modifier)
+    .clip(shape)
+    .background(containerColor, shape)
+    .then(if (border != null) Modifier.border(border, shape) else Modifier)
 
 @Composable
 private fun HyperListItemContainer(

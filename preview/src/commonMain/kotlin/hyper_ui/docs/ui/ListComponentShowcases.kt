@@ -28,12 +28,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
 import hyper_ui.HyperList
+import hyper_ui.HyperListDefaults
 import hyper_ui.HyperListItem
 import hyper_ui.HyperMenuList
 import hyper_ui.HyperRadioButton
@@ -117,6 +119,7 @@ fun HyperListDemo() {
         "数据备份"
     )
     var lazyLoading by remember { mutableStateOf(true) }
+    var roundedCorners by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -140,10 +143,28 @@ fun HyperListDemo() {
             )
         }
 
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = if (roundedCorners) "轻圆角开启" else "直角容器",
+                color = LocalContentColor.current,
+                fontSize = 14.sp,
+                lineHeight = 20.sp
+            )
+            HyperSwitch(
+                checked = roundedCorners,
+                onCheckedChange = { roundedCorners = it }
+            )
+        }
+
         Box(modifier = Modifier.height(280.dp)) {
             HyperList(
                 items = items,
-                lazyLoading = lazyLoading
+                lazyLoading = lazyLoading,
+                shape = if (roundedCorners) HyperListDefaults.Shape else RectangleShape
             ) { item ->
                 HyperListItem(
                     leadingContent = { ListIcon(iconFor(item)) },

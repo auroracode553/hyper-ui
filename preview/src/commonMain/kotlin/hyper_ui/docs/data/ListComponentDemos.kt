@@ -11,11 +11,12 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_list",
         group = GROUP_LIST,
         title = "HyperList",
-        description = "页面级列表容器，支持通过 lazyLoading 开关选择懒加载或普通列表渲染。",
+        description = "轻圆角页面级列表容器，支持切换懒加载、普通列表渲染和容器形状。",
         code = """
             HyperList(
                 items = items,
-                lazyLoading = true
+                lazyLoading = true,
+                shape = HyperListDefaults.Shape
             ) { item ->
                 HyperListItem(
                     leadingContent = { Icon(item.icon, null) },

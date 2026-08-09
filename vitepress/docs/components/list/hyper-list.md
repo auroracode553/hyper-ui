@@ -5,7 +5,7 @@
 - 状态归属：调用方提供列表数据
 - Preview ID：`hyper_list`
 
-页面级列表容器，适合列表页、消息页、记录流和动态数据。`HyperList` 默认使用无圆角、无玻璃高光、无外层描边的平铺列表样式；调用方通过 `lazyLoading` 参数决定使用 `LazyColumn` 懒加载，还是使用普通 `Column + verticalScroll` 一次组合全部项目。数据入口会自动抑制最后一项的 `HyperListItem` 分割线。
+页面级列表容器，适合列表页、消息页、记录流和动态数据。`HyperList` 默认使用 12dp 轻圆角、无玻璃高光、无外层描边的平铺列表样式，并会按容器形状裁剪滚动内容；调用方通过 `lazyLoading` 参数决定使用 `LazyColumn` 懒加载，还是使用普通 `Column + verticalScroll` 一次组合全部项目。数据入口会自动抑制最后一项的 `HyperListItem` 分割线。
 
 ## 公开签名
 
@@ -20,6 +20,7 @@ fun <T> HyperList(
     scrollState: ScrollState = rememberScrollState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
+    shape: Shape = HyperListDefaults.Shape,
     border: BorderStroke? = null,
     colors: HyperListColors = HyperListDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
@@ -31,6 +32,7 @@ fun HyperList(
     state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
+    shape: Shape = HyperListDefaults.Shape,
     border: BorderStroke? = null,
     colors: HyperListColors = HyperListDefaults.colors(),
     content: LazyListScope.() -> Unit
@@ -45,6 +47,8 @@ data class HyperListColors(
 )
 
 object HyperListDefaults {
+    val Shape: Shape
+
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperListColors
 
@@ -65,7 +69,8 @@ object HyperListDefaults {
 | `scrollState` | `ScrollState` | `rememberScrollState()` | 普通列表模式的滚动状态 |
 | `contentPadding` | `PaddingValues` | `PaddingValues(0.dp)` | 列表内容内边距 |
 | `verticalArrangement` | `Arrangement.Vertical` | 间距 `0.dp` | 条目纵向排列 |
-| `border` | `BorderStroke?` | `null` | 页面列表默认无外层描边；需要矩形描边时可传 `HyperListDefaults.border()` |
+| `shape` | `Shape` | `HyperListDefaults.Shape` | 列表容器与内容裁剪形状，默认 12dp 轻圆角 |
+| `border` | `BorderStroke?` | `null` | 页面列表默认无外层描边；需要同形描边时可传 `HyperListDefaults.border()` |
 | `colors` | `HyperListColors` | `HyperListDefaults.colors()` | 列表容器颜色，默认使用 `HyperColors.cardContainer` |
 | `itemContent` | `@Composable (T) -> Unit` | 必填 | 每项内容，只接收当前项目，不接收索引 |
 
@@ -121,7 +126,8 @@ HyperList(state = listState) {
 
 ## 约束
 
-- `HyperList` 是页面级列表容器，不做首尾圆角，也不默认添加外层描边。
+- `HyperList` 是页面级列表容器，默认使用 12dp 轻圆角并裁剪内容，不默认添加外层描边。
+- `contentPadding` 位于列表容器内部，会使用列表背景绘制；底栏避让等页面级留白应通过外层 `modifier` 或父布局约束实现。
 - 数据入口会自动隐藏最后一项的 `HyperListItem` 分割线，调用方只需表达普通行是否需要分割线。
 - `lazyLoading = true` 适合大量数据、分页和动态列表；`key` 只在该模式下生效。
 - `lazyLoading = false` 会一次组合全部项目，适合少量稳定数据或需要普通 `Column` 行为的场景。

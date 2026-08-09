@@ -97,6 +97,7 @@ fun SettingsGroup(enabled: Boolean, onEnabledChange: (Boolean) -> Unit) {
 ## 约束
 
 - `HyperMenuList` 用于菜单、设置分组和少量操作入口；页面级列表使用 [HyperList](hyper-list.md)。
+- `contentPadding` 位于圆角背景和 border 内部；底栏避让等页面级留白应通过外层 `modifier` 或父布局约束实现，避免 border 包住留白区域。
 - `items` 数据入口内部自带纵向滚动；放入另一个同方向无界滚动容器前，应明确尺寸约束。
 - `items` 数据入口会自动隐藏最后一项的 `HyperListItem` 分割线，调用方只需表达普通行是否需要分割线。
 - slot 分组入口不额外添加纵向滚动，适合设置页、详情页等已有页面级滚动的场景。

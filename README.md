@@ -158,7 +158,7 @@ fun App() {
 - 基础组件：`HyperButton`, `HyperIconButton`（slot-first 紧凑型容器，内容由调用方渲染；`HyperIconButton` 默认 40dp，浅色模式沿用既有填充与描边，深色模式默认是半透明圆形控制按钮，视觉通过 `colors`、`shape`、`size` 和描边颜色控制）
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperSlider`（输入框默认使用不透明背景和轻描边；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边；主题色选择板色块默认带细描边，选中状态由调用方管理）
-- 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 是无圆角页面列表，可通过 `lazyLoading` 开关选择懒加载或普通列表；`HyperMenuList` 是圆角菜单列表和设置分组；数据入口自动隐藏最后一项分割线）
+- 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 是默认 12dp 轻圆角的页面列表，可通过 `lazyLoading` 开关选择懒加载或普通列表；`HyperMenuList` 是圆角菜单列表和设置分组；数据入口自动隐藏最后一项分割线）
 - 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperDropdownMenu`（弹窗默认支持点击面板外空白区域关闭，可通过 `dismissOnClickOutside = false` 禁用；面板使用响应式宽度与不透明背景，且不渲染遮罩）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
 - 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 为标题 slot 提供默认标题文字样式；`HyperBottomBar` 为内容提供默认标签文字样式；抽屉和底栏默认带轻描边；`HyperGroupMenus` 用于横向分组菜单；页面切换由调用方处理）
