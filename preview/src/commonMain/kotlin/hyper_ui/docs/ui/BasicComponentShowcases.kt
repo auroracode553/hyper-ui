@@ -197,7 +197,7 @@ fun IconButtonDemo() {
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
                     contentDescription = "媒体控制",
-                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                    modifier = Modifier.size(24.dp)
                 )
             }
             HyperIconButton(
@@ -212,7 +212,7 @@ fun IconButtonDemo() {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "浅色自定义",
-                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }

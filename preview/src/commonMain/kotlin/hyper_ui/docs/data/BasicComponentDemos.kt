@@ -31,7 +31,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         id = "icon_button",
         group = GROUP_BASIC,
         title = "HyperIconButton",
-        description = "Slot-first 圆形图标按钮容器。浅色模式恢复既有填充与描边，深色模式默认使用半透明控制按钮样式。",
+        description = "Slot-first 紧凑型圆形图标按钮容器。默认 40dp，浅色模式恢复既有填充与描边，深色模式默认使用半透明控制按钮样式。",
         code = """
             HyperIconButton(
                 onClick = onSearch

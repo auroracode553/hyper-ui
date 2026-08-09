@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/button/HyperIconButton.kt`
 - 预览：`icon_button`
 
-`HyperIconButton` 是固定尺寸的 slot-first 点击容器。它不接收 `ImageVector`；调用方在 `content` slot 中放入任意 `Icon`、进度或状态内容。
+`HyperIconButton` 是紧凑型固定尺寸的 slot-first 点击容器，默认视觉尺寸为 40dp。它不接收 `ImageVector`；调用方在 `content` slot 中放入任意 `Icon`、进度或状态内容。
 默认容器是圆形图标按钮：浅色模式沿用 HyperUI 既有的 `elevatedContainer + primaryText + fieldBorder` 配色，深色模式使用亮色半透明控制按钮且默认不显示描边。调用方可以通过 `colors` 显式设置普通、按压、禁用与描边颜色，适合播放器控制、工具栏和浮层操作。
 
 ## 公开签名
@@ -39,8 +39,8 @@ fun HyperIconButton(
 
 ```kotlin
 object HyperIconButtonDefaults {
-    val Size = 48.dp
-    val IconSize = 24.dp
+    val Size = 40.dp
+    val IconSize = 22.dp
     val Shape: Shape = CircleShape
     val OutlineWidth = 1.dp
     const val PressedScale = 0.92f

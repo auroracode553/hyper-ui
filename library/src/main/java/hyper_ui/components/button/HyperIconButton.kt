@@ -122,8 +122,8 @@ fun HyperIconButton(
 }
 
 object HyperIconButtonDefaults {
-    val Size = 48.dp
-    val IconSize = 24.dp
+    val Size = 40.dp
+    val IconSize = 22.dp
     val Shape: Shape = CircleShape
     val OutlineWidth = 1.dp
     const val PressedScale = 0.92f
