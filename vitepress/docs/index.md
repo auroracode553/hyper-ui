@@ -59,4 +59,11 @@ AI 生成代码时必须遵守：
 
 新增、删除、重命名或修改公开 API 时，按照 [文档维护规则](maintenance.md) 同步源码、Markdown、Desktop/Wasm preview 与 VitePress 导航。需要让文档 iframe 显示最新组件时，按 [组件更新后刷新预览](preview-update-workflow.md) 手动发布 Wasm 静态产物。
 
-部署 VitePress 后，AI 也可以从站点根路径的 `llms.txt` 发现主要文档页；该索引只负责导航，具体 API 仍以本目录 Markdown 为准。
+部署 VitePress 后，AI 可以使用以下机器入口：
+
+- [`llms.txt`](https://auroracode553.github.io/hyper-ui/llms.txt)：完整 Markdown 文档索引。
+- [`llms-full.txt`](https://auroracode553.github.io/hyper-ui/llms-full.txt)：单次响应包含全部权威文档，适合不继续跟链的抓取器。
+- [`index.md`](https://auroracode553.github.io/hyper-ui/index.md)：本页的纯 Markdown 版本；其他页面也提供同路径 `.md` 版本。
+- [`sitemap.xml`](https://auroracode553.github.io/hyper-ui/sitemap.xml)：网页发现入口。
+
+这些纯文本文件由构建过程直接从本目录派生，不维护第二份组件正文。具体 API 仍以本目录 Markdown 为准。

@@ -18,7 +18,19 @@
 
 ## AI 接入说明
 
-如果你在其他项目中使用 HyperUI，请让 AI 先阅读 Markdown 文档入口：
+如果你在其他项目中使用 HyperUI，请让 AI 优先读取官网的纯文本入口：
+
+```text
+https://auroracode553.github.io/hyper-ui/llms.txt
+https://auroracode553.github.io/hyper-ui/llms-full.txt
+```
+
+- `llms.txt` 是完整的 Markdown 文档索引。
+- `llms-full.txt` 把全部权威文档合并到单个响应，适合不能继续跟随链接的 AI 抓取器。
+- 每个网页都有同路径 `.md` 版本，例如 `components/basic/hyper-button.md`，适合按组件摘取。
+- HTML 页面会声明 canonical、Markdown alternate、sitemap 与允许完整摘要的 robots meta。
+
+如果所用 AI 无法访问 GitHub Pages，可退回仓库 Markdown 源文件：
 
 ```text
 https://gitee.com/my_new_way/hyper_ui/blob/master/vitepress/docs/index.md
@@ -239,10 +251,13 @@ vitepress/
 │   ├── index.ts                         # 注册文档主题组件
 │   ├── custom.css
 │   └── components/WasmPreview.vue       # iframe 预览组件
+├── .vitepress/ai-docs.mts                # 构建期派生 AI 文档入口与抓取元数据
 └── public/
-    ├── llms.txt                          # AI 可发现的网页索引
+    ├── llms.txt                          # 开发期 AI 索引；生产构建会自动补全
     └── wasm-preview/README.md            # Wasm 产物放置说明
 ```
+
+生产构建会从 `vitepress/docs/` 自动派生 `llms.txt`、`llms-full.txt`、`sitemap.xml`、`robots.txt` 和每篇文档的 `.md` 静态直链；这些都是构建产物，不维护第二份组件正文。
 
 Wasm 静态产物不会自动复制，也不提交到仓库。使用者手动生成后，需要把 `preview/build/dist/wasmJs/productionExecutable/` 的**全部内容**放入 `vitepress/public/wasm-preview/`，不能只复制 `index.html`。
 

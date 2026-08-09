@@ -1,45 +1,13 @@
 # HyperUI
 
-> Android Jetpack Compose UI component library. Read these semantic documentation pages instead of inferring APIs from the Wasm preview.
+> Android Jetpack Compose UI component library. Markdown is the authoritative API source; Wasm is only an interactive preview.
 
-- Package: `hyper_ui`
-- Maven: `com.hyperui:hyper-ui:1.0.0`
-- Minimum Android SDK: 30
+- [Complete documentation corpus](./llms-full.txt): all documentation in one plain-text response.
+- [Documentation index](./index.md): AI and developer reading order.
+- [Getting started](./getting-started.md): dependency and minimum setup.
+- [Theme and colors](./theme.md): theme configuration and RGBA color rules.
+- [State and architecture](./state-model.md): state ownership and integration boundaries.
+- [Component index](./component-index.md): links to every component Markdown page.
+- [HTML documentation](./): human-readable website.
 
-## Start
-
-- [Documentation index](./index.html)
-- [Getting started](./getting-started.html)
-- [Theme and colors](./theme.html)
-- [State and architecture](./state-model.html)
-- [Component index](./component-index.html)
-
-## Components
-
-- [HyperButton](./components/basic/hyper-button.html)
-- [HyperIconButton](./components/basic/hyper-icon-button.html)
-- [HyperTextField](./components/form/hyper-text-field.html)
-- [HyperSwitch](./components/form/hyper-switch.html)
-- [HyperCheckbox](./components/form/hyper-checkbox.html)
-- [HyperRadioButton](./components/form/hyper-radio-button.html)
-- [HyperPanel](./components/container/hyper-panel.html)
-- [HyperColorPicker](./components/container/hyper-color-picker.html)
-- [HyperTopBar](./components/navigation/hyper-top-bar.html)
-- [HyperDrawer](./components/navigation/hyper-drawer.html)
-- [HyperGroupMenus](./components/navigation/hyper-group-menus.html)
-- [HyperBottomBar](./components/navigation/hyper-bottom-bar.html)
-- [HyperLazyList](./components/list/hyper-lazy-list.html)
-- [HyperList](./components/list/hyper-list.html)
-- [HyperListItem](./components/list/hyper-list-item.html)
-- [HyperDropdownMenu](./components/feedback/hyper-dropdown-menu.html)
-- [HyperProgressIndicator](./components/feedback/hyper-progress-indicator.html)
-- [HyperDialog](./components/feedback/hyper-dialog.html)
-- [HyperAlertDialog](./components/feedback/hyper-alert-dialog.html)
-
-## Rules
-
-- Public package: `hyper_ui`.
-- Caller owns business state.
-- Do not import `hyper_ui.core.*`.
-- Dialogs, menus, and drawers render no scrim or overlay.
-- Wasm is an interactive preview, not an API documentation source.
+Production builds regenerate this index from `vitepress/docs/` and add every Markdown document automatically.

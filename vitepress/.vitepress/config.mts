@@ -1,8 +1,11 @@
 import { env } from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitepress'
+import { createAiDocsConfig } from './ai-docs.mts'
 
 const siteBase = env.VITEPRESS_BASE || '/'
+const siteOrigin = env.VITEPRESS_SITE_ORIGIN || 'https://auroracode553.github.io'
+const siteUrl = new URL(siteBase, siteOrigin)
 const publicDirectory = fileURLToPath(new URL('../public', import.meta.url))
 // 动态获取当前年份，避免版权年份写死
 const currentYear = new Date().getFullYear()
@@ -15,6 +18,7 @@ export default defineConfig({
   titleTemplate: ':title | HyperUI',
   description: 'HyperUI Compose UI 组件库文档与交互预览',
   lastUpdated: true,
+  ...createAiDocsConfig({ siteUrl }),
   vite: {
     // Markdown 源码位于 vitepress/docs/，静态预览产物集中保存在 vitepress/public/。
     publicDir: publicDirectory
