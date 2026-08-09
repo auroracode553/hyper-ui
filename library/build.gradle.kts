@@ -36,7 +36,6 @@ dependencies {
     api("androidx.compose.ui:ui")
     api("androidx.compose.ui:ui-graphics")
     api("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-extended")
 }
 
 publishing {

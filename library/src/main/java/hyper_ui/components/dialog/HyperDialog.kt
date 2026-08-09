@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -45,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -79,7 +79,7 @@ fun HyperDialog(
         Alignment.End
     ),
     dismissOnBackPress: Boolean = true,
-    dismissOnClickOutside: Boolean = false,
+    dismissOnClickOutside: Boolean = true,
     showScrollIndicator: Boolean = HyperDialogDefaults.ShowScrollIndicator,
     actionContent: (@Composable RowScope.() -> Unit)? = null,
     border: BorderStroke? = HyperDialogDefaults.border(),
@@ -109,6 +109,8 @@ fun HyperDialog(
     val animationProgress = remember { Animatable(0f) }
     val requestedMinWidth = minWidth
     val requestedMaxWidth = maxWidth
+    val requestedMaxHeight = maxHeight
+    val layoutDirection = LocalLayoutDirection.current
 
     LaunchedEffect(visible) {
         if (visible) {
@@ -120,7 +122,9 @@ fun HyperDialog(
     }
 
     DisableSelection {
+        // Popup 仅包裹面板，避免全屏内容把空白区域算作内部点击。
         Popup(
+            alignment = Alignment.Center,
             onDismissRequest = onDismissRequest,
             properties = PopupProperties(
                 focusable = true,
@@ -128,22 +132,27 @@ fun HyperDialog(
                 dismissOnClickOutside = dismissOnClickOutside
             )
         ) {
-            BoxWithConstraints(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(windowPadding),
-                contentAlignment = Alignment.Center
-            ) {
-                val resolvedMaxWidth = requestedMaxWidth.coerceAtMost(this.maxWidth)
+            BoxWithConstraints {
+                val horizontalWindowPadding =
+                    windowPadding.calculateLeftPadding(layoutDirection) +
+                        windowPadding.calculateRightPadding(layoutDirection)
+                val verticalWindowPadding =
+                    windowPadding.calculateTopPadding() + windowPadding.calculateBottomPadding()
+                val availableWidth =
+                    (this.maxWidth - horizontalWindowPadding).coerceAtLeast(0.dp)
+                val availableHeight =
+                    (this.maxHeight - verticalWindowPadding).coerceAtLeast(0.dp)
+                val resolvedMaxWidth = requestedMaxWidth.coerceAtMost(availableWidth)
                 val resolvedMinWidth = requestedMinWidth.coerceAtMost(resolvedMaxWidth)
                 // 先按窗口比例收窄，再应用尺寸边界，兼顾竖屏留白与小窗口不越界。
-                val resolvedWidth = (this.maxWidth * widthFraction)
+                val resolvedWidth = (availableWidth * widthFraction)
                     .coerceIn(resolvedMinWidth, resolvedMaxWidth)
+                val resolvedMaxHeight = requestedMaxHeight.coerceAtMost(availableHeight)
 
                 Column(
                     modifier = Modifier
                         .width(resolvedWidth)
-                        .heightIn(max = maxHeight)
+                        .heightIn(max = resolvedMaxHeight)
                         .then(modifier)
                         .graphicsLayer {
                             alpha = animationProgress.value

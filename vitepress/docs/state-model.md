@@ -30,7 +30,7 @@ HyperUI 采用调用方持有状态的方式。组件接收当前值并通过回
 
 HyperUI 的弹窗、菜单和抽屉只渲染自身面板，不添加 scrim、overlay 或半透明遮罩。
 
-- `HyperDialog` 默认不因点击外部关闭；通过 `onDismissRequest` 处理返回键等关闭请求。
+- `HyperDialog` 默认在点击面板外空白区域时调用 `onDismissRequest`；传入 `dismissOnClickOutside = false` 可禁用空白关闭。
 - `HyperDropdownMenu` 的菜单项点击后会先调用项目回调，再调用关闭回调。
 - `HyperDrawer` 可使用透明的外部点击区域处理关闭，但不绘制遮罩。
 

@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/dialog/HyperDialog.kt`
 - 预览：`custom_dialog`
 
-`HyperDialog` 是基础弹窗容器，只负责居中浮层、可选固定顶部标题、尺寸、滚动内容区、底部 action slot 和动画。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为 480dp，并在窗口四周保留 16dp 间距。该策略会适度收窄竖屏弹窗，同时让横屏和大屏继续受最大宽度约束。弹窗不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 轻描边，避免页面内容透到弹窗内部。
+`HyperDialog` 是基础弹窗容器，只负责居中浮层、可选固定顶部标题、尺寸、滚动内容区、底部 action slot 和动画。点击面板外的空白区域默认通过 `onDismissRequest` 请求关闭，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为 480dp，并在窗口四周保留 16dp 间距。弹窗不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 轻描边。
 
 ## 公开签名
 
@@ -30,7 +30,7 @@ fun HyperDialog(
         Alignment.End
     ),
     dismissOnBackPress: Boolean = true,
-    dismissOnClickOutside: Boolean = false,
+    dismissOnClickOutside: Boolean = true,
     showScrollIndicator: Boolean = HyperDialogDefaults.ShowScrollIndicator,
     actionContent: (@Composable RowScope.() -> Unit)? = null,
     border: BorderStroke? = HyperDialogDefaults.border(),
@@ -82,6 +82,7 @@ HyperDialog(
 
 - 不存在 `show` 和 `actions` 参数；使用 `visible` 与 `actionContent`。
 - 不渲染遮罩或半透明蒙层。
+- `dismissOnClickOutside` 默认为 `true`，点击面板外空白区域会调用 `onDismissRequest`；传入 `false` 后空白区域点击不会请求关闭。
 - 标题通过 `title` 属性提供，由组件固定渲染在顶部，不参与正文滚动；`title = null`、空字符串或全空白字符串时不渲染标题槽位，也不预留标题高度。
 - 默认背景来自 `HyperDialogDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.cardContainer`，保持不透明卡片效果。
 - `widthFraction` 必须在 `(0, 1]` 范围内，默认取扣除 `windowPadding` 后可用宽度的 `90%`；结果继续受 `minWidth`、`maxWidth` 约束。`maxHeight` 约束面板高度。

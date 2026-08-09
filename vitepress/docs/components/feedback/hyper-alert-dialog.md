@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/dialog/HyperAlertDialog.kt`
 - 预览：`dialog`
 
-`HyperAlertDialog` 是基于 `HyperDialog` 的结构化弹窗。它通过可选 `title` 属性固定渲染顶部标题，只提供 body、action 两个 slot 区域，不内置确认、取消、危险操作等业务按钮，并继承 `HyperDialog` 的 90% 可用宽度策略、280–360dp 尺寸约束、16dp 窗口间距和不透明卡片面板。
+`HyperAlertDialog` 是基于 `HyperDialog` 的结构化弹窗。它通过可选 `title` 属性固定渲染顶部标题，只提供 body、action 两个 slot 区域，不内置确认、取消、危险操作等业务按钮。点击面板外的空白区域默认请求关闭，也可通过 `dismissOnClickOutside = false` 禁用。
 
 ## 公开签名
 
@@ -15,6 +15,7 @@ fun HyperAlertDialog(
     onDismissRequest: () -> Unit,
     title: String? = null,
     modifier: Modifier = Modifier,
+    dismissOnClickOutside: Boolean = true,
     bodyContent: (@Composable ColumnScope.() -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null
 )
@@ -44,6 +45,7 @@ HyperAlertDialog(
 - 标题通过 `title` 属性提供，固定在顶部，不参与 `bodyContent` 的滚动；`title = null`、空字符串或全空白字符串时不渲染标题槽位，也不预留标题高度。
 - 如果项目需要二次确认语义，应该在业务项目中封装项目级 ConfirmDialog。
 - 弹窗不渲染遮罩或半透明蒙层。
+- `dismissOnClickOutside` 默认为 `true`；设为 `false` 后，点击面板外空白区域不会调用 `onDismissRequest`。
 - 面板尺寸、窗口间距、背景、圆角和描边由内部 `HyperDialog` 默认值提供；当前 `HyperAlertDialog` 不单独暴露这些参数。
 - `bodyContent` 默认继承 `HyperColors.secondaryText`；slot 内显式传入的颜色优先。
 

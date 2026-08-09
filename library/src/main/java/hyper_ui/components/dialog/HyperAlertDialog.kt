@@ -17,6 +17,7 @@ fun HyperAlertDialog(
     onDismissRequest: () -> Unit,
     title: String? = null,
     modifier: Modifier = Modifier,
+    dismissOnClickOutside: Boolean = true,
     bodyContent: (@Composable ColumnScope.() -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -25,6 +26,7 @@ fun HyperAlertDialog(
         onDismissRequest = onDismissRequest,
         title = title,
         modifier = modifier,
+        dismissOnClickOutside = dismissOnClickOutside,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         actionContent = actionContent

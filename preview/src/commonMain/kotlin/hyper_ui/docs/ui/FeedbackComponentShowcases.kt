@@ -189,6 +189,7 @@ fun LoadingProgressDemo() {
 fun DialogDemo() {
     var showDialog by remember { mutableStateOf(false) }
     var resultText by remember { mutableStateOf("等待操作") }
+    var dismissOnClickOutside by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier.widthIn(max = 420.dp),
@@ -201,6 +202,12 @@ fun DialogDemo() {
         ) {
             Text(text = "删除数据")
         }
+        HyperButton(
+            tone = HyperButtonTone.Outline,
+            onClick = { dismissOnClickOutside = !dismissOnClickOutside }
+        ) {
+            Text(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
+        }
         Text(
             text = resultText,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -210,8 +217,12 @@ fun DialogDemo() {
 
     HyperAlertDialog(
         visible = showDialog,
-        onDismissRequest = { showDialog = false },
+        onDismissRequest = {
+            resultText = "已收到关闭请求"
+            showDialog = false
+        },
         title = "确认删除",
+        dismissOnClickOutside = dismissOnClickOutside,
         bodyContent = { DialogBody("删除后无法恢复，是否继续？") },
         actionContent = {
             HyperButton(
@@ -244,6 +255,7 @@ fun HyperDialogDemo() {
     var savedNote by remember { mutableStateOf("默认备注") }
     var draftNote by remember { mutableStateOf(savedNote) }
     var useResponsiveWidth by remember { mutableStateOf(true) }
+    var dismissOnClickOutside by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier.widthIn(max = 420.dp),
@@ -263,6 +275,12 @@ fun HyperDialogDemo() {
             onClick = { useResponsiveWidth = !useResponsiveWidth }
         ) {
             Text(text = if (useResponsiveWidth) "宽度：响应式 90%" else "宽度：填满可用区域")
+        }
+        HyperButton(
+            tone = HyperButtonTone.Outline,
+            onClick = { dismissOnClickOutside = !dismissOnClickOutside }
+        ) {
+            Text(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
         }
         Text(
             text = "当前备注：$savedNote",
@@ -284,6 +302,7 @@ fun HyperDialogDemo() {
         onDismissRequest = { showDialog = false },
         title = "编辑备注",
         widthFraction = if (useResponsiveWidth) 0.9f else 1f,
+        dismissOnClickOutside = dismissOnClickOutside,
         horizontalAlignment = Alignment.Start,
         actionContent = {
             HyperButton(
