@@ -51,3 +51,4 @@
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 线性/圆形进度指示器，线性轨道默认带轻描边 | 调用方提供 `progress` |
 | [HyperDialog](components/feedback/hyper-dialog.md) | 默认支持点击空白关闭、可选固定标题的内容弹窗 | 调用方提供 `visible` 和内容状态 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 默认支持点击空白关闭的 Slot-first Alert 弹窗 | 调用方提供 `visible` 并处理结果 |
+| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 通用应用更新状态与下载确认弹窗 | 调用方持有状态，并注入 Release 加载和下载动作 |

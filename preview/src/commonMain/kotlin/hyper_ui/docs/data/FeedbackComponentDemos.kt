@@ -5,6 +5,7 @@ import hyper_ui.docs.ui.DialogDemo
 import hyper_ui.docs.ui.DropdownMenuDemo
 import hyper_ui.docs.ui.HyperDialogDemo
 import hyper_ui.docs.ui.ProgressDemo
+import hyper_ui.docs.ui.UpdateDialogDemo
 
 private const val GROUP_FEEDBACK = "反馈组件"
 
@@ -92,5 +93,32 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         content = { DialogDemo() }
+    ),
+    ComponentDemo(
+        id = "update_dialog",
+        group = GROUP_FEEDBACK,
+        title = "HyperUpdateDialog",
+        description = "由调用方持有状态并注入 Release 加载与下载动作的应用更新弹窗；预览可切换结果并确认下载。",
+        code = """
+            val checker = HyperUpdateChecker(
+                HyperReleaseLoader { releaseUrl ->
+                    repository.loadLatestRelease(releaseUrl)
+                }
+            )
+            val result = checker.check(
+                HyperUpdateRequest(
+                    currentVersionName = currentVersion,
+                    releaseUrl = releaseUrl
+                )
+            )
+
+            HyperUpdateDialog(
+                state = updateState,
+                onDismissRequest = onDismiss,
+                onRetry = onRetry,
+                onDownload = onDownload
+            )
+        """.trimIndent(),
+        content = { UpdateDialogDemo() }
     )
 )

@@ -41,6 +41,9 @@ import hyper_ui.HyperCircularProgressIndicator
 import hyper_ui.HyperProgressIndicatorDefaults
 import hyper_ui.HyperProgressIndicatorDefaults.colors
 import hyper_ui.HyperTextField
+import hyper_ui.HyperAppRelease
+import hyper_ui.HyperUpdateDialog
+import hyper_ui.HyperUpdateDialogState
 
 @Composable
 fun DropdownMenuDemo() {
@@ -325,6 +328,90 @@ fun HyperDialogDemo() {
     ) {
         dialogContent(draftNote) { draftNote = it }
     }
+}
+
+@Composable
+fun UpdateDialogDemo() {
+    val previewRelease = remember {
+        HyperAppRelease(
+            versionName = "1.2.0",
+            displayName = "文档查看器 1.2.0",
+            releaseNotes = "优化大文档加载速度，并修复部分表格预览问题。",
+            packageFileName = "app-release.apk",
+            packageDownloadUrl = "https://example.com/app-release.apk"
+        )
+    }
+    var state by remember { mutableStateOf<HyperUpdateDialogState>(HyperUpdateDialogState.Idle) }
+    var resultText by remember { mutableStateOf("选择一种状态查看弹窗") }
+
+    Column(
+        modifier = Modifier.widthIn(max = 520.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            HyperButton(
+                onClick = {
+                    state = HyperUpdateDialogState.UpdateAvailable(
+                        currentVersionName = "1.0.0",
+                        release = previewRelease
+                    )
+                }
+            ) {
+                Text("发现更新")
+            }
+            HyperButton(
+                tone = HyperButtonTone.Outline,
+                onClick = { state = HyperUpdateDialogState.Checking("1.0.0") }
+            ) {
+                Text("检查中")
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            HyperButton(
+                tone = HyperButtonTone.Outline,
+                onClick = { state = HyperUpdateDialogState.UpToDate("1.2.0") }
+            ) {
+                Text("已是最新")
+            }
+            HyperButton(
+                tone = HyperButtonTone.Outline,
+                onClick = {
+                    state = HyperUpdateDialogState.Error(
+                        currentVersionName = "1.0.0",
+                        message = "无法连接更新服务，请稍后重试"
+                    )
+                }
+            ) {
+                Text("请求失败")
+            }
+        }
+        Text(
+            text = resultText,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp
+        )
+    }
+
+    HyperUpdateDialog(
+        state = state,
+        onDismissRequest = {
+            state = HyperUpdateDialogState.Idle
+            resultText = "已关闭弹窗"
+        },
+        onRetry = {
+            state = HyperUpdateDialogState.Checking("1.0.0")
+            resultText = "已请求重试"
+        },
+        onDownload = {
+            state = HyperUpdateDialogState.DownloadQueued(
+                currentVersionName = "1.0.0",
+                release = previewRelease,
+                downloadId = 1001L
+            )
+            resultText = "已确认下载"
+        }
+    )
 }
 
 @Composable

@@ -102,7 +102,8 @@ export default defineConfig({
           { text: 'HyperDropdownMenu', link: '/components/feedback/hyper-dropdown-menu' },
           { text: 'HyperProgressIndicator', link: '/components/feedback/hyper-progress-indicator' },
           { text: 'HyperDialog', link: '/components/feedback/hyper-dialog' },
-          { text: 'HyperAlertDialog', link: '/components/feedback/hyper-alert-dialog' }
+          { text: 'HyperAlertDialog', link: '/components/feedback/hyper-alert-dialog' },
+          { text: 'HyperUpdateDialog', link: '/components/feedback/hyper-update-dialog' }
         ]
       },
       {
