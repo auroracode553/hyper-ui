@@ -186,13 +186,13 @@ HyperIconButton(onClick = onSearch) {
 
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
-- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 紧凑型容器，内容由调用方渲染；`HyperIconButton` 默认 40dp，明暗模式均使用实色填充与描边，视觉通过 `colors`、`shape`、`size` 和描边颜色控制）
+- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 紧凑型容器，内容由调用方渲染；`HyperButton` 的所有 tone 与禁用态均使用不透明实色；`HyperIconButton` 默认 40dp，浅色模式沿用既有填充与描边，深色模式默认是半透明圆形控制按钮）
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperSlider`（输入框默认使用不透明背景和轻描边；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边；主题色选择板色块默认带细描边，选中状态由调用方管理）
-- 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 是默认 12dp 轻圆角的页面列表，可通过 `lazyLoading` 开关选择懒加载或普通列表；`HyperMenuList` 是圆角菜单列表和设置分组；数据入口自动隐藏最后一项分割线）
-- 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdownMenu`（更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求；弹窗使用不透明背景且不渲染遮罩）
+- 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 与 `HyperMenuList` 均使用不透明实色容器；前者是默认 12dp 轻圆角的页面列表，可切换懒加载或普通列表；后者用于圆角菜单列表和设置分组）
+- 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdownMenu`（菜单、弹窗、内部按钮与进度指示器均使用不透明实色；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
-- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 为标题 slot 提供默认标题文字样式；`HyperBottomBar` 为内容提供默认标签文字样式，其浅色容器是组件库唯一半透明样式；抽屉和底栏默认带轻描边；`HyperGroupMenus` 用于横向分组菜单；页面切换由调用方处理）
+- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperDrawer` 使用不透明实色面板、无玻璃高光和无遮罩的滑动动画；`HyperBottomBar` 浅色模式保留透明玻璃效果，深色模式使用不透明实色；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
 ## 状态管理原则
@@ -200,8 +200,8 @@ HyperIconButton(onClick = onSearch) {
 - 组件不持有业务状态。
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
-- `HyperDialog` 标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度 480dp，并在窗口四周保留 16dp 间距；弹窗带缩放动画，无遮罩，使用不透明卡片背景、20dp 圆角和 1dp 轻描边。
-- 组件内部只处理焦点、动画、禁用实色和描边等视觉反馈 UI 状态；`HyperTextField` 聚焦时不改变容器背景。
+- `HyperDialog` 标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度 480dp，并在窗口四周保留 16dp 间距；弹窗只做缩放动画，无遮罩，面板全程使用不透明卡片背景、20dp 圆角和 1dp 实色轻描边。
+- 组件内部只处理焦点、动画、禁用态和描边等视觉反馈 UI 状态；`HyperButton`、列表、菜单、进度与弹窗不通过透明度表达状态。
 
 示例：
 
@@ -212,7 +212,7 @@ HyperTextField(
     value = keyword,
     onValueChange = { keyword = it },
     placeholderContent = { Text("搜索") },
-    startContent = {
+    leadingContent = {
         Icon(
             painter = painterResource(LucideR.drawable.lucide_ic_search),
             contentDescription = null
@@ -227,7 +227,7 @@ HyperTextField(
 
 - `vitepress/docs/`：Markdown 权威内容，记录真实公开签名、参数默认值、状态归属、约束与示例，供 AI 和调用方阅读。
 - `vitepress/`：将 `vitepress/docs/` 渲染为语义化静态网页，并通过 iframe 嵌入 Wasm 预览。
-- `preview/`：Compose Multiplatform Desktop/Wasm 组件演示，用来操作真实组件状态；示例代码下方直接加载同一份 VitePress Markdown，自动展示属性表与 API 正文。
+- `preview/`：Compose Multiplatform Desktop/Wasm 组件演示，用来操作真实组件状态。
 
 调用方只依赖 `hyper_ui`，不依赖文档源码、`vitepress/` 或 `preview/`。AI 不应从 Wasm 画面推断 API，应读取 [vitepress/docs/index.md](vitepress/docs/index.md) 和具体组件页。
 
@@ -260,7 +260,8 @@ preview/
 - 公开组件源码按功能组放在 `library/src/main/java/hyper_ui/components/` 下，但包名统一声明为 `hyper_ui`，方便调用方 `import hyper_ui.*`。
 - UI 库内部公共工具放在 `library/src/main/java/hyper_ui/core/` 下，供组件实现复用，不作为调用方公开入口。
 - Android-only 工具不能进入 `commonMain` 编译链；Preview 页面只展示说明、可交互模拟和 Android 调用片段。
-- `HyperBottomBar` 不依赖任何导航框架；Preview 直接展示正式组件，页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
+- `HyperDrawer` 的四个方向均使用不透明实色面板，打开与关闭只做滑动动画；外部点击区域不绘制遮罩。
+- `HyperBottomBar` 不依赖任何导航框架；浅色模式继续使用原有透明效果，深色模式会把容器、内容色和默认描边合成为不透明实色；页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
 - 调用方接入时不需要依赖 `preview` 模块。
 - Wasm 入口接受 `#组件-id`，例如 `index.html#button`，供 VitePress 组件页选择初始预览项；未知 ID 回退到第一个组件。
 

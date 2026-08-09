@@ -72,6 +72,11 @@ fun HyperDrawer(
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
+    val containerColor = resolveHyperOpaqueColor(
+        color = colors.containerColor,
+        fallbackColor = HyperColors.cardContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
     val drawerAlignment = when (position) {
         HyperDrawerPosition.Left -> Alignment.CenterStart
         HyperDrawerPosition.Right -> Alignment.CenterEnd
@@ -119,8 +124,8 @@ fun HyperDrawer(
             ) {
                 Column(
                     modifier = drawerSizeModifier
-                        .hyperSurface(
-                            containerColor = colors.containerColor,
+                        .hyperSolidSurface(
+                            containerColor = containerColor,
                             shape = drawerShape(position),
                             border = border
                         )
@@ -188,15 +193,7 @@ fun HyperDrawerItem(
     } else {
         Modifier
     }
-    val itemShape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius)
-    val selectedContainerModifier = if (selected) {
-        Modifier.hyperSurface(
-            containerColor = colors.selectedContainerColor,
-            shape = itemShape
-        )
-    } else {
-        Modifier
-    }
+    val containerColor = if (selected) colors.selectedContainerColor else Color.Transparent
     val contentColor = when {
         !enabled -> colors.disabledContentColor
         selected -> colors.selectedContentColor
@@ -209,7 +206,10 @@ fun HyperDrawerItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .then(selectedContainerModifier)
+                .hyperGlassSurface(
+                    containerColor = containerColor,
+                    shape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius)
+                )
                 .then(rowClickModifier)
                 .heightIn(min = minHeight)
                 .padding(contentPadding),
@@ -341,22 +341,29 @@ object HyperDrawerDefaults {
         val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
 
         return HyperDrawerColors(
-            containerColor = resolveHyperContainerColor(containerColor, HyperColors.elevatedContainer),
+            containerColor = resolveHyperOpaqueColor(
+                color = containerColor,
+                fallbackColor = HyperColors.cardContainer,
+                backgroundColor = HyperColors.pageBackground
+            ),
             contentColor = resolvedContentColor,
             supportingColor = resolveHyperContainerColor(supportingColor, HyperColors.secondaryText),
             selectedContainerColor = resolveHyperContainerColor(
                 selectedContainerColor,
-                HyperColors.accentContainer
+                HyperColors.accent.copy(alpha = 0.12f)
             ),
             selectedContentColor = resolveHyperContainerColor(selectedContentColor, HyperColors.accent),
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,
-                HyperColors.disabledText
+                resolvedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
             ),
             dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
         )
     }
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
+        color = color,
+        backgroundColor = HyperColors.cardContainer
+    )
 }

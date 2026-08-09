@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/update/`
 - 预览：`update_dialog`
 
-`HyperUpdateDialog` 统一展示检查中、已是最新、发现新版本、下载已入队和错误状态。`HyperUpdateChecker` 负责版本判断，但不发起网络请求；调用方通过 `HyperReleaseLoader` 提供 Release 加载实现，并通过 `HyperUpdateRequest.releaseUrl` 传入检查地址。
+`HyperUpdateDialog` 使用不透明实色面板，统一展示检查中、已是最新、发现新版本、下载已入队和错误状态；内部按钮与进度指示器也不使用透明度。`HyperUpdateChecker` 负责版本判断，但不发起网络请求；调用方通过 `HyperReleaseLoader` 提供 Release 加载实现，并通过 `HyperUpdateRequest.releaseUrl` 传入检查地址。
 
 ## 公开签名
 
@@ -122,6 +122,6 @@ HyperUpdateDialog(
 - 版本比较支持可选 `v` 前缀、不同长度的数字段、预发布标识和构建元数据。
 - `onDownload` 只表达用户确认；实际下载、权限和安装流程由调用方实现。
 - `texts` 可完整替换可见文案；默认提供简体中文。
-- 弹窗继承 `HyperAlertDialog` 的不透明面板，且不渲染遮罩或蒙层。
+- 弹窗继承 `HyperAlertDialog` 全程不透明的实色面板与缩放动画，且不渲染遮罩或蒙层。
 
 <WasmPreview demo="update_dialog" title="HyperUpdateDialog 交互预览" />

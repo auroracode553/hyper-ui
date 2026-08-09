@@ -206,6 +206,12 @@ fun DrawerDemo() {
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
+                Text(
+                    text = "抽屉面板全程使用不透明实色，仅做滑入滑出动画，外部区域不绘制遮罩。",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 13.sp,
+                    lineHeight = 18.sp
+                )
                 DrawerPositionSelector(
                     selected = drawerPosition,
                     onSelect = { drawerPosition = it }
@@ -283,7 +289,7 @@ fun BottomBarDemo() {
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "HyperBottomBar 可以只负责底栏容器，按钮布局、选中态和点击逻辑都由调用方在 slot 中组合。",
+                        text = "切换预览主题可对比：浅色模式保留透明效果，深色模式使用不透明实色底栏。按钮布局、选中态和点击逻辑仍由调用方组合。",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         lineHeight = 20.sp

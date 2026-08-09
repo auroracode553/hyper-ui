@@ -52,6 +52,11 @@ fun HyperMenuListDemo() {
         modifier = Modifier.widthIn(max = 560.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        Text(
+            text = "菜单列表使用不透明实色容器",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp
+        )
         Box(modifier = Modifier.height(220.dp)) {
             HyperMenuList(items = items) { item ->
                 HyperListItem(
@@ -132,7 +137,7 @@ fun HyperListDemo() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = if (lazyLoading) "懒加载开启" else "普通列表渲染",
+                text = if (lazyLoading) "懒加载开启 · 实色背景" else "普通列表渲染 · 实色背景",
                 color = LocalContentColor.current,
                 fontSize = 14.sp,
                 lineHeight = 20.sp

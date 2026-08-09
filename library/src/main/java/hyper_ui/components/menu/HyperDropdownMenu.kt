@@ -2,8 +2,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -24,7 +22,6 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
@@ -67,6 +64,29 @@ fun HyperDropdownMenu(
     val intOffset = LocalDensity.current.run {
         IntOffset(offset.x.roundToPx(), offset.y.roundToPx())
     }
+    val resolvedContainerColor = resolveHyperOpaqueColor(
+        color = colors.containerColor,
+        fallbackColor = HyperColors.cardContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
+    val resolvedColors = HyperDropdownMenuColors(
+        containerColor = resolvedContainerColor,
+        contentColor = resolveHyperOpaqueColor(
+            color = colors.contentColor,
+            fallbackColor = HyperColors.primaryText,
+            backgroundColor = resolvedContainerColor
+        ),
+        disabledContentColor = resolveHyperOpaqueColor(
+            color = colors.disabledContentColor,
+            fallbackColor = HyperColors.secondaryText,
+            backgroundColor = resolvedContainerColor
+        ),
+        dividerColor = resolveHyperOpaqueColor(
+            color = colors.dividerColor,
+            fallbackColor = HyperColors.divider,
+            backgroundColor = resolvedContainerColor
+        )
+    )
 
     Popup(
         alignment = alignment,
@@ -78,16 +98,18 @@ fun HyperDropdownMenu(
             modifier = modifier
                 .width(width)
                 .heightIn(max = maxHeight)
-                .clip(shape)
-                .background(color = colors.containerColor, shape = shape)
-                .then(if (border != null) Modifier.border(border, shape) else Modifier)
+                .hyperSolidSurface(
+                    containerColor = resolvedColors.containerColor,
+                    shape = shape,
+                    border = border
+                )
                 .verticalScroll(rememberScrollState())
                 .padding(contentPadding)
         ) {
-            val scope = remember(onDismissRequest, colors) {
+            val scope = remember(onDismissRequest, resolvedColors) {
                 HyperDropdownMenuScope(
                     onDismiss = onDismissRequest,
-                    colors = colors
+                    colors = resolvedColors
                 )
             }
             scope.content()
@@ -158,19 +180,36 @@ object HyperDropdownMenuDefaults {
         disabledContentColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
     ): HyperDropdownMenuColors {
-        val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
+        val resolvedContainerColor = resolveHyperOpaqueColor(
+            color = containerColor,
+            fallbackColor = HyperColors.cardContainer,
+            backgroundColor = HyperColors.pageBackground
+        )
+        val resolvedContentColor = resolveHyperOpaqueColor(
+            color = contentColor,
+            fallbackColor = HyperColors.primaryText,
+            backgroundColor = resolvedContainerColor
+        )
 
         return HyperDropdownMenuColors(
-            containerColor = resolveHyperContainerColor(containerColor, HyperColors.cardContainer),
+            containerColor = resolvedContainerColor,
             contentColor = resolvedContentColor,
-            disabledContentColor = resolveHyperContainerColor(
-                disabledContentColor,
-                HyperColors.disabledText
+            disabledContentColor = resolveHyperOpaqueColor(
+                color = disabledContentColor,
+                fallbackColor = HyperColors.secondaryText,
+                backgroundColor = resolvedContainerColor
             ),
-            dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
+            dividerColor = resolveHyperOpaqueColor(
+                color = dividerColor,
+                fallbackColor = HyperColors.divider,
+                backgroundColor = resolvedContainerColor
+            ),
         )
     }
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
+        color = color,
+        backgroundColor = HyperColors.cardContainer
+    )
 }

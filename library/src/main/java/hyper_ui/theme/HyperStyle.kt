@@ -8,6 +8,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
@@ -62,6 +63,7 @@ object HyperStyleDefaults {
     val InfoColor = rgba(144, 147, 153, 1f)
     val WarningColor = rgba(230, 162, 60, 1f)
     val DangerColor = rgba(255, 59, 48, 1f)
+    const val DisabledAlpha = 0.38f
     val SmallCornerRadius = 12.dp
     val MediumCornerRadius = 16.dp
     val LargeCornerRadius = 24.dp
@@ -148,5 +150,14 @@ object HyperColors {
         get() = BorderStroke(
             width = 1.dp,
             color = divider
+        )
+
+    val glassHighlightBrush: Brush
+        @Composable @ReadOnlyComposable
+        get() = Brush.verticalGradient(
+            colors = listOf(
+                Color(1f, 1f, 1f, if (isLight) 0.3f else 0.15f),
+                Color.Transparent
+            )
         )
 }

@@ -4,8 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/navigation/HyperBottomBar.kt`
 - 预览：`bottom-bar`
 
-`HyperBottomBar` 是底部栏容器，默认带 1dp 轻描边和标签文字样式。组件负责底栏面板与横向布局；调用方可以直接传入完整内容 slot，也可以使用泛型 items 入口让组件统一处理单项点击、选中/未选中内容色和禁用状态。
-浅色模式默认容器为 `rgba(255, 255, 255, 0.92f)`，这是 HyperUI 唯一保留的半透明组件样式；深色模式和所有内容状态均使用不透明实色。
+`HyperBottomBar` 是底部栏容器，默认带 1dp 轻描边和标签文字样式。浅色模式完整保留原有半透明容器、玻璃高光和内容透明度；深色模式改用不透明实色容器，不绘制玻璃高光，并将选中、未选中、禁用内容色与默认描边合成为实色。组件负责底栏面板与横向布局；调用方可以直接传入完整内容 slot，也可以使用泛型 items 入口。
 
 ## 公开签名
 
@@ -107,6 +106,8 @@ HyperBottomBar(
 - 完整内容 slot 只提供底栏外壳和默认内容色；点击、选中、禁用与内部布局由调用方自行组合。
 - 单项可用状态由 `itemEnabled` 决定，全局禁用仍使用 `enabled`。
 - `HyperBottomBarItemScope` 暴露 `selected` 与 `enabled`，slot 可据此渲染字体、徽标或动画。
-- 默认描边来自 `HyperBottomBarDefaults.border()`，内部使用 `HyperColors.panelBorder`；如需无边框，传入 `border = null`。
+- 浅色模式继续使用 `HyperColors.elevatedContainer` 和玻璃高光，既有透明效果不变。
+- 深色模式默认使用不透明的 `HyperColors.cardContainer`；即使通过 `HyperBottomBarColors` 或 `colors(...)` 传入含 alpha 的颜色，也会先与底栏背景合成为实色。
+- 默认描边来自 `HyperBottomBarDefaults.border()`：浅色模式保持原有 `HyperColors.panelBorder`，深色模式使用合成后的实色轻描边；如需无边框，传入 `border = null`。
 
 <WasmPreview demo="bottom-bar" title="HyperBottomBar 交互预览" />

@@ -61,10 +61,11 @@ fun HyperBottomBar(
     colors: HyperBottomBarColors = HyperBottomBarDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
+    val resolvedColors = resolveHyperBottomBarColors(colors)
     val contentColor = if (enabled) {
-        colors.unselectedContentColor
+        resolvedColors.unselectedContentColor
     } else {
-        colors.disabledContentColor
+        resolvedColors.disabledContentColor
     }
 
     HyperBottomBarSurface(
@@ -72,7 +73,7 @@ fun HyperBottomBar(
         height = height,
         shape = shape,
         border = border,
-        colors = colors
+        colors = resolvedColors
     ) {
         Row(
             modifier = Modifier
@@ -113,6 +114,7 @@ fun <T> HyperBottomBar(
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperBottomBarItemScope.(item: T) -> Unit
 ) {
+    val resolvedColors = resolveHyperBottomBarColors(colors)
     HyperBottomBar(
         modifier = modifier,
         enabled = enabled,
@@ -126,7 +128,7 @@ fun <T> HyperBottomBar(
         },
         shape = shape,
         border = border,
-        colors = colors
+        colors = resolvedColors
     ) {
         items.forEach { item ->
             val selected = itemSelected(item)
@@ -136,9 +138,9 @@ fun <T> HyperBottomBar(
                 enabled = actualEnabled
             )
             val contentColor = when {
-                !actualEnabled -> colors.disabledContentColor
-                selected -> colors.selectedContentColor
-                else -> colors.unselectedContentColor
+                !actualEnabled -> resolvedColors.disabledContentColor
+                selected -> resolvedColors.selectedContentColor
+                else -> resolvedColors.unselectedContentColor
             }
 
             if (itemLayout == HyperBottomBarItemLayout.Equal) {
@@ -184,18 +186,56 @@ private fun HyperBottomBarSurface(
     colors: HyperBottomBarColors,
     content: @Composable BoxScope.() -> Unit
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(height)
-            .hyperSurface(
-                containerColor = colors.containerColor,
-                shape = shape,
-                border = border
-            )
-    ) {
+    val sizedModifier = modifier
+        .fillMaxWidth()
+        .height(height)
+    val surfaceModifier = if (HyperColors.isLight) {
+        sizedModifier.hyperGlassSurface(
+            containerColor = colors.containerColor,
+            shape = shape,
+            border = border
+        )
+    } else {
+        sizedModifier.hyperSolidSurface(
+            containerColor = colors.containerColor,
+            shape = shape,
+            border = border
+        )
+    }
+    Box(modifier = surfaceModifier) {
         content()
     }
+}
+
+@Composable
+private fun resolveHyperBottomBarColors(colors: HyperBottomBarColors): HyperBottomBarColors {
+    if (HyperColors.isLight) {
+        return colors
+    }
+
+    val containerColor = resolveHyperOpaqueColor(
+        color = colors.containerColor,
+        fallbackColor = HyperColors.cardContainer,
+        backgroundColor = HyperColors.pageBackground
+    )
+    return HyperBottomBarColors(
+        containerColor = containerColor,
+        selectedContentColor = resolveHyperOpaqueColor(
+            color = colors.selectedContentColor,
+            fallbackColor = HyperColors.accent,
+            backgroundColor = containerColor
+        ),
+        unselectedContentColor = resolveHyperOpaqueColor(
+            color = colors.unselectedContentColor,
+            fallbackColor = HyperColors.secondaryText,
+            backgroundColor = containerColor
+        ),
+        disabledContentColor = resolveHyperOpaqueColor(
+            color = colors.disabledContentColor,
+            fallbackColor = HyperColors.secondaryText,
+            backgroundColor = containerColor
+        )
+    )
 }
 
 @Composable
@@ -238,27 +278,38 @@ object HyperBottomBarDefaults {
         unselectedContentColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
     ): HyperBottomBarColors {
-        val defaultContainerColor = if (HyperColors.isLight) {
-            // HyperBottomBar 浅色模式是组件库唯一保留的半透明容器样式。
-            rgba(255, 255, 255, 0.92f)
+        val isLight = HyperColors.isLight
+        val defaultUnselectedColor = if (isLight) {
+            rgba(0, 0, 0, 0.72f)
         } else {
-            HyperColors.cardContainer
+            rgba(255, 255, 255, 0.72f)
         }
-        val defaultUnselectedColor = HyperColors.secondaryText
         val resolvedSelectedColor = resolveHyperContainerColor(selectedContentColor, HyperColors.accent)
         val resolvedUnselectedColor = resolveHyperContainerColor(unselectedContentColor, defaultUnselectedColor)
 
-        return HyperBottomBarColors(
-            containerColor = resolveHyperContainerColor(containerColor, defaultContainerColor),
-            selectedContentColor = resolvedSelectedColor,
-            unselectedContentColor = resolvedUnselectedColor,
-            disabledContentColor = resolveHyperContainerColor(
-                disabledContentColor,
-                HyperColors.disabledText
+        return resolveHyperBottomBarColors(
+            HyperBottomBarColors(
+                containerColor = resolveHyperContainerColor(
+                    containerColor,
+                    if (isLight) HyperColors.elevatedContainer else HyperColors.cardContainer
+                ),
+                selectedContentColor = resolvedSelectedColor,
+                unselectedContentColor = resolvedUnselectedColor,
+                disabledContentColor = resolveHyperContainerColor(
+                    disabledContentColor,
+                    resolvedUnselectedColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+                )
             )
         )
     }
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
+    fun border(color: Color = Color.Unspecified): BorderStroke = if (HyperColors.isLight) {
+        hyperPanelBorder(color)
+    } else {
+        hyperSolidPanelBorder(
+            color = color,
+            backgroundColor = HyperColors.cardContainer
+        )
+    }
 }

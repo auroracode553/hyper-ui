@@ -20,6 +20,7 @@ data class ComponentDemo(
     val content: @Composable () -> Unit
 )
 
+/** 聚合各分组的稳定 Preview ID；组件视觉调整直接更新对应分组与 Showcase。 */
 fun componentDemos(): List<ComponentDemo> = listOf(
     basicComponentDemos(),
     formComponentDemos(),

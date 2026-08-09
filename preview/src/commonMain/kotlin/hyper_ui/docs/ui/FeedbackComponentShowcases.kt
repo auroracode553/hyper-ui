@@ -60,6 +60,11 @@ fun DropdownMenuDemo() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            Text(
+                text = "菜单面板：不透明实色",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 13.sp
+            )
             HyperButton(
                 onClick = { expanded = true },
                 tone = HyperButtonTone.Outline
@@ -113,7 +118,7 @@ fun ProgressDemo() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "确定进度",
+                    text = "确定进度 · 实色轨道",
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
@@ -216,6 +221,11 @@ fun DialogDemo() {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp
         )
+        Text(
+            text = "Alert 面板全程不透明",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp
+        )
     }
 
     HyperAlertDialog(
@@ -296,6 +306,12 @@ fun HyperDialogDemo() {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = "显示与关闭只做缩放动画，面板全程保持不透明。",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
             textAlign = TextAlign.Center
         )
     }
@@ -388,6 +404,11 @@ fun UpdateDialogDemo() {
         }
         Text(
             text = resultText,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp
+        )
+        Text(
+            text = "更新弹窗及内部按钮、进度指示器均为实色",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp
         )

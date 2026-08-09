@@ -14,7 +14,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dropdown",
         group = GROUP_FEEDBACK,
         title = "HyperDropdownMenu",
-        description = "浮层菜单容器默认使用不透明卡片面板，菜单项内容使用 slot 渲染，可配置点击后是否关闭。",
+        description = "浮层菜单使用不透明实色面板，菜单项和分割线不依赖透明度，可配置点击后是否关闭。",
         code = """
             HyperDropdownMenu(
                 expanded = expanded,
@@ -43,7 +43,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "progress",
         group = GROUP_FEEDBACK,
         title = "HyperProgressIndicator",
-        description = "线性轨道默认带轻描边；progress 为 null 时表示不确定加载。",
+        description = "线性与圆形轨道均使用不透明实色；progress 为 null 时表示不确定加载。",
         code = """
             HyperLinearProgressIndicator(progress = progress)
             HyperLinearProgressIndicator(progress = null)
@@ -63,7 +63,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "基础对话框默认支持点击空白区域关闭，也可通过参数禁用；面板使用响应式宽度，title 固定在顶部，正文滚动。",
+        description = "基础对话框全程使用不透明实色面板和缩放动画；支持响应式宽度、固定标题与正文滚动。",
         code = """
             HyperDialog(
                 visible = visible,
@@ -94,7 +94,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dialog",
         group = GROUP_FEEDBACK,
         title = "HyperAlertDialog",
-        description = "Alert 结构化对话框默认支持点击空白区域关闭，也可通过参数禁用；正文和按钮均为 slot。",
+        description = "Alert 结构化对话框继承不透明实色面板；支持点击空白关闭，正文和按钮均为 slot。",
         code = """
             HyperAlertDialog(
                 visible = visible,
@@ -123,7 +123,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "update_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperUpdateDialog",
-        description = "由调用方持有状态并注入 Release 加载与下载动作的应用更新弹窗；预览可切换结果并确认下载。",
+        description = "使用不透明实色面板的应用更新弹窗；调用方持有状态并注入 Release 加载与下载动作。",
         code = """
             val checker = HyperUpdateChecker(
                 HyperReleaseLoader { releaseUrl ->
