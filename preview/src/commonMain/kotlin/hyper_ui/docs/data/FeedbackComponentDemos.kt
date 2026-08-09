@@ -49,7 +49,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "基础对话框容器默认使用不透明卡片面板；title 存在时固定在顶部，未提供时不占标题空间，正文滚动，底部 action 固定。",
+        description = "基础对话框容器默认最大宽度 360dp，并保留 16dp 窗口间距；title 固定在顶部，正文滚动，底部 action 固定。",
         code = """
             HyperDialog(
                 visible = visible,

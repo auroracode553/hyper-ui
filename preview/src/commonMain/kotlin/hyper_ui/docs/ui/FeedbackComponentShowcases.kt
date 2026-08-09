@@ -263,6 +263,13 @@ fun HyperDialogDemo() {
             fontSize = 13.sp,
             lineHeight = 18.sp
         )
+        Text(
+            text = "可缩放预览窗口验证：弹窗最大宽度为 360dp，四周至少保留 16dp 间距。",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
+            lineHeight = 18.sp,
+            textAlign = TextAlign.Center
+        )
     }
 
     HyperDialog(

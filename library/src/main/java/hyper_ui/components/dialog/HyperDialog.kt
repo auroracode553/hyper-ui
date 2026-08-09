@@ -68,6 +68,7 @@ fun HyperDialog(
     minWidth: Dp = HyperDialogDefaults.MinWidth,
     maxWidth: Dp = HyperDialogDefaults.MaxWidth,
     maxHeight: Dp = HyperDialogDefaults.MaxHeight,
+    windowPadding: PaddingValues = HyperDialogDefaults.WindowPadding,
     shape: Shape = HyperDialogDefaults.Shape,
     colors: HyperDialogColors = HyperDialogDefaults.colors(),
     contentPadding: PaddingValues = HyperDialogDefaults.ContentPadding,
@@ -119,14 +120,17 @@ fun HyperDialog(
             )
         ) {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(windowPadding),
                 contentAlignment = Alignment.Center
             ) {
                 Column(
-                    modifier = modifier
-                        .fillMaxWidth(HyperDialogDefaults.WidthFraction)
+                    modifier = Modifier
                         .widthIn(min = minWidth, max = maxWidth)
+                        .fillMaxWidth()
                         .heightIn(max = maxHeight)
+                        .then(modifier)
                         .graphicsLayer {
                             alpha = animationProgress.value
                             scaleX = 0.8f + 0.2f * animationProgress.value
@@ -246,9 +250,9 @@ private fun HyperDialogScrollIndicator(
 
 object HyperDialogDefaults {
     val MinWidth = 280.dp
-    const val WidthFraction = 0.92f
     val MaxWidth = 360.dp
     val MaxHeight = 480.dp
+    val WindowPadding = PaddingValues(16.dp)
     val Shape: Shape = RoundedCornerShape(20.dp)
     val ContentPadding = PaddingValues(20.dp)
     val ContentSpacing = 16.dp
