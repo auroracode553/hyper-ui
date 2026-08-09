@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,7 +59,11 @@ fun <T> HyperList(
                     .background(containerColor)
                     .then(if (hasVisibleBackground) Modifier.background(HyperColors.glassHighlightBrush) else Modifier)
             ) {
-                itemContent(item)
+                CompositionLocalProvider(
+                    LocalHyperListItemDividerSuppressed provides isLast
+                ) {
+                    itemContent(item)
+                }
             }
         }
     }
@@ -74,18 +79,20 @@ fun HyperList(
     content: @Composable ColumnScope.() -> Unit
 ) {
     val shape = HyperListDefaults.Shape
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .hyperGlassSurface(
-                containerColor = colors.containerColor,
-                shape = shape,
-                border = border
-            )
-            .padding(contentPadding),
-        verticalArrangement = verticalArrangement,
-        content = content
-    )
+    CompositionLocalProvider(LocalHyperListItemDividerSuppressed provides false) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .hyperGlassSurface(
+                    containerColor = colors.containerColor,
+                    shape = shape,
+                    border = border
+                )
+                .padding(contentPadding),
+            verticalArrangement = verticalArrangement,
+            content = content
+        )
+    }
 }
 
 object HyperListDefaults {

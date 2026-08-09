@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +38,8 @@ data class HyperListItemColors(
     val dividerColor: Color
 )
 
+internal val LocalHyperListItemDividerSuppressed = staticCompositionLocalOf { false }
+
 @Composable
 fun HyperListItem(
     modifier: Modifier = Modifier,
@@ -54,6 +57,7 @@ fun HyperListItem(
 ) {
     val contentColor = if (enabled) colors.contentColor else colors.disabledContentColor
     val supportingColor = if (enabled) colors.supportingColor else colors.disabledContentColor
+    val shouldShowDivider = dividerVisible && !LocalHyperListItemDividerSuppressed.current
     val clickModifier = if (onClick != null) {
         Modifier.hyperNoRippleClickable(
             enabled = enabled,
@@ -124,7 +128,7 @@ fun HyperListItem(
             }
         }
 
-        if (dividerVisible) {
+        if (shouldShowDivider) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

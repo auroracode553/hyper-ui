@@ -5,7 +5,7 @@
 - 状态归属：调用方提供列表数据
 - Preview ID：`lazy_list`
 
-基于 `LazyColumn` 的懒加载列表，适合数量较多或动态变化的数据。列表提供同构数据入口和异构内容 DSL 入口，背景、圆角与外层轻描边均由 HyperUI 管理。
+基于 `LazyColumn` 的懒加载列表，适合数量较多或动态变化的数据。列表提供同构数据入口和异构内容 DSL 入口，背景、圆角与外层轻描边均由 HyperUI 管理；同构数据入口会自动抑制最后一项的 `HyperListItem` 分割线。
 
 ## 公开签名
 
@@ -80,7 +80,8 @@ fun AccountList(accounts: List<String>) {
         key = { account -> account }
     ) { account ->
         HyperListItem(
-            headlineContent = { Text(account) }
+            headlineContent = { Text(account) },
+            dividerVisible = true
         )
     }
 }
@@ -102,9 +103,10 @@ HyperLazyList(state = listState) {
 ## 约束
 
 - `itemContent` 的参数是项目本身，不是索引。
+- 同构数据入口会自动隐藏最后一项的 `HyperListItem` 分割线，调用方只需表达普通行是否需要分割线。
 - 需要混合多种条目或由外部持有滚动状态时，使用 `LazyListScope` DSL 入口。
 - 首尾圆角、项目背景与外层描边由列表自动处理，不要在每项重复计算外层形状。
-- 分割线仍由条目内容决定；使用 `HyperListItem.dividerVisible` 时由调用方根据业务数据设置。
+- DSL 入口无法推断最后一个子项；使用 `HyperListItem.dividerVisible` 时仍由调用方控制最后一项是否显示。
 - 默认描边来自 `HyperListDefaults.border()`，内部使用 `HyperColors.panelBorder`。
 - 少量、固定数据可使用 [HyperList](hyper-list.md)。
 

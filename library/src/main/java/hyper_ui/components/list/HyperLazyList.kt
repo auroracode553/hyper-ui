@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -57,7 +58,11 @@ fun <T> HyperLazyList(
                     .background(containerColor)
                     .then(if (hasVisibleBackground) Modifier.background(HyperColors.glassHighlightBrush) else Modifier)
             ) {
-                itemContent(item)
+                CompositionLocalProvider(
+                    LocalHyperListItemDividerSuppressed provides isLast
+                ) {
+                    itemContent(item)
+                }
             }
         }
     }
@@ -78,19 +83,21 @@ fun HyperLazyList(
     colors: HyperListColors = HyperListDefaults.colors(),
     content: LazyListScope.() -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxWidth()
-            .hyperGlassSurface(
-                containerColor = colors.containerColor,
-                shape = HyperListDefaults.Shape,
-                border = border
-            ),
-        state = state,
-        contentPadding = contentPadding,
-        verticalArrangement = verticalArrangement,
-        content = content
-    )
+    CompositionLocalProvider(LocalHyperListItemDividerSuppressed provides false) {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxWidth()
+                .hyperGlassSurface(
+                    containerColor = colors.containerColor,
+                    shape = HyperListDefaults.Shape,
+                    border = border
+                ),
+            state = state,
+            contentPadding = contentPadding,
+            verticalArrangement = verticalArrangement,
+            content = content
+        )
+    }
 }
 
 internal fun listItemShape(

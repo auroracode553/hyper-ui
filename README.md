@@ -158,7 +158,7 @@ fun App() {
 - 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；`HyperIconButton` 默认带轻描边，视觉通过 `tone`、`colors`、`shape`、`border` 控制）
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperSlider`（输入框默认使用不透明背景和轻描边；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边；主题色选择板色块默认带细描边，选中状态由调用方管理）
-- 列表组件：`HyperLazyList`, `HyperList`, `HyperListItem`（`HyperLazyList` 支持同构数据和异构内容 DSL；列表和设置分组外层默认带轻描边，行内容通过分割线表达层级）
+- 列表组件：`HyperLazyList`, `HyperList`, `HyperListItem`（`HyperLazyList` 支持同构数据和异构内容 DSL；数据列表自动隐藏最后一项分割线，列表和设置分组外层默认带轻描边）
 - 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperDropdownMenu`（弹窗与菜单默认不透明卡片面板，且不渲染遮罩）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
 - 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 为标题 slot 提供默认标题文字样式；`HyperBottomBar` 为内容提供默认标签文字样式；抽屉和底栏默认带轻描边；`HyperGroupMenus` 用于横向分组菜单；页面切换由调用方处理）

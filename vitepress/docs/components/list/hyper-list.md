@@ -5,7 +5,7 @@
 - 状态归属：调用方提供列表数据
 - Preview ID：`hyper_list`
 
-非懒加载列表容器，适合数量较少的静态数据和设置页分组。数据项入口基于 `Column` 与 `verticalScroll` 一次组合全部项目；slot 分组入口不额外添加滚动，适合放在页面级滚动容器中。列表外层默认带 1dp 轻描边。
+非懒加载列表容器，适合数量较少的静态数据和设置页分组。数据项入口基于 `Column` 与 `verticalScroll` 一次组合全部项目，并会自动抑制最后一项的 `HyperListItem` 分割线；slot 分组入口不额外添加滚动，适合放在页面级滚动容器中。列表外层默认带 1dp 轻描边。
 
 ## 公开签名
 
@@ -71,6 +71,7 @@ fun StaticOptions(options: List<String>) {
     HyperList(items = options) { option ->
         HyperListItem(
             headlineContent = { Text(option) },
+            dividerVisible = true,
             onClick = { /* 由调用方处理 */ }
         )
     }
@@ -96,7 +97,9 @@ fun SettingsGroup(enabled: Boolean, onEnabledChange: (Boolean) -> Unit) {
 ## 约束
 
 - `items` 数据入口内部自带纵向滚动；放入另一个同方向无界滚动容器前，应明确尺寸约束。
+- `items` 数据入口会自动隐藏最后一项的 `HyperListItem` 分割线，调用方只需表达普通行是否需要分割线。
 - slot 分组入口不额外添加纵向滚动，适合设置页、详情页等已有页面级滚动的场景。
+- slot 分组入口无法推断最后一个子项；使用 `HyperListItem.dividerVisible` 时仍由调用方控制最后一项是否显示。
 - 项目较多时改用 [HyperLazyList](hyper-lazy-list.md)，避免一次组合所有内容。
 - 与 `HyperLazyList` 一样，首尾圆角、卡片背景和外层描边由列表处理。
 - 默认描边来自 `HyperListDefaults.border()`，内部使用 `HyperColors.panelBorder`。

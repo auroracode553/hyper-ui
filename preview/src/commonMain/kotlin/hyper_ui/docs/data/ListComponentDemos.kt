@@ -18,7 +18,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
                     leadingContent = { Icon(item.icon, null) },
                     headlineContent = { Text(item.title) },
                     supportingContent = { Text(item.description) },
-                    dividerVisible = item != items.last()
+                    dividerVisible = true
                 )
             }
 

@@ -54,7 +54,7 @@ fun HyperListDemo() {
                     leadingContent = { ListIcon(iconFor(item)) },
                     headlineContent = { ListTitle(item) },
                     supportingContent = { ListDescription("点击查看配置") },
-                    dividerVisible = item != items.last(),
+                    dividerVisible = true,
                     dividerInset = 70.dp
                 )
             }
@@ -116,7 +116,7 @@ fun LazyListDemo() {
                 leadingContent = { ListIcon(iconFor(item)) },
                 headlineContent = { ListTitle(item) },
                 supportingContent = { ListDescription("点击查看配置") },
-                dividerVisible = item != items.last(),
+                dividerVisible = true,
                 dividerInset = 70.dp
             )
         }
