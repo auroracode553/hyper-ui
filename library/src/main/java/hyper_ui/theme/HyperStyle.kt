@@ -8,8 +8,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.dp
 
@@ -62,8 +62,6 @@ object HyperStyleDefaults {
     val InfoColor = rgba(144, 147, 153, 1f)
     val WarningColor = rgba(230, 162, 60, 1f)
     val DangerColor = rgba(255, 59, 48, 1f)
-    val DisabledAlpha = 0.42f
-
     val SmallCornerRadius = 12.dp
     val MediumCornerRadius = 16.dp
     val LargeCornerRadius = 24.dp
@@ -115,11 +113,11 @@ object HyperColors {
 
     val elevatedContainer: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(255, 255, 255, 0.92f) else rgba(255, 255, 255, 0.12f)
+        get() = cardContainer
 
     val disabledContainer: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(255, 255, 255, 0.52f) else rgba(255, 255, 255, 0.08f)
+        get() = if (isLight) rgba(232, 233, 238, 1f) else rgba(52, 52, 55, 1f)
 
     val primaryText: Color
         @Composable @ReadOnlyComposable
@@ -131,45 +129,24 @@ object HyperColors {
 
     val disabledText: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(28, 28, 30, 0.40f) else rgba(245, 245, 247, 0.40f)
+        get() = if (isLight) rgba(154, 154, 160, 1f) else rgba(124, 124, 130, 1f)
 
     val divider: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(0, 0, 0, 0.08f) else rgba(255, 255, 255, 0.12f)
+        get() = if (isLight) rgba(224, 225, 230, 1f) else rgba(72, 72, 76, 1f)
 
     val fieldBorder: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(0, 0, 0, 0.14f) else rgba(255, 255, 255, 0.24f)
+        get() = if (isLight) rgba(199, 200, 206, 1f) else rgba(94, 94, 100, 1f)
+
+    val accentContainer: Color
+        @Composable @ReadOnlyComposable
+        get() = lerp(accent, softContainer, 0.84f)
 
     val panelBorder: BorderStroke
         @Composable @ReadOnlyComposable
         get() = BorderStroke(
             width = 1.dp,
-            color = if (isLight) rgba(0, 0, 0, 0.08f) else rgba(255, 255, 255, 0.18f)
+            color = divider
         )
-
-    val glassBorder: BorderStroke
-        @Composable @ReadOnlyComposable
-        get() = BorderStroke(
-            width = 1.dp,
-            color = if (isLight) rgba(255, 255, 255, 0.90f) else rgba(255, 255, 255, 0.22f)
-        )
-
-    val glassHighlightBrush: Brush
-        @Composable @ReadOnlyComposable
-        get() = if (isLight) {
-            Brush.verticalGradient(
-                colors = listOf(
-                    rgba(255, 255, 255, 0.50f),
-                    rgba(255, 255, 255, 0.05f)
-                )
-            )
-        } else {
-            Brush.verticalGradient(
-                colors = listOf(
-                    rgba(255, 255, 255, 0.14f),
-                    rgba(255, 255, 255, 0f)
-                )
-            )
-        }
 }

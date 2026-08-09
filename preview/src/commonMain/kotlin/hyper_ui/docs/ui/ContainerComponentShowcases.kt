@@ -88,7 +88,7 @@ fun PanelDemo() {
             ContainerIconBadge(
                 imageVector = if (acknowledged) Icons.Default.Star else Icons.Default.Check,
                 tint = MaterialTheme.colorScheme.secondary,
-                background = MaterialTheme.colorScheme.secondary.copy(alpha = 0.12f)
+                background = MaterialTheme.colorScheme.secondaryContainer
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {

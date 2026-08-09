@@ -59,6 +59,6 @@ HyperButton(onClick = onSave) {
 
 - 不存在 `text`、`leadingIcon`、`trailingIcon` 参数；这些内容必须由调用方放入 `content`。
 - `LocalContentColor` 会传递给 slot 内的 `Text` 与 `Icon`。
-- `Plain` 与 `Outline` 默认透明背景；`Outline` 默认有 1.dp 边框。
+- `Plain` 与 `Outline` 默认使用不透明实色背景；`Outline` 默认有 1.dp 主题色边框。
 
 <WasmPreview demo="button" title="HyperButton 交互预览" />

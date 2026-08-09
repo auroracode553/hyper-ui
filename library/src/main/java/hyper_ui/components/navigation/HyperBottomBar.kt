@@ -188,7 +188,7 @@ private fun HyperBottomBarSurface(
         modifier = modifier
             .fillMaxWidth()
             .height(height)
-            .hyperGlassSurface(
+            .hyperSurface(
                 containerColor = colors.containerColor,
                 shape = shape,
                 border = border
@@ -238,21 +238,23 @@ object HyperBottomBarDefaults {
         unselectedContentColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
     ): HyperBottomBarColors {
-        val defaultUnselectedColor = if (HyperColors.isLight) {
-            rgba(0, 0, 0, 0.72f)
+        val defaultContainerColor = if (HyperColors.isLight) {
+            // HyperBottomBar 浅色模式是组件库唯一保留的半透明容器样式。
+            rgba(255, 255, 255, 0.92f)
         } else {
-            rgba(255, 255, 255, 0.72f)
+            HyperColors.cardContainer
         }
+        val defaultUnselectedColor = HyperColors.secondaryText
         val resolvedSelectedColor = resolveHyperContainerColor(selectedContentColor, HyperColors.accent)
         val resolvedUnselectedColor = resolveHyperContainerColor(unselectedContentColor, defaultUnselectedColor)
 
         return HyperBottomBarColors(
-            containerColor = resolveHyperContainerColor(containerColor, HyperColors.elevatedContainer),
+            containerColor = resolveHyperContainerColor(containerColor, defaultContainerColor),
             selectedContentColor = resolvedSelectedColor,
             unselectedContentColor = resolvedUnselectedColor,
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,
-                resolvedUnselectedColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+                HyperColors.disabledText
             )
         )
     }

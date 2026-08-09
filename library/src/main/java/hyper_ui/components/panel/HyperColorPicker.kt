@@ -121,7 +121,6 @@ private fun ColorPickItem(
     ) {
         // 选中时用 accent 色环形描边：外层固定尺寸 + accent 背景，内层色块小一圈形成"环"
         val ringWidth = 2.dp
-        val ringColor = if (selected) HyperColors.accent else Color.Transparent
 
         Box(
             modifier = Modifier
@@ -129,7 +128,7 @@ private fun ColorPickItem(
                 .clip(CircleShape)
                 .then(
                     if (selected) {
-                        Modifier.background(ringColor)
+                        Modifier.background(HyperColors.accent)
                     } else {
                         Modifier
                     }
@@ -156,7 +155,7 @@ private fun ColorPickItem(
                         modifier = Modifier
                             .size(colorSize * 0.42f)
                             .clip(CircleShape)
-                            .background(Color.White.copy(alpha = 0.9f))
+                            .background(Color.White)
                     )
                 }
             }

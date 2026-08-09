@@ -43,7 +43,7 @@ fun HyperTopBar(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = minHeight)
-            .hyperGlassSurface(
+            .hyperSurface(
                 containerColor = colors.containerColor,
                 shape = HyperTopBarDefaults.Shape
             )
@@ -78,10 +78,10 @@ object HyperTopBarDefaults {
 
     @Composable
     fun colors(
-        containerColor: Color = Color.Transparent,
+        containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified
     ): HyperTopBarColors = HyperTopBarColors(
-        containerColor = containerColor,
+        containerColor = resolveHyperContainerColor(containerColor, HyperColors.cardContainer),
         contentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
     )
 }

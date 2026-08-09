@@ -55,5 +55,6 @@ HyperTopBar(
 - 不存在 `title`、`onBack`、`rightSlot` 参数。
 - 返回按钮是否出现、图标内容和点击行为都由调用方控制。
 - `LocalContentColor` 会传递给三个 slot，`titleContent` 同时继承 `HyperTopBarDefaults.TitleTextStyle`。
+- 默认容器使用不透明 `HyperColors.cardContainer`；可通过 `HyperTopBarDefaults.colors(containerColor = ...)` 自定义。
 
 <WasmPreview demo="topbar" title="HyperTopBar 交互预览" />

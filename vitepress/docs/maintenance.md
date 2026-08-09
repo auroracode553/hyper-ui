@@ -113,7 +113,7 @@ cd preview
 - Kotlin 源码定义真实公开 API。
 - `vitepress/docs/` 用准确的 Markdown 解释这些 API，是 AI 和调用方的首读入口。
 - VitePress 导航只引用 `vitepress/docs/`，不维护第二份组件正文。
-- Desktop/Wasm preview 展示真实交互，但不能替代参数与约束文档。
+- Desktop/Wasm preview 展示真实交互，并从构建资源加载同一份 Markdown；属性表从公开签名自动提取，不能替代或另行维护参数与约束正文。
 
 ## 组件改动检查表
 
@@ -126,6 +126,8 @@ cd preview
 5. `preview/src/commonMain/kotlin/hyper_ui/docs/ui/` 对应 `*ComponentShowcases.kt`。
 6. `vitepress/.vitepress/config.mts` 的导航和侧栏（分组变化时）。
 7. 根目录 `README.md`。
+
+每个 `ComponentDemo` 必须提供 `variants`（逐项标识预览属性与样式）和 `apiDocumentPaths`（关联 `vitepress/docs/components/` 下的权威 Markdown）。
 
 每个组件页至少包含：
 

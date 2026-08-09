@@ -49,7 +49,7 @@ object HyperSwitchDefaults {
 | `modifier` | `Modifier` | 否 | `Modifier` | 调整外层布局。 |
 | `enabled` | `Boolean` | 否 | `true` | 调用方控制可用态；为 `false` 时不回调。 |
 | `checkedTrackColor` | `Color` | 否 | `Color.Unspecified` | 选中轨道色；未指定时使用 `HyperColors.accent`。 |
-| `uncheckedTrackColor` | `Color` | 否 | `Color.Unspecified` | 未选中轨道色；未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘）。 |
+| `uncheckedTrackColor` | `Color` | 否 | `Color.Unspecified` | 未选中轨道色；未指定时使用不透明 `HyperColors.elevatedContainer`。 |
 | `checkedThumbColor` | `Color` | 否 | `rgba(255, 255, 255, 1f)` | 选中滑块色。 |
 | `uncheckedThumbColor` | `Color` | 否 | `rgba(255, 255, 255, 1f)` | 未选中滑块色。 |
 
@@ -57,7 +57,7 @@ object HyperSwitchDefaults {
 
 - 组件不会在内部保存业务开关值。
 - 调用方必须把 `onCheckedChange` 返回的新值写回自己的状态。
-- 组件内部只处理滑块位置、颜色动画和禁用透明度。
+- 组件内部只处理滑块位置、颜色动画和禁用实色状态。
 
 ## 最小用法
 

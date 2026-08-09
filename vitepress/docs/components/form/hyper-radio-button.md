@@ -44,7 +44,7 @@ object HyperRadioDefaults {
 | `modifier` | `Modifier` | 否 | `Modifier` | 调整外层布局。 |
 | `enabled` | `Boolean` | 否 | `true` | 调用方控制可用态。 |
 | `selectedColor` | `Color` | 否 | `Color.Unspecified` | 选中背景色；未指定时使用 `HyperColors.accent`。 |
-| `unselectedColor` | `Color` | 否 | `Color.Unspecified` | 未选中背景色；未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘）。 |
+| `unselectedColor` | `Color` | 否 | `Color.Unspecified` | 未选中背景色；未指定时使用不透明 `HyperColors.elevatedContainer`。 |
 | `unselectedBorderColor` | `Color` | 否 | `Color.Unspecified` | 未选中描边色；未指定时使用 `HyperColors.accent`。 |
 | `innerDotColor` | `Color` | 否 | `rgba(255, 255, 255, 1f)` | 选中态内部圆点颜色。 |
 
@@ -52,7 +52,7 @@ object HyperRadioDefaults {
 
 - 组件不会自行切换 `selected`，也不会管理一组单选项。
 - 调用方持有组值，并在每个选项的 `onClick` 中写入对应值。
-- 组件内部只处理背景、描边、圆点动画和禁用透明度。
+- 组件内部只处理背景、描边、圆点尺寸动画和禁用实色状态。
 
 ## 最小用法
 
@@ -68,7 +68,7 @@ HyperRadioButton(
 ## 约束与行为
 
 - 只有 `enabled && onClick != null` 时才可点击，语义角色为 `Role.RadioButton`。
-- `onClick = null` 不等于 `enabled = false`：两者都会阻止点击，但禁用透明度只由 `enabled` 控制。
+- `onClick = null` 不等于 `enabled = false`：两者都会阻止点击，但禁用实色只由 `enabled` 控制。
 - 同组互斥、必选校验和选项标签布局均由调用方实现。
 - 未选中态默认使用卡片背景和主题色 `2.dp` 描边。
 - 项目颜色规范禁止十六进制硬编码；自定义颜色使用项目允许的 RGBA 写法。

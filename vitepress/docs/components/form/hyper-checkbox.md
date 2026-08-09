@@ -45,7 +45,7 @@ object HyperCheckboxDefaults {
 | `modifier` | `Modifier` | 否 | `Modifier` | 调整外层布局。 |
 | `enabled` | `Boolean` | 否 | `true` | 调用方控制可用态；为 `false` 时不回调。 |
 | `checkedColor` | `Color` | 否 | `Color.Unspecified` | 选中背景色；未指定时使用 `HyperColors.accent`。 |
-| `uncheckedColor` | `Color` | 否 | `Color.Unspecified` | 未选中背景色；未指定时使用 `HyperColors.elevatedContainer`（半透明玻璃托盘）。 |
+| `uncheckedColor` | `Color` | 否 | `Color.Unspecified` | 未选中背景色；未指定时使用不透明 `HyperColors.elevatedContainer`。 |
 | `uncheckedBorderColor` | `Color` | 否 | `Color.Unspecified` | 未选中描边色；未指定时使用 `HyperColors.accent`。 |
 | `checkmarkColor` | `Color` | 否 | `rgba(255, 255, 255, 1f)` | 选中勾号颜色。 |
 
@@ -53,7 +53,7 @@ object HyperCheckboxDefaults {
 
 - 组件不会在内部保存业务选中值。
 - 调用方必须把 `onCheckedChange` 返回的新值写回自己的状态。
-- 组件内部只处理背景、描边、勾号动画和禁用透明度。
+- 组件内部只处理背景、描边、勾号尺寸动画和禁用实色状态。
 
 ## 最小用法
 

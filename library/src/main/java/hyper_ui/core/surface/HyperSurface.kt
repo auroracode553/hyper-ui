@@ -19,18 +19,6 @@ internal fun resolveHyperContainerColor(
     fallbackColor: Color
 ): Color = if (containerColor == Color.Unspecified) fallbackColor else containerColor
 
-@PublishedApi
-internal fun resolveHyperDisabledContainerColor(
-    containerColor: Color,
-    usesDefaultContainerColor: Boolean,
-    fallbackDisabledColor: Color,
-    disabledAlpha: Float = HyperStyleDefaults.DisabledAlpha
-): Color = if (usesDefaultContainerColor) {
-    fallbackDisabledColor
-} else {
-    containerColor.copy(alpha = containerColor.alpha * disabledAlpha)
-}
-
 @Composable
 @PublishedApi
 internal fun hyperPanelBorder(
@@ -43,22 +31,13 @@ internal fun hyperPanelBorder(
 
 @Composable
 @PublishedApi
-internal fun Modifier.hyperGlassSurface(
+internal fun Modifier.hyperSurface(
     containerColor: Color,
     shape: Shape,
     elevation: Dp = 0.dp,
     border: BorderStroke? = null,
     clipContent: Boolean = true
 ): Modifier {
-    val highlightModifier = if (containerColor.alpha > 0f) {
-        Modifier.background(
-            brush = HyperColors.glassHighlightBrush,
-            shape = shape
-        )
-    } else {
-        Modifier
-    }
-
     return this
         .then(
             if (elevation > 0.dp) {
@@ -69,6 +48,5 @@ internal fun Modifier.hyperGlassSurface(
         )
         .then(if (clipContent) Modifier.clip(shape) else Modifier)
         .background(color = containerColor, shape = shape)
-        .then(highlightModifier)
         .then(if (border != null) Modifier.border(border, shape) else Modifier)
 }

@@ -7,11 +7,11 @@
 只要改动会影响文档中的交互预览，就需要重新发布 Wasm 静态产物：
 
 - 修改 `library/src/main/java/hyper_ui/` 下组件实现。
-- 修改 `preview/src/commonMain/kotlin/hyper_ui/docs/data/` 下组件注册或示例代码。
+- 修改 `preview/src/commonMain/kotlin/hyper_ui/docs/data/` 下组件注册、变体元数据、API 文档映射或示例代码。
 - 修改 `preview/src/commonMain/kotlin/hyper_ui/docs/ui/` 下交互 Showcase。
 - 修改 `preview/src/commonMain/kotlin/hyper_ui/docs/theme/` 或 Wasm 入口资源，例如字体、主题、布局。
 
-只修改普通 Markdown 文档时，不需要执行本流程；VitePress 会刷新 Markdown 页面。
+只查看 VitePress 页面时，修改普通 Markdown 不需要执行本流程；如果还要让 Wasm Preview 内嵌的 API 正文同步更新，则需要重新发布 Preview 资源。
 
 ## 正确命令
 

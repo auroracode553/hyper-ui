@@ -69,7 +69,7 @@ fun HyperLinearProgressIndicator(
         modifier = modifier
             .height(height)
             .fillMaxWidth()
-            .hyperGlassSurface(
+            .hyperSurface(
                 containerColor = colors.trackColor,
                 shape = shape,
                 border = trackBorder
@@ -89,7 +89,7 @@ fun HyperLinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(animatedProgress)
-                    .hyperGlassSurface(
+                    .hyperSurface(
                         containerColor = colors.indicatorColor,
                         shape = shape
                     )
@@ -201,7 +201,7 @@ private fun IndeterminateLinearSegment(
                 .fillMaxHeight()
                 .width(segmentWidth)
                 .offset(x = maxWidth * offsetProgress)
-                .hyperGlassSurface(
+                .hyperSurface(
                     containerColor = indicatorColor,
                     shape = segmentShape
                 )

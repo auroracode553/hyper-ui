@@ -297,7 +297,6 @@ private fun DocsNavItem(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    val background = if (selected) MaterialTheme.colorScheme.primaryContainer else rgba(0, 0, 0, 0f)
     val textColor = if (selected) {
         MaterialTheme.colorScheme.primary
     } else {
@@ -313,7 +312,16 @@ private fun DocsNavItem(
                 selected = selected,
                 onClick = onClick
             )
-            .background(background, RoundedCornerShape(8.dp))
+            .then(
+                if (selected) {
+                    Modifier.background(
+                        MaterialTheme.colorScheme.primaryContainer,
+                        RoundedCornerShape(8.dp)
+                    )
+                } else {
+                    Modifier
+                }
+            )
             .padding(horizontal = 12.dp, vertical = 9.dp),
         color = textColor,
         fontSize = 14.sp,
@@ -364,6 +372,7 @@ private fun ComponentContent(
             ComponentHeader(demo = demo)
             PreviewCard(demo = demo)
             CodeCard(code = demo.code)
+            ApiDocumentationCard(documentPaths = demo.apiDocumentPaths)
         }
     }
 }
@@ -402,6 +411,14 @@ private fun PreviewCard(demo: ComponentDemo) {
         ) {
             demo.content()
         }
+        SectionLabel(title = "预览属性与样式")
+        DocumentationTable(
+            headers = listOf("预览项", "关键属性", "样式说明"),
+            rows = demo.variants.map { variant ->
+                listOf(variant.label, variant.properties, variant.style)
+            },
+            columnWidths = listOf(180.dp, 340.dp, 360.dp)
+        )
     }
 }
 
@@ -424,7 +441,7 @@ private fun CodeCard(code: String) {
 }
 
 @Composable
-private fun DocsCard(content: @Composable () -> Unit) {
+internal fun DocsCard(content: @Composable () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -438,7 +455,7 @@ private fun DocsCard(content: @Composable () -> Unit) {
 }
 
 @Composable
-private fun SectionLabel(title: String) {
+internal fun SectionLabel(title: String) {
     Text(
         text = title,
         color = MaterialTheme.colorScheme.onSurface,

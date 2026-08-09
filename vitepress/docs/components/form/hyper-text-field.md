@@ -2,10 +2,10 @@
 
 - 包名：`hyper_ui`
 - 源码：`library/src/main/java/hyper_ui/components/input/HyperTextField.kt`
-- 预览：`text_field`、`search`
+- 预览：`text_field`
 
 `HyperTextField` 是 slot-first 输入框。搜索框、地址栏、页内查找栏和普通表单输入都通过同一个组件组合；UI 库不再提供固定搜索图标或固定清空按钮。
-默认容器使用不透明输入背景和 1dp 描边，不叠加玻璃高光或阴影，避免内容区出现直角浅色块。
+默认容器使用不透明输入背景和 1dp 描边，不叠加渐变高光或阴影，避免内容区出现直角浅色块。
 
 ## 公开签名
 
@@ -31,10 +31,11 @@ fun HyperTextField(
     keyboardActions: KeyboardActions = KeyboardActions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    slotSpacing: Dp = HyperTextFieldDefaults.SlotSpacing,
     labelContent: (@Composable ColumnScope.() -> Unit)? = null,
     placeholderContent: (@Composable () -> Unit)? = null,
-    leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    trailingContent: (@Composable RowScope.() -> Unit)? = null,
+    startContent: (@Composable RowScope.() -> Unit)? = null,
+    endContent: (@Composable RowScope.() -> Unit)? = null,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null
 )
 ```
@@ -45,7 +46,8 @@ fun HyperTextField(
 object HyperTextFieldDefaults {
     val MinHeight = 52.dp
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
-    val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 14.dp)
+    val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
+    val SlotSpacing = 10.dp
     val BorderWidth = 1.dp
 }
 ```
@@ -75,13 +77,13 @@ HyperTextField(
     value = keyword,
     onValueChange = { keyword = it },
     placeholderContent = { Text("搜索或输入网址") },
-    leadingContent = {
+    startContent = {
         Icon(
             painter = painterResource(LucideR.drawable.lucide_ic_search),
             contentDescription = null
         )
     },
-    trailingContent = {
+    endContent = {
         HyperIconButton(
             onClick = { keyword = "" },
             size = 32.dp
@@ -101,8 +103,8 @@ HyperTextField(
 - `inputModifier` 用于传入 `focusRequester` 等需要作用在 `BasicTextField` 上的修饰符。
 - 聚焦时不改变输入框容器背景；容器只区分普通、错误和禁用状态。
 - 默认背景来自 `HyperTextFieldDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.fieldContainer`，保持不透明输入区域。
-- 默认描边来自 `HyperColors.fieldBorder`；错误态描边使用 `errorColor` 的弱化透明度。
+- `startContent` 与 `endContent` 按布局方向放置左右内容，间距由 `slotSpacing` 控制。
+- 默认描边来自 `HyperColors.fieldBorder`；错误态直接使用不透明 `errorColor`。
 - 错误态通过 `isError` 和 `supportingContent` 组合表达。
 
 <WasmPreview demo="text_field" title="HyperTextField 交互预览" />
-<WasmPreview demo="search" title="HyperTextField 搜索组合预览" />

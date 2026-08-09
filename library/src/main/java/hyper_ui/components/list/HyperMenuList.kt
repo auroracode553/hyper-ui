@@ -41,7 +41,6 @@ fun <T> HyperMenuList(
     itemContent: @Composable (item: T) -> Unit
 ) {
     val containerColor = colors.containerColor
-    val hasVisibleBackground = containerColor.alpha > 0f
     val shape = HyperMenuListDefaults.Shape
     Column(
         modifier = modifier
@@ -60,7 +59,6 @@ fun <T> HyperMenuList(
                     .fillMaxWidth()
                     .clip(menuListItemShape(isFirst, isLast))
                     .background(containerColor)
-                    .then(if (hasVisibleBackground) Modifier.background(HyperColors.glassHighlightBrush) else Modifier)
             ) {
                 CompositionLocalProvider(
                     LocalHyperListItemDividerSuppressed provides isLast
@@ -85,7 +83,7 @@ fun HyperMenuList(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .hyperGlassSurface(
+                .hyperSurface(
                     containerColor = colors.containerColor,
                     shape = HyperMenuListDefaults.Shape,
                     border = border

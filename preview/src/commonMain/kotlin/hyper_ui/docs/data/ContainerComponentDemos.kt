@@ -18,6 +18,11 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
                 onSelected = { option -> selectedColorId = option.id }
             )
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("预设色板", "options = presetOptions", "圆形色块、选中环与文字标签"),
+            DemoVariant("自定义布局", "colorSize / spacing", "尺寸与横纵间距可调")
+        ),
+        apiDocumentPaths = listOf("container/hyper-color-picker.md"),
         content = { ColorPickerDemo() }
     ),
     ComponentDemo(
@@ -38,6 +43,11 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
                 }
             }
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("默认面板", "colors = defaults", "实色容器、圆角与轻描边"),
+            DemoVariant("自定义内容", "content slot", "标题、状态与操作组合")
+        ),
+        apiDocumentPaths = listOf("container/hyper-panel.md"),
         content = { PanelDemo() }
     )
 )

@@ -332,7 +332,7 @@ private fun DrawerBadge(content: @Composable () -> Unit) {
         modifier = Modifier
             .size(42.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)),
+            .background(MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.Center
     ) {
         content()

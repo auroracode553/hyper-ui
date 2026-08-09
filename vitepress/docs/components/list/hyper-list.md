@@ -5,7 +5,7 @@
 - 状态归属：调用方提供列表数据
 - Preview ID：`hyper_list`
 
-页面级列表容器，适合列表页、消息页、记录流和动态数据。`HyperList` 默认使用 12dp 轻圆角、无玻璃高光、无外层描边的平铺列表样式，并会按容器形状裁剪滚动内容；调用方通过 `lazyLoading` 参数决定使用 `LazyColumn` 懒加载，还是使用普通 `Column + verticalScroll` 一次组合全部项目。数据入口会自动抑制最后一项的 `HyperListItem` 分割线。
+页面级列表容器，适合列表页、消息页、记录流和动态数据。`HyperList` 默认使用 12dp 轻圆角、无额外渐变、无外层描边的实色平铺列表样式，并会按容器形状裁剪滚动内容；调用方通过 `lazyLoading` 参数决定使用 `LazyColumn` 懒加载，还是使用普通 `Column + verticalScroll` 一次组合全部项目。数据入口会自动抑制最后一项的 `HyperListItem` 分割线。
 
 ## 公开签名
 

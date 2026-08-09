@@ -43,70 +43,39 @@ fun HyperSwitch(
     checkedThumbColor: Color = rgba(255, 255, 255, 1f),
     uncheckedThumbColor: Color = rgba(255, 255, 255, 1f)
 ) {
-    val enabledAlpha = if (enabled) 1f else HyperStyleDefaults.DisabledAlpha
     val trackShape = RoundedCornerShape(percent = 50)
-    // 对齐 HyperIconButton 玻璃托盘范式：
-    // 标记使用默认背景 → 禁用态 disabledContainer 回退；track/thumb 可见背景叠 glass 高光
-    val usesDefaultCheckedTrack = checkedTrackColor == Color.Unspecified
-    val usesDefaultUncheckedTrack = uncheckedTrackColor == Color.Unspecified
-    val resolvedCheckedTrackColor = if (usesDefaultCheckedTrack) {
+    val resolvedCheckedTrackColor = if (checkedTrackColor == Color.Unspecified) {
         HyperColors.accent
     } else {
         checkedTrackColor
     }
-    val resolvedUncheckedTrackColor = if (usesDefaultUncheckedTrack) {
+    val resolvedUncheckedTrackColor = if (uncheckedTrackColor == Color.Unspecified) {
         HyperColors.elevatedContainer
     } else {
         uncheckedTrackColor
     }
     val trackColor by animateColorAsState(
-        targetValue = if (enabled) {
-            if (checked) resolvedCheckedTrackColor else resolvedUncheckedTrackColor
-        } else if (if (checked) usesDefaultCheckedTrack else usesDefaultUncheckedTrack) {
+        targetValue = if (!enabled) {
             HyperColors.disabledContainer
         } else {
-            (if (checked) resolvedCheckedTrackColor else resolvedUncheckedTrackColor).copy(
-                alpha = (if (checked) resolvedCheckedTrackColor else resolvedUncheckedTrackColor).alpha * enabledAlpha
-            )
+            if (checked) resolvedCheckedTrackColor else resolvedUncheckedTrackColor
         },
         label = "hyperSwitchTrackColor"
     )
     val thumbColor by animateColorAsState(
-        targetValue = (if (checked) checkedThumbColor else uncheckedThumbColor).copy(alpha = enabledAlpha),
+        targetValue = if (enabled) {
+            if (checked) checkedThumbColor else uncheckedThumbColor
+        } else {
+            HyperColors.disabledText
+        },
         label = "hyperSwitchThumbColor"
     )
-    val trackHasVisibleBackground =
-        (if (checked) resolvedCheckedTrackColor else resolvedUncheckedTrackColor).alpha > 0f
-    val trackHighlightModifier = if (trackHasVisibleBackground) {
-        Modifier.background(
-            brush = HyperColors.glassHighlightBrush,
-            shape = trackShape
-        )
-    } else {
-        Modifier
-    }
-    val thumbHasVisibleBackground =
-        (if (checked) checkedThumbColor else uncheckedThumbColor).alpha > 0f
-    val thumbHighlightModifier = if (thumbHasVisibleBackground) {
-        Modifier.background(
-            brush = HyperColors.glassHighlightBrush,
-            shape = CircleShape
-        )
-    } else {
-        Modifier
-    }
-    val switchBorderBaseColor = HyperColors.fieldBorder
-    val switchBorderAlphaRatio = if (enabled) 1f else 0.72f
     val trackBorderColor by animateColorAsState(
-        targetValue = switchBorderBaseColor.copy(
-            alpha = switchBorderBaseColor.alpha * switchBorderAlphaRatio
-        ),
+        targetValue = if (enabled) HyperColors.fieldBorder else HyperColors.divider,
         label = "hyperSwitchTrackBorderColor"
     )
     val thumbBorderColor by animateColorAsState(
-        targetValue = switchBorderBaseColor.copy(
-            alpha = switchBorderBaseColor.alpha * if (enabled) 0.88f else 0.48f
-        ),
+        targetValue = if (enabled) HyperColors.fieldBorder else HyperColors.divider,
         label = "hyperSwitchThumbBorderColor"
     )
     val thumbProgress by animateFloatAsState(
@@ -128,7 +97,6 @@ fun HyperSwitch(
                 clip = false
             )
             .background(trackColor, trackShape)
-            .then(trackHighlightModifier)
             .border(
                 border = BorderStroke(
                     width = HyperSwitchDefaults.TrackBorderWidth,
@@ -158,7 +126,6 @@ fun HyperSwitch(
                 )
                 .clip(CircleShape)
                 .background(thumbColor)
-                .then(thumbHighlightModifier)
                 .border(
                     border = BorderStroke(
                         width = HyperSwitchDefaults.ThumbBorderWidth,
@@ -181,17 +148,12 @@ fun HyperCheckbox(
     uncheckedBorderColor: Color = Color.Unspecified,
     checkmarkColor: Color = rgba(255, 255, 255, 1f)
 ) {
-    val enabledAlpha = if (enabled) 1f else HyperStyleDefaults.DisabledAlpha
-    // 对齐 HyperIconButton 玻璃托盘范式：
-    // 标记使用默认背景 → 禁用态 disabledContainer 回退；Box 可见背景叠 glass 高光；保留未选中 border 语义
-    val usesDefaultChecked = checkedColor == Color.Unspecified
-    val usesDefaultUnchecked = uncheckedColor == Color.Unspecified
-    val resolvedCheckedColor = if (usesDefaultChecked) {
+    val resolvedCheckedColor = if (checkedColor == Color.Unspecified) {
         HyperColors.accent
     } else {
         checkedColor
     }
-    val resolvedUncheckedColor = if (usesDefaultUnchecked) {
+    val resolvedUncheckedColor = if (uncheckedColor == Color.Unspecified) {
         HyperColors.elevatedContainer
     } else {
         uncheckedColor
@@ -202,39 +164,23 @@ fun HyperCheckbox(
         uncheckedBorderColor
     }
     val backgroundColor by animateColorAsState(
-        targetValue = if (enabled) {
-            if (checked) resolvedCheckedColor else resolvedUncheckedColor
-        } else if (if (checked) usesDefaultChecked else usesDefaultUnchecked) {
+        targetValue = if (!enabled) {
             HyperColors.disabledContainer
         } else {
-            (if (checked) resolvedCheckedColor else resolvedUncheckedColor).copy(
-                alpha = (if (checked) resolvedCheckedColor else resolvedUncheckedColor).alpha * enabledAlpha
-            )
+            if (checked) resolvedCheckedColor else resolvedUncheckedColor
         },
         label = "hyperCheckboxBackgroundColor"
     )
-    val hasVisibleBackground = (if (checked) resolvedCheckedColor else resolvedUncheckedColor).alpha > 0f
-    val highlightModifier = if (hasVisibleBackground) {
-        Modifier.background(HyperColors.glassHighlightBrush)
-    } else {
-        Modifier
-    }
-    val borderColor by animateColorAsState(
-        targetValue = (if (checked) {
-            Color.Transparent
-        } else {
-            resolvedUncheckedBorderColor
-        }).copy(alpha = if (checked) 0f else enabledAlpha),
-        label = "hyperCheckboxBorderColor"
-    )
-    val checkmarkAlpha by animateFloatAsState(
-        targetValue = if (checked) enabledAlpha else 0f,
+    val borderColor = if (enabled) resolvedUncheckedBorderColor else HyperColors.divider
+    val checkmarkSize by animateDpAsState(
+        targetValue = if (checked) HyperCheckboxDefaults.CheckmarkSize else 0.dp,
         animationSpec = spring(
             stiffness = Spring.StiffnessMedium,
             dampingRatio = Spring.DampingRatioNoBouncy
         ),
-        label = "hyperCheckboxCheckmarkAlpha"
+        label = "hyperCheckboxCheckmarkSize"
     )
+    val resolvedCheckmarkColor = if (enabled) checkmarkColor else HyperColors.disabledText
     val shape = RoundedCornerShape(HyperCheckboxDefaults.CornerRadius)
 
     Box(
@@ -242,13 +188,16 @@ fun HyperCheckbox(
             .size(HyperCheckboxDefaults.BoxSize)
             .clip(shape)
             .background(backgroundColor)
-            .then(highlightModifier)
-            .border(
-                border = BorderStroke(
-                    width = HyperCheckboxDefaults.BorderWidth,
-                    color = borderColor
-                ),
-                shape = shape
+            .then(
+                if (checked) {
+                    Modifier
+                } else {
+                    Modifier.border(
+                        width = HyperCheckboxDefaults.BorderWidth,
+                        color = borderColor,
+                        shape = shape
+                    )
+                }
             )
             .hyperNoRippleClickable(
                 enabled = enabled,
@@ -257,7 +206,7 @@ fun HyperCheckbox(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Canvas(modifier = Modifier.size(HyperCheckboxDefaults.CheckmarkSize)) {
+        Canvas(modifier = Modifier.size(checkmarkSize)) {
             val path = Path().apply {
                 moveTo(size.width * 0.22f, size.height * 0.52f)
                 lineTo(size.width * 0.42f, size.height * 0.72f)
@@ -266,7 +215,7 @@ fun HyperCheckbox(
 
             drawPath(
                 path = path,
-                color = checkmarkColor.copy(alpha = checkmarkAlpha),
+                color = resolvedCheckmarkColor,
                 style = Stroke(
                     width = size.width * 0.14f,
                     cap = StrokeCap.Round,
@@ -288,17 +237,12 @@ fun HyperRadioButton(
     unselectedBorderColor: Color = Color.Unspecified,
     innerDotColor: Color = rgba(255, 255, 255, 1f)
 ) {
-    val enabledAlpha = if (enabled) 1f else HyperStyleDefaults.DisabledAlpha
-    // 对齐 HyperIconButton 玻璃托盘范式：
-    // 标记使用默认背景 → 禁用态 disabledContainer 回退；outer 可见背景叠 glass 高光；保留未选中 border 语义
-    val usesDefaultSelected = selectedColor == Color.Unspecified
-    val usesDefaultUnselected = unselectedColor == Color.Unspecified
-    val resolvedSelectedColor = if (usesDefaultSelected) {
+    val resolvedSelectedColor = if (selectedColor == Color.Unspecified) {
         HyperColors.accent
     } else {
         selectedColor
     }
-    val resolvedUnselectedColor = if (usesDefaultUnselected) {
+    val resolvedUnselectedColor = if (unselectedColor == Color.Unspecified) {
         HyperColors.elevatedContainer
     } else {
         unselectedColor
@@ -309,37 +253,14 @@ fun HyperRadioButton(
         unselectedBorderColor
     }
     val backgroundColor by animateColorAsState(
-        targetValue = if (enabled) {
-            if (selected) resolvedSelectedColor else resolvedUnselectedColor
-        } else if (if (selected) usesDefaultSelected else usesDefaultUnselected) {
+        targetValue = if (!enabled) {
             HyperColors.disabledContainer
         } else {
-            (if (selected) resolvedSelectedColor else resolvedUnselectedColor).copy(
-                alpha = (if (selected) resolvedSelectedColor else resolvedUnselectedColor).alpha * enabledAlpha
-            )
+            if (selected) resolvedSelectedColor else resolvedUnselectedColor
         },
         label = "hyperRadioBackgroundColor"
     )
-    val hasVisibleBackground = (if (selected) resolvedSelectedColor else resolvedUnselectedColor).alpha > 0f
-    val highlightModifier = if (hasVisibleBackground) {
-        Modifier.background(HyperColors.glassHighlightBrush)
-    } else {
-        Modifier
-    }
-    val borderColor by animateColorAsState(
-        targetValue = (if (selected) {
-            Color.Transparent
-        } else {
-            resolvedUnselectedBorderColor
-        }).copy(alpha = if (selected) 0f else enabledAlpha),
-        label = "hyperRadioBorderColor"
-    )
-    val innerDotHasVisibleBackground = innerDotColor.alpha > 0f
-    val innerDotHighlightModifier = if (innerDotHasVisibleBackground) {
-        Modifier.background(HyperColors.glassHighlightBrush)
-    } else {
-        Modifier
-    }
+    val borderColor = if (enabled) resolvedUnselectedBorderColor else HyperColors.divider
     val innerDotSize by animateDpAsState(
         targetValue = if (selected) HyperRadioDefaults.InnerDotSize else 0.dp,
         animationSpec = spring(
@@ -348,19 +269,23 @@ fun HyperRadioButton(
         ),
         label = "hyperRadioInnerDotSize"
     )
+    val resolvedInnerDotColor = if (enabled) innerDotColor else HyperColors.disabledText
 
     Box(
         modifier = modifier
             .size(HyperRadioDefaults.OuterSize)
             .clip(CircleShape)
             .background(backgroundColor)
-            .then(highlightModifier)
-            .border(
-                border = BorderStroke(
-                    width = HyperRadioDefaults.BorderWidth,
-                    color = borderColor
-                ),
-                shape = CircleShape
+            .then(
+                if (selected) {
+                    Modifier
+                } else {
+                    Modifier.border(
+                        width = HyperRadioDefaults.BorderWidth,
+                        color = borderColor,
+                        shape = CircleShape
+                    )
+                }
             )
             .hyperNoRippleClickable(
                 enabled = enabled && onClick != null,
@@ -373,8 +298,7 @@ fun HyperRadioButton(
             modifier = Modifier
                 .size(innerDotSize)
                 .clip(CircleShape)
-                .background(innerDotColor.copy(alpha = enabledAlpha))
-                .then(innerDotHighlightModifier)
+                .background(resolvedInnerDotColor)
         )
     }
 }

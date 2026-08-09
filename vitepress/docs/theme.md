@@ -2,7 +2,7 @@
 
 ## `rgba`
 
-使用整数 RGB 与浮点透明度创建 Compose `Color`：
+使用整数 RGB 与 Float alpha 分量创建 Compose `Color`：
 
 ```kotlin
 fun rgba(
@@ -18,8 +18,9 @@ fun rgba(
 
 ```kotlin
 val brandColor = rgba(255, 103, 0)
-val translucentBlack = rgba(0, 0, 0, 0.12f)
 ```
+
+组件默认样式使用不透明实色；唯一例外是 `HyperBottomBar` 的浅色容器。`alpha` 参数保留给调用方表达完整 RGBA 颜色值。
 
 组件源码禁止使用 `Color(0xFFRRGGBB)` 十六进制硬编码。需要直接构造颜色时，使用四个 Float RGBA 分量；调用方也可优先使用 `rgba(...)`。
 
@@ -58,8 +59,6 @@ object HyperTheme {
 object HyperStyleDefaults {
     val DefaultThemeColor = rgba(255, 103, 0, 1f)
     val SuccessColor = rgba(52, 199, 89, 1f)
-    val DisabledAlpha = 0.42f
-
     val SmallCornerRadius = 12.dp
     val MediumCornerRadius = 16.dp
     val LargeCornerRadius = 24.dp
@@ -82,13 +81,12 @@ object HyperStyleDefaults {
 | `fieldContainer` | `Color` | 输入字段背景 |
 | `elevatedContainer` | `Color` | 浮起控件背景 |
 | `disabledContainer` | `Color` | 禁用容器背景 |
+| `accentContainer` | `Color` | 强调色与柔和容器混合后的不透明背景 |
 | `primaryText` | `Color` | 主文字 |
 | `secondaryText` | `Color` | 次文字 |
 | `disabledText` | `Color` | 禁用文字 |
 | `divider` | `Color` | 分割线 |
 | `fieldBorder` | `Color` | 输入框描边 |
 | `panelBorder` | `BorderStroke` | 面板描边 |
-| `glassBorder` | `BorderStroke` | 玻璃边框 |
-| `glassHighlightBrush` | `Brush` | 玻璃高光渐变 |
 
 不要把 `HyperColors` 的结果缓存到全局变量；这些值依赖当前 Composition，应在 Composable 上下文中读取。

@@ -31,6 +31,11 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
                 }
             )
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("三段布局", "navigation/title/action", "左右操作与居中标题"),
+            DemoVariant("Slot 内容", "content slots", "图标按钮和标题文字")
+        ),
+        apiDocumentPaths = listOf("navigation/hyper-top-bar.md"),
         content = { TopBarDemo() }
     ),
     ComponentDemo(
@@ -60,6 +65,12 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
                 content()
             }
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("方向", "position = Left/Right/Top/Bottom", "四向滑入，不使用淡入"),
+            DemoVariant("选中项", "selected = true", "主题混合实色容器"),
+            DemoVariant("无蒙层", "dismissOnClickOutside", "仅处理外部点击，不绘制背景或遮罩")
+        ),
+        apiDocumentPaths = listOf("navigation/hyper-drawer.md"),
         content = { DrawerDemo() }
     ),
     ComponentDemo(
@@ -76,6 +87,12 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
                 Text(item)
             }
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("选中项", "selectedItem", "主题实色胶囊"),
+            DemoVariant("未选中项", "itemEnabled = true", "中性实色与轻描边"),
+            DemoVariant("禁用项", "itemEnabled = false", "禁用实色状态")
+        ),
+        apiDocumentPaths = listOf("navigation/hyper-group-menus.md"),
         content = { GroupMenusDemo() }
     ),
     ComponentDemo(
@@ -98,6 +115,12 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
                 }
             }
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("完整 Slot", "content: RowScope", "调用方控制按钮布局"),
+            DemoVariant("泛型项目", "items + itemSelected", "统一点击、选中与禁用状态"),
+            DemoVariant("浅色容器", "colors.containerColor", "唯一保留的浅色半透明组件容器")
+        ),
+        apiDocumentPaths = listOf("navigation/hyper-bottom-bar.md"),
         content = { BottomBarDemo() }
     )
 )

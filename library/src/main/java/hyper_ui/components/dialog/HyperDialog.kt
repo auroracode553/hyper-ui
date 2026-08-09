@@ -155,7 +155,6 @@ fun HyperDialog(
                         .heightIn(max = resolvedMaxHeight)
                         .then(modifier)
                         .graphicsLayer {
-                            alpha = animationProgress.value
                             scaleX = 0.8f + 0.2f * animationProgress.value
                             scaleY = 0.8f + 0.2f * animationProgress.value
                         }

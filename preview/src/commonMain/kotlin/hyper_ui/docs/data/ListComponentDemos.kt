@@ -40,6 +40,16 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
                 }
             }
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("懒加载", "lazyLoading = true", "LazyColumn 页面列表"),
+            DemoVariant("普通列表", "lazyLoading = false", "Column 滚动列表"),
+            DemoVariant("DSL 列表", "state + item/items", "调用方组合条目"),
+            DemoVariant("列表条目", "leading/headline/supporting", "图标、双行文字与分隔线")
+        ),
+        apiDocumentPaths = listOf(
+            "list/hyper-list.md",
+            "list/hyper-list-item.md"
+        ),
         content = { HyperListDemo() }
     ),
     ComponentDemo(
@@ -68,6 +78,15 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
                 )
             }
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("数据入口", "items + itemContent", "静态菜单数据"),
+            DemoVariant("Slot 入口", "content slot", "设置项与选择控件组合"),
+            DemoVariant("列表条目", "trailingContent", "值、开关、复选与单选尾部内容")
+        ),
+        apiDocumentPaths = listOf(
+            "list/hyper-menu-list.md",
+            "list/hyper-list-item.md"
+        ),
         content = { HyperMenuListDemo() }
     )
 )

@@ -3,7 +3,6 @@ package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.CheckboxDemo
 import hyper_ui.docs.ui.RadioDemo
-import hyper_ui.docs.ui.SearchFieldDemo
 import hyper_ui.docs.ui.SliderDemo
 import hyper_ui.docs.ui.SwitchDemo
 import hyper_ui.docs.ui.TextFieldDemo
@@ -22,6 +21,12 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 onClick = onSelect
             )
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("选中", "selected = true", "主题实色与内部圆点"),
+            DemoVariant("未选中", "selected = false", "实色容器与主题描边"),
+            DemoVariant("禁用", "enabled = false", "禁用实色状态")
+        ),
+        apiDocumentPaths = listOf("form/hyper-radio-button.md"),
         content = { RadioDemo() }
     ),
     ComponentDemo(
@@ -35,13 +40,19 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 onCheckedChange = { checked = it }
             )
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("选中", "checked = true", "主题实色与勾号"),
+            DemoVariant("未选中", "checked = false", "实色容器与主题描边"),
+            DemoVariant("禁用", "enabled = false", "禁用实色状态")
+        ),
+        apiDocumentPaths = listOf("form/hyper-checkbox.md"),
         content = { CheckboxDemo() }
     ),
     ComponentDemo(
         id = "text_field",
         group = GROUP_FORM,
         title = "HyperTextField",
-        description = "Slot-first 输入框，默认使用不透明输入背景和轻描边，label、placeholder、supporting、leading、trailing 均由调用方渲染。",
+        description = "Slot-first 输入框，普通表单、搜索框与地址栏统一使用 startContent/endContent 左右插槽组合。",
         code = """
             HyperTextField(
                 value = value,
@@ -53,23 +64,15 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 minLines = 3,
                 maxLines = 5
             )
-        """.trimIndent(),
-        content = { TextFieldDemo() }
-    ),
-    ComponentDemo(
-        id = "search",
-        group = GROUP_FORM,
-        title = "HyperTextField Search Pattern",
-        description = "搜索框、地址栏和页内查找栏都使用 HyperTextField 的 leading/trailing slot 组合。",
-        code = """
+
             HyperTextField(
                 value = keyword,
                 onValueChange = { keyword = it },
                 placeholderContent = { Text("搜索组件") },
-                leadingContent = {
+                startContent = {
                     Icon(Icons.Default.Search, contentDescription = null)
                 },
-                trailingContent = {
+                endContent = {
                     HyperIconButton(
                         onClick = { keyword = "" },
                         size = 32.dp
@@ -79,7 +82,14 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 }
             )
         """.trimIndent(),
-        content = { SearchFieldDemo() }
+        variants = listOf(
+            DemoVariant("标准单行", "singleLine = true", "label 与 placeholder"),
+            DemoVariant("多行/错误", "minLines = 3, isError", "supporting 与错误描边"),
+            DemoVariant("禁用", "enabled = false", "禁用实色状态"),
+            DemoVariant("左右插槽", "startContent / endContent", "搜索图标与清除操作")
+        ),
+        apiDocumentPaths = listOf("form/hyper-text-field.md"),
+        content = { TextFieldDemo() }
     ),
     ComponentDemo(
         id = "switch",
@@ -92,6 +102,12 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 onCheckedChange = { enabled = it }
             )
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("开启", "checked = true", "主题实色轨道"),
+            DemoVariant("关闭", "checked = false", "中性实色轨道"),
+            DemoVariant("禁用", "enabled = false", "禁用实色轨道与滑块")
+        ),
+        apiDocumentPaths = listOf("form/hyper-switch.md"),
         content = { SwitchDemo() }
     ),
     ComponentDemo(
@@ -108,6 +124,12 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 onValueChangeFinished = onSeekFinished
             )
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("连续", "steps = 0", "连续点击与拖动"),
+            DemoVariant("分段", "steps = 4", "分段吸附与自定义色"),
+            DemoVariant("禁用", "enabled = false", "禁用实色轨道与滑块")
+        ),
+        apiDocumentPaths = listOf("form/hyper-slider.md"),
         content = { SliderDemo() }
     )
 )

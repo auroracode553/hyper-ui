@@ -31,6 +31,12 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 }
             }
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("展开/关闭", "expanded", "实色浮层菜单"),
+            DemoVariant("菜单项", "Item(closeOnClick)", "图标、文字与点击回调"),
+            DemoVariant("分隔线", "Divider()", "不透明实色分隔")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-dropdown-menu.md"),
         content = { DropdownMenuDemo() }
     ),
     ComponentDemo(
@@ -44,6 +50,13 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             HyperCircularProgressIndicator(progress = progress)
             HyperCircularProgressIndicator(progress = null)
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("线性确定", "progress: Float", "实色轨道、指示条与描边"),
+            DemoVariant("线性不确定", "progress = null", "循环移动指示条"),
+            DemoVariant("圆形确定", "progress: Float", "圆形 stroke"),
+            DemoVariant("圆形不确定", "progress = null", "旋转 stroke")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-progress-indicator.md"),
         content = { ProgressDemo() }
     ),
     ComponentDemo(
@@ -69,6 +82,12 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 )
             }
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("基础面板", "visible + content", "响应式实色弹窗面板"),
+            DemoVariant("外部关闭", "dismissOnClickOutside", "仅点击处理，不绘制遮罩"),
+            DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-dialog.md"),
         content = { HyperDialogDemo() }
     ),
     ComponentDemo(
@@ -92,6 +111,12 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 }
             )
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("结构化标题", "title", "固定标题区"),
+            DemoVariant("正文", "bodyContent", "可滚动内容 slot"),
+            DemoVariant("操作", "actionContent", "普通与危险操作按钮")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-alert-dialog.md"),
         content = { DialogDemo() }
     ),
     ComponentDemo(
@@ -119,6 +144,12 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 onDownload = onDownload
             )
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("检查中", "HyperUpdateState.Checking", "加载状态"),
+            DemoVariant("可更新", "HyperUpdateState.UpdateAvailable", "版本信息与下载操作"),
+            DemoVariant("已最新/失败", "UpToDate / Error", "结果反馈与重试")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-update-dialog.md"),
         content = { UpdateDialogDemo() }
     )
 )

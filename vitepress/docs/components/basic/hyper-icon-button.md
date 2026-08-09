@@ -5,7 +5,7 @@
 - 预览：`icon_button`
 
 `HyperIconButton` 是紧凑型固定尺寸的 slot-first 点击容器，默认视觉尺寸为 40dp。它不接收 `ImageVector`；调用方在 `content` slot 中放入任意 `Icon`、进度或状态内容。
-默认容器是圆形图标按钮：浅色模式沿用 HyperUI 既有的 `elevatedContainer + primaryText + fieldBorder` 配色，深色模式使用亮色半透明控制按钮且默认不显示描边。调用方可以通过 `colors` 显式设置普通、按压、禁用与描边颜色，适合播放器控制、工具栏和浮层操作。
+默认容器是圆形图标按钮，明暗模式统一使用 `elevatedContainer + primaryText + fieldBorder` 不透明实色配色。调用方可以通过 `colors` 显式设置普通、按压、禁用与描边颜色，适合播放器控制、工具栏和浮层操作。
 
 ## 公开签名
 
@@ -85,12 +85,10 @@ HyperIconButton(
     onClick = onPlay,
     size = 56.dp,
     colors = HyperIconButtonDefaults.colors(
-        containerColor = rgba(255, 255, 255, 0.18f),
-        pressedContainerColor = rgba(255, 255, 255, 0.28f),
-        contentColor = rgba(255, 255, 255, 1f),
-        outlineColor = rgba(255, 255, 255, 0f),
-        pressedOutlineColor = rgba(255, 255, 255, 0f),
-        disabledOutlineColor = rgba(255, 255, 255, 0f)
+        containerColor = MaterialTheme.colorScheme.primary,
+        pressedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        pressedContentColor = MaterialTheme.colorScheme.primary
     )
 ) {
     Icon(
@@ -104,9 +102,8 @@ HyperIconButton(
 
 - 不存在 `imageVector`、`contentDescription`、`tint`、`backgroundColor` 参数；这些通过 slot 或 `colors` 表达。
 - Android 调用方需要通用图标时，优先使用可通过资源裁剪按引用保留的 `com.composables:icons-lucide-android:2.2.1`；HyperUI 不传递该可选依赖。
-- 默认浅色配色沿用 `HyperColors.elevatedContainer`、`HyperColors.primaryText` 与 `HyperColors.fieldBorder`，保证白色页面上仍有清晰边界；默认深色配色使用半透明亮色容器且描边透明。
+- 默认明暗配色均使用 `HyperColors.elevatedContainer`、`HyperColors.primaryText` 与 `HyperColors.fieldBorder`，并保持不透明实色边界。
 - 圆形和圆角矩形按钮都通过 `shape` 配置；描边颜色通过 `outlineColor`、`pressedOutlineColor` 与 `disabledOutlineColor` 配置。
-- 如需完全透明图标按钮，需要把 `containerColor`、`pressedContainerColor`、`outlineColor` 与 `pressedOutlineColor` 都传为透明色。
 - `LocalContentColor` 会传递给 slot 内容。
 - 按压反馈由组件内部处理，业务状态仍由调用方维护。
 

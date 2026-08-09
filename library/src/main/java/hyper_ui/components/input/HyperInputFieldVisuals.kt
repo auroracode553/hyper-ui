@@ -40,12 +40,10 @@ internal fun hyperInputFieldVisuals(
         isError -> colors.errorContainerColor
         else -> colors.containerColor
     }
-    val defaultBorderColor = HyperColors.fieldBorder
-    val errorBorderAlpha = colors.errorColor.alpha * if (enabled) 0.58f else 0.32f
     val borderColor = when {
-        isError -> colors.errorColor.copy(alpha = errorBorderAlpha)
-        enabled -> defaultBorderColor
-        else -> defaultBorderColor.copy(alpha = defaultBorderColor.alpha * 0.72f)
+        isError -> colors.errorColor
+        enabled -> HyperColors.fieldBorder
+        else -> HyperColors.divider
     }
 
     return HyperInputFieldVisuals(

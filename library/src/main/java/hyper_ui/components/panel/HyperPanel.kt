@@ -39,7 +39,7 @@ fun HyperPanel(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .hyperGlassSurface(
+            .hyperSurface(
                 containerColor = colors.containerColor,
                 shape = shape,
                 elevation = elevation,

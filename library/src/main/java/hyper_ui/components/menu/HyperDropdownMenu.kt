@@ -165,7 +165,7 @@ object HyperDropdownMenuDefaults {
             contentColor = resolvedContentColor,
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,
-                resolvedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+                HyperColors.disabledText
             ),
             dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
         )

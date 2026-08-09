@@ -58,10 +58,11 @@ fun HyperTextField(
     keyboardActions: KeyboardActions = KeyboardActions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    slotSpacing: Dp = HyperTextFieldDefaults.SlotSpacing,
     labelContent: (@Composable ColumnScope.() -> Unit)? = null,
     placeholderContent: (@Composable () -> Unit)? = null,
-    leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    trailingContent: (@Composable RowScope.() -> Unit)? = null,
+    startContent: (@Composable RowScope.() -> Unit)? = null,
+    endContent: (@Composable RowScope.() -> Unit)? = null,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null
 ) {
     val visuals = hyperInputFieldVisuals(
@@ -113,9 +114,9 @@ fun HyperTextField(
                         .padding(contentPadding),
                     verticalAlignment = verticalAlignment
                 ) {
-                    if (leadingContent != null) {
+                    if (startContent != null) {
                         CompositionLocalProvider(LocalContentColor provides visuals.contentColor) {
-                            leadingContent()
+                            startContent()
                         }
                     }
 
@@ -123,8 +124,8 @@ fun HyperTextField(
                         modifier = Modifier
                             .weight(1f)
                             .padding(
-                                start = if (leadingContent == null) 0.dp else 10.dp,
-                                end = if (trailingContent == null) 0.dp else 10.dp
+                                start = if (startContent == null) 0.dp else slotSpacing,
+                                end = if (endContent == null) 0.dp else slotSpacing
                             ),
                         contentAlignment = if (singleLine) Alignment.CenterStart else Alignment.TopStart
                     ) {
@@ -136,9 +137,9 @@ fun HyperTextField(
                         innerTextField()
                     }
 
-                    if (trailingContent != null) {
+                    if (endContent != null) {
                         CompositionLocalProvider(LocalContentColor provides visuals.contentColor) {
-                            trailingContent()
+                            endContent()
                         }
                     }
                 }
@@ -159,7 +160,8 @@ fun HyperTextField(
 object HyperTextFieldDefaults {
     val MinHeight = 52.dp
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
-    val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 14.dp)
+    val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
+    val SlotSpacing = 10.dp
     val BorderWidth = 1.dp
 
     @Composable
@@ -197,7 +199,7 @@ object HyperTextFieldDefaults {
             ),
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,
-                resolvedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+                HyperColors.disabledText
             )
         )
     }

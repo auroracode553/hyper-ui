@@ -65,7 +65,7 @@ fun HyperButton(
     Row(
         modifier = modifier
             .heightIn(min = minHeight)
-            .hyperGlassSurface(
+            .hyperSurface(
                 containerColor = containerColor,
                 shape = shape,
                 border = border
@@ -102,9 +102,9 @@ object HyperButtonDefaults {
         val defaultContainerColor = when (tone) {
             HyperButtonTone.Primary -> HyperColors.accent
             HyperButtonTone.Secondary -> HyperColors.softContainer
-            HyperButtonTone.Tonal -> HyperColors.accent.copy(alpha = 0.14f)
-            HyperButtonTone.Outline -> Color.Transparent
-            HyperButtonTone.Plain -> Color.Transparent
+            HyperButtonTone.Tonal -> HyperColors.accentContainer
+            HyperButtonTone.Outline -> HyperColors.cardContainer
+            HyperButtonTone.Plain -> HyperColors.softContainer
             HyperButtonTone.Success -> HyperColors.success
             HyperButtonTone.Info -> HyperColors.info
             HyperButtonTone.Warning -> HyperColors.warning
@@ -129,18 +129,13 @@ object HyperButtonDefaults {
             containerColor = contentColor,
             fallbackColor = defaultContentColor
         )
-        val usesDefaultContainerColor = containerColor == Color.Unspecified
         val resolvedDisabledContainerColor = if (disabledContainerColor == Color.Unspecified) {
-            resolveHyperDisabledContainerColor(
-                containerColor = resolvedContainerColor,
-                usesDefaultContainerColor = usesDefaultContainerColor,
-                fallbackDisabledColor = HyperColors.disabledContainer
-            )
+            HyperColors.disabledContainer
         } else {
             disabledContainerColor
         }
         val resolvedDisabledContentColor = if (disabledContentColor == Color.Unspecified) {
-            resolvedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+            HyperColors.disabledText
         } else {
             disabledContentColor
         }
@@ -161,7 +156,7 @@ object HyperButtonDefaults {
         HyperButtonTone.Outline -> BorderStroke(
             width = 1.dp,
             color = if (color == Color.Unspecified) {
-                HyperColors.accent.copy(alpha = 0.50f)
+                HyperColors.accent
             } else {
                 color
             }

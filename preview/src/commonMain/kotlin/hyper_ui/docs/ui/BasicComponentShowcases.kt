@@ -30,7 +30,6 @@ import hyper_ui.HyperButtonDefaults
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
-import hyper_ui.rgba
 
 @Composable
 fun ButtonDemo() {
@@ -121,7 +120,7 @@ fun IconButtonDemo() {
     var selectedAction by remember { mutableStateOf("未选择操作") }
 
     Column(
-        modifier = Modifier.widthIn(max = 420.dp),
+        modifier = Modifier.widthIn(max = 640.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -129,97 +128,123 @@ fun IconButtonDemo() {
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            HyperIconButton(
-                onClick = { selectedAction = "搜索" }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "搜索",
-                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
-                )
+            IconButtonVariantLabel(label = "默认圆形") {
+                HyperIconButton(onClick = { selectedAction = "搜索" }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "搜索",
+                        modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                    )
+                }
             }
-            HyperIconButton(
-                onClick = { selectedAction = "通知" },
-                colors = HyperIconButtonDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.16f),
-                    pressedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.26f),
-                    contentColor = MaterialTheme.colorScheme.primary
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = "通知",
-                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
-                )
+            IconButtonVariantLabel(label = "主题实色") {
+                HyperIconButton(
+                    onClick = { selectedAction = "通知" },
+                    colors = HyperIconButtonDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        pressedContainerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        pressedContentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Notifications,
+                        contentDescription = "通知",
+                        modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                    )
+                }
             }
-            HyperIconButton(
-                onClick = { selectedAction = "删除" },
-                shape = RoundedCornerShape(12.dp),
-                colors = HyperIconButtonDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.14f),
-                    pressedContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.24f),
-                    contentColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "删除",
-                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
-                )
+            IconButtonVariantLabel(label = "危险圆角") {
+                HyperIconButton(
+                    onClick = { selectedAction = "删除" },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = HyperIconButtonDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        pressedContainerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.error,
+                        pressedContentColor = MaterialTheme.colorScheme.onError
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "删除",
+                        modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                    )
+                }
             }
-            HyperIconButton(
-                onClick = {},
-                enabled = false
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "关闭",
-                    modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
-                )
+            IconButtonVariantLabel(label = "禁用状态") {
+                HyperIconButton(onClick = {}, enabled = false) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "关闭",
+                        modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+                    )
+                }
             }
         }
         Row(
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            HyperIconButton(
-                onClick = { selectedAction = "媒体控制" },
-                size = 56.dp,
-                colors = HyperIconButtonDefaults.colors(
-                    containerColor = rgba(255, 255, 255, 0.18f),
-                    pressedContainerColor = rgba(255, 255, 255, 0.28f),
-                    contentColor = rgba(255, 255, 255, 1f),
-                    outlineColor = rgba(255, 255, 255, 0f),
-                    pressedOutlineColor = rgba(255, 255, 255, 0f),
-                    disabledOutlineColor = rgba(255, 255, 255, 0f)
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "媒体控制",
-                    modifier = Modifier.size(24.dp)
-                )
+            IconButtonVariantLabel(label = "大尺寸主要") {
+                HyperIconButton(
+                    onClick = { selectedAction = "媒体控制" },
+                    size = 56.dp,
+                    colors = HyperIconButtonDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        pressedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        pressedContentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = "媒体控制",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
-            HyperIconButton(
-                onClick = { selectedAction = "浅色自定义" },
-                size = 56.dp,
-                colors = HyperIconButtonDefaults.colors(
-                    containerColor = rgba(28, 28, 30, 0.10f),
-                    pressedContainerColor = rgba(28, 28, 30, 0.18f),
-                    contentColor = rgba(28, 28, 30, 1f)
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "浅色自定义",
-                    modifier = Modifier.size(24.dp)
-                )
+            IconButtonVariantLabel(label = "大尺寸中性") {
+                HyperIconButton(
+                    onClick = { selectedAction = "中性操作" },
+                    size = 56.dp,
+                    colors = HyperIconButtonDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        pressedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "中性操作",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
         Text(
             text = selectedAction,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp
+        )
+    }
+}
+
+@Composable
+private fun IconButtonVariantLabel(
+    label: String,
+    content: @Composable () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        content()
+        Text(
+            text = label,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 12.sp,
+            lineHeight = 16.sp
         )
     }
 }

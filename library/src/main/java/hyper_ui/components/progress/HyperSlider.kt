@@ -184,7 +184,7 @@ fun HyperSlider(
                 .align(Alignment.Center)
                 .width(availableTrackWidth)
                 .height(trackHeight)
-                .hyperGlassSurface(
+                .hyperSurface(
                     containerColor = resolvedTrackColor,
                     shape = trackShape,
                     border = trackBorder
@@ -194,7 +194,7 @@ fun HyperSlider(
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(valueFraction)
-                    .hyperGlassSurface(
+                    .hyperSurface(
                         containerColor = resolvedActiveTrackColor,
                         shape = trackShape
                     )
@@ -205,7 +205,7 @@ fun HyperSlider(
             modifier = Modifier
                 .offset(x = availableTrackWidth * valueFraction)
                 .size(thumbSize)
-                .hyperGlassSurface(
+                .hyperSurface(
                     containerColor = resolvedThumbColor,
                     shape = thumbShape,
                     border = thumbBorder
@@ -244,11 +244,11 @@ object HyperSliderDefaults {
             ),
             disabledActiveTrackColor = resolveHyperContainerColor(
                 disabledActiveTrackColor,
-                resolvedActiveTrackColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+                HyperColors.disabledText
             ),
             disabledThumbColor = resolveHyperContainerColor(
                 disabledThumbColor,
-                resolvedThumbColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+                HyperColors.disabledText
             )
         )
     }

@@ -95,16 +95,10 @@ fun HyperIconButton(
             }
             .clip(shape)
             .background(animatedContainerColor, shape)
-            .then(
-                if (animatedOutlineColor.alpha > 0f) {
-                    Modifier.border(
-                        width = HyperIconButtonDefaults.OutlineWidth,
-                        color = animatedOutlineColor,
-                        shape = shape
-                    )
-                } else {
-                    Modifier
-                }
+            .border(
+                width = HyperIconButtonDefaults.OutlineWidth,
+                color = animatedOutlineColor,
+                shape = shape
             )
             .clickable(
                 interactionSource = interactionSource,
@@ -140,26 +134,10 @@ object HyperIconButtonDefaults {
         disabledContentColor: Color = Color.Unspecified,
         disabledOutlineColor: Color = Color.Unspecified
     ): HyperIconButtonColors {
-        val defaultContainerColor = if (HyperColors.isLight) {
-            HyperColors.elevatedContainer
-        } else {
-            rgba(255, 255, 255, 0.16f)
-        }
-        val defaultContentColor = if (HyperColors.isLight) {
-            HyperColors.primaryText
-        } else {
-            rgba(255, 255, 255, 1f)
-        }
-        val defaultPressedContainerColor = if (HyperColors.isLight) {
-            HyperColors.fieldContainer
-        } else {
-            rgba(255, 255, 255, 0.24f)
-        }
-        val defaultOutlineColor = if (HyperColors.isLight) {
-            HyperColors.fieldBorder
-        } else {
-            rgba(255, 255, 255, 0f)
-        }
+        val defaultContainerColor = HyperColors.elevatedContainer
+        val defaultContentColor = HyperColors.primaryText
+        val defaultPressedContainerColor = HyperColors.fieldContainer
+        val defaultOutlineColor = HyperColors.fieldBorder
         val resolvedContainerColor = resolveHyperContainerColor(
             containerColor = containerColor,
             fallbackColor = defaultContainerColor
@@ -185,21 +163,17 @@ object HyperIconButtonDefaults {
             fallbackColor = resolvedOutlineColor
         )
         val resolvedDisabledContainerColor = if (disabledContainerColor == Color.Unspecified) {
-            resolveHyperDisabledContainerColor(
-                containerColor = resolvedContainerColor,
-                usesDefaultContainerColor = containerColor == Color.Unspecified,
-                fallbackDisabledColor = HyperColors.disabledContainer
-            )
+            HyperColors.disabledContainer
         } else {
             disabledContainerColor
         }
         val resolvedDisabledContentColor = if (disabledContentColor == Color.Unspecified) {
-            resolvedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+            HyperColors.disabledText
         } else {
             disabledContentColor
         }
         val resolvedDisabledOutlineColor = if (disabledOutlineColor == Color.Unspecified) {
-            resolvedOutlineColor.copy(alpha = resolvedOutlineColor.alpha * HyperStyleDefaults.DisabledAlpha)
+            HyperColors.divider
         } else {
             disabledOutlineColor
         }

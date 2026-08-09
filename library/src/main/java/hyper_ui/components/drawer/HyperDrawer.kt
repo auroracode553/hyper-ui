@@ -3,8 +3,6 @@ package hyper_ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
@@ -121,7 +119,7 @@ fun HyperDrawer(
             ) {
                 Column(
                     modifier = drawerSizeModifier
-                        .hyperGlassSurface(
+                        .hyperSurface(
                             containerColor = colors.containerColor,
                             shape = drawerShape(position),
                             border = border
@@ -190,7 +188,15 @@ fun HyperDrawerItem(
     } else {
         Modifier
     }
-    val containerColor = if (selected) colors.selectedContainerColor else Color.Transparent
+    val itemShape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius)
+    val selectedContainerModifier = if (selected) {
+        Modifier.hyperSurface(
+            containerColor = colors.selectedContainerColor,
+            shape = itemShape
+        )
+    } else {
+        Modifier
+    }
     val contentColor = when {
         !enabled -> colors.disabledContentColor
         selected -> colors.selectedContentColor
@@ -203,10 +209,7 @@ fun HyperDrawerItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .hyperGlassSurface(
-                    containerColor = containerColor,
-                    shape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius)
-                )
+                .then(selectedContainerModifier)
                 .then(rowClickModifier)
                 .heightIn(min = minHeight)
                 .padding(contentPadding),
@@ -292,7 +295,7 @@ private fun drawerEnterTransition(position: HyperDrawerPosition) = when (positio
         animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
         initialOffsetY = { fullHeight -> fullHeight }
     )
-} + fadeIn(animationSpec = tween(HyperDrawerDefaults.AnimationMillis))
+}
 
 private fun drawerExitTransition(position: HyperDrawerPosition) = when (position) {
     HyperDrawerPosition.Left -> slideOutHorizontally(
@@ -311,7 +314,7 @@ private fun drawerExitTransition(position: HyperDrawerPosition) = when (position
         animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
         targetOffsetY = { fullHeight -> fullHeight }
     )
-} + fadeOut(animationSpec = tween(HyperDrawerDefaults.AnimationMillis))
+}
 
 object HyperDrawerDefaults {
     val Width = 320.dp
@@ -343,12 +346,12 @@ object HyperDrawerDefaults {
             supportingColor = resolveHyperContainerColor(supportingColor, HyperColors.secondaryText),
             selectedContainerColor = resolveHyperContainerColor(
                 selectedContainerColor,
-                HyperColors.accent.copy(alpha = 0.12f)
+                HyperColors.accentContainer
             ),
             selectedContentColor = resolveHyperContainerColor(selectedContentColor, HyperColors.accent),
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,
-                resolvedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+                HyperColors.disabledText
             ),
             dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
         )

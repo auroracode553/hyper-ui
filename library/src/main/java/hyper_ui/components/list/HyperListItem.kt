@@ -185,7 +185,7 @@ object HyperListItemDefaults {
             supportingColor = resolveHyperContainerColor(supportingColor, HyperColors.secondaryText),
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,
-                resolvedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+                HyperColors.disabledText
             ),
             dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
         )

@@ -184,7 +184,7 @@ private fun ListIcon(imageVector: ImageVector) {
         modifier = Modifier
             .size(36.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)),
+            .background(MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.Center
     ) {
         Icon(

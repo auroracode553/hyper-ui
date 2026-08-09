@@ -3,12 +3,20 @@ package hyper_ui.docs.data
 
 import androidx.compose.runtime.Composable
 
+data class DemoVariant(
+    val label: String,
+    val properties: String,
+    val style: String
+)
+
 data class ComponentDemo(
     val id: String,
     val group: String,
     val title: String,
     val description: String,
     val code: String,
+    val variants: List<DemoVariant>,
+    val apiDocumentPaths: List<String>,
     val content: @Composable () -> Unit
 )
 

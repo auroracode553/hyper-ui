@@ -25,13 +25,22 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
                 Text("删除")
             }
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("轮廓", "tone = Outline", "卡片实色填充与主题描边"),
+            DemoVariant("主要", "tone = Primary", "主题实色"),
+            DemoVariant("弱强调", "tone = Tonal", "主题混合实色"),
+            DemoVariant("语义色", "tone = Success / Danger", "成功与危险实色"),
+            DemoVariant("禁用", "enabled = false", "禁用实色状态"),
+            DemoVariant("紧凑", "minHeight = 32.dp", "小尺寸 slot")
+        ),
+        apiDocumentPaths = listOf("basic/hyper-button.md"),
         content = { ButtonDemo() }
     ),
     ComponentDemo(
         id = "icon_button",
         group = GROUP_BASIC,
         title = "HyperIconButton",
-        description = "Slot-first 紧凑型圆形图标按钮容器。默认 40dp，浅色模式恢复既有填充与描边，深色模式默认使用半透明控制按钮样式。",
+        description = "Slot-first 紧凑型图标按钮容器。默认 40dp，并提供圆形、圆角、语义色、大尺寸和禁用实色变体。",
         code = """
             HyperIconButton(
                 onClick = onSearch
@@ -47,17 +56,23 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
                 onClick = onPlay,
                 size = 56.dp,
                 colors = HyperIconButtonDefaults.colors(
-                    containerColor = rgba(255, 255, 255, 0.18f),
-                    pressedContainerColor = rgba(255, 255, 255, 0.28f),
-                    contentColor = rgba(255, 255, 255, 1f),
-                    outlineColor = rgba(255, 255, 255, 0f),
-                    pressedOutlineColor = rgba(255, 255, 255, 0f),
-                    disabledOutlineColor = rgba(255, 255, 255, 0f)
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    pressedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
                 Icon(Icons.Default.PlayArrow, contentDescription = "播放")
             }
         """.trimIndent(),
+        variants = listOf(
+            DemoVariant("默认圆形", "shape = CircleShape, size = 40.dp", "默认实色容器与描边"),
+            DemoVariant("主题实色", "colors = primaryContainer", "主题色按压反馈"),
+            DemoVariant("危险圆角", "shape = RoundedCornerShape(12.dp)", "危险语义实色"),
+            DemoVariant("禁用状态", "enabled = false", "禁用容器、文字与描边"),
+            DemoVariant("大尺寸主要", "size = 56.dp", "主要实色媒体按钮"),
+            DemoVariant("大尺寸中性", "size = 56.dp", "中性实色工具按钮")
+        ),
+        apiDocumentPaths = listOf("basic/hyper-icon-button.md"),
         content = { IconButtonDemo() }
     )
 )

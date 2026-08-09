@@ -50,8 +50,26 @@ kotlin {
     }
 }
 
+// VitePress Markdown 是 API 正文的唯一来源；Preview 只消费构建目录中的资源副本。
+// 合并默认 composeResources（字体等）与 API 文档到统一的资源目录
+val mergedResourcesDir = layout.buildDirectory.dir("generated/merged-compose-resources")
+val prepareMergedResources = tasks.register<Sync>("prepareMergedResources") {
+    // 首先复制默认的 composeResources（包含字体等）
+    from(layout.projectDirectory.dir("src/commonMain/composeResources"))
+    // 然后复制 API 文档 markdown 文件
+    from(layout.projectDirectory.dir("../vitepress/docs/components")) {
+        into("files/api")
+        include("**/*.md")
+    }
+    into(mergedResourcesDir)
+}
+
 compose.resources {
     packageOfResClass = "hyper_ui.docs.generated.resources"
+    customDirectory(
+        sourceSetName = "commonMain",
+        directoryProvider = prepareMergedResources.map { mergedResourcesDir.get() }
+    )
 }
 
 compose.desktop {

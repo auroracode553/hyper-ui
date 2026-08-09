@@ -70,12 +70,7 @@ fun HyperGroupMenuItem(
         selected -> colors.selectedContentColor
         else -> colors.unselectedContentColor
     }
-    val defaultBorderColor = HyperColors.fieldBorder
-    val targetBorderColor = when {
-        selected -> Color.Transparent
-        enabled -> defaultBorderColor
-        else -> defaultBorderColor.copy(alpha = defaultBorderColor.alpha * 0.72f)
-    }
+    val targetBorderColor = if (enabled) HyperColors.fieldBorder else HyperColors.divider
     val containerColor by animateColorAsState(
         targetValue = targetContainerColor,
         animationSpec = spring(
@@ -105,10 +100,10 @@ fun HyperGroupMenuItem(
     Row(
         modifier = modifier
             .heightIn(min = minHeight)
-            .hyperGlassSurface(
+            .hyperSurface(
                 containerColor = containerColor,
                 shape = shape,
-                border = BorderStroke(
+                border = if (selected) null else BorderStroke(
                     width = HyperGroupMenusDefaults.ItemBorderWidth,
                     color = borderColor
                 )
@@ -199,7 +194,7 @@ object HyperGroupMenusDefaults {
             disabledContainerColor = resolveHyperContainerColor(disabledContainerColor, HyperColors.disabledContainer),
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,
-                resolvedUnselectedContentColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
+                HyperColors.disabledText
             )
         )
     }

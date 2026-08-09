@@ -32,7 +32,6 @@ import hyper_ui.HyperIconButtonDefaults
 import hyper_ui.HyperRadioButton
 import hyper_ui.HyperSlider
 import hyper_ui.HyperSliderDefaults
-import hyper_ui.HyperStyleDefaults
 import hyper_ui.HyperSwitch
 import hyper_ui.HyperTextField
 
@@ -113,6 +112,7 @@ fun CheckboxDemo() {
 fun TextFieldDemo() {
     var name by remember { mutableStateOf("HyperUI") }
     var note by remember { mutableStateOf("") }
+    var keyword by remember { mutableStateOf("HyperUI") }
     val isNoteError = note.length > 80
 
     Column(
@@ -143,22 +143,11 @@ fun TextFieldDemo() {
             labelContent = { FieldLabel("禁用态") },
             enabled = false
         )
-    }
-}
-
-@Composable
-fun SearchFieldDemo() {
-    var keyword by remember { mutableStateOf("HyperUI") }
-
-    Column(
-        modifier = Modifier.widthIn(max = 520.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
         HyperTextField(
             value = keyword,
             onValueChange = { keyword = it },
             placeholderContent = { FieldPlaceholder("搜索组件") },
-            leadingContent = {
+            startContent = {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
@@ -166,7 +155,7 @@ fun SearchFieldDemo() {
                     modifier = Modifier.size(20.dp)
                 )
             },
-            trailingContent = if (keyword.isNotEmpty()) {
+            endContent = if (keyword.isNotEmpty()) {
                 {
                     HyperIconButton(
                         onClick = { keyword = "" },
@@ -184,7 +173,11 @@ fun SearchFieldDemo() {
             }
         )
         Text(
-            text = if (keyword.isBlank()) "当前未输入关键词" else "当前关键词：$keyword",
+            text = if (keyword.isBlank()) {
+                "左右插槽示例：当前未输入关键词"
+            } else {
+                "左右插槽示例：当前关键词为 $keyword"
+            },
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp
@@ -321,8 +314,6 @@ private fun FormControlOption(
     } else {
         Modifier
     }
-    val contentAlpha = if (enabled) 1f else HyperStyleDefaults.DisabledAlpha
-
     Row(
         modifier = modifier.then(clickModifier),
         verticalAlignment = Alignment.CenterVertically,
@@ -334,7 +325,11 @@ private fun FormControlOption(
         )
         Text(
             text = text,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = contentAlpha),
+            color = if (enabled) {
+                MaterialTheme.colorScheme.onSurface
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            },
             fontSize = 15.sp,
             lineHeight = 20.sp
         )
