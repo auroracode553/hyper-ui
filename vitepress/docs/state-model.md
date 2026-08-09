@@ -10,6 +10,7 @@ HyperUI 采用调用方持有状态的方式。组件接收当前值并通过回
 | 选择 | `checked`、`selected` / 对应回调 | 保存当前选择 |
 | 显示 | `visible`、`open`、`expanded` | 决定何时显示或关闭 |
 | 进度 | `progress` | 计算并传入 `0f..1f`，或用 `null` 表示不确定进度 |
+| 可拖动进度 | `value` / `onValueChange` | 持有当前值，并在拖动回调中执行预览或提交 |
 | 导航选择 | `itemSelected` / `onItemClick` | 更新选中项并执行应用导航 |
 
 组件可以在内部保存动画、焦点或滚动等纯 UI 状态，但不能保存业务结果。

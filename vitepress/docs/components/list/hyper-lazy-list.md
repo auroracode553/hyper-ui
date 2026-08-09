@@ -5,7 +5,7 @@
 - 状态归属：调用方提供列表数据
 - Preview ID：`lazy_list`
 
-基于 `LazyColumn` 的懒加载列表，适合数量较多或动态变化的数据。列表自动计算首尾圆角、卡片背景与外层轻描边。
+基于 `LazyColumn` 的懒加载列表，适合数量较多或动态变化的数据。列表提供同构数据入口和异构内容 DSL 入口，背景、圆角与外层轻描边均由 HyperUI 管理。
 
 ## 公开签名
 
@@ -20,6 +20,17 @@ fun <T> HyperLazyList(
     border: BorderStroke? = HyperListDefaults.border(),
     colors: HyperListColors = HyperListDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
+)
+
+@Composable
+fun HyperLazyList(
+    modifier: Modifier = Modifier,
+    state: LazyListState = rememberLazyListState(),
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
+    border: BorderStroke? = HyperListDefaults.border(),
+    colors: HyperListColors = HyperListDefaults.colors(),
+    content: LazyListScope.() -> Unit
 )
 ```
 
@@ -54,6 +65,8 @@ object HyperListDefaults {
 | `colors` | `HyperListColors` | `HyperListDefaults.colors()` | 列表容器颜色，默认使用 `HyperColors.elevatedContainer` |
 | `itemContent` | `@Composable (T) -> Unit` | 必填 | 每项内容，只接收当前项目，不接收索引 |
 
+DSL 入口额外接收 `state` 与 `LazyListScope.content`，适合异构条目、分组标题、分页加载占位等内容；其余视觉参数含义与数据入口一致。
+
 ## 最小用法
 
 ```kotlin
@@ -73,9 +86,23 @@ fun AccountList(accounts: List<String>) {
 }
 ```
 
+异构内容可使用 DSL 入口：
+
+```kotlin
+HyperLazyList(state = listState) {
+    item {
+        HyperListItem(headlineContent = { Text("概览") })
+    }
+    items(accounts, key = { it.id }) { account ->
+        HyperListItem(headlineContent = { Text(account.name) })
+    }
+}
+```
+
 ## 约束
 
 - `itemContent` 的参数是项目本身，不是索引。
+- 需要混合多种条目或由外部持有滚动状态时，使用 `LazyListScope` DSL 入口。
 - 首尾圆角、项目背景与外层描边由列表自动处理，不要在每项重复计算外层形状。
 - 分割线仍由条目内容决定；使用 `HyperListItem.dividerVisible` 时由调用方根据业务数据设置。
 - 默认描边来自 `HyperListDefaults.border()`，内部使用 `HyperColors.panelBorder`。

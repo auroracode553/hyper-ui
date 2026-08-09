@@ -4,6 +4,7 @@ package hyper_ui.docs.data
 import hyper_ui.docs.ui.CheckboxDemo
 import hyper_ui.docs.ui.RadioDemo
 import hyper_ui.docs.ui.SearchFieldDemo
+import hyper_ui.docs.ui.SliderDemo
 import hyper_ui.docs.ui.SwitchDemo
 import hyper_ui.docs.ui.TextFieldDemo
 
@@ -89,5 +90,21 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         content = { SwitchDemo() }
+    ),
+    ComponentDemo(
+        id = "slider",
+        group = GROUP_FORM,
+        title = "HyperSlider",
+        description = "支持点击定位、连续拖动、分段吸附和禁用态，业务值与范围由调用方持有。",
+        code = """
+            HyperSlider(
+                value = progress,
+                onValueChange = { progress = it },
+                valueRange = 0f..duration,
+                onValueChangeStarted = onSeekStart,
+                onValueChangeFinished = onSeekFinished
+            )
+        """.trimIndent(),
+        content = { SliderDemo() }
     )
 )

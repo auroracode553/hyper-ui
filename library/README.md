@@ -68,7 +68,7 @@ src/main/java/hyper_ui/
     ├── dialog/
     ├── drawer/
     ├── navigation/
-    └── progress/
+    └── progress/         # 只读进度指示器与可拖动 HyperSlider
 ```
 
 ## 技术栈

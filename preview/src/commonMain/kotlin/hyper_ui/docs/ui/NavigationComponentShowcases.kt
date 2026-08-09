@@ -88,12 +88,7 @@ fun TopBarDemo() {
                     null
                 },
                 titleContent = {
-                    Text(
-                        text = if (showBack) "可返回页面" else "一级页面",
-                        fontSize = 28.sp,
-                        lineHeight = 34.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text(text = if (showBack) "可返回页面" else "一级页面")
                 },
                 actionContent = {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -295,46 +290,21 @@ fun BottomBarDemo() {
                     )
                 }
                 HyperBottomBar(
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    bottomItems.forEach { item ->
-                        val selected = item.id == selectedItemId
-                        val itemColor = if (selected) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            LocalContentColor.current
-                        }
+                    items = bottomItems,
+                    itemSelected = { item -> item.id == selectedItemId },
+                    onItemClick = { item -> selectedItemId = item.id }
+                ) { item ->
                         Column(
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(64.dp)
-                                .clip(RoundedCornerShape(18.dp))
-                                .background(
-                                    if (selected) {
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
-                                    } else {
-                                        androidx.compose.ui.graphics.Color.Transparent
-                                    }
-                                )
-                                .clickable { selectedItemId = item.id },
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
                             Icon(
                                 imageVector = item.icon,
                                 contentDescription = item.label,
-                                tint = itemColor,
                                 modifier = Modifier.size(24.dp)
                             )
-                            Text(
-                                text = item.label,
-                                color = itemColor,
-                                fontSize = 12.sp,
-                                lineHeight = 14.sp,
-                                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
-                            )
+                            Text(text = item.label)
                         }
-                    }
                 }
             }
         }

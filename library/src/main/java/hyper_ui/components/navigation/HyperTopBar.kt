@@ -9,12 +9,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Immutable
@@ -49,11 +53,13 @@ fun HyperTopBar(
     ) {
         CompositionLocalProvider(LocalContentColor provides colors.contentColor) {
             navigationContent?.invoke(this)
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = verticalAlignment,
-                content = titleContent
-            )
+            CompositionLocalProvider(LocalTextStyle provides HyperTopBarDefaults.TitleTextStyle) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = verticalAlignment,
+                    content = titleContent
+                )
+            }
             actionContent?.invoke(this)
         }
     }
@@ -64,6 +70,11 @@ object HyperTopBarDefaults {
     val ContentGap = 8.dp
     val ContentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp)
     val Shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
+
+    val TitleTextStyle: TextStyle
+        @Composable get() = MaterialTheme.typography.titleLarge.copy(
+            fontWeight = FontWeight.SemiBold
+        )
 
     @Composable
     fun colors(

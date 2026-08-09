@@ -58,7 +58,7 @@ https://gitee.com/my_new_way/hyper_ui/blob/master/vitepress/docs/index.md
 
 ## 适用范围
 
-HyperUI 面向 Android Compose 项目，提供按钮、输入框、列表分组、设置项、弹窗、抽屉、加载进度条、顶部栏、底部导航等基础组件。
+HyperUI 面向 Android Compose 项目，提供按钮、输入框、列表分组、设置项、弹窗、抽屉、加载进度条、可拖动进度滑块、顶部栏、底部导航等基础组件。
 
 不适合的场景：
 
@@ -156,12 +156,12 @@ fun App() {
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
 - 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；`HyperIconButton` 默认带轻描边，视觉通过 `tone`、`colors`、`shape`、`border` 控制）
-- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`（输入框默认使用不透明背景和轻描边；搜索框、地址栏通过 `HyperTextField` 的 leading/trailing slots 组合）
+- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperSlider`（输入框默认使用不透明背景和轻描边；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边；主题色选择板色块默认带细描边，选中状态由调用方管理）
-- 列表组件：`HyperLazyList`, `HyperList`, `HyperListItem`（列表和设置分组外层默认带轻描边，行内容通过分割线表达层级）
+- 列表组件：`HyperLazyList`, `HyperList`, `HyperListItem`（`HyperLazyList` 支持同构数据和异构内容 DSL；列表和设置分组外层默认带轻描边，行内容通过分割线表达层级）
 - 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperDropdownMenu`（弹窗与菜单默认不透明卡片面板，且不渲染遮罩）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
-- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（抽屉和底栏默认带轻描边；`HyperGroupMenus` 用于横向分组菜单；`HyperBottomBar` 支持完整内容 slot 与泛型 items 两种入口，页面切换由调用方处理）
+- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 为标题 slot 提供默认标题文字样式；`HyperBottomBar` 为内容提供默认标签文字样式；抽屉和底栏默认带轻描边；`HyperGroupMenus` 用于横向分组菜单；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
 ## 状态管理原则

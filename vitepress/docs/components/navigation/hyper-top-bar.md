@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/navigation/HyperTopBar.kt`
 - 预览：`topbar`
 
-`HyperTopBar` 是三段式顶部栏容器：`navigationContent`、`titleContent`、`actionContent`。组件不内置返回按钮、标题文本或导航逻辑。
+`HyperTopBar` 是三段式顶部栏容器：`navigationContent`、`titleContent`、`actionContent`。组件不内置返回按钮、标题文本或导航逻辑，标题 slot 默认继承 HyperUI 提供的标题字重和字号。
 
 ## 公开签名
 
@@ -45,6 +45,6 @@ HyperTopBar(
 
 - 不存在 `title`、`onBack`、`rightSlot` 参数。
 - 返回按钮是否出现、图标内容和点击行为都由调用方控制。
-- `LocalContentColor` 会传递给三个 slot。
+- `LocalContentColor` 会传递给三个 slot，`titleContent` 同时继承 `HyperTopBarDefaults.TitleTextStyle`。
 
 <WasmPreview demo="topbar" title="HyperTopBar 交互预览" />

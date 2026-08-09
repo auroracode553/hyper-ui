@@ -17,6 +17,7 @@
 | [HyperSwitch](components/form/hyper-switch.md) | 开关，轨道和滑块默认有轮廓层次 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选项 | 调用方提供 `checked` |
 | [HyperRadioButton](components/form/hyper-radio-button.md) | 单选项 | 调用方提供 `selected` |
+| [HyperSlider](components/form/hyper-slider.md) | 可点击、可拖动的进度与范围滑块 | 调用方提供 `value` |
 
 ## 容器组件
 

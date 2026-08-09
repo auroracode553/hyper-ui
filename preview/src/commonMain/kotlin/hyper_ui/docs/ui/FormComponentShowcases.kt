@@ -4,6 +4,7 @@ package hyper_ui.docs.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
@@ -22,12 +23,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
 import hyper_ui.HyperRadioButton
+import hyper_ui.HyperSlider
+import hyper_ui.HyperSliderDefaults
 import hyper_ui.HyperStyleDefaults
 import hyper_ui.HyperSwitch
 import hyper_ui.HyperTextField
@@ -222,6 +226,44 @@ fun SwitchDemo() {
                 enabled = false
             )
         }
+    }
+}
+
+@Composable
+fun SliderDemo() {
+    var continuousValue by remember { mutableStateOf(0.42f) }
+    var steppedValue by remember { mutableStateOf(2f) }
+
+    Column(
+        modifier = Modifier.widthIn(max = 520.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(text = "连续进度 ${(continuousValue * 100).toInt()}%")
+        HyperSlider(
+            value = continuousValue,
+            onValueChange = { continuousValue = it },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Text(text = "分段进度 ${steppedValue.toInt()}/5")
+        HyperSlider(
+            value = steppedValue,
+            onValueChange = { steppedValue = it },
+            valueRange = 0f..5f,
+            steps = 4,
+            modifier = Modifier.fillMaxWidth(),
+            colors = HyperSliderDefaults.colors(
+                activeTrackColor = Color(0.03f, 0.76f, 0.38f, 1f)
+            )
+        )
+
+        Text(text = "禁用状态")
+        HyperSlider(
+            value = 0.65f,
+            onValueChange = {},
+            enabled = false,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 

@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 internal val LazyListCornerRadius = HyperStyleDefaults.LargeCornerRadius
@@ -59,6 +61,36 @@ fun <T> HyperLazyList(
             }
         }
     }
+}
+
+/**
+ * 面向异构项目、分组和分页内容的懒列表入口。
+ *
+ * 列表状态与内容 DSL 由调用方持有，容器背景、圆角和描边仍由 HyperUI 统一提供。
+ */
+@Composable
+fun HyperLazyList(
+    modifier: Modifier = Modifier,
+    state: LazyListState = rememberLazyListState(),
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
+    border: BorderStroke? = HyperListDefaults.border(),
+    colors: HyperListColors = HyperListDefaults.colors(),
+    content: LazyListScope.() -> Unit
+) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxWidth()
+            .hyperGlassSurface(
+                containerColor = colors.containerColor,
+                shape = HyperListDefaults.Shape,
+                border = border
+            ),
+        state = state,
+        contentPadding = contentPadding,
+        verticalArrangement = verticalArrangement,
+        content = content
+    )
 }
 
 internal fun listItemShape(

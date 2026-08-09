@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/navigation/HyperBottomBar.kt`
 - 预览：`bottom-bar`
 
-`HyperBottomBar` 是底部栏容器，默认带 1dp 轻描边。组件负责底栏面板与横向布局；调用方可以直接传入完整内容 slot，也可以使用泛型 items 入口让组件统一处理单项点击、选中/未选中内容色和禁用状态。
+`HyperBottomBar` 是底部栏容器，默认带 1dp 轻描边和标签文字样式。组件负责底栏面板与横向布局；调用方可以直接传入完整内容 slot，也可以使用泛型 items 入口让组件统一处理单项点击、选中/未选中内容色和禁用状态。
 
 ## 公开签名
 

@@ -68,7 +68,8 @@ export default defineConfig({
           { text: 'HyperTextField', link: '/components/form/hyper-text-field' },
           { text: 'HyperSwitch', link: '/components/form/hyper-switch' },
           { text: 'HyperCheckbox', link: '/components/form/hyper-checkbox' },
-          { text: 'HyperRadioButton', link: '/components/form/hyper-radio-button' }
+          { text: 'HyperRadioButton', link: '/components/form/hyper-radio-button' },
+          { text: 'HyperSlider', link: '/components/form/hyper-slider' }
         ]
       },
       {

@@ -11,7 +11,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "lazy_list",
         group = GROUP_LIST,
         title = "HyperLazyList",
-        description = "懒加载列表容器，外层默认带轻描边，子项内容完全由调用方决定。",
+        description = "懒加载列表容器，支持同构数据和异构内容 DSL，外观统一由 HyperUI 提供。",
         code = """
             HyperLazyList(items = items) { item ->
                 HyperListItem(
@@ -20,6 +20,13 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
                     supportingContent = { Text(item.description) },
                     dividerVisible = item != items.last()
                 )
+            }
+
+            HyperLazyList(state = listState) {
+                item { HyperListItem(headlineContent = { Text("概览") }) }
+                items(items, key = { it.id }) { item ->
+                    HyperListItem(headlineContent = { Text(item.title) })
+                }
             }
         """.trimIndent(),
         content = { LazyListDemo() }
