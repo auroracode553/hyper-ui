@@ -1,6 +1,6 @@
 # 底部导航
 
-`HyperBottomBar` 不依赖任何导航框架。需要完全自定义按钮、徽标、输入框或快捷功能时，直接使用完整内容 slot；需要统一处理项目点击和选中颜色时，可使用泛型 items 入口。
+`HyperBottomBar` 不依赖任何导航框架。浅色模式保留透明玻璃效果，深色模式使用不透明实色底栏。需要完全自定义按钮、徽标、输入框或快捷功能时，直接使用完整内容 slot；需要统一处理项目点击和选中颜色时，可使用泛型 items 入口。
 
 ```kotlin
 import androidx.annotation.DrawableRes

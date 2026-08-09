@@ -24,7 +24,7 @@ AI 生成代码时必须遵守：
 - 只使用具体组件页“公开签名”中存在的参数，不根据其他 Compose 库猜测参数名。
 - `value`、`checked`、`selected`、`show`、`open`、`expanded`、进度和导航选择等业务状态均由调用方持有。
 - 不把网络请求、数据库访问、权限申请、路由实现或 ViewModel 写入 HyperUI 组件。
-- 弹窗、菜单、抽屉不渲染遮罩或半透明蒙层；`HyperButton`、`HyperList`、`HyperMenuList`、进度指示器以及各类弹窗面板使用不透明实色。
+- 弹窗、菜单、抽屉不渲染遮罩或半透明蒙层；`HyperButton`、`HyperList`、`HyperMenuList`、进度指示器以及各类弹窗面板使用不透明实色；`HyperBottomBar` 仅在深色模式使用不透明实色，浅色模式保留透明玻璃效果。
 - HyperUI 不强制绑定图标库；Android 项目需要图标时，默认优先推荐 `com.composables:icons-lucide-android:2.2.1`，通过 `painterResource` 使用其 VectorDrawable 资源。
 - 除非调用方已有明确依赖，否则不要为少量图标引入 `material-icons-extended`；Release 构建应开启代码与资源裁剪。
 - 文档示例中的 Compose、图标和状态 API 仍需从各自标准包导入。

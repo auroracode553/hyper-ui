@@ -82,7 +82,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "bottom-bar",
         group = GROUP_NAVIGATION,
         title = "HyperBottomBar",
-        description = "底部栏容器默认带轻描边。调用方可以传入完整内容 slot，也可以使用泛型 items 入口。",
+        description = "底部栏浅色模式保留透明玻璃效果，深色模式使用不透明实色；支持完整 slot 与泛型 items 入口。",
         code = """
             HyperBottomBar(
                 contentPadding = PaddingValues(horizontal = 16.dp)
