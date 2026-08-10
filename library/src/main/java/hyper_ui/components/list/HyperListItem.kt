@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,12 +39,16 @@ data class HyperListItemColors(
 
 internal val LocalHyperListItemDividerSuppressed = staticCompositionLocalOf { false }
 
+/**
+ * 列表项组件。
+ *
+ * 组件内部已包含内容默认间距，外部间距请通过 modifier.padding(...) 控制。
+ */
 @Composable
 fun HyperListItem(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     minHeight: Dp = HyperListItemDefaults.MinHeight,
-    contentPadding: PaddingValues = HyperListItemDefaults.ContentPadding,
     dividerVisible: Boolean = false,
     dividerInset: Dp = HyperListItemDefaults.DividerInset,
     colors: HyperListItemColors = HyperListItemDefaults.colors(),
@@ -89,7 +92,7 @@ fun HyperListItem(
                 .fillMaxWidth()
                 .heightIn(min = minHeight)
                 .then(clickModifier)
-                .padding(contentPadding),
+                .padding(HyperListItemDefaults.ContentPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (leadingContent != null) {
@@ -158,7 +161,7 @@ fun HyperListItem(
 object HyperListItemDefaults {
     val MinHeight = 68.dp
     val ContentGap = 14.dp
-    val ContentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp)
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 12.dp)
     val DividerInset = 20.dp
     val DividerHeight = 1.dp
 

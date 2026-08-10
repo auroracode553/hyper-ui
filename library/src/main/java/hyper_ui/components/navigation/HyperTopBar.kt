@@ -2,7 +2,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,11 +26,15 @@ data class HyperTopBarColors(
     val contentColor: Color
 )
 
+/**
+ * 顶部导航栏组件。
+ *
+ * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
+ */
 @Composable
 fun HyperTopBar(
     modifier: Modifier = Modifier,
     minHeight: androidx.compose.ui.unit.Dp = HyperTopBarDefaults.MinHeight,
-    contentPadding: PaddingValues = HyperTopBarDefaults.ContentPadding,
     colors: HyperTopBarColors = HyperTopBarDefaults.colors(),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperTopBarDefaults.ContentGap),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
@@ -47,7 +50,7 @@ fun HyperTopBar(
                 containerColor = colors.containerColor,
                 shape = HyperTopBarDefaults.Shape
             )
-            .padding(contentPadding),
+            .padding(horizontal = 16.dp),
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {
@@ -68,7 +71,6 @@ fun HyperTopBar(
 object HyperTopBarDefaults {
     val MinHeight = 56.dp
     val ContentGap = 8.dp
-    val ContentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp)
     val Shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
 
     val TitleTextStyle: TextStyle

@@ -8,9 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -33,6 +31,11 @@ data class HyperListColors(
     val containerColor: Color
 )
 
+/**
+ * 简单数据列表入口。
+ *
+ * 组件不内置内边距，如需内容间距请通过 modifier.padding(...) 控制。
+ */
 @Composable
 fun <T> HyperList(
     items: List<T>,
@@ -41,7 +44,6 @@ fun <T> HyperList(
     lazyLoading: Boolean = true,
     lazyListState: LazyListState = rememberLazyListState(),
     scrollState: ScrollState = rememberScrollState(),
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     shape: Shape = HyperListDefaults.Shape,
     border: BorderStroke? = null,
@@ -63,7 +65,6 @@ fun <T> HyperList(
         LazyColumn(
             modifier = containerModifier,
             state = lazyListState,
-            contentPadding = contentPadding,
             verticalArrangement = verticalArrangement
         ) {
             itemsIndexed(
@@ -83,8 +84,7 @@ fun <T> HyperList(
     } else {
         Column(
             modifier = containerModifier
-                .verticalScroll(scrollState)
-                .padding(contentPadding),
+                .verticalScroll(scrollState),
             verticalArrangement = verticalArrangement
         ) {
             items.forEachIndexed { index, item ->
@@ -103,12 +103,12 @@ fun <T> HyperList(
  * 面向异构项目、分组和分页内容的懒列表入口。
  *
  * DSL 入口固定使用 LazyColumn；简单数据列表如需关闭懒加载，使用 items 入口的 lazyLoading 参数。
+ * 组件不内置内边距，如需内容间距请通过 modifier.padding(...) 控制。
  */
 @Composable
 fun HyperList(
     modifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     shape: Shape = HyperListDefaults.Shape,
     border: BorderStroke? = null,
@@ -128,7 +128,6 @@ fun HyperList(
                 border = border
             ),
             state = state,
-            contentPadding = contentPadding,
             verticalArrangement = verticalArrangement,
             content = content
         )

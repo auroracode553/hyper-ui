@@ -5,9 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -23,6 +21,11 @@ data class HyperPanelColors(
     val containerColor: Color
 )
 
+/**
+ * 面板容器组件。
+ *
+ * 组件不内置内边距，如需内容间距请通过 modifier.padding(...) 控制。
+ */
 @Composable
 fun HyperPanel(
     modifier: Modifier = Modifier,
@@ -31,7 +34,6 @@ fun HyperPanel(
     elevation: Dp = HyperPanelDefaults.Elevation,
     border: BorderStroke? = HyperPanelDefaults.border(),
     clipContent: Boolean = true,
-    contentPadding: PaddingValues = HyperPanelDefaults.ContentPadding,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperPanelDefaults.ContentSpacing),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.() -> Unit
@@ -45,8 +47,7 @@ fun HyperPanel(
                 elevation = elevation,
                 border = border,
                 clipContent = clipContent
-            )
-            .padding(contentPadding),
+            ),
         horizontalAlignment = horizontalAlignment,
         verticalArrangement = verticalArrangement,
         content = content
@@ -56,7 +57,6 @@ fun HyperPanel(
 object HyperPanelDefaults {
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
     val Elevation = 0.dp
-    val ContentPadding = PaddingValues(20.dp)
     val ContentSpacing = 12.dp
 
     @Composable

@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -29,11 +27,15 @@ data class HyperMenuListColors(
     val containerColor: Color
 )
 
+/**
+ * 简单菜单列表。
+ *
+ * 组件不内置内边距，如需内容间距请通过 modifier.padding(...) 控制。
+ */
 @Composable
 fun <T> HyperMenuList(
     items: List<T>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
@@ -53,8 +55,7 @@ fun <T> HyperMenuList(
                 shape = shape,
                 border = border
             )
-            .verticalScroll(rememberScrollState())
-            .padding(contentPadding),
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = verticalArrangement
     ) {
         items.forEachIndexed { index, item ->
@@ -76,10 +77,14 @@ fun <T> HyperMenuList(
     }
 }
 
+/**
+ * DSL 菜单列表入口。
+ *
+ * 组件不内置内边距，如需内容间距请通过 modifier.padding(...) 控制。
+ */
 @Composable
 fun HyperMenuList(
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
@@ -98,8 +103,7 @@ fun HyperMenuList(
                     containerColor = containerColor,
                     shape = HyperMenuListDefaults.Shape,
                     border = border
-                )
-                .padding(contentPadding),
+                ),
             verticalArrangement = verticalArrangement,
             content = content
         )

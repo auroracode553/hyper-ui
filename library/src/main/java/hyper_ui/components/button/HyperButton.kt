@@ -3,7 +3,6 @@ package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.heightIn
@@ -41,6 +40,11 @@ data class HyperButtonColors(
     val disabledContentColor: Color
 )
 
+/**
+ * 按钮组件。
+ *
+ * 组件内部已包含文字与边框的默认间距，外部间距请通过 modifier.padding(...) 控制。
+ */
 @Composable
 fun HyperButton(
     onClick: () -> Unit,
@@ -51,7 +55,6 @@ fun HyperButton(
     border: BorderStroke? = HyperButtonDefaults.border(tone),
     shape: Shape = HyperButtonDefaults.Shape,
     minHeight: androidx.compose.ui.unit.Dp = HyperButtonDefaults.MinHeight,
-    contentPadding: PaddingValues = HyperButtonDefaults.ContentPadding,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
         HyperButtonDefaults.ContentSpacing,
         Alignment.CenterHorizontally
@@ -86,7 +89,7 @@ fun HyperButton(
                 role = Role.Button,
                 onClick = onClick
             )
-            .padding(contentPadding),
+            .padding(HyperButtonDefaults.ContentPadding),
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {
@@ -99,7 +102,7 @@ fun HyperButton(
 object HyperButtonDefaults {
     val MinHeight = 40.dp
     val ContentSpacing = 8.dp
-    val ContentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 14.dp, vertical = 8.dp)
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
 
     @Composable

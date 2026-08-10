@@ -5,7 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,13 +46,17 @@ class HyperBottomBarItemScope internal constructor(
     val enabled: Boolean
 )
 
+/**
+ * 底部导航栏组件（Slot 模式）。
+ *
+ * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
+ */
 @Composable
 fun HyperBottomBar(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     height: Dp = HyperBottomBarDefaults.Height,
     contentHeight: Dp = HyperBottomBarDefaults.ContentHeight,
-    contentPadding: PaddingValues = HyperBottomBarDefaults.ContentPadding,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     shape: Shape = HyperBottomBarDefaults.Shape,
@@ -79,7 +82,7 @@ fun HyperBottomBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(contentHeight)
-                .padding(contentPadding),
+                .padding(horizontal = 16.dp),
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = verticalAlignment
         ) {
@@ -94,6 +97,11 @@ fun HyperBottomBar(
     }
 }
 
+/**
+ * 底部导航栏组件（简单 items 模式）。
+ *
+ * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
+ */
 @Composable
 fun <T> HyperBottomBar(
     items: List<T>,
@@ -104,7 +112,6 @@ fun <T> HyperBottomBar(
     itemSelected: (T) -> Boolean = { false },
     height: Dp = HyperBottomBarDefaults.Height,
     contentHeight: Dp = HyperBottomBarDefaults.ContentHeight,
-    contentPadding: PaddingValues = HyperBottomBarDefaults.ContentPadding,
     itemWidth: Dp = HyperBottomBarDefaults.ItemWidth,
     itemSlotAlignment: Alignment = Alignment.Center,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
@@ -120,7 +127,6 @@ fun <T> HyperBottomBar(
         enabled = enabled,
         height = height,
         contentHeight = contentHeight,
-        contentPadding = contentPadding,
         horizontalArrangement = if (itemLayout == HyperBottomBarItemLayout.Equal) {
             Arrangement.Start
         } else {
@@ -264,7 +270,6 @@ private fun RowScope.HyperBottomBarItemContainer(
 object HyperBottomBarDefaults {
     val Height = 70.dp
     val ContentHeight = 64.dp
-    val ContentPadding = PaddingValues(horizontal = 24.dp)
     val ItemWidth = 60.dp
     val Shape: Shape = RoundedCornerShape(0.dp)
 

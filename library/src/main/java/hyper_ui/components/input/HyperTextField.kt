@@ -8,7 +8,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,6 +33,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * 文本输入框组件。
+ *
+ * 组件内部已包含输入内容与边框的默认间距，外部间距请通过 modifier.padding(...) 控制。
+ */
 @Composable
 fun HyperTextField(
     value: String,
@@ -53,7 +57,6 @@ fun HyperTextField(
         fontSize = 16.sp,
         lineHeight = 22.sp
     ),
-    contentPadding: PaddingValues = HyperTextFieldDefaults.ContentPadding,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -103,7 +106,7 @@ fun HyperTextField(
                         .fillMaxWidth()
                         .heightIn(min = minHeight)
                         .clip(shape)
-                        .background(color = visuals.containerColor, shape = shape)
+                        .background(color = visuals.containerColor, shape)
                         .border(
                             border = BorderStroke(
                                 width = HyperTextFieldDefaults.BorderWidth,
@@ -111,7 +114,7 @@ fun HyperTextField(
                             ),
                             shape = shape
                         )
-                        .padding(contentPadding),
+                        .padding(HyperTextFieldDefaults.ContentPadding),
                     verticalAlignment = verticalAlignment
                 ) {
                     if (startContent != null) {
@@ -160,7 +163,7 @@ fun HyperTextField(
 object HyperTextFieldDefaults {
     val MinHeight = 52.dp
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
-    val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 18.dp, vertical = 10.dp)
     val SlotSpacing = 10.dp
     val BorderWidth = 1.dp
 

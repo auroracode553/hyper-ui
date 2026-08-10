@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -50,6 +49,11 @@ data class HyperDialogColors(
     val containerColor: Color
 )
 
+/**
+ * 对话框组件。
+ *
+ * 组件内部已包含默认内边距，外部间距请通过 modifier 控制。
+ */
 @Composable
 fun HyperDialog(
     visible: Boolean,
@@ -60,10 +64,8 @@ fun HyperDialog(
     maxWidth: Dp = HyperDialogDefaults.MaxWidth,
     widthFraction: Float = HyperDialogDefaults.WidthFraction,
     maxHeight: Dp = HyperDialogDefaults.MaxHeight,
-    windowPadding: PaddingValues = HyperDialogDefaults.WindowPadding,
     shape: Shape = HyperDialogDefaults.Shape,
     colors: HyperDialogColors = HyperDialogDefaults.colors(),
-    contentPadding: PaddingValues = HyperDialogDefaults.ContentPadding,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperDialogDefaults.ContentSpacing),
     actionArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
@@ -99,6 +101,8 @@ fun HyperDialog(
         fallbackColor = HyperColors.cardContainer,
         backgroundColor = HyperColors.pageBackground
     )
+    val windowPadding = HyperDialogDefaults.WindowPadding
+    val contentPadding = HyperDialogDefaults.ContentPadding
 
     DisableSelection {
         // Popup 仅包裹面板，避免全屏内容把空白区域算作内部点击。
@@ -134,7 +138,7 @@ fun HyperDialog(
                         .heightIn(max = resolvedMaxHeight)
                         .then(modifier)
                         .clip(shape)
-                        .background(color = containerColor, shape = shape)
+                        .background(color = containerColor, shape)
                         .then(if (border != null) Modifier.border(border, shape) else Modifier)
                         .padding(contentPadding),
                     horizontalAlignment = horizontalAlignment,
@@ -255,9 +259,9 @@ object HyperDialogDefaults {
     val MaxWidth = 360.dp
     const val WidthFraction = 0.9f
     val MaxHeight = 480.dp
-    val WindowPadding = PaddingValues(16.dp)
+    val WindowPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
     val Shape: Shape = RoundedCornerShape(20.dp)
-    val ContentPadding = PaddingValues(20.dp)
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(20.dp)
     val ContentSpacing = 16.dp
     val ActionSpacing = 12.dp
     const val ShowScrollIndicator = true
