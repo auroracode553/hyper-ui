@@ -34,12 +34,13 @@ data class HyperListColors(
 /**
  * 简单数据列表入口。
  *
- * 组件不内置内边距，如需内容间距请通过 modifier.padding(...) 控制。
+ * modifier 控制列表外壳，contentModifier 控制容器内部内容布局。
  */
 @Composable
 fun <T> HyperList(
     items: List<T>,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier,
     key: ((item: T) -> Any)? = null,
     lazyLoading: Boolean = true,
     lazyListState: LazyListState = rememberLazyListState(),
@@ -59,7 +60,7 @@ fun <T> HyperList(
         containerColor = containerColor,
         shape = shape,
         border = border
-    )
+    ).then(contentModifier)
 
     if (lazyLoading) {
         LazyColumn(
@@ -103,11 +104,12 @@ fun <T> HyperList(
  * 面向异构项目、分组和分页内容的懒列表入口。
  *
  * DSL 入口固定使用 LazyColumn；简单数据列表如需关闭懒加载，使用 items 入口的 lazyLoading 参数。
- * 组件不内置内边距，如需内容间距请通过 modifier.padding(...) 控制。
+ * modifier 控制列表外壳，contentModifier 控制容器内部内容布局。
  */
 @Composable
 fun HyperList(
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     shape: Shape = HyperListDefaults.Shape,
@@ -126,7 +128,7 @@ fun HyperList(
                 containerColor = containerColor,
                 shape = shape,
                 border = border
-            ),
+            ).then(contentModifier),
             state = state,
             verticalArrangement = verticalArrangement,
             content = content

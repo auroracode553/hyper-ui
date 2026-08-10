@@ -15,6 +15,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperList(
                 items = items,
+                contentModifier = Modifier.padding(vertical = 4.dp),
                 lazyLoading = true,
                 shape = HyperListDefaults.Shape
             ) { item ->
@@ -22,7 +23,8 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
                     leadingContent = { Icon(item.icon, null) },
                     headlineContent = { Text(item.title) },
                     supportingContent = { Text(item.description) },
-                    dividerVisible = true
+                    dividerVisible = true,
+                    dividerModifier = Modifier.padding(start = 70.dp)
                 )
             }
 
@@ -42,6 +44,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("懒加载", "lazyLoading = true", "LazyColumn 页面列表"),
+            DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制容器内部留白"),
             DemoVariant("普通列表", "lazyLoading = false", "Column 滚动列表"),
             DemoVariant("DSL 列表", "state + item/items", "调用方组合条目"),
             DemoVariant("列表条目", "leading/headline/supporting", "图标、双行文字与分隔线")
@@ -58,7 +61,10 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperMenuList",
         description = "不透明实色的圆角菜单列表，适合少量静态菜单、设置分组和操作入口。",
         code = """
-            HyperMenuList(items = items) { item ->
+            HyperMenuList(
+                items = items,
+                contentModifier = Modifier.padding(vertical = 4.dp)
+            ) { item ->
                 HyperListItem(
                     headlineContent = { Text(item.title) },
                     trailingContent = { Text(item.value) }
@@ -80,6 +86,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("数据入口", "items + itemContent", "静态菜单数据"),
+            DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制圆角背景内部留白"),
             DemoVariant("Slot 入口", "content slot", "设置项与选择控件组合"),
             DemoVariant("列表条目", "trailingContent", "值、开关、复选与单选尾部内容")
         ),

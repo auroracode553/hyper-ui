@@ -14,10 +14,9 @@ fun HyperGroupMenuItem(
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperGroupMenusDefaults.ItemContentPadding),
     enabled: Boolean = true,
     shape: Shape = HyperGroupMenusDefaults.Shape,
-    minHeight: Dp = HyperGroupMenusDefaults.MinHeight,
-    contentPadding: PaddingValues = HyperGroupMenusDefaults.ItemContentPadding,
     colors: HyperGroupMenusColors = HyperGroupMenusDefaults.colors(),
     role: Role = Role.Tab,
     content: @Composable HyperGroupMenusItemScope.() -> Unit
@@ -29,7 +28,6 @@ fun <T> HyperGroupMenus(
     selectedItem: T,
     onSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = HyperGroupMenusDefaults.ContentPadding,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperGroupMenusDefaults.ItemGap),
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperGroupMenusItemScope.(item: T) -> Unit
@@ -59,6 +57,8 @@ HyperGroupMenus(
 ## 约束
 
 - 不存在内置 `label`、`count`、`icon` 或业务分类模型。
+- 单项外壳使用 `modifier`，内部内容间距和语义使用 `contentModifier`；默认 Modifier 携带 `ItemContentPadding`。
+- 单项默认最小高度为 `HyperGroupMenusDefaults.MinHeight`；其他尺寸通过 `HyperGroupMenuItem` 的 `modifier` 定制。
 - 需要计数、图标或复杂内容时直接放入 `itemContent`。
 - `HyperGroupMenusItemScope` 暴露 `selected` 和 `enabled`，slot 可据此渲染字体、徽标或辅助状态。
 - 单个独立菜单项可直接使用 `HyperGroupMenuItem`，不需要横向列表时无需包一层组容器。

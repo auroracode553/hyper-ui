@@ -18,7 +18,8 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperDropdownMenu(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onDismissRequest = { expanded = false },
+                contentModifier = Modifier.padding(vertical = 10.dp)
             ) {
                 Item(onClick = onOpenDetail) {
                     Icon(Icons.Default.Info, contentDescription = null)
@@ -33,6 +34,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("展开/关闭", "expanded", "实色浮层菜单"),
+            DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制菜单内部内容"),
             DemoVariant("菜单项", "Item(closeOnClick)", "图标、文字与点击回调"),
             DemoVariant("分隔线", "Divider()", "不透明实色分隔")
         ),
@@ -69,7 +71,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 visible = visible,
                 onDismissRequest = onDismiss,
                 title = "编辑备注",
-                widthFraction = 0.9f,
+                modifier = Modifier.fillMaxWidth(0.9f),
                 dismissOnClickOutside = dismissOnClickOutside,
                 actionContent = {
                     HyperButton(onClick = onCancel) { Text("取消") }

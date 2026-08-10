@@ -30,12 +30,13 @@ data class HyperMenuListColors(
 /**
  * 简单菜单列表。
  *
- * 组件不内置内边距，如需内容间距请通过 modifier.padding(...) 控制。
+ * modifier 控制菜单外壳，contentModifier 控制容器内部内容布局。
  */
 @Composable
 fun <T> HyperMenuList(
     items: List<T>,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
@@ -55,6 +56,7 @@ fun <T> HyperMenuList(
                 shape = shape,
                 border = border
             )
+            .then(contentModifier)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = verticalArrangement
     ) {
@@ -80,11 +82,12 @@ fun <T> HyperMenuList(
 /**
  * DSL 菜单列表入口。
  *
- * 组件不内置内边距，如需内容间距请通过 modifier.padding(...) 控制。
+ * modifier 控制菜单外壳，contentModifier 控制容器内部内容布局。
  */
 @Composable
 fun HyperMenuList(
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
@@ -103,7 +106,8 @@ fun HyperMenuList(
                     containerColor = containerColor,
                     shape = HyperMenuListDefaults.Shape,
                     border = border
-                ),
+                )
+                .then(contentModifier),
             verticalArrangement = verticalArrangement,
             content = content
         )

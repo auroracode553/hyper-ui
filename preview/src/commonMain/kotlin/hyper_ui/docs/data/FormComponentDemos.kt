@@ -75,7 +75,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 endContent = {
                     HyperIconButton(
                         onClick = { keyword = "" },
-                        size = 32.dp
+                        modifier = Modifier.size(32.dp)
                     ) {
                         Icon(Icons.Default.Close, contentDescription = "清空")
                     }

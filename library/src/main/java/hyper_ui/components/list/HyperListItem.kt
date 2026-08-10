@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
@@ -46,15 +45,14 @@ internal val LocalHyperListItemDividerSuppressed = staticCompositionLocalOf { fa
  */
 @Composable
 fun HyperListItem(
+    headlineContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
+    dividerModifier: Modifier = Modifier.padding(start = HyperListItemDefaults.DividerInset),
     enabled: Boolean = true,
-    minHeight: Dp = HyperListItemDefaults.MinHeight,
     dividerVisible: Boolean = false,
-    dividerInset: Dp = HyperListItemDefaults.DividerInset,
     colors: HyperListItemColors = HyperListItemDefaults.colors(),
     onClick: (() -> Unit)? = null,
     leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    headlineContent: @Composable ColumnScope.() -> Unit,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -86,11 +84,11 @@ fun HyperListItem(
         Modifier
     }
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
-                .heightIn(min = minHeight)
+                .defaultMinSize(minHeight = HyperListItemDefaults.MinHeight)
                 .then(clickModifier)
                 .padding(HyperListItemDefaults.ContentPadding),
             verticalAlignment = Alignment.CenterVertically
@@ -148,9 +146,8 @@ fun HyperListItem(
 
         if (shouldShowDivider) {
             Box(
-                modifier = Modifier
+                modifier = dividerModifier
                     .fillMaxWidth()
-                    .padding(start = dividerInset)
                     .height(HyperListItemDefaults.DividerHeight)
                     .background(dividerColor)
             )

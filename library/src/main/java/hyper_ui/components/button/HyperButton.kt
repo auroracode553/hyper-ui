@@ -5,7 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
@@ -54,7 +54,6 @@ fun HyperButton(
     colors: HyperButtonColors = HyperButtonDefaults.colors(tone),
     border: BorderStroke? = HyperButtonDefaults.border(tone),
     shape: Shape = HyperButtonDefaults.Shape,
-    minHeight: androidx.compose.ui.unit.Dp = HyperButtonDefaults.MinHeight,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
         HyperButtonDefaults.ContentSpacing,
         Alignment.CenterHorizontally
@@ -78,7 +77,7 @@ fun HyperButton(
 
     Row(
         modifier = modifier
-            .heightIn(min = minHeight)
+            .defaultMinSize(minHeight = HyperButtonDefaults.MinHeight)
             .hyperSolidSurface(
                 containerColor = containerColor,
                 shape = shape,

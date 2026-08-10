@@ -97,8 +97,7 @@ internal fun Modifier.hyperSolidSurface(
     containerColor: Color,
     shape: Shape,
     elevation: Dp = 0.dp,
-    border: BorderStroke? = null,
-    clipContent: Boolean = true
+    border: BorderStroke? = null
 ): Modifier = this
     .then(
         if (elevation > 0.dp) {
@@ -107,7 +106,7 @@ internal fun Modifier.hyperSolidSurface(
             Modifier
         }
     )
-    .then(if (clipContent) Modifier.clip(shape) else Modifier)
+    .clip(shape)
     .background(color = containerColor, shape = shape)
     .then(if (border != null) Modifier.border(border, shape) else Modifier)
 
@@ -119,14 +118,12 @@ internal fun Modifier.hyperSurface(
     containerColor: Color,
     shape: Shape,
     elevation: Dp = 0.dp,
-    border: BorderStroke? = null,
-    clipContent: Boolean = true
+    border: BorderStroke? = null
 ): Modifier = hyperSolidSurface(
     containerColor = containerColor,
     shape = shape,
     elevation = elevation,
-    border = border,
-    clipContent = clipContent
+    border = border
 )
 
 @Composable
@@ -135,8 +132,7 @@ internal fun Modifier.hyperGlassSurface(
     containerColor: Color,
     shape: Shape,
     elevation: Dp = 0.dp,
-    border: BorderStroke? = null,
-    clipContent: Boolean = true
+    border: BorderStroke? = null
 ): Modifier {
     val highlightModifier = if (containerColor.alpha > 0f) {
         Modifier.background(
@@ -155,7 +151,7 @@ internal fun Modifier.hyperGlassSurface(
                 Modifier
             }
         )
-        .then(if (clipContent) Modifier.clip(shape) else Modifier)
+        .clip(shape)
         .background(color = containerColor, shape = shape)
         .then(highlightModifier)
         .then(if (border != null) Modifier.border(border, shape) else Modifier)

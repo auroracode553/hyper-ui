@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -138,6 +139,13 @@ fun DrawerDemo() {
         HyperDrawer(
             open = open,
             onDismissRequest = { open = false },
+            drawerModifier = when (drawerPosition) {
+                HyperDrawerPosition.Left,
+                HyperDrawerPosition.Right -> Modifier.width(300.dp)
+                HyperDrawerPosition.Top,
+                HyperDrawerPosition.Bottom -> Modifier.height(260.dp)
+            },
+            drawerContentModifier = Modifier.padding(vertical = 12.dp),
             position = drawerPosition,
             dismissOnClickOutside = true,
             drawerContent = {
@@ -387,7 +395,7 @@ private fun DrawerPositionButton(
 ) {
     HyperButton(
         onClick = onClick,
-        minHeight = 36.dp,
+        modifier = Modifier.height(36.dp),
         tone = if (selected) HyperButtonTone.Primary else HyperButtonTone.Outline
     ) {
         Text(

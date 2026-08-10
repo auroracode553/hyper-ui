@@ -27,7 +27,6 @@ fun HyperIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    size: Dp = HyperIconButtonDefaults.Size,
     shape: Shape = HyperIconButtonDefaults.Shape,
     colors: HyperIconButtonColors = HyperIconButtonDefaults.colors(),
     contentAlignment: Alignment = Alignment.Center,
@@ -83,7 +82,7 @@ HyperIconButton(onClick = onSearch) {
 ```kotlin
 HyperIconButton(
     onClick = onPlay,
-    size = 56.dp,
+    modifier = Modifier.size(56.dp),
     colors = HyperIconButtonDefaults.colors(
         containerColor = MaterialTheme.colorScheme.primary,
         pressedContainerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -101,6 +100,7 @@ HyperIconButton(
 ## 约束
 
 - 不存在 `imageVector`、`contentDescription`、`tint`、`backgroundColor` 参数；这些通过 slot 或 `colors` 表达。
+- 默认尺寸为 `HyperIconButtonDefaults.Size`；自定义尺寸使用 `modifier = Modifier.size(...)`。
 - Android 调用方需要通用图标时，优先使用可通过资源裁剪按引用保留的 `com.composables:icons-lucide-android:2.2.1`；HyperUI 不传递该可选依赖。
 - 默认明暗配色均使用 `HyperColors.elevatedContainer`、`HyperColors.primaryText` 与 `HyperColors.fieldBorder`，并保持不透明实色边界。
 - 圆形和圆角矩形按钮都通过 `shape` 配置；描边颜色通过 `outlineColor`、`pressedOutlineColor` 与 `disabledOutlineColor` 配置。

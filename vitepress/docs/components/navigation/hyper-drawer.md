@@ -16,10 +16,9 @@ fun HyperDrawer(
     open: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
+    drawerModifier: Modifier = Modifier,
+    drawerContentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.ContentPadding),
     position: HyperDrawerPosition = HyperDrawerPosition.Left,
-    drawerWidth: Dp = HyperDrawerDefaults.Width,
-    drawerHeight: Dp = HyperDrawerDefaults.Height,
-    contentPadding: PaddingValues = HyperDrawerDefaults.ContentPadding,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = false,
     border: BorderStroke? = HyperDrawerDefaults.border(),
@@ -29,25 +28,24 @@ fun HyperDrawer(
 
 @Composable
 fun HyperDrawerHeader(
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = HyperDrawerDefaults.HeaderPadding,
-    leadingContent: (@Composable RowScope.() -> Unit)? = null,
     headlineContent: @Composable ColumnScope.() -> Unit,
+    modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.HeaderPadding),
+    leadingContent: (@Composable RowScope.() -> Unit)? = null,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null
 )
 
 @Composable
 fun HyperDrawerItem(
+    headlineContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.ItemPadding),
     selected: Boolean = false,
     enabled: Boolean = true,
     dividerVisible: Boolean = false,
-    minHeight: Dp = HyperDrawerDefaults.ItemMinHeight,
-    contentPadding: PaddingValues = HyperDrawerDefaults.ItemPadding,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     onClick: (() -> Unit)? = null,
     leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    headlineContent: @Composable ColumnScope.() -> Unit,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null
 )
@@ -71,6 +69,7 @@ import com.composables.icons.lucide.R as LucideR
 HyperDrawer(
     open = open,
     onDismissRequest = { open = false },
+    drawerModifier = Modifier.width(320.dp),
     position = HyperDrawerPosition.Left,
     drawerContent = {
         HyperDrawerHeader(
@@ -103,6 +102,10 @@ HyperDrawer(
 ## 约束
 
 - 不存在 `scrimColor`，抽屉不渲染遮罩。
+- `modifier` 作用于包含页面内容的抽屉根容器；`drawerModifier` 只作用于抽屉面板，使用 `width(...)` 定制左右抽屉、使用 `height(...)` 定制上下抽屉。
+- 抽屉面板、Header 和 Item 的内部内容分别使用 `drawerContentModifier`、`contentModifier`；默认 Modifier 携带原有 PaddingValues，不再暴露 `contentPadding` 参数。
+- 默认面板宽高由 `HyperDrawerDefaults.Width`、`Height` 提供，且仍受窗口最大占比保护；不再提供 `drawerWidth`、`drawerHeight` 参数。
+- `HyperDrawerItem` 默认最小高度由 `HyperDrawerDefaults.ItemMinHeight` 提供，其他尺寸通过 `modifier` 控制。
 - 默认面板背景使用不透明的 `HyperColors.cardContainer`；通过 `HyperDrawerColors` 或 `HyperDrawerDefaults.colors(...)` 传入含 alpha 的容器色时，会先与页面背景合成为实色。
 - 抽屉进出场只使用滑动动画，不使用淡入淡出；四个方向的面板均全程不透明。
 - Header/Item 不提供 `title`、`description`、`leadingIcon` 参数。

@@ -45,7 +45,6 @@ data class HyperProgressIndicatorColors(
 fun HyperLinearProgressIndicator(
     progress: Float?,
     modifier: Modifier = Modifier,
-    height: Dp = HyperProgressIndicatorDefaults.LinearHeight,
     shape: Shape = HyperProgressIndicatorDefaults.LinearShape,
     colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors(),
     trackBorder: BorderStroke? = HyperProgressIndicatorDefaults.linearTrackBorder()
@@ -77,7 +76,7 @@ fun HyperLinearProgressIndicator(
 
     BoxWithConstraints(
         modifier = modifier
-            .height(height)
+            .height(HyperProgressIndicatorDefaults.LinearHeight)
             .fillMaxWidth()
             .hyperSolidSurface(
                 containerColor = resolvedTrackColor,
@@ -112,7 +111,6 @@ fun HyperLinearProgressIndicator(
 fun HyperCircularProgressIndicator(
     progress: Float?,
     modifier: Modifier = Modifier,
-    size: Dp = HyperProgressIndicatorDefaults.CircularSize,
     strokeWidth: Dp = HyperProgressIndicatorDefaults.CircularStrokeWidth,
     colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors()
 ) {
@@ -156,7 +154,7 @@ fun HyperCircularProgressIndicator(
 
     Canvas(
         modifier = modifier
-            .size(size)
+            .size(HyperProgressIndicatorDefaults.CircularSize)
             .semantics {
                 progressBarRangeInfo = semanticsInfo
             }

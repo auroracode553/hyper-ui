@@ -15,9 +15,6 @@ enum class HyperBottomBarItemLayout { Equal, Packed }
 fun HyperBottomBar(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    height: Dp = HyperBottomBarDefaults.Height,
-    contentHeight: Dp = HyperBottomBarDefaults.ContentHeight,
-    contentPadding: PaddingValues = HyperBottomBarDefaults.ContentPadding,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     shape: Shape = HyperBottomBarDefaults.Shape,
@@ -34,10 +31,6 @@ fun <T> HyperBottomBar(
     enabled: Boolean = true,
     itemLayout: HyperBottomBarItemLayout = HyperBottomBarItemLayout.Equal,
     itemSelected: (T) -> Boolean = { false },
-    height: Dp = HyperBottomBarDefaults.Height,
-    contentHeight: Dp = HyperBottomBarDefaults.ContentHeight,
-    contentPadding: PaddingValues = HyperBottomBarDefaults.ContentPadding,
-    itemWidth: Dp = HyperBottomBarDefaults.ItemWidth,
     itemSlotAlignment: Alignment = Alignment.Center,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     shape: Shape = HyperBottomBarDefaults.Shape,
@@ -65,9 +58,7 @@ object HyperBottomBarDefaults {
 import androidx.compose.ui.res.painterResource
 import com.composables.icons.lucide.R as LucideR
 
-HyperBottomBar(
-    contentPadding = PaddingValues(horizontal = 16.dp)
-) {
+HyperBottomBar {
     HyperIconButton(onClick = onBack) {
         Icon(
             painter = painterResource(LucideR.drawable.lucide_ic_arrow_left),
@@ -102,6 +93,8 @@ HyperBottomBar(
 ## 约束
 
 - 不存在 `HyperBottomBarItem`、`selectedItemId`、`HyperBottomBarConfig`。
+- 底栏默认高度为 `HyperBottomBarDefaults.Height`；自定义尺寸使用 `modifier.height(...)`。内容自动填满底栏高度，不再提供重复的 `height`、`contentHeight`、`itemWidth` 参数。
+- `Equal` 模式中的项目等分可用宽度；`Packed` 模式使用 `HyperBottomBarDefaults.ItemWidth` 作为最小项目宽度，slot 内容可以自然撑宽。
 - 泛型 items 入口的页面切换和导航由调用方在 `onItemClick` 中完成。
 - 完整内容 slot 只提供底栏外壳和默认内容色；点击、选中、禁用与内部布局由调用方自行组合。
 - 单项可用状态由 `itemEnabled` 决定，全局禁用仍使用 `enabled`。

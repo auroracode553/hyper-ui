@@ -4,6 +4,7 @@ package hyper_ui.docs.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -98,7 +99,7 @@ fun ButtonDemo() {
         }
         HyperButton(
             onClick = { clicks += 1 },
-            minHeight = 32.dp
+            modifier = Modifier.height(32.dp)
         ) {
             Text(
                 text = "小尺寸 slot",
@@ -188,7 +189,7 @@ fun IconButtonDemo() {
             IconButtonVariantLabel(label = "大尺寸主要") {
                 HyperIconButton(
                     onClick = { selectedAction = "媒体控制" },
-                    size = 56.dp,
+                    modifier = Modifier.size(56.dp),
                     colors = HyperIconButtonDefaults.colors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         pressedContainerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -206,7 +207,7 @@ fun IconButtonDemo() {
             IconButtonVariantLabel(label = "大尺寸中性") {
                 HyperIconButton(
                     onClick = { selectedAction = "中性操作" },
-                    size = 56.dp,
+                    modifier = Modifier.size(56.dp),
                     colors = HyperIconButtonDefaults.colors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         pressedContainerColor = MaterialTheme.colorScheme.secondaryContainer,

@@ -8,8 +8,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -52,10 +52,9 @@ fun HyperGroupMenuItem(
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperGroupMenusDefaults.ItemContentPadding),
     enabled: Boolean = true,
     shape: Shape = HyperGroupMenusDefaults.Shape,
-    minHeight: androidx.compose.ui.unit.Dp = HyperGroupMenusDefaults.MinHeight,
-    contentPadding: PaddingValues = HyperGroupMenusDefaults.ItemContentPadding,
     colors: HyperGroupMenusColors = HyperGroupMenusDefaults.colors(),
     role: Role = Role.Tab,
     content: @Composable HyperGroupMenusItemScope.() -> Unit
@@ -99,7 +98,7 @@ fun HyperGroupMenuItem(
 
     Row(
         modifier = modifier
-            .heightIn(min = minHeight)
+            .defaultMinSize(minHeight = HyperGroupMenusDefaults.MinHeight)
             .hyperSurface(
                 containerColor = containerColor,
                 shape = shape,
@@ -113,7 +112,7 @@ fun HyperGroupMenuItem(
                 role = role,
                 onClick = onClick
             )
-            .padding(contentPadding),
+            .then(contentModifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(HyperGroupMenusDefaults.ItemContentGap)
     ) {

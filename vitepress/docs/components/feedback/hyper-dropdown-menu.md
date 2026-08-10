@@ -14,13 +14,11 @@ fun HyperDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperDropdownMenuDefaults.MenuPadding),
     alignment: Alignment = Alignment.TopEnd,
     offset: DpOffset = DpOffset(0.dp, HyperDropdownMenuDefaults.AnchorOffsetY),
-    width: Dp = HyperDropdownMenuDefaults.MenuWidth,
-    maxHeight: Dp = HyperDropdownMenuDefaults.MaxHeight,
     shape: Shape = HyperDropdownMenuDefaults.Shape,
     colors: HyperDropdownMenuColors = HyperDropdownMenuDefaults.colors(),
-    contentPadding: PaddingValues = HyperDropdownMenuDefaults.MenuPadding,
     border: BorderStroke? = HyperDropdownMenuDefaults.border(),
     content: @Composable HyperDropdownMenuScope.() -> Unit
 )
@@ -30,9 +28,9 @@ class HyperDropdownMenuScope {
     fun Item(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
+        contentModifier: Modifier = Modifier.padding(HyperDropdownMenuDefaults.ItemPadding),
         enabled: Boolean = true,
         closeOnClick: Boolean = true,
-        contentPadding: PaddingValues = HyperDropdownMenuDefaults.ItemPadding,
         content: @Composable RowScope.() -> Unit
     )
 
@@ -95,6 +93,8 @@ HyperDropdownMenu(
 ## 约束
 
 - 不存在 `text`、`leadingIcon`、`textColor` 参数。
+- 菜单面板与菜单项的内部布局分别通过各自的 `contentModifier` 控制；默认 Modifier 携带原有 `MenuPadding`、`ItemPadding`，不提供重复的 `contentPadding` 参数。
+- 默认宽度和最大高度分别为 `HyperDropdownMenuDefaults.MenuWidth`、`MaxHeight`；自定义面板尺寸使用 `modifier.width(...)`、`modifier.heightIn(...)`。
 - 菜单不渲染遮罩。
 - 如果点击菜单项后不希望关闭，设置 `closeOnClick = false`。
 - 默认背景来自 `HyperDropdownMenuDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.cardContainer`，保持不透明卡片效果。

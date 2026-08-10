@@ -14,11 +14,11 @@
 fun <T> HyperList(
     items: List<T>,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier,
     key: ((item: T) -> Any)? = null,
     lazyLoading: Boolean = true,
     lazyListState: LazyListState = rememberLazyListState(),
     scrollState: ScrollState = rememberScrollState(),
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     shape: Shape = HyperListDefaults.Shape,
     border: BorderStroke? = null,
@@ -29,8 +29,8 @@ fun <T> HyperList(
 @Composable
 fun HyperList(
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     shape: Shape = HyperListDefaults.Shape,
     border: BorderStroke? = null,
@@ -63,11 +63,11 @@ object HyperListDefaults {
 | --- | --- | --- | --- |
 | `items` | `List<T>` | 必填 | 列表数据 |
 | `modifier` | `Modifier` | `Modifier` | 列表根容器修饰符 |
+| `contentModifier` | `Modifier` | `Modifier` | 列表背景内部的内容布局修饰符 |
 | `key` | `((T) -> Any)?` | `null` | 可选稳定键，仅在 `lazyLoading = true` 时传给懒列表 |
 | `lazyLoading` | `Boolean` | `true` | `true` 使用 `LazyColumn`；`false` 使用普通 `Column + verticalScroll` |
 | `lazyListState` | `LazyListState` | `rememberLazyListState()` | 懒加载模式的滚动状态 |
 | `scrollState` | `ScrollState` | `rememberScrollState()` | 普通列表模式的滚动状态 |
-| `contentPadding` | `PaddingValues` | `PaddingValues(0.dp)` | 列表内容内边距 |
 | `verticalArrangement` | `Arrangement.Vertical` | 间距 `0.dp` | 条目纵向排列 |
 | `shape` | `Shape` | `HyperListDefaults.Shape` | 列表容器与内容裁剪形状，默认 12dp 轻圆角 |
 | `border` | `BorderStroke?` | `null` | 页面列表默认无外层描边；需要同形描边时可传 `HyperListDefaults.border()` |
@@ -128,7 +128,7 @@ HyperList(state = listState) {
 
 - `HyperList` 是页面级列表容器，默认使用 12dp 轻圆角并裁剪内容，不默认添加外层描边。
 - 容器颜色始终以不透明实色绘制；含 alpha 的自定义颜色会先与页面背景合成，不会透出下层内容。
-- `contentPadding` 位于列表容器内部，会使用列表背景绘制；底栏避让等页面级留白应通过外层 `modifier` 或父布局约束实现。
+- 列表内部留白使用 `contentModifier = Modifier.padding(...)`；底栏避让等页面级外部留白使用 `modifier` 或父布局约束。
 - 数据入口会自动隐藏最后一项的 `HyperListItem` 分割线，调用方只需表达普通行是否需要分割线。
 - `lazyLoading = true` 适合大量数据、分页和动态列表；`key` 只在该模式下生效。
 - `lazyLoading = false` 会一次组合全部项目，适合少量稳定数据或需要普通 `Column` 行为的场景。

@@ -11,14 +11,12 @@
 ```kotlin
 @Composable
 fun HyperTopBar(
+    titleContent: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
-    minHeight: Dp = HyperTopBarDefaults.MinHeight,
-    contentPadding: PaddingValues = HyperTopBarDefaults.ContentPadding,
     colors: HyperTopBarColors = HyperTopBarDefaults.colors(),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperTopBarDefaults.ContentGap),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     navigationContent: (@Composable RowScope.() -> Unit)? = null,
-    titleContent: @Composable RowScope.() -> Unit,
     actionContent: (@Composable RowScope.() -> Unit)? = null
 )
 ```
@@ -53,6 +51,7 @@ HyperTopBar(
 ## 约束
 
 - 不存在 `title`、`onBack`、`rightSlot` 参数。
+- 默认最小高度为 `HyperTopBarDefaults.MinHeight`；自定义高度通过 `modifier.height(...)` 或 `modifier.heightIn(...)` 表达。
 - 返回按钮是否出现、图标内容和点击行为都由调用方控制。
 - `LocalContentColor` 会传递给三个 slot，`titleContent` 同时继承 `HyperTopBarDefaults.TitleTextStyle`。
 - 默认容器使用不透明 `HyperColors.cardContainer`；可通过 `HyperTopBarDefaults.colors(containerColor = ...)` 自定义。

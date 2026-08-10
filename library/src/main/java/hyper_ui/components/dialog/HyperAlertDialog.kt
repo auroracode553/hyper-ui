@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 fun HyperAlertDialog(
     visible: Boolean,
     onDismissRequest: () -> Unit,
-    title: String? = null,
     modifier: Modifier = Modifier,
+    title: String? = null,
     dismissOnClickOutside: Boolean = true,
     bodyContent: (@Composable ColumnScope.() -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null

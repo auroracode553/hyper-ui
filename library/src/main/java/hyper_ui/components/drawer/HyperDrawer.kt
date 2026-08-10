@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalContentColor
@@ -34,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import hyper_ui.core.interaction.hyperNoRippleClickable
@@ -62,10 +63,9 @@ fun HyperDrawer(
     open: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
+    drawerModifier: Modifier = Modifier,
+    drawerContentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.ContentPadding),
     position: HyperDrawerPosition = HyperDrawerPosition.Left,
-    drawerWidth: Dp = HyperDrawerDefaults.Width,
-    drawerHeight: Dp = HyperDrawerDefaults.Height,
-    contentPadding: PaddingValues = HyperDrawerDefaults.ContentPadding,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = false,
     border: BorderStroke? = HyperDrawerDefaults.border(),
@@ -102,18 +102,20 @@ fun HyperDrawer(
 
             val maxDrawerWidth = maxWidth * HyperDrawerDefaults.MaxWidthFraction
             val maxDrawerHeight = maxHeight * HyperDrawerDefaults.MaxHeightFraction
-            val resolvedDrawerWidth = drawerWidth.coerceAtMost(maxDrawerWidth)
-            val resolvedDrawerHeight = drawerHeight.coerceAtMost(maxDrawerHeight)
             val drawerSizeModifier = when (position) {
                 HyperDrawerPosition.Left,
                 HyperDrawerPosition.Right -> Modifier
+                    .widthIn(max = maxDrawerWidth)
+                    .then(drawerModifier)
                     .fillMaxHeight()
-                    .width(resolvedDrawerWidth)
+                    .width(HyperDrawerDefaults.Width)
 
                 HyperDrawerPosition.Top,
                 HyperDrawerPosition.Bottom -> Modifier
+                    .heightIn(max = maxDrawerHeight)
+                    .then(drawerModifier)
                     .fillMaxWidth()
-                    .height(resolvedDrawerHeight)
+                    .height(HyperDrawerDefaults.Height)
             }
 
             AnimatedVisibility(
@@ -129,7 +131,7 @@ fun HyperDrawer(
                             shape = drawerShape(position),
                             border = border
                         )
-                        .padding(contentPadding),
+                        .then(drawerContentModifier),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     CompositionLocalProvider(LocalContentColor provides colors.contentColor) {
@@ -143,16 +145,16 @@ fun HyperDrawer(
 
 @Composable
 fun HyperDrawerHeader(
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = HyperDrawerDefaults.HeaderPadding,
-    leadingContent: (@Composable RowScope.() -> Unit)? = null,
     headlineContent: @Composable ColumnScope.() -> Unit,
+    modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.HeaderPadding),
+    leadingContent: (@Composable RowScope.() -> Unit)? = null,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(contentPadding),
+            .then(contentModifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
         leadingContent?.invoke(this)
@@ -171,16 +173,15 @@ fun HyperDrawerHeader(
 
 @Composable
 fun HyperDrawerItem(
+    headlineContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.ItemPadding),
     selected: Boolean = false,
     enabled: Boolean = true,
     dividerVisible: Boolean = false,
-    minHeight: Dp = HyperDrawerDefaults.ItemMinHeight,
-    contentPadding: PaddingValues = HyperDrawerDefaults.ItemPadding,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     onClick: (() -> Unit)? = null,
     leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    headlineContent: @Composable ColumnScope.() -> Unit,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -201,9 +202,9 @@ fun HyperDrawerItem(
     }
     val supportingColor = if (enabled) colors.supportingColor else colors.disabledContentColor
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
                 .hyperGlassSurface(
@@ -211,8 +212,8 @@ fun HyperDrawerItem(
                     shape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius)
                 )
                 .then(rowClickModifier)
-                .heightIn(min = minHeight)
-                .padding(contentPadding),
+                .defaultMinSize(minHeight = HyperDrawerDefaults.ItemMinHeight)
+                .then(contentModifier),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (leadingContent != null) {

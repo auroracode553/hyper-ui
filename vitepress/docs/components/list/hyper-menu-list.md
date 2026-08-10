@@ -13,7 +13,7 @@
 @Composable
 fun HyperMenuList(
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentModifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
@@ -24,7 +24,7 @@ fun HyperMenuList(
 fun <T> HyperMenuList(
     items: List<T>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentModifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
@@ -56,7 +56,7 @@ object HyperMenuListDefaults {
 | --- | --- | --- | --- |
 | `items` | `List<T>` | 必填 | 一次性渲染的菜单数据 |
 | `modifier` | `Modifier` | `Modifier` | 根容器修饰符 |
-| `contentPadding` | `PaddingValues` | `PaddingValues(0.dp)` | 容器内容内边距 |
+| `contentModifier` | `Modifier` | `Modifier` | 圆角背景内部的内容布局修饰符 |
 | `verticalArrangement` | `Arrangement.Vertical` | 间距 `0.dp` | 条目纵向排列 |
 | `border` | `BorderStroke?` | `HyperMenuListDefaults.border()` | 菜单外层描边；传 `null` 可关闭 |
 | `colors` | `HyperMenuListColors` | `HyperMenuListDefaults.colors()` | 菜单容器颜色，默认使用不透明的 `HyperColors.cardContainer` |
@@ -98,7 +98,7 @@ fun SettingsGroup(enabled: Boolean, onEnabledChange: (Boolean) -> Unit) {
 
 - `HyperMenuList` 用于菜单、设置分组和少量操作入口；页面级列表使用 [HyperList](hyper-list.md)。
 - 容器不绘制透明层或玻璃高光；含 alpha 的自定义容器颜色会先与页面背景合成为实色。
-- `contentPadding` 位于圆角背景和 border 内部；底栏避让等页面级留白应通过外层 `modifier` 或父布局约束实现，避免 border 包住留白区域。
+- 容器内部留白使用 `contentModifier = Modifier.padding(...)`；底栏避让等页面级外部留白使用 `modifier` 或父布局约束。
 - `items` 数据入口内部自带纵向滚动；放入另一个同方向无界滚动容器前，应明确尺寸约束。
 - `items` 数据入口会自动隐藏最后一项的 `HyperListItem` 分割线，调用方只需表达普通行是否需要分割线。
 - slot 分组入口不额外添加纵向滚动，适合设置页、详情页等已有页面级滚动的场景。

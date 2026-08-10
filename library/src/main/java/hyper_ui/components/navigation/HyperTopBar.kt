@@ -4,8 +4,8 @@ package hyper_ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -33,19 +33,18 @@ data class HyperTopBarColors(
  */
 @Composable
 fun HyperTopBar(
+    titleContent: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
-    minHeight: androidx.compose.ui.unit.Dp = HyperTopBarDefaults.MinHeight,
     colors: HyperTopBarColors = HyperTopBarDefaults.colors(),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperTopBarDefaults.ContentGap),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     navigationContent: (@Composable RowScope.() -> Unit)? = null,
-    titleContent: @Composable RowScope.() -> Unit,
     actionContent: (@Composable RowScope.() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = minHeight)
+            .defaultMinSize(minHeight = HyperTopBarDefaults.MinHeight)
             .hyperSurface(
                 containerColor = colors.containerColor,
                 shape = HyperTopBarDefaults.Shape

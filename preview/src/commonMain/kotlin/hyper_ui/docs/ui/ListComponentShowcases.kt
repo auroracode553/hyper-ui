@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,13 +59,16 @@ fun HyperMenuListDemo() {
             fontSize = 13.sp
         )
         Box(modifier = Modifier.height(220.dp)) {
-            HyperMenuList(items = items) { item ->
+            HyperMenuList(
+                items = items,
+                contentModifier = Modifier.padding(vertical = 4.dp)
+            ) { item ->
                 HyperListItem(
                     leadingContent = { ListIcon(iconFor(item)) },
                     headlineContent = { ListTitle(item) },
                     supportingContent = { ListDescription("点击查看配置") },
                     dividerVisible = true,
-                    dividerInset = 70.dp
+                    dividerModifier = Modifier.padding(start = 70.dp)
                 )
             }
         }
@@ -75,7 +79,7 @@ fun HyperMenuListDemo() {
                 headlineContent = { Text("推送通知") },
                 supportingContent = { Text("接收系统消息提醒") },
                 dividerVisible = true,
-                dividerInset = 70.dp,
+                dividerModifier = Modifier.padding(start = 70.dp),
                 trailingContent = {
                     HyperSwitch(
                         checked = pushEnabled,
@@ -88,7 +92,7 @@ fun HyperMenuListDemo() {
                 headlineContent = { Text("自动同步") },
                 supportingContent = { Text("网络可用时自动刷新数据") },
                 dividerVisible = true,
-                dividerInset = 70.dp,
+                dividerModifier = Modifier.padding(start = 70.dp),
                 trailingContent = {
                     HyperCheckbox(
                         checked = autoSync,
@@ -168,6 +172,7 @@ fun HyperListDemo() {
         Box(modifier = Modifier.height(280.dp)) {
             HyperList(
                 items = items,
+                contentModifier = Modifier.padding(vertical = 4.dp),
                 lazyLoading = lazyLoading,
                 shape = if (roundedCorners) HyperListDefaults.Shape else RectangleShape
             ) { item ->
@@ -176,7 +181,7 @@ fun HyperListDemo() {
                     headlineContent = { ListTitle(item) },
                     supportingContent = { ListDescription("点击查看配置") },
                     dividerVisible = true,
-                    dividerInset = 70.dp
+                    dividerModifier = Modifier.padding(start = 70.dp)
                 )
             }
         }

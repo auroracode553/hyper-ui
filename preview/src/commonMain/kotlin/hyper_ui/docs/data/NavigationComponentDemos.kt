@@ -47,6 +47,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             HyperDrawer(
                 open = open,
                 onDismissRequest = { open = false },
+                drawerModifier = Modifier.width(320.dp),
+                drawerContentModifier = Modifier.padding(vertical = 12.dp),
                 position = HyperDrawerPosition.Left,
                 drawerContent = {
                     HyperDrawerHeader(
@@ -67,6 +69,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("方向", "position = Left/Right/Top/Bottom", "四向滑入，不使用淡入"),
+            DemoVariant("面板尺寸", "drawerModifier = Modifier.width/height", "按方向定制独立面板节点"),
+            DemoVariant("内容布局", "drawerContentModifier = Modifier.padding(...)", "独立控制抽屉内部内容"),
             DemoVariant("选中项", "selected = true", "主题混合实色容器"),
             DemoVariant("无蒙层", "dismissOnClickOutside", "仅处理外部点击，不绘制背景或遮罩")
         ),
@@ -89,6 +93,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("选中项", "selectedItem", "主题实色胶囊"),
+            DemoVariant("单项布局", "contentModifier = Modifier.padding(...)", "独立控制单项内容区"),
             DemoVariant("未选中项", "itemEnabled = true", "中性实色与轻描边"),
             DemoVariant("禁用项", "itemEnabled = false", "禁用实色状态")
         ),

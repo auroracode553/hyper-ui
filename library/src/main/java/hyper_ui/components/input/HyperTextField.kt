@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -50,7 +50,6 @@ fun HyperTextField(
     singleLine: Boolean = true,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    minHeight: Dp = HyperTextFieldDefaults.MinHeight,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(
@@ -104,7 +103,7 @@ fun HyperTextField(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(min = minHeight)
+                        .defaultMinSize(minHeight = HyperTextFieldDefaults.MinHeight)
                         .clip(shape)
                         .background(color = visuals.containerColor, shape)
                         .border(

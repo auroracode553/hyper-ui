@@ -29,7 +29,6 @@ fun HyperButton(
     colors: HyperButtonColors = HyperButtonDefaults.colors(tone),
     border: BorderStroke? = HyperButtonDefaults.border(tone),
     shape: Shape = HyperButtonDefaults.Shape,
-    minHeight: Dp = HyperButtonDefaults.MinHeight,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
         HyperButtonDefaults.ContentSpacing,
         Alignment.CenterHorizontally
@@ -56,12 +55,13 @@ HyperButton(onClick = onSave) {
 
 ## 间距说明
 
-组件间距通过 `Modifier` 控制，外部间距使用 `modifier.padding(...)`。
+组件尺寸和外部间距通过 `Modifier` 控制，例如 `Modifier.height(32.dp)`、`Modifier.widthIn(...)` 与 `Modifier.padding(...)`。
 `HyperButton` 作为原子组件，内部已有合理默认内边距。
 
 ## 约束
 
 - 不存在 `text`、`leadingIcon`、`trailingIcon` 参数；这些内容必须由调用方放入 `content`。
+- 默认最小高度为 `HyperButtonDefaults.MinHeight`；调用方需要其他尺寸时使用 `modifier`，不传 `minHeight` 配置参数。
 - `LocalContentColor` 会传递给 slot 内的 `Text` 与 `Icon`。
 - 所有 tone 都使用不透明背景：`Tonal` 使用预混合后的实色强调背景，`Outline` 使用实色卡片背景和 1.dp 实色强调边框，`Plain` 使用无边框实色卡片背景。
 - 禁用态使用不透明的 `softContainer` 与 `secondaryText`。通过 `HyperButtonColors` 或 `HyperButtonDefaults.colors(...)` 传入含 alpha 的颜色时，组件会先与自身实色背景合成再绘制，不会透出下层内容。

@@ -1,13 +1,13 @@
 # 组件索引
 
-所有组件的公开包名均为 `hyper_ui`。状态归属只描述业务状态；动画、滚动等内部 UI 状态不需要调用方管理。
+所有组件的公开包名均为 `hyper_ui`。状态归属只描述业务状态；动画、滚动等内部 UI 状态不需要调用方管理。组件外壳尺寸和外部间距统一通过 `modifier` 控制，具体内部节点使用组件签名中明确提供的 `contentModifier`、`drawerModifier`、`inputModifier` 等修饰符。
 
 ## 基础组件
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperButton](components/basic/hyper-button.md) | 不透明实色的 Slot-first 按钮容器 | 调用方处理点击 |
-| [HyperIconButton](components/basic/hyper-icon-button.md) | Slot-first 半透明圆形图标按钮容器 | 调用方处理点击 |
+| [HyperIconButton](components/basic/hyper-icon-button.md) | Slot-first 不透明实色图标按钮容器 | 调用方处理点击 |
 
 ## 表单组件
 

@@ -47,13 +47,11 @@ fun HyperDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperDropdownMenuDefaults.MenuPadding),
     alignment: Alignment = Alignment.TopEnd,
     offset: DpOffset = DpOffset(0.dp, HyperDropdownMenuDefaults.AnchorOffsetY),
-    width: Dp = HyperDropdownMenuDefaults.MenuWidth,
-    maxHeight: Dp = HyperDropdownMenuDefaults.MaxHeight,
     shape: Shape = HyperDropdownMenuDefaults.Shape,
     colors: HyperDropdownMenuColors = HyperDropdownMenuDefaults.colors(),
-    contentPadding: PaddingValues = HyperDropdownMenuDefaults.MenuPadding,
     border: BorderStroke? = HyperDropdownMenuDefaults.border(),
     content: @Composable HyperDropdownMenuScope.() -> Unit
 ) {
@@ -96,15 +94,15 @@ fun HyperDropdownMenu(
     ) {
         Column(
             modifier = modifier
-                .width(width)
-                .heightIn(max = maxHeight)
+                .width(HyperDropdownMenuDefaults.MenuWidth)
+                .heightIn(max = HyperDropdownMenuDefaults.MaxHeight)
                 .hyperSolidSurface(
                     containerColor = resolvedColors.containerColor,
                     shape = shape,
                     border = border
                 )
                 .verticalScroll(rememberScrollState())
-                .padding(contentPadding)
+                .then(contentModifier)
         ) {
             val scope = remember(onDismissRequest, resolvedColors) {
                 HyperDropdownMenuScope(
@@ -125,9 +123,9 @@ class HyperDropdownMenuScope internal constructor(
     fun Item(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
+        contentModifier: Modifier = Modifier.padding(HyperDropdownMenuDefaults.ItemPadding),
         enabled: Boolean = true,
         closeOnClick: Boolean = true,
-        contentPadding: PaddingValues = HyperDropdownMenuDefaults.ItemPadding,
         content: @Composable RowScope.() -> Unit
     ) {
         val contentColor = if (enabled) colors.contentColor else colors.disabledContentColor
@@ -146,7 +144,7 @@ class HyperDropdownMenuScope internal constructor(
                         }
                     }
                 )
-                .padding(contentPadding),
+                .then(contentModifier),
             verticalAlignment = Alignment.CenterVertically
         ) {
             CompositionLocalProvider(LocalContentColor provides contentColor) {

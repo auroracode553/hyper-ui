@@ -29,7 +29,7 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         id = "panel",
         group = GROUP_CONTAINER,
         title = "HyperPanel",
-        description = "通用 slot 容器，默认带轻描边，支持 colors、shape、elevation、border、padding 和 clipContent。",
+        description = "通用 slot 容器，默认带轻描边、内容间距并始终按 shape 裁剪；外壳和内容区分别使用 modifier、contentModifier。",
         code = """
             HyperPanel(
                 colors = HyperPanelDefaults.colors(
@@ -45,7 +45,8 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("默认面板", "colors = defaults", "实色容器、圆角与轻描边"),
-            DemoVariant("自定义内容", "content slot", "标题、状态与操作组合")
+            DemoVariant("自定义内容", "content slot", "标题、状态与操作组合"),
+            DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "独立控制面板内部内容区")
         ),
         apiDocumentPaths = listOf("container/hyper-panel.md"),
         content = { PanelDemo() }

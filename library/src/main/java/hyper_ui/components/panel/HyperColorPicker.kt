@@ -79,10 +79,10 @@ object HyperColorPickerDefaults {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun HyperColorPicker(
-    options: List<HyperColorOption> = HyperColorPickerDefaults.presetOptions,
     selectedId: String,
     onSelected: (HyperColorOption) -> Unit,
     modifier: Modifier = Modifier,
+    options: List<HyperColorOption> = HyperColorPickerDefaults.presetOptions,
     colorSize: Dp = HyperColorPickerDefaults.colorSize,
     horizontalSpacing: Dp = HyperColorPickerDefaults.horizontalSpacing,
     verticalSpacing: Dp = HyperColorPickerDefaults.verticalSpacing,

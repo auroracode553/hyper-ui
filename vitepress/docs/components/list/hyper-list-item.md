@@ -11,16 +11,14 @@
 ```kotlin
 @Composable
 fun HyperListItem(
+    headlineContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
+    dividerModifier: Modifier = Modifier.padding(start = HyperListItemDefaults.DividerInset),
     enabled: Boolean = true,
-    minHeight: Dp = HyperListItemDefaults.MinHeight,
-    contentPadding: PaddingValues = HyperListItemDefaults.ContentPadding,
     dividerVisible: Boolean = false,
-    dividerInset: Dp = HyperListItemDefaults.DividerInset,
     colors: HyperListItemColors = HyperListItemDefaults.colors(),
     onClick: (() -> Unit)? = null,
     leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    headlineContent: @Composable ColumnScope.() -> Unit,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null
 )
@@ -53,8 +51,10 @@ HyperListItem(
 ## 约束
 
 - 不存在 `title`、`description`、`leadingIcon`、`trailing` 参数。
+- 默认最小高度为 `HyperListItemDefaults.MinHeight`；外部尺寸由 `modifier` 控制，内部内容间距由组件统一维护。
 - `headlineContent` 默认使用 16sp/22sp，`supportingContent` 默认使用 13sp/18sp；调用方显式传入 `style` 或 `fontSize` 时以调用方为准。
 - `dividerVisible = true` 时会绘制分割线；放入 `HyperList(items)` 或 `HyperMenuList(items)` 的最后一项时，父列表会自动隐藏该分割线。
+- 分割线默认使用 `HyperListItemDefaults.DividerInset` 缩进；自定义缩进或尺寸使用 `dividerModifier`，不提供 `dividerInset` 数值参数。
 - 通过 `HyperListItemColors` 或 `HyperListItemDefaults.colors(...)` 传入含 alpha 的颜色时，会先与列表卡片背景合成为实色。
 - 行点击和 trailing 控件点击是否独立，由调用方在 slot 中组合。
 - 放入 `HyperMenuList` 时，菜单容器负责外层圆角背景；放入 `HyperList` 时保持页面列表的无圆角平铺效果。

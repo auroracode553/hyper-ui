@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
@@ -134,7 +135,7 @@ fun TextFieldDemo() {
             singleLine = false,
             minLines = 3,
             maxLines = 5,
-            minHeight = 92.dp,
+            inputModifier = Modifier.heightIn(min = 92.dp),
             isError = isNoteError
         )
         HyperTextField(
@@ -159,7 +160,7 @@ fun TextFieldDemo() {
                 {
                     HyperIconButton(
                         onClick = { keyword = "" },
-                        size = 32.dp
+                        modifier = Modifier.size(32.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,

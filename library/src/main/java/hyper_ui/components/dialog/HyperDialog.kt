@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
@@ -39,7 +40,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
@@ -58,12 +58,8 @@ data class HyperDialogColors(
 fun HyperDialog(
     visible: Boolean,
     onDismissRequest: () -> Unit,
-    title: String? = null,
     modifier: Modifier = Modifier,
-    minWidth: Dp = HyperDialogDefaults.MinWidth,
-    maxWidth: Dp = HyperDialogDefaults.MaxWidth,
-    widthFraction: Float = HyperDialogDefaults.WidthFraction,
-    maxHeight: Dp = HyperDialogDefaults.MaxHeight,
+    title: String? = null,
     shape: Shape = HyperDialogDefaults.Shape,
     colors: HyperDialogColors = HyperDialogDefaults.colors(),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
@@ -79,22 +75,12 @@ fun HyperDialog(
     border: BorderStroke? = HyperDialogDefaults.border(),
     content: @Composable ColumnScope.() -> Unit
 ) {
-    require(widthFraction > 0f && widthFraction <= 1f) {
-        "widthFraction must be greater than 0 and less than or equal to 1"
-    }
-    require(minWidth <= maxWidth) {
-        "minWidth must be less than or equal to maxWidth"
-    }
-
     if (!visible) {
         return
     }
 
     val resolvedTitle = title?.trim()?.takeIf { it.isNotEmpty() }
     val scrollState = rememberScrollState()
-    val requestedMinWidth = minWidth
-    val requestedMaxWidth = maxWidth
-    val requestedMaxHeight = maxHeight
     val layoutDirection = LocalLayoutDirection.current
     val containerColor = resolveHyperOpaqueColor(
         color = colors.containerColor,
@@ -125,18 +111,20 @@ fun HyperDialog(
                     (this.maxWidth - horizontalWindowPadding).coerceAtLeast(0.dp)
                 val availableHeight =
                     (this.maxHeight - verticalWindowPadding).coerceAtLeast(0.dp)
-                val resolvedMaxWidth = requestedMaxWidth.coerceAtMost(availableWidth)
-                val resolvedMinWidth = requestedMinWidth.coerceAtMost(resolvedMaxWidth)
+                val resolvedMaxWidth = HyperDialogDefaults.MaxWidth.coerceAtMost(availableWidth)
+                val resolvedMinWidth = HyperDialogDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
                 // 先按窗口比例收窄，再应用尺寸边界，兼顾竖屏留白与小窗口不越界。
-                val resolvedWidth = (availableWidth * widthFraction)
+                val resolvedWidth = (availableWidth * HyperDialogDefaults.WidthFraction)
                     .coerceIn(resolvedMinWidth, resolvedMaxWidth)
-                val resolvedMaxHeight = requestedMaxHeight.coerceAtMost(availableHeight)
+                val resolvedMaxHeight = HyperDialogDefaults.MaxHeight.coerceAtMost(availableHeight)
 
                 Column(
                     modifier = Modifier
+                        .widthIn(max = availableWidth)
+                        .heightIn(max = availableHeight)
+                        .then(modifier)
                         .width(resolvedWidth)
                         .heightIn(max = resolvedMaxHeight)
-                        .then(modifier)
                         .clip(shape)
                         .background(color = containerColor, shape)
                         .then(if (border != null) Modifier.border(border, shape) else Modifier)

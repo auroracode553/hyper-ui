@@ -13,12 +13,11 @@
 @Composable
 fun HyperPanel(
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperPanelDefaults.ContentPadding),
     colors: HyperPanelColors = HyperPanelDefaults.colors(),
     shape: Shape = HyperPanelDefaults.Shape,
     elevation: Dp = HyperPanelDefaults.Elevation,
     border: BorderStroke? = HyperPanelDefaults.border(),
-    clipContent: Boolean = true,
-    contentPadding: PaddingValues = HyperPanelDefaults.ContentPadding,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperPanelDefaults.ContentSpacing),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.() -> Unit
@@ -56,7 +55,10 @@ HyperPanel(
 
 - 点击语义放在调用方外层或内部具体控件，不由 `HyperPanel` 提供。
 - 自定义背景色通过 `HyperPanelDefaults.colors(containerColor = ...)` 传入。
+- `modifier` 控制面板外壳尺寸与外部间距；`contentModifier` 控制内部内容区，默认值提供 20dp 内容间距。
 - 默认描边来自 `HyperPanelDefaults.border()`，内部使用 `HyperColors.panelBorder`。
+- 内容始终按 `shape` 裁剪，不再暴露无调用方使用价值的 `clipContent` 开关。
+- 自定义内容间距时使用 `contentModifier = Modifier.padding(...)`，不提供重复的 `contentPadding` 参数。
 - 需要完全无边框面板时显式传入 `border = null`；需要阴影时使用 `elevation`。
 
 <WasmPreview demo="panel" title="HyperPanel 交互预览" />

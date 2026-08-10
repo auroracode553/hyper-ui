@@ -31,7 +31,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("弱强调", "tone = Tonal", "主题混合实色"),
             DemoVariant("语义色", "tone = Success / Danger", "成功与危险实色"),
             DemoVariant("禁用", "enabled = false", "禁用实色状态"),
-            DemoVariant("紧凑", "minHeight = 32.dp", "小尺寸 slot")
+            DemoVariant("紧凑", "modifier = Modifier.height(32.dp)", "小尺寸 slot")
         ),
         apiDocumentPaths = listOf("basic/hyper-button.md"),
         content = { ButtonDemo() }
@@ -54,7 +54,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
 
             HyperIconButton(
                 onClick = onPlay,
-                size = 56.dp,
+                modifier = Modifier.size(56.dp),
                 colors = HyperIconButtonDefaults.colors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     pressedContainerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -65,12 +65,12 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认圆形", "shape = CircleShape, size = 40.dp", "默认实色容器与描边"),
+            DemoVariant("默认圆形", "shape = CircleShape", "默认 40dp 实色容器与描边"),
             DemoVariant("主题实色", "colors = primaryContainer", "主题色按压反馈"),
             DemoVariant("危险圆角", "shape = RoundedCornerShape(12.dp)", "危险语义实色"),
             DemoVariant("禁用状态", "enabled = false", "禁用容器、文字与描边"),
-            DemoVariant("大尺寸主要", "size = 56.dp", "主要实色媒体按钮"),
-            DemoVariant("大尺寸中性", "size = 56.dp", "中性实色工具按钮")
+            DemoVariant("大尺寸主要", "modifier = Modifier.size(56.dp)", "主要实色媒体按钮"),
+            DemoVariant("大尺寸中性", "modifier = Modifier.size(56.dp)", "中性实色工具按钮")
         ),
         apiDocumentPaths = listOf("basic/hyper-icon-button.md"),
         content = { IconButtonDemo() }

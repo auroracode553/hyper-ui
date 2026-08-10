@@ -13,16 +13,10 @@
 fun HyperDialog(
     visible: Boolean,
     onDismissRequest: () -> Unit,
-    title: String? = null,
     modifier: Modifier = Modifier,
-    minWidth: Dp = HyperDialogDefaults.MinWidth,
-    maxWidth: Dp = HyperDialogDefaults.MaxWidth,
-    widthFraction: Float = HyperDialogDefaults.WidthFraction,
-    maxHeight: Dp = HyperDialogDefaults.MaxHeight,
-    windowPadding: PaddingValues = HyperDialogDefaults.WindowPadding,
+    title: String? = null,
     shape: Shape = HyperDialogDefaults.Shape,
     colors: HyperDialogColors = HyperDialogDefaults.colors(),
-    contentPadding: PaddingValues = HyperDialogDefaults.ContentPadding,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperDialogDefaults.ContentSpacing),
     actionArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
@@ -87,8 +81,9 @@ HyperDialog(
 - 默认背景来自 `HyperDialogDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.cardContainer`，保持不透明卡片效果。
 - `visible` 直接控制弹窗是否渲染，显示与关闭均不执行动画。
 - 通过 `HyperDialogColors` 或 `HyperDialogDefaults.colors(...)` 传入含 alpha 的容器色时，会先与页面背景合成为实色。
-- `widthFraction` 必须在 `(0, 1]` 范围内，默认取扣除 `windowPadding` 后可用宽度的 `90%`；结果继续受 `minWidth`、`maxWidth` 约束。`maxHeight` 约束面板高度。
-- 默认 `windowPadding` 确保面板与窗口四周至少保留 16dp 间距。窗口不足以容纳默认最小宽度时，以窗口可用宽度为准，不会越界。
+- 默认取扣除窗口间距后可用宽度的 `90%`，并使用 `HyperDialogDefaults.MinWidth`、`MaxWidth`、`MaxHeight` 作为默认边界。
+- 自定义面板尺寸使用 `modifier.width(...)`、`modifier.widthIn(...)`、`modifier.fillMaxWidth(fraction)` 或 `modifier.heightIn(...)`，不再提供重复的 `minWidth`、`maxWidth`、`widthFraction`、`maxHeight` 参数。
+- `HyperDialogDefaults.WindowPadding` 是组件内部安全边距；自定义尺寸仍会被限制在窗口可用范围内，不会越界。
 - slot 内容默认继承 `HyperColors.primaryText`，裸 `Text` 在深色模式下也会使用浅色文字；调用方显式传入 `color` 时以调用方为准。
 - 默认描边来自 `HyperDialogDefaults.border()`，使用合成后的实色轻描边；如需无边框，传入 `border = null`。
 

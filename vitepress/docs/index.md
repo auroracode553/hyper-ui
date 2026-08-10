@@ -22,6 +22,7 @@ AI 生成代码时必须遵守：
 - 生成或更新依赖声明前，从 [JitPack](https://jitpack.io/#auroracode553/hyper-ui) 或 [GitHub Tags](https://github.com/auroracode553/hyper-ui/tags) 读取最新可用 tag；文档不提供固定版本号。
 - 公开 API 统一从 `hyper_ui` 包导入；不要导入 `hyper_ui.core.*`。
 - 只使用具体组件页“公开签名”中存在的参数，不根据其他 Compose 库猜测参数名。
+- 宽、高、最小尺寸和外部间距优先使用组件的首个 `modifier`；不要猜测 `size`、`width`、`height`、`minHeight`、`contentPadding` 等重复具名参数。作用于内部独立节点的修饰符以具体签名为准，例如 `contentModifier`、`HyperDrawer.drawerModifier`、`HyperTextField.inputModifier`。
 - `value`、`checked`、`selected`、`show`、`open`、`expanded`、进度和导航选择等业务状态均由调用方持有。
 - 不把网络请求、数据库访问、权限申请、路由实现或 ViewModel 写入 HyperUI 组件。
 - 弹窗、菜单、抽屉不渲染遮罩或半透明蒙层；`HyperButton`、`HyperList`、`HyperMenuList`、`HyperDrawer`、进度指示器以及各类弹窗面板使用不透明实色；`HyperBottomBar` 仅在深色模式使用不透明实色，浅色模式保留透明玻璃效果。

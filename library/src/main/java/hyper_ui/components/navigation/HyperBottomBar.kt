@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -24,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
@@ -55,8 +56,6 @@ class HyperBottomBarItemScope internal constructor(
 fun HyperBottomBar(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    height: Dp = HyperBottomBarDefaults.Height,
-    contentHeight: Dp = HyperBottomBarDefaults.ContentHeight,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     shape: Shape = HyperBottomBarDefaults.Shape,
@@ -73,15 +72,13 @@ fun HyperBottomBar(
 
     HyperBottomBarSurface(
         modifier = modifier,
-        height = height,
         shape = shape,
         border = border,
         colors = resolvedColors
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(contentHeight)
+                .fillMaxSize()
                 .padding(horizontal = 16.dp),
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = verticalAlignment
@@ -110,9 +107,6 @@ fun <T> HyperBottomBar(
     enabled: Boolean = true,
     itemLayout: HyperBottomBarItemLayout = HyperBottomBarItemLayout.Equal,
     itemSelected: (T) -> Boolean = { false },
-    height: Dp = HyperBottomBarDefaults.Height,
-    contentHeight: Dp = HyperBottomBarDefaults.ContentHeight,
-    itemWidth: Dp = HyperBottomBarDefaults.ItemWidth,
     itemSlotAlignment: Alignment = Alignment.Center,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     shape: Shape = HyperBottomBarDefaults.Shape,
@@ -125,8 +119,6 @@ fun <T> HyperBottomBar(
     HyperBottomBar(
         modifier = modifier,
         enabled = enabled,
-        height = height,
-        contentHeight = contentHeight,
         horizontalArrangement = if (itemLayout == HyperBottomBarItemLayout.Equal) {
             Arrangement.Start
         } else {
@@ -156,15 +148,10 @@ fun <T> HyperBottomBar(
                     contentColor = contentColor,
                     modifier = Modifier
                         .weight(1f)
-                        .height(contentHeight),
+                        .fillMaxHeight(),
                     contentAlignment = itemSlotAlignment
                 ) {
-                    Box(
-                        modifier = Modifier.width(itemWidth),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        scope.itemContent(item)
-                    }
+                    scope.itemContent(item)
                 }
             } else {
                 HyperBottomBarItemContainer(
@@ -172,8 +159,8 @@ fun <T> HyperBottomBar(
                     enabled = actualEnabled,
                     contentColor = contentColor,
                     modifier = Modifier
-                        .width(itemWidth)
-                        .height(contentHeight),
+                        .widthIn(min = HyperBottomBarDefaults.ItemWidth)
+                        .fillMaxHeight(),
                     contentAlignment = itemSlotAlignment
                 ) {
                     scope.itemContent(item)
@@ -186,7 +173,6 @@ fun <T> HyperBottomBar(
 @Composable
 private fun HyperBottomBarSurface(
     modifier: Modifier,
-    height: Dp,
     shape: Shape,
     border: BorderStroke?,
     colors: HyperBottomBarColors,
@@ -194,7 +180,7 @@ private fun HyperBottomBarSurface(
 ) {
     val sizedModifier = modifier
         .fillMaxWidth()
-        .height(height)
+        .height(HyperBottomBarDefaults.Height)
     val surfaceModifier = if (HyperColors.isLight) {
         sizedModifier.hyperGlassSurface(
             containerColor = colors.containerColor,
@@ -269,7 +255,6 @@ private fun RowScope.HyperBottomBarItemContainer(
 
 object HyperBottomBarDefaults {
     val Height = 70.dp
-    val ContentHeight = 64.dp
     val ItemWidth = 60.dp
     val Shape: Shape = RoundedCornerShape(0.dp)
 

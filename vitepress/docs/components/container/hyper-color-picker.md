@@ -12,10 +12,10 @@
 ```kotlin
 @Composable
 fun HyperColorPicker(
-    options: List<HyperColorOption> = HyperColorPickerDefaults.presetOptions,
     selectedId: String,
     onSelected: (HyperColorOption) -> Unit,
     modifier: Modifier = Modifier,
+    options: List<HyperColorOption> = HyperColorPickerDefaults.presetOptions,
     colorSize: Dp = HyperColorPickerDefaults.colorSize,
     horizontalSpacing: Dp = HyperColorPickerDefaults.horizontalSpacing,
     verticalSpacing: Dp = HyperColorPickerDefaults.verticalSpacing,
@@ -83,10 +83,10 @@ object HyperColorPickerDefaults {
 
 | 参数 | 类型 | 必填 | 默认值 | 状态归属 / 作用 |
 | --- | --- | --- | --- | --- |
-| `options` | `List<HyperColorOption>` | 否 | `HyperColorPickerDefaults.presetOptions` | 调用方可替换的颜色选项列表。 |
 | `selectedId` | `String` | 是 | 无 | 调用方持有的当前选项 ID。 |
 | `onSelected` | `(HyperColorOption) -> Unit` | 是 | 无 | 点击后回传完整选项；调用方应更新 `selectedId`。 |
 | `modifier` | `Modifier` | 否 | `Modifier` | 调整颜色板外层布局。 |
+| `options` | `List<HyperColorOption>` | 否 | `HyperColorPickerDefaults.presetOptions` | 调用方可替换的颜色选项列表。 |
 | `colorSize` | `Dp` | 否 | `HyperColorPickerDefaults.colorSize`（`36.dp`） | 单个颜色圆的尺寸。 |
 | `horizontalSpacing` | `Dp` | 否 | `HyperColorPickerDefaults.horizontalSpacing`（`10.dp`） | 选项的水平间距。 |
 | `verticalSpacing` | `Dp` | 否 | `HyperColorPickerDefaults.verticalSpacing`（`14.dp`） | 选项的垂直间距。 |

@@ -186,7 +186,7 @@ HyperIconButton(onClick = onSearch) {
 
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
-- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 紧凑型容器，内容由调用方渲染；`HyperButton` 的所有 tone 与禁用态均使用不透明实色；`HyperIconButton` 默认 40dp，浅色模式沿用既有填充与描边，深色模式默认是半透明圆形控制按钮）
+- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 紧凑型容器，内容由调用方渲染；所有 tone、禁用态和图标按钮容器均使用不透明实色；`HyperIconButton` 默认 40dp，自定义尺寸通过 `modifier` 控制）
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperSlider`（输入框默认使用不透明背景和轻描边；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 与 `HyperMenuList` 均使用不透明实色容器；前者是默认 12dp 轻圆角的页面列表，可切换懒加载或普通列表；后者用于圆角菜单列表和设置分组）
@@ -200,6 +200,7 @@ HyperIconButton(onClick = onSearch) {
 - 组件不持有业务状态。
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
+- 组件外壳的宽、高、最小尺寸和外部间距统一通过首个 `modifier` 表达，不为可由 `Modifier.size/width/height/heightIn` 完成的布局需求重复增加具名尺寸参数；独立布局节点使用语义明确的 `drawerModifier`、`contentModifier`、`inputModifier`。
 - `HyperDialog` 标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度 480dp，并在窗口四周保留 16dp 间距；弹窗不使用显示或关闭动画，也不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 实色轻描边。
 - 组件内部只处理焦点、动画、禁用态和描边等视觉反馈 UI 状态；`HyperButton`、列表、菜单、进度与弹窗不通过透明度表达状态。
 
@@ -212,7 +213,7 @@ HyperTextField(
     value = keyword,
     onValueChange = { keyword = it },
     placeholderContent = { Text("搜索") },
-    leadingContent = {
+    startContent = {
         Icon(
             painter = painterResource(LucideR.drawable.lucide_ic_search),
             contentDescription = null

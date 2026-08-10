@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
@@ -35,6 +36,7 @@ import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperDialog
+import hyper_ui.HyperDialogDefaults
 import hyper_ui.HyperDropdownMenu
 import hyper_ui.HyperLinearProgressIndicator
 import hyper_ui.HyperCircularProgressIndicator
@@ -81,13 +83,17 @@ fun DropdownMenuDemo() {
         HyperDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
+            contentModifier = Modifier.padding(vertical = 10.dp),
             alignment = Alignment.TopCenter
         ) {
             Item(onClick = { selectedAction = "标记完成" }) {
                 MenuIcon(Icons.Default.Check)
                 Text(text = "标记完成")
             }
-            Item(onClick = { selectedAction = "查看详情" }) {
+            Item(
+                onClick = { selectedAction = "查看详情" },
+                contentModifier = Modifier.padding(horizontal = 24.dp)
+            ) {
                 MenuIcon(Icons.Default.Info)
                 Text(text = "查看详情")
             }
@@ -165,14 +171,14 @@ fun ProgressDemo() {
             )
             HyperLinearProgressIndicator(
                 progress = null,
-                height = 8.dp,
+                modifier = Modifier.height(8.dp),
                 colors = colors(
                     indicatorColor = Color(0.03f, 0.76f, 0.38f, 1f)
                 )
             )
             HyperCircularProgressIndicator(
                 progress = null,
-                size = 44.dp,
+                modifier = Modifier.size(44.dp),
                 strokeWidth = 4.dp,
                 colors = HyperProgressIndicatorDefaults.colors(
                     indicatorColor = MaterialTheme.colorScheme.primary
@@ -320,7 +326,12 @@ fun HyperDialogDemo() {
         visible = showDialog,
         onDismissRequest = { showDialog = false },
         title = "编辑备注",
-        widthFraction = if (useResponsiveWidth) 0.9f else 1f,
+        modifier = Modifier
+            .widthIn(
+                min = HyperDialogDefaults.MinWidth,
+                max = HyperDialogDefaults.MaxWidth
+            )
+            .fillMaxWidth(if (useResponsiveWidth) 0.9f else 1f),
         dismissOnClickOutside = dismissOnClickOutside,
         horizontalAlignment = Alignment.Start,
         actionContent = {
@@ -449,9 +460,8 @@ private fun ColumnScope.dialogContent(
     HyperTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = 88.dp, max = 220.dp),
+        modifier = Modifier.fillMaxWidth(),
+        inputModifier = Modifier.heightIn(min = 88.dp, max = 220.dp),
         placeholderContent = {
             Text(
                 text = "请输入备注",
@@ -460,8 +470,7 @@ private fun ColumnScope.dialogContent(
         },
         singleLine = false,
         minLines = 3,
-        maxLines = 6,
-        minHeight = 88.dp
+        maxLines = 6
     )
 }
 
