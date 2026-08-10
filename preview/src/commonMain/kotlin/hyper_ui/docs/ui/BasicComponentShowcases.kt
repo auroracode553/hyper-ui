@@ -98,8 +98,7 @@ fun ButtonDemo() {
         }
         HyperButton(
             onClick = { clicks += 1 },
-            minHeight = 32.dp,
-            contentPadding = HyperButtonDefaults.ContentPadding
+            minHeight = 32.dp
         ) {
             Text(
                 text = "小尺寸 slot",

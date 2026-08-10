@@ -101,9 +101,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperBottomBar",
         description = "底部栏浅色模式保留透明玻璃效果，深色模式使用不透明实色；支持完整 slot 与泛型 items 入口。",
         code = """
-            HyperBottomBar(
-                contentPadding = PaddingValues(horizontal = 16.dp)
-            ) {
+            HyperBottomBar {
                 bottomItems.forEach { item ->
                     Column(
                         modifier = Modifier.weight(1f).clickable { selectedItemId = item.id },

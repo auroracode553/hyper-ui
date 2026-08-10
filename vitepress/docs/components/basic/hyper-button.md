@@ -30,7 +30,6 @@ fun HyperButton(
     border: BorderStroke? = HyperButtonDefaults.border(tone),
     shape: Shape = HyperButtonDefaults.Shape,
     minHeight: Dp = HyperButtonDefaults.MinHeight,
-    contentPadding: PaddingValues = HyperButtonDefaults.ContentPadding,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
         HyperButtonDefaults.ContentSpacing,
         Alignment.CenterHorizontally
@@ -54,6 +53,11 @@ HyperButton(onClick = onSave) {
     Text("搜索")
 }
 ```
+
+## 间距说明
+
+组件间距通过 `Modifier` 控制，外部间距使用 `modifier.padding(...)`。
+`HyperButton` 作为原子组件，内部已有合理默认内边距。
 
 ## 约束
 

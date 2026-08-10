@@ -26,7 +26,6 @@ fun HyperTextField(
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(...),
-    contentPadding: PaddingValues = HyperTextFieldDefaults.ContentPadding,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -46,7 +45,6 @@ fun HyperTextField(
 object HyperTextFieldDefaults {
     val MinHeight = 52.dp
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
-    val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
     val SlotSpacing = 10.dp
     val BorderWidth = 1.dp
 }
