@@ -239,7 +239,8 @@ fun GroupMenusDemo() {
         HyperGroupMenus(
             items = categories,
             selectedItem = selected,
-            onSelected = { selected = it }
+            onSelected = { selected = it },
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         ) { item ->
             Text(text = item, fontSize = 13.sp)
         }

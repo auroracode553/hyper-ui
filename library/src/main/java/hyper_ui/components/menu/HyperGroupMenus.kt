@@ -127,6 +127,7 @@ fun HyperGroupMenuItem(
  * 横向分组菜单。
  *
  * 典型用于页面顶部分类、筛选分组或同级视图切换；组件不内置 label/count 模型，业务内容通过 itemContent slot 传入。
+ * 组件本身不添加任何内边距，请通过 modifier.padding(...) 控制外部间距。
  */
 @Composable
 fun <T> HyperGroupMenus(
@@ -134,14 +135,12 @@ fun <T> HyperGroupMenus(
     selectedItem: T,
     onSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = HyperGroupMenusDefaults.ContentPadding,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperGroupMenusDefaults.ItemGap),
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperGroupMenusItemScope.(item: T) -> Unit
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
-        contentPadding = contentPadding,
         horizontalArrangement = horizontalArrangement
     ) {
         items(items) { item ->
@@ -162,7 +161,6 @@ object HyperGroupMenusDefaults {
     val ItemContentGap = 6.dp
     val ItemGap = 8.dp
     val ItemContentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
-    val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     val ItemBorderWidth = 1.dp
     val Shape: Shape = RoundedCornerShape(percent = 50)
 
