@@ -65,7 +65,8 @@ src/main/java/hyper_ui/
     ├── panel/
     ├── list/
     ├── menu/
-    ├── dialog/
+    ├── dialog/           # HyperAlertDialog 结构化弹窗
+    ├── popup/            # HyperPopup 基础浮层
     ├── drawer/
     ├── navigation/
     └── progress/         # 只读进度指示器与可拖动 HyperSlider

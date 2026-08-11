@@ -3,7 +3,7 @@ package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.DialogDemo
 import hyper_ui.docs.ui.DropdownMenuDemo
-import hyper_ui.docs.ui.HyperDialogDemo
+import hyper_ui.docs.ui.HyperPopupDemo
 import hyper_ui.docs.ui.ProgressDemo
 import hyper_ui.docs.ui.UpdateDialogDemo
 
@@ -62,12 +62,12 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         content = { ProgressDemo() }
     ),
     ComponentDemo(
-        id = "custom_dialog",
+        id = "custom_popup",
         group = GROUP_FEEDBACK,
-        title = "HyperDialog",
-        description = "基础对话框无显示或关闭动画，使用不透明实色面板；支持响应式宽度、固定标题与正文滚动。",
+        title = "HyperPopup",
+        description = "窗口居中的基础浮层，无公开定位参数、无显示或关闭动画，并使用不透明实色面板。",
         code = """
-            HyperDialog(
+            HyperPopup(
                 visible = visible,
                 onDismissRequest = onDismiss,
                 title = "编辑备注",
@@ -85,12 +85,13 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("基础面板", "visible + content", "响应式实色弹窗面板"),
+            DemoVariant("基础面板", "visible + content", "响应式实色浮层面板"),
+            DemoVariant("窗口居中", "Popup", "忽略触发组件位置并相对窗口居中"),
             DemoVariant("外部关闭", "dismissOnClickOutside", "仅点击处理，不绘制遮罩"),
             DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
         ),
-        apiDocumentPaths = listOf("feedback/hyper-dialog.md"),
-        content = { HyperDialogDemo() }
+        apiDocumentPaths = listOf("feedback/hyper-popup.md"),
+        content = { HyperPopupDemo() }
     ),
     ComponentDemo(
         id = "dialog",

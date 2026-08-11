@@ -21,7 +21,7 @@ fun HyperAlertDialog(
     bodyContent: (@Composable ColumnScope.() -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null
 ) {
-    HyperDialog(
+    HyperPopup(
         visible = visible,
         onDismissRequest = onDismissRequest,
         title = title,
@@ -31,11 +31,11 @@ fun HyperAlertDialog(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         actionContent = actionContent
     ) {
-        val dialogColumnScope = this
+        val popupColumnScope = this
 
         bodyContent?.let { body ->
             CompositionLocalProvider(LocalContentColor provides HyperColors.secondaryText) {
-                body.invoke(dialogColumnScope)
+                body.invoke(popupColumnScope)
             }
         }
     }

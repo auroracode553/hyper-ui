@@ -190,7 +190,7 @@ HyperIconButton(onClick = onSearch) {
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperSlider`（输入框默认使用不透明背景和轻描边；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 与 `HyperMenuList` 均使用不透明实色容器；前者是默认 12dp 轻圆角的页面列表，可切换懒加载或普通列表；后者用于圆角菜单列表和设置分组）
-- 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdownMenu`（菜单、弹窗、内部按钮与进度指示器均使用不透明实色；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
+- 浮层反馈：`HyperPopup`, `HyperPopupDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdownMenu`（基础浮层始终相对应用窗口居中；菜单、浮层、内部按钮与进度指示器均使用不透明实色；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
 - 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 默认使用不透明卡片容器；`HyperDrawer` 使用不透明实色面板、无玻璃高光和无遮罩的滑动动画；`HyperBottomBar` 浅色模式保留透明玻璃效果，深色模式使用不透明实色；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
@@ -201,7 +201,7 @@ HyperIconButton(onClick = onSearch) {
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
 - 组件外壳的宽、高、最小尺寸和外部间距统一通过首个 `modifier` 表达，不为可由 `Modifier.size/width/height/heightIn` 完成的布局需求重复增加具名尺寸参数；独立布局节点使用语义明确的 `drawerModifier`、`contentModifier`、`inputModifier`。
-- `HyperDialog` 标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度 480dp，并在窗口四周保留 16dp 间距；弹窗不使用显示或关闭动画，也不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 实色轻描边。
+- `HyperPopup` 内部浮层忽略调用节点位置并始终相对应用窗口居中；组件不暴露锚点、对齐或偏移参数。标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度 480dp，并在窗口四周保留 16dp 间距；浮层不使用显示或关闭动画，也不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 实色轻描边。
 - 组件内部只处理焦点、动画、禁用态和描边等视觉反馈 UI 状态；`HyperButton`、列表、菜单、进度与弹窗不通过透明度表达状态。
 
 示例：

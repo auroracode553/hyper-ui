@@ -4,5 +4,5 @@
 
 - [设置页](settings.md)
 - [表单页](form.md)
-- [弹窗与草稿状态](dialog.md)
+- [浮层与草稿状态](popup.md)
 - [底部导航](navigation.md)

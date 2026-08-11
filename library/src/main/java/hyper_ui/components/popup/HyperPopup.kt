@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/dialog/HyperDialog 可复用界面组件及交互封装。 */
+/** 文件职责：提供不依赖调用节点位置的 HyperPopup 窗口居中浮层。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -40,39 +40,44 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 
 @Immutable
-data class HyperDialogColors(
+data class HyperPopupColors(
     val containerColor: Color
 )
 
 /**
- * 对话框组件。
+ * 弹出层组件。
  *
  * 组件内部已包含默认内边距，外部间距请通过 modifier 控制。
  */
 @Composable
-fun HyperDialog(
+fun HyperPopup(
     visible: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
-    shape: Shape = HyperDialogDefaults.Shape,
-    colors: HyperDialogColors = HyperDialogDefaults.colors(),
+    shape: Shape = HyperPopupDefaults.Shape,
+    colors: HyperPopupColors = HyperPopupDefaults.colors(),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperDialogDefaults.ContentSpacing),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperPopupDefaults.ContentSpacing),
     actionArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
-        HyperDialogDefaults.ActionSpacing,
+        HyperPopupDefaults.ActionSpacing,
         Alignment.End
     ),
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true,
-    showScrollIndicator: Boolean = HyperDialogDefaults.ShowScrollIndicator,
+    showScrollIndicator: Boolean = HyperPopupDefaults.ShowScrollIndicator,
     actionContent: (@Composable RowScope.() -> Unit)? = null,
-    border: BorderStroke? = HyperDialogDefaults.border(),
+    border: BorderStroke? = HyperPopupDefaults.border(),
     content: @Composable ColumnScope.() -> Unit
 ) {
     if (!visible) {
@@ -87,13 +92,12 @@ fun HyperDialog(
         fallbackColor = HyperColors.cardContainer,
         backgroundColor = HyperColors.pageBackground
     )
-    val windowPadding = HyperDialogDefaults.WindowPadding
-    val contentPadding = HyperDialogDefaults.ContentPadding
+    val windowPadding = HyperPopupDefaults.WindowPadding
+    val contentPadding = HyperPopupDefaults.ContentPadding
 
     DisableSelection {
-        // Popup 仅包裹面板，避免全屏内容把空白区域算作内部点击。
         Popup(
-            alignment = Alignment.Center,
+            popupPositionProvider = HyperPopupWindowCenterPositionProvider,
             onDismissRequest = onDismissRequest,
             properties = PopupProperties(
                 focusable = true,
@@ -111,12 +115,12 @@ fun HyperDialog(
                     (this.maxWidth - horizontalWindowPadding).coerceAtLeast(0.dp)
                 val availableHeight =
                     (this.maxHeight - verticalWindowPadding).coerceAtLeast(0.dp)
-                val resolvedMaxWidth = HyperDialogDefaults.MaxWidth.coerceAtMost(availableWidth)
-                val resolvedMinWidth = HyperDialogDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
+                val resolvedMaxWidth = HyperPopupDefaults.MaxWidth.coerceAtMost(availableWidth)
+                val resolvedMinWidth = HyperPopupDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
                 // 先按窗口比例收窄，再应用尺寸边界，兼顾竖屏留白与小窗口不越界。
-                val resolvedWidth = (availableWidth * HyperDialogDefaults.WidthFraction)
+                val resolvedWidth = (availableWidth * HyperPopupDefaults.WidthFraction)
                     .coerceIn(resolvedMinWidth, resolvedMaxWidth)
-                val resolvedMaxHeight = HyperDialogDefaults.MaxHeight.coerceAtMost(availableHeight)
+                val resolvedMaxHeight = HyperPopupDefaults.MaxHeight.coerceAtMost(availableHeight)
 
                 Column(
                     modifier = Modifier
@@ -130,11 +134,11 @@ fun HyperDialog(
                         .then(if (border != null) Modifier.border(border, shape) else Modifier)
                         .padding(contentPadding),
                     horizontalAlignment = horizontalAlignment,
-                    verticalArrangement = Arrangement.spacedBy(HyperDialogDefaults.ContentSpacing)
+                    verticalArrangement = Arrangement.spacedBy(HyperPopupDefaults.ContentSpacing)
                 ) {
                     CompositionLocalProvider(LocalContentColor provides HyperColors.primaryText) {
                         if (resolvedTitle != null) {
-                            HyperDialogTitle(title = resolvedTitle)
+                            HyperPopupTitle(title = resolvedTitle)
                         }
 
                         Box(
@@ -147,7 +151,7 @@ fun HyperDialog(
                                     .fillMaxWidth()
                                     .padding(
                                         end = if (showScrollIndicator) {
-                                            HyperDialogDefaults.ScrollIndicatorContentPadding
+                                            HyperPopupDefaults.ScrollIndicatorContentPadding
                                         } else {
                                             0.dp
                                         }
@@ -159,7 +163,7 @@ fun HyperDialog(
                             )
 
                             if (showScrollIndicator) {
-                                HyperDialogScrollIndicator(
+                                HyperPopupScrollIndicator(
                                     scrollState = scrollState,
                                     modifier = Modifier.align(Alignment.CenterEnd)
                                 )
@@ -181,8 +185,24 @@ fun HyperDialog(
     }
 }
 
+/**
+ * Popup 默认会以调用节点作为锚点；基础弹出层必须忽略锚点并相对应用窗口居中。
+ * 该规则是组件内部实现，不向调用方暴露定位参数。
+ */
+private object HyperPopupWindowCenterPositionProvider : PopupPositionProvider {
+    override fun calculatePosition(
+        anchorBounds: IntRect,
+        windowSize: IntSize,
+        layoutDirection: LayoutDirection,
+        popupContentSize: IntSize
+    ): IntOffset = IntOffset(
+        x = ((windowSize.width - popupContentSize.width) / 2).coerceAtLeast(0),
+        y = ((windowSize.height - popupContentSize.height) / 2).coerceAtLeast(0)
+    )
+}
+
 @Composable
-private fun HyperDialogTitle(title: String) {
+private fun HyperPopupTitle(title: String) {
     Text(
         text = title,
         modifier = Modifier.fillMaxWidth(),
@@ -196,7 +216,7 @@ private fun HyperDialogTitle(title: String) {
 }
 
 @Composable
-private fun HyperDialogScrollIndicator(
+private fun HyperPopupScrollIndicator(
     scrollState: ScrollState,
     modifier: Modifier = Modifier
 ) {
@@ -214,7 +234,7 @@ private fun HyperDialogScrollIndicator(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxHeight()
-            .width(HyperDialogDefaults.ScrollIndicatorWidth)
+            .width(HyperPopupDefaults.ScrollIndicatorWidth)
     ) {
         if (!constraints.hasBoundedHeight) {
             return@BoxWithConstraints
@@ -226,7 +246,7 @@ private fun HyperDialogScrollIndicator(
         }
 
         val contentPx = viewportPx + scrollState.maxValue.toFloat()
-        val minThumbPx = with(density) { HyperDialogDefaults.ScrollIndicatorMinHeight.toPx() }
+        val minThumbPx = with(density) { HyperPopupDefaults.ScrollIndicatorMinHeight.toPx() }
         val thumbHeightPx = (viewportPx * viewportPx / contentPx).coerceAtLeast(minThumbPx)
         val travelPx = (viewportPx - thumbHeightPx).coerceAtLeast(0f)
         val scrollProgress = scrollState.value / scrollState.maxValue.toFloat()
@@ -235,14 +255,14 @@ private fun HyperDialogScrollIndicator(
         Box(
             modifier = Modifier
                 .offset(y = with(density) { thumbOffsetPx.toDp() })
-                .width(HyperDialogDefaults.ScrollIndicatorWidth)
+                .width(HyperPopupDefaults.ScrollIndicatorWidth)
                 .height(with(density) { thumbHeightPx.toDp() })
                 .background(indicatorColor, RoundedCornerShape(percent = 50))
         )
     }
 }
 
-object HyperDialogDefaults {
+object HyperPopupDefaults {
     val MinWidth = 280.dp
     val MaxWidth = 360.dp
     const val WidthFraction = 0.9f
@@ -258,7 +278,7 @@ object HyperDialogDefaults {
     val ScrollIndicatorMinHeight = 32.dp
 
     @Composable
-    fun colors(containerColor: Color = Color.Unspecified): HyperDialogColors = HyperDialogColors(
+    fun colors(containerColor: Color = Color.Unspecified): HyperPopupColors = HyperPopupColors(
         containerColor = resolveHyperOpaqueColor(
             color = containerColor,
             fallbackColor = HyperColors.cardContainer,

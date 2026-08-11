@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.sp
 import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
-import hyper_ui.HyperDialog
-import hyper_ui.HyperDialogDefaults
+import hyper_ui.HyperPopup
+import hyper_ui.HyperPopupDefaults
 import hyper_ui.HyperDropdownMenu
 import hyper_ui.HyperLinearProgressIndicator
 import hyper_ui.HyperCircularProgressIndicator
@@ -269,8 +269,8 @@ fun DialogDemo() {
 }
 
 @Composable
-fun HyperDialogDemo() {
-    var showDialog by remember { mutableStateOf(false) }
+fun HyperPopupDemo() {
+    var showPopup by remember { mutableStateOf(false) }
     var savedNote by remember { mutableStateOf("默认备注") }
     var draftNote by remember { mutableStateOf(savedNote) }
     var useResponsiveWidth by remember { mutableStateOf(true) }
@@ -284,7 +284,7 @@ fun HyperDialogDemo() {
         HyperButton(
             onClick = {
                 draftNote = savedNote
-                showDialog = true
+                showPopup = true
             }
         ) {
             Text(text = "编辑备注")
@@ -308,28 +308,28 @@ fun HyperDialogDemo() {
             lineHeight = 18.sp
         )
         Text(
-            text = "可缩放预览窗口验证：弹窗使用 90% 可用宽度，限制在 280–360dp，并保留 16dp 窗口间距。",
+            text = "可缩放预览窗口验证：浮层忽略触发位置并始终相对窗口居中，宽度限制在 280–360dp。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp,
             textAlign = TextAlign.Center
         )
         Text(
-            text = "显示与关闭均无动画，面板保持不透明。",
+            text = "基础浮层没有公开定位参数或动画，面板保持不透明且不绘制蒙层。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center
         )
     }
 
-    HyperDialog(
-        visible = showDialog,
-        onDismissRequest = { showDialog = false },
+    HyperPopup(
+        visible = showPopup,
+        onDismissRequest = { showPopup = false },
         title = "编辑备注",
         modifier = Modifier
             .widthIn(
-                min = HyperDialogDefaults.MinWidth,
-                max = HyperDialogDefaults.MaxWidth
+                min = HyperPopupDefaults.MinWidth,
+                max = HyperPopupDefaults.MaxWidth
             )
             .fillMaxWidth(if (useResponsiveWidth) 0.9f else 1f),
         dismissOnClickOutside = dismissOnClickOutside,
@@ -338,7 +338,7 @@ fun HyperDialogDemo() {
             HyperButton(
                 modifier = Modifier.weight(1f),
                 tone = HyperButtonTone.Outline,
-                onClick = { showDialog = false }
+                onClick = { showPopup = false }
             ) {
                 Text(text = "取消")
             }
@@ -346,14 +346,14 @@ fun HyperDialogDemo() {
                 modifier = Modifier.weight(1f),
                 onClick = {
                     savedNote = draftNote.ifBlank { "未填写备注" }
-                    showDialog = false
+                    showPopup = false
                 }
             ) {
                 Text(text = "保存")
             }
         }
     ) {
-        dialogContent(draftNote) { draftNote = it }
+        popupContent(draftNote) { draftNote = it }
     }
 }
 
@@ -447,7 +447,7 @@ fun UpdateDialogDemo() {
 }
 
 @Composable
-private fun ColumnScope.dialogContent(
+private fun ColumnScope.popupContent(
     value: String,
     onValueChange: (String) -> Unit
 ) {
