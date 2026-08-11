@@ -43,7 +43,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "drawer",
         group = GROUP_NAVIGATION,
         title = "HyperDrawer",
-        description = "抽屉使用不透明实色面板和纯滑动动画，支持四个方向、默认安全区留白和超高内容滚动；Header 和 Item 使用 slot 渲染，无遮罩。",
+        description = "抽屉即时显示和关闭，支持四个方向、默认安全区留白和超高内容滚动；Header 和 Item 使用 slot 渲染，无遮罩、无动画。",
         code = """
             HyperDrawer(
                 open = open,
@@ -67,7 +67,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("方向", "position = Left/Right/Top/Bottom", "四向滑入，不使用淡入"),
+            DemoVariant("方向", "position = Left/Right/Top/Bottom", "四向直接显示，不执行过渡"),
             DemoVariant("面板尺寸", "drawerModifier = Modifier.width/height", "按方向定制独立面板节点"),
             DemoVariant("默认安全区", "safeDrawing + contentPadding", "自动避让系统栏并提供方向化留白"),
             DemoVariant("超高内容", "internal vertical scroll", "达到窗口上限后在面板内滚动"),

@@ -54,9 +54,9 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("线性确定", "progress: Float", "实色轨道、指示条与描边"),
-            DemoVariant("线性不确定", "progress = null", "循环移动指示条"),
+            DemoVariant("线性不确定", "progress = null", "静态居中指示段"),
             DemoVariant("圆形确定", "progress: Float", "圆形 stroke"),
-            DemoVariant("圆形不确定", "progress = null", "旋转 stroke")
+            DemoVariant("圆形不确定", "progress = null", "静态 stroke 弧段")
         ),
         apiDocumentPaths = listOf("feedback/hyper-progress-indicator.md"),
         content = { ProgressDemo() }
@@ -71,7 +71,6 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 visible = visible,
                 onDismissRequest = onDismiss,
                 title = "编辑备注",
-                modifier = Modifier.fillMaxWidth(0.9f),
                 dismissOnClickOutside = dismissOnClickOutside,
                 actionContent = {
                     HyperButton(onClick = onCancel) { Text("取消") }

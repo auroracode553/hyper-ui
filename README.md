@@ -202,7 +202,7 @@ HyperIconButton(onClick = onSearch) {
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
 - 组件外壳的宽、高、最小尺寸和外部间距统一通过首个 `modifier` 表达，不为可由 `Modifier.size/width/height/heightIn` 完成的布局需求重复增加具名尺寸参数；独立布局节点使用语义明确的 `drawerModifier`、`contentModifier`、`inputModifier`。
 - `HyperPopup` 内部浮层忽略调用节点位置并始终相对应用窗口居中；组件不暴露锚点、对齐或偏移参数。标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度 480dp，并在窗口四周保留 16dp 间距；浮层不使用显示或关闭动画，也不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 实色轻描边。
-- 组件内部只处理焦点、动画、禁用态和描边等视觉反馈 UI 状态；`HyperButton`、列表、菜单、进度与弹窗不通过透明度表达状态。
+- 组件内部只处理焦点、滚动、禁用态和描边等视觉反馈 UI 状态；所有组件状态均即时更新，不执行显示、关闭、颜色、尺寸、位移、旋转或循环动画。
 
 示例：
 
@@ -261,7 +261,7 @@ preview/
 - 公开组件源码按功能组放在 `library/src/main/java/hyper_ui/components/` 下，但包名统一声明为 `hyper_ui`，方便调用方 `import hyper_ui.*`。
 - UI 库内部公共工具放在 `library/src/main/java/hyper_ui/core/` 下，供组件实现复用，不作为调用方公开入口。
 - Android-only 工具不能进入 `commonMain` 编译链；Preview 页面只展示说明、可交互模拟和 Android 调用片段。
-- `HyperDrawer` 的四个方向均使用不透明实色面板，打开与关闭只做滑动动画；外部点击区域不绘制遮罩。上下抽屉默认由内容撑高并避让系统栏，达到窗口最大占比后在面板内部滚动。
+- `HyperDrawer` 的四个方向均使用不透明实色面板，打开与关闭直接渲染或移除，不执行动画；外部点击区域不绘制遮罩。上下抽屉默认由内容撑高并避让系统栏，达到窗口最大占比后在面板内部滚动。
 - `HyperBottomBar` 不依赖任何导航框架；浅色模式继续使用原有透明效果，深色模式会把容器、内容色和默认描边合成为不透明实色；页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
 - 调用方接入时不需要依赖 `preview` 模块。
 - Wasm 入口接受 `#组件-id`，例如 `index.html#button`，供 VitePress 组件页选择初始预览项；未知 ID 回退到第一个组件。

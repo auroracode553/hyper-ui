@@ -46,7 +46,7 @@ HyperAlertDialog(
 - 如果项目需要二次确认语义，应该在业务项目中封装项目级 ConfirmDialog。
 - 弹窗不渲染遮罩或半透明蒙层。
 - `dismissOnClickOutside` 默认为 `true`；设为 `false` 后，点击面板外空白区域不会调用 `onDismissRequest`。
-- 面板尺寸、窗口间距、不透明实色背景、圆角和实色描边由内部 `HyperPopup` 默认值提供；当前 `HyperAlertDialog` 不单独暴露这些参数。
+- 面板尺寸、窗口间距、内容间距、不透明实色背景、圆角和实色描边均由内部 `HyperPopup` 默认值提供；当前 `HyperAlertDialog` 不单独覆盖或暴露这些参数。
 - `bodyContent` 默认继承 `HyperColors.secondaryText`；slot 内显式传入的颜色优先。
 
 <WasmPreview demo="dialog" title="HyperAlertDialog 交互预览" />

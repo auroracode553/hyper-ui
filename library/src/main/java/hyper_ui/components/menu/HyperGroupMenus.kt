@@ -1,9 +1,6 @@
 /** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/menu/HyperGroupMenus 可复用界面组件及交互封装。 */
 package hyper_ui
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +15,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -70,41 +66,17 @@ fun HyperGroupMenuItem(
         else -> colors.unselectedContentColor
     }
     val targetBorderColor = if (enabled) HyperColors.fieldBorder else HyperColors.divider
-    val containerColor by animateColorAsState(
-        targetValue = targetContainerColor,
-        animationSpec = spring(
-            stiffness = Spring.StiffnessMedium,
-            dampingRatio = Spring.DampingRatioNoBouncy
-        ),
-        label = "hyperGroupMenuItemContainer"
-    )
-    val contentColor by animateColorAsState(
-        targetValue = targetContentColor,
-        animationSpec = spring(
-            stiffness = Spring.StiffnessMedium,
-            dampingRatio = Spring.DampingRatioNoBouncy
-        ),
-        label = "hyperGroupMenuItemContent"
-    )
-    val borderColor by animateColorAsState(
-        targetValue = targetBorderColor,
-        animationSpec = spring(
-            stiffness = Spring.StiffnessMedium,
-            dampingRatio = Spring.DampingRatioNoBouncy
-        ),
-        label = "hyperGroupMenuItemBorder"
-    )
     val scope = HyperGroupMenusItemScope(selected = selected, enabled = enabled)
 
     Row(
         modifier = modifier
             .defaultMinSize(minHeight = HyperGroupMenusDefaults.MinHeight)
             .hyperSurface(
-                containerColor = containerColor,
+                containerColor = targetContainerColor,
                 shape = shape,
                 border = if (selected) null else BorderStroke(
                     width = HyperGroupMenusDefaults.ItemBorderWidth,
-                    color = borderColor
+                    color = targetBorderColor
                 )
             )
             .hyperNoRippleClickable(
@@ -116,7 +88,7 @@ fun HyperGroupMenuItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(HyperGroupMenusDefaults.ItemContentGap)
     ) {
-        CompositionLocalProvider(LocalContentColor provides contentColor) {
+        CompositionLocalProvider(LocalContentColor provides targetContentColor) {
             scope.content()
         }
     }

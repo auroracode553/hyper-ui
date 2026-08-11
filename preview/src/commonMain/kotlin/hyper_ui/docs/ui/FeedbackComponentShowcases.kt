@@ -36,7 +36,6 @@ import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperPopup
-import hyper_ui.HyperPopupDefaults
 import hyper_ui.HyperDropdownMenu
 import hyper_ui.HyperLinearProgressIndicator
 import hyper_ui.HyperCircularProgressIndicator
@@ -273,7 +272,6 @@ fun HyperPopupDemo() {
     var showPopup by remember { mutableStateOf(false) }
     var savedNote by remember { mutableStateOf("默认备注") }
     var draftNote by remember { mutableStateOf(savedNote) }
-    var useResponsiveWidth by remember { mutableStateOf(true) }
     var dismissOnClickOutside by remember { mutableStateOf(true) }
 
     Column(
@@ -288,12 +286,6 @@ fun HyperPopupDemo() {
             }
         ) {
             Text(text = "编辑备注")
-        }
-        HyperButton(
-            tone = HyperButtonTone.Outline,
-            onClick = { useResponsiveWidth = !useResponsiveWidth }
-        ) {
-            Text(text = if (useResponsiveWidth) "宽度：响应式 90%" else "宽度：填满可用区域")
         }
         HyperButton(
             tone = HyperButtonTone.Outline,
@@ -326,24 +318,15 @@ fun HyperPopupDemo() {
         visible = showPopup,
         onDismissRequest = { showPopup = false },
         title = "编辑备注",
-        modifier = Modifier
-            .widthIn(
-                min = HyperPopupDefaults.MinWidth,
-                max = HyperPopupDefaults.MaxWidth
-            )
-            .fillMaxWidth(if (useResponsiveWidth) 0.9f else 1f),
         dismissOnClickOutside = dismissOnClickOutside,
-        horizontalAlignment = Alignment.Start,
         actionContent = {
             HyperButton(
-                modifier = Modifier.weight(1f),
                 tone = HyperButtonTone.Outline,
                 onClick = { showPopup = false }
             ) {
                 Text(text = "取消")
             }
             HyperButton(
-                modifier = Modifier.weight(1f),
                 onClick = {
                     savedNote = draftNote.ifBlank { "未填写备注" }
                     showPopup = false

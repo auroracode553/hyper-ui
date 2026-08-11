@@ -100,7 +100,7 @@ HyperBottomBar(
 - 泛型 items 入口的页面切换和导航由调用方在 `onItemClick` 中完成。
 - 完整内容 slot 只提供底栏外壳和默认内容色；点击、选中、禁用与内部布局由调用方自行组合。
 - 单项可用状态由 `itemEnabled` 决定，全局禁用仍使用 `enabled`。
-- `HyperBottomBarItemScope` 暴露 `selected` 与 `enabled`，slot 可据此渲染字体、徽标或动画。
+- `HyperBottomBarItemScope` 暴露 `selected` 与 `enabled`，slot 可据此渲染字体、徽标或其他辅助状态；组件本身不执行动画。
 - 浅色模式继续使用 `HyperColors.elevatedContainer` 和玻璃高光，既有透明效果不变。
 - 深色模式默认使用不透明的 `HyperColors.cardContainer`；即使通过 `HyperBottomBarColors` 或 `colors(...)` 传入含 alpha 的颜色，也会先与底栏背景合成为实色。
 - 默认描边来自 `HyperBottomBarDefaults.border()`：浅色模式保持原有 `HyperColors.panelBorder`，深色模式使用合成后的实色轻描边；如需无边框，传入 `border = null`。

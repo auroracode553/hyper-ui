@@ -1,13 +1,6 @@
 /** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/progress/HyperProgressIndicators 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
@@ -21,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -60,14 +52,6 @@ fun HyperLinearProgressIndicator(
         fallbackColor = HyperColors.accent,
         backgroundColor = resolvedTrackColor
     )
-    val animatedProgress by animateFloatAsState(
-        targetValue = coercedProgress ?: 0f,
-        animationSpec = tween(
-            durationMillis = HyperProgressIndicatorDefaults.ProgressAnimationMillis,
-            easing = LinearEasing
-        ),
-        label = "hyperLinearProgressValue"
-    )
     val semanticsInfo = if (coercedProgress == null) {
         ProgressBarRangeInfo.Indeterminate
     } else {
@@ -97,7 +81,7 @@ fun HyperLinearProgressIndicator(
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .fillMaxWidth(animatedProgress)
+                    .fillMaxWidth(coercedProgress)
                     .hyperSolidSurface(
                         containerColor = resolvedIndicatorColor,
                         shape = shape
@@ -125,27 +109,8 @@ fun HyperCircularProgressIndicator(
         fallbackColor = HyperColors.accent,
         backgroundColor = resolvedTrackColor
     )
-    val transition = rememberInfiniteTransition(label = "hyperCircularProgressTransition")
-    val indeterminateRotation by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = HyperProgressIndicatorDefaults.CircularAnimationMillis,
-                easing = LinearEasing
-            ),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "hyperCircularProgressRotation"
-    )
-    val animatedProgress by animateFloatAsState(
-        targetValue = coercedProgress ?: HyperProgressIndicatorDefaults.CircularIndeterminateSweepFraction,
-        animationSpec = tween(
-            durationMillis = HyperProgressIndicatorDefaults.ProgressAnimationMillis,
-            easing = LinearEasing
-        ),
-        label = "hyperCircularProgressValue"
-    )
+    val displayedProgress = coercedProgress
+        ?: HyperProgressIndicatorDefaults.CircularIndeterminateSweepFraction
     val semanticsInfo = if (coercedProgress == null) {
         ProgressBarRangeInfo.Indeterminate
     } else {
@@ -165,12 +130,7 @@ fun HyperCircularProgressIndicator(
             width = this.size.width - strokePx,
             height = this.size.height - strokePx
         )
-        val sweepAngle = (animatedProgress * 360f).coerceIn(0f, 360f)
-        val startAngle = if (coercedProgress == null) {
-            indeterminateRotation - 90f
-        } else {
-            -90f
-        }
+        val sweepAngle = (displayedProgress * 360f).coerceIn(0f, 360f)
 
         drawCircle(
             color = resolvedTrackColor,
@@ -179,7 +139,7 @@ fun HyperCircularProgressIndicator(
         )
         drawArc(
             color = resolvedIndicatorColor,
-            startAngle = startAngle,
+            startAngle = -90f,
             sweepAngle = sweepAngle,
             useCenter = false,
             topLeft = Offset(inset, inset),
@@ -195,20 +155,6 @@ private fun IndeterminateLinearSegment(
     segmentWidth: Dp,
     segmentShape: Shape
 ) {
-    val transition = rememberInfiniteTransition(label = "hyperLinearProgressTransition")
-    val offsetProgress by transition.animateFloat(
-        initialValue = -HyperProgressIndicatorDefaults.IndeterminateSegmentFraction,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = HyperProgressIndicatorDefaults.LinearAnimationMillis,
-                easing = LinearEasing
-            ),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "hyperLinearProgressOffset"
-    )
-
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
@@ -218,7 +164,7 @@ private fun IndeterminateLinearSegment(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(segmentWidth)
-                .offset(x = maxWidth * offsetProgress)
+                .offset(x = (maxWidth - segmentWidth) / 2)
                 .hyperSolidSurface(
                     containerColor = indicatorColor,
                     shape = segmentShape
@@ -232,9 +178,6 @@ object HyperProgressIndicatorDefaults {
     val LinearShape: Shape = RoundedCornerShape(percent = 50)
     val CircularSize = 32.dp
     val CircularStrokeWidth = 3.dp
-    const val ProgressAnimationMillis = 180
-    const val LinearAnimationMillis = 1100
-    const val CircularAnimationMillis = 900
     const val IndeterminateSegmentFraction = 0.36f
     const val CircularIndeterminateSweepFraction = 0.26f
 

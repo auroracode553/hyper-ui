@@ -1,11 +1,6 @@
 /** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/selection/HyperSelectionControls 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -18,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,38 +48,23 @@ fun HyperSwitch(
     } else {
         uncheckedTrackColor
     }
-    val trackColor by animateColorAsState(
-        targetValue = if (!enabled) {
-            HyperColors.disabledContainer
-        } else {
-            if (checked) resolvedCheckedTrackColor else resolvedUncheckedTrackColor
-        },
-        label = "hyperSwitchTrackColor"
-    )
-    val thumbColor by animateColorAsState(
-        targetValue = if (enabled) {
-            if (checked) checkedThumbColor else uncheckedThumbColor
-        } else {
-            HyperColors.disabledText
-        },
-        label = "hyperSwitchThumbColor"
-    )
-    val trackBorderColor by animateColorAsState(
-        targetValue = if (enabled) HyperColors.fieldBorder else HyperColors.divider,
-        label = "hyperSwitchTrackBorderColor"
-    )
-    val thumbBorderColor by animateColorAsState(
-        targetValue = if (enabled) HyperColors.fieldBorder else HyperColors.divider,
-        label = "hyperSwitchThumbBorderColor"
-    )
-    val thumbProgress by animateFloatAsState(
-        targetValue = if (checked) 1f else 0f,
-        animationSpec = spring(
-            stiffness = Spring.StiffnessMedium,
-            dampingRatio = Spring.DampingRatioNoBouncy
-        ),
-        label = "hyperSwitchThumbProgress"
-    )
+    val trackColor = if (!enabled) {
+        HyperColors.disabledContainer
+    } else if (checked) {
+        resolvedCheckedTrackColor
+    } else {
+        resolvedUncheckedTrackColor
+    }
+    val thumbColor = if (!enabled) {
+        HyperColors.disabledText
+    } else if (checked) {
+        checkedThumbColor
+    } else {
+        uncheckedThumbColor
+    }
+    val trackBorderColor = if (enabled) HyperColors.fieldBorder else HyperColors.divider
+    val thumbBorderColor = if (enabled) HyperColors.fieldBorder else HyperColors.divider
+    val thumbProgress = if (checked) 1f else 0f
 
     Box(
         modifier = modifier
@@ -163,23 +142,15 @@ fun HyperCheckbox(
     } else {
         uncheckedBorderColor
     }
-    val backgroundColor by animateColorAsState(
-        targetValue = if (!enabled) {
-            HyperColors.disabledContainer
-        } else {
-            if (checked) resolvedCheckedColor else resolvedUncheckedColor
-        },
-        label = "hyperCheckboxBackgroundColor"
-    )
+    val backgroundColor = if (!enabled) {
+        HyperColors.disabledContainer
+    } else if (checked) {
+        resolvedCheckedColor
+    } else {
+        resolvedUncheckedColor
+    }
     val borderColor = if (enabled) resolvedUncheckedBorderColor else HyperColors.divider
-    val checkmarkSize by animateDpAsState(
-        targetValue = if (checked) HyperCheckboxDefaults.CheckmarkSize else 0.dp,
-        animationSpec = spring(
-            stiffness = Spring.StiffnessMedium,
-            dampingRatio = Spring.DampingRatioNoBouncy
-        ),
-        label = "hyperCheckboxCheckmarkSize"
-    )
+    val checkmarkSize = if (checked) HyperCheckboxDefaults.CheckmarkSize else 0.dp
     val resolvedCheckmarkColor = if (enabled) checkmarkColor else HyperColors.disabledText
     val shape = RoundedCornerShape(HyperCheckboxDefaults.CornerRadius)
 
@@ -252,23 +223,15 @@ fun HyperRadioButton(
     } else {
         unselectedBorderColor
     }
-    val backgroundColor by animateColorAsState(
-        targetValue = if (!enabled) {
-            HyperColors.disabledContainer
-        } else {
-            if (selected) resolvedSelectedColor else resolvedUnselectedColor
-        },
-        label = "hyperRadioBackgroundColor"
-    )
+    val backgroundColor = if (!enabled) {
+        HyperColors.disabledContainer
+    } else if (selected) {
+        resolvedSelectedColor
+    } else {
+        resolvedUnselectedColor
+    }
     val borderColor = if (enabled) resolvedUnselectedBorderColor else HyperColors.divider
-    val innerDotSize by animateDpAsState(
-        targetValue = if (selected) HyperRadioDefaults.InnerDotSize else 0.dp,
-        animationSpec = spring(
-            stiffness = Spring.StiffnessMedium,
-            dampingRatio = Spring.DampingRatioNoBouncy
-        ),
-        label = "hyperRadioInnerDotSize"
-    )
+    val innerDotSize = if (selected) HyperRadioDefaults.InnerDotSize else 0.dp
     val resolvedInnerDotColor = if (enabled) innerDotColor else HyperColors.disabledText
 
     Box(

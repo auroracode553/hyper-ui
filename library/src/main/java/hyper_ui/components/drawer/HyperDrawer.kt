@@ -1,12 +1,6 @@
 /** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/drawer/HyperDrawer 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -125,14 +119,10 @@ fun HyperDrawer(
                     .fillMaxWidth()
             }
 
-            AnimatedVisibility(
-                visible = open,
-                modifier = Modifier.align(drawerAlignment),
-                enter = drawerEnterTransition(position),
-                exit = drawerExitTransition(position)
-            ) {
+            if (open) {
                 Column(
                     modifier = drawerSizeModifier
+                        .align(drawerAlignment)
                         .hyperSolidSurface(
                             containerColor = containerColor,
                             shape = drawerShape(position),
@@ -300,44 +290,6 @@ private fun drawerSafeDrawingSides(position: HyperDrawerPosition): WindowInsetsS
     HyperDrawerPosition.Bottom -> WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal
 }
 
-private fun drawerEnterTransition(position: HyperDrawerPosition) = when (position) {
-    HyperDrawerPosition.Left -> slideInHorizontally(
-        animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
-        initialOffsetX = { fullWidth -> -fullWidth }
-    )
-    HyperDrawerPosition.Right -> slideInHorizontally(
-        animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
-        initialOffsetX = { fullWidth -> fullWidth }
-    )
-    HyperDrawerPosition.Top -> slideInVertically(
-        animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
-        initialOffsetY = { fullHeight -> -fullHeight }
-    )
-    HyperDrawerPosition.Bottom -> slideInVertically(
-        animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
-        initialOffsetY = { fullHeight -> fullHeight }
-    )
-}
-
-private fun drawerExitTransition(position: HyperDrawerPosition) = when (position) {
-    HyperDrawerPosition.Left -> slideOutHorizontally(
-        animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
-        targetOffsetX = { fullWidth -> -fullWidth }
-    )
-    HyperDrawerPosition.Right -> slideOutHorizontally(
-        animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
-        targetOffsetX = { fullWidth -> fullWidth }
-    )
-    HyperDrawerPosition.Top -> slideOutVertically(
-        animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
-        targetOffsetY = { fullHeight -> -fullHeight }
-    )
-    HyperDrawerPosition.Bottom -> slideOutVertically(
-        animationSpec = tween(HyperDrawerDefaults.AnimationMillis),
-        targetOffsetY = { fullHeight -> fullHeight }
-    )
-}
-
 object HyperDrawerDefaults {
     val Width = 320.dp
     val HeaderPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp)
@@ -345,7 +297,6 @@ object HyperDrawerDefaults {
     val ItemMinHeight = 54.dp
     const val MaxWidthFraction = 0.88f
     const val MaxHeightFraction = 0.88f
-    const val AnimationMillis = 240
     const val DrawerZIndex = 9f
 
     /** 上下抽屉默认提供完整内容留白，左右抽屉让 Header/Item 自己管理水平留白。 */

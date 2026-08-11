@@ -1,8 +1,6 @@
 /** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/button/HyperIconButton 可复用界面组件及交互封装。 */
 package hyper_ui
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 
@@ -67,35 +64,14 @@ fun HyperIconButton(
         pressed -> colors.pressedOutlineColor
         else -> colors.outlineColor
     }
-    val animatedContainerColor by animateColorAsState(
-        targetValue = targetContainerColor,
-        label = "hyper-icon-button-container"
-    )
-    val animatedContentColor by animateColorAsState(
-        targetValue = targetContentColor,
-        label = "hyper-icon-button-content"
-    )
-    val animatedOutlineColor by animateColorAsState(
-        targetValue = targetOutlineColor,
-        label = "hyper-icon-button-outline"
-    )
-    val animatedScale by animateFloatAsState(
-        targetValue = if (enabled && pressed) HyperIconButtonDefaults.PressedScale else 1f,
-        label = "hyper-icon-button-scale"
-    )
-
     Box(
         modifier = modifier
             .size(HyperIconButtonDefaults.Size)
-            .graphicsLayer {
-                scaleX = animatedScale
-                scaleY = animatedScale
-            }
             .clip(shape)
-            .background(animatedContainerColor, shape)
+            .background(targetContainerColor, shape)
             .border(
                 width = HyperIconButtonDefaults.OutlineWidth,
-                color = animatedOutlineColor,
+                color = targetOutlineColor,
                 shape = shape
             )
             .clickable(
@@ -107,7 +83,7 @@ fun HyperIconButton(
             ),
         contentAlignment = contentAlignment
     ) {
-        CompositionLocalProvider(LocalContentColor provides animatedContentColor) {
+        CompositionLocalProvider(LocalContentColor provides targetContentColor) {
             content()
         }
     }
@@ -118,7 +94,6 @@ object HyperIconButtonDefaults {
     val IconSize = 22.dp
     val Shape: Shape = CircleShape
     val OutlineWidth = 1.dp
-    const val PressedScale = 0.92f
 
     @Composable
     fun colors(

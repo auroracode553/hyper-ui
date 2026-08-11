@@ -1,6 +1,6 @@
 # 组件索引
 
-所有组件的公开包名均为 `hyper_ui`。状态归属只描述业务状态；动画、滚动等内部 UI 状态不需要调用方管理。组件外壳尺寸和外部间距统一通过 `modifier` 控制，具体内部节点使用组件签名中明确提供的 `contentModifier`、`drawerModifier`、`inputModifier` 等修饰符。
+所有组件的公开包名均为 `hyper_ui`。状态归属只描述业务状态；滚动等内部 UI 状态不需要调用方管理。所有组件状态均即时渲染，不执行动画。组件外壳尺寸和外部间距统一通过 `modifier` 控制，具体内部节点使用组件签名中明确提供的 `contentModifier`、`drawerModifier`、`inputModifier` 等修饰符。
 
 ## 基础组件
 
@@ -31,7 +31,7 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperTopBar](components/navigation/hyper-top-bar.md) | 默认透明、继承页面背景的顶部栏三段 slot 容器 | 调用方处理事件 |
-| [HyperDrawer](components/navigation/hyper-drawer.md) | 不透明实色、无遮罩、自动安全区与溢出滚动的四方向 slot 抽屉 | 调用方提供 `open` 与选中态 |
+| [HyperDrawer](components/navigation/hyper-drawer.md) | 无动画、不透明实色、无遮罩、自动安全区与溢出滚动的四方向 slot 抽屉 | 调用方提供 `open` 与选中态 |
 | [HyperGroupMenus](components/navigation/hyper-group-menus.md) | 横向分组菜单，未选中项默认带细描边 | 调用方提供 `selectedItem` |
 | [HyperBottomBar](components/navigation/hyper-bottom-bar.md) | 默认 56dp、浅色透明、深色不透明的底部栏容器 | 调用方处理内容、选择与导航 |
 
@@ -48,7 +48,7 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperDropdownMenu](components/feedback/hyper-dropdown-menu.md) | Popup 浮层菜单，使用不透明实色面板 | 调用方提供 `expanded` |
-| [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |
+| [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 无动画、不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |
 | [HyperPopup](components/feedback/hyper-popup.md) | 窗口居中、无动画、全程不透明的内容浮层 | 调用方提供 `visible` 和内容状态 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 全程不透明的 Slot-first Alert 弹窗 | 调用方提供 `visible` 并处理结果 |
 | [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 全程不透明的应用更新状态与下载确认弹窗 | 调用方持有状态，并注入 Release 加载和下载动作 |

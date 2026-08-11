@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/drawer/HyperDrawer.kt`
 - 预览：`drawer`
 
-`HyperDrawer` 是四方向抽屉容器，无遮罩。抽屉面板使用不透明实色卡片背景和实色轻描边，不再叠加玻璃高光；打开与关闭只做滑入滑出动画，不再改变面板透明度。`HyperDrawerHeader` 与 `HyperDrawerItem` 都采用 slot-first API。
+`HyperDrawer` 是四方向抽屉容器，无遮罩。抽屉面板使用不透明实色卡片背景和实色轻描边，不再叠加玻璃高光；`open` 直接控制面板是否渲染，打开与关闭均不执行动画。`HyperDrawerHeader` 与 `HyperDrawerItem` 都采用 slot-first API。
 
 ## 公开签名
 
@@ -113,7 +113,7 @@ HyperDrawer(
 - 四个方向会按位置自动避让 `safeDrawing` 系统栏；内容超过最大高度时在面板内部滚动，不会从屏幕底部溢出或被导航手势区裁切。
 - `HyperDrawerItem` 默认最小高度由 `HyperDrawerDefaults.ItemMinHeight` 提供，其他尺寸通过 `modifier` 控制。
 - 默认面板背景使用不透明的 `HyperColors.cardContainer`；通过 `HyperDrawerColors` 或 `HyperDrawerDefaults.colors(...)` 传入含 alpha 的容器色时，会先与页面背景合成为实色。
-- 抽屉进出场只使用滑动动画，不使用淡入淡出；四个方向的面板均全程不透明。
+- 抽屉打开与关闭均直接渲染或移除，不执行滑动、淡入淡出或透明度动画。
 - Header/Item 不提供 `title`、`description`、`leadingIcon` 参数。
 - `open`、选中项和路由由调用方持有。
 - 默认描边来自 `HyperDrawerDefaults.border()`，使用合成后的实色轻描边；如需无边框，传入 `border = null`。

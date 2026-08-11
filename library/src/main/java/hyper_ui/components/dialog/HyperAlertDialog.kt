@@ -1,15 +1,12 @@
 /** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/dialog/HyperAlertDialog 可复用界面组件及交互封装。 */
 package hyper_ui
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun HyperAlertDialog(
@@ -27,8 +24,6 @@ fun HyperAlertDialog(
         title = title,
         modifier = modifier,
         dismissOnClickOutside = dismissOnClickOutside,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
         actionContent = actionContent
     ) {
         val popupColumnScope = this

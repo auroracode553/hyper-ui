@@ -42,7 +42,6 @@ object HyperIconButtonDefaults {
     val IconSize = 22.dp
     val Shape: Shape = CircleShape
     val OutlineWidth = 1.dp
-    const val PressedScale = 0.92f
 
     @Composable
     fun colors(
@@ -105,6 +104,6 @@ HyperIconButton(
 - 默认明暗配色均使用 `HyperColors.elevatedContainer`、`HyperColors.primaryText` 与 `HyperColors.fieldBorder`，并保持不透明实色边界。
 - 圆形和圆角矩形按钮都通过 `shape` 配置；描边颜色通过 `outlineColor`、`pressedOutlineColor` 与 `disabledOutlineColor` 配置。
 - `LocalContentColor` 会传递给 slot 内容。
-- 按压反馈由组件内部处理，业务状态仍由调用方维护。
+- 按压状态会即时切换容器、内容和描边颜色，不执行缩放或颜色过渡动画；业务状态仍由调用方维护。
 
 <WasmPreview demo="icon_button" title="HyperIconButton 交互预览" />

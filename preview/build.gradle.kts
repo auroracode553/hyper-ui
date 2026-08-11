@@ -26,7 +26,7 @@ kotlin {
             kotlin.srcDir("../library/src/main/java")
 
             dependencies {
-                implementation("org.jetbrains.compose.animation:animation:${libs.versions.composeMultiplatform.get()}")
+                // Preview 与正式组件保持一致，不额外引入动画运行时。
                 implementation("org.jetbrains.compose.foundation:foundation:${libs.versions.composeMultiplatform.get()}")
                 implementation("org.jetbrains.compose.material3:material3:${libs.versions.composeMaterial3Version.get()}")
                 implementation("org.jetbrains.compose.material:material-icons-core:${libs.versions.composeMaterialIconsVersion.get()}")

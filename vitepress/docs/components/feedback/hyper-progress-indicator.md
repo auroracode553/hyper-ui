@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/progress/HyperProgressIndicators.kt`
 - 预览：`progress`
 
-HyperUI 提供线性和圆形进度指示器。`progress` 为 `0f..1f` 表示确定进度，`null` 表示不确定加载。轨道、指示段和线性描边均使用不透明实色，不再叠加玻璃高光。
+HyperUI 提供线性和圆形进度指示器。`progress` 为 `0f..1f` 表示确定进度，`null` 表示不确定加载。轨道、指示段和线性描边均使用不透明实色，所有进度状态均即时渲染，不执行补间、旋转或循环动画。
 
 需要用户点击或拖动进度时，应使用 [HyperSlider](../form/hyper-slider.md)，不要给只读进度指示器叠加调用方手势和样式。
 
@@ -57,5 +57,6 @@ HyperCircularProgressIndicator(progress = null)
 - 线性轨道描边通过 `trackBorder` 配置；默认来自 `HyperProgressIndicatorDefaults.linearTrackBorder()`，传 `null` 可关闭。
 - 圆形进度指示器本身是 stroke 图形，不额外渲染外框。
 - `progress` 会被限制在 `0f..1f`。
+- `progress = null` 时线性组件显示居中的静态指示段，圆形组件显示静态弧段；语义仍保持 `Indeterminate`。
 
 <WasmPreview demo="progress" title="HyperProgressIndicator 交互预览" />
