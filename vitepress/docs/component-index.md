@@ -50,5 +50,5 @@
 | [HyperDropdownMenu](components/feedback/hyper-dropdown-menu.md) | Popup 浮层菜单，使用不透明实色面板 | 调用方提供 `expanded` |
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 无动画、不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |
 | [HyperPopup](components/feedback/hyper-popup.md) | 跳过未定位首帧、直接居中且全程不透明的内容浮层 | 调用方提供 `visible` 和内容状态 |
-| [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 无显示动画、描边可选的 Slot-first Alert 弹窗 | 调用方提供 `visible` 并处理结果 |
+| [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 无显示动画、内置标准描边的 Slot-first Alert 弹窗 | 调用方提供 `visible` 并处理结果 |
 | [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 全程不透明的应用更新状态与下载确认弹窗 | 调用方持有状态，并注入 Release 加载和下载动作 |

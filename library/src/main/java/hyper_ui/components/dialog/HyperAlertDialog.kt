@@ -1,7 +1,6 @@
 /** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/dialog/HyperAlertDialog 可复用界面组件及交互封装。 */
 package hyper_ui
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.LocalContentColor
@@ -16,7 +15,6 @@ fun HyperAlertDialog(
     modifier: Modifier = Modifier,
     title: String? = null,
     dismissOnClickOutside: Boolean = true,
-    border: BorderStroke? = HyperPopupDefaults.border(),
     bodyContent: (@Composable ColumnScope.() -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -26,7 +24,6 @@ fun HyperAlertDialog(
         title = title,
         modifier = modifier,
         dismissOnClickOutside = dismissOnClickOutside,
-        border = border,
         actionContent = actionContent
     ) {
         val popupColumnScope = this

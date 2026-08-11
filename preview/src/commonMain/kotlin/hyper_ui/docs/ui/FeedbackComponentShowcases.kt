@@ -36,7 +36,6 @@ import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperPopup
-import hyper_ui.HyperPopupDefaults
 import hyper_ui.HyperDropdownMenu
 import hyper_ui.HyperLinearProgressIndicator
 import hyper_ui.HyperCircularProgressIndicator
@@ -204,7 +203,6 @@ fun DialogDemo() {
     var showDialog by remember { mutableStateOf(false) }
     var resultText by remember { mutableStateOf("等待操作") }
     var dismissOnClickOutside by remember { mutableStateOf(true) }
-    var showBorder by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier.widthIn(max = 420.dp),
@@ -222,12 +220,6 @@ fun DialogDemo() {
             onClick = { dismissOnClickOutside = !dismissOnClickOutside }
         ) {
             Text(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
-        }
-        HyperButton(
-            tone = HyperButtonTone.Outline,
-            onClick = { showBorder = !showBorder }
-        ) {
-            Text(text = if (showBorder) "描边：开启" else "描边：关闭")
         }
         Text(
             text = resultText,
@@ -249,7 +241,6 @@ fun DialogDemo() {
         },
         title = "确认删除",
         dismissOnClickOutside = dismissOnClickOutside,
-        border = if (showBorder) HyperPopupDefaults.border() else null,
         bodyContent = { DialogBody("删除后无法恢复，是否继续？") },
         actionContent = {
             HyperButton(

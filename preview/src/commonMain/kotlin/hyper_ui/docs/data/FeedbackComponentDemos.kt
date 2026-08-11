@@ -96,14 +96,13 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dialog",
         group = GROUP_FEEDBACK,
         title = "HyperAlertDialog",
-        description = "Alert 结构化对话框直接居中显示；支持点击空白关闭、可选描边，正文和按钮均为 slot。",
+        description = "Alert 结构化对话框直接居中显示；内置标准实色描边，正文和按钮均为 slot。",
         code = """
             HyperAlertDialog(
                 visible = visible,
                 onDismissRequest = onDismiss,
                 title = "确认删除",
                 dismissOnClickOutside = dismissOnClickOutside,
-                border = if (showBorder) HyperPopupDefaults.border() else null,
                 bodyContent = { Text("删除后无法恢复，是否继续？") },
                 actionContent = {
                     HyperButton(onClick = onDismiss) { Text("取消") }
@@ -117,8 +116,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("结构化标题", "title", "固定标题区"),
             DemoVariant("正文", "bodyContent", "可滚动内容 slot"),
-            DemoVariant("操作", "actionContent", "普通与危险操作按钮"),
-            DemoVariant("描边", "border", "默认轻描边或无描边")
+            DemoVariant("操作", "actionContent", "普通与危险操作按钮")
         ),
         apiDocumentPaths = listOf("feedback/hyper-alert-dialog.md"),
         content = { DialogDemo() }

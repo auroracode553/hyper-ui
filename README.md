@@ -190,7 +190,7 @@ HyperIconButton(onClick = onSearch) {
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperSlider`（输入框默认使用不透明背景、轻描边和 40dp 紧凑最小高度；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 与 `HyperMenuList` 均使用不透明实色容器；`HyperMenuList` 不提供 `border` 参数，外部描边等视觉由调用方通过 `modifier` 组合，并默认提供 6dp 首尾安全留白；`HyperListItem` 根据 supporting slot 自动使用单行 52dp、双行 56dp 的基础高度和 6dp 纵向留白；前者是页面列表，后者用于设置分组）
-- 浮层反馈：`HyperPopup`, `HyperPopupDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdownMenu`（基础浮层跳过未定位首帧并直接在应用窗口中居中显示；Alert 可按业务需要关闭描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
+- 浮层反馈：`HyperPopup`, `HyperPopupDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdownMenu`（基础浮层跳过未定位首帧并直接在应用窗口中居中显示；Alert 内置标准实色描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
 - 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 默认透明并继承页面底色；`HyperDrawer` 提供系统安全区避让和可配置内容滚动；`HyperBottomBar` 默认 56dp，浅色模式保留透明玻璃效果、深色模式使用不透明实色；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
@@ -201,7 +201,7 @@ HyperIconButton(onClick = onSearch) {
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
 - 组件外壳的宽、高、最小尺寸和外部间距统一通过首个 `modifier` 表达，不为可由 `Modifier.size/width/height/heightIn` 完成的布局需求重复增加具名尺寸参数；独立布局节点使用语义明确的 `drawerModifier`、`contentModifier`、`inputModifier`。
-- `HyperPopup` 内部浮层忽略调用节点位置并始终相对应用窗口居中；组件不暴露锚点、对齐或偏移参数。首次挂载时会隐藏平台尚未完成居中定位的首帧，随后直接显示在中心，不产生顶部位移或显示动画。标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度 480dp，并在窗口四周保留 16dp 间距；浮层不使用显示或关闭动画，也不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 实色轻描边。`HyperAlertDialog` 可通过 `border = null` 关闭该描边。
+- `HyperPopup` 内部浮层忽略调用节点位置并始终相对应用窗口居中；组件不暴露锚点、对齐或偏移参数。首次挂载时会隐藏平台尚未完成居中定位的首帧，随后直接显示在中心，不产生顶部位移或显示动画。标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度 480dp，并在窗口四周保留 16dp 间距；浮层不使用显示或关闭动画，也不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 实色轻描边。`HyperAlertDialog` 固定使用该标准描边，不暴露描边配置。
 - 组件内部只处理焦点、滚动、禁用态和描边等视觉反馈 UI 状态；所有组件状态均即时更新，不执行显示、关闭、颜色、尺寸、位移、旋转或循环动画。
 
 示例：
