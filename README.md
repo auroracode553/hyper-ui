@@ -192,7 +192,7 @@ HyperIconButton(onClick = onSearch) {
 - 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 与 `HyperMenuList` 均使用不透明实色容器；`HyperMenuList` 不提供 `border` 参数，外部描边等视觉由调用方通过 `modifier` 组合，并默认提供 6dp 首尾安全留白；`HyperListItem` 根据 supporting slot 自动使用单行 52dp、双行 56dp 的基础高度和 6dp 纵向留白；前者是页面列表，后者用于设置分组）
 - 浮层反馈：`HyperPopup`, `HyperPopupDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdownMenu`（基础浮层跳过未定位首帧并直接在应用窗口中居中显示；Alert 可按业务需要关闭描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
-- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 默认透明并继承页面底色；`HyperDrawer` 提供系统安全区避让；`HyperBottomBar` 默认 56dp，浅色模式保留透明玻璃效果、深色模式使用不透明实色；页面切换由调用方处理）
+- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 默认透明并继承页面底色；`HyperDrawer` 提供系统安全区避让和可配置内容滚动；`HyperBottomBar` 默认 56dp，浅色模式保留透明玻璃效果、深色模式使用不透明实色；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
 ## 状态管理原则
@@ -261,7 +261,7 @@ preview/
 - 公开组件源码按功能组放在 `library/src/main/java/hyper_ui/components/` 下，但包名统一声明为 `hyper_ui`，方便调用方 `import hyper_ui.*`。
 - UI 库内部公共工具放在 `library/src/main/java/hyper_ui/core/` 下，供组件实现复用，不作为调用方公开入口。
 - Android-only 工具不能进入 `commonMain` 编译链；Preview 页面只展示说明、可交互模拟和 Android 调用片段。
-- `HyperDrawer` 的四个方向均使用不透明实色面板，打开与关闭直接渲染或移除，不执行动画；外部点击区域不绘制遮罩。上下抽屉默认由内容撑高并避让系统栏，达到窗口最大占比后在面板内部滚动。
+- `HyperDrawer` 的四个方向均使用不透明实色面板，打开与关闭直接渲染或移除，不执行动画；外部点击区域不绘制遮罩。上下抽屉默认由内容撑高并避让系统栏，达到窗口最大占比后在面板内部滚动；承载 `LazyColumn`、`HyperList` 等纵向滚动内容时设置 `drawerContentScrollEnabled = false`，由内层列表独立滚动。
 - `HyperBottomBar` 不依赖任何导航框架；浅色模式继续使用原有透明效果，深色模式会把容器、内容色和默认描边合成为不透明实色；页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
 - 调用方接入时不需要依赖 `preview` 模块。
 - Wasm 入口接受 `#组件-id`，例如 `index.html#button`，供 VitePress 组件页选择初始预览项；未知 ID 回退到第一个组件。

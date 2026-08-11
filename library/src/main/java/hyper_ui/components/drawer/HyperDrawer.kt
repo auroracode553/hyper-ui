@@ -68,6 +68,7 @@ fun HyperDrawer(
     drawerContentModifier: Modifier = Modifier.padding(
         HyperDrawerDefaults.contentPadding(position)
     ),
+    drawerContentScrollEnabled: Boolean = true,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = false,
     border: BorderStroke? = HyperDrawerDefaults.border(),
@@ -79,6 +80,7 @@ fun HyperDrawer(
         fallbackColor = HyperColors.cardContainer,
         backgroundColor = HyperColors.pageBackground
     )
+    val drawerContentScrollState = rememberScrollState()
     val drawerAlignment = when (position) {
         HyperDrawerPosition.Left -> Alignment.CenterStart
         HyperDrawerPosition.Right -> Alignment.CenterEnd
@@ -133,8 +135,14 @@ fun HyperDrawer(
                             WindowInsets.safeDrawing.only(drawerSafeDrawingSides(position))
                         )
                         .then(drawerContentModifier)
-                        // 内容超过窗口最大占比时在抽屉内部滚动，避免从底部被裁掉。
-                        .verticalScroll(rememberScrollState()),
+                        .then(
+                            if (drawerContentScrollEnabled) {
+                                // 普通内容由抽屉负责溢出滚动；懒列表必须关闭此层滚动。
+                                Modifier.verticalScroll(drawerContentScrollState)
+                            } else {
+                                Modifier
+                            }
+                        ),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     CompositionLocalProvider(LocalContentColor provides colors.contentColor) {

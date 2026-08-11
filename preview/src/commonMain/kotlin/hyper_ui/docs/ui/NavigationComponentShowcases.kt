@@ -118,6 +118,7 @@ fun DrawerDemo() {
     var open by remember { mutableStateOf(false) }
     var selectedPageId by remember { mutableStateOf("home") }
     var drawerPosition by remember { mutableStateOf(HyperDrawerPosition.Left) }
+    var drawerContentScrollEnabled by remember { mutableStateOf(true) }
     val items = listOf(
         DemoNavItem("home", "首页", Icons.Default.Home),
         DemoNavItem("notice", "通知", Icons.Default.Notifications),
@@ -144,6 +145,7 @@ fun DrawerDemo() {
             },
             position = drawerPosition,
             dismissOnClickOutside = true,
+            drawerContentScrollEnabled = drawerContentScrollEnabled,
             drawerContent = {
                 HyperDrawerHeader(
                     leadingContent = {
@@ -220,6 +222,20 @@ fun DrawerDemo() {
                     selected = drawerPosition,
                     onSelect = { drawerPosition = it }
                 )
+                HyperButton(
+                    onClick = {
+                        drawerContentScrollEnabled = !drawerContentScrollEnabled
+                    },
+                    tone = HyperButtonTone.Tonal
+                ) {
+                    Text(
+                        text = if (drawerContentScrollEnabled) {
+                            "面板负责内容滚动"
+                        } else {
+                            "内容组件负责滚动"
+                        }
+                    )
+                }
                 HyperButton(onClick = { open = true }) {
                     Text(text = "打开${drawerPosition.label()}抽屉")
                 }
