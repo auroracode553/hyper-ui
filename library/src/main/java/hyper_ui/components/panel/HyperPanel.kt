@@ -62,7 +62,8 @@ fun HyperPanel(
 object HyperPanelDefaults {
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
     val Elevation = 0.dp
-    val ContentPadding = PaddingValues(20.dp)
+    // 16dp 足以避开圆角边界，也避免调用方组合 40dp 控件时形成过高卡片。
+    val ContentPadding = PaddingValues(16.dp)
     val ContentSpacing = 12.dp
 
     @Composable

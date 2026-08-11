@@ -187,12 +187,12 @@ HyperIconButton(onClick = onSearch) {
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
 - 基础组件：`HyperButton`, `HyperIconButton`（slot-first 紧凑型容器，内容由调用方渲染；所有 tone、禁用态和图标按钮容器均使用不透明实色；`HyperIconButton` 默认 40dp，自定义尺寸通过 `modifier` 控制）
-- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperSlider`（输入框默认使用不透明背景、轻描边和 44dp 紧凑最小高度；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
-- 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边；主题色选择板色块默认带细描边，选中状态由调用方管理）
-- 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 与 `HyperMenuList` 均使用不透明实色容器；`HyperListItem` 默认使用 56dp 紧凑行高与 8dp 纵向内容留白；前者是默认 12dp 轻圆角的页面列表，可切换懒加载或普通列表；后者用于圆角菜单列表和设置分组）
+- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadioButton`, `HyperSlider`（输入框默认使用不透明背景、轻描边和 40dp 紧凑最小高度；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
+- 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
+- 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 与 `HyperMenuList` 均使用不透明实色容器，菜单容器默认提供 6dp 首尾安全留白；`HyperListItem` 根据 supporting slot 自动使用单行 52dp、双行 56dp 的基础高度和 6dp 纵向留白；前者是页面列表，后者用于设置分组）
 - 浮层反馈：`HyperPopup`, `HyperPopupDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdownMenu`（基础浮层始终相对应用窗口居中；菜单、浮层、内部按钮与进度指示器均使用不透明实色；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
-- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 默认使用不透明卡片容器；`HyperDrawer` 使用不透明实色面板、方向化默认留白、系统安全区避让和超高内容滚动；`HyperBottomBar` 浅色模式保留透明玻璃效果，深色模式使用不透明实色；页面切换由调用方处理）
+- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 默认透明并继承页面底色；`HyperDrawer` 提供系统安全区避让；`HyperBottomBar` 默认 56dp，浅色模式保留透明玻璃效果、深色模式使用不透明实色；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
 ## 状态管理原则

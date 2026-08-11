@@ -83,7 +83,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("紧凑单行", "MinHeight = 44.dp", "默认高度与留白，无需调用方覆盖"),
+            DemoVariant("统一单行", "MinHeight = 40.dp", "地址栏、首页搜索与搜索态共享默认高度"),
             DemoVariant("多行/错误", "minLines = 3, isError", "supporting 与错误描边"),
             DemoVariant("禁用", "enabled = false", "禁用实色状态"),
             DemoVariant("左右插槽", "startContent / endContent", "搜索图标与清除操作")

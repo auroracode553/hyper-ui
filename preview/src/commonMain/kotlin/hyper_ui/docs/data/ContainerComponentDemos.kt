@@ -45,6 +45,7 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("默认面板", "colors = defaults", "实色容器、圆角与轻描边"),
+            DemoVariant("默认留白", "ContentPadding = 16.dp", "无需在直接子节点重复添加整块 padding"),
             DemoVariant("自定义内容", "content slot", "标题、状态与操作组合"),
             DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "独立控制面板内部内容区")
         ),

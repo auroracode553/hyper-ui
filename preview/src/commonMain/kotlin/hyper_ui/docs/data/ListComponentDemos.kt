@@ -43,7 +43,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("普通列表", "lazyLoading = false", "Column 滚动列表"),
             DemoVariant("DSL 列表", "state + item/items", "调用方组合条目"),
             DemoVariant("默认外观", "colors + shape", "不透明卡片背景与 12dp 轻圆角"),
-            DemoVariant("紧凑默认值", "MinHeight = 56.dp", "设置菜单无需逐项覆盖行高或留白"),
+            DemoVariant("自适应行高", "52.dp / 56.dp", "根据 supportingContent 自动平衡单行与双行密度"),
             DemoVariant("列表条目", "leading/headline/supporting", "图标、双行文字与分隔线")
         ),
         apiDocumentPaths = listOf(
@@ -58,10 +58,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperMenuList",
         description = "不透明实色的圆角菜单列表，适合少量静态菜单、设置分组和操作入口。",
         code = """
-            HyperMenuList(
-                items = items,
-                contentModifier = Modifier.padding(vertical = 4.dp)
-            ) { item ->
+            HyperMenuList(items = items) { item ->
                 HyperListItem(
                     headlineContent = { Text(item.title) },
                     trailingContent = { Text(item.value) }
@@ -83,7 +80,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("数据入口", "items + itemContent", "静态菜单数据"),
-            DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制圆角背景内部留白"),
+            DemoVariant("首尾留白", "ContentPadding = 6.dp", "默认避开卡片上下圆角边界"),
             DemoVariant("Slot 入口", "content slot", "设置项与选择控件组合"),
             DemoVariant("列表条目", "trailingContent", "值、开关、复选与单选尾部内容")
         ),

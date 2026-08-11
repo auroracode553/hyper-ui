@@ -254,7 +254,8 @@ private fun RowScope.HyperBottomBarItemContainer(
 }
 
 object HyperBottomBarDefaults {
-    val Height = 70.dp
+    /** 保留标准触控高度，同时避免底栏占据过多页面空间。 */
+    val Height = 56.dp
     val ItemWidth = 60.dp
     val Shape: Shape = RoundedCornerShape(0.dp)
 

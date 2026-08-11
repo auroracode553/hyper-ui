@@ -13,7 +13,7 @@
 @Composable
 fun HyperMenuList(
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperMenuListDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
@@ -24,7 +24,7 @@ fun HyperMenuList(
 fun <T> HyperMenuList(
     items: List<T>,
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperMenuListDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
@@ -41,6 +41,7 @@ data class HyperMenuListColors(
 
 object HyperMenuListDefaults {
     val Shape: Shape
+    val ContentPadding = PaddingValues(vertical = 6.dp)
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperMenuListColors
@@ -56,7 +57,7 @@ object HyperMenuListDefaults {
 | --- | --- | --- | --- |
 | `items` | `List<T>` | 必填 | 一次性渲染的菜单数据 |
 | `modifier` | `Modifier` | `Modifier` | 根容器修饰符 |
-| `contentModifier` | `Modifier` | `Modifier` | 圆角背景内部的内容布局修饰符 |
+| `contentModifier` | `Modifier` | 默认首尾各 `6.dp` | 圆角背景内部的内容布局修饰符 |
 | `verticalArrangement` | `Arrangement.Vertical` | 间距 `0.dp` | 条目纵向排列 |
 | `border` | `BorderStroke?` | `HyperMenuListDefaults.border()` | 菜单外层描边；传 `null` 可关闭 |
 | `colors` | `HyperMenuListColors` | `HyperMenuListDefaults.colors()` | 菜单容器颜色，默认使用不透明的 `HyperColors.cardContainer` |
@@ -98,7 +99,7 @@ fun SettingsGroup(enabled: Boolean, onEnabledChange: (Boolean) -> Unit) {
 
 - `HyperMenuList` 用于菜单、设置分组和少量操作入口；页面级列表使用 [HyperList](hyper-list.md)。
 - 容器不绘制透明层或玻璃高光；含 alpha 的自定义容器颜色会先与页面背景合成为实色。
-- 容器内部留白使用 `contentModifier = Modifier.padding(...)`；底栏避让等页面级外部留白使用 `modifier` 或父布局约束。
+- 容器默认在第一项上方和最后一项下方各保留 `6.dp`，避免内容紧贴圆角；特殊布局才使用 `contentModifier` 替换默认值。
 - `items` 数据入口内部自带纵向滚动；放入另一个同方向无界滚动容器前，应明确尺寸约束。
 - `items` 数据入口会自动隐藏最后一项的 `HyperListItem` 分割线，调用方只需表达普通行是否需要分割线。
 - slot 分组入口不额外添加纵向滚动，适合设置页、详情页等已有页面级滚动的场景。

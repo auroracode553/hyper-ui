@@ -53,19 +53,23 @@ HyperListItem(
 
 ```kotlin
 object HyperListItemDefaults {
-    val MinHeight = 56.dp
+    val SingleLineMinHeight = 52.dp
+    val SupportingMinHeight = 56.dp
     val ContentGap = 12.dp
-    val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    val TextGap = 3.dp
+    val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
     val DividerInset = 16.dp
+
+    fun minHeight(hasSupportingContent: Boolean): Dp
 }
 ```
 
 ## 约束
 
 - 不存在 `title`、`description`、`leadingIcon`、`trailing` 参数。
-- 默认最小高度为紧凑的 `56.dp`；单行设置菜单无需在调用处覆盖高度，双行或更高内容会自然扩展。
-- `contentModifier` 默认应用水平 `16.dp`、垂直 `8.dp` 的 `HyperListItemDefaults.ContentPadding`；仅在明确需要不同密度时替换该参数，不要把内容 padding 叠加到外层 `modifier`。
-- `headlineContent` 默认使用 16sp/22sp，`supportingContent` 默认使用 13sp/18sp；调用方显式传入 `style` 或 `fontSize` 时以调用方为准。
+- 组件根据 `supportingContent` 自动选择行高：纯单行项最小 `52.dp`，带说明文字的项最小 `56.dp`；长文本和较大 slot 仍会自然撑高。
+- `contentModifier` 默认应用水平 `16.dp`、垂直 `6.dp` 的 `HyperListItemDefaults.ContentPadding`；调用页面无需为单行/双行分别设置高度或 padding。
+- `headlineContent` 默认使用 16sp/22sp，`supportingContent` 默认使用 13sp/17sp，两者间距为 `3.dp`；调用方显式传入 `style` 或 `fontSize` 时以调用方为准。
 - `dividerVisible = true` 时会绘制分割线；放入 `HyperList(items)` 或 `HyperMenuList(items)` 的最后一项时，父列表会自动隐藏该分割线。
 - 分割线默认使用 `HyperListItemDefaults.DividerInset` 缩进；自定义缩进或尺寸使用 `dividerModifier`，不提供 `dividerInset` 数值参数。
 - 通过 `HyperListItemColors` 或 `HyperListItemDefaults.colors(...)` 传入含 alpha 的颜色时，会先与父 `HyperList` 或 `HyperMenuList` 的实际容器背景合成为实色；独立使用时按页面背景解析。

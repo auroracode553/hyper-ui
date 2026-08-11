@@ -29,7 +29,7 @@ data class HyperTopBarColors(
 /**
  * 顶部导航栏组件。
  *
- * 默认使用不透明卡片容器色，与页面主体形成稳定层级。
+ * 默认背景透明，由页面容器统一提供底色，避免顶部出现独立色块。
  * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
  */
 @Composable
@@ -83,7 +83,7 @@ object HyperTopBarDefaults {
         containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified
     ): HyperTopBarColors = HyperTopBarColors(
-        containerColor = resolveHyperContainerColor(containerColor, HyperColors.cardContainer),
+        containerColor = resolveHyperContainerColor(containerColor, Color.Transparent),
         contentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
     )
 }

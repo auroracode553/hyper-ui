@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
@@ -58,6 +59,9 @@ fun HyperListItem(
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null
 ) {
+    val minHeight = HyperListItemDefaults.minHeight(
+        hasSupportingContent = supportingContent != null
+    )
     val containerColor = currentHyperListItemContainerColor()
     val requestedContentColor = if (enabled) colors.contentColor else colors.disabledContentColor
     val requestedSupportingColor = if (enabled) colors.supportingColor else colors.disabledContentColor
@@ -91,7 +95,7 @@ fun HyperListItem(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .defaultMinSize(minHeight = HyperListItemDefaults.MinHeight)
+                .defaultMinSize(minHeight = minHeight)
                 .then(clickModifier)
                 .then(contentModifier),
             verticalAlignment = Alignment.CenterVertically
@@ -115,7 +119,7 @@ fun HyperListItem(
                         start = if (leadingContent == null) 0.dp else HyperListItemDefaults.ContentGap,
                         end = if (trailingContent == null) 0.dp else HyperListItemDefaults.ContentGap
                     ),
-                verticalArrangement = Arrangement.spacedBy(3.dp)
+                verticalArrangement = Arrangement.spacedBy(HyperListItemDefaults.TextGap)
             ) {
                 // 为裸 Text(...) 提供稳定的列表层级，调用方显式 style 仍可覆盖。
                 CompositionLocalProvider(
@@ -159,12 +163,21 @@ fun HyperListItem(
 }
 
 object HyperListItemDefaults {
-    /** 设置菜单和普通列表共享紧凑行高，双行内容可按自身高度自然扩展。 */
-    val MinHeight = 56.dp
+    /** 单行导航项与双行说明项使用不同基础高度，避免统一高度造成过松或过密。 */
+    val SingleLineMinHeight = 52.dp
+    val SupportingMinHeight = 56.dp
     val ContentGap = 12.dp
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    val TextGap = 3.dp
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 6.dp)
     val DividerInset = 16.dp
     val DividerHeight = 1.dp
+
+    /** 根据是否存在 supporting slot 返回稳定的默认行高，调用方无需判断内容密度。 */
+    fun minHeight(hasSupportingContent: Boolean): Dp = if (hasSupportingContent) {
+        SupportingMinHeight
+    } else {
+        SingleLineMinHeight
+    }
 
     val LeadingTextStyle: TextStyle
         @Composable get() = MaterialTheme.typography.bodyMedium.copy(
@@ -181,7 +194,7 @@ object HyperListItemDefaults {
     val SupportingTextStyle: TextStyle
         @Composable get() = MaterialTheme.typography.bodyMedium.copy(
             fontSize = 13.sp,
-            lineHeight = 18.sp
+            lineHeight = 17.sp
         )
 
     val TrailingTextStyle: TextStyle

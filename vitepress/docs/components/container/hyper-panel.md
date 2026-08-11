@@ -30,7 +30,7 @@ fun HyperPanel(
 object HyperPanelDefaults {
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
     val Elevation = 0.dp
-    val ContentPadding = PaddingValues(20.dp)
+    val ContentPadding = PaddingValues(16.dp)
     val ContentSpacing = 12.dp
 
     @Composable
@@ -55,7 +55,8 @@ HyperPanel(
 
 - 点击语义放在调用方外层或内部具体控件，不由 `HyperPanel` 提供。
 - 自定义背景色通过 `HyperPanelDefaults.colors(containerColor = ...)` 传入。
-- `modifier` 控制面板外壳尺寸与外部间距；`contentModifier` 控制内部内容区，默认值提供 20dp 内容间距。
+- `modifier` 控制面板外壳尺寸与外部间距；`contentModifier` 控制内部内容区，默认值提供 16dp 内容间距。
+- 调用方不应在默认内容区的直接子节点再次添加整块 padding；需要全宽内容时显式传入 `contentModifier = Modifier`，并由内部区块管理边界。
 - 默认描边来自 `HyperPanelDefaults.border()`，内部使用 `HyperColors.panelBorder`。
 - 内容始终按 `shape` 裁剪，不再暴露无调用方使用价值的 `clipContent` 开关。
 - 自定义内容间距时使用 `contentModifier = Modifier.padding(...)`，不提供重复的 `contentPadding` 参数。

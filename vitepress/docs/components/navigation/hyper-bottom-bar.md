@@ -45,6 +45,8 @@ fun <T> HyperBottomBar(
 
 ```kotlin
 object HyperBottomBarDefaults {
+    val Height = 56.dp
+
     @Composable
     fun border(color: Color = Color.Unspecified): BorderStroke
 }
@@ -93,7 +95,7 @@ HyperBottomBar(
 ## 约束
 
 - 不存在 `HyperBottomBarItem`、`selectedItemId`、`HyperBottomBarConfig`。
-- 底栏默认高度为 `HyperBottomBarDefaults.Height`；自定义尺寸使用 `modifier.height(...)`。内容自动填满底栏高度，不再提供重复的 `height`、`contentHeight`、`itemWidth` 参数。
+- 底栏默认高度为 `56.dp`；slot 内容自动填满底栏高度，不应在调用处再次设置操作区高度。特殊页面才通过 `modifier.height(...)` 覆盖。
 - `Equal` 模式中的项目等分可用宽度；`Packed` 模式使用 `HyperBottomBarDefaults.ItemWidth` 作为最小项目宽度，slot 内容可以自然撑宽。
 - 泛型 items 入口的页面切换和导航由调用方在 `onItemClick` 中完成。
 - 完整内容 slot 只提供底栏外壳和默认内容色；点击、选中、禁用与内部布局由调用方自行组合。

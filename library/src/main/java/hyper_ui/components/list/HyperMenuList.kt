@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -36,7 +38,7 @@ data class HyperMenuListColors(
 fun <T> HyperMenuList(
     items: List<T>,
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperMenuListDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
@@ -88,7 +90,7 @@ fun <T> HyperMenuList(
 @Composable
 fun HyperMenuList(
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperMenuListDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
@@ -120,6 +122,8 @@ fun HyperMenuList(
 
 object HyperMenuListDefaults {
     val Shape: Shape = RoundedCornerShape(MenuListCornerRadius)
+    /** 菜单项负责行内留白，容器额外保留首尾安全区以避开圆角边界。 */
+    val ContentPadding = PaddingValues(vertical = 6.dp)
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperMenuListColors = HyperMenuListColors(

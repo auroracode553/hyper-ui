@@ -60,10 +60,7 @@ fun HyperMenuListDemo() {
             fontSize = 13.sp
         )
         Box(modifier = Modifier.height(220.dp)) {
-            HyperMenuList(
-                items = items,
-                contentModifier = Modifier.padding(vertical = 4.dp)
-            ) { item ->
+            HyperMenuList(items = items) { item ->
                 HyperListItem(
                     leadingContent = { ListIcon(iconFor(item)) },
                     headlineContent = { ListTitle(item) },
@@ -130,7 +127,7 @@ fun HyperListDemo() {
     )
     var lazyLoading by remember { mutableStateOf(true) }
     var roundedCorners by remember { mutableStateOf(true) }
-    var compactContent by remember { mutableStateOf(false) }
+    var comfortableContent by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -177,14 +174,14 @@ fun HyperListDemo() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = if (compactContent) "紧凑条目间距" else "默认条目间距",
+                text = if (comfortableContent) "宽松条目间距" else "默认自适应间距",
                 color = LocalContentColor.current,
                 fontSize = 14.sp,
                 lineHeight = 20.sp
             )
             HyperSwitch(
-                checked = compactContent,
-                onCheckedChange = { compactContent = it }
+                checked = comfortableContent,
+                onCheckedChange = { comfortableContent = it }
             )
         }
 
@@ -196,8 +193,8 @@ fun HyperListDemo() {
                 shape = if (roundedCorners) HyperListDefaults.Shape else RectangleShape
             ) { item ->
                 HyperListItem(
-                    contentModifier = if (compactContent) {
-                        Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    contentModifier = if (comfortableContent) {
+                        Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                     } else {
                         Modifier.padding(HyperListItemDefaults.ContentPadding)
                     },

@@ -13,7 +13,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "topbar",
         group = GROUP_NAVIGATION,
         title = "HyperTopBar",
-        description = "不透明卡片背景的顶部栏容器；navigation、title、action 三个区域由调用方通过 slot 渲染。",
+        description = "默认透明的顶部栏容器；navigation、title、action 三个区域由调用方通过 slot 渲染。",
         code = """
             HyperTopBar(
                 navigationContent = {
@@ -33,7 +33,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("三段布局", "navigation/title/action", "左右操作与居中标题"),
-            DemoVariant("默认背景", "colors.containerColor", "不透明卡片容器色"),
+            DemoVariant("默认背景", "Color.Transparent", "继承页面底色，不绘制独立色块"),
             DemoVariant("Slot 内容", "content slots", "图标按钮和标题文字")
         ),
         apiDocumentPaths = listOf("navigation/hyper-top-bar.md"),
@@ -104,7 +104,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "bottom-bar",
         group = GROUP_NAVIGATION,
         title = "HyperBottomBar",
-        description = "底部栏浅色模式保留透明玻璃效果，深色模式使用不透明实色；支持完整 slot 与泛型 items 入口。",
+        description = "默认 56dp 的底部栏；浅色模式保留透明玻璃效果，深色模式使用不透明实色，支持完整 slot 与泛型 items 入口。",
         code = """
             HyperBottomBar {
                 bottomItems.forEach { item ->
@@ -119,6 +119,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("默认高度", "Height = 56.dp", "紧凑但保留标准触控区域"),
             DemoVariant("完整 Slot", "content: RowScope", "调用方控制按钮布局"),
             DemoVariant("泛型项目", "items + itemSelected", "统一点击、选中与禁用状态"),
             DemoVariant("浅色容器", "colors.containerColor", "唯一保留的浅色半透明组件容器")
