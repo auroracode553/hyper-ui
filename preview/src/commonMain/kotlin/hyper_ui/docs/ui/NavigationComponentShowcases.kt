@@ -145,7 +145,6 @@ fun DrawerDemo() {
                 HyperDrawerPosition.Top,
                 HyperDrawerPosition.Bottom -> Modifier.height(260.dp)
             },
-            drawerContentModifier = Modifier.padding(vertical = 12.dp),
             position = drawerPosition,
             dismissOnClickOutside = true,
             drawerContent = {

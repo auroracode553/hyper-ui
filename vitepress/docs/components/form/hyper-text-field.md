@@ -42,9 +42,10 @@ fun HyperTextField(
 
 ```kotlin
 object HyperTextFieldDefaults {
-    val MinHeight = 52.dp
+    val MinHeight = 44.dp
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
-    val SlotSpacing = 10.dp
+    val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    val SlotSpacing = 8.dp
     val BorderWidth = 1.dp
 }
 ```
@@ -98,7 +99,7 @@ HyperTextField(
 
 - 不存在 `label`、`placeholder`、`errorText` 字符串参数；可见文本全部通过 slot 渲染。
 - `inputModifier` 用于传入 `focusRequester`、`heightIn(...)` 等需要作用在 `BasicTextField` 上的修饰符；整个字段（含 label/supporting）的外部布局使用 `modifier`。
-- 输入容器默认最小高度为 `HyperTextFieldDefaults.MinHeight`，不提供重复的 `minHeight` 参数。
+- 输入容器默认最小高度为紧凑的 `44.dp`，内部默认使用水平 `16.dp`、垂直 `8.dp` 留白；多行内容仍按行数自然增高，不提供重复的 `minHeight` 参数。
 - 聚焦时不改变输入框容器背景；容器只区分普通、错误和禁用状态。
 - 默认背景来自 `HyperTextFieldDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.fieldContainer`，保持不透明输入区域。
 - `startContent` 与 `endContent` 按布局方向放置左右内容，间距由 `slotSpacing` 控制。

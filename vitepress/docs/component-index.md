@@ -13,7 +13,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperTextField](components/form/hyper-text-field.md) | 文本输入，默认实色背景和轻描边 | 调用方提供 `value` |
+| [HyperTextField](components/form/hyper-text-field.md) | 紧凑文本输入，默认实色背景、轻描边与 44dp 最小高度 | 调用方提供 `value` |
 | [HyperSwitch](components/form/hyper-switch.md) | 开关，轨道和滑块默认有轮廓层次 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选项 | 调用方提供 `checked` |
 | [HyperRadioButton](components/form/hyper-radio-button.md) | 单选项 | 调用方提供 `selected` |
@@ -31,7 +31,7 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperTopBar](components/navigation/hyper-top-bar.md) | 不透明卡片背景的顶部栏三段 slot 容器 | 调用方处理事件 |
-| [HyperDrawer](components/navigation/hyper-drawer.md) | 不透明实色、无遮罩的四方向 slot 抽屉 | 调用方提供 `open` 与选中态 |
+| [HyperDrawer](components/navigation/hyper-drawer.md) | 不透明实色、无遮罩、自动安全区与溢出滚动的四方向 slot 抽屉 | 调用方提供 `open` 与选中态 |
 | [HyperGroupMenus](components/navigation/hyper-group-menus.md) | 横向分组菜单，未选中项默认带细描边 | 调用方提供 `selectedItem` |
 | [HyperBottomBar](components/navigation/hyper-bottom-bar.md) | 浅色透明、深色不透明的底部栏容器 | 调用方处理内容、选择与导航 |
 
@@ -41,7 +41,7 @@
 | --- | --- | --- |
 | [HyperList](components/list/hyper-list.md) | 不透明实色的轻圆角页面级列表，可切换懒加载或普通列表 | 调用方提供数据 |
 | [HyperMenuList](components/list/hyper-menu-list.md) | 不透明实色的圆角菜单列表和设置分组 | 调用方提供数据或内容 |
-| [HyperListItem](components/list/hyper-list-item.md) | 不透明实色的列表行内容 | 调用方处理点击和尾部状态 |
+| [HyperListItem](components/list/hyper-list-item.md) | 默认 56dp 紧凑行高的不透明实色列表项 | 调用方处理点击和尾部状态 |
 
 ## 反馈组件
 

@@ -17,8 +17,10 @@ fun HyperDrawer(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     drawerModifier: Modifier = Modifier,
-    drawerContentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.ContentPadding),
     position: HyperDrawerPosition = HyperDrawerPosition.Left,
+    drawerContentModifier: Modifier = Modifier.padding(
+        HyperDrawerDefaults.contentPadding(position)
+    ),
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = false,
     border: BorderStroke? = HyperDrawerDefaults.border(),
@@ -55,6 +57,10 @@ fun HyperDrawerItem(
 
 ```kotlin
 object HyperDrawerDefaults {
+    val Width = 320.dp
+
+    fun contentPadding(position: HyperDrawerPosition): PaddingValues
+
     @Composable
     fun border(color: Color = Color.Unspecified): BorderStroke
 }
@@ -69,7 +75,6 @@ import com.composables.icons.lucide.R as LucideR
 HyperDrawer(
     open = open,
     onDismissRequest = { open = false },
-    drawerModifier = Modifier.width(320.dp),
     position = HyperDrawerPosition.Left,
     drawerContent = {
         HyperDrawerHeader(
@@ -103,8 +108,9 @@ HyperDrawer(
 
 - 不存在 `scrimColor`，抽屉不渲染遮罩。
 - `modifier` 作用于包含页面内容的抽屉根容器；`drawerModifier` 只作用于抽屉面板，使用 `width(...)` 定制左右抽屉、使用 `height(...)` 定制上下抽屉。
-- 抽屉面板、Header 和 Item 的内部内容分别使用 `drawerContentModifier`、`contentModifier`；默认 Modifier 携带原有 PaddingValues，不再暴露 `contentPadding` 参数。
-- 默认面板宽高由 `HyperDrawerDefaults.Width`、`Height` 提供，且仍受窗口最大占比保护；不再提供 `drawerWidth`、`drawerHeight` 参数。
+- 抽屉面板、Header 和 Item 的内部内容分别使用 `drawerContentModifier`、`contentModifier`。上下抽屉默认带水平 `20.dp`、垂直 `16.dp` 内容留白；左右抽屉保留垂直留白，由 Header/Item 管理水平留白。
+- 左右抽屉默认宽度为 `HyperDrawerDefaults.Width`；上下抽屉默认由内容自然撑高，不再固定为 `320.dp`，并受窗口最大占比保护。
+- 四个方向会按位置自动避让 `safeDrawing` 系统栏；内容超过最大高度时在面板内部滚动，不会从屏幕底部溢出或被导航手势区裁切。
 - `HyperDrawerItem` 默认最小高度由 `HyperDrawerDefaults.ItemMinHeight` 提供，其他尺寸通过 `modifier` 控制。
 - 默认面板背景使用不透明的 `HyperColors.cardContainer`；通过 `HyperDrawerColors` 或 `HyperDrawerDefaults.colors(...)` 传入含 alpha 的容器色时，会先与页面背景合成为实色。
 - 抽屉进出场只使用滑动动画，不使用淡入淡出；四个方向的面板均全程不透明。

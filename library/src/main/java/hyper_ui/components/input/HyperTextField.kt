@@ -160,10 +160,11 @@ fun HyperTextField(
 }
 
 object HyperTextFieldDefaults {
-    val MinHeight = 52.dp
+    /** 单行输入默认保持紧凑；多行输入仍由文本行数自然撑高。 */
+    val MinHeight = 44.dp
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 18.dp, vertical = 10.dp)
-    val SlotSpacing = 10.dp
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    val SlotSpacing = 8.dp
     val BorderWidth = 1.dp
 
     @Composable

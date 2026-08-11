@@ -159,10 +159,11 @@ fun HyperListItem(
 }
 
 object HyperListItemDefaults {
-    val MinHeight = 68.dp
-    val ContentGap = 14.dp
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 12.dp)
-    val DividerInset = 20.dp
+    /** 设置菜单和普通列表共享紧凑行高，双行内容可按自身高度自然扩展。 */
+    val MinHeight = 56.dp
+    val ContentGap = 12.dp
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    val DividerInset = 16.dp
     val DividerHeight = 1.dp
 
     val LeadingTextStyle: TextStyle
