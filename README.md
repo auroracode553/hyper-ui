@@ -192,7 +192,7 @@ HyperIconButton(onClick = onSearch) {
 - 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 与 `HyperMenuList` 均使用不透明实色容器；前者是默认 12dp 轻圆角的页面列表，可切换懒加载或普通列表；后者用于圆角菜单列表和设置分组）
 - 浮层反馈：`HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdownMenu`（菜单、弹窗、内部按钮与进度指示器均使用不透明实色；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
-- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperDrawer` 使用不透明实色面板、无玻璃高光和无遮罩的滑动动画；`HyperBottomBar` 浅色模式保留透明玻璃效果，深色模式使用不透明实色；页面切换由调用方处理）
+- 导航组件：`HyperTopBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperGroupMenus`, `HyperBottomBar`, `HyperBottomBarItemLayout`（`HyperTopBar` 默认使用不透明卡片容器；`HyperDrawer` 使用不透明实色面板、无玻璃高光和无遮罩的滑动动画；`HyperBottomBar` 浅色模式保留透明玻璃效果，深色模式使用不透明实色；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
 ## 状态管理原则

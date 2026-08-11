@@ -34,6 +34,7 @@ data class HyperListColors(
 /**
  * 简单数据列表入口。
  *
+ * 默认使用不透明卡片背景与轻圆角外形。
  * modifier 控制列表外壳，contentModifier 控制容器内部内容布局。
  */
 @Composable
@@ -104,6 +105,7 @@ fun <T> HyperList(
  * 面向异构项目、分组和分页内容的懒列表入口。
  *
  * DSL 入口固定使用 LazyColumn；简单数据列表如需关闭懒加载，使用 items 入口的 lazyLoading 参数。
+ * 默认使用不透明卡片背景与轻圆角外形。
  * modifier 控制列表外壳，contentModifier 控制容器内部内容布局。
  */
 @Composable
@@ -122,7 +124,10 @@ fun HyperList(
         fallbackColor = HyperColors.cardContainer,
         backgroundColor = HyperColors.pageBackground
     )
-    CompositionLocalProvider(LocalHyperListItemDividerSuppressed provides false) {
+    CompositionLocalProvider(
+        LocalHyperListItemDividerSuppressed provides false,
+        LocalHyperListItemContainerColor provides containerColor
+    ) {
         LazyColumn(
             modifier = modifier.hyperListContainer(
                 containerColor = containerColor,
@@ -177,7 +182,8 @@ private fun HyperListItemContainer(
             .background(containerColor)
     ) {
         CompositionLocalProvider(
-            LocalHyperListItemDividerSuppressed provides dividerSuppressed
+            LocalHyperListItemDividerSuppressed provides dividerSuppressed,
+            LocalHyperListItemContainerColor provides containerColor
         ) {
             itemContent()
         }

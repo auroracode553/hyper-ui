@@ -70,7 +70,8 @@ fun <T> HyperMenuList(
                     .background(containerColor)
             ) {
                 CompositionLocalProvider(
-                    LocalHyperListItemDividerSuppressed provides isLast
+                    LocalHyperListItemDividerSuppressed provides isLast,
+                    LocalHyperListItemContainerColor provides containerColor
                 ) {
                     itemContent(item)
                 }
@@ -98,7 +99,10 @@ fun HyperMenuList(
         fallbackColor = HyperColors.cardContainer,
         backgroundColor = HyperColors.pageBackground
     )
-    CompositionLocalProvider(LocalHyperListItemDividerSuppressed provides false) {
+    CompositionLocalProvider(
+        LocalHyperListItemDividerSuppressed provides false,
+        LocalHyperListItemContainerColor provides containerColor
+    ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()

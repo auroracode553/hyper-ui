@@ -63,7 +63,7 @@ object HyperListDefaults {
 | --- | --- | --- | --- |
 | `items` | `List<T>` | 必填 | 列表数据 |
 | `modifier` | `Modifier` | `Modifier` | 列表根容器修饰符 |
-| `contentModifier` | `Modifier` | `Modifier` | 列表背景内部的内容布局修饰符 |
+| `contentModifier` | `Modifier` | `Modifier` | 列表容器内部的内容布局修饰符 |
 | `key` | `((T) -> Any)?` | `null` | 可选稳定键，仅在 `lazyLoading = true` 时传给懒列表 |
 | `lazyLoading` | `Boolean` | `true` | `true` 使用 `LazyColumn`；`false` 使用普通 `Column + verticalScroll` |
 | `lazyListState` | `LazyListState` | `rememberLazyListState()` | 懒加载模式的滚动状态 |
@@ -129,6 +129,7 @@ HyperList(state = listState) {
 - `HyperList` 是页面级列表容器，默认使用 12dp 轻圆角并裁剪内容，不默认添加外层描边。
 - 容器颜色始终以不透明实色绘制；含 alpha 的自定义颜色会先与页面背景合成，不会透出下层内容。
 - 列表内部留白使用 `contentModifier = Modifier.padding(...)`；底栏避让等页面级外部留白使用 `modifier` 或父布局约束。
+- 组件本身不强制占满父布局高度；`Modifier.weight(1f)` 的默认 `fill = true` 会由父 `Column` 拉伸列表。需要“内容较少时收紧、内容较多时占用剩余空间并滚动”时，使用 `Modifier.weight(weight = 1f, fill = false)`。
 - 数据入口会自动隐藏最后一项的 `HyperListItem` 分割线，调用方只需表达普通行是否需要分割线。
 - `lazyLoading = true` 适合大量数据、分页和动态列表；`key` 只在该模式下生效。
 - `lazyLoading = false` 会一次组合全部项目，适合少量稳定数据或需要普通 `Column` 行为的场景。

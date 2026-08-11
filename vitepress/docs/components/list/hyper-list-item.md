@@ -13,6 +13,7 @@
 fun HyperListItem(
     headlineContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperListItemDefaults.ContentPadding),
     dividerModifier: Modifier = Modifier.padding(start = HyperListItemDefaults.DividerInset),
     enabled: Boolean = true,
     dividerVisible: Boolean = false,
@@ -51,12 +52,13 @@ HyperListItem(
 ## 约束
 
 - 不存在 `title`、`description`、`leadingIcon`、`trailing` 参数。
-- 默认最小高度为 `HyperListItemDefaults.MinHeight`；外部尺寸由 `modifier` 控制，内部内容间距由组件统一维护。
+- 默认最小高度为 `HyperListItemDefaults.MinHeight`；外部尺寸和间距由 `modifier` 控制，内部内容间距由 `contentModifier` 控制。
+- `contentModifier` 默认应用 `HyperListItemDefaults.ContentPadding`；需要紧凑条目时应替换该参数，不要把内容 padding 叠加到外层 `modifier`。
 - `headlineContent` 默认使用 16sp/22sp，`supportingContent` 默认使用 13sp/18sp；调用方显式传入 `style` 或 `fontSize` 时以调用方为准。
 - `dividerVisible = true` 时会绘制分割线；放入 `HyperList(items)` 或 `HyperMenuList(items)` 的最后一项时，父列表会自动隐藏该分割线。
 - 分割线默认使用 `HyperListItemDefaults.DividerInset` 缩进；自定义缩进或尺寸使用 `dividerModifier`，不提供 `dividerInset` 数值参数。
-- 通过 `HyperListItemColors` 或 `HyperListItemDefaults.colors(...)` 传入含 alpha 的颜色时，会先与列表卡片背景合成为实色。
+- 通过 `HyperListItemColors` 或 `HyperListItemDefaults.colors(...)` 传入含 alpha 的颜色时，会先与父 `HyperList` 或 `HyperMenuList` 的实际容器背景合成为实色；独立使用时按页面背景解析。
 - 行点击和 trailing 控件点击是否独立，由调用方在 slot 中组合。
-- 放入 `HyperMenuList` 时，菜单容器负责外层圆角背景；放入 `HyperList` 时保持页面列表的无圆角平铺效果。
+- 放入 `HyperMenuList` 或 `HyperList` 时，父容器负责外层圆角背景与裁剪。
 
 <WasmPreview demo="hyper_list" title="HyperListItem 交互预览" />

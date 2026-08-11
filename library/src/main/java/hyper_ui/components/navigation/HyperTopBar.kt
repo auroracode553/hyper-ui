@@ -29,6 +29,7 @@ data class HyperTopBarColors(
 /**
  * 顶部导航栏组件。
  *
+ * 默认使用不透明卡片容器色，与页面主体形成稳定层级。
  * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
  */
 @Composable

@@ -37,16 +37,18 @@ data class HyperListItemColors(
 )
 
 internal val LocalHyperListItemDividerSuppressed = staticCompositionLocalOf { false }
+internal val LocalHyperListItemContainerColor = staticCompositionLocalOf { Color.Unspecified }
 
 /**
  * 列表项组件。
  *
- * 组件内部已包含内容默认间距，外部间距请通过 modifier.padding(...) 控制。
+ * modifier 控制列表项外壳，contentModifier 控制列表项内部内容布局。
  */
 @Composable
 fun HyperListItem(
     headlineContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier.padding(HyperListItemDefaults.ContentPadding),
     dividerModifier: Modifier = Modifier.padding(start = HyperListItemDefaults.DividerInset),
     enabled: Boolean = true,
     dividerVisible: Boolean = false,
@@ -56,22 +58,23 @@ fun HyperListItem(
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null
 ) {
+    val containerColor = currentHyperListItemContainerColor()
     val requestedContentColor = if (enabled) colors.contentColor else colors.disabledContentColor
     val requestedSupportingColor = if (enabled) colors.supportingColor else colors.disabledContentColor
     val contentColor = resolveHyperOpaqueColor(
         color = requestedContentColor,
         fallbackColor = if (enabled) HyperColors.primaryText else HyperColors.secondaryText,
-        backgroundColor = HyperColors.cardContainer
+        backgroundColor = containerColor
     )
     val supportingColor = resolveHyperOpaqueColor(
         color = requestedSupportingColor,
         fallbackColor = HyperColors.secondaryText,
-        backgroundColor = HyperColors.cardContainer
+        backgroundColor = containerColor
     )
     val dividerColor = resolveHyperOpaqueColor(
         color = colors.dividerColor,
         fallbackColor = HyperColors.divider,
-        backgroundColor = HyperColors.cardContainer
+        backgroundColor = containerColor
     )
     val shouldShowDivider = dividerVisible && !LocalHyperListItemDividerSuppressed.current
     val clickModifier = if (onClick != null) {
@@ -90,7 +93,7 @@ fun HyperListItem(
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = HyperListItemDefaults.MinHeight)
                 .then(clickModifier)
-                .padding(HyperListItemDefaults.ContentPadding),
+                .then(contentModifier),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (leadingContent != null) {
@@ -193,10 +196,11 @@ object HyperListItemDefaults {
         disabledContentColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
     ): HyperListItemColors {
+        val containerColor = currentHyperListItemContainerColor()
         val resolvedContentColor = resolveHyperOpaqueColor(
             color = contentColor,
             fallbackColor = HyperColors.primaryText,
-            backgroundColor = HyperColors.cardContainer
+            backgroundColor = containerColor
         )
 
         return HyperListItemColors(
@@ -204,18 +208,25 @@ object HyperListItemDefaults {
             supportingColor = resolveHyperOpaqueColor(
                 color = supportingColor,
                 fallbackColor = HyperColors.secondaryText,
-                backgroundColor = HyperColors.cardContainer
+                backgroundColor = containerColor
             ),
             disabledContentColor = resolveHyperOpaqueColor(
                 color = disabledContentColor,
                 fallbackColor = HyperColors.secondaryText,
-                backgroundColor = HyperColors.cardContainer
+                backgroundColor = containerColor
             ),
             dividerColor = resolveHyperOpaqueColor(
                 color = dividerColor,
                 fallbackColor = HyperColors.divider,
-                backgroundColor = HyperColors.cardContainer
+                backgroundColor = containerColor
             )
         )
     }
+}
+
+/** 返回父列表提供的实色背景；独立列表项默认按页面背景解析颜色。 */
+@Composable
+private fun currentHyperListItemContainerColor(): Color {
+    val providedColor = LocalHyperListItemContainerColor.current
+    return if (providedColor == Color.Unspecified) HyperColors.pageBackground else providedColor
 }

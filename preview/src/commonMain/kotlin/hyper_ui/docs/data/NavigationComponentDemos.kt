@@ -13,7 +13,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "topbar",
         group = GROUP_NAVIGATION,
         title = "HyperTopBar",
-        description = "顶部栏容器。navigation、title、action 三个区域都由调用方通过 slot 渲染。",
+        description = "不透明卡片背景的顶部栏容器；navigation、title、action 三个区域由调用方通过 slot 渲染。",
         code = """
             HyperTopBar(
                 navigationContent = {
@@ -33,6 +33,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("三段布局", "navigation/title/action", "左右操作与居中标题"),
+            DemoVariant("默认背景", "colors.containerColor", "不透明卡片容器色"),
             DemoVariant("Slot 内容", "content slots", "图标按钮和标题文字")
         ),
         apiDocumentPaths = listOf("navigation/hyper-top-bar.md"),

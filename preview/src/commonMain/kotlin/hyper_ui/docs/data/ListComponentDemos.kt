@@ -11,15 +11,15 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_list",
         group = GROUP_LIST,
         title = "HyperList",
-        description = "不透明实色的轻圆角页面级列表，支持切换懒加载、普通列表渲染和容器形状。",
+        description = "不透明实色的轻圆角页面级列表，支持切换懒加载、普通列表渲染和内容间距。",
         code = """
             HyperList(
                 items = items,
                 contentModifier = Modifier.padding(vertical = 4.dp),
-                lazyLoading = true,
-                shape = HyperListDefaults.Shape
+                lazyLoading = true
             ) { item ->
                 HyperListItem(
+                    contentModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     leadingContent = { Icon(item.icon, null) },
                     headlineContent = { Text(item.title) },
                     supportingContent = { Text(item.description) },
@@ -47,6 +47,8 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制容器内部留白"),
             DemoVariant("普通列表", "lazyLoading = false", "Column 滚动列表"),
             DemoVariant("DSL 列表", "state + item/items", "调用方组合条目"),
+            DemoVariant("默认外观", "colors + shape", "不透明卡片背景与 12dp 轻圆角"),
+            DemoVariant("条目内部布局", "contentModifier = Modifier.padding(...)", "自定义紧凑内容间距"),
             DemoVariant("列表条目", "leading/headline/supporting", "图标、双行文字与分隔线")
         ),
         apiDocumentPaths = listOf(

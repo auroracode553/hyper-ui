@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/navigation/HyperTopBar.kt`
 - 预览：`topbar`
 
-`HyperTopBar` 是三段式顶部栏容器：`navigationContent`、`titleContent`、`actionContent`。组件不内置返回按钮、标题文本或导航逻辑，标题 slot 默认继承 HyperUI 提供的标题字重和字号。
+`HyperTopBar` 是三段式顶部栏容器：`navigationContent`、`titleContent`、`actionContent`。组件不内置返回按钮、标题文本或导航逻辑，标题 slot 默认继承 HyperUI 提供的标题字重和字号。默认容器使用不透明的 `HyperColors.cardContainer`，与页面主体形成清晰层级。
 
 ## 公开签名
 

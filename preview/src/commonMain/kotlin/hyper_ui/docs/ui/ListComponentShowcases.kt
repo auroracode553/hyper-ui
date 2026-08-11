@@ -38,6 +38,7 @@ import hyper_ui.HyperCheckbox
 import hyper_ui.HyperList
 import hyper_ui.HyperListDefaults
 import hyper_ui.HyperListItem
+import hyper_ui.HyperListItemDefaults
 import hyper_ui.HyperMenuList
 import hyper_ui.HyperRadioButton
 import hyper_ui.HyperSwitch
@@ -129,6 +130,7 @@ fun HyperListDemo() {
     )
     var lazyLoading by remember { mutableStateOf(true) }
     var roundedCorners by remember { mutableStateOf(true) }
+    var compactContent by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -169,6 +171,23 @@ fun HyperListDemo() {
             )
         }
 
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = if (compactContent) "紧凑条目间距" else "默认条目间距",
+                color = LocalContentColor.current,
+                fontSize = 14.sp,
+                lineHeight = 20.sp
+            )
+            HyperSwitch(
+                checked = compactContent,
+                onCheckedChange = { compactContent = it }
+            )
+        }
+
         Box(modifier = Modifier.height(280.dp)) {
             HyperList(
                 items = items,
@@ -177,6 +196,11 @@ fun HyperListDemo() {
                 shape = if (roundedCorners) HyperListDefaults.Shape else RectangleShape
             ) { item ->
                 HyperListItem(
+                    contentModifier = if (compactContent) {
+                        Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    } else {
+                        Modifier.padding(HyperListItemDefaults.ContentPadding)
+                    },
                     leadingContent = { ListIcon(iconFor(item)) },
                     headlineContent = { ListTitle(item) },
                     supportingContent = { ListDescription("点击查看配置") },
