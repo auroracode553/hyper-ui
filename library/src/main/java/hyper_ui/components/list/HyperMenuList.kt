@@ -31,6 +31,7 @@ data class HyperMenuListColors(
 /**
  * 简单菜单列表。
  *
+ * 仅用于少量菜单、设置项和操作入口；页面级或动态数据列表必须使用 HyperList。
  * modifier 控制菜单外壳，contentModifier 控制容器内部内容布局。
  * 组件不提供边框参数；需要外层描边时由调用方通过 modifier 组合。
  */
@@ -83,6 +84,7 @@ fun <T> HyperMenuList(
 /**
  * DSL 菜单列表入口。
  *
+ * 仅用于少量菜单、设置项和操作入口；不推荐用于普通列表或大量数据渲染。
  * modifier 控制菜单外壳，contentModifier 控制容器内部内容布局。
  * 组件不提供边框参数；需要外层描边时由调用方通过 modifier 组合。
  */

@@ -44,7 +44,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_menu_list",
         group = GROUP_LIST,
         title = "HyperMenuList",
-        description = "不提供 border 参数的不透明圆角菜单列表，外部视觉统一通过 modifier 组合。",
+        description = "只用于少量菜单、设置项和操作入口的不透明圆角菜单容器，不用于数据列表。",
         code = """
             HyperMenuList(items = items) { item ->
                 HyperListItem(

@@ -5,7 +5,9 @@
 - 状态归属：调用方提供菜单数据或内容
 - Preview ID：`hyper_menu_list`
 
-圆角菜单列表容器，适合少量静态菜单、设置分组和操作入口。它带圆角和不透明实色卡片背景，不提供 `border` 参数，也不绘制外层描边或玻璃高光；如需额外边框，由调用方通过 `modifier` 组合。数据项入口基于 `Column` 与 `verticalScroll` 一次组合全部项目，并会自动抑制最后一项的 `HyperListItem` 分割线；slot 分组入口不额外添加滚动，适合放在页面级滚动容器中。
+圆角菜单容器，只适合少量静态菜单、设置分组和操作入口。它带圆角和不透明实色卡片背景，不提供 `border` 参数，也不绘制外层描边或玻璃高光；如需额外边框，由调用方通过 `modifier` 组合。数据项入口基于 `Column` 与 `verticalScroll` 一次组合全部项目，并会自动抑制最后一项的 `HyperListItem` 分割线；slot 分组入口不额外添加滚动，适合放在页面级滚动容器中。
+
+> **注意：** `HyperMenuList` 不是通用数据列表，不推荐用于页面级、动态或大量数据渲染。普通页面列表必须使用 [`HyperList`](hyper-list.md)；少量非菜单的静态详情直接使用 `Column` 等 Compose 布局。
 
 ## 公开签名
 
@@ -92,6 +94,7 @@ fun SettingsGroup(enabled: Boolean, onEnabledChange: (Boolean) -> Unit) {
 ## 约束
 
 - `HyperMenuList` 用于菜单、设置分组和少量操作入口；页面级列表使用 [HyperList](hyper-list.md)。
+- 不要为了复用圆角卡片样式，把历史、文件、媒体、日志、搜索结果或属性数据列表放入 `HyperMenuList`。
 - 容器不绘制透明层或玻璃高光；含 alpha 的自定义容器颜色会先与页面背景合成为实色。
 - 容器默认在第一项上方和最后一项下方各保留 `6.dp`，避免内容紧贴圆角；特殊布局才使用 `contentModifier` 替换默认值。
 - `items` 数据入口内部自带纵向滚动；放入另一个同方向无界滚动容器前，应明确尺寸约束。
