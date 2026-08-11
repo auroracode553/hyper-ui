@@ -30,8 +30,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -94,6 +99,14 @@ fun HyperPopup(
     )
     val windowPadding = HyperPopupDefaults.WindowPadding
     val contentPadding = HyperPopupDefaults.ContentPadding
+    val showPositionedContent = remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        // Compose Popup 首帧先挂载在窗口起点，下一帧才完成尺寸与居中定位。
+        // 首帧保持透明可消除从顶部移动到中心的视觉跳变，不引入显示动画。
+        withFrameNanos { }
+        showPositionedContent.value = true
+    }
 
     DisableSelection {
         Popup(
@@ -105,7 +118,9 @@ fun HyperPopup(
                 dismissOnClickOutside = dismissOnClickOutside
             )
         ) {
-            BoxWithConstraints {
+            BoxWithConstraints(
+                modifier = Modifier.alpha(if (showPositionedContent.value) 1f else 0f)
+            ) {
                 val horizontalWindowPadding =
                     windowPadding.calculateLeftPadding(layoutDirection) +
                         windowPadding.calculateRightPadding(layoutDirection)

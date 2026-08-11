@@ -65,7 +65,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_popup",
         group = GROUP_FEEDBACK,
         title = "HyperPopup",
-        description = "窗口居中的基础浮层，无公开定位参数、无显示或关闭动画，并使用不透明实色面板。",
+        description = "窗口居中的基础浮层会跳过未定位首帧，无顶部位移或显示/关闭动画，并使用不透明实色面板。",
         code = """
             HyperPopup(
                 visible = visible,
@@ -85,7 +85,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("基础面板", "visible + content", "响应式实色浮层面板"),
-            DemoVariant("窗口居中", "Popup", "忽略触发组件位置并相对窗口居中"),
+            DemoVariant("窗口居中", "Popup", "跳过未定位首帧并直接在窗口中心显示"),
             DemoVariant("外部关闭", "dismissOnClickOutside", "仅点击处理，不绘制遮罩"),
             DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
         ),
@@ -96,13 +96,14 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dialog",
         group = GROUP_FEEDBACK,
         title = "HyperAlertDialog",
-        description = "Alert 结构化对话框继承不透明实色面板；支持点击空白关闭，正文和按钮均为 slot。",
+        description = "Alert 结构化对话框直接居中显示；支持点击空白关闭、可选描边，正文和按钮均为 slot。",
         code = """
             HyperAlertDialog(
                 visible = visible,
                 onDismissRequest = onDismiss,
                 title = "确认删除",
                 dismissOnClickOutside = dismissOnClickOutside,
+                border = if (showBorder) HyperPopupDefaults.border() else null,
                 bodyContent = { Text("删除后无法恢复，是否继续？") },
                 actionContent = {
                     HyperButton(onClick = onDismiss) { Text("取消") }
@@ -116,7 +117,8 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("结构化标题", "title", "固定标题区"),
             DemoVariant("正文", "bodyContent", "可滚动内容 slot"),
-            DemoVariant("操作", "actionContent", "普通与危险操作按钮")
+            DemoVariant("操作", "actionContent", "普通与危险操作按钮"),
+            DemoVariant("描边", "border", "默认轻描边或无描边")
         ),
         apiDocumentPaths = listOf("feedback/hyper-alert-dialog.md"),
         content = { DialogDemo() }

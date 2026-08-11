@@ -1,7 +1,6 @@
 /** 文件职责：在 hyper_ui 中负责承载菜单列表容器 HyperMenuList。 */
 package hyper_ui
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +32,7 @@ data class HyperMenuListColors(
  * 简单菜单列表。
  *
  * modifier 控制菜单外壳，contentModifier 控制容器内部内容布局。
+ * 组件不提供边框参数；需要外层描边时由调用方通过 modifier 组合。
  */
 @Composable
 fun <T> HyperMenuList(
@@ -40,7 +40,6 @@ fun <T> HyperMenuList(
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperMenuListDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
 ) {
@@ -55,8 +54,7 @@ fun <T> HyperMenuList(
             .fillMaxWidth()
             .hyperSolidSurface(
                 containerColor = containerColor,
-                shape = shape,
-                border = border
+                shape = shape
             )
             .then(contentModifier)
             .verticalScroll(rememberScrollState()),
@@ -86,13 +84,13 @@ fun <T> HyperMenuList(
  * DSL 菜单列表入口。
  *
  * modifier 控制菜单外壳，contentModifier 控制容器内部内容布局。
+ * 组件不提供边框参数；需要外层描边时由调用方通过 modifier 组合。
  */
 @Composable
 fun HyperMenuList(
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperMenuListDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    border: BorderStroke? = HyperMenuListDefaults.border(),
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -110,8 +108,7 @@ fun HyperMenuList(
                 .fillMaxWidth()
                 .hyperSolidSurface(
                     containerColor = containerColor,
-                    shape = HyperMenuListDefaults.Shape,
-                    border = border
+                    shape = HyperMenuListDefaults.Shape
                 )
                 .then(contentModifier),
             verticalArrangement = verticalArrangement,
@@ -132,12 +129,6 @@ object HyperMenuListDefaults {
             fallbackColor = HyperColors.cardContainer,
             backgroundColor = HyperColors.pageBackground
         )
-    )
-
-    @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
-        color = color,
-        backgroundColor = HyperColors.cardContainer
     )
 }
 

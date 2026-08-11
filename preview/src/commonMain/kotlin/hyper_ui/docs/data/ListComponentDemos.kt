@@ -56,7 +56,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_menu_list",
         group = GROUP_LIST,
         title = "HyperMenuList",
-        description = "不透明实色的圆角菜单列表，适合少量静态菜单、设置分组和操作入口。",
+        description = "不提供 border 参数的不透明圆角菜单列表，外部视觉统一通过 modifier 组合。",
         code = """
             HyperMenuList(items = items) { item ->
                 HyperListItem(
@@ -80,6 +80,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("数据入口", "items + itemContent", "静态菜单数据"),
+            DemoVariant("外部修饰", "modifier", "间距或额外边框由调用方组合"),
             DemoVariant("首尾留白", "ContentPadding = 6.dp", "默认避开卡片上下圆角边界"),
             DemoVariant("Slot 入口", "content slot", "设置项与选择控件组合"),
             DemoVariant("列表条目", "trailingContent", "值、开关、复选与单选尾部内容")

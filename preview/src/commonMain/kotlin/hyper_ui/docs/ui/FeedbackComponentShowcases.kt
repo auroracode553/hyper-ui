@@ -36,6 +36,7 @@ import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperPopup
+import hyper_ui.HyperPopupDefaults
 import hyper_ui.HyperDropdownMenu
 import hyper_ui.HyperLinearProgressIndicator
 import hyper_ui.HyperCircularProgressIndicator
@@ -203,6 +204,7 @@ fun DialogDemo() {
     var showDialog by remember { mutableStateOf(false) }
     var resultText by remember { mutableStateOf("等待操作") }
     var dismissOnClickOutside by remember { mutableStateOf(true) }
+    var showBorder by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier.widthIn(max = 420.dp),
@@ -221,13 +223,19 @@ fun DialogDemo() {
         ) {
             Text(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
         }
+        HyperButton(
+            tone = HyperButtonTone.Outline,
+            onClick = { showBorder = !showBorder }
+        ) {
+            Text(text = if (showBorder) "描边：开启" else "描边：关闭")
+        }
         Text(
             text = resultText,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp
         )
         Text(
-            text = "Alert 面板全程不透明",
+            text = "Alert 打开时直接居中，无顶部位移或显示动画",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp
         )
@@ -241,6 +249,7 @@ fun DialogDemo() {
         },
         title = "确认删除",
         dismissOnClickOutside = dismissOnClickOutside,
+        border = if (showBorder) HyperPopupDefaults.border() else null,
         bodyContent = { DialogBody("删除后无法恢复，是否继续？") },
         actionContent = {
             HyperButton(
@@ -307,7 +316,7 @@ fun HyperPopupDemo() {
             textAlign = TextAlign.Center
         )
         Text(
-            text = "基础浮层没有公开定位参数或动画，面板保持不透明且不绘制蒙层。",
+            text = "基础浮层跳过未定位首帧，直接居中显示；面板保持不透明且不绘制蒙层。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center

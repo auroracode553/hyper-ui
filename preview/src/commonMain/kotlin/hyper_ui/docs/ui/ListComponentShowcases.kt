@@ -55,7 +55,7 @@ fun HyperMenuListDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "菜单列表使用不透明实色容器",
+            text = "菜单列表不提供边框参数，外部视觉由 modifier 组合",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp
         )

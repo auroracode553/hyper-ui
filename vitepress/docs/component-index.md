@@ -40,7 +40,7 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperList](components/list/hyper-list.md) | 不透明实色的轻圆角页面级列表，可切换懒加载或普通列表 | 调用方提供数据 |
-| [HyperMenuList](components/list/hyper-menu-list.md) | 带默认首尾安全留白的圆角菜单列表和设置分组 | 调用方提供数据或内容 |
+| [HyperMenuList](components/list/hyper-menu-list.md) | 无 border API、带首尾安全留白的圆角菜单列表和设置分组 | 调用方通过 `modifier` 控制外部视觉 |
 | [HyperListItem](components/list/hyper-list-item.md) | 单行 52dp、带说明 56dp 的自适应实色列表项 | 调用方处理点击和尾部状态 |
 
 ## 反馈组件
@@ -49,6 +49,6 @@
 | --- | --- | --- |
 | [HyperDropdownMenu](components/feedback/hyper-dropdown-menu.md) | Popup 浮层菜单，使用不透明实色面板 | 调用方提供 `expanded` |
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 无动画、不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |
-| [HyperPopup](components/feedback/hyper-popup.md) | 窗口居中、无动画、全程不透明的内容浮层 | 调用方提供 `visible` 和内容状态 |
-| [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 全程不透明的 Slot-first Alert 弹窗 | 调用方提供 `visible` 并处理结果 |
+| [HyperPopup](components/feedback/hyper-popup.md) | 跳过未定位首帧、直接居中且全程不透明的内容浮层 | 调用方提供 `visible` 和内容状态 |
+| [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 无显示动画、描边可选的 Slot-first Alert 弹窗 | 调用方提供 `visible` 并处理结果 |
 | [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 全程不透明的应用更新状态与下载确认弹窗 | 调用方持有状态，并注入 Release 加载和下载动作 |
