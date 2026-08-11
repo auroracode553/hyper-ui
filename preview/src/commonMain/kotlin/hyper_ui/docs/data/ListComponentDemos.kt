@@ -11,37 +11,25 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_list",
         group = GROUP_LIST,
         title = "HyperList",
-        description = "不透明实色的轻圆角页面级列表，支持切换懒加载、普通列表渲染和内容间距。",
+        description = "不透明实色的轻圆角页面级懒列表，通过 LazyListScope Slot 组合项目。",
         code = """
-            HyperList(items = items, lazyLoading = true) { item ->
-                HyperListItem(
-                    leadingContent = { Icon(item.icon, null) },
-                    headlineContent = { Text(item.title) },
-                    supportingContent = { Text(item.description) },
-                    dividerVisible = true,
-                    dividerModifier = Modifier.padding(start = 70.dp)
-                )
-            }
-
-            HyperList(
-                items = items,
-                lazyLoading = false
-            ) { item ->
-                HyperListItem(headlineContent = { Text(item.title) })
-            }
-
             HyperList(state = listState) {
-                item { HyperListItem(headlineContent = { Text("概览") }) }
-                items(items, key = { it.id }) { item ->
+                item(key = "overview", contentType = "header") {
+                    HyperListItem(headlineContent = { Text("概览") })
+                }
+                items(
+                    items = items,
+                    key = { it.id },
+                    contentType = { "account" }
+                ) { item ->
                     HyperListItem(headlineContent = { Text(item.title) })
                 }
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("懒加载", "lazyLoading = true", "LazyColumn 页面列表"),
+            DemoVariant("懒加载", "LazyListScope", "固定使用 LazyColumn 页面列表"),
             DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制容器内部留白"),
-            DemoVariant("普通列表", "lazyLoading = false", "Column 滚动列表"),
-            DemoVariant("DSL 列表", "state + item/items", "调用方组合条目"),
+            DemoVariant("Slot 列表", "item/items/itemsIndexed", "调用方组合异构项目"),
             DemoVariant("默认外观", "colors + shape", "不透明卡片背景与 12dp 轻圆角"),
             DemoVariant("自适应行高", "52.dp / 56.dp", "根据 supportingContent 自动平衡单行与双行密度"),
             DemoVariant("列表条目", "leading/headline/supporting", "图标、双行文字与分隔线")

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -125,7 +126,6 @@ fun HyperListDemo() {
         "隐私权限",
         "数据备份"
     )
-    var lazyLoading by remember { mutableStateOf(true) }
     var roundedCorners by remember { mutableStateOf(true) }
     var comfortableContent by remember { mutableStateOf(false) }
 
@@ -134,23 +134,6 @@ fun HyperListDemo() {
             .widthIn(max = 560.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = if (lazyLoading) "懒加载开启 · 实色背景" else "普通列表渲染 · 实色背景",
-                color = LocalContentColor.current,
-                fontSize = 14.sp,
-                lineHeight = 20.sp
-            )
-            HyperSwitch(
-                checked = lazyLoading,
-                onCheckedChange = { lazyLoading = it }
-            )
-        }
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -187,23 +170,27 @@ fun HyperListDemo() {
 
         Box(modifier = Modifier.height(280.dp)) {
             HyperList(
-                items = items,
                 contentModifier = Modifier.padding(vertical = 4.dp),
-                lazyLoading = lazyLoading,
                 shape = if (roundedCorners) HyperListDefaults.Shape else RectangleShape
-            ) { item ->
-                HyperListItem(
-                    contentModifier = if (comfortableContent) {
-                        Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
-                    } else {
-                        Modifier.padding(HyperListItemDefaults.ContentPadding)
-                    },
-                    leadingContent = { ListIcon(iconFor(item)) },
-                    headlineContent = { ListTitle(item) },
-                    supportingContent = { ListDescription("点击查看配置") },
-                    dividerVisible = true,
-                    dividerModifier = Modifier.padding(start = 70.dp)
-                )
+            ) {
+                itemsIndexed(
+                    items = items,
+                    key = { _, item -> item },
+                    contentType = { _, _ -> "setting-item" }
+                ) { index, item ->
+                    HyperListItem(
+                        contentModifier = if (comfortableContent) {
+                            Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                        } else {
+                            Modifier.padding(HyperListItemDefaults.ContentPadding)
+                        },
+                        leadingContent = { ListIcon(iconFor(item)) },
+                        headlineContent = { ListTitle(item) },
+                        supportingContent = { ListDescription("点击查看配置") },
+                        dividerVisible = index < items.lastIndex,
+                        dividerModifier = Modifier.padding(start = 70.dp)
+                    )
+                }
             }
         }
     }

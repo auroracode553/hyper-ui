@@ -20,7 +20,7 @@ data class ComponentDemo(
     val content: @Composable () -> Unit
 )
 
-/** 聚合各分组的稳定 Preview ID；组件默认外观或交互调整需同步更新对应分组与 Showcase。 */
+/** 聚合各分组的稳定 Preview ID；公开 API、渲染策略或交互调整需同步更新对应分组与 Showcase。 */
 fun componentDemos(): List<ComponentDemo> = listOf(
     basicComponentDemos(),
     formComponentDemos(),

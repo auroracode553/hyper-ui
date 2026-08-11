@@ -2,30 +2,14 @@
 
 - 包名：`hyper_ui`
 - 源码：`library/src/main/java/hyper_ui/components/list/HyperList.kt`
-- 状态归属：调用方提供列表数据
+- 状态归属：调用方提供项目 Slot，可选持有 `LazyListState`
 - Preview ID：`hyper_list`
 
-页面级列表容器，适合列表页、消息页、记录流和动态数据。`HyperList` 默认使用不透明实色卡片背景、12dp 轻圆角、无玻璃高光、无外层描边的平铺列表样式，并会按容器形状裁剪滚动内容；调用方通过 `lazyLoading` 参数决定使用 `LazyColumn` 懒加载，还是使用普通 `Column + verticalScroll` 一次组合全部项目。数据入口会自动抑制最后一项的 `HyperListItem` 分割线。
+页面级懒加载列表，适合列表页、消息页、记录流、分组数据和分页内容。`HyperList` 固定使用 `LazyColumn`，只负责不透明实色卡片背景、12dp 轻圆角、可选边框和滚动状态；项目结构完全由调用方通过 `LazyListScope` Slot 描述。
 
 ## 公开签名
 
 ```kotlin
-@Composable
-fun <T> HyperList(
-    items: List<T>,
-    modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier,
-    key: ((item: T) -> Any)? = null,
-    lazyLoading: Boolean = true,
-    lazyListState: LazyListState = rememberLazyListState(),
-    scrollState: ScrollState = rememberScrollState(),
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    shape: Shape = HyperListDefaults.Shape,
-    border: BorderStroke? = null,
-    colors: HyperListColors = HyperListDefaults.colors(),
-    itemContent: @Composable (item: T) -> Unit
-)
-
 @Composable
 fun HyperList(
     modifier: Modifier = Modifier,
@@ -61,64 +45,47 @@ object HyperListDefaults {
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `items` | `List<T>` | 必填 | 列表数据 |
 | `modifier` | `Modifier` | `Modifier` | 列表根容器修饰符 |
-| `contentModifier` | `Modifier` | `Modifier` | 列表容器内部的内容布局修饰符 |
-| `key` | `((T) -> Any)?` | `null` | 可选稳定键，仅在 `lazyLoading = true` 时传给懒列表 |
-| `lazyLoading` | `Boolean` | `true` | `true` 使用 `LazyColumn`；`false` 使用普通 `Column + verticalScroll` |
-| `lazyListState` | `LazyListState` | `rememberLazyListState()` | 懒加载模式的滚动状态 |
-| `scrollState` | `ScrollState` | `rememberScrollState()` | 普通列表模式的滚动状态 |
+| `contentModifier` | `Modifier` | `Modifier` | 列表容器内部的布局修饰符 |
+| `state` | `LazyListState` | `rememberLazyListState()` | 懒列表滚动状态 |
 | `verticalArrangement` | `Arrangement.Vertical` | 间距 `0.dp` | 条目纵向排列 |
-| `shape` | `Shape` | `HyperListDefaults.Shape` | 列表容器与内容裁剪形状，默认 12dp 轻圆角 |
-| `border` | `BorderStroke?` | `null` | 页面列表默认无外层描边；需要同形描边时可传 `HyperListDefaults.border()` |
-| `colors` | `HyperListColors` | `HyperListDefaults.colors()` | 列表容器颜色，默认使用不透明的 `HyperColors.cardContainer` |
-| `itemContent` | `@Composable (T) -> Unit` | 必填 | 每项内容，只接收当前项目，不接收索引 |
-
-DSL 入口接收 `state` 与 `LazyListScope.content`，固定使用 `LazyColumn`，适合异构条目、分组标题、分页加载占位等内容。
+| `shape` | `Shape` | `HyperListDefaults.Shape` | 容器与内容裁剪形状，默认 12dp 轻圆角 |
+| `border` | `BorderStroke?` | `null` | 可选同形边框 |
+| `colors` | `HyperListColors` | `HyperListDefaults.colors()` | 默认使用不透明的 `HyperColors.cardContainer` |
+| `content` | `LazyListScope.() -> Unit` | 必填 | 使用 `item`、`items`、`itemsIndexed` 等标准懒列表 Slot 描述项目 |
 
 ## 最小用法
 
 ```kotlin
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import hyper_ui.*
 
 @Composable
-fun AccountList(accounts: List<String>) {
-    HyperList(
-        items = accounts,
-        key = { account -> account },
-        lazyLoading = true
-    ) { account ->
-        HyperListItem(
-            headlineContent = { Text(account) },
-            dividerVisible = true
-        )
+fun AccountList(accounts: List<Account>) {
+    HyperList {
+        items(
+            items = accounts,
+            key = { account -> account.id },
+            contentType = { "account" }
+        ) { account ->
+            HyperListItem(
+                headlineContent = { Text(account.name) },
+                dividerVisible = account != accounts.lastOrNull()
+            )
+        }
     }
 }
 ```
 
-少量数据可关闭懒加载：
-
-```kotlin
-HyperList(
-    items = accounts,
-    lazyLoading = false
-) { account ->
-    HyperListItem(
-        headlineContent = { Text(account.name) },
-        dividerVisible = true
-    )
-}
-```
-
-异构内容可使用 DSL 入口：
+异构或分组内容直接组合多个 Slot：
 
 ```kotlin
 HyperList(state = listState) {
-    item {
-        HyperListItem(headlineContent = { Text("概览") })
+    item(key = "overview", contentType = "header") {
+        Text("概览")
     }
-    items(accounts, key = { it.id }) { account ->
+    items(accounts, key = { it.id }, contentType = { "account" }) { account ->
         HyperListItem(headlineContent = { Text(account.name) })
     }
 }
@@ -126,16 +93,13 @@ HyperList(state = listState) {
 
 ## 约束
 
-- `HyperList` 是页面级列表容器，默认使用 12dp 轻圆角并裁剪内容，不默认添加外层描边。
-- 容器颜色始终以不透明实色绘制；含 alpha 的自定义颜色会先与页面背景合成，不会透出下层内容。
-- 列表内部留白使用 `contentModifier = Modifier.padding(...)`；底栏避让等页面级外部留白使用 `modifier` 或父布局约束。
-- 组件本身不强制占满父布局高度；`Modifier.weight(1f)` 的默认 `fill = true` 会由父 `Column` 拉伸列表。需要“内容较少时收紧、内容较多时占用剩余空间并滚动”时，使用 `Modifier.weight(weight = 1f, fill = false)`。
-- 数据入口会自动隐藏最后一项的 `HyperListItem` 分割线，调用方只需表达普通行是否需要分割线。
-- `lazyLoading = true` 适合大量数据、分页和动态列表；`key` 只在该模式下生效。
-- `lazyLoading = false` 会一次组合全部项目，适合少量稳定数据或需要普通 `Column` 行为的场景。
-- DSL 入口固定使用 `LazyListScope`，无法推断最后一个子项；使用 `HyperListItem.dividerVisible` 时仍由调用方控制最后一项是否显示。
-- 需要圆角菜单、设置分组或少量操作入口时，使用 [HyperMenuList](hyper-menu-list.md)。
-- 放入另一个同方向无界滚动容器前，应明确尺寸约束。
+- `HyperList` 始终使用 `LazyColumn`，不提供关闭懒加载或切换普通 `Column` 的参数。
+- 数据量很少且不需要独立滚动时，直接使用 Compose `Column`；设置分组和少量操作入口使用 [HyperMenuList](hyper-menu-list.md)。
+- 容器颜色始终以不透明实色绘制；含 alpha 的自定义颜色会先与页面背景合成。
+- 列表内部留白使用 `contentModifier`，页面级外部留白使用 `modifier` 或父布局约束。
+- `HyperList` 不解析 Slot 内容，最后一项分割线由调用方通过 `HyperListItem.dividerVisible` 控制。
+- 大量或动态数据应提供稳定 `key`；结构不同的项目建议提供 `contentType`。
+- 放入另一个同方向无界滚动容器前，应明确尺寸约束，避免嵌套滚动测量异常。
 
 ## 交互预览
 

@@ -39,7 +39,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperList](components/list/hyper-list.md) | 不透明实色的轻圆角页面级列表，可切换懒加载或普通列表 | 调用方提供数据 |
+| [HyperList](components/list/hyper-list.md) | 固定使用 LazyColumn 的页面级 Slot 懒列表 | 调用方提供 LazyListScope 项目 |
 | [HyperMenuList](components/list/hyper-menu-list.md) | 无 border API、带首尾安全留白的圆角菜单列表和设置分组 | 调用方通过 `modifier` 控制外部视觉 |
 | [HyperListItem](components/list/hyper-list-item.md) | 单行 52dp、带说明 56dp 的自适应实色列表项 | 调用方处理点击和尾部状态 |
 
