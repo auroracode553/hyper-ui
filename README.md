@@ -189,7 +189,7 @@ HyperIconButton(onClick = onSearch) {
 - 基础组件：`HyperButton`, `HyperIconButton`（slot-first 紧凑型容器，内容由调用方渲染；所有 tone、禁用态和图标按钮容器均使用不透明实色；`HyperIconButton` 默认 40dp，自定义尺寸通过 `modifier` 控制）
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadio`, `HyperSegmented`, `HyperSlider`（输入框默认使用不透明背景、轻描边和 40dp 紧凑最小高度；`HyperSegmented` 提供等宽分段与抬升选中态；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
-- 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 只提供带统一容器样式的 `LazyColumn` 和 `LazyListScope` Slot，用于页面级数据列表；`HyperMenuList` 只能用于少量菜单、设置项和操作入口，不推荐用于普通、动态或大量列表数据；两者均使用不透明实色容器；`HyperMenuList` 不提供 `border` 参数，并默认提供 6dp 首尾安全留白；`HyperListItem` 根据 supporting slot 自动使用单行 52dp、双行 56dp 的基础高度和 6dp 纵向留白）
+- 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 只提供带统一容器样式的 `LazyColumn` 和 `LazyListScope` Slot，用于页面级数据列表；`HyperMenuList` 只能用于少量菜单、设置项和操作入口，不推荐用于普通、动态或大量列表数据；两者均使用不透明实色容器；`HyperMenuList` 不提供 `border` 参数，并默认提供 4dp 首尾安全留白；`HyperListItem` 根据 supporting slot 自动使用单行 44dp、双行 54dp 的基础高度和 4dp 纵向留白）
 - 浮层反馈：`HyperPopup`, `HyperPopupDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `hyperToast`, `HyperToastDuration`（基础浮层跳过未定位首帧并直接在应用窗口中居中显示；Alert 内置标准实色描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
 - 导航组件：`HyperNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明并继承页面底色；`HyperDrawer` 提供系统安全区避让和可配置内容滚动；`HyperTabBar` 默认 56dp，浅色模式保留透明玻璃效果、深色模式使用不透明实色；页面切换由调用方处理）

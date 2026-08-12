@@ -31,7 +31,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制容器内部留白"),
             DemoVariant("Slot 列表", "item/items/itemsIndexed", "调用方组合异构项目"),
             DemoVariant("默认外观", "colors + shape", "不透明卡片背景与 12dp 轻圆角"),
-            DemoVariant("自适应行高", "52.dp / 56.dp", "根据 supportingContent 自动平衡单行与双行密度"),
+            DemoVariant("自适应行高", "44.dp / 54.dp", "单行保持紧凑，带描述项增加纵向呼吸空间"),
             DemoVariant("列表条目", "leading/headline/supporting", "图标、双行文字与分隔线")
         ),
         apiDocumentPaths = listOf(
@@ -69,7 +69,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("数据入口", "items + itemContent", "静态菜单数据"),
             DemoVariant("外部修饰", "modifier", "间距或额外边框由调用方组合"),
-            DemoVariant("首尾留白", "ContentPadding = 6.dp", "默认避开卡片上下圆角边界"),
+            DemoVariant("首尾留白", "ContentPadding = 4.dp", "紧凑避开卡片上下圆角边界"),
             DemoVariant("Slot 入口", "content slot", "设置项与选择控件组合"),
             DemoVariant("列表条目", "trailingContent", "值、开关、复选与单选尾部内容")
         ),

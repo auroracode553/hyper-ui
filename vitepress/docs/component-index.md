@@ -42,7 +42,7 @@
 | --- | --- | --- |
 | [HyperList](components/list/hyper-list.md) | 固定使用 LazyColumn 的页面级 Slot 懒列表 | 调用方提供 LazyListScope 项目 |
 | [HyperMenuList](components/list/hyper-menu-list.md) | 仅用于少量菜单、设置项和操作入口的圆角菜单容器 | 调用方提供菜单 Slot；不用于数据列表 |
-| [HyperListItem](components/list/hyper-list-item.md) | 单行 52dp、带说明 56dp 的自适应实色列表项 | 调用方处理点击和尾部状态 |
+| [HyperListItem](components/list/hyper-list-item.md) | 单行 44dp、带说明 54dp 的自适应实色列表项 | 调用方处理点击和尾部状态 |
 
 ## 反馈组件
 

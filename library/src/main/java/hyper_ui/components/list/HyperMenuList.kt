@@ -121,8 +121,8 @@ fun HyperMenuList(
 
 object HyperMenuListDefaults {
     val Shape: Shape = RoundedCornerShape(MenuListCornerRadius)
-    /** 菜单项负责行内留白，容器额外保留首尾安全区以避开圆角边界。 */
-    val ContentPadding = PaddingValues(vertical = 6.dp)
+    /** 菜单项负责行内留白，容器仅保留紧凑的首尾圆角安全区。 */
+    val ContentPadding = PaddingValues(vertical = 4.dp)
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperMenuListColors = HyperMenuListColors(

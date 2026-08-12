@@ -163,12 +163,12 @@ fun HyperListItem(
 }
 
 object HyperListItemDefaults {
-    /** 单行导航项与双行说明项使用不同基础高度，避免统一高度造成过松或过密。 */
-    val SingleLineMinHeight = 52.dp
-    val SupportingMinHeight = 56.dp
+    /** 单行保持紧凑；带说明的双行项增加纵向呼吸空间，避免标题与描述显得拥挤。 */
+    val SingleLineMinHeight = 44.dp
+    val SupportingMinHeight = 54.dp
     val ContentGap = 12.dp
     val TextGap = 3.dp
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 6.dp)
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 4.dp)
     val DividerInset = 16.dp
     val DividerHeight = 1.dp
 
