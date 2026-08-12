@@ -11,6 +11,16 @@
 ```kotlin
 enum class HyperDrawerPosition { Left, Right, Top, Bottom }
 
+data class HyperDrawerColors(
+    val containerColor: Color,
+    val contentColor: Color,
+    val supportingColor: Color,
+    val selectedContainerColor: Color,
+    val selectedContentColor: Color,
+    val disabledContentColor: Color,
+    val dividerColor: Color
+)
+
 @Composable
 fun HyperDrawer(
     open: Boolean,
@@ -59,8 +69,25 @@ fun HyperDrawerItem(
 ```kotlin
 object HyperDrawerDefaults {
     val Width = 320.dp
+    val HeaderPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp)
+    val ItemPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp)
+    val ItemMinHeight = 54.dp
+    const val MaxWidthFraction = 0.88f
+    const val MaxHeightFraction = 0.88f
+    const val DrawerZIndex = 9f
 
     fun contentPadding(position: HyperDrawerPosition): PaddingValues
+
+    @Composable
+    fun colors(
+        containerColor: Color = Color.Unspecified,
+        contentColor: Color = Color.Unspecified,
+        supportingColor: Color = Color.Unspecified,
+        selectedContainerColor: Color = Color.Unspecified,
+        selectedContentColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified,
+        dividerColor: Color = Color.Unspecified
+    ): HyperDrawerColors
 
     @Composable
     fun border(color: Color = Color.Unspecified): BorderStroke

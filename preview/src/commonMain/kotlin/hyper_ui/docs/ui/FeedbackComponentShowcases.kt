@@ -1,6 +1,7 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/FeedbackComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
@@ -36,7 +38,7 @@ import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperPopup
-import hyper_ui.HyperDropdownMenu
+import hyper_ui.HyperDropdown
 import hyper_ui.HyperLinearProgressIndicator
 import hyper_ui.HyperCircularProgressIndicator
 import hyper_ui.HyperProgressIndicatorDefaults
@@ -79,7 +81,7 @@ fun DropdownMenuDemo() {
             )
         }
 
-        HyperDropdownMenu(
+        HyperDropdown(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             contentModifier = Modifier.padding(vertical = 10.dp),
@@ -105,6 +107,58 @@ fun DropdownMenuDemo() {
                 )
             }
         }
+    }
+}
+
+/** Android-only hyperToast 的跨平台交互模拟。 */
+@Composable
+fun ToastDemo() {
+    var message by remember { mutableStateOf("点击按钮模拟 Toast 反馈") }
+    var duration by remember { mutableStateOf("Short") }
+
+    Column(
+        modifier = Modifier.widthIn(max = 420.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            HyperButton(onClick = {
+                message = "保存成功"
+                duration = "Short"
+            }) {
+                Text("短提示")
+            }
+            HyperButton(
+                onClick = {
+                    message = "操作已完成，这是一条较长提示"
+                    duration = "Long"
+                },
+                tone = HyperButtonTone.Outline
+            ) {
+                Text("长提示")
+            }
+        }
+        Box(
+            modifier = Modifier
+                .widthIn(min = 220.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.inverseSurface,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = message,
+                color = MaterialTheme.colorScheme.inverseOnSurface,
+                textAlign = TextAlign.Center
+            )
+        }
+        Text(
+            text = "模拟时长：HyperToastDuration.$duration",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp
+        )
     }
 }
 

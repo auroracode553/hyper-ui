@@ -25,12 +25,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
-import hyper_ui.HyperRadioButton
+import hyper_ui.HyperRadio
+import hyper_ui.HyperSegmented
+import hyper_ui.HyperSegmentedDefaults
 import hyper_ui.HyperSlider
 import hyper_ui.HyperSliderDefaults
 import hyper_ui.HyperSwitch
@@ -45,7 +48,7 @@ fun RadioDemo() {
             text = "均衡模式",
             onClick = { mode = "balanced" }
         ) {
-            HyperRadioButton(
+            HyperRadio(
                 selected = mode == "balanced",
                 onClick = { mode = "balanced" }
             )
@@ -54,7 +57,7 @@ fun RadioDemo() {
             text = "性能模式",
             onClick = { mode = "performance" }
         ) {
-            HyperRadioButton(
+            HyperRadio(
                 selected = mode == "performance",
                 onClick = { mode = "performance" }
             )
@@ -63,10 +66,55 @@ fun RadioDemo() {
             text = "禁用选项",
             enabled = false
         ) {
-            HyperRadioButton(
+            HyperRadio(
                 selected = false,
                 onClick = null,
                 enabled = false
+            )
+        }
+    }
+}
+
+@Composable
+fun SegmentedDemo() {
+    val periods = remember { listOf("日", "周", "月", "年") }
+    var selectedPeriod by remember { mutableStateOf("年") }
+    val modes = remember { listOf("轻量", "标准", "停用") }
+    var selectedMode by remember { mutableStateOf("标准") }
+
+    Column(
+        modifier = Modifier.widthIn(max = 520.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        HyperSegmented(
+            items = periods,
+            selectedItem = selectedPeriod,
+            onSelected = { selectedPeriod = it }
+        ) { period ->
+            Text(
+                text = period,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+            )
+        }
+        Text(
+            text = "当前周期：$selectedPeriod",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp
+        )
+
+        HyperSegmented(
+            items = modes,
+            selectedItem = selectedMode,
+            onSelected = { selectedMode = it },
+            itemEnabled = { it != "停用" },
+            colors = HyperSegmentedDefaults.colors(
+                selectedItemColor = Color(0.03f, 0.76f, 0.38f, 1f),
+                selectedContentColor = Color(1f, 1f, 1f, 1f)
+            )
+        ) { mode ->
+            Text(
+                text = mode,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
             )
         }
     }

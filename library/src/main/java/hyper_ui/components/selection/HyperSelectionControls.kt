@@ -198,7 +198,7 @@ fun HyperCheckbox(
 }
 
 @Composable
-fun HyperRadioButton(
+fun HyperRadio(
     selected: Boolean,
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,

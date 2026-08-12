@@ -20,7 +20,7 @@ fun rgba(
 val brandColor = rgba(255, 103, 0)
 ```
 
-组件默认样式使用不透明实色；唯一例外是 `HyperBottomBar` 的浅色容器。`alpha` 参数保留给调用方表达完整 RGBA 颜色值。
+组件默认样式使用不透明实色；唯一例外是 `HyperTabBar` 的浅色容器。`alpha` 参数保留给调用方表达完整 RGBA 颜色值。
 
 组件源码禁止使用 `Color(0xFFRRGGBB)` 十六进制硬编码。需要直接构造颜色时，使用四个 Float RGBA 分量；调用方也可优先使用 `rgba(...)`。
 
@@ -59,6 +59,10 @@ object HyperTheme {
 object HyperStyleDefaults {
     val DefaultThemeColor = rgba(255, 103, 0, 1f)
     val SuccessColor = rgba(52, 199, 89, 1f)
+    val InfoColor = rgba(144, 147, 153, 1f)
+    val WarningColor = rgba(230, 162, 60, 1f)
+    val DangerColor = rgba(255, 59, 48, 1f)
+    const val DisabledAlpha = 0.38f
     val SmallCornerRadius = 12.dp
     val MediumCornerRadius = 16.dp
     val LargeCornerRadius = 24.dp
@@ -74,6 +78,9 @@ object HyperStyleDefaults {
 | --- | --- | --- |
 | `accent` | `Color` | 当前主题强调色 |
 | `success` | `Color` | 当前成功色 |
+| `info` | `Color` | 信息语义色 |
+| `warning` | `Color` | 警告语义色 |
+| `danger` | `Color` | 危险语义色 |
 | `isLight` | `Boolean` | 当前背景是否为浅色 |
 | `pageBackground` | `Color` | 页面背景 |
 | `cardContainer` | `Color` | 卡片/面板背景 |
@@ -88,5 +95,6 @@ object HyperStyleDefaults {
 | `divider` | `Color` | 分割线 |
 | `fieldBorder` | `Color` | 输入框描边 |
 | `panelBorder` | `BorderStroke` | 面板描边 |
+| `glassHighlightBrush` | `Brush` | 浅色玻璃表面的高光画刷 |
 
 不要把 `HyperColors` 的结果缓存到全局变量；这些值依赖当前 Composition，应在 Composable 上下文中读取。

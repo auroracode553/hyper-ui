@@ -41,7 +41,7 @@ import hyper_ui.HyperListDefaults
 import hyper_ui.HyperListItem
 import hyper_ui.HyperListItemDefaults
 import hyper_ui.HyperMenuList
-import hyper_ui.HyperRadioButton
+import hyper_ui.HyperRadio
 import hyper_ui.HyperSwitch
 
 @Composable
@@ -104,7 +104,7 @@ fun HyperMenuListDemo() {
                 headlineContent = { Text("性能模式") },
                 supportingContent = { Text("优先保证流畅度") },
                 trailingContent = {
-                    HyperRadioButton(
+                    HyperRadio(
                         selected = performanceMode,
                         onClick = { performanceMode = true }
                     )

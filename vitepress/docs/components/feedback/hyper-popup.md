@@ -9,6 +9,10 @@
 ## 公开签名
 
 ```kotlin
+data class HyperPopupColors(
+    val containerColor: Color
+)
+
 @Composable
 fun HyperPopup(
     visible: Boolean,
@@ -46,6 +50,10 @@ object HyperPopupDefaults {
     val ContentSpacing = 16.dp
     val ActionSpacing = 12.dp
     const val ShowScrollIndicator = true
+    val ScrollIndicatorWidth = 3.dp
+    val ScrollIndicatorContentPadding = 10.dp
+    val ScrollIndicatorMinHeight = 32.dp
+
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperPopupColors
     @Composable

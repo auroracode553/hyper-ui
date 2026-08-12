@@ -68,7 +68,8 @@ export default defineConfig({
           { text: 'HyperTextField', link: '/components/form/hyper-text-field' },
           { text: 'HyperSwitch', link: '/components/form/hyper-switch' },
           { text: 'HyperCheckbox', link: '/components/form/hyper-checkbox' },
-          { text: 'HyperRadioButton', link: '/components/form/hyper-radio-button' },
+          { text: 'HyperRadio', link: '/components/form/hyper-radio' },
+          { text: 'HyperSegmented', link: '/components/form/hyper-segmented' },
           { text: 'HyperSlider', link: '/components/form/hyper-slider' }
         ]
       },
@@ -82,10 +83,10 @@ export default defineConfig({
       {
         text: '导航组件',
         items: [
-          { text: 'HyperTopBar', link: '/components/navigation/hyper-top-bar' },
+          { text: 'HyperNavBar', link: '/components/navigation/hyper-nav-bar' },
           { text: 'HyperDrawer', link: '/components/navigation/hyper-drawer' },
-          { text: 'HyperGroupMenus', link: '/components/navigation/hyper-group-menus' },
-          { text: 'HyperBottomBar', link: '/components/navigation/hyper-bottom-bar' }
+          { text: 'HyperSlideMenu', link: '/components/navigation/hyper-slide-menu' },
+          { text: 'HyperTabBar', link: '/components/navigation/hyper-tab-bar' }
         ]
       },
       {
@@ -99,9 +100,10 @@ export default defineConfig({
       {
         text: '反馈组件',
         items: [
-          { text: 'HyperDropdownMenu', link: '/components/feedback/hyper-dropdown-menu' },
+          { text: 'HyperDropdown', link: '/components/feedback/hyper-dropdown' },
+          { text: 'hyperToast', link: '/components/feedback/hyper-toast' },
           { text: 'HyperProgressIndicator', link: '/components/feedback/hyper-progress-indicator' },
-          { text: 'HyperDialog', link: '/components/feedback/hyper-dialog' },
+          { text: 'HyperPopup', link: '/components/feedback/hyper-popup' },
           { text: 'HyperAlertDialog', link: '/components/feedback/hyper-alert-dialog' },
           { text: 'HyperUpdateDialog', link: '/components/feedback/hyper-update-dialog' }
         ]

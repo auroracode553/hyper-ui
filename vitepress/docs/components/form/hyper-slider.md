@@ -9,6 +9,15 @@
 ## 公开签名
 
 ```kotlin
+data class HyperSliderColors(
+    val trackColor: Color,
+    val activeTrackColor: Color,
+    val thumbColor: Color,
+    val disabledTrackColor: Color,
+    val disabledActiveTrackColor: Color,
+    val disabledThumbColor: Color
+)
+
 @Composable
 fun HyperSlider(
     value: Float,
@@ -33,14 +42,21 @@ fun HyperSlider(
 
 ```kotlin
 object HyperSliderDefaults {
-    val MinTouchHeight: Dp
-    val TrackHeight: Dp
-    val ThumbSize: Dp
-    val TrackShape: Shape
-    val ThumbShape: Shape
+    val MinTouchHeight = 40.dp
+    val TrackHeight = 6.dp
+    val ThumbSize = 22.dp
+    val TrackShape: Shape = RoundedCornerShape(percent = 50)
+    val ThumbShape: Shape = CircleShape
 
     @Composable
-    fun colors(...): HyperSliderColors
+    fun colors(
+        trackColor: Color = Color.Unspecified,
+        activeTrackColor: Color = Color.Unspecified,
+        thumbColor: Color = Color.Unspecified,
+        disabledTrackColor: Color = Color.Unspecified,
+        disabledActiveTrackColor: Color = Color.Unspecified,
+        disabledThumbColor: Color = Color.Unspecified
+    ): HyperSliderColors
 
     @Composable
     fun trackBorder(color: Color = Color.Unspecified): BorderStroke

@@ -11,6 +11,11 @@ HyperUI 提供线性和圆形进度指示器。`progress` 为 `0f..1f` 表示确
 ## 公开签名
 
 ```kotlin
+data class HyperProgressIndicatorColors(
+    val trackColor: Color,
+    val indicatorColor: Color
+)
+
 @Composable
 fun HyperLinearProgressIndicator(
     progress: Float?,
@@ -33,6 +38,19 @@ fun HyperCircularProgressIndicator(
 
 ```kotlin
 object HyperProgressIndicatorDefaults {
+    val LinearHeight = 4.dp
+    val LinearShape: Shape = RoundedCornerShape(percent = 50)
+    val CircularSize = 32.dp
+    val CircularStrokeWidth = 3.dp
+    const val IndeterminateSegmentFraction = 0.36f
+    const val CircularIndeterminateSweepFraction = 0.26f
+
+    @Composable
+    fun colors(
+        trackColor: Color = Color.Unspecified,
+        indicatorColor: Color = Color.Unspecified
+    ): HyperProgressIndicatorColors
+
     @Composable
     fun linearTrackBorder(color: Color = Color.Unspecified): BorderStroke
 }

@@ -5,6 +5,7 @@ import hyper_ui.docs.ui.DialogDemo
 import hyper_ui.docs.ui.DropdownMenuDemo
 import hyper_ui.docs.ui.HyperPopupDemo
 import hyper_ui.docs.ui.ProgressDemo
+import hyper_ui.docs.ui.ToastDemo
 import hyper_ui.docs.ui.UpdateDialogDemo
 
 private const val GROUP_FEEDBACK = "反馈组件"
@@ -13,10 +14,10 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "dropdown",
         group = GROUP_FEEDBACK,
-        title = "HyperDropdownMenu",
+        title = "HyperDropdown",
         description = "浮层菜单使用不透明实色面板，菜单项和分割线不依赖透明度，可配置点击后是否关闭。",
         code = """
-            HyperDropdownMenu(
+            HyperDropdown(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 contentModifier = Modifier.padding(vertical = 10.dp)
@@ -38,8 +39,30 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("菜单项", "Item(closeOnClick)", "图标、文字与点击回调"),
             DemoVariant("分隔线", "Divider()", "不透明实色分隔")
         ),
-        apiDocumentPaths = listOf("feedback/hyper-dropdown-menu.md"),
+        apiDocumentPaths = listOf("feedback/hyper-dropdown.md"),
         content = { DropdownMenuDemo() }
+    ),
+    ComponentDemo(
+        id = "toast",
+        group = GROUP_FEEDBACK,
+        title = "hyperToast",
+        description = "Android 原生 Toast 封装，统一短/长时长并自动切换到主线程；跨平台 Preview 使用交互模拟。",
+        code = """
+            hyperToast(context, "保存成功")
+            hyperToast(
+                context = context,
+                messageResource = R.string.saved,
+                duration = HyperToastDuration.Long
+            )
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("短提示", "HyperToastDuration.Short", "Android 原生短 Toast"),
+            DemoVariant("长提示", "HyperToastDuration.Long", "Android 原生长 Toast"),
+            DemoVariant("字符串资源", "messageResource", "由 Context 读取本地化文本"),
+            DemoVariant("线程", "任意线程调用", "内部调度到 Android 主线程")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-toast.md"),
+        content = { ToastDemo() }
     ),
     ComponentDemo(
         id = "progress",

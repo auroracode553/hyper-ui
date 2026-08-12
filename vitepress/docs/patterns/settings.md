@@ -25,7 +25,7 @@ fun SettingsScreen() {
         modifier = Modifier.fillMaxSize().padding(18.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        HyperTopBar(
+        HyperNavBar(
             titleContent = { Text("设置") }
         )
         HyperMenuList {

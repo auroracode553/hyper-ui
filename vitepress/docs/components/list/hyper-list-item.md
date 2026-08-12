@@ -9,6 +9,13 @@
 ## 公开签名
 
 ```kotlin
+data class HyperListItemColors(
+    val contentColor: Color,
+    val supportingColor: Color,
+    val disabledContentColor: Color,
+    val dividerColor: Color
+)
+
 @Composable
 fun HyperListItem(
     headlineContent: @Composable ColumnScope.() -> Unit,
@@ -59,8 +66,22 @@ object HyperListItemDefaults {
     val TextGap = 3.dp
     val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
     val DividerInset = 16.dp
+    val DividerHeight = 1.dp
 
     fun minHeight(hasSupportingContent: Boolean): Dp
+
+    val LeadingTextStyle: TextStyle
+    val HeadlineTextStyle: TextStyle
+    val SupportingTextStyle: TextStyle
+    val TrailingTextStyle: TextStyle
+
+    @Composable
+    fun colors(
+        contentColor: Color = Color.Unspecified,
+        supportingColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified,
+        dividerColor: Color = Color.Unspecified
+    ): HyperListItemColors
 }
 ```
 

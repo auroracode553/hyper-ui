@@ -24,6 +24,8 @@ kotlin {
         val commonMain by getting {
             // 组件和文档 UI 均为平台无关 Compose 源码，由 Desktop 与 Wasm 共同编译。
             kotlin.srcDir("../library/src/main/java")
+            // Android 原生 Toast 由跨平台 Preview 使用交互模拟展示，避免引入 Android 编译链。
+            kotlin.exclude("**/HyperToast.kt")
 
             dependencies {
                 // Preview 与正式组件保持一致，不额外引入动画运行时。

@@ -3,6 +3,7 @@ package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.CheckboxDemo
 import hyper_ui.docs.ui.RadioDemo
+import hyper_ui.docs.ui.SegmentedDemo
 import hyper_ui.docs.ui.SliderDemo
 import hyper_ui.docs.ui.SwitchDemo
 import hyper_ui.docs.ui.TextFieldDemo
@@ -13,10 +14,10 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "radio",
         group = GROUP_FORM,
-        title = "HyperRadioButton",
+        title = "HyperRadio",
         description = "单选按钮组件，选中状态由调用方维护。",
         code = """
-            HyperRadioButton(
+            HyperRadio(
                 selected = selected,
                 onClick = onSelect
             )
@@ -26,8 +27,30 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("未选中", "selected = false", "实色容器与主题描边"),
             DemoVariant("禁用", "enabled = false", "禁用实色状态")
         ),
-        apiDocumentPaths = listOf("form/hyper-radio-button.md"),
+        apiDocumentPaths = listOf("form/hyper-radio.md"),
         content = { RadioDemo() }
+    ),
+    ComponentDemo(
+        id = "segmented",
+        group = GROUP_FORM,
+        title = "HyperSegmented",
+        description = "等宽分段控制器；调用方维护选中项，组件渲染选中抬升、未选中与禁用状态。",
+        code = """
+            HyperSegmented(
+                items = periods,
+                selectedItem = selectedPeriod,
+                onSelected = { selectedPeriod = it }
+            ) { period ->
+                Text(period.label)
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("默认", "selectedItem", "浅色容器与实色抬升选中项"),
+            DemoVariant("禁用项", "itemEnabled", "单独禁用指定分段"),
+            DemoVariant("自定义颜色", "HyperSegmentedDefaults.colors", "覆盖选中项和内容色")
+        ),
+        apiDocumentPaths = listOf("form/hyper-segmented.md"),
+        content = { SegmentedDemo() }
     ),
     ComponentDemo(
         id = "checkbox",

@@ -10,6 +10,10 @@
 ## 公开签名
 
 ```kotlin
+data class HyperPanelColors(
+    val containerColor: Color
+)
+
 @Composable
 fun HyperPanel(
     modifier: Modifier = Modifier,
@@ -32,6 +36,9 @@ object HyperPanelDefaults {
     val Elevation = 0.dp
     val ContentPadding = PaddingValues(16.dp)
     val ContentSpacing = 12.dp
+
+    @Composable
+    fun colors(containerColor: Color = Color.Unspecified): HyperPanelColors
 
     @Composable
     fun border(color: Color = Color.Unspecified): BorderStroke

@@ -31,6 +31,11 @@ class HyperUpdateChecker(releaseLoader: HyperReleaseLoader) {
     suspend fun check(request: HyperUpdateRequest): HyperUpdateCheckResult
 }
 
+object HyperVersionNameComparator {
+    fun isNewer(candidate: String, current: String): Boolean
+    fun compare(left: String, right: String): Int
+}
+
 fun HyperUpdateCheckResult.toDialogState(): HyperUpdateDialogState
 
 sealed interface HyperUpdateDialogState {

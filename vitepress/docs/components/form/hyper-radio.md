@@ -1,4 +1,4 @@
-# HyperRadioButton
+# HyperRadio
 
 - 分类：表单组件
 - 包名：`hyper_ui`
@@ -11,7 +11,7 @@
 
 ```kotlin
 @Composable
-fun HyperRadioButton(
+fun HyperRadio(
     selected: Boolean,
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
@@ -33,7 +33,7 @@ object HyperRadioDefaults {
 }
 ```
 
-`HyperRadioDefaults` 是公开尺寸常量集合；当前 `HyperRadioButton` 签名不接收该对象作为配置参数。
+`HyperRadioDefaults` 是公开尺寸常量集合；当前 `HyperRadio` 签名不接收该对象作为配置参数。
 
 ## 参数
 
@@ -59,7 +59,7 @@ object HyperRadioDefaults {
 ```kotlin
 var mode by remember { mutableStateOf("balanced") }
 
-HyperRadioButton(
+HyperRadio(
     selected = mode == "balanced",
     onClick = { mode = "balanced" }
 )
@@ -77,8 +77,8 @@ HyperRadioButton(
 
 ```kotlin
 // 错误：两个固定 selected 值不会形成可交互的互斥组。
-HyperRadioButton(selected = true, onClick = { })
-HyperRadioButton(selected = false, onClick = { })
+HyperRadio(selected = true, onClick = { })
+HyperRadio(selected = false, onClick = { })
 ```
 
 应让多个选项读取同一个调用方状态，并在各自回调中更新它。
@@ -91,4 +91,4 @@ HyperRadioButton(selected = false, onClick = { })
 
 ## 交互预览
 
-<WasmPreview demo="radio" title="HyperRadioButton 交互预览" />
+<WasmPreview demo="radio" title="HyperRadio 交互预览" />

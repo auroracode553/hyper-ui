@@ -38,6 +38,32 @@ fun HyperButton(
 )
 ```
 
+## 默认值与配置
+
+```kotlin
+object HyperButtonDefaults {
+    val MinHeight = 40.dp
+    val ContentSpacing = 8.dp
+    val ContentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+    val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
+
+    @Composable
+    fun colors(
+        tone: HyperButtonTone = HyperButtonTone.Primary,
+        containerColor: Color = Color.Unspecified,
+        contentColor: Color = Color.Unspecified,
+        disabledContainerColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified
+    ): HyperButtonColors
+
+    @Composable
+    fun border(
+        tone: HyperButtonTone = HyperButtonTone.Primary,
+        color: Color = Color.Unspecified
+    ): BorderStroke?
+}
+```
+
 ## 最小用法
 
 ```kotlin

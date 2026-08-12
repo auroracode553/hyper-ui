@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/navigation/HyperTopBar 模块实现，并集中维护其依赖协作与核心逻辑。 */
+/** 文件职责：提供透明背景的三段式 HyperNavBar 导航容器。 */
 package hyper_ui
 
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Immutable
-data class HyperTopBarColors(
+data class HyperNavBarColors(
     val containerColor: Color,
     val contentColor: Color
 )
@@ -33,11 +33,11 @@ data class HyperTopBarColors(
  * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
  */
 @Composable
-fun HyperTopBar(
+fun HyperNavBar(
     titleContent: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
-    colors: HyperTopBarColors = HyperTopBarDefaults.colors(),
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperTopBarDefaults.ContentGap),
+    colors: HyperNavBarColors = HyperNavBarDefaults.colors(),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperNavBarDefaults.ContentGap),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     navigationContent: (@Composable RowScope.() -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null
@@ -45,10 +45,10 @@ fun HyperTopBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .defaultMinSize(minHeight = HyperTopBarDefaults.MinHeight)
+            .defaultMinSize(minHeight = HyperNavBarDefaults.MinHeight)
             .hyperSurface(
                 containerColor = colors.containerColor,
-                shape = HyperTopBarDefaults.Shape
+                shape = HyperNavBarDefaults.Shape
             )
             .padding(horizontal = 16.dp),
         horizontalArrangement = horizontalArrangement,
@@ -56,7 +56,7 @@ fun HyperTopBar(
     ) {
         CompositionLocalProvider(LocalContentColor provides colors.contentColor) {
             navigationContent?.invoke(this)
-            CompositionLocalProvider(LocalTextStyle provides HyperTopBarDefaults.TitleTextStyle) {
+            CompositionLocalProvider(LocalTextStyle provides HyperNavBarDefaults.TitleTextStyle) {
                 Row(
                     modifier = Modifier.weight(1f),
                     verticalAlignment = verticalAlignment,
@@ -68,7 +68,7 @@ fun HyperTopBar(
     }
 }
 
-object HyperTopBarDefaults {
+object HyperNavBarDefaults {
     val MinHeight = 56.dp
     val ContentGap = 8.dp
     val Shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
@@ -82,7 +82,7 @@ object HyperTopBarDefaults {
     fun colors(
         containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified
-    ): HyperTopBarColors = HyperTopBarColors(
+    ): HyperNavBarColors = HyperNavBarColors(
         containerColor = resolveHyperContainerColor(containerColor, Color.Transparent),
         contentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
     )

@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/navigation/HyperBottomBar 模块实现，并集中维护其依赖协作与核心逻辑。 */
+/** 文件职责：提供 HyperTabBar 容器、项目布局与主题颜色。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -29,20 +29,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
-enum class HyperBottomBarItemLayout {
+enum class HyperTabBarItemLayout {
     Equal,
     Packed
 }
 
 @Immutable
-data class HyperBottomBarColors(
+data class HyperTabBarColors(
     val containerColor: Color,
     val selectedContentColor: Color,
     val unselectedContentColor: Color,
     val disabledContentColor: Color
 )
 
-class HyperBottomBarItemScope internal constructor(
+class HyperTabBarItemScope internal constructor(
     val selected: Boolean,
     val enabled: Boolean
 )
@@ -53,24 +53,24 @@ class HyperBottomBarItemScope internal constructor(
  * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
  */
 @Composable
-fun HyperBottomBar(
+fun HyperTabBar(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    shape: Shape = HyperBottomBarDefaults.Shape,
-    border: BorderStroke? = HyperBottomBarDefaults.border(),
-    colors: HyperBottomBarColors = HyperBottomBarDefaults.colors(),
+    shape: Shape = HyperTabBarDefaults.Shape,
+    border: BorderStroke? = HyperTabBarDefaults.border(),
+    colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
-    val resolvedColors = resolveHyperBottomBarColors(colors)
+    val resolvedColors = resolveHyperTabBarColors(colors)
     val contentColor = if (enabled) {
         resolvedColors.unselectedContentColor
     } else {
         resolvedColors.disabledContentColor
     }
 
-    HyperBottomBarSurface(
+    HyperTabBarSurface(
         modifier = modifier,
         shape = shape,
         border = border,
@@ -86,7 +86,7 @@ fun HyperBottomBar(
             // Slot 模式只提供底栏外壳和默认内容色；具体点击、选中与禁用逻辑由调用方组合。
             CompositionLocalProvider(
                 LocalContentColor provides contentColor,
-                LocalTextStyle provides HyperBottomBarDefaults.ItemTextStyle
+                LocalTextStyle provides HyperTabBarDefaults.ItemTextStyle
             ) {
                 content()
             }
@@ -100,26 +100,26 @@ fun HyperBottomBar(
  * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
  */
 @Composable
-fun <T> HyperBottomBar(
+fun <T> HyperTabBar(
     items: List<T>,
     onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    itemLayout: HyperBottomBarItemLayout = HyperBottomBarItemLayout.Equal,
+    itemLayout: HyperTabBarItemLayout = HyperTabBarItemLayout.Equal,
     itemSelected: (T) -> Boolean = { false },
     itemSlotAlignment: Alignment = Alignment.Center,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
-    shape: Shape = HyperBottomBarDefaults.Shape,
-    border: BorderStroke? = HyperBottomBarDefaults.border(),
-    colors: HyperBottomBarColors = HyperBottomBarDefaults.colors(),
+    shape: Shape = HyperTabBarDefaults.Shape,
+    border: BorderStroke? = HyperTabBarDefaults.border(),
+    colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
     itemEnabled: (T) -> Boolean = { true },
-    itemContent: @Composable HyperBottomBarItemScope.(item: T) -> Unit
+    itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
 ) {
-    val resolvedColors = resolveHyperBottomBarColors(colors)
-    HyperBottomBar(
+    val resolvedColors = resolveHyperTabBarColors(colors)
+    HyperTabBar(
         modifier = modifier,
         enabled = enabled,
-        horizontalArrangement = if (itemLayout == HyperBottomBarItemLayout.Equal) {
+        horizontalArrangement = if (itemLayout == HyperTabBarItemLayout.Equal) {
             Arrangement.Start
         } else {
             horizontalArrangement
@@ -131,7 +131,7 @@ fun <T> HyperBottomBar(
         items.forEach { item ->
             val selected = itemSelected(item)
             val actualEnabled = enabled && itemEnabled(item)
-            val scope = HyperBottomBarItemScope(
+            val scope = HyperTabBarItemScope(
                 selected = selected,
                 enabled = actualEnabled
             )
@@ -141,8 +141,8 @@ fun <T> HyperBottomBar(
                 else -> resolvedColors.unselectedContentColor
             }
 
-            if (itemLayout == HyperBottomBarItemLayout.Equal) {
-                HyperBottomBarItemContainer(
+            if (itemLayout == HyperTabBarItemLayout.Equal) {
+                HyperTabBarItemContainer(
                     onClick = { onItemClick(item) },
                     enabled = actualEnabled,
                     contentColor = contentColor,
@@ -154,12 +154,12 @@ fun <T> HyperBottomBar(
                     scope.itemContent(item)
                 }
             } else {
-                HyperBottomBarItemContainer(
+                HyperTabBarItemContainer(
                     onClick = { onItemClick(item) },
                     enabled = actualEnabled,
                     contentColor = contentColor,
                     modifier = Modifier
-                        .widthIn(min = HyperBottomBarDefaults.ItemWidth)
+                        .widthIn(min = HyperTabBarDefaults.ItemWidth)
                         .fillMaxHeight(),
                     contentAlignment = itemSlotAlignment
                 ) {
@@ -171,16 +171,16 @@ fun <T> HyperBottomBar(
 }
 
 @Composable
-private fun HyperBottomBarSurface(
+private fun HyperTabBarSurface(
     modifier: Modifier,
     shape: Shape,
     border: BorderStroke?,
-    colors: HyperBottomBarColors,
+    colors: HyperTabBarColors,
     content: @Composable BoxScope.() -> Unit
 ) {
     val sizedModifier = modifier
         .fillMaxWidth()
-        .height(HyperBottomBarDefaults.Height)
+        .height(HyperTabBarDefaults.Height)
     val surfaceModifier = if (HyperColors.isLight) {
         sizedModifier.hyperGlassSurface(
             containerColor = colors.containerColor,
@@ -200,7 +200,7 @@ private fun HyperBottomBarSurface(
 }
 
 @Composable
-private fun resolveHyperBottomBarColors(colors: HyperBottomBarColors): HyperBottomBarColors {
+private fun resolveHyperTabBarColors(colors: HyperTabBarColors): HyperTabBarColors {
     if (HyperColors.isLight) {
         return colors
     }
@@ -210,7 +210,7 @@ private fun resolveHyperBottomBarColors(colors: HyperBottomBarColors): HyperBott
         fallbackColor = HyperColors.cardContainer,
         backgroundColor = HyperColors.pageBackground
     )
-    return HyperBottomBarColors(
+    return HyperTabBarColors(
         containerColor = containerColor,
         selectedContentColor = resolveHyperOpaqueColor(
             color = colors.selectedContentColor,
@@ -231,7 +231,7 @@ private fun resolveHyperBottomBarColors(colors: HyperBottomBarColors): HyperBott
 }
 
 @Composable
-private fun RowScope.HyperBottomBarItemContainer(
+private fun RowScope.HyperTabBarItemContainer(
     onClick: () -> Unit,
     enabled: Boolean,
     contentColor: Color,
@@ -253,7 +253,7 @@ private fun RowScope.HyperBottomBarItemContainer(
     }
 }
 
-object HyperBottomBarDefaults {
+object HyperTabBarDefaults {
     /** 保留标准触控高度，同时避免底栏占据过多页面空间。 */
     val Height = 56.dp
     val ItemWidth = 60.dp
@@ -268,7 +268,7 @@ object HyperBottomBarDefaults {
         selectedContentColor: Color = Color.Unspecified,
         unselectedContentColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
-    ): HyperBottomBarColors {
+    ): HyperTabBarColors {
         val isLight = HyperColors.isLight
         val defaultUnselectedColor = if (isLight) {
             rgba(0, 0, 0, 0.72f)
@@ -278,8 +278,8 @@ object HyperBottomBarDefaults {
         val resolvedSelectedColor = resolveHyperContainerColor(selectedContentColor, HyperColors.accent)
         val resolvedUnselectedColor = resolveHyperContainerColor(unselectedContentColor, defaultUnselectedColor)
 
-        return resolveHyperBottomBarColors(
-            HyperBottomBarColors(
+        return resolveHyperTabBarColors(
+            HyperTabBarColors(
                 containerColor = resolveHyperContainerColor(
                     containerColor,
                     if (isLight) HyperColors.elevatedContainer else HyperColors.cardContainer

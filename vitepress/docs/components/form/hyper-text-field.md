@@ -10,6 +10,19 @@
 ## 公开签名
 
 ```kotlin
+data class HyperTextFieldColors(
+    val containerColor: Color,
+    val errorContainerColor: Color,
+    val contentColor: Color,
+    val placeholderColor: Color,
+    val labelColor: Color,
+    val supportingColor: Color,
+    val errorColor: Color,
+    val cursorColor: Color,
+    val disabledContainerColor: Color,
+    val disabledContentColor: Color
+)
+
 @Composable
 fun HyperTextField(
     value: String,
@@ -24,7 +37,10 @@ fun HyperTextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(...),
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(
+        fontSize = 16.sp,
+        lineHeight = 22.sp
+    ),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -47,6 +63,20 @@ object HyperTextFieldDefaults {
     val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
     val SlotSpacing = 8.dp
     val BorderWidth = 1.dp
+
+    @Composable
+    fun colors(
+        containerColor: Color = Color.Unspecified,
+        errorContainerColor: Color = Color.Unspecified,
+        contentColor: Color = Color.Unspecified,
+        placeholderColor: Color = Color.Unspecified,
+        labelColor: Color = Color.Unspecified,
+        supportingColor: Color = Color.Unspecified,
+        errorColor: Color = Color.Unspecified,
+        cursorColor: Color = Color.Unspecified,
+        disabledContainerColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified
+    ): HyperTextFieldColors
 }
 ```
 

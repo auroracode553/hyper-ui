@@ -1,21 +1,21 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/data/NavigationComponentDemos 可复用界面组件及交互封装。 */
 package hyper_ui.docs.data
 
-import hyper_ui.docs.ui.BottomBarDemo
+import hyper_ui.docs.ui.NavBarDemo
 import hyper_ui.docs.ui.DrawerDemo
-import hyper_ui.docs.ui.GroupMenusDemo
-import hyper_ui.docs.ui.TopBarDemo
+import hyper_ui.docs.ui.SlideMenuDemo
+import hyper_ui.docs.ui.TabBarDemo
 
 private const val GROUP_NAVIGATION = "导航组件"
 
 internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
-        id = "topbar",
+        id = "nav-bar",
         group = GROUP_NAVIGATION,
-        title = "HyperTopBar",
+        title = "HyperNavBar",
         description = "默认透明的顶部栏容器；navigation、title、action 三个区域由调用方通过 slot 渲染。",
         code = """
-            HyperTopBar(
+            HyperNavBar(
                 navigationContent = {
                     HyperIconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "返回")
@@ -36,8 +36,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("默认背景", "Color.Transparent", "继承页面底色，不绘制独立色块"),
             DemoVariant("Slot 内容", "content slots", "图标按钮和标题文字")
         ),
-        apiDocumentPaths = listOf("navigation/hyper-top-bar.md"),
-        content = { TopBarDemo() }
+        apiDocumentPaths = listOf("navigation/hyper-nav-bar.md"),
+        content = { NavBarDemo() }
     ),
     ComponentDemo(
         id = "drawer",
@@ -79,12 +79,12 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         content = { DrawerDemo() }
     ),
     ComponentDemo(
-        id = "group-menus",
+        id = "slide-menu",
         group = GROUP_NAVIGATION,
-        title = "HyperGroupMenus",
+        title = "HyperSlideMenu",
         description = "横向分组菜单。未选中项默认带细描边，菜单文字、计数或图标由 item slot 渲染。",
         code = """
-            HyperGroupMenus(
+            HyperSlideMenu(
                 items = categories,
                 selectedItem = selected,
                 onSelected = { selected = it }
@@ -98,16 +98,16 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("未选中项", "itemEnabled = true", "中性实色与轻描边"),
             DemoVariant("禁用项", "itemEnabled = false", "禁用实色状态")
         ),
-        apiDocumentPaths = listOf("navigation/hyper-group-menus.md"),
-        content = { GroupMenusDemo() }
+        apiDocumentPaths = listOf("navigation/hyper-slide-menu.md"),
+        content = { SlideMenuDemo() }
     ),
     ComponentDemo(
-        id = "bottom-bar",
+        id = "tab-bar",
         group = GROUP_NAVIGATION,
-        title = "HyperBottomBar",
+        title = "HyperTabBar",
         description = "默认 56dp 的底部栏；浅色模式保留透明玻璃效果，深色模式使用不透明实色，支持完整 slot 与泛型 items 入口。",
         code = """
-            HyperBottomBar {
+            HyperTabBar {
                 bottomItems.forEach { item ->
                     Column(
                         modifier = Modifier.weight(1f).clickable { selectedItemId = item.id },
@@ -125,7 +125,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("泛型项目", "items + itemSelected", "统一点击、选中与禁用状态"),
             DemoVariant("浅色容器", "colors.containerColor", "唯一保留的浅色半透明组件容器")
         ),
-        apiDocumentPaths = listOf("navigation/hyper-bottom-bar.md"),
-        content = { BottomBarDemo() }
+        apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
+        content = { TabBarDemo() }
     )
 )

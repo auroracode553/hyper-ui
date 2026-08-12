@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/menu/HyperGroupMenus 可复用界面组件及交互封装。 */
+/** 文件职责：提供可横向滚动的 HyperSlideMenu 及其菜单项。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
 @Immutable
-data class HyperGroupMenusColors(
+data class HyperSlideMenuColors(
     val selectedContainerColor: Color,
     val unselectedContainerColor: Color,
     val selectedContentColor: Color,
@@ -33,7 +33,7 @@ data class HyperGroupMenusColors(
     val disabledContentColor: Color
 )
 
-class HyperGroupMenusItemScope internal constructor(
+class HyperSlideMenuItemScope internal constructor(
     val selected: Boolean,
     val enabled: Boolean
 )
@@ -44,16 +44,16 @@ class HyperGroupMenusItemScope internal constructor(
  * UI 库只负责选中/禁用视觉、点击边界和基础布局；文字、计数、图标等业务内容由 content slot 渲染。
  */
 @Composable
-fun HyperGroupMenuItem(
+fun HyperSlideMenuItem(
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperGroupMenusDefaults.ItemContentPadding),
+    contentModifier: Modifier = Modifier.padding(HyperSlideMenuDefaults.ItemContentPadding),
     enabled: Boolean = true,
-    shape: Shape = HyperGroupMenusDefaults.Shape,
-    colors: HyperGroupMenusColors = HyperGroupMenusDefaults.colors(),
+    shape: Shape = HyperSlideMenuDefaults.Shape,
+    colors: HyperSlideMenuColors = HyperSlideMenuDefaults.colors(),
     role: Role = Role.Tab,
-    content: @Composable HyperGroupMenusItemScope.() -> Unit
+    content: @Composable HyperSlideMenuItemScope.() -> Unit
 ) {
     val targetContainerColor = when {
         !enabled -> colors.disabledContainerColor
@@ -66,16 +66,16 @@ fun HyperGroupMenuItem(
         else -> colors.unselectedContentColor
     }
     val targetBorderColor = if (enabled) HyperColors.fieldBorder else HyperColors.divider
-    val scope = HyperGroupMenusItemScope(selected = selected, enabled = enabled)
+    val scope = HyperSlideMenuItemScope(selected = selected, enabled = enabled)
 
     Row(
         modifier = modifier
-            .defaultMinSize(minHeight = HyperGroupMenusDefaults.MinHeight)
+            .defaultMinSize(minHeight = HyperSlideMenuDefaults.MinHeight)
             .hyperSurface(
                 containerColor = targetContainerColor,
                 shape = shape,
                 border = if (selected) null else BorderStroke(
-                    width = HyperGroupMenusDefaults.ItemBorderWidth,
+                    width = HyperSlideMenuDefaults.ItemBorderWidth,
                     color = targetBorderColor
                 )
             )
@@ -86,7 +86,7 @@ fun HyperGroupMenuItem(
             )
             .then(contentModifier),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(HyperGroupMenusDefaults.ItemContentGap)
+        horizontalArrangement = Arrangement.spacedBy(HyperSlideMenuDefaults.ItemContentGap)
     ) {
         CompositionLocalProvider(LocalContentColor provides targetContentColor) {
             scope.content()
@@ -101,14 +101,14 @@ fun HyperGroupMenuItem(
  * 组件本身不添加任何内边距，请通过 modifier.padding(...) 控制外部间距。
  */
 @Composable
-fun <T> HyperGroupMenus(
+fun <T> HyperSlideMenu(
     items: List<T>,
     selectedItem: T,
     onSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperGroupMenusDefaults.ItemGap),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperSlideMenuDefaults.ItemGap),
     itemEnabled: (T) -> Boolean = { true },
-    itemContent: @Composable HyperGroupMenusItemScope.(item: T) -> Unit
+    itemContent: @Composable HyperSlideMenuItemScope.(item: T) -> Unit
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -116,7 +116,7 @@ fun <T> HyperGroupMenus(
     ) {
         items(items) { item ->
             val enabled = itemEnabled(item)
-            HyperGroupMenuItem(
+            HyperSlideMenuItem(
                 selected = item == selectedItem,
                 enabled = enabled,
                 onClick = { onSelected(item) }
@@ -127,7 +127,7 @@ fun <T> HyperGroupMenus(
     }
 }
 
-object HyperGroupMenusDefaults {
+object HyperSlideMenuDefaults {
     val MinHeight = 32.dp
     val ItemContentGap = 6.dp
     val ItemGap = 8.dp
@@ -143,13 +143,13 @@ object HyperGroupMenusDefaults {
         unselectedContentColor: Color = Color.Unspecified,
         disabledContainerColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
-    ): HyperGroupMenusColors {
+    ): HyperSlideMenuColors {
         val resolvedUnselectedContentColor = resolveHyperContainerColor(
             unselectedContentColor,
             HyperColors.primaryText
         )
 
-        return HyperGroupMenusColors(
+        return HyperSlideMenuColors(
             selectedContainerColor = resolveHyperContainerColor(selectedContainerColor, HyperColors.accent),
             unselectedContainerColor = resolveHyperContainerColor(
                 unselectedContainerColor,

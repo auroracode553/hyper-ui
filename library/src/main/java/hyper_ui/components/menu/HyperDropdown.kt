@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/menu/HyperDropdownMenu 可复用界面组件及交互封装。 */
+/** 文件职责：提供 HyperDropdown 浮层菜单及其菜单项作用域。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -35,7 +35,7 @@ import androidx.compose.ui.window.PopupProperties
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
 @Immutable
-data class HyperDropdownMenuColors(
+data class HyperDropdownColors(
     val containerColor: Color,
     val contentColor: Color,
     val disabledContentColor: Color,
@@ -43,17 +43,17 @@ data class HyperDropdownMenuColors(
 )
 
 @Composable
-fun HyperDropdownMenu(
+fun HyperDropdown(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperDropdownMenuDefaults.MenuPadding),
+    contentModifier: Modifier = Modifier.padding(HyperDropdownDefaults.MenuPadding),
     alignment: Alignment = Alignment.TopEnd,
-    offset: DpOffset = DpOffset(0.dp, HyperDropdownMenuDefaults.AnchorOffsetY),
-    shape: Shape = HyperDropdownMenuDefaults.Shape,
-    colors: HyperDropdownMenuColors = HyperDropdownMenuDefaults.colors(),
-    border: BorderStroke? = HyperDropdownMenuDefaults.border(),
-    content: @Composable HyperDropdownMenuScope.() -> Unit
+    offset: DpOffset = DpOffset(0.dp, HyperDropdownDefaults.AnchorOffsetY),
+    shape: Shape = HyperDropdownDefaults.Shape,
+    colors: HyperDropdownColors = HyperDropdownDefaults.colors(),
+    border: BorderStroke? = HyperDropdownDefaults.border(),
+    content: @Composable HyperDropdownScope.() -> Unit
 ) {
     if (!expanded) {
         return
@@ -67,7 +67,7 @@ fun HyperDropdownMenu(
         fallbackColor = HyperColors.cardContainer,
         backgroundColor = HyperColors.pageBackground
     )
-    val resolvedColors = HyperDropdownMenuColors(
+    val resolvedColors = HyperDropdownColors(
         containerColor = resolvedContainerColor,
         contentColor = resolveHyperOpaqueColor(
             color = colors.contentColor,
@@ -94,8 +94,8 @@ fun HyperDropdownMenu(
     ) {
         Column(
             modifier = modifier
-                .width(HyperDropdownMenuDefaults.MenuWidth)
-                .heightIn(max = HyperDropdownMenuDefaults.MaxHeight)
+                .width(HyperDropdownDefaults.MenuWidth)
+                .heightIn(max = HyperDropdownDefaults.MaxHeight)
                 .hyperSolidSurface(
                     containerColor = resolvedColors.containerColor,
                     shape = shape,
@@ -105,7 +105,7 @@ fun HyperDropdownMenu(
                 .then(contentModifier)
         ) {
             val scope = remember(onDismissRequest, resolvedColors) {
-                HyperDropdownMenuScope(
+                HyperDropdownScope(
                     onDismiss = onDismissRequest,
                     colors = resolvedColors
                 )
@@ -115,15 +115,15 @@ fun HyperDropdownMenu(
     }
 }
 
-class HyperDropdownMenuScope internal constructor(
+class HyperDropdownScope internal constructor(
     private val onDismiss: () -> Unit,
-    private val colors: HyperDropdownMenuColors
+    private val colors: HyperDropdownColors
 ) {
     @Composable
     fun Item(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        contentModifier: Modifier = Modifier.padding(HyperDropdownMenuDefaults.ItemPadding),
+        contentModifier: Modifier = Modifier.padding(HyperDropdownDefaults.ItemPadding),
         enabled: Boolean = true,
         closeOnClick: Boolean = true,
         content: @Composable RowScope.() -> Unit
@@ -133,7 +133,7 @@ class HyperDropdownMenuScope internal constructor(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .height(HyperDropdownMenuDefaults.ItemHeight)
+                .height(HyperDropdownDefaults.ItemHeight)
                 .hyperNoRippleClickable(
                     enabled = enabled,
                     role = Role.Button,
@@ -162,7 +162,7 @@ class HyperDropdownMenuScope internal constructor(
     }
 }
 
-object HyperDropdownMenuDefaults {
+object HyperDropdownDefaults {
     val MenuWidth = 184.dp
     val MaxHeight = 420.dp
     val ItemHeight = 48.dp
@@ -177,7 +177,7 @@ object HyperDropdownMenuDefaults {
         contentColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
-    ): HyperDropdownMenuColors {
+    ): HyperDropdownColors {
         val resolvedContainerColor = resolveHyperOpaqueColor(
             color = containerColor,
             fallbackColor = HyperColors.cardContainer,
@@ -189,7 +189,7 @@ object HyperDropdownMenuDefaults {
             backgroundColor = resolvedContainerColor
         )
 
-        return HyperDropdownMenuColors(
+        return HyperDropdownColors(
             containerColor = resolvedContainerColor,
             contentColor = resolvedContentColor,
             disabledContentColor = resolveHyperOpaqueColor(

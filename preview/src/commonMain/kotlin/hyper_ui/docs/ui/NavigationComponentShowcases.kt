@@ -39,19 +39,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import hyper_ui.HyperBottomBar
+import hyper_ui.HyperTabBar
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperDrawer
 import hyper_ui.HyperDrawerHeader
 import hyper_ui.HyperDrawerItem
 import hyper_ui.HyperDrawerPosition
-import hyper_ui.HyperGroupMenus
+import hyper_ui.HyperSlideMenu
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
 import hyper_ui.HyperPanel
 import hyper_ui.HyperPanelDefaults
-import hyper_ui.HyperTopBar
+import hyper_ui.HyperNavBar
 import hyper_ui.docs.theme.DocsBorder
 
 private data class DemoNavItem(
@@ -61,7 +61,7 @@ private data class DemoNavItem(
 )
 
 @Composable
-fun TopBarDemo() {
+fun NavBarDemo() {
     var showBack by remember { mutableStateOf(false) }
 
     Column(
@@ -73,7 +73,7 @@ fun TopBarDemo() {
                 containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
-            HyperTopBar(
+            HyperNavBar(
                 navigationContent = if (showBack) {
                     {
                         TopBarIconButton(
@@ -245,7 +245,7 @@ fun DrawerDemo() {
 }
 
 @Composable
-fun GroupMenusDemo() {
+fun SlideMenuDemo() {
     val categories = remember {
         listOf("全部", "恶意网址", "广告", "恶意跳转", "打开应用")
     }
@@ -256,7 +256,7 @@ fun GroupMenusDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // 示例只把分类文本交给 slot；组件本身不拥有分类、计数或业务筛选规则。
-        HyperGroupMenus(
+        HyperSlideMenu(
             items = categories,
             selectedItem = selected,
             onSelected = { selected = it },
@@ -274,7 +274,7 @@ fun GroupMenusDemo() {
 }
 
 @Composable
-fun BottomBarDemo() {
+fun TabBarDemo() {
     var selectedItemId by remember { mutableStateOf("home") }
     val bottomItems = listOf(
         DemoNavItem("home", "首页", Icons.Default.Home),
@@ -316,7 +316,7 @@ fun BottomBarDemo() {
                         lineHeight = 20.sp
                     )
                 }
-                HyperBottomBar(
+                HyperTabBar(
                     items = bottomItems,
                     itemSelected = { item -> item.id == selectedItemId },
                     onItemClick = { item -> selectedItemId = item.id }
