@@ -12,19 +12,14 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.HorizontalDivider
@@ -65,9 +60,7 @@ fun HyperDrawer(
     modifier: Modifier = Modifier,
     drawerModifier: Modifier = Modifier,
     position: HyperDrawerPosition = HyperDrawerPosition.Left,
-    drawerContentModifier: Modifier = Modifier.padding(
-        HyperDrawerDefaults.contentPadding(position)
-    ),
+    drawerContentModifier: Modifier = Modifier,
     drawerContentScrollEnabled: Boolean = true,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = false,
@@ -129,10 +122,7 @@ fun HyperDrawer(
                             shape = drawerShape(position),
                             border = border
                         )
-                        // 面板背景可延伸到系统栏，内容始终留在安全绘制区域内。
-                        .windowInsetsPadding(
-                            WindowInsets.safeDrawing.only(drawerSafeDrawingSides(position))
-                        )
+                        // 内容区默认覆盖完整面板；场景间距与系统栏避让由调用方显式注入。
                         .then(drawerContentModifier)
                         .then(
                             if (drawerContentScrollEnabled) {
@@ -289,14 +279,6 @@ private fun drawerShape(position: HyperDrawerPosition): RoundedCornerShape {
     }
 }
 
-/** 按抽屉方向保留对应系统栏与横向安全区，避免内容落入手势导航区域。 */
-private fun drawerSafeDrawingSides(position: HyperDrawerPosition): WindowInsetsSides = when (position) {
-    HyperDrawerPosition.Left -> WindowInsetsSides.Start + WindowInsetsSides.Vertical
-    HyperDrawerPosition.Right -> WindowInsetsSides.End + WindowInsetsSides.Vertical
-    HyperDrawerPosition.Top -> WindowInsetsSides.Top + WindowInsetsSides.Horizontal
-    HyperDrawerPosition.Bottom -> WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal
-}
-
 object HyperDrawerDefaults {
     val Width = 320.dp
     val HeaderPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp)
@@ -305,14 +287,6 @@ object HyperDrawerDefaults {
     const val MaxWidthFraction = 0.88f
     const val MaxHeightFraction = 0.88f
     const val DrawerZIndex = 9f
-
-    /** 上下抽屉默认提供完整内容留白，左右抽屉让 Header/Item 自己管理水平留白。 */
-    fun contentPadding(position: HyperDrawerPosition): PaddingValues = when (position) {
-        HyperDrawerPosition.Top,
-        HyperDrawerPosition.Bottom -> PaddingValues(horizontal = 20.dp, vertical = 16.dp)
-        HyperDrawerPosition.Left,
-        HyperDrawerPosition.Right -> PaddingValues(vertical = 16.dp)
-    }
 
     @Composable
     fun colors(

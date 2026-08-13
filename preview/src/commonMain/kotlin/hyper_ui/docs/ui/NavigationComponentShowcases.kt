@@ -119,6 +119,7 @@ fun DrawerDemo() {
     var selectedPageId by remember { mutableStateOf("home") }
     var drawerPosition by remember { mutableStateOf(HyperDrawerPosition.Left) }
     var drawerContentScrollEnabled by remember { mutableStateOf(true) }
+    var addScenePadding by remember { mutableStateOf(false) }
     val items = listOf(
         DemoNavItem("home", "首页", Icons.Default.Home),
         DemoNavItem("notice", "通知", Icons.Default.Notifications),
@@ -144,6 +145,11 @@ fun DrawerDemo() {
                 HyperDrawerPosition.Bottom -> Modifier.height(260.dp)
             },
             position = drawerPosition,
+            drawerContentModifier = if (addScenePadding) {
+                Modifier.padding(16.dp)
+            } else {
+                Modifier
+            },
             dismissOnClickOutside = true,
             drawerContentScrollEnabled = drawerContentScrollEnabled,
             drawerContent = {
@@ -233,6 +239,18 @@ fun DrawerDemo() {
                             "面板负责内容滚动"
                         } else {
                             "内容组件负责滚动"
+                        }
+                    )
+                }
+                HyperButton(
+                    onClick = { addScenePadding = !addScenePadding },
+                    tone = HyperButtonTone.Tonal
+                ) {
+                    Text(
+                        text = if (addScenePadding) {
+                            "调用方已添加 16dp 间距"
+                        } else {
+                            "抽屉使用完整内容区"
                         }
                     )
                 }
