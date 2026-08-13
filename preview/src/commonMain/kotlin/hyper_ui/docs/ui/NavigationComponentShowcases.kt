@@ -213,7 +213,7 @@ fun DrawerDemo() {
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "抽屉面板即时显示和关闭，全程使用不透明实色，不执行动画，外部区域不绘制遮罩。",
+                    text = "深色抽屉与页面背景保持同色且无灰色边界；浅色仅保留轻微透明度，两种模式均无玻璃高光。不执行动画，外部区域不绘制遮罩。",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 13.sp,
                     lineHeight = 18.sp
@@ -310,7 +310,7 @@ fun TabBarDemo() {
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "切换预览主题可对比容器效果；底栏使用 55dp 操作区和 5dp 轻量底部留白，总高度为 60dp。按钮布局、选中态和点击逻辑仍由调用方组合。",
+                        text = "切换预览主题可查看背景策略：深色底栏与页面同色且无灰色边界，浅色保留轻量透明度；均无玻璃高光。底栏总高度为 60dp，按钮布局、选中态和点击逻辑仍由调用方组合。",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         lineHeight = 20.sp

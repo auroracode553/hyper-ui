@@ -20,7 +20,7 @@ fun rgba(
 val brandColor = rgba(255, 103, 0)
 ```
 
-组件默认样式使用不透明实色；唯一例外是 `HyperTabBar` 的浅色容器。`alpha` 参数保留给调用方表达完整 RGBA 颜色值。
+组件默认样式主要使用不透明实色；`HyperDrawer` 与 `HyperTabBar` 在深色模式下直接采用 `MaterialTheme.colorScheme.background`，浅色模式保留轻量透明度，两者均不叠加玻璃高光。`alpha` 参数保留给调用方表达完整 RGBA 颜色值。
 
 组件源码禁止使用 `Color(0xFFRRGGBB)` 十六进制硬编码。需要直接构造颜色时，使用四个 Float RGBA 分量；调用方也可优先使用 `rgba(...)`。
 
@@ -95,6 +95,5 @@ object HyperStyleDefaults {
 | `divider` | `Color` | 分割线 |
 | `fieldBorder` | `Color` | 输入框描边 |
 | `panelBorder` | `BorderStroke` | 面板描边 |
-| `glassHighlightBrush` | `Brush` | 浅色玻璃表面的高光画刷 |
 
 不要把 `HyperColors` 的结果缓存到全局变量；这些值依赖当前 Composition，应在 Composable 上下文中读取。

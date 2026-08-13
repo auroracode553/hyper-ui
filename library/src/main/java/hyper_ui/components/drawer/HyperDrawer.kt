@@ -75,10 +75,9 @@ fun HyperDrawer(
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val containerColor = resolveHyperOpaqueColor(
-        color = colors.containerColor,
-        fallbackColor = HyperColors.cardContainer,
-        backgroundColor = HyperColors.pageBackground
+    val containerColor = resolveHyperContainerColor(
+        containerColor = colors.containerColor,
+        fallbackColor = defaultHyperDrawerContainerColor()
     )
     val drawerContentScrollState = rememberScrollState()
     val drawerAlignment = when (position) {
@@ -125,7 +124,7 @@ fun HyperDrawer(
                 Column(
                     modifier = drawerSizeModifier
                         .align(drawerAlignment)
-                        .hyperSolidSurface(
+                        .hyperSurface(
                             containerColor = containerColor,
                             shape = drawerShape(position),
                             border = border
@@ -218,7 +217,7 @@ fun HyperDrawerItem(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .hyperGlassSurface(
+                .hyperSurface(
                     containerColor = containerColor,
                     shape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius)
                 )
@@ -328,11 +327,7 @@ object HyperDrawerDefaults {
         val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
 
         return HyperDrawerColors(
-            containerColor = resolveHyperOpaqueColor(
-                color = containerColor,
-                fallbackColor = HyperColors.cardContainer,
-                backgroundColor = HyperColors.pageBackground
-            ),
+            containerColor = resolveHyperContainerColor(containerColor, defaultHyperDrawerContainerColor()),
             contentColor = resolvedContentColor,
             supportingColor = resolveHyperContainerColor(supportingColor, HyperColors.secondaryText),
             selectedContainerColor = resolveHyperContainerColor(
@@ -349,8 +344,11 @@ object HyperDrawerDefaults {
     }
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
-        color = color,
-        backgroundColor = HyperColors.cardContainer
-    )
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPageMatchedPanelBorder(color)
 }
+
+/** 浅色仅保留轻微透明度；深色与页面背景完全一致。 */
+@Composable
+private fun defaultHyperDrawerContainerColor(): Color = hyperPageMatchedContainerColor(
+    lightContainerColor = rgba(255, 255, 255, 0.96f)
+)

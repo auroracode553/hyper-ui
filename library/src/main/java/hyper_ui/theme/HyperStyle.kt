@@ -8,7 +8,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
@@ -152,12 +151,4 @@ object HyperColors {
             color = divider
         )
 
-    val glassHighlightBrush: Brush
-        @Composable @ReadOnlyComposable
-        get() = Brush.verticalGradient(
-            colors = listOf(
-                Color(1f, 1f, 1f, if (isLight) 0.3f else 0.15f),
-                Color.Transparent
-            )
-        )
 }

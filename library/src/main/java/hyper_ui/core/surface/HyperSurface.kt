@@ -4,6 +4,7 @@ package hyper_ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,6 +62,15 @@ internal fun resolveHyperDisabledContainerColor(
     containerColor.copy(alpha = containerColor.alpha * disabledAlpha)
 }
 
+/** 浅色使用组件自己的容器色，深色直接跟随当前页面主题背景。 */
+@Composable
+@PublishedApi
+internal fun hyperPageMatchedContainerColor(lightContainerColor: Color): Color = if (HyperColors.isLight) {
+    lightContainerColor
+} else {
+    MaterialTheme.colorScheme.background
+}
+
 @Composable
 @PublishedApi
 internal fun hyperPanelBorder(
@@ -70,6 +80,19 @@ internal fun hyperPanelBorder(
 } else {
     BorderStroke(width = 1.dp, color = color)
 }
+
+/** 深色默认描边与页面背景同色，避免组件边缘出现灰色悬浮层。 */
+@Composable
+@PublishedApi
+internal fun hyperPageMatchedPanelBorder(
+    color: Color = Color.Unspecified
+): BorderStroke = BorderStroke(
+    width = 1.dp,
+    color = resolveHyperContainerColor(
+        color,
+        if (HyperColors.isLight) HyperColors.divider else MaterialTheme.colorScheme.background
+    )
+)
 
 @Composable
 @PublishedApi
@@ -110,9 +133,7 @@ internal fun Modifier.hyperSolidSurface(
     .background(color = containerColor, shape = shape)
     .then(if (border != null) Modifier.border(border, shape) else Modifier)
 
-/**
- * 通用表面修饰符，默认使用实心不透明表面效果。
- */
+/** 通用普通表面修饰符；只绘制传入颜色、阴影和描边，不添加玻璃高光。 */
 @PublishedApi
 internal fun Modifier.hyperSurface(
     containerColor: Color,
@@ -125,34 +146,3 @@ internal fun Modifier.hyperSurface(
     elevation = elevation,
     border = border
 )
-
-@Composable
-@PublishedApi
-internal fun Modifier.hyperGlassSurface(
-    containerColor: Color,
-    shape: Shape,
-    elevation: Dp = 0.dp,
-    border: BorderStroke? = null
-): Modifier {
-    val highlightModifier = if (containerColor.alpha > 0f) {
-        Modifier.background(
-            brush = HyperColors.glassHighlightBrush,
-            shape = shape
-        )
-    } else {
-        Modifier
-    }
-
-    return this
-        .then(
-            if (elevation > 0.dp) {
-                Modifier.shadow(elevation = elevation, shape = shape, clip = false)
-            } else {
-                Modifier
-            }
-        )
-        .clip(shape)
-        .background(color = containerColor, shape = shape)
-        .then(highlightModifier)
-        .then(if (border != null) Modifier.border(border, shape) else Modifier)
-}

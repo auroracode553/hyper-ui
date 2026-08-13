@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/drawer/HyperDrawer.kt`
 - 预览：`drawer`
 
-`HyperDrawer` 是四方向抽屉容器，无遮罩。抽屉面板使用不透明实色卡片背景和实色轻描边，不再叠加玻璃高光；`open` 直接控制面板是否渲染，打开与关闭均不执行动画。`HyperDrawerHeader` 与 `HyperDrawerItem` 都采用 slot-first API。
+`HyperDrawer` 是四方向抽屉容器，无遮罩。深色模式下抽屉面板和默认描边直接采用当前 `MaterialTheme.colorScheme.background`，与页面保持同色；浅色模式仅保留轻微透明度。面板不叠加玻璃高光或渐变；`open` 直接控制面板是否渲染，打开与关闭均不执行动画。
 
 ## 公开签名
 
@@ -141,10 +141,12 @@ HyperDrawer(
 - 四个方向会按位置自动避让 `safeDrawing` 系统栏。`drawerContentScrollEnabled = true` 时，普通内容超过最大高度后由面板负责滚动。
 - `drawerContent` 包含 `LazyColumn`、`HyperList` 等纵向滚动组件时，必须设置 `drawerContentScrollEnabled = false`，由内层列表独立负责滚动，避免嵌套滚动导致无限高度测量异常。
 - `HyperDrawerItem` 默认最小高度由 `HyperDrawerDefaults.ItemMinHeight` 提供，其他尺寸通过 `modifier` 控制。
-- 默认面板背景使用不透明的 `HyperColors.cardContainer`；通过 `HyperDrawerColors` 或 `HyperDrawerDefaults.colors(...)` 传入含 alpha 的容器色时，会先与页面背景合成为实色。
+- 默认面板在浅色模式使用白色 `0.96f` alpha；深色模式直接使用当前 `MaterialTheme.colorScheme.background`，不再使用会发灰的深灰透明层。
+- 深色默认描边同样使用页面背景色，因此不会出现灰色边界；通过 `HyperDrawerColors`、`HyperDrawerDefaults.colors(...)` 或 `border` 显式传入的颜色仍会保留。
+- 抽屉面板和选中项不叠加玻璃高光或渐变。
 - 抽屉打开与关闭均直接渲染或移除，不执行滑动、淡入淡出或透明度动画。
 - Header/Item 不提供 `title`、`description`、`leadingIcon` 参数。
 - `open`、选中项和路由由调用方持有。
-- 默认描边来自 `HyperDrawerDefaults.border()`，使用合成后的实色轻描边；如需无边框，传入 `border = null`。
+- 默认描边来自 `HyperDrawerDefaults.border()`；如需无边框，传入 `border = null`。
 
 <WasmPreview demo="drawer" title="HyperDrawer 交互预览" />

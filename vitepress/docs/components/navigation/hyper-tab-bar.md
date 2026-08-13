@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/navigation/HyperTabBar.kt`
 - Preview ID：`tab-bar`
 
-`HyperTabBar` 是默认总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。底部留白让内容与 Android 手势小白条保持一点距离，同时维持紧凑高度。它提供完整 Row slot 和泛型 items 两个入口；浅色模式保留玻璃容器，深色模式把容器、内容与描边解析为不透明实色。
+`HyperTabBar` 是默认总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。深色模式下容器和默认描边直接采用当前 `MaterialTheme.colorScheme.background`，与页面保持同色；浅色模式保留轻量透明度。两种模式均不叠加玻璃高光或渐变。
 
 ## 公开 API
 
@@ -129,7 +129,9 @@ HyperTabBar(
 - 不存在 `HyperTabBarItem`、`selectedItemId` 或 `HyperTabBarConfig`。
 - 组件不依赖导航框架，也不会在 `onItemClick` 后自动切换页面。
 - `Equal` 项目等分宽度；`Packed` 项目至少 60dp 宽，内容可继续撑宽。
-- 浅色默认容器为 `HyperColors.elevatedContainer` 玻璃表面；深色默认容器为不透明 `HyperColors.cardContainer`。
+- 默认容器在浅色模式使用白色 `0.92f` alpha；深色模式直接使用当前 `MaterialTheme.colorScheme.background`，不再使用会发灰的白色透明层。
+- 深色默认描边同样使用页面背景色，因此不会出现灰色边界；显式传入 `border` 或 `containerColor` 时仍按调用方颜色绘制，并保留其 alpha。
+- 容器只绘制普通颜色背景和可选描边，不叠加玻璃高光或渐变。
 - `HyperTabBarDefaults.Height` 表示 55dp 标签操作区；默认底栏总高度为 60dp，包含 5dp 的 `BottomPadding`。
 - 通常不应使用 `modifier.height(...)` 强制压缩底栏总高度，否则可能挤占内部操作区或底部留白。
 

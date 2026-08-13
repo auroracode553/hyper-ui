@@ -32,9 +32,9 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperNavBar](components/navigation/hyper-nav-bar.md) | 默认透明、继承页面背景的顶部栏三段 slot 容器 | 调用方处理事件 |
-| [HyperDrawer](components/navigation/hyper-drawer.md) | 无动画、不透明实色、无遮罩、自动安全区与可配置内容滚动的四方向 slot 抽屉 | 调用方提供 `open`、选中态与嵌套列表滚动策略 |
+| [HyperDrawer](components/navigation/hyper-drawer.md) | 深色与页面同色、浅色轻微透明、无玻璃高光、无遮罩、无动画的四方向 slot 抽屉 | 调用方提供 `open`、选中态与嵌套列表滚动策略 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 横向分组菜单，未选中项默认带细描边 | 调用方提供 `selectedItem` |
-| [HyperTabBar](components/navigation/hyper-tab-bar.md) | 55dp 操作区、5dp 底部留白、总高 60dp 的底部栏容器 | 调用方处理内容、选择与导航 |
+| [HyperTabBar](components/navigation/hyper-tab-bar.md) | 深色与页面同色、浅色轻量透明且无玻璃高光，总高 60dp 的底部栏容器 | 调用方处理内容、选择与导航 |
 
 ## 列表组件
 

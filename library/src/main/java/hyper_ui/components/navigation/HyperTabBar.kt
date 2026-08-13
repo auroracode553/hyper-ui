@@ -63,7 +63,7 @@ fun HyperTabBar(
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
-    val resolvedColors = resolveHyperTabBarColors(colors)
+    val resolvedColors = colors
     val contentColor = if (enabled) {
         resolvedColors.unselectedContentColor
     } else {
@@ -117,7 +117,7 @@ fun <T> HyperTabBar(
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
 ) {
-    val resolvedColors = resolveHyperTabBarColors(colors)
+    val resolvedColors = colors
     HyperTabBar(
         modifier = modifier,
         enabled = enabled,
@@ -180,54 +180,18 @@ private fun HyperTabBarSurface(
     colors: HyperTabBarColors,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val sizedModifier = modifier.fillMaxWidth()
-    val surfaceModifier = if (HyperColors.isLight) {
-        sizedModifier.hyperGlassSurface(
-            containerColor = colors.containerColor,
-            shape = shape,
-            border = border
-        )
-    } else {
-        sizedModifier.hyperSolidSurface(
-            containerColor = colors.containerColor,
-            shape = shape,
-            border = border
-        )
-    }
-    Box(modifier = surfaceModifier.padding(bottom = HyperTabBarDefaults.BottomPadding)) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .hyperSurface(
+                containerColor = colors.containerColor,
+                shape = shape,
+                border = border
+            )
+            .padding(bottom = HyperTabBarDefaults.BottomPadding)
+    ) {
         content()
     }
-}
-
-@Composable
-private fun resolveHyperTabBarColors(colors: HyperTabBarColors): HyperTabBarColors {
-    if (HyperColors.isLight) {
-        return colors
-    }
-
-    val containerColor = resolveHyperOpaqueColor(
-        color = colors.containerColor,
-        fallbackColor = HyperColors.cardContainer,
-        backgroundColor = HyperColors.pageBackground
-    )
-    return HyperTabBarColors(
-        containerColor = containerColor,
-        selectedContentColor = resolveHyperOpaqueColor(
-            color = colors.selectedContentColor,
-            fallbackColor = HyperColors.accent,
-            backgroundColor = containerColor
-        ),
-        unselectedContentColor = resolveHyperOpaqueColor(
-            color = colors.unselectedContentColor,
-            fallbackColor = HyperColors.secondaryText,
-            backgroundColor = containerColor
-        ),
-        disabledContentColor = resolveHyperOpaqueColor(
-            color = colors.disabledContentColor,
-            fallbackColor = HyperColors.secondaryText,
-            backgroundColor = containerColor
-        )
-    )
 }
 
 @Composable
@@ -272,8 +236,7 @@ object HyperTabBarDefaults {
         unselectedContentColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
     ): HyperTabBarColors {
-        val isLight = HyperColors.isLight
-        val defaultUnselectedColor = if (isLight) {
+        val defaultUnselectedColor = if (HyperColors.isLight) {
             rgba(0, 0, 0, 0.72f)
         } else {
             rgba(255, 255, 255, 0.72f)
@@ -281,29 +244,26 @@ object HyperTabBarDefaults {
         val resolvedSelectedColor = resolveHyperContainerColor(selectedContentColor, HyperColors.accent)
         val resolvedUnselectedColor = resolveHyperContainerColor(unselectedContentColor, defaultUnselectedColor)
 
-        return resolveHyperTabBarColors(
-            HyperTabBarColors(
-                containerColor = resolveHyperContainerColor(
-                    containerColor,
-                    if (isLight) HyperColors.elevatedContainer else HyperColors.cardContainer
-                ),
-                selectedContentColor = resolvedSelectedColor,
-                unselectedContentColor = resolvedUnselectedColor,
-                disabledContentColor = resolveHyperContainerColor(
-                    disabledContentColor,
-                    resolvedUnselectedColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
-                )
+        return HyperTabBarColors(
+            containerColor = resolveHyperContainerColor(
+                containerColor,
+                defaultHyperTabBarContainerColor()
+            ),
+            selectedContentColor = resolvedSelectedColor,
+            unselectedContentColor = resolvedUnselectedColor,
+            disabledContentColor = resolveHyperContainerColor(
+                disabledContentColor,
+                resolvedUnselectedColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
             )
         )
     }
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = if (HyperColors.isLight) {
-        hyperPanelBorder(color)
-    } else {
-        hyperSolidPanelBorder(
-            color = color,
-            backgroundColor = HyperColors.cardContainer
-        )
-    }
+    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPageMatchedPanelBorder(color)
 }
+
+/** 浅色保留轻量透明度；深色与页面背景完全一致。 */
+@Composable
+private fun defaultHyperTabBarContainerColor(): Color = hyperPageMatchedContainerColor(
+    lightContainerColor = rgba(255, 255, 255, 0.92f)
+)

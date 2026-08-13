@@ -43,7 +43,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "drawer",
         group = GROUP_NAVIGATION,
         title = "HyperDrawer",
-        description = "抽屉即时显示和关闭，支持四个方向、默认安全区留白和可配置内容滚动；Header 和 Item 使用 slot 渲染，无遮罩、无动画。",
+        description = "抽屉即时显示和关闭；深色模式默认与页面背景同色且无灰色边界，浅色模式仅轻微透明，两种模式均无玻璃高光。支持四个方向、默认安全区留白和可配置内容滚动，无遮罩、无动画。",
         code = """
             HyperDrawer(
                 open = open,
@@ -72,7 +72,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("面板尺寸", "drawerModifier = Modifier.width/height", "按方向定制独立面板节点"),
             DemoVariant("默认安全区", "safeDrawing + contentPadding", "自动避让系统栏并提供方向化留白"),
             DemoVariant("滚动职责", "drawerContentScrollEnabled", "普通内容由面板滚动，懒列表关闭外层滚动"),
-            DemoVariant("选中项", "selected = true", "主题混合实色容器"),
+            DemoVariant("明暗背景", "colors.containerColor", "深色继承页面背景，浅色使用 0.96f alpha"),
+            DemoVariant("选中项", "selected = true", "主题色半透明容器，无玻璃高光"),
             DemoVariant("无蒙层", "dismissOnClickOutside", "仅处理外部点击，不绘制背景或遮罩")
         ),
         apiDocumentPaths = listOf("navigation/hyper-drawer.md"),
@@ -105,7 +106,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tab-bar",
         group = GROUP_NAVIGATION,
         title = "HyperTabBar",
-        description = "默认 55dp 操作区和 5dp 轻量底部留白，总高度 60dp；浅色模式保留透明玻璃效果，深色模式使用不透明实色。",
+        description = "深色模式默认与页面背景同色且无灰色边界，浅色模式保留轻量透明度；无玻璃高光，包含 55dp 操作区和 5dp 轻量底部留白，总高度 60dp。",
         code = """
             HyperTabBar {
                 bottomItems.forEach { item ->
@@ -124,7 +125,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("操作区高度", "Height = 55.dp", "搭配留白后总高度为 60dp"),
             DemoVariant("完整 Slot", "content: RowScope", "调用方控制按钮布局"),
             DemoVariant("泛型项目", "items + itemSelected", "统一点击、选中与禁用状态"),
-            DemoVariant("浅色容器", "colors.containerColor", "唯一保留的浅色半透明组件容器")
+            DemoVariant("明暗背景", "colors.containerColor", "深色继承页面背景，浅色保留轻量透明度")
         ),
         apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
         content = { TabBarDemo() }
