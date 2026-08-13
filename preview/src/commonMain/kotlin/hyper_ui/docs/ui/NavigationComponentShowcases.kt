@@ -310,7 +310,7 @@ fun TabBarDemo() {
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "切换预览主题可对比：浅色模式保留透明效果，深色模式使用不透明实色底栏。按钮布局、选中态和点击逻辑仍由调用方组合。",
+                        text = "切换预览主题可对比容器效果；底栏使用 55dp 操作区和 5dp 轻量底部留白，总高度为 60dp。按钮布局、选中态和点击逻辑仍由调用方组合。",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         lineHeight = 20.sp

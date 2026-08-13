@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,7 +49,8 @@ class HyperTabBarItemScope internal constructor(
 /**
  * 底部导航栏组件（Slot 模式）。
  *
- * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
+ * 组件内部已包含默认水平内容间距（16dp）和少量底部安全留白。
+ * 外部间距请通过 modifier.padding(...) 控制。
  */
 @Composable
 fun HyperTabBar(
@@ -78,7 +78,8 @@ fun HyperTabBar(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .height(HyperTabBarDefaults.Height)
                 .padding(horizontal = 16.dp),
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = verticalAlignment
@@ -97,7 +98,8 @@ fun HyperTabBar(
 /**
  * 底部导航栏组件（简单 items 模式）。
  *
- * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
+ * 组件内部已包含默认水平内容间距（16dp）和少量底部安全留白。
+ * 外部间距请通过 modifier.padding(...) 控制。
  */
 @Composable
 fun <T> HyperTabBar(
@@ -178,9 +180,7 @@ private fun HyperTabBarSurface(
     colors: HyperTabBarColors,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val sizedModifier = modifier
-        .fillMaxWidth()
-        .height(HyperTabBarDefaults.Height)
+    val sizedModifier = modifier.fillMaxWidth()
     val surfaceModifier = if (HyperColors.isLight) {
         sizedModifier.hyperGlassSurface(
             containerColor = colors.containerColor,
@@ -194,7 +194,7 @@ private fun HyperTabBarSurface(
             border = border
         )
     }
-    Box(modifier = surfaceModifier) {
+    Box(modifier = surfaceModifier.padding(bottom = HyperTabBarDefaults.BottomPadding)) {
         content()
     }
 }
@@ -254,8 +254,11 @@ private fun RowScope.HyperTabBarItemContainer(
 }
 
 object HyperTabBarDefaults {
-    /** 保留标准触控高度，同时避免底栏占据过多页面空间。 */
-    val Height = 56.dp
+    /** 标签操作区高度。 */
+    val Height = 55.dp
+
+    /** 轻量底部留白，用于让标签内容与系统手势条保持少量距离。 */
+    val BottomPadding = 5.dp
     val ItemWidth = 60.dp
     val Shape: Shape = RoundedCornerShape(0.dp)
 

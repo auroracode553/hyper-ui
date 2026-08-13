@@ -105,7 +105,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tab-bar",
         group = GROUP_NAVIGATION,
         title = "HyperTabBar",
-        description = "默认 56dp 的底部栏；浅色模式保留透明玻璃效果，深色模式使用不透明实色，支持完整 slot 与泛型 items 入口。",
+        description = "默认 55dp 操作区和 5dp 轻量底部留白，总高度 60dp；浅色模式保留透明玻璃效果，深色模式使用不透明实色。",
         code = """
             HyperTabBar {
                 bottomItems.forEach { item ->
@@ -120,7 +120,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认高度", "Height = 56.dp", "紧凑但保留标准触控区域"),
+            DemoVariant("底部留白", "BottomPadding = 5.dp", "与系统手势小白条保持少量距离"),
+            DemoVariant("操作区高度", "Height = 55.dp", "搭配留白后总高度为 60dp"),
             DemoVariant("完整 Slot", "content: RowScope", "调用方控制按钮布局"),
             DemoVariant("泛型项目", "items + itemSelected", "统一点击、选中与禁用状态"),
             DemoVariant("浅色容器", "colors.containerColor", "唯一保留的浅色半透明组件容器")

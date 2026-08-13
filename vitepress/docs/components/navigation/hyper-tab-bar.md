@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/navigation/HyperTabBar.kt`
 - Preview ID：`tab-bar`
 
-`HyperTabBar` 是默认 56dp 高的底部标签栏。它提供完整 Row slot 和泛型 items 两个入口；浅色模式保留玻璃容器，深色模式把容器、内容与描边解析为不透明实色。
+`HyperTabBar` 是默认总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。底部留白让内容与 Android 手势小白条保持一点距离，同时维持紧凑高度。它提供完整 Row slot 和泛型 items 两个入口；浅色模式保留玻璃容器，深色模式把容器、内容与描边解析为不透明实色。
 
 ## 公开 API
 
@@ -59,7 +59,8 @@ fun <T> HyperTabBar(
 
 ```kotlin
 object HyperTabBarDefaults {
-    val Height = 56.dp
+    val Height = 55.dp
+    val BottomPadding = 5.dp
     val ItemWidth = 60.dp
     val Shape: Shape = RoundedCornerShape(0.dp)
     val ItemTextStyle: TextStyle
@@ -91,7 +92,7 @@ object HyperTabBarDefaults {
 | `colors` | `HyperTabBarColors` | 否 | `HyperTabBarDefaults.colors()` | 容器与三种内容状态色。 |
 | `content` | `@Composable RowScope.() -> Unit` | 是 | 无 | 完整自定义内容。 |
 
-Slot 入口固定提供水平 16dp 内边距和 `ItemTextStyle`。
+Slot 入口固定提供水平 16dp 内边距、5dp 底部留白和 `ItemTextStyle`。
 
 ## Items 入口附加参数
 
@@ -129,6 +130,7 @@ HyperTabBar(
 - 组件不依赖导航框架，也不会在 `onItemClick` 后自动切换页面。
 - `Equal` 项目等分宽度；`Packed` 项目至少 60dp 宽，内容可继续撑宽。
 - 浅色默认容器为 `HyperColors.elevatedContainer` 玻璃表面；深色默认容器为不透明 `HyperColors.cardContainer`。
-- `modifier.height(...)` 可覆盖默认 56dp 高度；通常不应在 slot 内再次声明操作区高度。
+- `HyperTabBarDefaults.Height` 表示 55dp 标签操作区；默认底栏总高度为 60dp，包含 5dp 的 `BottomPadding`。
+- 通常不应使用 `modifier.height(...)` 强制压缩底栏总高度，否则可能挤占内部操作区或底部留白。
 
 <WasmPreview demo="tab-bar" title="HyperTabBar 交互预览" />
