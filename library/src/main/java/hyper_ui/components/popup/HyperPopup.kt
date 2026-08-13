@@ -133,7 +133,10 @@ fun HyperPopup(
                 // 先按窗口比例收窄，再应用尺寸边界，兼顾竖屏留白与小窗口不越界。
                 val resolvedWidth = (availableWidth * HyperPopupDefaults.WidthFraction)
                     .coerceIn(resolvedMinWidth, resolvedMaxWidth)
-                val resolvedMaxHeight = HyperPopupDefaults.MaxHeight.coerceAtMost(availableHeight)
+                // 高度上限跟随窗口变化；大屏不再受固定 dp 限制，小屏仍保留安全边距。
+                val resolvedMaxHeight =
+                    (this.maxHeight * HyperPopupDefaults.MaxHeightFraction)
+                        .coerceAtMost(availableHeight)
 
                 Column(
                     modifier = Modifier
@@ -281,7 +284,7 @@ object HyperPopupDefaults {
     val MinWidth = 280.dp
     val MaxWidth = 360.dp
     const val WidthFraction = 0.9f
-    val MaxHeight = 480.dp
+    const val MaxHeightFraction = 0.7f
     val WindowPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
     val Shape: Shape = RoundedCornerShape(20.dp)
     val ContentPadding = androidx.compose.foundation.layout.PaddingValues(20.dp)

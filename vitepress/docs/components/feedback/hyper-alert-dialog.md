@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/dialog/HyperAlertDialog.kt`
 - 预览：`dialog`
 
-`HyperAlertDialog` 是基于 `HyperPopup` 的结构化弹窗。它通过可选 `title` 属性固定渲染顶部标题，只提供 body、action 两个 slot 区域，不内置确认、取消、危险操作等业务按钮。面板跳过未定位首帧并直接居中显示，显示与关闭均不执行动画；点击面板外的空白区域默认请求关闭，也可通过 `dismissOnClickOutside = false` 禁用。面板固定使用 UI 库标准实色描边，不暴露描边配置。
+`HyperAlertDialog` 是基于 `HyperPopup` 的结构化弹窗。它通过可选 `title` 属性固定渲染顶部标题，只提供 body、action 两个 slot 区域，不内置确认、取消、危险操作等业务按钮。面板最大高度为窗口高度的 70%，超出高度的正文可滚动，标题与底部操作区保持固定。面板跳过未定位首帧并直接居中显示，显示与关闭均不执行动画；点击面板外的空白区域默认请求关闭，也可通过 `dismissOnClickOutside = false` 禁用。面板固定使用 UI 库标准实色描边，不暴露描边配置。
 
 ## 公开签名
 
@@ -47,7 +47,7 @@ HyperAlertDialog(
 - 弹窗不渲染遮罩或半透明蒙层。
 - 弹窗继承 `HyperPopup` 的无动画居中显示策略，不绘制从顶部进入的过渡。
 - `dismissOnClickOutside` 默认为 `true`；设为 `false` 后，点击面板外空白区域不会调用 `onDismissRequest`。
-- 面板尺寸、窗口间距、内容间距、不透明实色背景、圆角和描边均由内部 `HyperPopup` 标准样式提供；`HyperAlertDialog` 不暴露 `border` 参数。
+- 面板尺寸、窗口间距、内容间距、不透明实色背景、圆角和描边均由内部 `HyperPopup` 标准样式提供；默认最大高度为窗口高度的 `70%`，`HyperAlertDialog` 不暴露 `border` 参数。
 - `bodyContent` 默认继承 `HyperColors.secondaryText`；slot 内显式传入的颜色优先。
 
 <WasmPreview demo="dialog" title="HyperAlertDialog 交互预览" />

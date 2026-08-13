@@ -88,7 +88,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_popup",
         group = GROUP_FEEDBACK,
         title = "HyperPopup",
-        description = "窗口居中的基础浮层会跳过未定位首帧，无顶部位移或显示/关闭动画，并使用不透明实色面板。",
+        description = "窗口居中的基础浮层最大高度为窗口的 70%，长内容滚动且操作区固定。",
         code = """
             HyperPopup(
                 visible = visible,
@@ -108,6 +108,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("基础面板", "visible + content", "响应式实色浮层面板"),
+            DemoVariant("响应式高度", "MaxHeightFraction", "最大为窗口高度的 70%"),
             DemoVariant("窗口居中", "Popup", "跳过未定位首帧并直接在窗口中心显示"),
             DemoVariant("外部关闭", "dismissOnClickOutside", "仅点击处理，不绘制遮罩"),
             DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
@@ -119,7 +120,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dialog",
         group = GROUP_FEEDBACK,
         title = "HyperAlertDialog",
-        description = "Alert 结构化对话框直接居中显示；内置标准实色描边，正文和按钮均为 slot。",
+        description = "Alert 结构化对话框直接居中显示；最大高度为窗口高度的 70%，长正文可滚动。",
         code = """
             HyperAlertDialog(
                 visible = visible,
@@ -138,7 +139,8 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("结构化标题", "title", "固定标题区"),
-            DemoVariant("正文", "bodyContent", "可滚动内容 slot"),
+            DemoVariant("响应式高度", "MaxHeightFraction", "最大为窗口高度的 70%"),
+            DemoVariant("长正文", "bodyContent", "超出高度后可滚动"),
             DemoVariant("操作", "actionContent", "普通与危险操作按钮")
         ),
         apiDocumentPaths = listOf("feedback/hyper-alert-dialog.md"),
@@ -148,7 +150,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "update_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperUpdateDialog",
-        description = "使用不透明实色面板的应用更新弹窗；调用方持有状态并注入 Release 加载与下载动作。",
+        description = "最大高度为窗口 70% 的应用更新弹窗；调用方持有状态并注入 Release 加载与下载动作。",
         code = """
             val checker = HyperUpdateChecker(
                 HyperReleaseLoader { releaseUrl ->

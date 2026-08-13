@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/popup/HyperPopup.kt`
 - 预览：`custom_popup`
 
-`HyperPopup` 是基础浮层容器。它忽略调用节点位置并始终相对应用窗口居中，不接受锚点、偏移或对齐参数。首次挂载时会隐藏平台尚未完成居中定位的首帧，随后直接在中心显示，避免产生从窗口顶部移动到中心的视觉跳变。组件负责可选固定顶部标题、尺寸、滚动内容区和底部 action slot。点击面板外的空白区域默认通过 `onDismissRequest` 请求关闭，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为 480dp，并在窗口四周保留 16dp 间距。浮层不渲染遮罩，也不使用显示或关闭动画；面板使用不透明卡片背景和实色描边。
+`HyperPopup` 是基础浮层容器。它忽略调用节点位置并始终相对应用窗口居中，不接受锚点、偏移或对齐参数。首次挂载时会隐藏平台尚未完成居中定位的首帧，随后直接在中心显示，避免产生从窗口顶部移动到中心的视觉跳变。组件负责可选固定顶部标题、尺寸、滚动内容区和底部 action slot。点击面板外的空白区域默认通过 `onDismissRequest` 请求关闭，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为窗口高度的 70%，并在窗口四周保留 16dp 间距。浮层不渲染遮罩，也不使用显示或关闭动画；面板使用不透明卡片背景和实色描边。
 
 ## 公开签名
 
@@ -43,7 +43,7 @@ object HyperPopupDefaults {
     val MinWidth = 280.dp
     val MaxWidth = 360.dp
     const val WidthFraction = 0.9f
-    val MaxHeight = 480.dp
+    const val MaxHeightFraction = 0.7f
     val WindowPadding = PaddingValues(16.dp)
     val Shape: Shape = RoundedCornerShape(20.dp)
     val ContentPadding = PaddingValues(20.dp)
@@ -90,7 +90,7 @@ HyperPopup(
 - 默认背景来自 `HyperPopupDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.cardContainer`，保持不透明卡片效果。
 - `visible` 直接控制弹窗是否渲染；首次显示跳过平台未定位首帧，显示与关闭均不执行动画。
 - 通过 `HyperPopupColors` 或 `HyperPopupDefaults.colors(...)` 传入含 alpha 的容器色时，会先与页面背景合成为实色。
-- 默认取扣除窗口间距后可用宽度的 `90%`，并使用 `HyperPopupDefaults.MinWidth`、`MaxWidth`、`MaxHeight` 作为默认边界。
+- 默认取扣除窗口间距后可用宽度的 `90%`，并使用 `HyperPopupDefaults.MinWidth`、`MaxWidth` 作为宽度边界；高度上限由 `MaxHeightFraction = 0.7f` 按窗口高度计算。
 - 自定义面板尺寸使用 `modifier.width(...)`、`modifier.widthIn(...)`、`modifier.fillMaxWidth(fraction)` 或 `modifier.heightIn(...)`，不再提供重复的 `minWidth`、`maxWidth`、`widthFraction`、`maxHeight` 参数。
 - `HyperPopupDefaults.WindowPadding` 是组件内部安全边距；自定义尺寸仍会被限制在窗口可用范围内，不会越界。
 - slot 内容默认继承 `HyperColors.primaryText`，裸 `Text` 在深色模式下也会使用浅色文字；调用方显式传入 `color` 时以调用方为准。

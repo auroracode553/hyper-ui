@@ -255,6 +255,7 @@ fun LoadingProgressDemo() {
 @Composable
 fun DialogDemo() {
     var showDialog by remember { mutableStateOf(false) }
+    var showLongContent by remember { mutableStateOf(false) }
     var resultText by remember { mutableStateOf("等待操作") }
     var dismissOnClickOutside by remember { mutableStateOf(true) }
 
@@ -265,9 +266,21 @@ fun DialogDemo() {
     ) {
         HyperButton(
             tone = HyperButtonTone.Danger,
-            onClick = { showDialog = true }
+            onClick = {
+                showLongContent = false
+                showDialog = true
+            }
         ) {
             Text(text = "删除数据")
+        }
+        HyperButton(
+            tone = HyperButtonTone.Outline,
+            onClick = {
+                showLongContent = true
+                showDialog = true
+            }
+        ) {
+            Text(text = "查看 70% 高度长内容")
         }
         HyperButton(
             tone = HyperButtonTone.Outline,
@@ -293,9 +306,22 @@ fun DialogDemo() {
             resultText = "已收到关闭请求"
             showDialog = false
         },
-        title = "确认删除",
+        title = if (showLongContent) "长内容对话框" else "确认删除",
         dismissOnClickOutside = dismissOnClickOutside,
-        bodyContent = { DialogBody("删除后无法恢复，是否继续？") },
+        bodyContent = {
+            if (showLongContent) {
+                repeat(18) { index ->
+                    Text(
+                        text = "第 ${index + 1} 项可滚动内容",
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 15.sp
+                    )
+                }
+            } else {
+                DialogBody("删除后无法恢复，是否继续？")
+            }
+        },
         actionContent = {
             HyperButton(
                 modifier = Modifier.weight(1f),
@@ -354,7 +380,7 @@ fun HyperPopupDemo() {
             lineHeight = 18.sp
         )
         Text(
-            text = "可缩放预览窗口验证：浮层忽略触发位置并始终相对窗口居中，宽度限制在 280–360dp。",
+            text = "可缩放预览窗口验证：浮层始终相对窗口居中，宽度限制在 280–360dp，最大高度为窗口的 70%。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp,
