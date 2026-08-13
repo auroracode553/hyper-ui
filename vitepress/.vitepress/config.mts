@@ -93,6 +93,7 @@ export default defineConfig({
         text: '列表组件',
         items: [
           { text: 'HyperList', link: '/components/list/hyper-list' },
+          { text: 'HyperSectionedList', link: '/components/list/hyper-sectioned-list' },
           { text: 'HyperMenuList', link: '/components/list/hyper-menu-list' },
           { text: 'HyperListItem', link: '/components/list/hyper-list-item' }
         ]

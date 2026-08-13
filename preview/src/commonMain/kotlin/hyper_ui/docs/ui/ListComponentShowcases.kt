@@ -42,6 +42,8 @@ import hyper_ui.HyperListItem
 import hyper_ui.HyperListItemDefaults
 import hyper_ui.HyperMenuList
 import hyper_ui.HyperRadio
+import hyper_ui.HyperSectionedList
+import hyper_ui.HyperSectionedListDefaults
 import hyper_ui.HyperSwitch
 
 @Composable
@@ -191,6 +193,84 @@ fun HyperListDemo() {
                         dividerModifier = Modifier.padding(start = 70.dp)
                     )
                 }
+            }
+        }
+    }
+}
+
+private data class SectionedListPreviewGroup(
+    val id: String,
+    val title: String,
+    val entries: List<String>
+)
+
+@Composable
+fun HyperSectionedListDemo() {
+    val groups = remember {
+        listOf(
+            SectionedListPreviewGroup(
+                id = "today",
+                title = "今天",
+                entries = listOf("项目周报.docx", "会议记录.txt", "设计稿.pdf")
+            ),
+            SectionedListPreviewGroup(
+                id = "yesterday",
+                title = "昨天",
+                entries = listOf("需求清单.xlsx", "发布说明.md")
+            )
+        )
+    }
+    var compactSections by remember { mutableStateOf(false) }
+    var selectedEntry by remember { mutableStateOf<String?>(null) }
+
+    Column(
+        modifier = Modifier.widthIn(max = 560.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = if (compactSections) "紧凑分段间距" else "标准分段间距",
+                color = LocalContentColor.current,
+                fontSize = 14.sp,
+                lineHeight = 20.sp
+            )
+            HyperSwitch(
+                checked = compactSections,
+                onCheckedChange = { compactSections = it }
+            )
+        }
+
+        Box(modifier = Modifier.height(340.dp)) {
+            HyperSectionedList(
+                sections = groups,
+                items = { group -> group.entries },
+                sectionKey = { group -> "preview-section-${group.id}" },
+                itemKey = { group, entry -> "preview-item-${group.id}-$entry" },
+                sectionSpacing = if (compactSections) {
+                    8.dp
+                } else {
+                    HyperSectionedListDefaults.SectionSpacing
+                },
+                headerContent = { group -> Text(group.title) }
+            ) { _, entry ->
+                HyperListItem(
+                    onClick = { selectedEntry = entry },
+                    leadingContent = { ListIcon(iconFor(entry)) },
+                    headlineContent = { ListTitle(entry) },
+                    supportingContent = { ListDescription("点击切换选中状态") },
+                    trailingContent = {
+                        HyperCheckbox(
+                            checked = selectedEntry == entry,
+                            onCheckedChange = { checked ->
+                                selectedEntry = if (checked) entry else null
+                            }
+                        )
+                    }
+                )
             }
         }
     }

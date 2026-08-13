@@ -5,7 +5,7 @@
 - 状态归属：调用方提供项目 Slot，可选持有 `LazyListState`
 - Preview ID：`hyper_list`
 
-页面级懒加载列表，适合列表页、消息页、记录流、分组数据和分页内容。`HyperList` 固定使用 `LazyColumn`，只负责不透明实色卡片背景、12dp 轻圆角、可选边框和滚动状态；项目结构完全由调用方通过 `LazyListScope` Slot 描述。
+页面级连续懒加载列表，适合列表页、消息页、记录流和分页内容。`HyperList` 固定使用 `LazyColumn`，只负责一个连续的不透明实色卡片背景、12dp 轻圆角、可选边框和滚动状态；项目结构完全由调用方通过 `LazyListScope` Slot 描述。需要按日期或类别形成多个独立圆角卡片时使用 [`HyperSectionedList`](hyper-sectioned-list.md)。
 
 ## 公开签名
 
@@ -94,6 +94,7 @@ HyperList(state = listState) {
 ## 约束
 
 - `HyperList` 始终使用 `LazyColumn`，不提供关闭懒加载或切换普通 `Column` 的参数。
+- 多个分组需要各自的圆角、背景和自动末项分割线时使用 [HyperSectionedList](hyper-sectioned-list.md)，不要在每个 `HyperListItem` 上重复拼接分组样式。
 - 数据量很少且不需要独立滚动时，直接使用 Compose `Column`；设置分组和少量操作入口使用 [HyperMenuList](hyper-menu-list.md)。
 - 容器颜色始终以不透明实色绘制；含 alpha 的自定义颜色会先与页面背景合成。
 - 列表内部留白使用 `contentModifier`，页面级外部留白使用 `modifier` 或父布局约束。

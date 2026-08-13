@@ -3,6 +3,7 @@ package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.HyperMenuListDemo
 import hyper_ui.docs.ui.HyperListDemo
+import hyper_ui.docs.ui.HyperSectionedListDemo
 
 private const val GROUP_LIST = "列表组件"
 
@@ -78,5 +79,37 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
             "list/hyper-list-item.md"
         ),
         content = { HyperMenuListDemo() }
+    ),
+    ComponentDemo(
+        id = "hyper_sectioned_list",
+        group = GROUP_LIST,
+        title = "HyperSectionedList",
+        description = "日期、历史等动态数据使用的分段懒列表，自动处理组内圆角与分割线。",
+        code = """
+            HyperSectionedList(
+                sections = groups,
+                items = { group -> group.entries },
+                sectionKey = { group -> "section-${'$'}{group.id}" },
+                itemKey = { _, entry -> "entry-${'$'}{entry.id}" },
+                headerContent = { group -> Text(group.title) }
+            ) { _, entry ->
+                HyperListItem(
+                    headlineContent = { Text(entry.title) },
+                    supportingContent = { Text(entry.subtitle) }
+                )
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("懒分段", "sections + items", "标题与每个数据行独立懒加载"),
+            DemoVariant("自动圆角", "首项 / 中间项 / 尾项", "每组形成独立的 16dp 圆角卡片"),
+            DemoVariant("自动分割线", "dividerModifier", "组内非末项绘制，末项自动隐藏"),
+            DemoVariant("稳定复用", "sectionKey + itemKey", "分段标题和数据行使用独立稳定 key"),
+            DemoVariant("可调间距", "sectionSpacing", "支持紧凑和标准分段节奏")
+        ),
+        apiDocumentPaths = listOf(
+            "list/hyper-sectioned-list.md",
+            "list/hyper-list-item.md"
+        ),
+        content = { HyperSectionedListDemo() }
     )
 )

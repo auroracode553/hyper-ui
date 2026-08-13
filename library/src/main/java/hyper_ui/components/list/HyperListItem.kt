@@ -91,9 +91,12 @@ fun HyperListItem(
         Modifier
     }
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        // modifier 描述完整列表项外壳，必须同时约束内容行和分割线。
+        modifier = modifier.fillMaxWidth()
+    ) {
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = minHeight)
                 .then(clickModifier)
@@ -152,14 +155,26 @@ fun HyperListItem(
         }
 
         if (shouldShowDivider) {
-            Box(
-                modifier = dividerModifier
-                    .fillMaxWidth()
-                    .height(HyperListItemDefaults.DividerHeight)
-                    .background(dividerColor)
+            HyperListDivider(
+                modifier = dividerModifier,
+                color = dividerColor
             )
         }
     }
+}
+
+/** 列表组件共用同一分割线实现，保证普通列表与分段列表的尺寸一致。 */
+@Composable
+internal fun HyperListDivider(
+    modifier: Modifier,
+    color: Color
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(HyperListItemDefaults.DividerHeight)
+            .background(color)
+    )
 }
 
 object HyperListItemDefaults {
