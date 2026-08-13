@@ -192,7 +192,7 @@ HyperIconButton(onClick = onSearch) {
 - 列表组件：`HyperList`, `HyperMenuList`, `HyperListItem`（`HyperList` 只提供带统一容器样式的 `LazyColumn` 和 `LazyListScope` Slot，用于页面级数据列表；`HyperMenuList` 只能用于少量菜单、设置项和操作入口，不推荐用于普通、动态或大量列表数据；两者均使用不透明实色容器；`HyperMenuList` 不提供 `border` 参数，并默认提供 4dp 首尾安全留白；`HyperListItem` 根据 supporting slot 自动使用单行 44dp、双行 54dp 的基础高度和 4dp 纵向留白）
 - 浮层反馈：`HyperPopup`, `HyperPopupDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `hyperToast`, `HyperToastDuration`（基础浮层跳过未定位首帧并直接在应用窗口中居中显示；Alert 内置标准实色描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
-- 导航组件：`HyperNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明并继承页面底色；`HyperDrawer` 与 `HyperTabBar` 在深色模式下默认继承页面背景色且不绘制灰色边界，浅色模式保留轻量透明度，均不叠加玻璃高光；`HyperDrawer` 默认不注入内容间距或系统安全区并支持可配置内容滚动，`HyperTabBar` 使用 55dp 操作区和 5dp 轻量底部留白，默认总高度 60dp；页面切换由调用方处理）
+- 导航组件：`HyperNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明并继承页面底色；`HyperDrawer` 的面板、选中项、文字与分隔线均使用不透明实色，深色模式默认继承页面背景色且不绘制灰色边界；`HyperTabBar` 深色模式默认继承页面背景色，浅色模式保留轻量透明度；`HyperDrawer` 默认提供方向化内容间距与系统安全区，可通过 `defaultSetPadding = false` 关闭，并支持可配置内容滚动；`HyperTabBar` 使用 55dp 操作区和 5dp 轻量底部留白，默认总高度 60dp；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
 ## 状态管理原则
@@ -261,7 +261,7 @@ preview/
 - 公开组件源码按功能组放在 `library/src/main/java/hyper_ui/components/` 下，但包名统一声明为 `hyper_ui`，方便调用方 `import hyper_ui.*`。
 - UI 库内部公共工具放在 `library/src/main/java/hyper_ui/core/` 下，供组件实现复用，不作为调用方公开入口。
 - Android-only 工具不能进入 `commonMain` 编译链；Preview 页面只展示说明、可交互模拟和 Android 调用片段。
-- `HyperDrawer` 的四个方向在深色模式下默认直接使用 `MaterialTheme.colorScheme.background`，与页面背景保持一致且不显示灰色默认描边；浅色模式使用白色 `0.96f` alpha，不叠加玻璃高光。打开与关闭直接渲染或移除，不执行动画，外部点击区域不绘制遮罩。组件默认不注入内容间距或系统安全区，场景需要时通过 `drawerContentModifier` 显式添加；上下抽屉默认由内容撑高，达到窗口最大占比后在面板内部滚动；承载 `LazyColumn`、`HyperList` 等纵向滚动内容时设置 `drawerContentScrollEnabled = false`，由内层列表独立滚动。
+- `HyperDrawer` 的四个方向均使用不透明实色面板；浅色模式默认使用白色卡片背景，深色模式直接使用 `MaterialTheme.colorScheme.background`，与页面背景保持一致且不显示灰色默认描边。通过 `HyperDrawerDefaults.colors(...)` 传入的自定义颜色同样以实色绘制。打开与关闭直接渲染或移除，不执行动画，外部点击区域不绘制遮罩。组件默认提供方向化内容间距与 `safeDrawing` 系统栏避让；需要完整内容区时传入 `defaultSetPadding = false`，附加场景布局继续通过 `drawerContentModifier` 提供。上下抽屉默认由内容撑高，达到窗口最大占比后在面板内部滚动；承载 `LazyColumn`、`HyperList` 等纵向滚动内容时设置 `drawerContentScrollEnabled = false`，由内层列表独立滚动。
 - `HyperTabBar` 不依赖任何导航框架；深色模式下默认直接使用 `MaterialTheme.colorScheme.background` 并隐藏灰色默认描边，浅色模式保留白色 `0.92f` alpha，均不叠加玻璃高光。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp；页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
 - 调用方接入时不需要依赖 `preview` 模块。
 - Wasm 入口接受 `#组件-id`，例如 `index.html#button`，供 VitePress 组件页选择初始预览项；未知 ID 回退到第一个组件。

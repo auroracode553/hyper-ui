@@ -20,7 +20,7 @@ fun rgba(
 val brandColor = rgba(255, 103, 0)
 ```
 
-组件默认样式主要使用不透明实色；`HyperDrawer` 与 `HyperTabBar` 在深色模式下直接采用 `MaterialTheme.colorScheme.background`，浅色模式保留轻量透明度，两者均不叠加玻璃高光。`alpha` 参数保留给调用方表达完整 RGBA 颜色值。
+组件默认样式主要使用不透明实色；`HyperDrawer` 的面板和内部状态色始终合成为不透明实色，深色模式下直接采用 `MaterialTheme.colorScheme.background`。`HyperTabBar` 在深色模式下采用页面背景色，浅色模式保留轻量透明度。`alpha` 参数保留给调用方表达完整 RGBA 颜色值。
 
 组件源码禁止使用 `Color(0xFFRRGGBB)` 十六进制硬编码。需要直接构造颜色时，使用四个 Float RGBA 分量；调用方也可优先使用 `rgba(...)`。
 

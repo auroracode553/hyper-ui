@@ -43,12 +43,13 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "drawer",
         group = GROUP_NAVIGATION,
         title = "HyperDrawer",
-        description = "抽屉即时显示和关闭；深色模式默认与页面背景同色且无灰色边界，浅色模式仅轻微透明，两种模式均无玻璃高光。支持四个方向，默认不注入内容间距或系统安全区，可配置内容滚动，无遮罩、无动画。",
+        description = "抽屉使用不透明实色面板和状态色并即时显示、关闭；深色模式默认与页面背景同色且无灰色边界。支持四个方向，默认启用方向化内容间距与系统安全区，也可关闭以使用完整内容区；支持可配置内容滚动，无遮罩、无动画。",
         code = """
             HyperDrawer(
                 open = open,
                 onDismissRequest = { open = false },
                 position = HyperDrawerPosition.Left,
+                defaultSetPadding = true,
                 drawerContentScrollEnabled = true,
                 drawerContent = {
                     HyperDrawerHeader(
@@ -70,11 +71,12 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("方向", "position = Left/Right/Top/Bottom", "四向直接显示，不执行过渡"),
             DemoVariant("面板尺寸", "drawerModifier = Modifier.width/height", "按方向定制独立面板节点"),
-            DemoVariant("完整内容区", "drawerContentModifier = Modifier", "默认不注入间距或系统栏避让"),
-            DemoVariant("场景间距", "drawerContentModifier", "调用方按页面需要注入 padding 或 WindowInsets"),
+            DemoVariant("默认 Padding", "defaultSetPadding = true", "方向化内容留白并避让 safeDrawing"),
+            DemoVariant("完整内容区", "defaultSetPadding = false", "不注入默认间距或系统栏避让"),
+            DemoVariant("场景间距", "drawerContentModifier", "在默认策略之后追加调用方布局"),
             DemoVariant("滚动职责", "drawerContentScrollEnabled", "普通内容由面板滚动，懒列表关闭外层滚动"),
-            DemoVariant("明暗背景", "colors.containerColor", "深色继承页面背景，浅色使用 0.96f alpha"),
-            DemoVariant("选中项", "selected = true", "主题色半透明容器，无玻璃高光"),
+            DemoVariant("不透明背景", "colors.containerColor", "浅色使用实色卡片背景，深色继承页面背景"),
+            DemoVariant("选中项", "selected = true", "使用不透明主题容器色"),
             DemoVariant("无蒙层", "dismissOnClickOutside", "仅处理外部点击，不绘制背景或遮罩")
         ),
         apiDocumentPaths = listOf("navigation/hyper-drawer.md"),

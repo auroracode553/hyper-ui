@@ -119,7 +119,7 @@ fun DrawerDemo() {
     var selectedPageId by remember { mutableStateOf("home") }
     var drawerPosition by remember { mutableStateOf(HyperDrawerPosition.Left) }
     var drawerContentScrollEnabled by remember { mutableStateOf(true) }
-    var addScenePadding by remember { mutableStateOf(false) }
+    var defaultSetPadding by remember { mutableStateOf(true) }
     val items = listOf(
         DemoNavItem("home", "首页", Icons.Default.Home),
         DemoNavItem("notice", "通知", Icons.Default.Notifications),
@@ -145,11 +145,7 @@ fun DrawerDemo() {
                 HyperDrawerPosition.Bottom -> Modifier.height(260.dp)
             },
             position = drawerPosition,
-            drawerContentModifier = if (addScenePadding) {
-                Modifier.padding(16.dp)
-            } else {
-                Modifier
-            },
+            defaultSetPadding = defaultSetPadding,
             dismissOnClickOutside = true,
             drawerContentScrollEnabled = drawerContentScrollEnabled,
             drawerContent = {
@@ -219,7 +215,7 @@ fun DrawerDemo() {
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "深色抽屉与页面背景保持同色且无灰色边界；浅色仅保留轻微透明度，两种模式均无玻璃高光。不执行动画，外部区域不绘制遮罩。",
+                    text = "抽屉面板和状态色均使用不透明实色；浅色使用卡片背景，深色与页面背景保持同色且无灰色边界。不执行动画，外部区域不绘制遮罩。",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 13.sp,
                     lineHeight = 18.sp
@@ -243,14 +239,14 @@ fun DrawerDemo() {
                     )
                 }
                 HyperButton(
-                    onClick = { addScenePadding = !addScenePadding },
+                    onClick = { defaultSetPadding = !defaultSetPadding },
                     tone = HyperButtonTone.Tonal
                 ) {
                     Text(
-                        text = if (addScenePadding) {
-                            "调用方已添加 16dp 间距"
+                        text = if (defaultSetPadding) {
+                            "默认 Padding 已开启"
                         } else {
-                            "抽屉使用完整内容区"
+                            "默认 Padding 已关闭"
                         }
                     )
                 }
