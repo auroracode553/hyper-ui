@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +41,7 @@ import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperDialog
 import hyper_ui.HyperDropdown
+import hyper_ui.HyperEmptyState
 import hyper_ui.HyperPopup
 import hyper_ui.HyperLinearProgressIndicator
 import hyper_ui.HyperCircularProgressIndicator
@@ -51,6 +53,52 @@ import hyper_ui.HyperTextField
 import hyper_ui.HyperAppRelease
 import hyper_ui.HyperUpdateDialog
 import hyper_ui.HyperUpdateDialogState
+
+@Composable
+fun EmptyStateDemo() {
+    var showDescription by remember { mutableStateOf(true) }
+    var feedback by remember { mutableStateOf("等待操作") }
+
+    Column(
+        modifier = Modifier
+            .widthIn(max = 520.dp)
+            .heightIn(min = 360.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton(
+                tone = HyperButtonTone.Outline,
+                onClick = { showDescription = !showDescription }
+            ) {
+                Text(if (showDescription) "隐藏说明" else "显示说明")
+            }
+            Text(
+                text = feedback,
+                modifier = Modifier.align(Alignment.CenterVertically),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 13.sp
+            )
+        }
+        HyperEmptyState(
+            title = "暂无历史记录",
+            modifier = Modifier.weight(1f),
+            description = if (showDescription) "浏览过的页面会显示在这里" else null,
+            iconContent = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    modifier = Modifier.size(44.dp)
+                )
+            },
+            actionContent = {
+                HyperButton(onClick = { feedback = "已请求重新加载" }) {
+                    Text("重新加载")
+                }
+            }
+        )
+    }
+}
 
 @Composable
 fun DropdownMenuDemo() {

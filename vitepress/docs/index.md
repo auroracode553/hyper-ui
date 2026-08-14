@@ -25,6 +25,7 @@ AI 生成代码时必须遵守：
 - 宽、高、最小尺寸和外部间距优先使用组件的首个 `modifier`；不要猜测 `size`、`width`、`height`、`minHeight`、`contentPadding` 等重复具名参数。作用于内部独立节点的修饰符以具体签名为准，例如 `contentModifier`、`HyperDrawer.drawerModifier`、`HyperTextField.inputModifier`。
 - `value`、`checked`、`selected`、`show`、`open`、`expanded`、进度和导航选择等业务状态均由调用方持有。
 - 单一连续卡片的页面级数据列表使用 `HyperList`；按日期或类别形成多个独立卡片分组的动态列表使用 `HyperSectionedList`；`HyperMenuList` 只能用于少量菜单、设置项和操作入口，不要用于历史、文件、媒体、日志或搜索结果列表。
+- 页面级空数据或筛选无结果使用 `HyperEmptyState`；图标和可选操作通过 Slot 注入，加载中与错误态仍由页面分别处理。
 - 不把网络请求、数据库访问、权限申请、路由实现或 ViewModel 写入 HyperUI 组件。
 - `hyperToast` 是 Android-only 工具；传入 `Context` 与文本或字符串资源 ID，内部只负责主线程调度和原生 Toast 显示。
 - 弹窗、菜单和抽屉不渲染遮罩或半透明蒙层；`HyperButton`、`HyperList`、`HyperSectionedList`、`HyperMenuList`、`HyperDrawer`、进度指示器以及各类弹窗面板使用不透明实色。`HyperDrawer` 在深色模式下默认继承页面背景色并隐藏灰色默认边界；`HyperTabBar` 深色模式继承页面背景色，浅色模式保留轻量透明度。

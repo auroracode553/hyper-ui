@@ -3,6 +3,7 @@ package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.DialogDemo
 import hyper_ui.docs.ui.DropdownMenuDemo
+import hyper_ui.docs.ui.EmptyStateDemo
 import hyper_ui.docs.ui.HyperDialogDemo
 import hyper_ui.docs.ui.HyperPopupDemo
 import hyper_ui.docs.ui.LevelCapsuleDemo
@@ -13,6 +14,32 @@ import hyper_ui.docs.ui.UpdateDialogDemo
 private const val GROUP_FEEDBACK = "反馈组件"
 
 internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(
+        id = "empty_state",
+        group = GROUP_FEEDBACK,
+        title = "HyperEmptyState",
+        description = "页面级空数据状态使用居中的 HyperPanel，图标和操作通过 Slot 注入。",
+        code = """
+            HyperEmptyState(
+                title = "暂无历史记录",
+                description = "浏览过的页面会显示在这里",
+                iconContent = {
+                    Icon(Icons.Default.Search, contentDescription = null)
+                },
+                actionContent = {
+                    HyperButton(onClick = onRefresh) { Text("重新加载") }
+                }
+            )
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("纯标题", "description = null", "紧凑空状态文案"),
+            DemoVariant("辅助说明", "description", "居中次级说明"),
+            DemoVariant("图标", "iconContent", "由调用方注入图标资源"),
+            DemoVariant("操作", "actionContent", "由调用方持有交互和结果状态")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-empty-state.md"),
+        content = { EmptyStateDemo() }
+    ),
     ComponentDemo(
         id = "dropdown",
         group = GROUP_FEEDBACK,
