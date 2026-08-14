@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/popup/HyperPopup.kt`
 - 预览：`custom_popup`
 
-`HyperPopup` 是基础浮层容器。它忽略调用节点位置并始终相对应用窗口居中，不接受锚点、偏移或对齐参数。首次挂载时会隐藏平台尚未完成居中定位的首帧，随后直接在中心显示，避免产生从窗口顶部移动到中心的视觉跳变。组件负责可选固定顶部标题、尺寸、滚动内容区和底部 action slot。点击面板外的空白区域默认通过 `onDismissRequest` 请求关闭，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为窗口高度的 70%，并在窗口四周保留 16dp 间距。浮层不渲染遮罩，也不使用显示或关闭动画；面板使用不透明卡片背景和实色描边。
+`HyperPopup` 是轻量 Popup 浮层。组件使用窗口级位置提供器忽略调用节点锚点并居中，不创建模态 Dialog。它负责可选固定顶部标题、尺寸、滚动内容区和底部 action slot。点击面板外的空白区域默认通过 `onDismissRequest` 请求关闭，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为窗口高度的 70%，并在窗口四周保留 16dp 间距。模态确认、表单和必须处理的任务使用 `HyperDialog`。
 
 ## 公开签名
 
@@ -83,12 +83,12 @@ HyperPopup(
 ## 约束
 
 - 不存在 `show` 和 `actions` 参数；使用 `visible` 与 `actionContent`。
-- 组件不提供 `alignment`、`offset`、锚点或其他定位 API；内部浮层忽略调用节点位置并相对应用窗口居中。
+- 组件不提供 `alignment`、`offset`、锚点或其他定位 API；内部 Popup 位置提供器负责窗口居中。
 - 不渲染遮罩或半透明蒙层。
 - `dismissOnClickOutside` 默认为 `true`，点击面板外空白区域会调用 `onDismissRequest`；传入 `false` 后空白区域点击不会请求关闭。
 - 标题通过 `title` 属性提供，由组件固定渲染在顶部，不参与正文滚动；`title = null`、空字符串或全空白字符串时不渲染标题槽位，也不预留标题高度。
 - 默认背景来自 `HyperPopupDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.cardContainer`，保持不透明卡片效果。
-- `visible` 直接控制弹窗是否渲染；首次显示跳过平台未定位首帧，显示与关闭均不执行动画。
+- `visible` 直接控制弹窗是否渲染；显示与关闭均不执行动画。
 - 通过 `HyperPopupColors` 或 `HyperPopupDefaults.colors(...)` 传入含 alpha 的容器色时，会先与页面背景合成为实色。
 - 默认取扣除窗口间距后可用宽度的 `90%`，并使用 `HyperPopupDefaults.MinWidth`、`MaxWidth` 作为宽度边界；高度上限由 `MaxHeightFraction = 0.7f` 按窗口高度计算。
 - 自定义面板尺寸使用 `modifier.width(...)`、`modifier.widthIn(...)`、`modifier.fillMaxWidth(fraction)` 或 `modifier.heightIn(...)`，不再提供重复的 `minWidth`、`maxWidth`、`widthFraction`、`maxHeight` 参数。

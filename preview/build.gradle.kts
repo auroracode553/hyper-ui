@@ -26,6 +26,8 @@ kotlin {
             kotlin.srcDir("../library/src/main/java")
             // Android 原生 Toast 由跨平台 Preview 使用交互模拟展示，避免引入 Android 编译链。
             kotlin.exclude("**/HyperToast.kt")
+            // Android Dialog 窗口配置由跨平台 Preview 使用同包宿主替代。
+            kotlin.exclude("**/HyperDialogHost.kt")
 
             dependencies {
                 // Preview 与正式组件保持一致，不额外引入动画运行时。

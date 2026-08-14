@@ -3,7 +3,9 @@ package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.DialogDemo
 import hyper_ui.docs.ui.DropdownMenuDemo
+import hyper_ui.docs.ui.HyperDialogDemo
 import hyper_ui.docs.ui.HyperPopupDemo
+import hyper_ui.docs.ui.LevelCapsuleDemo
 import hyper_ui.docs.ui.ProgressDemo
 import hyper_ui.docs.ui.ToastDemo
 import hyper_ui.docs.ui.UpdateDialogDemo
@@ -85,6 +87,55 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         content = { ProgressDemo() }
     ),
     ComponentDemo(
+        id = "level_capsule",
+        group = GROUP_FEEDBACK,
+        title = "HyperLevelCapsule",
+        description = "面向播放器亮度、音量等连续比例反馈的竖向胶囊；手势与显示时机由调用方管理。",
+        code = """
+            HyperLevelCapsule(
+                progress = brightness,
+                label = "${'$'}{(brightness * 100).toInt()}%"
+            )
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("实时比例", "progress: Float", "从底部填充并限制在 0..1"),
+            DemoVariant("百分比文案", "label", "居中单行反馈"),
+            DemoVariant("自定义尺寸", "modifier.width/height", "覆盖默认 40×140dp"),
+            DemoVariant("自定义配色", "HyperLevelCapsuleDefaults.colors", "容器、填充、文字与描边")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-level-capsule.md"),
+        content = { LevelCapsuleDemo() }
+    ),
+    ComponentDemo(
+        id = "hyper_dialog",
+        group = GROUP_FEEDBACK,
+        title = "HyperDialog",
+        description = "固定窗口根尺寸的模态对话框；输入和正文变化不会反复调整平台窗口。",
+        code = """
+            HyperDialog(
+                visible = visible,
+                onDismissRequest = onDismiss,
+                title = "编辑备注",
+                actionContent = {
+                    HyperButton(onClick = onSave) { Text("保存") }
+                }
+            ) {
+                HyperTextField(
+                    value = value,
+                    onValueChange = onValueChange
+                )
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("固定窗口", "fillMaxSize root", "正文变化只重排内部面板"),
+            DemoVariant("稳定输入", "HyperTextField", "输入重组不重建 Dialog 窗口"),
+            DemoVariant("外部关闭", "dismissOnClickOutside", "透明命中层，不绘制蒙层"),
+            DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-dialog.md"),
+        content = { HyperDialogDemo() }
+    ),
+    ComponentDemo(
         id = "custom_popup",
         group = GROUP_FEEDBACK,
         title = "HyperPopup",
@@ -109,7 +160,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("基础面板", "visible + content", "响应式实色浮层面板"),
             DemoVariant("响应式高度", "MaxHeightFraction", "最大为窗口高度的 70%"),
-            DemoVariant("窗口居中", "Popup", "跳过未定位首帧并直接在窗口中心显示"),
+            DemoVariant("窗口居中", "Popup host", "自定义位置提供器忽略调用节点锚点"),
             DemoVariant("外部关闭", "dismissOnClickOutside", "仅点击处理，不绘制遮罩"),
             DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
         ),

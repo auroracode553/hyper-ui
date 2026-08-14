@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -37,10 +38,13 @@ import androidx.compose.ui.unit.sp
 import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
-import hyper_ui.HyperPopup
+import hyper_ui.HyperDialog
 import hyper_ui.HyperDropdown
+import hyper_ui.HyperPopup
 import hyper_ui.HyperLinearProgressIndicator
 import hyper_ui.HyperCircularProgressIndicator
+import hyper_ui.HyperLevelCapsule
+import hyper_ui.HyperLevelCapsuleDefaults
 import hyper_ui.HyperProgressIndicatorDefaults
 import hyper_ui.HyperProgressIndicatorDefaults.colors
 import hyper_ui.HyperTextField
@@ -242,6 +246,45 @@ fun ProgressDemo() {
 }
 
 @Composable
+fun LevelCapsuleDemo() {
+    var progress by remember { mutableStateOf(0.56f) }
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        HyperLevelCapsule(
+            progress = progress,
+            label = "${(progress * 100).toInt()}%"
+        )
+        HyperLevelCapsule(
+            progress = progress,
+            label = "${(progress * 100).toInt()}%",
+            modifier = Modifier
+                .width(48.dp)
+                .height(160.dp),
+            colors = HyperLevelCapsuleDefaults.colors(
+                progressColor = Color(1f, 0.78f, 0.18f, 1f),
+                labelColor = Color(0.12f, 0.35f, 0.88f, 1f)
+            )
+        )
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            HyperButton(
+                tone = HyperButtonTone.Outline,
+                onClick = { progress = (progress - 0.1f).coerceAtLeast(0f) }
+            ) {
+                Text("降低")
+            }
+            HyperButton(
+                onClick = { progress = (progress + 0.1f).coerceAtMost(1f) }
+            ) {
+                Text("提高")
+            }
+        }
+    }
+}
+
+@Composable
 fun LoadingProgressDemo() {
     Column(
         modifier = Modifier.widthIn(max = 560.dp),
@@ -249,6 +292,45 @@ fun LoadingProgressDemo() {
     ) {
         HyperLinearProgressIndicator(progress = null)
         HyperCircularProgressIndicator(progress = null)
+    }
+}
+
+@Composable
+fun HyperDialogDemo() {
+    var visible by remember { mutableStateOf(false) }
+    var draft by remember { mutableStateOf("输入内容验证窗口稳定") }
+
+    Column(
+        modifier = Modifier.widthIn(max = 420.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        HyperButton(onClick = { visible = true }) {
+            Text("打开 Dialog")
+        }
+        Text(
+            text = "Dialog 使用固定窗口根尺寸；输入和正文重组只更新内部面板。",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+
+    HyperDialog(
+        visible = visible,
+        onDismissRequest = { visible = false },
+        title = "稳定输入",
+        actionContent = {
+            HyperButton(onClick = { visible = false }) {
+                Text("确定")
+            }
+        }
+    ) {
+        HyperTextField(
+            value = draft,
+            onValueChange = { draft = it },
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -387,7 +469,7 @@ fun HyperPopupDemo() {
             textAlign = TextAlign.Center
         )
         Text(
-            text = "基础浮层跳过未定位首帧，直接居中显示；面板保持不透明且不绘制蒙层。",
+            text = "基础浮层由 Popup 位置提供器居中；模态任务应使用独立的 HyperDialog。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center

@@ -190,8 +190,8 @@ HyperIconButton(onClick = onSearch) {
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadio`, `HyperSegmented`, `HyperSlider`（输入框默认使用不透明背景、轻描边和 40dp 紧凑最小高度；`HyperSegmented` 提供等宽分段与抬升选中态；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperSectionedList`, `HyperMenuList`, `HyperListItem`（`HyperList` 提供单一连续卡片的页面级 `LazyColumn` 与 `LazyListScope` Slot；`HyperSectionedList` 面向日期、历史等动态分组数据，保持标题和数据行独立懒加载并自动处理组内圆角与分割线；`HyperMenuList` 只能用于少量菜单、设置项和操作入口；所有列表容器均使用不透明实色，`HyperListItem` 根据 supporting slot 自动使用单行 44dp、双行 54dp 的基础高度和 4dp 纵向留白）
-- 浮层反馈：`HyperPopup`, `HyperPopupDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `hyperToast`, `HyperToastDuration`（基础浮层跳过未定位首帧并直接在应用窗口中居中显示；Alert 内置标准实色描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
-- 加载反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`（`progress = null` 表示不确定加载；线性轨道默认带轻描边）
+- 浮层反馈：`HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `hyperToast`, `HyperToastDuration`（Popup 与模态 Dialog 使用独立宿主；Dialog 使用固定窗口根尺寸并在内部居中面板，正文重组不调整平台窗口；Alert 内置标准实色描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
+- 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`（加载进度支持确定/不确定状态；比例胶囊用于亮度、音量等短时反馈，手势和显示时机由调用方管理）
 - 导航组件：`HyperNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明并继承页面底色；`HyperDrawer` 的面板、选中项、文字与分隔线均使用不透明实色，深色模式默认继承页面背景色且不绘制灰色边界；`HyperTabBar` 深色模式默认继承页面背景色，浅色模式保留轻量透明度；`HyperDrawer` 默认提供方向化内容间距与系统安全区，可通过 `defaultSetPadding = false` 关闭，并支持可配置内容滚动；`HyperTabBar` 使用 55dp 操作区和 5dp 轻量底部留白，默认总高度 60dp；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
@@ -201,7 +201,7 @@ HyperIconButton(onClick = onSearch) {
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
 - 组件外壳的宽、高、最小尺寸和外部间距统一通过首个 `modifier` 表达，不为可由 `Modifier.size/width/height/heightIn` 完成的布局需求重复增加具名尺寸参数；独立布局节点使用语义明确的 `drawerModifier`、`contentModifier`、`inputModifier`。
-- `HyperPopup` 内部浮层忽略调用节点位置并始终相对应用窗口居中；组件不暴露锚点、对齐或偏移参数。首次挂载时会隐藏平台尚未完成居中定位的首帧，随后直接显示在中心，不产生顶部位移或显示动画。标题由可选 `title` 属性固定渲染在顶部；未提供标题或传入空白字符串时不渲染标题槽位，也不预留标题高度。正文内容由 slot 渲染，长内容在中间内容区滚动并显示滚动指示条，固定底部操作放入 `actionContent`。点击面板外空白区域默认调用 `onDismissRequest`，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为窗口高度的 70%，并在窗口四周保留 16dp 间距；浮层不使用显示或关闭动画，也不渲染遮罩，面板使用不透明卡片背景、20dp 圆角和 1dp 实色轻描边。`HyperAlertDialog` 固定使用该标准描边，不暴露描边配置。
+- `HyperPopup` 是窗口级轻量 Popup；`HyperDialog` 是独立模态 Dialog，两者不再通过兼容壳互相冒充。`HyperDialog` 的透明根节点固定铺满可用窗口，面板在根节点内部居中；标题、正文输入或异步内容变化只重排面板，不触发平台窗口跟随内容反复改尺寸。Android 宿主每个窗口只清除一次系统调暗标记，不绘制 HyperUI 蒙层。两者默认宽度为扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为窗口高度的 70%，正文可滚动，底部操作放入 `actionContent`。`HyperAlertDialog` 基于 `HyperDialog` 提供 body/action 结构并固定使用标准实色描边。
 - 组件内部只处理焦点、滚动、禁用态和描边等视觉反馈 UI 状态；所有组件状态均即时更新，不执行显示、关闭、颜色、尺寸、位移、旋转或循环动画。
 
 示例：

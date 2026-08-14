@@ -1,102 +1,97 @@
-/** 文件职责：提供相对应用窗口居中的轻量 Popup，不承担模态 Dialog 职责。 */
+/** 文件职责：提供固定窗口根尺寸、面板居中且无蒙层的模态 Dialog。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.withFrameNanos
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntRect
-import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupPositionProvider
-import androidx.compose.ui.window.PopupProperties
 
 @Immutable
-data class HyperPopupColors(
+data class HyperDialogColors(
     val containerColor: Color
 )
 
+/** Dialog 窗口根节点始终铺满可用窗口，正文尺寸变化只重排内部面板。 */
 @Composable
-fun HyperPopup(
+fun HyperDialog(
     visible: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
-    shape: Shape = HyperPopupDefaults.Shape,
-    colors: HyperPopupColors = HyperPopupDefaults.colors(),
+    shape: Shape = HyperDialogDefaults.Shape,
+    colors: HyperDialogColors = HyperDialogDefaults.colors(),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperPopupDefaults.ContentSpacing),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperDialogDefaults.ContentSpacing),
     actionArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
-        HyperPopupDefaults.ActionSpacing,
+        HyperDialogDefaults.ActionSpacing,
         Alignment.End
     ),
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true,
-    showScrollIndicator: Boolean = HyperPopupDefaults.ShowScrollIndicator,
+    showScrollIndicator: Boolean = HyperDialogDefaults.ShowScrollIndicator,
     actionContent: (@Composable RowScope.() -> Unit)? = null,
-    border: BorderStroke? = HyperPopupDefaults.border(),
+    border: BorderStroke? = HyperDialogDefaults.border(),
     content: @Composable ColumnScope.() -> Unit
 ) {
     if (!visible) return
 
     val layoutDirection = LocalLayoutDirection.current
+    val currentOnDismissRequest by rememberUpdatedState(onDismissRequest)
     val containerColor = resolveHyperOpaqueColor(
         color = colors.containerColor,
         fallbackColor = HyperColors.cardContainer,
         backgroundColor = HyperColors.pageBackground
     )
-    val showPositionedContent = remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        // Popup 首帧需要完成内容尺寸定位，定位完成前保持透明以避免从窗口起点跳入中心。
-        withFrameNanos { }
-        showPositionedContent.value = true
-    }
-
-    Popup(
-        popupPositionProvider = HyperPopupWindowCenterPositionProvider,
+    HyperDialogHost(
         onDismissRequest = onDismissRequest,
-        properties = PopupProperties(
-            focusable = true,
-            dismissOnBackPress = dismissOnBackPress,
-            dismissOnClickOutside = dismissOnClickOutside
-        )
+        dismissOnBackPress = dismissOnBackPress
     ) {
         BoxWithConstraints(
-            modifier = Modifier.alpha(if (showPositionedContent.value) 1f else 0f)
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
+            if (dismissOnClickOutside) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .pointerInput(Unit) {
+                            detectTapGestures { currentOnDismissRequest() }
+                        }
+                )
+            }
+
             val horizontalWindowPadding =
-                HyperPopupDefaults.WindowPadding.calculateLeftPadding(layoutDirection) +
-                    HyperPopupDefaults.WindowPadding.calculateRightPadding(layoutDirection)
+                HyperDialogDefaults.WindowPadding.calculateLeftPadding(layoutDirection) +
+                    HyperDialogDefaults.WindowPadding.calculateRightPadding(layoutDirection)
             val verticalWindowPadding =
-                HyperPopupDefaults.WindowPadding.calculateTopPadding() +
-                    HyperPopupDefaults.WindowPadding.calculateBottomPadding()
+                HyperDialogDefaults.WindowPadding.calculateTopPadding() +
+                    HyperDialogDefaults.WindowPadding.calculateBottomPadding()
             val availableWidth = (maxWidth - horizontalWindowPadding).coerceAtLeast(0.dp)
             val availableHeight = (maxHeight - verticalWindowPadding).coerceAtLeast(0.dp)
-            val resolvedMaxWidth = HyperPopupDefaults.MaxWidth.coerceAtMost(availableWidth)
-            val resolvedMinWidth = HyperPopupDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
-            val resolvedWidth = (availableWidth * HyperPopupDefaults.WidthFraction)
+            val resolvedMaxWidth = HyperDialogDefaults.MaxWidth.coerceAtMost(availableWidth)
+            val resolvedMinWidth = HyperDialogDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
+            val resolvedWidth = (availableWidth * HyperDialogDefaults.WidthFraction)
                 .coerceIn(resolvedMinWidth, resolvedMaxWidth)
-            val resolvedMaxHeight = (maxHeight * HyperPopupDefaults.MaxHeightFraction)
+            val resolvedMaxHeight = (maxHeight * HyperDialogDefaults.MaxHeightFraction)
                 .coerceAtMost(availableHeight)
 
             HyperFloatingPanel(
@@ -106,7 +101,9 @@ fun HyperPopup(
                     .heightIn(max = availableHeight)
                     .then(modifier)
                     .width(resolvedWidth)
-                    .heightIn(max = resolvedMaxHeight),
+                    .heightIn(max = resolvedMaxHeight)
+                    // 面板作为最上层命中区域，空白点击不会穿透到外部关闭区域。
+                    .pointerInput(Unit) { detectTapGestures { } },
                 shape = shape,
                 containerColor = containerColor,
                 border = border,
@@ -121,19 +118,7 @@ fun HyperPopup(
     }
 }
 
-private object HyperPopupWindowCenterPositionProvider : PopupPositionProvider {
-    override fun calculatePosition(
-        anchorBounds: IntRect,
-        windowSize: IntSize,
-        layoutDirection: LayoutDirection,
-        popupContentSize: IntSize
-    ): IntOffset = IntOffset(
-        x = ((windowSize.width - popupContentSize.width) / 2).coerceAtLeast(0),
-        y = ((windowSize.height - popupContentSize.height) / 2).coerceAtLeast(0)
-    )
-}
-
-object HyperPopupDefaults {
+object HyperDialogDefaults {
     val MinWidth = 280.dp
     val MaxWidth = 360.dp
     const val WidthFraction = 0.9f
@@ -149,7 +134,7 @@ object HyperPopupDefaults {
     val ScrollIndicatorMinHeight = HyperFloatingPanelDefaults.ScrollIndicatorMinHeight
 
     @Composable
-    fun colors(containerColor: Color = Color.Unspecified): HyperPopupColors = HyperPopupColors(
+    fun colors(containerColor: Color = Color.Unspecified): HyperDialogColors = HyperDialogColors(
         containerColor = resolveHyperOpaqueColor(
             color = containerColor,
             fallbackColor = HyperColors.cardContainer,
