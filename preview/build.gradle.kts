@@ -21,7 +21,7 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
+        getByName("commonMain") {
             // 组件和文档 UI 均为平台无关 Compose 源码，由 Desktop 与 Wasm 共同编译。
             kotlin.srcDir("../library/src/main/java")
             // Android 原生 Toast 由跨平台 Preview 使用交互模拟展示，避免引入 Android 编译链。
@@ -42,13 +42,13 @@ kotlin {
             }
         }
 
-        val desktopMain by getting {
+        getByName("desktopMain") {
             dependencies {
                 implementation(compose.desktop.currentOs)
             }
         }
 
-        val wasmJsMain by getting {
+        getByName("wasmJsMain") {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-browser:${libs.versions.kotlinxBrowser.get()}")
             }

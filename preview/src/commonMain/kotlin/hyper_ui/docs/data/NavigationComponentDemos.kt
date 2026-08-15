@@ -18,7 +18,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             HyperNavBar(
                 navigationContent = {
                     HyperIconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 },
                 titleContent = {
