@@ -24,11 +24,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
+import hyper_ui.HyperButton
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
 import hyper_ui.HyperRadio
@@ -162,6 +165,7 @@ fun TextFieldDemo() {
     var name by remember { mutableStateOf("HyperUI") }
     var note by remember { mutableStateOf("") }
     var keyword by remember { mutableStateOf("HyperUI") }
+    val nameFocusRequester = remember { FocusRequester() }
     val isNoteError = note.length > 80
 
     Column(
@@ -172,8 +176,12 @@ fun TextFieldDemo() {
             value = name,
             onValueChange = { name = it },
             labelContent = { FieldLabel("组件名称") },
-            placeholderContent = { FieldPlaceholder("请输入名称") }
+            placeholderContent = { FieldPlaceholder("请输入名称") },
+            inputModifier = Modifier.focusRequester(nameFocusRequester)
         )
+        HyperButton(onClick = { nameFocusRequester.requestFocus() }) {
+            Text("首次聚焦已有文本")
+        }
         HyperTextField(
             value = note,
             onValueChange = { note = it },

@@ -20,7 +20,7 @@ data class ComponentDemo(
     val content: @Composable () -> Unit
 )
 
-/** 聚合各分组的稳定 Preview ID；包括空状态在内的公开组件需同步更新对应分组与 Showcase。 */
+/** 聚合稳定 Preview ID；输入框末尾光标与带图标玻璃胶囊由对应分组 Showcase 覆盖。 */
 fun componentDemos(): List<ComponentDemo> = listOf(
     basicComponentDemos(),
     formComponentDemos(),

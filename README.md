@@ -187,11 +187,11 @@ HyperIconButton(onClick = onSearch) {
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
 - 基础组件：`HyperButton`, `HyperIconButton`（slot-first 紧凑型容器，内容由调用方渲染；所有 tone、禁用态和图标按钮容器均使用不透明实色；`HyperIconButton` 默认 40dp，自定义尺寸通过 `modifier` 控制）
-- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadio`, `HyperSegmented`, `HyperSlider`（输入框默认使用不透明背景、轻描边和 40dp 紧凑最小高度；`HyperSegmented` 提供等宽分段与抬升选中态；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
+- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadio`, `HyperSegmented`, `HyperSlider`（输入框默认使用不透明背景、轻描边和 40dp 紧凑最小高度，已有文本首次聚焦时光标位于末尾；`HyperSegmented` 提供等宽分段与抬升选中态；`HyperSlider` 支持点击定位、连续拖动和分段吸附）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperSectionedList`, `HyperMenuList`, `HyperListItem`（`HyperList` 提供单一连续卡片的页面级 `LazyColumn` 与 `LazyListScope` Slot；`HyperSectionedList` 面向日期、历史等动态分组数据，保持标题和数据行独立懒加载并自动处理组内圆角与分割线；`HyperMenuList` 只能用于少量菜单、设置项和操作入口；所有列表容器均使用不透明实色，`HyperListItem` 根据 supporting slot 自动使用单行 44dp、双行 54dp 的基础高度和 4dp 纵向留白）
 - 状态与浮层反馈：`HyperEmptyState`, `HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `hyperToast`, `HyperToastDuration`（`HyperEmptyState` 使用居中的 `HyperPanel` 承载空数据文案，图标与操作由调用方注入；Popup 与模态 Dialog 使用独立宿主；Dialog 使用固定窗口根尺寸并在内部居中面板，正文重组不调整平台窗口；Alert 内置标准实色描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
-- 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`（加载进度支持确定/不确定状态；比例胶囊用于亮度、音量等短时反馈，手势和显示时机由调用方管理）
+- 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`（加载进度支持确定/不确定状态；柔性玻璃比例胶囊支持图标插槽，用于亮度、音量等短时反馈，手势和显示时机由调用方管理）
 - 导航组件：`HyperNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明并继承页面底色；`HyperDrawer` 的面板、选中项、文字与分隔线均使用不透明实色，深色模式默认继承页面背景色且不绘制灰色边界；`HyperTabBar` 深色模式默认继承页面背景色，浅色模式保留轻量透明度；`HyperDrawer` 默认提供方向化内容间距与系统安全区，可通过 `defaultSetPadding = false` 关闭，并支持可配置内容滚动；`HyperTabBar` 使用 55dp 操作区和 5dp 轻量底部留白，默认总高度 60dp；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 

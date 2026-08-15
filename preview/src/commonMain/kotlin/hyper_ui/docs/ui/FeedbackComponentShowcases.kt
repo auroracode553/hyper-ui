@@ -296,6 +296,7 @@ fun ProgressDemo() {
 @Composable
 fun LevelCapsuleDemo() {
     var progress by remember { mutableStateOf(0.56f) }
+    var showIcon by remember { mutableStateOf(true) }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -303,7 +304,16 @@ fun LevelCapsuleDemo() {
     ) {
         HyperLevelCapsule(
             progress = progress,
-            label = "${(progress * 100).toInt()}%"
+            label = "${(progress * 100).toInt()}%",
+            iconContent = if (showIcon) {
+                {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            } else null
         )
         HyperLevelCapsule(
             progress = progress,
@@ -327,6 +337,12 @@ fun LevelCapsuleDemo() {
                 onClick = { progress = (progress + 0.1f).coerceAtMost(1f) }
             ) {
                 Text("提高")
+            }
+            HyperButton(
+                tone = HyperButtonTone.Outline,
+                onClick = { showIcon = !showIcon }
+            ) {
+                Text(if (showIcon) "隐藏图标" else "显示图标")
             }
         }
     }

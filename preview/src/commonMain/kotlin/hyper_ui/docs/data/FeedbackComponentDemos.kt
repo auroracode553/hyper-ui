@@ -117,18 +117,22 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "level_capsule",
         group = GROUP_FEEDBACK,
         title = "HyperLevelCapsule",
-        description = "面向播放器亮度、音量等连续比例反馈的竖向胶囊；手势与显示时机由调用方管理。",
+        description = "柔性玻璃竖向比例胶囊，支持亮度、音量等图标插槽；手势与显示时机由调用方管理。",
         code = """
             HyperLevelCapsule(
                 progress = brightness,
-                label = "${'$'}{(brightness * 100).toInt()}%"
+                label = "${'$'}{(brightness * 100).toInt()}%",
+                iconContent = {
+                    Icon(Icons.Default.Info, contentDescription = null)
+                }
             )
         """.trimIndent(),
         variants = listOf(
             DemoVariant("实时比例", "progress: Float", "从底部填充并限制在 0..1"),
             DemoVariant("百分比文案", "label", "居中单行反馈"),
-            DemoVariant("自定义尺寸", "modifier.width/height", "覆盖默认 40×140dp"),
-            DemoVariant("自定义配色", "HyperLevelCapsuleDefaults.colors", "容器、填充、文字与描边")
+            DemoVariant("图标插槽", "iconContent", "亮度、音量或业务状态图标"),
+            DemoVariant("自定义尺寸", "modifier.width/height", "覆盖默认 52×156dp"),
+            DemoVariant("自定义配色", "HyperLevelCapsuleDefaults.colors", "容器、填充、内容、柔光与描边")
         ),
         apiDocumentPaths = listOf("feedback/hyper-level-capsule.md"),
         content = { LevelCapsuleDemo() }

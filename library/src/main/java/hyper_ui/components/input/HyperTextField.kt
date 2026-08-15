@@ -21,13 +21,19 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -67,6 +73,27 @@ fun HyperTextField(
     endContent: (@Composable RowScope.() -> Unit)? = null,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null
 ) {
+    // String API 仍由调用方持有文本，组件仅保存 selection/composition。
+    // 首次挂载时把光标放到末尾；后续输入继续沿用用户当前选区。
+    var textFieldValueState by remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = value,
+                selection = TextRange(value.length)
+            )
+        )
+    }
+    val textFieldValue = textFieldValueState.copy(text = value)
+    SideEffect {
+        if (
+            textFieldValue.text != textFieldValueState.text ||
+            textFieldValue.selection != textFieldValueState.selection ||
+            textFieldValue.composition != textFieldValueState.composition
+        ) {
+            textFieldValueState = textFieldValue
+        }
+    }
+
     val visuals = hyperInputFieldVisuals(
         enabled = enabled,
         isError = isError,
@@ -85,8 +112,13 @@ fun HyperTextField(
         }
 
         BasicTextField(
-            value = value,
-            onValueChange = onValueChange,
+            value = textFieldValue,
+            onValueChange = { updatedValue ->
+                textFieldValueState = updatedValue
+                if (updatedValue.text != value) {
+                    onValueChange(updatedValue.text)
+                }
+            },
             modifier = inputModifier.fillMaxWidth(),
             enabled = enabled,
             readOnly = readOnly,

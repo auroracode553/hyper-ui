@@ -75,7 +75,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "text_field",
         group = GROUP_FORM,
         title = "HyperTextField",
-        description = "紧凑型 Slot-first 输入框，普通表单、搜索框与地址栏统一使用 startContent/endContent 左右插槽组合。",
+        description = "紧凑型 Slot-first 输入框，首次聚焦默认将光标放到末尾，搜索框与地址栏使用左右插槽组合。",
         code = """
             HyperTextField(
                 value = value,
@@ -107,6 +107,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("统一单行", "MinHeight = 40.dp", "地址栏、首页搜索与搜索态共享默认高度"),
+            DemoVariant("默认光标", "selection = TextRange(value.length)", "首次聚焦位于现有文本末尾"),
             DemoVariant("多行/错误", "minLines = 3, isError", "supporting 与错误描边"),
             DemoVariant("禁用", "enabled = false", "禁用实色状态"),
             DemoVariant("左右插槽", "startContent / endContent", "搜索图标与清除操作")

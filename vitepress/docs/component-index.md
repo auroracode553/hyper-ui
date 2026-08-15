@@ -13,7 +13,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperTextField](components/form/hyper-text-field.md) | 紧凑文本输入，默认实色背景、轻描边与 40dp 最小高度 | 调用方提供 `value` |
+| [HyperTextField](components/form/hyper-text-field.md) | 紧凑文本输入，已有文本首次聚焦默认光标置末尾 | 调用方提供 `value` |
 | [HyperSwitch](components/form/hyper-switch.md) | 开关，轨道和滑块默认有轮廓层次 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选项 | 调用方提供 `checked` |
 | [HyperRadio](components/form/hyper-radio.md) | 单选项 | 调用方提供 `selected` |
@@ -53,7 +53,7 @@
 | [HyperDropdown](components/feedback/hyper-dropdown.md) | Popup 浮层菜单，使用不透明实色面板 | 调用方提供 `expanded` |
 | [hyperToast](components/feedback/hyper-toast.md) | Android 原生 Toast 的线程安全封装 | 调用即显示，无持久业务状态 |
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 无动画、不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |
-| [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | 播放器亮度、音量等竖向连续比例反馈 | 调用方提供 `progress`、文案与显示时机 |
+| [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | 柔性玻璃竖向比例反馈，支持图标插槽 | 调用方提供 `progress`、文案、图标与显示时机 |
 | [HyperPopup](components/feedback/hyper-popup.md) | 最大高度为窗口 70%、长内容可滚动的居中内容浮层 | 调用方提供 `visible` 和内容状态 |
 | [HyperDialog](components/feedback/hyper-dialog.md) | 固定窗口根尺寸、内部面板居中的模态对话框 | 调用方提供 `visible` 并处理结果 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 最大高度为窗口 70%、正文可滚动的 Slot-first Alert 弹窗 | 调用方提供 `visible` 并处理结果 |

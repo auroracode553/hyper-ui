@@ -6,6 +6,7 @@
 
 `HyperTextField` 是 slot-first 输入框。搜索框、地址栏、页内查找栏和普通表单输入都通过同一个组件组合；UI 库不再提供固定搜索图标或固定清空按钮。
 默认容器使用不透明输入背景和 1dp 描边，不叠加渐变高光或阴影，避免内容区出现直角浅色块。
+组件内部维护 selection/composition，首次挂载已有文本时，光标默认位于文本末尾；用户开始编辑后会保留当前选区。
 
 ## 公开签名
 
@@ -129,6 +130,7 @@ HyperTextField(
 
 - 不存在 `label`、`placeholder`、`errorText` 字符串参数；可见文本全部通过 slot 渲染。
 - `inputModifier` 用于传入 `focusRequester`、`heightIn(...)` 等需要作用在 `BasicTextField` 上的修饰符；整个字段（含 label/supporting）的外部布局使用 `modifier`。
+- `value` 仍由调用方持有；组件只保存输入法组合态和选区。已有文本首次聚焦时光标位于末尾，适合重命名、编辑标题等场景。
 - 输入容器默认最小高度为紧凑的 `40.dp`，内部默认使用水平 `16.dp`、垂直 `6.dp` 留白；目前地址栏、首页搜索框和搜索聚焦态的最大 slot 为 `28.dp`，三者会保持相同行高。多行内容仍按行数自然增高，不提供重复的 `minHeight` 参数。
 - 聚焦时不改变输入框容器背景；容器只区分普通、错误和禁用状态。
 - 默认背景来自 `HyperTextFieldDefaults.colors()`，未指定 `containerColor` 时使用 `HyperColors.fieldContainer`，保持不透明输入区域。
