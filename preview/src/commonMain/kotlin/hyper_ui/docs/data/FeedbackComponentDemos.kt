@@ -7,6 +7,8 @@ import hyper_ui.docs.ui.EmptyStateDemo
 import hyper_ui.docs.ui.HyperDialogDemo
 import hyper_ui.docs.ui.HyperPopupDemo
 import hyper_ui.docs.ui.LevelCapsuleDemo
+import hyper_ui.docs.ui.BatteryIndicatorDemo
+import hyper_ui.docs.ui.PlaybackSpeedScaleDemo
 import hyper_ui.docs.ui.ProgressDemo
 import hyper_ui.docs.ui.ToastDemo
 import hyper_ui.docs.ui.UpdateDialogDemo
@@ -136,6 +138,55 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         ),
         apiDocumentPaths = listOf("feedback/hyper-level-capsule.md"),
         content = { LevelCapsuleDemo() }
+    ),
+    ComponentDemo(
+        id = "playback_speed_scale",
+        group = GROUP_FEEDBACK,
+        title = "HyperPlaybackSpeedScale",
+        description = "播放器长按临时加速使用的柔性玻璃刻度，支持 0.25x 到 4x 档位和自定义前导图标。",
+        code = """
+            HyperPlaybackSpeedScale(
+                selectedSpeed = temporarySpeed,
+                leadingContent = {
+                    Icon(Icons.Default.FastForward, contentDescription = null)
+                }
+            )
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("默认档位", "SpeedOptions", "0.25x 到 4x 八档刻度"),
+            DemoVariant("当前速度", "selectedSpeed", "高亮最近的速度刻度"),
+            DemoVariant("图标插槽", "leadingContent", "可替换默认双箭头"),
+            DemoVariant("自定义配色", "HyperPlaybackSpeedScaleDefaults.colors", "玻璃层、轨道、刻度与文案")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-playback-speed-scale.md"),
+        content = { PlaybackSpeedScaleDemo() }
+    ),
+    ComponentDemo(
+        id = "battery_indicator",
+        group = GROUP_FEEDBACK,
+        title = "HyperBatteryIndicator",
+        description = "紧凑系统电池图标；Android 端可用 rememberHyperBatteryState 自动订阅电量，Preview 使用按钮模拟状态。",
+        code = """
+            val batteryState by rememberHyperBatteryState()
+
+            if (batteryState.isAvailable) {
+                HyperBatteryIndicator(
+                    percentage = batteryState.percentage,
+                    charging = batteryState.isCharging
+                )
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("常规电量", "percentage", "百分比内显并按比例填充"),
+            DemoVariant("低电量", "percentage <= 20", "默认切换红色填充"),
+            DemoVariant("充电中", "charging = true", "绿色填充且右侧展示闪电"),
+            DemoVariant("隐藏数字", "showPercentage = false", "仅展示图形电量")
+        ),
+        apiDocumentPaths = listOf(
+            "feedback/hyper-battery-indicator.md",
+            "tools/hyper-battery-state.md"
+        ),
+        content = { BatteryIndicatorDemo() }
     ),
     ComponentDemo(
         id = "hyper_dialog",

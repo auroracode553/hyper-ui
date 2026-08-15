@@ -20,7 +20,7 @@ data class ComponentDemo(
     val content: @Composable () -> Unit
 )
 
-/** 聚合稳定 Preview ID；输入框末尾光标与带图标玻璃胶囊由对应分组 Showcase 覆盖。 */
+/** 聚合稳定 Preview ID；Android 电池工具由电池 Showcase 模拟状态并展示真实调用代码。 */
 fun componentDemos(): List<ComponentDemo> = listOf(
     basicComponentDemos(),
     formComponentDemos(),

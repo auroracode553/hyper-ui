@@ -47,6 +47,9 @@ import hyper_ui.HyperLinearProgressIndicator
 import hyper_ui.HyperCircularProgressIndicator
 import hyper_ui.HyperLevelCapsule
 import hyper_ui.HyperLevelCapsuleDefaults
+import hyper_ui.HyperBatteryIndicator
+import hyper_ui.HyperPlaybackSpeedScale
+import hyper_ui.HyperPlaybackSpeedScaleDefaults
 import hyper_ui.HyperProgressIndicatorDefaults
 import hyper_ui.HyperProgressIndicatorDefaults.colors
 import hyper_ui.HyperTextField
@@ -345,6 +348,92 @@ fun LevelCapsuleDemo() {
                 Text(if (showIcon) "隐藏图标" else "显示图标")
             }
         }
+    }
+}
+
+@Composable
+fun PlaybackSpeedScaleDemo() {
+    var selectedSpeed by remember { mutableStateOf(2f) }
+    val speedOptions = HyperPlaybackSpeedScaleDefaults.SpeedOptions
+    val selectedIndex = speedOptions.indexOf(selectedSpeed).coerceAtLeast(0)
+
+    Column(
+        modifier = Modifier.widthIn(max = 560.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        HyperPlaybackSpeedScale(selectedSpeed = selectedSpeed)
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            HyperButton(
+                tone = HyperButtonTone.Outline,
+                enabled = selectedIndex > 0,
+                onClick = { selectedSpeed = speedOptions[selectedIndex - 1] }
+            ) {
+                Text("向左调速")
+            }
+            HyperButton(
+                enabled = selectedIndex < speedOptions.lastIndex,
+                onClick = { selectedSpeed = speedOptions[selectedIndex + 1] }
+            ) {
+                Text("向右调速")
+            }
+        }
+        Text(
+            text = "组件负责玻璃刻度反馈，长按与横向手势由调用方持有。",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun BatteryIndicatorDemo() {
+    var percentage by remember { mutableStateOf(68) }
+    var charging by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier.widthIn(max = 520.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            HyperBatteryIndicator(
+                percentage = percentage,
+                charging = charging,
+                contentDescription = "电量 $percentage%"
+            )
+            HyperBatteryIndicator(percentage = 16, charging = false)
+            HyperBatteryIndicator(percentage = 82, charging = true)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            HyperButton(
+                tone = HyperButtonTone.Outline,
+                onClick = { percentage = (percentage - 10).coerceAtLeast(0) }
+            ) {
+                Text("减少电量")
+            }
+            HyperButton(
+                onClick = { percentage = (percentage + 10).coerceAtMost(100) }
+            ) {
+                Text("增加电量")
+            }
+            HyperButton(
+                tone = HyperButtonTone.Outline,
+                onClick = { charging = !charging }
+            ) {
+                Text(if (charging) "停止充电" else "开始充电")
+            }
+        }
+        Text(
+            text = "模拟 Android 电池工具输出：常规、低电量与充电状态。",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
+            textAlign = TextAlign.Center
+        )
     }
 }
 

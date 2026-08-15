@@ -191,7 +191,8 @@ HyperIconButton(onClick = onSearch) {
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperSectionedList`, `HyperMenuList`, `HyperListItem`（`HyperList` 提供单一连续卡片的页面级 `LazyColumn` 与 `LazyListScope` Slot；`HyperSectionedList` 面向日期、历史等动态分组数据，保持标题和数据行独立懒加载并自动处理组内圆角与分割线；`HyperMenuList` 只能用于少量菜单、设置项和操作入口；所有列表容器均使用不透明实色，`HyperListItem` 根据 supporting slot 自动使用单行 44dp、双行 54dp 的基础高度和 4dp 纵向留白）
 - 状态与浮层反馈：`HyperEmptyState`, `HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `hyperToast`, `HyperToastDuration`（`HyperEmptyState` 使用居中的 `HyperPanel` 承载空数据文案，图标与操作由调用方注入；Popup 与模态 Dialog 使用独立宿主；Dialog 使用固定窗口根尺寸并在内部居中面板，正文重组不调整平台窗口；Alert 内置标准实色描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
-- 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`（加载进度支持确定/不确定状态；柔性玻璃比例胶囊支持图标插槽，用于亮度、音量等短时反馈，手势和显示时机由调用方管理）
+- 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`, `HyperPlaybackSpeedScale`, `HyperBatteryIndicator`（加载进度支持确定/不确定状态；柔性玻璃比例胶囊支持亮度/音量图标；横向玻璃刻度用于长按临时倍速；电池组件将百分比显示在内部并在充电时把闪电展示在右侧；组件本身不主动读取系统状态）
+- Android 系统工具：`HyperBatteryState`, `readHyperBatteryState`, `rememberHyperBatteryState`（支持一次性读取与 Compose 生命周期安全订阅；内部使用 Application Context，并在离开 Composition 时注销电池广播）
 - 导航组件：`HyperNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明并继承页面底色；`HyperDrawer` 的面板、选中项、文字与分隔线均使用不透明实色，深色模式默认继承页面背景色且不绘制灰色边界；`HyperTabBar` 深色模式默认继承页面背景色，浅色模式保留轻量透明度；`HyperDrawer` 默认提供方向化内容间距与系统安全区，可通过 `defaultSetPadding = false` 关闭，并支持可配置内容滚动；`HyperTabBar` 使用 55dp 操作区和 5dp 轻量底部留白，默认总高度 60dp；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
