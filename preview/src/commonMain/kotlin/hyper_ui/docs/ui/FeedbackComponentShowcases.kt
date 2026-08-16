@@ -379,7 +379,7 @@ fun PlaybackSpeedScaleDemo() {
             }
         }
         Text(
-            text = "组件负责玻璃刻度反馈，长按与横向手势由调用方持有。",
+            text = "分段轨道复用只读 HyperSlider；长按与横向手势仍由调用方持有。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center

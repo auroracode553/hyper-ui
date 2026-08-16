@@ -1,7 +1,8 @@
-/** 文件职责：在 HyperUI 中提供可点击、可拖动并支持业务值范围的进度滑块。 */
+/** 文件职责：提供支持连续、等距吸附与可配置分段标记的受控滑块。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -39,16 +40,23 @@ import kotlin.math.roundToInt
 data class HyperSliderColors(
     val trackColor: Color,
     val activeTrackColor: Color,
+    val segmentMarkerColor: Color,
     val thumbColor: Color,
+    val thumbCenterColor: Color,
+    val thumbHaloColor: Color,
     val disabledTrackColor: Color,
     val disabledActiveTrackColor: Color,
-    val disabledThumbColor: Color
+    val disabledSegmentMarkerColor: Color,
+    val disabledThumbColor: Color,
+    val disabledThumbCenterColor: Color,
+    val disabledThumbHaloColor: Color
 )
 
 /**
- * 支持点击定位和拖动的 HyperUI 进度滑块。
+ * 可点击、可拖动的 HyperUI 受控滑块。
  *
- * value、拖动开始/结束后的业务处理均由调用方持有，组件只处理交互和视觉状态。
+ * `steps` 只负责等距吸附；`showSegmentMarkers` 与 `segmentValues` 只负责分段点视觉，
+ * 两者可以独立使用。`readOnly` 保留正常配色和进度语义，但不响应用户输入。
  */
 @Composable
 fun HyperSlider(
@@ -56,17 +64,22 @@ fun HyperSlider(
     onValueChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    readOnly: Boolean = false,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     steps: Int = 0,
+    showSegmentMarkers: Boolean = false,
+    segmentValues: List<Float> = emptyList(),
     onValueChangeStarted: (() -> Unit)? = null,
     onValueChangeFinished: (() -> Unit)? = null,
+    minimumTouchHeight: Dp = HyperSliderDefaults.MinTouchHeight,
     trackHeight: Dp = HyperSliderDefaults.TrackHeight,
     thumbSize: Dp = HyperSliderDefaults.ThumbSize,
+    segmentMarkerSize: Dp = HyperSliderDefaults.SegmentMarkerSize,
     trackShape: Shape = HyperSliderDefaults.TrackShape,
     thumbShape: Shape = HyperSliderDefaults.ThumbShape,
     colors: HyperSliderColors = HyperSliderDefaults.colors(),
-    trackBorder: BorderStroke? = HyperSliderDefaults.trackBorder(),
-    thumbBorder: BorderStroke? = HyperSliderDefaults.thumbBorder()
+    trackBorder: BorderStroke? = null,
+    thumbBorder: BorderStroke? = null
 ) {
     require(valueRange.start.isFinite() && valueRange.endInclusive.isFinite()) {
         "valueRange 的起止值必须是有限数值"
@@ -75,12 +88,22 @@ fun HyperSlider(
         "valueRange 的结束值必须大于起始值"
     }
     require(steps >= 0) { "steps 不能小于 0" }
+    require(minimumTouchHeight >= 0.dp) { "minimumTouchHeight 不能小于 0.dp" }
+    require(trackHeight >= 0.dp) { "trackHeight 不能小于 0.dp" }
+    require(thumbSize > 0.dp) { "thumbSize 必须大于 0.dp" }
+    require(segmentMarkerSize >= 0.dp) { "segmentMarkerSize 不能小于 0.dp" }
 
     val currentOnValueChange by rememberUpdatedState(onValueChange)
     val currentOnValueChangeStarted by rememberUpdatedState(onValueChangeStarted)
     val currentOnValueChangeFinished by rememberUpdatedState(onValueChangeFinished)
     val density = LocalDensity.current
-    val thumbSizePx = with(density) { thumbSize.toPx() }
+    val thumbHaloSize = maxOf(
+        thumbSize,
+        thumbSize * HyperSliderDefaults.ThumbHaloScale
+    )
+    val thumbCenterSize = (thumbSize * HyperSliderDefaults.ThumbCenterScale)
+        .coerceAtMost(thumbSize)
+    val thumbHaloSizePx = with(density) { thumbHaloSize.toPx() }
     var isDragging by remember { mutableStateOf(false) }
 
     val coercedValue = if (value.isFinite()) {
@@ -89,16 +112,46 @@ fun HyperSlider(
         valueRange.start
     }
     val valueFraction = valueToFraction(coercedValue, valueRange)
+    val markerValues = remember(showSegmentMarkers, segmentValues, valueRange, steps) {
+        resolveSegmentMarkerValues(
+            showSegmentMarkers = showSegmentMarkers,
+            segmentValues = segmentValues,
+            valueRange = valueRange,
+            steps = steps
+        )
+    }
+    val interactionEnabled = enabled && !readOnly
     val resolvedTrackColor = if (enabled) colors.trackColor else colors.disabledTrackColor
     val resolvedActiveTrackColor = if (enabled) {
         colors.activeTrackColor
     } else {
         colors.disabledActiveTrackColor
     }
+    val resolvedSegmentMarkerColor = if (enabled) {
+        colors.segmentMarkerColor
+    } else {
+        colors.disabledSegmentMarkerColor
+    }
     val resolvedThumbColor = if (enabled) colors.thumbColor else colors.disabledThumbColor
+    val resolvedThumbCenterColor = if (enabled) {
+        colors.thumbCenterColor
+    } else {
+        colors.disabledThumbCenterColor
+    }
+    val resolvedThumbHaloColor = if (enabled) {
+        colors.thumbHaloColor
+    } else {
+        colors.disabledThumbHaloColor
+    }
     val interactionModifier = Modifier
-        .pointerInput(enabled, valueRange.start, valueRange.endInclusive, steps, thumbSizePx) {
-            if (!enabled) return@pointerInput
+        .pointerInput(
+            interactionEnabled,
+            valueRange.start,
+            valueRange.endInclusive,
+            steps,
+            thumbHaloSizePx
+        ) {
+            if (!interactionEnabled) return@pointerInput
 
             detectDragGestures(
                 onDragStart = { offset ->
@@ -108,7 +161,7 @@ fun HyperSlider(
                         pointerPositionToValue(
                             pointerX = offset.x,
                             widthPx = size.width.toFloat(),
-                            thumbSizePx = thumbSizePx,
+                            thumbHaloSizePx = thumbHaloSizePx,
                             valueRange = valueRange,
                             steps = steps
                         )
@@ -127,16 +180,23 @@ fun HyperSlider(
                         pointerPositionToValue(
                             pointerX = change.position.x,
                             widthPx = size.width.toFloat(),
-                            thumbSizePx = thumbSizePx,
+                            thumbHaloSizePx = thumbHaloSizePx,
                             valueRange = valueRange,
                             steps = steps
                         )
                     )
+                    change.consume()
                 }
             )
         }
-        .pointerInput(enabled, valueRange.start, valueRange.endInclusive, steps, thumbSizePx) {
-            if (!enabled) return@pointerInput
+        .pointerInput(
+            interactionEnabled,
+            valueRange.start,
+            valueRange.endInclusive,
+            steps,
+            thumbHaloSizePx
+        ) {
+            if (!interactionEnabled) return@pointerInput
 
             detectTapGestures { offset ->
                 if (!isDragging) {
@@ -145,7 +205,7 @@ fun HyperSlider(
                         pointerPositionToValue(
                             pointerX = offset.x,
                             widthPx = size.width.toFloat(),
-                            thumbSizePx = thumbSizePx,
+                            thumbHaloSizePx = thumbHaloSizePx,
                             valueRange = valueRange,
                             steps = steps
                         )
@@ -158,7 +218,7 @@ fun HyperSlider(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
-            .height(maxOf(HyperSliderDefaults.MinTouchHeight, thumbSize))
+            .height(maxOf(minimumTouchHeight, thumbHaloSize))
             .then(interactionModifier)
             .semantics {
                 progressBarRangeInfo = ProgressBarRangeInfo(
@@ -166,7 +226,7 @@ fun HyperSlider(
                     range = valueRange,
                     steps = steps
                 )
-                if (enabled) {
+                if (interactionEnabled) {
                     setProgress { targetValue ->
                         currentOnValueChangeStarted?.invoke()
                         currentOnValueChange(snapValueToSteps(targetValue, valueRange, steps))
@@ -177,7 +237,7 @@ fun HyperSlider(
             },
         contentAlignment = Alignment.CenterStart
     ) {
-        val availableTrackWidth = (maxWidth - thumbSize).coerceAtLeast(0.dp)
+        val availableTrackWidth = (maxWidth - thumbHaloSize).coerceAtLeast(0.dp)
 
         Box(
             modifier = Modifier
@@ -201,23 +261,54 @@ fun HyperSlider(
             )
         }
 
+        markerValues.forEach { markerValue ->
+            val markerFraction = valueToFraction(markerValue, valueRange)
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .offset(
+                        x = availableTrackWidth * markerFraction +
+                            (thumbHaloSize - segmentMarkerSize) * 0.5f
+                    )
+                    .size(segmentMarkerSize)
+                    .background(resolvedSegmentMarkerColor, CircleShape)
+            )
+        }
+
         Box(
             modifier = Modifier
                 .offset(x = availableTrackWidth * valueFraction)
-                .size(thumbSize)
-                .hyperSurface(
-                    containerColor = resolvedThumbColor,
-                    shape = thumbShape,
-                    border = thumbBorder
+                .size(thumbHaloSize)
+                .background(resolvedThumbHaloColor, thumbShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(thumbSize)
+                    .hyperSurface(
+                        containerColor = resolvedThumbColor,
+                        shape = thumbShape,
+                        border = thumbBorder
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(thumbCenterSize)
+                        .background(resolvedThumbCenterColor, thumbShape)
                 )
-        )
+            }
+        }
     }
 }
 
 object HyperSliderDefaults {
     val MinTouchHeight = 40.dp
     val TrackHeight = 6.dp
-    val ThumbSize = 22.dp
+    val ThumbSize = 18.dp
+    val SegmentMarkerSize = 5.dp
+    const val ThumbHaloScale = 1.85f
+    const val ThumbCenterScale = 0.52f
     val TrackShape: Shape = RoundedCornerShape(percent = 50)
     val ThumbShape: Shape = CircleShape
 
@@ -225,19 +316,39 @@ object HyperSliderDefaults {
     fun colors(
         trackColor: Color = Color.Unspecified,
         activeTrackColor: Color = Color.Unspecified,
+        segmentMarkerColor: Color = Color.Unspecified,
         thumbColor: Color = Color.Unspecified,
+        thumbCenterColor: Color = Color.Unspecified,
+        thumbHaloColor: Color = Color.Unspecified,
         disabledTrackColor: Color = Color.Unspecified,
         disabledActiveTrackColor: Color = Color.Unspecified,
-        disabledThumbColor: Color = Color.Unspecified
+        disabledSegmentMarkerColor: Color = Color.Unspecified,
+        disabledThumbColor: Color = Color.Unspecified,
+        disabledThumbCenterColor: Color = Color.Unspecified,
+        disabledThumbHaloColor: Color = Color.Unspecified
     ): HyperSliderColors {
-        val resolvedTrackColor = resolveHyperContainerColor(trackColor, HyperColors.elevatedContainer)
-        val resolvedActiveTrackColor = resolveHyperContainerColor(activeTrackColor, HyperColors.accent)
-        val resolvedThumbColor = resolveHyperContainerColor(thumbColor, HyperColors.cardContainer)
-
+        val accent = HyperColors.accent
+        val resolvedActiveTrackColor = resolveHyperContainerColor(activeTrackColor, accent)
+        val defaultMarkerColor = HyperColors.primaryText.copy(alpha = 0.56f)
         return HyperSliderColors(
-            trackColor = resolvedTrackColor,
+            trackColor = resolveHyperContainerColor(trackColor, HyperColors.fieldContainer),
             activeTrackColor = resolvedActiveTrackColor,
-            thumbColor = resolvedThumbColor,
+            segmentMarkerColor = resolveHyperContainerColor(
+                segmentMarkerColor,
+                defaultMarkerColor
+            ),
+            thumbColor = resolveHyperContainerColor(
+                thumbColor,
+                Color(1f, 1f, 1f, 1f)
+            ),
+            thumbCenterColor = resolveHyperContainerColor(
+                thumbCenterColor,
+                resolvedActiveTrackColor
+            ),
+            thumbHaloColor = resolveHyperContainerColor(
+                thumbHaloColor,
+                resolvedActiveTrackColor.copy(alpha = 0.22f)
+            ),
             disabledTrackColor = resolveHyperContainerColor(
                 disabledTrackColor,
                 HyperColors.disabledContainer
@@ -246,9 +357,21 @@ object HyperSliderDefaults {
                 disabledActiveTrackColor,
                 HyperColors.disabledText
             ),
+            disabledSegmentMarkerColor = resolveHyperContainerColor(
+                disabledSegmentMarkerColor,
+                HyperColors.disabledText.copy(alpha = 0.72f)
+            ),
             disabledThumbColor = resolveHyperContainerColor(
                 disabledThumbColor,
+                HyperColors.disabledContainer
+            ),
+            disabledThumbCenterColor = resolveHyperContainerColor(
+                disabledThumbCenterColor,
                 HyperColors.disabledText
+            ),
+            disabledThumbHaloColor = resolveHyperContainerColor(
+                disabledThumbHaloColor,
+                HyperColors.disabledText.copy(alpha = 0.16f)
             )
         )
     }
@@ -263,12 +386,13 @@ object HyperSliderDefaults {
 private fun pointerPositionToValue(
     pointerX: Float,
     widthPx: Float,
-    thumbSizePx: Float,
+    thumbHaloSizePx: Float,
     valueRange: ClosedFloatingPointRange<Float>,
     steps: Int
 ): Float {
-    val availableTrackWidth = (widthPx - thumbSizePx).coerceAtLeast(1f)
-    val fraction = ((pointerX - thumbSizePx / 2f) / availableTrackWidth).coerceIn(0f, 1f)
+    val availableTrackWidth = (widthPx - thumbHaloSizePx).coerceAtLeast(1f)
+    val fraction = ((pointerX - thumbHaloSizePx / 2f) / availableTrackWidth)
+        .coerceIn(0f, 1f)
     val rawValue = valueRange.start + fraction * (valueRange.endInclusive - valueRange.start)
     return snapValueToSteps(rawValue, valueRange, steps)
 }
@@ -291,4 +415,33 @@ private fun snapValueToSteps(
     val fraction = valueToFraction(coercedValue, valueRange)
     val snappedFraction = (fraction * intervals).roundToInt() / intervals.toFloat()
     return valueRange.start + snappedFraction * (valueRange.endInclusive - valueRange.start)
+}
+
+private fun resolveSegmentMarkerValues(
+    showSegmentMarkers: Boolean,
+    segmentValues: List<Float>,
+    valueRange: ClosedFloatingPointRange<Float>,
+    steps: Int
+): List<Float> {
+    if (!showSegmentMarkers) return emptyList()
+
+    val values = if (segmentValues.isNotEmpty()) {
+        segmentValues
+    } else if (steps > 0) {
+        val intervals = steps + 1
+        List(intervals + 1) { index ->
+            valueRange.start +
+                (valueRange.endInclusive - valueRange.start) * index / intervals.toFloat()
+        }
+    } else {
+        emptyList()
+    }
+
+    return values
+        .asSequence()
+        .filter { value -> value.isFinite() }
+        .filter { value -> value in valueRange }
+        .distinct()
+        .sorted()
+        .toList()
 }

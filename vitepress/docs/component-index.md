@@ -18,7 +18,7 @@
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选项 | 调用方提供 `checked` |
 | [HyperRadio](components/form/hyper-radio.md) | 单选项 | 调用方提供 `selected` |
 | [HyperSegmented](components/form/hyper-segmented.md) | 等宽分段控制器，选中项为实色抬升面板 | 调用方提供 `selectedItem` |
-| [HyperSlider](components/form/hyper-slider.md) | 可点击、可拖动的进度与范围滑块 | 调用方提供 `value` |
+| [HyperSlider](components/form/hyper-slider.md) | 支持连续/分段轨道、指定标记、只读态与三层圆点的受控滑块 | 调用方提供 `value` |
 
 ## 容器组件
 
@@ -54,7 +54,7 @@
 | [hyperToast](components/feedback/hyper-toast.md) | Android 原生 Toast 的线程安全封装 | 调用即显示，无持久业务状态 |
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 无动画、不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |
 | [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | 柔性玻璃竖向比例反馈，支持图标插槽 | 调用方提供 `progress`、文案、图标与显示时机 |
-| [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 长按临时加速使用的柔性玻璃横向刻度 | 调用方提供当前速度，并处理长按与横向手势 |
+| [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 复用 HyperSlider 分段视觉的长按临时加速玻璃刻度 | 调用方提供当前速度，并处理长按与横向手势 |
 | [HyperBatteryIndicator](components/feedback/hyper-battery-indicator.md) | 百分比内显、充电闪电外置的紧凑电池图标 | 调用方提供电量和充电状态 |
 | [HyperPopup](components/feedback/hyper-popup.md) | 最大高度为窗口 70%、长内容可滚动的居中内容浮层 | 调用方提供 `visible` 和内容状态 |
 | [HyperDialog](components/feedback/hyper-dialog.md) | 固定窗口根尺寸、内部面板居中的模态对话框 | 调用方提供 `visible` 并处理结果 |

@@ -138,20 +138,26 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "slider",
         group = GROUP_FORM,
         title = "HyperSlider",
-        description = "支持点击定位、连续拖动、分段吸附和禁用态，业务值与范围由调用方持有。",
+        description = "支持连续拖动、等距吸附、可选分段点、只读态与三层圆点，业务值由调用方持有。",
         code = """
             HyperSlider(
-                value = progress,
-                onValueChange = { progress = it },
-                valueRange = 0f..duration,
-                onValueChangeStarted = onSeekStart,
-                onValueChangeFinished = onSeekFinished
+                value = speed,
+                onValueChange = { speed = it },
+                valueRange = 0f..5f,
+                steps = 4,
+                showSegmentMarkers = true
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("连续", "steps = 0", "连续点击与拖动"),
-            DemoVariant("分段", "steps = 4", "分段吸附与自定义色"),
-            DemoVariant("禁用", "enabled = false", "禁用实色轨道与滑块")
+            DemoVariant(
+                "紧凑连续",
+                "steps = 0, trackHeight = 3.dp, thumbSize = 12.dp",
+                "无分段点的媒体进度条"
+            ),
+            DemoVariant("分段", "steps = 4, showSegmentMarkers = true", "吸附并显示全部分段点"),
+            DemoVariant("指定标记", "segmentValues", "只展示业务主刻度"),
+            DemoVariant("只读", "readOnly = true", "保留正常配色但关闭交互"),
+            DemoVariant("禁用", "enabled = false", "禁用轨道、标记与三层圆点")
         ),
         apiDocumentPaths = listOf("form/hyper-slider.md"),
         content = { SliderDemo() }

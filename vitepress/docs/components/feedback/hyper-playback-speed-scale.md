@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/feedback/HyperPlaybackSpeedScale.kt`
 - 预览：`playback_speed_scale`
 
-`HyperPlaybackSpeedScale` 是播放器长按临时加速使用的横向柔性玻璃刻度。组件只负责展示候选档位、当前高亮档位和实时倍速；长按识别、横向拖动、临时设置播放器速度以及松手恢复均由调用方处理。
+`HyperPlaybackSpeedScale` 是播放器长按临时加速使用的横向柔性玻璃刻度。组件只负责展示候选档位、当前高亮档位和实时倍速；内部轨道统一复用只读 `HyperSlider` 的分段点与三层圆点视觉，长按识别、横向拖动、临时设置播放器速度以及松手恢复仍由调用方处理。
 
 ## 公开签名
 
@@ -46,7 +46,11 @@ object HyperPlaybackSpeedScaleDefaults {
     val BorderWidth = 1.dp
     val ContentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp)
     val ContentSpacing = 4.dp
-    val TrackHeight = 20.dp
+    val TrackHeight = 34.dp
+    val TrackStrokeWidth = 3.dp
+    val TrackThumbSize = 18.dp
+    val TrackMarkerSize = 5.dp
+    val LabelWidth = 34.dp
     val LeadingIconSize = 17.dp
 
     fun closestSpeed(
@@ -87,6 +91,7 @@ HyperPlaybackSpeedScale(
 - 默认档位覆盖 `0.25x` 到 `4x`。可通过 `speedOptions` 替换，但应保持由小到大且至少包含一个值。
 - `DragStep` 是调用方实现横向离散调速时可复用的推荐手势距离，组件自身不拦截指针事件。
 - `closestSpeed` 可将初始速度或拖动结果吸附到最近档位。
+- 刻度轨道通过 `HyperSlider(readOnly = true)` 渲染，档位列表会映射为显式 `segmentValues`，因此与通用滑块保持同一套轨道、分段点和圆点样式。
 - `leadingContent` 为空时显示内置双箭头；传入图标时通过 `LocalContentColor` 接收 `valueColor`。
 - 默认最大宽度为 `480.dp`、占可用宽度的 90%；可用 `modifier` 继续约束外部尺寸与位置。
 - 组件提供确定进度语义，当前档位会映射为无障碍进度。

@@ -6,12 +6,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
@@ -133,10 +135,19 @@ private fun SpeedLabels(
     selectedIndex: Int,
     colors: HyperPlaybackSpeedScaleColors
 ) {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
         speedOptions.forEachIndexed { index, speed ->
+            val fraction = if (speedOptions.size <= 1) {
+                0f
+            } else {
+                index / speedOptions.lastIndex.toFloat()
+            }
             Box(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .offset(
+                        x = (maxWidth - HyperPlaybackSpeedScaleDefaults.LabelWidth) * fraction
+                    )
+                    .width(HyperPlaybackSpeedScaleDefaults.LabelWidth),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -161,50 +172,29 @@ private fun SpeedTrack(
     selectedIndex: Int,
     colors: HyperPlaybackSpeedScaleColors
 ) {
-    Canvas(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(HyperPlaybackSpeedScaleDefaults.TrackHeight)
-    ) {
-        val segmentWidth = size.width / itemCount
-        val trackStartX = segmentWidth / 2f
-        val trackEndX = size.width - segmentWidth / 2f
-        val selectedX = segmentWidth * (selectedIndex + 0.5f)
-        val centerY = size.height / 2f
-
-        drawLine(
-            color = colors.trackColor,
-            start = Offset(trackStartX, centerY),
-            end = Offset(trackEndX, centerY),
-            strokeWidth = 3.dp.toPx(),
-            cap = StrokeCap.Round
+    val sliderMaximum = (itemCount - 1).coerceAtLeast(1).toFloat()
+    HyperSlider(
+        value = selectedIndex.toFloat(),
+        onValueChange = {},
+        modifier = Modifier.fillMaxWidth(),
+        readOnly = true,
+        valueRange = 0f..sliderMaximum,
+        steps = (itemCount - 2).coerceAtLeast(0),
+        showSegmentMarkers = true,
+        segmentValues = List(itemCount) { index -> index.toFloat() },
+        minimumTouchHeight = HyperPlaybackSpeedScaleDefaults.TrackHeight,
+        trackHeight = HyperPlaybackSpeedScaleDefaults.TrackStrokeWidth,
+        thumbSize = HyperPlaybackSpeedScaleDefaults.TrackThumbSize,
+        segmentMarkerSize = HyperPlaybackSpeedScaleDefaults.TrackMarkerSize,
+        colors = HyperSliderDefaults.colors(
+            trackColor = colors.trackColor,
+            activeTrackColor = colors.activeTrackColor,
+            segmentMarkerColor = colors.tickColor,
+            thumbColor = colors.valueColor,
+            thumbCenterColor = colors.selectedTickColor,
+            thumbHaloColor = colors.selectedTickColor.copy(alpha = 0.22f)
         )
-        drawLine(
-            color = colors.activeTrackColor,
-            start = Offset(trackStartX, centerY),
-            end = Offset(selectedX, centerY),
-            strokeWidth = 3.dp.toPx(),
-            cap = StrokeCap.Round
-        )
-        repeat(itemCount) { index ->
-            val tickX = segmentWidth * (index + 0.5f)
-            drawCircle(
-                color = colors.tickColor,
-                radius = 2.5.dp.toPx(),
-                center = Offset(tickX, centerY)
-            )
-        }
-        drawCircle(
-            color = colors.selectedTickColor.copy(alpha = 0.22f),
-            radius = 9.dp.toPx(),
-            center = Offset(selectedX, centerY)
-        )
-        drawCircle(
-            color = colors.selectedTickColor,
-            radius = 5.dp.toPx(),
-            center = Offset(selectedX, centerY)
-        )
-    }
+    )
 }
 
 @Composable
@@ -247,7 +237,11 @@ object HyperPlaybackSpeedScaleDefaults {
         vertical = 12.dp
     )
     val ContentSpacing = 4.dp
-    val TrackHeight = 20.dp
+    val TrackHeight = 34.dp
+    val TrackStrokeWidth = 3.dp
+    val TrackThumbSize = 18.dp
+    val TrackMarkerSize = 5.dp
+    val LabelWidth = 34.dp
     val LeadingIconSize = 17.dp
 
     fun closestSpeed(

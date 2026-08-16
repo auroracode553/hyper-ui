@@ -143,7 +143,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "playback_speed_scale",
         group = GROUP_FEEDBACK,
         title = "HyperPlaybackSpeedScale",
-        description = "播放器长按临时加速使用的柔性玻璃刻度，支持 0.25x 到 4x 档位和自定义前导图标。",
+        description = "播放器长按临时加速使用的柔性玻璃刻度，轨道统一复用 HyperSlider 分段与三层圆点视觉。",
         code = """
             HyperPlaybackSpeedScale(
                 selectedSpeed = temporarySpeed,

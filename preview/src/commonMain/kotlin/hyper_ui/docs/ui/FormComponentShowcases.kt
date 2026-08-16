@@ -283,28 +283,53 @@ fun SwitchDemo() {
 fun SliderDemo() {
     var continuousValue by remember { mutableStateOf(0.42f) }
     var steppedValue by remember { mutableStateOf(2f) }
+    var showSegmentMarkers by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier.widthIn(max = 520.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(text = "连续进度 ${(continuousValue * 100).toInt()}%")
+        Text(text = "紧凑连续进度 ${(continuousValue * 100).toInt()}%")
         HyperSlider(
             value = continuousValue,
             onValueChange = { continuousValue = it },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            showSegmentMarkers = false,
+            trackHeight = 3.dp,
+            thumbSize = 12.dp
         )
 
-        Text(text = "分段进度 ${steppedValue.toInt()}/5")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "分段进度 ${steppedValue.toInt()}/5")
+            HyperButton(onClick = { showSegmentMarkers = !showSegmentMarkers }) {
+                Text(if (showSegmentMarkers) "隐藏分段点" else "显示分段点")
+            }
+        }
         HyperSlider(
             value = steppedValue,
             onValueChange = { steppedValue = it },
             valueRange = 0f..5f,
             steps = 4,
+            showSegmentMarkers = showSegmentMarkers,
             modifier = Modifier.fillMaxWidth(),
             colors = HyperSliderDefaults.colors(
                 activeTrackColor = Color(0.03f, 0.76f, 0.38f, 1f)
             )
+        )
+
+        Text(text = "只读分段 · 指定主刻度")
+        HyperSlider(
+            value = 3f,
+            onValueChange = {},
+            readOnly = true,
+            valueRange = 0f..5f,
+            showSegmentMarkers = true,
+            segmentValues = listOf(0f, 1f, 3f, 5f),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Text(text = "禁用状态")
