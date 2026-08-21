@@ -127,6 +127,6 @@ HyperUpdateDialog(
 - 版本比较支持可选 `v` 前缀、不同长度的数字段、预发布标识和构建元数据。
 - `onDownload` 只表达用户确认；实际下载、权限和安装流程由调用方实现。
 - `texts` 可完整替换可见文案；默认提供简体中文。
-- 弹窗继承 `HyperAlertDialog` 全程不透明的实色面板，最大高度为窗口高度的 `70%`；显示与关闭均不执行动画，且不渲染遮罩或蒙层。
+- 弹窗继承 `HyperAlertDialog` 的标准模态背景、平台尺寸约束与窗口过渡，面板保持不透明实色。
 
 <WasmPreview demo="update_dialog" title="HyperUpdateDialog 交互预览" />

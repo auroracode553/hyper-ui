@@ -192,7 +192,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "固定窗口根尺寸的模态对话框；输入和正文变化不会反复调整平台窗口。",
+        description = "使用 Compose 标准 Dialog 的模态对话框；保留平台背景调暗与窗口行为。",
         code = """
             HyperDialog(
                 visible = visible,
@@ -209,9 +209,10 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("固定窗口", "fillMaxSize root", "正文变化只重排内部面板"),
-            DemoVariant("稳定输入", "HyperTextField", "输入重组不重建 Dialog 窗口"),
-            DemoVariant("外部关闭", "dismissOnClickOutside", "透明命中层，不绘制蒙层"),
+            DemoVariant("标准模态", "Compose Dialog", "保留平台 scrim、焦点和窗口过渡"),
+            DemoVariant("内容窗口", "wrap content", "不创建透明全屏 Dialog 根节点"),
+            DemoVariant("稳定输入", "HyperTextField", "输入重组只更新面板内容"),
+            DemoVariant("外部关闭", "dismissOnClickOutside", "通过 DialogProperties 交给平台处理"),
             DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
         ),
         apiDocumentPaths = listOf("feedback/hyper-dialog.md"),
@@ -253,7 +254,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dialog",
         group = GROUP_FEEDBACK,
         title = "HyperAlertDialog",
-        description = "Alert 结构化对话框直接居中显示；最大高度为窗口高度的 70%，长正文可滚动。",
+        description = "Alert 结构化对话框直接居中显示；高度服从平台窗口约束，长正文可滚动。",
         code = """
             HyperAlertDialog(
                 visible = visible,
@@ -272,7 +273,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("结构化标题", "title", "固定标题区"),
-            DemoVariant("响应式高度", "MaxHeightFraction", "最大为窗口高度的 70%"),
+            DemoVariant("平台约束", "Dialog constraints", "不按内容反向计算窗口尺寸"),
             DemoVariant("长正文", "bodyContent", "超出高度后可滚动"),
             DemoVariant("操作", "actionContent", "普通与危险操作按钮")
         ),
@@ -283,7 +284,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "update_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperUpdateDialog",
-        description = "最大高度为窗口 70% 的应用更新弹窗；调用方持有状态并注入 Release 加载与下载动作。",
+        description = "使用标准模态窗口的应用更新弹窗；调用方持有状态并注入 Release 加载与下载动作。",
         code = """
             val checker = HyperUpdateChecker(
                 HyperReleaseLoader { releaseUrl ->

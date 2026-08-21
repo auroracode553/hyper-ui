@@ -190,7 +190,7 @@ HyperIconButton(onClick = onSearch) {
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadio`, `HyperSegmented`, `HyperSlider`（输入框默认使用不透明背景、轻描边和 40dp 紧凑最小高度，已有文本首次聚焦时光标位于末尾；`HyperSegmented` 提供等宽分段与抬升选中态；`HyperSlider` 支持点击定位、连续/等距吸附、可选分段点、指定业务标记和只读态，并统一使用柔光环、外圆、中心点三层滑块视觉）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperSectionedList`, `HyperMenuList`, `HyperListItem`（`HyperList` 提供单一连续卡片的页面级 `LazyColumn` 与 `LazyListScope` Slot；`HyperSectionedList` 面向日期、历史等动态分组数据，保持标题和数据行独立懒加载并自动处理组内圆角与分割线；`HyperMenuList` 只能用于少量菜单、设置项和操作入口；所有列表容器均使用不透明实色，`HyperListItem` 根据 supporting slot 自动使用单行 44dp、双行 54dp 的基础高度和 4dp 纵向留白）
-- 状态与浮层反馈：`HyperEmptyState`, `HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `hyperToast`, `HyperToastDuration`（`HyperEmptyState` 使用居中的 `HyperPanel` 承载空数据文案，图标与操作由调用方注入；Popup 与模态 Dialog 使用独立宿主；Dialog 使用固定窗口根尺寸并在内部居中面板，正文重组不调整平台窗口；Alert 内置标准实色描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
+- 状态与浮层反馈：`HyperEmptyState`, `HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `hyperToast`, `HyperToastDuration`（`HyperEmptyState` 使用居中的 `HyperPanel` 承载空数据文案，图标与操作由调用方注入；`HyperPopup` 使用轻量 Popup，`HyperDialog` 使用 Compose 标准模态 Dialog；Dialog 保留平台背景调暗、焦点、外部点击、返回键和窗口过渡，Alert 内置标准实色描边；菜单、浮层、内部按钮与进度指示器均使用不透明实色；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`, `HyperPlaybackSpeedScale`, `HyperBatteryIndicator`（加载进度支持确定/不确定状态；柔性玻璃比例胶囊支持亮度/音量图标；横向玻璃刻度用于长按临时倍速并复用只读 HyperSlider 的分段轨道；电池组件将百分比显示在内部并在充电时把闪电展示在右侧；组件本身不主动读取系统状态）
 - Android 系统工具：`HyperBatteryState`, `readHyperBatteryState`, `rememberHyperBatteryState`（支持一次性读取与 Compose 生命周期安全订阅；内部使用 Application Context，并在离开 Composition 时注销电池广播）
 - 导航组件：`HyperNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明并继承页面底色；`HyperDrawer` 的面板、选中项、文字与分隔线均使用不透明实色，深色模式默认继承页面背景色且不绘制灰色边界；`HyperTabBar` 深色模式默认继承页面背景色，浅色模式保留轻量透明度；`HyperDrawer` 默认提供方向化内容间距与系统安全区，可通过 `defaultSetPadding = false` 关闭，并支持可配置内容滚动；`HyperTabBar` 使用 55dp 操作区和 5dp 轻量底部留白，默认总高度 60dp；页面切换由调用方处理）
@@ -202,8 +202,8 @@ HyperIconButton(onClick = onSearch) {
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
 - 组件外壳的宽、高、最小尺寸和外部间距统一通过首个 `modifier` 表达，不为可由 `Modifier.size/width/height/heightIn` 完成的布局需求重复增加具名尺寸参数；独立布局节点使用语义明确的 `drawerModifier`、`contentModifier`、`inputModifier`。
-- `HyperPopup` 是窗口级轻量 Popup；`HyperDialog` 是独立模态 Dialog，两者不再通过兼容壳互相冒充。`HyperDialog` 的透明根节点固定铺满可用窗口，面板在根节点内部居中；标题、正文输入或异步内容变化只重排面板，不触发平台窗口跟随内容反复改尺寸。Android 宿主每个窗口只清除一次系统调暗标记，不绘制 HyperUI 蒙层。两者默认宽度为扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为窗口高度的 70%，正文可滚动，底部操作放入 `actionContent`。`HyperAlertDialog` 基于 `HyperDialog` 提供 body/action 结构并固定使用标准实色描边。
-- 组件内部只处理焦点、滚动、禁用态和描边等视觉反馈 UI 状态；所有组件状态均即时更新，不执行显示、关闭、颜色、尺寸、位移、旋转或循环动画。
+- `HyperPopup` 是窗口级轻量 Popup；`HyperDialog` 是 Compose 标准模态 Dialog，两者使用各自的标准宿主，不通过兼容壳互相冒充。`HyperDialog` 不测量或修改平台窗口，不创建透明全屏命中层，也不清除系统调暗标记；平台负责模态背景、尺寸约束、焦点、外部点击与返回键，组件只给面板设置 280–360dp 的稳定宽度边界并渲染标题、滚动正文和 `actionContent`。`HyperAlertDialog` 基于 `HyperDialog` 提供 body/action 结构并固定使用标准实色描边。
+- 组件内部状态即时更新，不额外执行颜色、尺寸、位移、旋转或循环动画；`HyperDialog` 保留平台标准窗口过渡，不由组件代码关闭或替换。
 
 示例：
 

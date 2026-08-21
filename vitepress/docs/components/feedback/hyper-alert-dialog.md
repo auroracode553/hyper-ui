@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/dialog/HyperAlertDialog.kt`
 - 预览：`dialog`
 
-`HyperAlertDialog` 是基于 `HyperDialog` 的结构化弹窗。它通过可选 `title` 属性固定渲染顶部标题，只提供 body、action 两个 slot 区域，不内置确认、取消、危险操作等业务按钮。Dialog 根节点保持固定窗口尺寸，正文变化只重排内部面板；面板最大高度为窗口高度的 70%，超出高度的正文可滚动，标题与底部操作区保持固定。点击面板外的透明区域默认请求关闭，也可通过 `dismissOnClickOutside = false` 禁用。面板固定使用 UI 库标准实色描边，不暴露描边配置。
+`HyperAlertDialog` 是基于 `HyperDialog` 的结构化弹窗。它通过可选 `title` 属性固定渲染顶部标题，只提供 body、action 两个 slot 区域，不内置确认、取消、危险操作等业务按钮。组件继承 Compose 标准 Dialog 的模态背景、平台尺寸约束和窗口行为；正文超出可用高度时可滚动，标题与底部操作区保持固定。平台默认在点击面板外时请求关闭，也可通过 `dismissOnClickOutside = false` 禁用。面板固定使用 UI 库标准实色描边，不暴露描边配置。
 
 ## 公开签名
 
@@ -44,10 +44,9 @@ HyperAlertDialog(
 - 不存在 `titleContent`、`message`、`confirmText`、`cancelText` 参数。
 - 标题通过 `title` 属性提供，固定在顶部，不参与 `bodyContent` 的滚动；`title = null`、空字符串或全空白字符串时不渲染标题槽位，也不预留标题高度。
 - 如果项目需要二次确认语义，应该在业务项目中封装项目级 ConfirmDialog。
-- 弹窗不渲染遮罩或半透明蒙层。
-- 弹窗继承 `HyperDialog` 的固定窗口根节点和无动画居中显示策略。
-- `dismissOnClickOutside` 默认为 `true`；设为 `false` 后，点击面板外空白区域不会调用 `onDismissRequest`。
-- 面板尺寸、窗口间距、内容间距、不透明实色背景、圆角和描边均由内部 `HyperDialog` 标准样式提供；默认最大高度为窗口高度的 `70%`，`HyperAlertDialog` 不暴露 `border` 参数。
+- 弹窗继承 `HyperDialog` 的标准平台 scrim、焦点、返回键和窗口过渡，不使用 `Popup`。
+- `dismissOnClickOutside` 默认为 `true`；该参数通过标准 `DialogProperties` 生效。
+- 面板宽度边界、内容间距、不透明实色背景、圆角和描边均由内部 `HyperDialog` 标准样式提供；高度服从平台窗口约束，`HyperAlertDialog` 不暴露 `border` 参数。
 - `bodyContent` 默认继承 `HyperColors.secondaryText`；slot 内显式传入的颜色优先。
 
 <WasmPreview demo="dialog" title="HyperAlertDialog 交互预览" />

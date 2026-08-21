@@ -20,7 +20,7 @@ data class ComponentDemo(
     val content: @Composable () -> Unit
 )
 
-/** 聚合稳定 Preview ID；滑块分段/只读态及 Android 电池工具均由对应 Showcase 演示。 */
+/** 聚合稳定 Preview ID；标准 Dialog 的模态行为由对应 Showcase 演示。 */
 fun componentDemos(): List<ComponentDemo> = listOf(
     basicComponentDemos(),
     formComponentDemos(),

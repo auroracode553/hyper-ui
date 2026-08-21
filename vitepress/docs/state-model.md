@@ -28,7 +28,7 @@ HyperUI 采用调用方持有状态的方式。组件接收当前值并通过回
 
 ## 弹出层规则
 
-HyperUI 的浮层、菜单和抽屉只渲染自身面板，不添加 scrim、overlay 或半透明遮罩；`HyperDrawer` 使用不透明实色面板和状态色，深色模式下默认继承页面背景色。
+HyperUI 的模态 Dialog 使用平台标准 scrim；Popup、菜单和当前抽屉组件只渲染自身面板。`HyperDrawer` 使用不透明实色面板和状态色，深色模式下默认继承页面背景色。
 
 - `HyperPopup` 默认在点击面板外空白区域时调用 `onDismissRequest`；传入 `dismissOnClickOutside = false` 可禁用空白关闭。
 - `HyperDropdown` 的菜单项点击后会先调用项目回调，再调用关闭回调。
