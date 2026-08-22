@@ -5,7 +5,7 @@
 - 预览：`text_field`
 
 `HyperTextField` 是 slot-first 输入框。搜索框、地址栏、页内查找栏和普通表单输入都通过同一个组件组合；UI 库不再提供固定搜索图标或固定清空按钮。
-默认容器采用澎湃 OS 风格的白色单色底面：浅色主题为不透明纯白，深色主题为白色 `0.18f` alpha 材质；不叠加高光、明暗渐变或纹理层，空间层次只由公共单层结构阴影提供。普通态不绘制硬边框；聚焦与错误状态各自只使用一条纯色语义边缘，错误状态优先。
+默认容器采用澎湃 OS 风格的白色单色底面：浅色主题为不透明纯白，深色主题为白色 `0.18f` alpha 材质；不叠加高光、明暗渐变或纹理层，直接复用公共 `hyperSurfaceDepth` 的控件描边与单层阴影。聚焦与错误状态会用对应语义色替换中性描边，不会叠加第二圈，错误状态优先。
 组件内部维护 selection/composition，首次挂载已有文本时，光标默认位于文本末尾；用户开始编辑后会保留当前选区。
 
 ## 公开签名
@@ -133,7 +133,7 @@ HyperTextField(
 - 输入容器默认最小高度为紧凑的 `40.dp`，内部默认使用水平 `16.dp`、垂直 `6.dp` 留白；目前地址栏、首页搜索框和搜索聚焦态的最大 slot 为 `28.dp`，三者会保持相同行高。多行内容仍按行数自然增高，不提供重复的 `minHeight` 参数。
 - 默认底色来自 `HyperTextFieldDefaults.colors()`：浅色主题使用 `Color(1f, 1f, 1f, 1f)`，深色主题使用 `Color(1f, 1f, 1f, 0.18f)`；自定义 `containerColor` 会作为整张输入表面的唯一底色。
 - 输入框不使用 `Brush` 或 `drawWithCache` 绘制材质层，避免在较宽的单行输入框内形成横向白线或色带。
-- 普通态通过公共 `hyperSurfaceShadow` 使用 `StructuralPanel` 的 2dp 单层阴影且不绘制边框；可编辑输入框聚焦时立即切换为单一主题色纯色边缘并将同一公共阴影提高到 3dp，布局尺寸和内边距不变。
+- 普通态通过公共 `hyperSurfaceDepth` 使用 `CompactControl` 的 1dp 中性描边和 4dp 单层阴影；浅色主题描边 alpha 为 `0.075f`，环境阴影 alpha 为 `0.10f`，点阴影 alpha 为 `0.24f`，使纯白输入框在白底上仍可辨识。可编辑输入框聚焦时立即以主题色替换中性描边并将同一公共阴影提高到 5dp，布局尺寸和内边距不变。
 - `readOnly = true` 保留正常材质和内容对比度，但不会显示可编辑聚焦强调；`enabled = false` 使用更低透明度底材并关闭投影。
 - `startContent` 与 `endContent` 按布局方向放置左右内容，间距由 `slotSpacing` 控制。
 - 错误态通过 `isError` 和 `supportingContent` 组合表达，并使用一条低透明度错误色纯色边缘；它会替代聚焦边缘，不叠加第二圈。
@@ -141,7 +141,7 @@ HyperTextField(
 
 ## 从旧版迁移
 
-- 删除 `HyperTextFieldDefaults.BorderWidth`；普通态不再绘制永久 1dp 描边。
-- 调用方无需为默认迁移新增参数；如曾直接读取该常量，应删除对应自定义描边，或在组件外按业务需要自行组合。
+- 删除 `HyperTextFieldDefaults.BorderWidth`；描边宽度和主题强度统一由内部公共 `hyperSurfaceDepth` 管理，不再作为输入框独立公开参数。
+- 调用方无需为默认迁移新增参数；如曾直接读取该常量，应删除对应自定义描边，避免与组件的公共描边重复。
 
 <WasmPreview demo="text_field" title="HyperTextField 交互预览" />

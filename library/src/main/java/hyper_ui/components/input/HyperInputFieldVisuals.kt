@@ -63,16 +63,21 @@ internal fun hyperInputFieldVisuals(
     } else {
         HyperSurfaceDepthState.Disabled
     }
+    val defaultDepth = hyperSurfaceDepthVisuals(
+        role = HyperSurfaceDepthRole.CompactControl,
+        elevation = elevation,
+        state = depthState
+    )
+    val depth = if (indicatorColor.alpha > 0f) {
+        defaultDepth.copy(strokeColor = indicatorColor)
+    } else {
+        defaultDepth
+    }
 
     return HyperInputFieldVisuals(
         surface = HyperTextFieldSurfaceVisuals(
             containerColor = containerColor,
-            indicatorColor = indicatorColor,
-            depth = hyperSurfaceDepthVisuals(
-                role = HyperSurfaceDepthRole.StructuralPanel,
-                elevation = elevation,
-                state = depthState
-            )
+            depth = depth
         ),
         contentColor = if (enabled) colors.contentColor else colors.disabledContentColor,
         placeholderColor = if (enabled) colors.placeholderColor else colors.disabledContentColor,

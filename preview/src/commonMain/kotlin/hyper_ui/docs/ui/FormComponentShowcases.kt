@@ -183,7 +183,7 @@ fun TextFieldDemo() {
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton(onClick = { nameFocusRequester.requestFocus() }) {
-                Text("查看聚焦态与阴影")
+                Text("查看聚焦描边与阴影")
             }
             HyperButton(onClick = { forceNoteError = !forceNoteError }) {
                 Text(if (forceNoteError) "关闭错误态" else "查看错误态")

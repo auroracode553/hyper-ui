@@ -75,7 +75,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "text_field",
         group = GROUP_FORM,
         title = "HyperTextField",
-        description = "紧凑型 Slot-first 澎湃 OS 风格输入框。浅色主题使用纯白单色表面并复用公共结构阴影，不叠加材质渐变。",
+        description = "紧凑型 Slot-first 澎湃 OS 风格输入框。纯白表面直接复用公共控件描边与阴影，保证白底可辨识。",
         code = """
             HyperTextField(
                 value = value,
@@ -106,12 +106,12 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认表面", "white container", "浅色主题纯白底面，无渐变或纹理色带"),
+            DemoVariant("默认表面", "white container, elevation = 4.dp", "纯白底面、公共中性描边与控件阴影"),
             DemoVariant("统一单行", "MinHeight = 40.dp", "地址栏、首页搜索与搜索态共享默认高度"),
-            DemoVariant("聚焦", "interactionSource focused", "单一主题色纯色边缘与 3dp 公共结构阴影"),
+            DemoVariant("聚焦", "interactionSource focused", "主题色替换公共中性描边，阴影提高到 5dp"),
             DemoVariant("默认光标", "selection = TextRange(value.length)", "首次聚焦位于现有文本末尾"),
-            DemoVariant("多行/错误", "minLines = 3, isError", "supporting 与单一错误边缘"),
-            DemoVariant("禁用/只读", "enabled / readOnly", "禁用态关闭公共阴影，只读态抑制聚焦强调"),
+            DemoVariant("多行/错误", "minLines = 3, isError", "错误色替换公共中性描边"),
+            DemoVariant("禁用/只读", "enabled / readOnly", "禁用态保留弱描边并关闭阴影，只读态抑制聚焦强调"),
             DemoVariant("左右插槽", "startContent / endContent", "自定义单色表面、搜索图标与清除操作")
         ),
         apiDocumentPaths = listOf("form/hyper-text-field.md"),

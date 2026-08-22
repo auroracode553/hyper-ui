@@ -2,7 +2,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -13,40 +12,25 @@ import androidx.compose.ui.unit.dp
 @Immutable
 internal data class HyperTextFieldSurfaceVisuals(
     val containerColor: Color,
-    val indicatorColor: Color,
     val depth: HyperSurfaceDepthVisuals
 ) {
     companion object {
-        val RestingElevation = 2.dp
-        val FocusedElevation = 3.dp
+        val RestingElevation = 4.dp
+        val FocusedElevation = 5.dp
         val DisabledElevation = 0.dp
     }
 }
 
 /**
  * 输入框表面只绘制单一容器色，不叠加任何高光、明暗渐变或纹理层。
- * 普通态无描边；聚焦或错误时只绘制一条纯色语义边缘。
+ * 主题描边与单层阴影统一由公共 HyperSurfaceDepth 绘制。
  */
 internal fun Modifier.hyperTextFieldSurface(
     shape: Shape,
     visuals: HyperTextFieldSurfaceVisuals
-): Modifier {
-    val surface = hyperSurfaceShadow(
+): Modifier = hyperSurfaceDepth(
         shape = shape,
         visuals = visuals.depth
     )
         .clip(shape)
         .background(visuals.containerColor)
-
-    return if (visuals.indicatorColor.alpha > 0f) {
-        surface.border(
-            width = StateIndicatorWidth,
-            color = visuals.indicatorColor,
-            shape = shape
-        )
-    } else {
-        surface
-    }
-}
-
-private val StateIndicatorWidth = 1.dp

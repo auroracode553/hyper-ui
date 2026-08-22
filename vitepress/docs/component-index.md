@@ -13,7 +13,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperTextField](components/form/hyper-text-field.md) | 澎湃 OS 风格白色单色表面、无材质渐变并复用公共结构阴影的文本输入 | 调用方提供 `value` |
+| [HyperTextField](components/form/hyper-text-field.md) | 澎湃 OS 风格白色单色表面，复用公共控件描边与阴影 | 调用方提供 `value` |
 | [HyperSwitch](components/form/hyper-switch.md) | 开关，轨道和滑块默认有轮廓层次 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选项 | 调用方提供 `checked` |
 | [HyperRadio](components/form/hyper-radio.md) | 单选项 | 调用方提供 `selected` |
