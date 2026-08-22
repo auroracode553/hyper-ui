@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.sp
 /**
  * 文本输入框组件。
  *
- * 组件内部已包含输入内容与玻璃容器的默认间距，外部间距请通过 modifier.padding(...) 控制。
+ * 组件内部已包含输入内容与输入容器的默认间距，外部间距请通过 modifier.padding(...) 控制。
  */
 @Composable
 fun HyperTextField(
@@ -136,9 +136,9 @@ fun HyperTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .defaultMinSize(minHeight = HyperTextFieldDefaults.MinHeight)
-                        .hyperTextFieldGlass(
+                        .hyperTextFieldSurface(
                             shape = shape,
-                            visuals = visuals.glass
+                            visuals = visuals.surface
                         )
                         .padding(HyperTextFieldDefaults.ContentPadding),
                     verticalAlignment = verticalAlignment
@@ -209,11 +209,17 @@ object HyperTextFieldDefaults {
         val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
         val resolvedPlaceholderColor = resolveHyperContainerColor(placeholderColor, HyperColors.secondaryText)
         val resolvedErrorColor = resolveHyperContainerColor(errorColor, HyperColors.danger)
-        val defaultContainerColor = rgba(
-            red = 255,
-            green = 255,
-            blue = 255,
-            alpha = if (HyperColors.isLight) 0.66f else 0.18f
+        val defaultContainerColor = androidx.compose.ui.graphics.Color(
+            1f,
+            1f,
+            1f,
+            if (HyperColors.isLight) 1f else 0.18f
+        )
+        val defaultDisabledContainerColor = androidx.compose.ui.graphics.Color(
+            1f,
+            1f,
+            1f,
+            if (HyperColors.isLight) 0.72f else 0.10f
         )
 
         return HyperTextFieldColors(
@@ -230,12 +236,7 @@ object HyperTextFieldDefaults {
             cursorColor = resolveHyperContainerColor(cursorColor, HyperColors.accent),
             disabledContainerColor = resolveHyperContainerColor(
                 disabledContainerColor,
-                rgba(
-                    red = 255,
-                    green = 255,
-                    blue = 255,
-                    alpha = if (HyperColors.isLight) 0.42f else 0.10f
-                )
+                defaultDisabledContainerColor
             ),
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,

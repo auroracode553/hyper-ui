@@ -21,7 +21,7 @@ data class HyperTextFieldColors(
 
 @Immutable
 internal data class HyperInputFieldVisuals(
-    val glass: HyperTextFieldGlassVisuals,
+    val surface: HyperTextFieldSurfaceVisuals,
     val contentColor: Color,
     val placeholderColor: Color,
     val labelColor: Color,
@@ -54,49 +54,24 @@ internal fun hyperInputFieldVisuals(
         else -> Color.Transparent
     }
     val elevation = when {
-        !enabled -> HyperTextFieldGlassVisuals.DisabledElevation
-        showsFocus -> HyperTextFieldGlassVisuals.FocusedElevation
-        else -> HyperTextFieldGlassVisuals.RestingElevation
+        !enabled -> HyperTextFieldSurfaceVisuals.DisabledElevation
+        showsFocus -> HyperTextFieldSurfaceVisuals.FocusedElevation
+        else -> HyperTextFieldSurfaceVisuals.RestingElevation
     }
-    val ambientShadowColor = when {
-        !enabled -> Color.Transparent
-        showsFocus -> rgba(0, 0, 0, if (isLight) 0.018f else 0.08f)
-        else -> rgba(0, 0, 0, if (isLight) 0.01f else 0.06f)
-    }
-    val spotShadowColor = when {
-        !enabled -> Color.Transparent
-        showsFocus -> rgba(0, 0, 0, if (isLight) 0.055f else 0.16f)
-        else -> rgba(0, 0, 0, if (isLight) 0.035f else 0.12f)
+    val depthState = if (enabled) {
+        HyperSurfaceDepthState.Resting
+    } else {
+        HyperSurfaceDepthState.Disabled
     }
 
     return HyperInputFieldVisuals(
-        glass = HyperTextFieldGlassVisuals(
+        surface = HyperTextFieldSurfaceVisuals(
             containerColor = containerColor,
-            topLightColor = rgba(
-                255,
-                255,
-                255,
-                when {
-                    !enabled -> if (isLight) 0.04f else 0.06f
-                    showsFocus -> if (isLight) 0.14f else 0.16f
-                    else -> if (isLight) 0.10f else 0.12f
-                }
-            ),
-            bottomShadeColor = rgba(
-                0,
-                0,
-                0,
-                when {
-                    !enabled -> if (isLight) 0.005f else 0.025f
-                    else -> if (isLight) 0.012f else 0.05f
-                }
-            ),
             indicatorColor = indicatorColor,
             depth = hyperSurfaceDepthVisuals(
-                strokeColor = Color.Transparent,
+                role = HyperSurfaceDepthRole.StructuralPanel,
                 elevation = elevation,
-                ambientShadowColor = ambientShadowColor,
-                spotShadowColor = spotShadowColor
+                state = depthState
             )
         ),
         contentColor = if (enabled) colors.contentColor else colors.disabledContentColor,

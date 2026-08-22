@@ -10,9 +10,9 @@ Use the accepted `HyperIconButton` implementation as the material anchor, then a
 ## Material language
 
 - Build glass from a white translucent base in both themes. Let dark backgrounds mix that white into neutral gray; do not switch the material itself to a near-black fill.
-- Use one continuous face: a broad weak top light, a slight bottom shade, an in-surface fading edge, and at most one contextual shadow.
+- Use one continuous face and at most one contextual shadow.
 - Do not draw hard borders, dark outlines, nested rings, isolated specular arcs, caustic streaks, or multiple stacked shadows.
-- A glass edge is a soft change within the material, not a separately configurable `border`. Semantic focus and error indication may temporarily replace the neutral edge with one restrained color cue.
+- Semantic focus and error indication should use one restrained color cue rather than stacked outlines.
 - Keep icons and text high contrast. Tint the material layer rather than reducing foreground legibility.
 - Avoid stacking a light glass surface directly on another light glass surface. Glass should normally float over page content or a stable opaque background.
 

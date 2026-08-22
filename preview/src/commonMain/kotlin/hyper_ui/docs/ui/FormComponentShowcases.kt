@@ -183,7 +183,7 @@ fun TextFieldDemo() {
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton(onClick = { nameFocusRequester.requestFocus() }) {
-                Text("查看聚焦态")
+                Text("查看聚焦态与阴影")
             }
             HyperButton(onClick = { forceNoteError = !forceNoteError }) {
                 Text(if (forceNoteError) "关闭错误态" else "查看错误态")
@@ -218,7 +218,7 @@ fun TextFieldDemo() {
             onValueChange = { keyword = it },
             placeholderContent = { FieldPlaceholder("搜索组件") },
             colors = HyperTextFieldDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.34f)
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             startContent = {
                 Icon(
