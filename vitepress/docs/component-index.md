@@ -6,7 +6,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperButton](components/basic/hyper-button.md) | 不透明实色的 Slot-first 按钮容器 | 调用方处理点击 |
+| [HyperButton](components/basic/hyper-button.md) | 复用公共控件描边与单层阴影的不透明实色 Slot-first 按钮 | 调用方处理点击 |
 | [HyperIconButton](components/basic/hyper-icon-button.md) | Slot-first 无描边磨砂玻璃图标按钮，浅色模式使用增强公共单层阴影 | 调用方处理点击 |
 
 ## 表单组件

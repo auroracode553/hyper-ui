@@ -20,7 +20,7 @@ data class ComponentDemo(
     val content: @Composable () -> Unit
 )
 
-/** 聚合稳定 Preview ID；白色单色表面、公共描边与阴影等效果以分组描述和 Showcase 为准。 */
+/** 聚合稳定 Preview ID；公共描边、阴影和交互状态以分组描述与 Showcase 为准。 */
 fun componentDemos(): List<ComponentDemo> = buildList {
     addAll(basicComponentDemos())
     addAll(formComponentDemos())

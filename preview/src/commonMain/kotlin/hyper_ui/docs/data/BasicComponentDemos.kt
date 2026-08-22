@@ -11,7 +11,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         id = "button",
         group = GROUP_BASIC,
         title = "HyperButton",
-        description = "Slot-first 实色按钮容器。所有 tone、禁用态和自定义颜色都会以不透明颜色渲染。",
+        description = "Slot-first 实色按钮容器。所有 tone 复用公共控件描边与单层阴影，按下时立即收低，禁用态移除阴影。",
         code = """
             HyperButton(onClick = onSave) {
                 Icon(Icons.Default.Search, contentDescription = null)
@@ -26,11 +26,12 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("轮廓", "tone = Outline", "卡片实色填充与主题描边"),
-            DemoVariant("主要", "tone = Primary", "主题实色"),
+            DemoVariant("轮廓", "tone = Outline", "主题描边替换公共中性描边，并保留公共阴影"),
+            DemoVariant("主要", "tone = Primary", "主题实色与公共控件描边、阴影"),
             DemoVariant("弱强调", "tone = Tonal", "主题混合实色"),
             DemoVariant("语义色", "tone = Success / Danger", "成功与危险实色"),
-            DemoVariant("禁用", "enabled = false", "禁用实色状态"),
+            DemoVariant("按压", "pointer down", "公共描边和阴影立即收低"),
+            DemoVariant("禁用", "enabled = false", "弱公共描边、移除阴影的禁用实色状态"),
             DemoVariant("紧凑", "modifier = Modifier.height(32.dp)", "小尺寸 slot"),
             DemoVariant("组合复用", "contentPadding / role", "供分段等组合组件复用布局与语义")
         ),

@@ -2,6 +2,8 @@
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +15,8 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -64,6 +68,8 @@ fun HyperButton(
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     content: @Composable RowScope.() -> Unit
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
     val surfaceColor = HyperColors.cardContainer
     val requestedContainerColor = if (enabled) colors.containerColor else colors.disabledContainerColor
     val requestedContentColor = if (enabled) colors.contentColor else colors.disabledContentColor
@@ -77,18 +83,24 @@ fun HyperButton(
         fallbackColor = if (enabled) HyperColors.primaryText else HyperColors.secondaryText,
         backgroundColor = containerColor
     )
+    val surfaceVisuals = hyperButtonSurfaceVisuals(
+        enabled = enabled,
+        pressed = pressed
+    )
 
     Row(
         modifier = modifier
             .defaultMinSize(minHeight = HyperButtonDefaults.MinHeight)
-            .hyperSolidSurface(
+            .hyperButtonSurface(
                 containerColor = containerColor,
                 shape = shape,
-                border = border
+                visuals = surfaceVisuals,
+                borderOverride = if (enabled) border else null
             )
             .hyperNoRippleClickable(
                 enabled = enabled,
                 role = role,
+                interactionSource = interactionSource,
                 onClick = onClick
             )
             .padding(contentPadding),

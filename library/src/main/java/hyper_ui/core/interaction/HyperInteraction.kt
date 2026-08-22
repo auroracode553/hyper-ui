@@ -16,10 +16,12 @@ import androidx.compose.ui.semantics.Role
 internal fun Modifier.hyperNoRippleClickable(
     enabled: Boolean = true,
     role: Role? = null,
+    interactionSource: MutableInteractionSource? = null,
     onClick: () -> Unit
 ): Modifier = composed {
+    val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
     clickable(
-        interactionSource = remember { MutableInteractionSource() },
+        interactionSource = resolvedInteractionSource,
         indication = null,
         enabled = enabled,
         role = role,

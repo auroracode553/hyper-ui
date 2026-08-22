@@ -109,7 +109,7 @@ fun ButtonDemo() {
             )
         }
         Text(
-            text = "点击次数：$clicks · 所有按钮均为实色",
+            text = "点击次数：$clicks · 所有按钮均复用公共描边与阴影",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp

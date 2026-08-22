@@ -1,6 +1,7 @@
 /** 文件职责：统一绘制 HyperUI 表面的主题描边与单层空间阴影。 */
 package hyper_ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -34,25 +35,38 @@ internal enum class HyperSurfaceDepthState {
 
 /**
  * 在组件材质之前建立统一空间层级：最多一层阴影，并在内容绘制后叠加主题描边。
- * 具体强度由调用组件按紧凑控件、浮层面板或结构表面的角色决定。
+ * 具体强度由调用组件按紧凑控件、浮层面板或结构表面的角色决定；覆盖描边会替换主题描边。
  */
 internal fun Modifier.hyperSurfaceDepth(
     shape: Shape,
-    visuals: HyperSurfaceDepthVisuals
-): Modifier = hyperSurfaceShadow(
-    shape = shape,
-    visuals = visuals
-).then(
-    if (visuals.strokeWidth > 0.dp && visuals.strokeColor.alpha > 0f) {
-        Modifier.border(
+    visuals: HyperSurfaceDepthVisuals,
+    borderOverride: BorderStroke? = null
+): Modifier {
+    val resolvedBorder = borderOverride ?: if (
+        visuals.strokeWidth > 0.dp && visuals.strokeColor.alpha > 0f
+    ) {
+        BorderStroke(
             width = visuals.strokeWidth,
-            color = visuals.strokeColor,
-            shape = shape
+            color = visuals.strokeColor
         )
     } else {
-        Modifier
+        null
     }
-)
+
+    return hyperSurfaceShadow(
+        shape = shape,
+        visuals = visuals
+    ).then(
+        if (resolvedBorder != null) {
+            Modifier.border(
+                border = resolvedBorder,
+                shape = shape
+            )
+        } else {
+            Modifier
+        }
+    )
+}
 
 /** 只应用公共表面阴影，供不需要描边的组件复用相同空间层级参数。 */
 internal fun Modifier.hyperSurfaceShadow(
