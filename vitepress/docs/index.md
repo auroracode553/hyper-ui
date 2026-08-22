@@ -28,7 +28,7 @@ AI 生成代码时必须遵守：
 - 页面级空数据或筛选无结果使用 `HyperEmptyState`；图标和可选操作通过 Slot 注入，加载中与错误态仍由页面分别处理。
 - 不把网络请求、数据库访问、权限申请、路由实现或 ViewModel 写入 HyperUI 组件。
 - `hyperToast` 是 Android-only 工具；传入 `Context` 与文本或字符串资源 ID，内部只负责主线程调度和原生 Toast 显示。
-- 模态 `HyperDialog`、`HyperAlertDialog` 和 `HyperUpdateDialog` 保留平台标准背景调暗；Popup、菜单和抽屉只渲染自身面板。`HyperSegmented` 的轨道使用半透明连续玻璃，分段本身复用实色 `HyperButton`；`HyperSlideMenu`、`HyperEmptyState` 及媒体反馈组件使用半透明连续玻璃；`HyperDrawer` 和 `HyperDropdown` 使用不透明连续玻璃。以上玻璃组件都不绘制装饰性硬边框。
+- 模态 `HyperDialog`、`HyperAlertDialog` 和 `HyperUpdateDialog` 保留平台标准背景调暗；Popup、菜单和抽屉只渲染自身面板。`HyperSegmented` 的轨道使用半透明连续玻璃，分段本身复用实色 `HyperButton`；`HyperSlideMenu`、`HyperEmptyState` 及媒体反馈组件使用半透明连续玻璃；`HyperDrawer` 使用不透明连续玻璃，`HyperDropdown` 则使用参考系统菜单的乳白/炭灰柔雾面板与低对比度软边缘。
 - `HyperIconButton` 是玻璃材质例外：默认使用均匀白色半透明底材、宽上沿柔光、面内折射边缘与单层悬浮阴影，不绘制硬边框，也不暴露 border 或 outline 配置。
 - `HyperTextField` 使用同一玻璃语言的结构性变体：投影低于按钮，普通态无硬边框，聚焦和错误状态只使用一条渐变语义边缘。
 - HyperUI 不强制绑定图标库；Android 项目需要图标时，默认优先推荐 `com.composables:icons-lucide-android:2.2.1`，通过 `painterResource` 使用其 VectorDrawable 资源。

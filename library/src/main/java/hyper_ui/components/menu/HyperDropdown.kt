@@ -1,6 +1,10 @@
-/** 文件职责：提供 HyperDropdown 浮层菜单及其菜单项作用域。 */
+/** 文件职责：提供 HyperDropdown 浮层菜单、菜单项语义及受控关闭行为。 */
 package hyper_ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,30 +19,42 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import hyper_ui.core.interaction.hyperNoRippleClickable
 
 @Immutable
 data class HyperDropdownColors(
     val containerColor: Color,
     val contentColor: Color,
+    val dangerContentColor: Color,
     val disabledContentColor: Color,
+    val pressedContainerColor: Color,
     val dividerColor: Color
 )
+
+enum class HyperDropdownItemTone {
+    Normal,
+    Danger
+}
 
 @Composable
 fun HyperDropdown(
@@ -59,20 +75,7 @@ fun HyperDropdown(
     val intOffset = LocalDensity.current.run {
         IntOffset(offset.x.roundToPx(), offset.y.roundToPx())
     }
-    val resolvedContainerColor = resolveHyperOpaqueColor(
-        color = colors.containerColor,
-        fallbackColor = HyperColors.cardContainer,
-        backgroundColor = HyperColors.pageBackground
-    )
-    val resolvedColors = HyperDropdownColors(
-        containerColor = resolvedContainerColor,
-        contentColor = resolveHyperContainerColor(colors.contentColor, HyperColors.primaryText),
-        disabledContentColor = resolveHyperContainerColor(colors.disabledContentColor, HyperColors.disabledText),
-        dividerColor = resolveHyperContainerColor(
-            colors.dividerColor,
-            if (HyperColors.isLight) Color(0f, 0f, 0f, 0.08f) else Color(1f, 1f, 1f, 0.10f)
-        )
-    )
+    val resolvedColors = resolveHyperDropdownColors(colors)
 
     Popup(
         alignment = alignment,
@@ -84,15 +87,10 @@ fun HyperDropdown(
             modifier = modifier
                 .width(HyperDropdownDefaults.MenuWidth)
                 .heightIn(max = HyperDropdownDefaults.MaxHeight)
-                .hyperGlassSurface(
+                .hyperDropdownSurface(
                     shape = shape,
-                    visuals = hyperGlassSurfaceVisuals(
-                        containerColor = resolvedColors.containerColor,
-                        elevation = HyperDropdownDefaults.Elevation,
-                        topLightAlpha = if (HyperColors.isLight) 0.32f else 0.12f,
-                        bottomShadeAlpha = if (HyperColors.isLight) 0.04f else 0.13f,
-                        shadowAlpha = if (HyperColors.isLight) 0.18f else 0.34f
-                    )
+                    containerColor = resolvedColors.containerColor,
+                    visuals = hyperDropdownSurfaceVisuals()
                 )
                 .verticalScroll(rememberScrollState())
                 .then(contentModifier)
@@ -119,15 +117,31 @@ class HyperDropdownScope internal constructor(
         contentModifier: Modifier = Modifier.padding(HyperDropdownDefaults.ItemPadding),
         enabled: Boolean = true,
         closeOnClick: Boolean = true,
+        tone: HyperDropdownItemTone = HyperDropdownItemTone.Normal,
         content: @Composable RowScope.() -> Unit
     ) {
-        val contentColor = if (enabled) colors.contentColor else colors.disabledContentColor
+        val interactionSource = remember { MutableInteractionSource() }
+        val pressed by interactionSource.collectIsPressedAsState()
+        val contentColor = when {
+            !enabled -> colors.disabledContentColor
+            tone == HyperDropdownItemTone.Danger -> colors.dangerContentColor
+            else -> colors.contentColor
+        }
+        val pressedContainerColor = if (enabled && pressed) {
+            colors.pressedContainerColor
+        } else {
+            Color.Transparent
+        }
 
         Row(
             modifier = modifier
                 .fillMaxWidth()
                 .height(HyperDropdownDefaults.ItemHeight)
-                .hyperNoRippleClickable(
+                .clip(HyperDropdownDefaults.ItemShape)
+                .background(pressedContainerColor)
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
                     enabled = enabled,
                     role = Role.Button,
                     onClick = {
@@ -141,7 +155,9 @@ class HyperDropdownScope internal constructor(
             verticalAlignment = Alignment.CenterVertically
         ) {
             CompositionLocalProvider(LocalContentColor provides contentColor) {
-                content()
+                ProvideTextStyle(HyperDropdownDefaults.ItemTextStyle) {
+                    content()
+                }
             }
         }
     }
@@ -149,44 +165,70 @@ class HyperDropdownScope internal constructor(
     @Composable
     fun Divider(modifier: Modifier = Modifier) {
         HorizontalDivider(
-            modifier = modifier.padding(horizontal = 20.dp, vertical = 6.dp),
+            modifier = modifier.padding(HyperDropdownDefaults.DividerPadding),
             color = colors.dividerColor
         )
     }
 }
 
 object HyperDropdownDefaults {
-    val MenuWidth = 184.dp
-    val MaxHeight = 420.dp
+    val MenuWidth = 220.dp
+    val MaxHeight = 432.dp
     val ItemHeight = 48.dp
     val AnchorOffsetY = 52.dp
-    val Elevation = 8.dp
-    val Shape: Shape = RoundedCornerShape(20.dp)
+    val Elevation = 10.dp
+    val Shape: Shape = RoundedCornerShape(26.dp)
+    val ItemShape: Shape = RoundedCornerShape(16.dp)
     val MenuPadding = PaddingValues(vertical = 8.dp)
-    val ItemPadding = PaddingValues(horizontal = 20.dp)
+    val ItemPadding = PaddingValues(horizontal = 22.dp)
+    val DividerPadding = PaddingValues(horizontal = 22.dp, vertical = 6.dp)
+    val ItemTextStyle = TextStyle(
+        fontSize = 18.sp,
+        lineHeight = 24.sp,
+        fontWeight = FontWeight.Normal
+    )
 
     @Composable
     fun colors(
         containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified,
+        dangerContentColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified,
+        pressedContainerColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
     ): HyperDropdownColors {
-        val resolvedContainerColor = resolveHyperOpaqueColor(
-            color = containerColor,
-            fallbackColor = HyperColors.cardContainer,
-            backgroundColor = HyperColors.pageBackground
-        )
-        val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
-
+        val isLight = HyperColors.isLight
         return HyperDropdownColors(
-            containerColor = resolvedContainerColor,
-            contentColor = resolvedContentColor,
-            disabledContentColor = resolveHyperContainerColor(disabledContentColor, HyperColors.disabledText),
+            containerColor = resolveHyperContainerColor(
+                containerColor,
+                if (isLight) {
+                    Color(1f, 1f, 1f, 0.96f)
+                } else {
+                    Color(0.14f, 0.14f, 0.15f, 0.96f)
+                }
+            ),
+            contentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText),
+            dangerContentColor = resolveHyperContainerColor(dangerContentColor, HyperColors.danger),
+            disabledContentColor = resolveHyperContainerColor(
+                disabledContentColor,
+                HyperColors.disabledText
+            ),
+            pressedContainerColor = resolveHyperContainerColor(
+                pressedContainerColor,
+                if (isLight) {
+                    Color(0f, 0f, 0f, 0.055f)
+                } else {
+                    Color(1f, 1f, 1f, 0.075f)
+                }
+            ),
             dividerColor = resolveHyperContainerColor(
                 dividerColor,
-                if (HyperColors.isLight) Color(0f, 0f, 0f, 0.08f) else Color(1f, 1f, 1f, 0.10f)
-            ),
+                if (isLight) {
+                    Color(0f, 0f, 0f, 0.07f)
+                } else {
+                    Color(1f, 1f, 1f, 0.09f)
+                }
+            )
         )
     }
 }

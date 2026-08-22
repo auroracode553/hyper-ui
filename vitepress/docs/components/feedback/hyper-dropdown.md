@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/menu/HyperDropdown.kt`
 - Preview ID：`dropdown`
 
-`HyperDropdown` 是无蒙层的 Popup 菜单容器。组件负责浮层定位、不透明连续磨砂玻璃面板、滚动、菜单项点击关闭与分割线；文字、图标和业务动作由 slot 提供。
+`HyperDropdown` 是无蒙层的 Popup 菜单容器。组件负责浮层定位、参考系统菜单的柔雾面板、滚动、即时按压反馈、危险项语义与点击关闭；文字、图标和业务动作仍由 slot 提供。
 
 ## 公开 API
 
@@ -14,9 +14,16 @@
 data class HyperDropdownColors(
     val containerColor: Color,
     val contentColor: Color,
+    val dangerContentColor: Color,
     val disabledContentColor: Color,
+    val pressedContainerColor: Color,
     val dividerColor: Color
 )
+
+enum class HyperDropdownItemTone {
+    Normal,
+    Danger
+}
 
 @Composable
 fun HyperDropdown(
@@ -39,6 +46,7 @@ class HyperDropdownScope {
         contentModifier: Modifier = Modifier.padding(HyperDropdownDefaults.ItemPadding),
         enabled: Boolean = true,
         closeOnClick: Boolean = true,
+        tone: HyperDropdownItemTone = HyperDropdownItemTone.Normal,
         content: @Composable RowScope.() -> Unit
     )
 
@@ -51,20 +59,29 @@ class HyperDropdownScope {
 
 ```kotlin
 object HyperDropdownDefaults {
-    val MenuWidth = 184.dp
-    val MaxHeight = 420.dp
+    val MenuWidth = 220.dp
+    val MaxHeight = 432.dp
     val ItemHeight = 48.dp
     val AnchorOffsetY = 52.dp
-    val Elevation = 8.dp
-    val Shape: Shape = RoundedCornerShape(20.dp)
+    val Elevation = 10.dp
+    val Shape: Shape = RoundedCornerShape(26.dp)
+    val ItemShape: Shape = RoundedCornerShape(16.dp)
     val MenuPadding = PaddingValues(vertical = 8.dp)
-    val ItemPadding = PaddingValues(horizontal = 20.dp)
+    val ItemPadding = PaddingValues(horizontal = 22.dp)
+    val DividerPadding = PaddingValues(horizontal = 22.dp, vertical = 6.dp)
+    val ItemTextStyle = TextStyle(
+        fontSize = 18.sp,
+        lineHeight = 24.sp,
+        fontWeight = FontWeight.Normal
+    )
 
     @Composable
     fun colors(
         containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified,
+        dangerContentColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified,
+        pressedContainerColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
     ): HyperDropdownColors
 }
@@ -81,7 +98,7 @@ object HyperDropdownDefaults {
 | `alignment` | `Alignment` | 否 | `Alignment.TopEnd` | Popup 相对应用窗口的对齐方式。 |
 | `offset` | `DpOffset` | 否 | `(0.dp, AnchorOffsetY)` | 在 `alignment` 基础上的密度无关偏移。 |
 | `shape` | `Shape` | 否 | `HyperDropdownDefaults.Shape` | 菜单面板形状。 |
-| `colors` | `HyperDropdownColors` | 否 | `HyperDropdownDefaults.colors()` | 面板、内容、禁用内容和分割线颜色。 |
+| `colors` | `HyperDropdownColors` | 否 | `HyperDropdownDefaults.colors()` | 面板、普通/危险/禁用内容、按压反馈和分割线颜色。 |
 | `content` | `@Composable HyperDropdownScope.() -> Unit` | 是 | 无 | 菜单项与分割线 slot。 |
 
 ## Item 参数
@@ -93,9 +110,10 @@ object HyperDropdownDefaults {
 | `contentModifier` | `Modifier` | 否 | `Modifier.padding(ItemPadding)` | 行内 slot 留白。 |
 | `enabled` | `Boolean` | 否 | `true` | 控制点击和禁用内容色。 |
 | `closeOnClick` | `Boolean` | 否 | `true` | 点击后是否调用 `onDismissRequest`。 |
+| `tone` | `HyperDropdownItemTone` | 否 | `Normal` | `Danger` 自动使用主题危险色，适合删除等不可逆操作。 |
 | `content` | `@Composable RowScope.() -> Unit` | 是 | 无 | 图标、文字等行内容。 |
 
-`Divider(modifier)` 使用当前 `dividerColor`，并固定添加水平 20dp、垂直 6dp 留白。
+`Divider(modifier)` 使用当前 `dividerColor`，并默认添加水平 22dp、垂直 6dp 留白。菜单项通过 `LocalContentColor` 和 `ProvideTextStyle` 提供默认颜色与 18sp 字体；slot 内显式设置的样式仍可覆盖默认值。
 
 ## 最小用法
 
@@ -104,18 +122,24 @@ HyperDropdown(
     expanded = expanded,
     onDismissRequest = { expanded = false }
 ) {
-    Item(onClick = onOpenDetail) { Text("查看详情") }
-    Divider()
-    Item(onClick = onDelete) { Text("删除") }
+    Item(onClick = onChangeBackground) { Text("更换背景") }
+    Item(onClick = onMove) { Text("移动到") }
+    Item(
+        onClick = onDelete,
+        tone = HyperDropdownItemTone.Danger
+    ) {
+        Text("删除")
+    }
 }
 ```
 
 ## 约束
 
-- 不存在 `text`、`leadingIcon`、`textColor` 或 `contentPadding` 参数。
+- 不存在 `text`、`leadingIcon` 或业务动作参数；内容继续由 slot 注入。
 - 菜单不渲染遮罩；`PopupProperties(focusable = true)` 负责外部点击和返回关闭请求。
-- 面板默认宽 184dp、最大高 420dp，超出后在组件内部纵向滚动。
-- 默认面板使用 `HyperColors.cardContainer` 的不透明玻璃基底，并用单层 `8.dp` 阴影与页面拉开空间。
-- 组件不绘制硬边框；自定义 `containerColor` 若带 alpha，会与 `HyperColors.pageBackground` 合成为不透明颜色，分割线仍采用低对比度颜色。
+- 面板默认宽 220dp、最大高 432dp，26dp 圆角；超出后在组件内部纵向滚动。
+- 默认容器在浅色主题使用 96% 乳白色、深色主题使用 96% 炭灰色，并以极弱明暗渐变、1dp 低对比度软边缘和单层 10dp 阴影建立层级。
+- 自定义 `containerColor` 的 alpha 会被保留，可让底层内容轻微透出；组件不执行真实背景模糊。
+- 菜单项固定 48dp 高，按下时立即显示低对比度背景；禁用态不响应点击，也不显示按压反馈。
 
 <WasmPreview demo="dropdown" title="HyperDropdown 交互预览" />

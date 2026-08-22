@@ -47,29 +47,30 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dropdown",
         group = GROUP_FEEDBACK,
         title = "HyperDropdown",
-        description = "浮层菜单使用不透明连续磨砂玻璃和单层空间阴影，可配置点击后是否关闭。",
+        description = "参考系统菜单的柔雾浮层：宽圆角、克制阴影、18sp 文本与内建危险项语义。",
         code = """
             HyperDropdown(
                 expanded = expanded,
-                onDismissRequest = { expanded = false },
-                contentModifier = Modifier.padding(vertical = 10.dp)
+                onDismissRequest = { expanded = false }
             ) {
-                Item(onClick = onOpenDetail) {
-                    Icon(Icons.Default.Info, contentDescription = null)
-                    Text("查看详情")
+                Item(onClick = onChangeBackground) {
+                    Text("更换背景")
                 }
-                Divider()
-                Item(onClick = onDelete) {
-                    Icon(Icons.Default.Delete, contentDescription = null)
+                Item(
+                    onClick = onDelete,
+                    tone = HyperDropdownItemTone.Danger
+                ) {
                     Text("删除")
                 }
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("展开/关闭", "expanded", "主题不透明浮层玻璃"),
-            DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制菜单内部内容"),
-            DemoVariant("菜单项", "Item(closeOnClick)", "图标、文字与点击回调"),
-            DemoVariant("分隔线", "Divider()", "低对比度半透明分隔")
+            DemoVariant("展开/关闭", "expanded", "浅色乳白、深色炭灰柔雾面板"),
+            DemoVariant("菜单项", "Item(closeOnClick)", "48dp 行高与即时按压反馈"),
+            DemoVariant("危险项", "tone = Danger", "自动使用主题危险色"),
+            DemoVariant("禁用态", "enabled = false", "降低文字对比度并取消反馈"),
+            DemoVariant("自定义色", "HyperDropdownDefaults.colors", "保留调用方容器色 alpha"),
+            DemoVariant("可选分隔线", "Divider()", "默认示例保持参考图的无分隔布局")
         ),
         apiDocumentPaths = listOf("feedback/hyper-dropdown.md"),
         content = { DropdownMenuDemo() }

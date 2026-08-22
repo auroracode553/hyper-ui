@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -41,6 +39,8 @@ import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperDialog
 import hyper_ui.HyperDropdown
+import hyper_ui.HyperDropdownDefaults
+import hyper_ui.HyperDropdownItemTone
 import hyper_ui.HyperEmptyState
 import hyper_ui.HyperPopup
 import hyper_ui.HyperLinearProgressIndicator
@@ -115,27 +115,52 @@ fun EmptyStateDemo() {
 fun DropdownMenuDemo() {
     var expanded by remember { mutableStateOf(false) }
     var selectedAction by remember { mutableStateOf("尚未选择") }
+    var desktopEnabled by remember { mutableStateOf(true) }
+    var useCoolTint by remember { mutableStateOf(false) }
+    var showDivider by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
             .widthIn(max = 420.dp)
-            .height(180.dp),
+            .height(400.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "菜单面板：不透明磨砂玻璃",
+                text = "柔雾浮层 · 纯文字大间距",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 13.sp
             )
-            HyperButton(
-                onClick = { expanded = true },
-                tone = HyperButtonTone.Outline
-            ) {
-                Text(text = "打开菜单")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                HyperButton(
+                    onClick = { expanded = true },
+                    tone = HyperButtonTone.Outline
+                ) {
+                    Text(text = "打开菜单")
+                }
+                HyperButton(
+                    onClick = { useCoolTint = !useCoolTint },
+                    tone = HyperButtonTone.Tonal
+                ) {
+                    Text(text = if (useCoolTint) "恢复默认色" else "冷色面板")
+                }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                HyperButton(
+                    onClick = { desktopEnabled = !desktopEnabled },
+                    tone = HyperButtonTone.Outline
+                ) {
+                    Text(text = if (desktopEnabled) "禁用桌面项" else "启用桌面项")
+                }
+                HyperButton(
+                    onClick = { showDivider = !showDivider },
+                    tone = HyperButtonTone.Tonal
+                ) {
+                    Text(text = if (showDivider) "隐藏分隔线" else "显示分隔线")
+                }
             }
             Text(
                 text = selectedAction,
@@ -147,27 +172,47 @@ fun DropdownMenuDemo() {
         HyperDropdown(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            contentModifier = Modifier.padding(vertical = 10.dp),
-            alignment = Alignment.TopCenter
+            alignment = Alignment.TopCenter,
+            colors = if (useCoolTint) {
+                HyperDropdownDefaults.colors(
+                    containerColor = Color(0.92f, 0.96f, 1f, 0.96f),
+                    contentColor = Color(0.08f, 0.11f, 0.16f, 1f),
+                    disabledContentColor = Color(0.08f, 0.11f, 0.16f, 0.38f),
+                    pressedContainerColor = Color(0f, 0.12f, 0.24f, 0.07f)
+                )
+            } else {
+                HyperDropdownDefaults.colors()
+            }
         ) {
-            Item(onClick = { selectedAction = "标记完成" }) {
-                MenuIcon(Icons.Default.Check)
-                Text(text = "标记完成")
+            Item(onClick = { selectedAction = "已选择：更换背景" }) {
+                Text(text = "更换背景")
+            }
+            Item(onClick = { selectedAction = "已选择：设为私密" }) {
+                Text(text = "设为私密")
+            }
+            Item(onClick = { selectedAction = "已选择：移动到" }) {
+                Text(text = "移动到")
             }
             Item(
-                onClick = { selectedAction = "查看详情" },
-                contentModifier = Modifier.padding(horizontal = 24.dp)
+                onClick = { selectedAction = "已选择：设置提醒（菜单保持展开）" },
+                closeOnClick = false
             ) {
-                MenuIcon(Icons.Default.Info)
-                Text(text = "查看详情")
+                Text(text = "设置提醒")
             }
-            Divider()
-            Item(onClick = { selectedAction = "删除" }) {
-                MenuIcon(Icons.Default.Delete)
-                Text(
-                    text = "删除",
-                    color = MaterialTheme.colorScheme.error
-                )
+            if (showDivider) {
+                Divider()
+            }
+            Item(
+                onClick = { selectedAction = "已选择：发送到桌面" },
+                enabled = desktopEnabled
+            ) {
+                Text(text = "发送到桌面")
+            }
+            Item(
+                onClick = { selectedAction = "已选择：删除" },
+                tone = HyperDropdownItemTone.Danger
+            ) {
+                Text(text = "删除")
             }
         }
     }
@@ -789,15 +834,5 @@ private fun DialogBody(text: String) {
         lineHeight = 22.sp,
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth()
-    )
-}
-
-@Composable
-private fun MenuIcon(imageVector: androidx.compose.ui.graphics.vector.ImageVector) {
-    Icon(
-        imageVector = imageVector,
-        contentDescription = null,
-        tint = LocalContentColor.current,
-        modifier = Modifier.size(22.dp)
     )
 }
