@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/menu/HyperDropdown.kt`
 - Preview ID：`dropdown`
 
-`HyperDropdown` 是无蒙层的 Popup 菜单容器。组件负责浮层定位、参考系统菜单的柔雾面板、滚动、即时按压反馈、危险项语义与点击关闭；描边和阴影复用内部公共 `HyperSurfaceDepth` 浮层强度，文字、图标和业务动作仍由 slot 提供。
+`HyperDropdown` 是无蒙层的 Popup 菜单容器。面板宽度按最宽菜单项内容自动收缩，并以 220dp 为上限，避免短菜单右侧出现大块空白。组件同时负责浮层定位、参考系统菜单的柔雾面板、滚动、即时按压反馈、危险项语义与点击关闭；描边和阴影复用内部公共 `HyperSurfaceDepth` 浮层强度，文字、图标和业务动作仍由 slot 提供。
 
 ## 公开 API
 
@@ -59,7 +59,7 @@ class HyperDropdownScope {
 
 ```kotlin
 object HyperDropdownDefaults {
-    val MenuWidth = 220.dp
+    val MaxWidth = 220.dp
     val MaxHeight = 432.dp
     val ItemHeight = 48.dp
     val AnchorOffsetY = 52.dp
@@ -93,7 +93,7 @@ object HyperDropdownDefaults {
 | --- | --- | --- | --- | --- |
 | `expanded` | `Boolean` | 是 | 无 | 是否渲染 Popup。 |
 | `onDismissRequest` | `() -> Unit` | 是 | 无 | 外部点击、返回或菜单项关闭时请求调用方更新状态。 |
-| `modifier` | `Modifier` | 否 | `Modifier` | 菜单面板外壳；默认尺寸会在其后应用，可用 `width`、`heightIn` 覆盖。 |
+| `modifier` | `Modifier` | 否 | `Modifier` | 菜单面板外壳；默认内容自适应宽度和最大宽度会在其后应用，可用 `width`、`heightIn` 覆盖。 |
 | `contentModifier` | `Modifier` | 否 | `Modifier.padding(MenuPadding)` | 面板内部滚动内容的修饰符。 |
 | `alignment` | `Alignment` | 否 | `Alignment.TopEnd` | Popup 相对应用窗口的对齐方式。 |
 | `offset` | `DpOffset` | 否 | `(0.dp, AnchorOffsetY)` | 在 `alignment` 基础上的密度无关偏移。 |
@@ -137,7 +137,7 @@ HyperDropdown(
 
 - 不存在 `text`、`leadingIcon` 或业务动作参数；内容继续由 slot 注入。
 - 菜单不渲染遮罩；`PopupProperties(focusable = true)` 负责外部点击和返回关闭请求。
-- 面板默认宽 220dp、最大高 432dp，26dp 圆角；超出后在组件内部纵向滚动。
+- 面板默认按最宽菜单项的固有宽度收缩，最大宽 220dp、最大高 432dp，26dp 圆角；纵向超出后在组件内部滚动。
 - 默认容器在浅色主题使用 96% 乳白色、深色主题使用 96% 炭灰色；公共深度层以 1dp 低对比度描边和单层 10dp 阴影建立浮层层级。
 - 自定义 `containerColor` 的 alpha 会被保留，可让底层内容轻微透出；组件不执行真实背景模糊。
 - 菜单项固定 48dp 高，按下时立即显示低对比度背景；禁用态不响应点击，也不显示按压反馈。

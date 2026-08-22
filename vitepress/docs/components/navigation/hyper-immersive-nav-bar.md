@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/navigation/HyperImmersiveNavBar.kt`
 - Preview ID：`immersive-nav-bar`
 
-`HyperImmersiveNavBar` 是复用 `HyperNavBar` 的沉浸式页面布局：导航栏固定在最上层并保持透明，同时保留 `HyperNavBar` 的轻量主题描边和单层阴影；首屏内容自动从“状态栏安全区 + 导航栏”下方开始，向上滚动后内容可以进入导航栏与状态栏后方。
+`HyperImmersiveNavBar` 是复用 `HyperNavBar` 的沉浸式页面布局：导航栏固定在最上层并保持透明，且不绘制描边和阴影；首屏内容自动从“状态栏安全区 + 导航栏”下方开始，向上滚动后内容可以进入导航栏与状态栏后方。
 
 它没有给 `HyperNavBar` 增加一个表面化的 `immersive` 布尔值，因为单独的导航栏无法控制兄弟节点的滚动起点和绘制层级。该组件负责精确测量并把顶部净空交给滚动容器，原 `HyperNavBar` 继续只负责三段式导航视觉和交互。
 

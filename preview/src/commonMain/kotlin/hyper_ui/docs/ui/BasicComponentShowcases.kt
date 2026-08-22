@@ -230,7 +230,7 @@ fun IconButtonDemo() {
             fontSize = 13.sp
         )
         Text(
-            text = "按住任一按钮可观察描边与阴影立即收低；禁用态不产生投影。",
+            text = "按钮始终无描边；浅色模式增强默认阴影，按住后阴影立即收低。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center

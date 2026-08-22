@@ -67,7 +67,7 @@ fun HyperIconButton(
                 scaleX = pressedScale
                 scaleY = pressedScale
             }
-            .hyperSurfaceDepth(
+            .hyperSurfaceShadow(
                 shape = shape,
                 visuals = glassVisuals.depth
             )
@@ -192,7 +192,7 @@ object HyperIconButtonDefaults {
                 bottomShadeColor = rgba(0, 0, 0, if (isLight) 0.018f else 0.07f),
                 depth = hyperSurfaceDepthVisuals(
                     role = HyperSurfaceDepthRole.CompactControl,
-                    elevation = 6.dp
+                    elevation = if (isLight) 8.dp else 6.dp
                 )
             )
         }

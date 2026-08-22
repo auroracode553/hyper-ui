@@ -130,7 +130,7 @@ fun DropdownMenuDemo() {
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "柔雾浮层 · 纯文字大间距",
+                text = "内容自适应宽度 · 纯文字菜单",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 13.sp
             )

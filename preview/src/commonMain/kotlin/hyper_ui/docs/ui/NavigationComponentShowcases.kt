@@ -74,10 +74,12 @@ fun NavBarDemo() {
         modifier = Modifier.widthIn(max = 640.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        HyperPanel(
-            colors = HyperPanelDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+        Column(
+            modifier = Modifier
+                .clip(RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             HyperNavBar(
                 navigationContent = if (showBack) {
@@ -110,7 +112,7 @@ fun NavBarDemo() {
                 }
             )
             Text(
-                text = "透明底色保留页面连续性；共享的低对比度描边与 3dp 阴影负责区分导航层。",
+                text = "透明底色保留页面连续性；导航栏自身不绘制描边和阴影。",
                 modifier = Modifier.padding(horizontal = 16.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 13.sp,

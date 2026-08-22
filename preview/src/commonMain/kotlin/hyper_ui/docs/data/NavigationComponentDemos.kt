@@ -14,7 +14,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "nav-bar",
         group = GROUP_NAVIGATION,
         title = "HyperNavBar",
-        description = "默认透明的顶部栏容器，以共享的低对比度描边和轻量阴影区分导航层；三个区域由 slot 渲染。",
+        description = "默认透明且无描边、无阴影的顶部栏容器；三个区域由 slot 渲染。",
         code = """
             HyperNavBar(
                 navigationContent = {
@@ -34,8 +34,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("三段布局", "navigation/title/action", "左右操作与居中标题"),
-            DemoVariant("默认背景", "Color.Transparent", "继承页面底色并保留结构描边"),
-            DemoVariant("导航层级", "shared surface depth", "1dp 主题描边与 3dp 单层阴影"),
+            DemoVariant("默认背景", "Color.Transparent", "直接继承页面底色"),
+            DemoVariant("纯平表面", "no border / shadow", "不绘制描边和阴影"),
             DemoVariant("Slot 内容", "content slots", "图标按钮和标题文字")
         ),
         apiDocumentPaths = listOf("navigation/hyper-nav-bar.md"),

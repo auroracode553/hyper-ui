@@ -28,8 +28,8 @@ AI 生成代码时必须遵守：
 - 页面级空数据或筛选无结果使用 `HyperEmptyState`；图标和可选操作通过 Slot 注入，加载中与错误态仍由页面分别处理。
 - 不把网络请求、数据库访问、权限申请、路由实现或 ViewModel 写入 HyperUI 组件。
 - `hyperToast` 是 Android-only 工具；传入 `Context` 与文本或字符串资源 ID，内部只负责主线程调度和原生 Toast 显示。
-- 模态 `HyperDialog`、`HyperAlertDialog` 和 `HyperUpdateDialog` 保留平台标准背景调暗；Popup、菜单和抽屉只渲染自身面板。玻璃组件的主题描边与单层阴影统一由内部公共深度层绘制，再由紧凑控件、浮层和结构面板分别选择强度。
-- `HyperIconButton` 使用紧凑级深度，`HyperDropdown` 使用浮层级深度，`HyperDrawer` 与透明 `HyperNavBar` 使用更克制的结构级深度；这些视觉参数不作为公开 border 或 outline API 暴露。
+- 模态 `HyperDialog`、`HyperAlertDialog` 和 `HyperUpdateDialog` 保留平台标准背景调暗；Popup、菜单和抽屉只渲染自身面板。需要描边与阴影的玻璃组件统一复用内部公共深度层，也可只复用其中的公共阴影能力。
+- `HyperIconButton` 只使用紧凑级阴影，`HyperDropdown` 使用内容自适应的浮层级深度，`HyperDrawer` 使用结构级深度；透明 `HyperNavBar` 不绘制描边和阴影。这些视觉参数不作为公开 border 或 outline API 暴露。
 - `HyperTextField` 使用同一玻璃语言的结构性变体：投影低于按钮，普通态无硬边框，聚焦和错误状态只使用一条渐变语义边缘。
 - HyperUI 不强制绑定图标库；Android 项目需要图标时，默认优先推荐 `com.composables:icons-lucide-android:2.2.1`，通过 `painterResource` 使用其 VectorDrawable 资源。
 - 除非调用方已有明确依赖，否则不要为少量图标引入 `material-icons-extended`；Release 构建应开启代码与资源裁剪。

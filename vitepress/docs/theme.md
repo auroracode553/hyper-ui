@@ -20,7 +20,7 @@ fun rgba(
 val brandColor = rgba(255, 103, 0)
 ```
 
-组件根据角色选择实色或玻璃表面。内部 `HyperSurfaceDepth` 统一绘制低对比度主题描边与至多一层阴影，组件只选择紧凑、浮层或结构级强度。`HyperIconButton`、`HyperDropdown`、`HyperDrawer` 和 `HyperNavBar` 直接复用该深度层；通用 `HyperGlassSurface` 与 `HyperTextField` 也把阴影绘制委托给它，输入框的焦点/错误语义边缘仍由专用逻辑覆盖。`HyperTabBar` 继续只使用专用 0.5dp 顶部发丝线。
+组件根据角色选择实色或玻璃表面。内部 `HyperSurfaceDepth` 统一绘制低对比度主题描边与至多一层阴影，并提供只应用阴影的公共内部能力。`HyperDropdown` 与 `HyperDrawer` 直接复用完整深度层，`HyperIconButton` 只复用阴影，`HyperNavBar` 不绘制描边和阴影；通用 `HyperGlassSurface` 与 `HyperTextField` 也把阴影绘制委托给公共能力，输入框的焦点/错误语义边缘仍由专用逻辑覆盖。`HyperTabBar` 继续只使用专用 0.5dp 顶部发丝线。
 
 组件源码禁止使用 `Color(0xFFRRGGBB)` 十六进制硬编码。需要直接构造颜色时，使用四个 Float RGBA 分量；调用方也可优先使用 `rgba(...)`。
 

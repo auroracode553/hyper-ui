@@ -23,8 +23,7 @@ internal data class HyperSurfaceDepthVisuals(
 internal enum class HyperSurfaceDepthRole {
     CompactControl,
     FloatingPanel,
-    StructuralPanel,
-    NavigationBar
+    StructuralPanel
 }
 
 internal enum class HyperSurfaceDepthState {
@@ -40,6 +39,25 @@ internal enum class HyperSurfaceDepthState {
 internal fun Modifier.hyperSurfaceDepth(
     shape: Shape,
     visuals: HyperSurfaceDepthVisuals
+): Modifier = hyperSurfaceShadow(
+    shape = shape,
+    visuals = visuals
+).then(
+    if (visuals.strokeWidth > 0.dp && visuals.strokeColor.alpha > 0f) {
+        Modifier.border(
+            width = visuals.strokeWidth,
+            color = visuals.strokeColor,
+            shape = shape
+        )
+    } else {
+        Modifier
+    }
+)
+
+/** 只应用公共表面阴影，供不需要描边的组件复用相同空间层级参数。 */
+internal fun Modifier.hyperSurfaceShadow(
+    shape: Shape,
+    visuals: HyperSurfaceDepthVisuals
 ): Modifier = then(
     if (visuals.elevation > 0.dp) {
         Modifier.shadow(
@@ -48,16 +66,6 @@ internal fun Modifier.hyperSurfaceDepth(
             clip = false,
             ambientColor = visuals.ambientShadowColor,
             spotColor = visuals.spotShadowColor
-        )
-    } else {
-        Modifier
-    }
-).then(
-    if (visuals.strokeWidth > 0.dp && visuals.strokeColor.alpha > 0f) {
-        Modifier.border(
-            width = visuals.strokeWidth,
-            color = visuals.strokeColor,
-            shape = shape
         )
     } else {
         Modifier
@@ -91,24 +99,21 @@ internal fun hyperSurfaceDepthVisuals(
         state == HyperSurfaceDepthState.Pressed -> if (isLight) 0.055f else 0.11f
         role == HyperSurfaceDepthRole.CompactControl -> if (isLight) 0.075f else 0.14f
         role == HyperSurfaceDepthRole.FloatingPanel -> if (isLight) 0.065f else 0.14f
-        role == HyperSurfaceDepthRole.StructuralPanel -> if (isLight) 0.055f else 0.11f
-        else -> if (isLight) 0.055f else 0.10f
+        else -> if (isLight) 0.055f else 0.11f
     }
     val ambientShadowAlpha = when {
         state == HyperSurfaceDepthState.Disabled -> 0f
         state == HyperSurfaceDepthState.Pressed -> if (isLight) 0.025f else 0.06f
-        role == HyperSurfaceDepthRole.CompactControl -> if (isLight) 0.055f else 0.10f
+        role == HyperSurfaceDepthRole.CompactControl -> 0.10f
         role == HyperSurfaceDepthRole.FloatingPanel -> if (isLight) 0.075f else 0.14f
-        role == HyperSurfaceDepthRole.StructuralPanel -> if (isLight) 0.115f else 0.23f
-        else -> if (isLight) 0.035f else 0.08f
+        else -> if (isLight) 0.115f else 0.23f
     }
     val spotShadowAlpha = when {
         state == HyperSurfaceDepthState.Disabled -> 0f
         state == HyperSurfaceDepthState.Pressed -> if (isLight) 0.055f else 0.12f
-        role == HyperSurfaceDepthRole.CompactControl -> if (isLight) 0.13f else 0.20f
+        role == HyperSurfaceDepthRole.CompactControl -> if (isLight) 0.24f else 0.20f
         role == HyperSurfaceDepthRole.FloatingPanel -> if (isLight) 0.15f else 0.24f
-        role == HyperSurfaceDepthRole.StructuralPanel -> if (isLight) 0.16f else 0.32f
-        else -> if (isLight) 0.08f else 0.14f
+        else -> if (isLight) 0.16f else 0.32f
     }
 
     return hyperSurfaceDepthVisuals(

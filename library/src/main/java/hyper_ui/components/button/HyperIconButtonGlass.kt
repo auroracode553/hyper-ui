@@ -18,7 +18,7 @@ internal data class HyperIconButtonGlassVisuals(
 
 /**
  * 用宽而弱的迎光面、底部阴影和渐隐折射带建立磨砂玻璃厚度。
- * 外层描边与阴影由组件组合公共 HyperSurfaceDepth，当前方法只负责按钮自身材质。
+ * 外层阴影由组件组合公共 `hyperSurfaceShadow`，当前方法只负责按钮自身材质。
  */
 internal fun Modifier.hyperIconButtonGlass(
     containerColor: Color,
