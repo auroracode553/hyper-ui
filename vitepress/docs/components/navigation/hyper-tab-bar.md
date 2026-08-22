@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/navigation/HyperTabBar.kt`
 - Preview ID：`tab-bar`
 
-`HyperTabBar` 是默认总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。深色模式下容器和默认描边直接采用当前 `MaterialTheme.colorScheme.background`，与页面保持同色；浅色模式保留轻量透明度。两种模式均不叠加玻璃高光或渐变。
+`HyperTabBar` 是默认总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。贴底容器默认只绘制 0.5dp 的低对比度顶部发丝线，不使用阴影或整框描边；深色模式下容器与发丝线采用当前 `MaterialTheme.colorScheme.background`，浅色模式保留轻量透明度。两种模式均不叠加玻璃高光或渐变。
 
 ## 公开 API
 
@@ -32,7 +32,7 @@ fun HyperTabBar(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     shape: Shape = HyperTabBarDefaults.Shape,
-    border: BorderStroke? = HyperTabBarDefaults.border(),
+    topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 )
@@ -48,7 +48,7 @@ fun <T> HyperTabBar(
     itemSlotAlignment: Alignment = Alignment.Center,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     shape: Shape = HyperTabBarDefaults.Shape,
-    border: BorderStroke? = HyperTabBarDefaults.border(),
+    topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
@@ -61,6 +61,7 @@ fun <T> HyperTabBar(
 object HyperTabBarDefaults {
     val Height = 55.dp
     val BottomPadding = 5.dp
+    val TopDividerThickness = 0.5.dp
     val ItemWidth = 60.dp
     val Shape: Shape = RoundedCornerShape(0.dp)
     val ItemTextStyle: TextStyle
@@ -75,7 +76,7 @@ object HyperTabBarDefaults {
     ): HyperTabBarColors
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke
+    fun topDivider(color: Color = Color.Unspecified): BorderStroke
 }
 ```
 
@@ -88,7 +89,7 @@ object HyperTabBarDefaults {
 | `horizontalArrangement` | `Arrangement.Horizontal` | 否 | `SpaceBetween` | Row 内容的横向排列。 |
 | `verticalAlignment` | `Alignment.Vertical` | 否 | `CenterVertically` | Row 内容的垂直对齐。 |
 | `shape` | `Shape` | 否 | `HyperTabBarDefaults.Shape` | 标签栏形状。 |
-| `border` | `BorderStroke?` | 否 | `HyperTabBarDefaults.border()` | 描边；传 `null` 移除。 |
+| `topDivider` | `BorderStroke?` | 否 | `HyperTabBarDefaults.topDivider()` | 顶部分隔线；只绘制顶边，传 `null` 移除。 |
 | `colors` | `HyperTabBarColors` | 否 | `HyperTabBarDefaults.colors()` | 容器与三种内容状态色。 |
 | `content` | `@Composable RowScope.() -> Unit` | 是 | 无 | 完整自定义内容。 |
 
@@ -107,7 +108,7 @@ Slot 入口固定提供水平 16dp 内边距、5dp 底部留白和 `ItemTextStyl
 | `itemEnabled` | `(T) -> Boolean` | 否 | `{ true }` | 单项可用状态，最终与全局 `enabled` 合并。 |
 | `itemContent` | `@Composable HyperTabBarItemScope.(T) -> Unit` | 是 | 无 | 标签内容，作用域提供 `selected`、`enabled`。 |
 
-其余 `modifier`、`enabled`、`shape`、`border`、`colors` 与 Slot 入口相同。
+其余 `modifier`、`enabled`、`shape`、`topDivider`、`colors` 与 Slot 入口相同。
 
 ## 最小用法
 
@@ -130,8 +131,8 @@ HyperTabBar(
 - 组件不依赖导航框架，也不会在 `onItemClick` 后自动切换页面。
 - `Equal` 项目等分宽度；`Packed` 项目至少 60dp 宽，内容可继续撑宽。
 - 默认容器在浅色模式使用白色 `0.92f` alpha；深色模式直接使用当前 `MaterialTheme.colorScheme.background`，不再使用会发灰的白色透明层。
-- 深色默认描边同样使用页面背景色，因此不会出现灰色边界；显式传入 `border` 或 `containerColor` 时仍按调用方颜色绘制，并保留其 alpha。
-- 容器只绘制普通颜色背景和可选描边，不叠加玻璃高光或渐变。
+- `topDivider` 只绘制顶边，不包围容器四周；浅色模式默认使用 0.5dp、黑色 `0.055f` alpha 的低对比度发丝线，深色模式使用页面背景色隐藏灰边。传 `null` 可移除，显式传入时按调用方的宽度与画刷绘制。
+- 容器只绘制普通颜色背景和可选顶部发丝线，不叠加阴影、玻璃高光或渐变。
 - `HyperTabBarDefaults.Height` 表示 55dp 标签操作区；默认底栏总高度为 60dp，包含 5dp 的 `BottomPadding`。
 - 通常不应使用 `modifier.height(...)` 强制压缩底栏总高度，否则可能挤占内部操作区或底部留白。
 

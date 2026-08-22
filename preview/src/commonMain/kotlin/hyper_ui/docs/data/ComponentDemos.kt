@@ -20,7 +20,7 @@ data class ComponentDemo(
     val content: @Composable () -> Unit
 )
 
-/** 聚合稳定 Preview ID；标准 Dialog 的模态行为由对应 Showcase 演示。 */
+/** 聚合稳定 Preview ID；组件视觉配置与交互状态由对应分组及 Showcase 同步维护。 */
 fun componentDemos(): List<ComponentDemo> = listOf(
     basicComponentDemos(),
     formComponentDemos(),

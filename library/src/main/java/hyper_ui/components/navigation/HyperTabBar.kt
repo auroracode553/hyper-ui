@@ -2,6 +2,7 @@
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -59,7 +60,7 @@ fun HyperTabBar(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     shape: Shape = HyperTabBarDefaults.Shape,
-    border: BorderStroke? = HyperTabBarDefaults.border(),
+    topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
@@ -73,7 +74,7 @@ fun HyperTabBar(
     HyperTabBarSurface(
         modifier = modifier,
         shape = shape,
-        border = border,
+        topDivider = topDivider,
         colors = resolvedColors
     ) {
         Row(
@@ -112,7 +113,7 @@ fun <T> HyperTabBar(
     itemSlotAlignment: Alignment = Alignment.Center,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     shape: Shape = HyperTabBarDefaults.Shape,
-    border: BorderStroke? = HyperTabBarDefaults.border(),
+    topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
@@ -127,7 +128,7 @@ fun <T> HyperTabBar(
             horizontalArrangement
         },
         shape = shape,
-        border = border,
+        topDivider = topDivider,
         colors = resolvedColors
     ) {
         items.forEach { item ->
@@ -176,7 +177,7 @@ fun <T> HyperTabBar(
 private fun HyperTabBarSurface(
     modifier: Modifier,
     shape: Shape,
-    border: BorderStroke?,
+    topDivider: BorderStroke?,
     colors: HyperTabBarColors,
     content: @Composable BoxScope.() -> Unit
 ) {
@@ -185,12 +186,21 @@ private fun HyperTabBarSurface(
             .fillMaxWidth()
             .hyperSurface(
                 containerColor = colors.containerColor,
-                shape = shape,
-                border = border
+                shape = shape
             )
             .padding(bottom = HyperTabBarDefaults.BottomPadding)
     ) {
         content()
+        if (topDivider != null) {
+            // 贴底栏只需要与上方内容分层；整框描边会形成不必要的卡片感。
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .height(topDivider.width)
+                    .background(brush = topDivider.brush)
+            )
+        }
     }
 }
 
@@ -223,6 +233,9 @@ object HyperTabBarDefaults {
 
     /** 轻量底部留白，用于让标签内容与系统手势条保持少量距离。 */
     val BottomPadding = 5.dp
+
+    /** 顶部分隔线使用半 dp 发丝线，避免在高密度屏幕上形成厚重边框。 */
+    val TopDividerThickness = 0.5.dp
     val ItemWidth = 60.dp
     val Shape: Shape = RoundedCornerShape(0.dp)
 
@@ -259,7 +272,17 @@ object HyperTabBarDefaults {
     }
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPageMatchedPanelBorder(color)
+    fun topDivider(color: Color = Color.Unspecified): BorderStroke = BorderStroke(
+        width = TopDividerThickness,
+        color = resolveHyperContainerColor(
+            color,
+            if (HyperColors.isLight) {
+                rgba(0, 0, 0, 0.055f)
+            } else {
+                MaterialTheme.colorScheme.background
+            }
+        )
+    )
 }
 
 /** 浅色保留轻量透明度；深色与页面背景完全一致。 */

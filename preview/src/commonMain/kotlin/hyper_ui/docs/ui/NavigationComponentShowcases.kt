@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperTabBar
+import hyper_ui.HyperTabBarDefaults
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperDrawer
@@ -386,6 +387,7 @@ fun SlideMenuDemo() {
 @Composable
 fun TabBarDemo() {
     var selectedItemId by remember { mutableStateOf("home") }
+    var showTopDivider by remember { mutableStateOf(true) }
     val bottomItems = listOf(
         DemoNavItem("home", "首页", Icons.Default.Home),
         DemoNavItem("recent", "最近", Icons.Default.Info),
@@ -420,16 +422,23 @@ fun TabBarDemo() {
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "切换预览主题可查看背景策略：深色底栏与页面同色且无灰色边界，浅色保留轻量透明度；均无玻璃高光。底栏总高度为 60dp，按钮布局、选中态和点击逻辑仍由调用方组合。",
+                        text = "贴底栏默认使用 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式下分隔线与页面同色。底栏总高度为 60dp，按钮布局、选中态和点击逻辑仍由调用方组合。",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     )
+                    HyperButton(
+                        onClick = { showTopDivider = !showTopDivider },
+                        tone = HyperButtonTone.Tonal
+                    ) {
+                        Text(text = if (showTopDivider) "隐藏顶部发丝线" else "显示顶部发丝线")
+                    }
                 }
                 HyperTabBar(
                     items = bottomItems,
                     itemSelected = { item -> item.id == selectedItemId },
-                    onItemClick = { item -> selectedItemId = item.id }
+                    onItemClick = { item -> selectedItemId = item.id },
+                    topDivider = if (showTopDivider) HyperTabBarDefaults.topDivider() else null
                 ) { item ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,

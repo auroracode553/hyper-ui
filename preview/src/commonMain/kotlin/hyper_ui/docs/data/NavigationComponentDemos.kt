@@ -137,7 +137,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tab-bar",
         group = GROUP_NAVIGATION,
         title = "HyperTabBar",
-        description = "深色模式默认与页面背景同色且无灰色边界，浅色模式保留轻量透明度；无玻璃高光，包含 55dp 操作区和 5dp 轻量底部留白，总高度 60dp。",
+        description = "贴底栏默认使用 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式与页面同色，浅色模式保留轻量透明度。包含 55dp 操作区和 5dp 轻量底部留白，总高度 60dp。",
         code = """
             HyperTabBar {
                 bottomItems.forEach { item ->
@@ -152,11 +152,12 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("顶部发丝线", "topDivider = HyperTabBarDefaults.topDivider()", "0.5dp 低对比分隔，可交互关闭"),
             DemoVariant("底部留白", "BottomPadding = 5.dp", "与系统手势小白条保持少量距离"),
             DemoVariant("操作区高度", "Height = 55.dp", "搭配留白后总高度为 60dp"),
             DemoVariant("完整 Slot", "content: RowScope", "调用方控制按钮布局"),
             DemoVariant("泛型项目", "items + itemSelected", "统一点击、选中与禁用状态"),
-            DemoVariant("明暗背景", "colors.containerColor", "深色继承页面背景，浅色保留轻量透明度")
+            DemoVariant("明暗背景", "colors.containerColor", "深色继承页面背景并隐藏分隔线，浅色保留轻量透明度")
         ),
         apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
         content = { TabBarDemo() }

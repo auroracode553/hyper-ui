@@ -81,19 +81,6 @@ internal fun hyperPanelBorder(
     BorderStroke(width = 1.dp, color = color)
 }
 
-/** 深色默认描边与页面背景同色，避免组件边缘出现灰色悬浮层。 */
-@Composable
-@PublishedApi
-internal fun hyperPageMatchedPanelBorder(
-    color: Color = Color.Unspecified
-): BorderStroke = BorderStroke(
-    width = 1.dp,
-    color = resolveHyperContainerColor(
-        color,
-        if (HyperColors.isLight) HyperColors.divider else MaterialTheme.colorScheme.background
-    )
-)
-
 @Composable
 @PublishedApi
 internal fun hyperSolidPanelBorder(
