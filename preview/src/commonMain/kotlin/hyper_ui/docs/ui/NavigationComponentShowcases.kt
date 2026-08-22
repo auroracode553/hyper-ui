@@ -48,7 +48,6 @@ import hyper_ui.HyperTabBarDefaults
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperDrawer
-import hyper_ui.HyperDrawerDefaults
 import hyper_ui.HyperDrawerHeader
 import hyper_ui.HyperDrawerItem
 import hyper_ui.HyperDrawerPosition
@@ -214,7 +213,6 @@ fun ImmersiveNavBarDemo() {
 @Composable
 fun DrawerDemo() {
     var open by remember { mutableStateOf(false) }
-    var showPanelBorder by remember { mutableStateOf(true) }
     var selectedPageId by remember { mutableStateOf("home") }
     var drawerPosition by remember { mutableStateOf(HyperDrawerPosition.Left) }
     var drawerContentScrollEnabled by remember { mutableStateOf(true) }
@@ -247,7 +245,6 @@ fun DrawerDemo() {
             defaultSetPadding = defaultSetPadding,
             dismissOnClickOutside = true,
             drawerContentScrollEnabled = drawerContentScrollEnabled,
-            border = if (showPanelBorder) HyperDrawerDefaults.border() else null,
             drawerContent = {
                 HyperDrawerHeader(
                     leadingContent = {
@@ -315,7 +312,7 @@ fun DrawerDemo() {
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "抽屉面板和状态色均使用不透明实色；深色模式以低对比度柔光轮廓标明外露边缘，不使用阴影。不执行动画，外部区域不绘制遮罩。",
+                    text = "抽屉使用低抬升不透明玻璃面，选中项只增加轻量主题染色；不绘制硬边框。不执行动画，外部区域不绘制遮罩。",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 13.sp,
                     lineHeight = 18.sp
@@ -324,32 +321,19 @@ fun DrawerDemo() {
                     selected = drawerPosition,
                     onSelect = { drawerPosition = it }
                 )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                HyperButton(
+                    onClick = {
+                        drawerContentScrollEnabled = !drawerContentScrollEnabled
+                    },
+                    tone = HyperButtonTone.Tonal
                 ) {
-                    HyperButton(
-                        onClick = { showPanelBorder = !showPanelBorder },
-                        modifier = Modifier.weight(1f),
-                        tone = HyperButtonTone.Tonal
-                    ) {
-                        Text(text = if (showPanelBorder) "轮廓：开" else "轮廓：关")
-                    }
-                    HyperButton(
-                        onClick = {
-                            drawerContentScrollEnabled = !drawerContentScrollEnabled
-                        },
-                        modifier = Modifier.weight(1f),
-                        tone = HyperButtonTone.Tonal
-                    ) {
-                        Text(
-                            text = if (drawerContentScrollEnabled) {
-                                "面板滚动"
-                            } else {
-                                "内容滚动"
-                            }
-                        )
-                    }
+                    Text(
+                        text = if (drawerContentScrollEnabled) {
+                            "面板滚动"
+                        } else {
+                            "内容滚动"
+                        }
+                    )
                 }
                 HyperButton(
                     onClick = { defaultSetPadding = !defaultSetPadding },
@@ -387,7 +371,8 @@ fun SlideMenuDemo() {
             items = categories,
             selectedItem = selected,
             onSelected = { selected = it },
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            itemEnabled = { it != "打开应用" }
         ) { item ->
             Text(text = item, fontSize = 13.sp)
         }

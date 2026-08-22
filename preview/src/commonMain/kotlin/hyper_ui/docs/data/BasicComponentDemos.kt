@@ -31,7 +31,8 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("弱强调", "tone = Tonal", "主题混合实色"),
             DemoVariant("语义色", "tone = Success / Danger", "成功与危险实色"),
             DemoVariant("禁用", "enabled = false", "禁用实色状态"),
-            DemoVariant("紧凑", "modifier = Modifier.height(32.dp)", "小尺寸 slot")
+            DemoVariant("紧凑", "modifier = Modifier.height(32.dp)", "小尺寸 slot"),
+            DemoVariant("组合复用", "contentPadding / role", "供分段等组合组件复用布局与语义")
         ),
         apiDocumentPaths = listOf("basic/hyper-button.md"),
         content = { ButtonDemo() }

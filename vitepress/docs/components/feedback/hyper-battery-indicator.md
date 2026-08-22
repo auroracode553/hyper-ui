@@ -11,7 +11,6 @@
 ```kotlin
 data class HyperBatteryIndicatorColors(
     val containerColor: Color,
-    val borderColor: Color,
     val levelColor: Color,
     val lowLevelColor: Color,
     val chargingLevelColor: Color,
@@ -39,10 +38,13 @@ object HyperBatteryIndicatorDefaults {
     val BodyWidth = 38.dp
     val Height = 18.dp
     val Shape: Shape = RoundedCornerShape(4.dp)
-    val BorderWidth = 1.dp
+    val LevelShape: Shape = RoundedCornerShape(2.dp)
+    val BodyInset = 2.dp
+    val Elevation = 1.dp
     val TerminalWidth = 2.dp
     val TerminalHeight = 8.dp
     val TerminalShape: Shape = RoundedCornerShape(percent = 50)
+    val TerminalElevation = 1.dp
     val TerminalSpacing = 1.dp
     val ElementSpacing = 4.dp
     val ChargingIconWidth = 9.dp
@@ -52,7 +54,6 @@ object HyperBatteryIndicatorDefaults {
     @Composable
     fun colors(
         containerColor: Color = Color.Unspecified,
-        borderColor: Color = Color.Unspecified,
         levelColor: Color = Color.Unspecified,
         lowLevelColor: Color = Color.Unspecified,
         chargingLevelColor: Color = Color.Unspecified,
@@ -85,5 +86,6 @@ if (batteryState.isAvailable) {
 - `showPercentage = false` 可隐藏内部数字，但仍保留电量填充与进度语义。
 - 建议调用方传入本地化的 `contentDescription`，其中包含电量和充电状态。
 - 默认电池主体为 `38×18dp`；充电闪电出现后组件整体宽度会自然增加。
+- 主体和端子均使用无描边的连续玻璃面，内部预留 `2.dp` 让电量填充与壳体自然分层；信息组件仅使用 `1.dp` 轻抬升，不呈现为按钮。
 
 <WasmPreview demo="battery_indicator" title="HyperBatteryIndicator 交互预览" />

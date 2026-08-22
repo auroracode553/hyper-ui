@@ -1,7 +1,6 @@
 /** 文件职责：提供可横向滚动的 HyperSlideMenu 及其菜单项。 */
 package hyper_ui
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -65,18 +64,27 @@ fun HyperSlideMenuItem(
         selected -> colors.selectedContentColor
         else -> colors.unselectedContentColor
     }
-    val targetBorderColor = if (enabled) HyperColors.fieldBorder else HyperColors.divider
     val scope = HyperSlideMenuItemScope(selected = selected, enabled = enabled)
 
     Row(
         modifier = modifier
             .defaultMinSize(minHeight = HyperSlideMenuDefaults.MinHeight)
-            .hyperSurface(
-                containerColor = targetContainerColor,
+            .hyperGlassSurface(
                 shape = shape,
-                border = if (selected) null else BorderStroke(
-                    width = HyperSlideMenuDefaults.ItemBorderWidth,
-                    color = targetBorderColor
+                visuals = hyperGlassSurfaceVisuals(
+                    containerColor = targetContainerColor,
+                    elevation = when {
+                        !enabled -> 0.dp
+                        selected -> HyperSlideMenuDefaults.SelectedElevation
+                        else -> HyperSlideMenuDefaults.RestingElevation
+                    },
+                    topLightAlpha = when {
+                        !enabled -> 0.08f
+                        HyperColors.isLight -> 0.34f
+                        else -> 0.12f
+                    },
+                    bottomShadeAlpha = if (HyperColors.isLight) 0.035f else 0.11f,
+                    shadowAlpha = if (HyperColors.isLight) 0.13f else 0.27f
                 )
             )
             .hyperNoRippleClickable(
@@ -132,7 +140,8 @@ object HyperSlideMenuDefaults {
     val ItemContentGap = 6.dp
     val ItemGap = 8.dp
     val ItemContentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
-    val ItemBorderWidth = 1.dp
+    val RestingElevation = 1.dp
+    val SelectedElevation = 3.dp
     val Shape: Shape = RoundedCornerShape(percent = 50)
 
     @Composable
@@ -150,17 +159,23 @@ object HyperSlideMenuDefaults {
         )
 
         return HyperSlideMenuColors(
-            selectedContainerColor = resolveHyperContainerColor(selectedContainerColor, HyperColors.accent),
+            selectedContainerColor = resolveHyperContainerColor(
+                selectedContainerColor,
+                HyperColors.accent.copy(alpha = if (HyperColors.isLight) 0.82f else 0.68f)
+            ),
             unselectedContainerColor = resolveHyperContainerColor(
                 unselectedContainerColor,
-                HyperColors.elevatedContainer
+                Color(1f, 1f, 1f, if (HyperColors.isLight) 0.62f else 0.16f)
             ),
             selectedContentColor = resolveHyperContainerColor(
                 selectedContentColor,
                 rgba(255, 255, 255, 1f)
             ),
             unselectedContentColor = resolvedUnselectedContentColor,
-            disabledContainerColor = resolveHyperContainerColor(disabledContainerColor, HyperColors.disabledContainer),
+            disabledContainerColor = resolveHyperContainerColor(
+                disabledContainerColor,
+                Color(1f, 1f, 1f, if (HyperColors.isLight) 0.26f else 0.07f)
+            ),
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,
                 HyperColors.disabledText

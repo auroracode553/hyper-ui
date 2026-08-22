@@ -13,9 +13,7 @@ data class HyperLevelCapsuleColors(
     val containerColor: Color,
     val progressColor: Color,
     val labelColor: Color,
-    val iconColor: Color,
-    val highlightColor: Color,
-    val borderColor: Color
+    val iconColor: Color
 )
 
 @Composable
@@ -36,22 +34,17 @@ object HyperLevelCapsuleDefaults {
     val Width = 52.dp
     val Height = 156.dp
     val Shape: Shape = RoundedCornerShape(percent = 50)
-    val BorderWidth = 1.dp
     val ContentInset = 3.dp
     val ContentSpacing = 6.dp
     val IconSize = 20.dp
-    val HighlightHeight = 1.dp
-    const val HighlightWidthFraction = 0.52f
-    val Elevation = 12.dp
+    val Elevation = 8.dp
 
     @Composable
     fun colors(
         containerColor: Color = Color.Unspecified,
         progressColor: Color = Color.Unspecified,
         labelColor: Color = Color.Unspecified,
-        iconColor: Color = Color.Unspecified,
-        highlightColor: Color = Color.Unspecified,
-        borderColor: Color = Color.Unspecified
+        iconColor: Color = Color.Unspecified
     ): HyperLevelCapsuleColors
 }
 ```
@@ -81,7 +74,8 @@ HyperLevelCapsule(
 - `iconContent` 可为空；传入时会在 `20.dp` 图标区域内、文案上方显示，并通过 `LocalContentColor` 接收 `iconColor`。
 - 手势监听、显示/隐藏、延时关闭以及系统亮度/音量更新均属于调用方业务。
 - 默认尺寸为 `52×156dp`；使用 `modifier.width(...)` 和 `modifier.height(...)` 覆盖。
-- 默认容器为深色半透明玻璃层，填充使用主题强调色，内容为高对比白色，并带柔光顶边、轻描边和柔和阴影。
+- 默认容器在明暗主题中都以白色半透明基底呈现，填充使用主题强调色；宽柔光、底部弱阴影和单层 `8.dp` 投影形成厚度。
+- 组件不再暴露高光色或边框色，也不绘制顶边亮线；材质光源由库统一维护，颜色 API 只表达容器、填充和内容语义。
 - 组件提供确定进度语义，便于无障碍服务读取当前比例。
 
 <WasmPreview demo="level_capsule" title="HyperLevelCapsule 交互预览" />

@@ -10,9 +10,7 @@
 
 ```kotlin
 data class HyperPlaybackSpeedScaleColors(
-    val glassHighlightColor: Color,
-    val glassContainerColor: Color,
-    val borderColor: Color,
+    val containerColor: Color,
     val trackColor: Color,
     val activeTrackColor: Color,
     val tickColor: Color,
@@ -42,8 +40,7 @@ object HyperPlaybackSpeedScaleDefaults {
     val MaxWidth = 480.dp
     const val WidthFraction = 0.9f
     val Shape: Shape = RoundedCornerShape(percent = 50)
-    val Elevation = 16.dp
-    val BorderWidth = 1.dp
+    val Elevation = 9.dp
     val ContentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp)
     val ContentSpacing = 4.dp
     val TrackHeight = 34.dp
@@ -60,9 +57,7 @@ object HyperPlaybackSpeedScaleDefaults {
 
     @Composable
     fun colors(
-        glassHighlightColor: Color = Color.Unspecified,
-        glassContainerColor: Color = Color.Unspecified,
-        borderColor: Color = Color.Unspecified,
+        containerColor: Color = Color.Unspecified,
         trackColor: Color = Color.Unspecified,
         activeTrackColor: Color = Color.Unspecified,
         tickColor: Color = Color.Unspecified,
@@ -95,5 +90,6 @@ HyperPlaybackSpeedScale(
 - `leadingContent` 为空时显示内置双箭头；传入图标时通过 `LocalContentColor` 接收 `valueColor`。
 - 默认最大宽度为 `480.dp`、占可用宽度的 90%；可用 `modifier` 继续约束外部尺寸与位置。
 - 组件提供确定进度语义，当前档位会映射为无障碍进度。
+- 默认玻璃使用浅色白色 `0.62f`、深色白色 `0.20f` 的透明基底和一层 `9.dp` 投影；没有边框或独立高光色入口。
 
 <WasmPreview demo="playback_speed_scale" title="HyperPlaybackSpeedScale 交互预览" />

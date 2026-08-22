@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/menu/HyperSlideMenu.kt`
 - Preview ID：`slide-menu`
 
-`HyperSlideMenu` 是可横向滚动的同级菜单，适合分类、筛选和标签较多的视图切换。单项也可通过 `HyperSlideMenuItem` 独立使用。
+`HyperSlideMenu` 是可横向滚动的同级玻璃菜单，适合分类、筛选和标签较多的视图切换。未选中项为轻量白色玻璃，选中项改用主题染色并增加抬升；没有永久描边。
 
 ## 公开 API
 
@@ -58,7 +58,8 @@ object HyperSlideMenuDefaults {
     val ItemContentGap = 6.dp
     val ItemGap = 8.dp
     val ItemContentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
-    val ItemBorderWidth = 1.dp
+    val RestingElevation = 1.dp
+    val SelectedElevation = 3.dp
     val Shape: Shape = RoundedCornerShape(percent = 50)
 
     @Composable
@@ -103,11 +104,11 @@ object HyperSlideMenuDefaults {
 
 | 属性 | 默认来源 |
 | --- | --- |
-| `selectedContainerColor` | `HyperColors.accent` |
-| `unselectedContainerColor` | `HyperColors.elevatedContainer` |
+| `selectedContainerColor` | 浅色 `HyperColors.accent` 0.82 alpha / 深色 0.68 alpha |
+| `unselectedContainerColor` | 浅色白色 0.62 alpha / 深色白色 0.16 alpha |
 | `selectedContentColor` | `rgba(255, 255, 255, 1f)` |
 | `unselectedContentColor` | `HyperColors.primaryText` |
-| `disabledContainerColor` | `HyperColors.disabledContainer` |
+| `disabledContainerColor` | 浅色白色 0.26 alpha / 深色白色 0.07 alpha |
 | `disabledContentColor` | `HyperColors.disabledText` |
 
 ## 最小用法
@@ -126,7 +127,7 @@ HyperSlideMenu(
 
 - 组件不内置 `label`、`count`、`icon` 或业务分类模型。
 - 泛型入口内部使用 `HyperSlideMenuItem` 的默认形状与颜色；需要逐项定制外壳时直接组合独立 `HyperSlideMenuItem`。
-- 未选中项使用 1dp `HyperColors.fieldBorder` 描边，选中项不绘制该描边。
+- 所有状态都不绘制硬边框；选中项通过材质遮盖率、主题染色与单层阴影表达层级。
 - 选中状态即时更新，不执行滚动定位或选中动画。
 
 <WasmPreview demo="slide-menu" title="HyperSlideMenu 交互预览" />

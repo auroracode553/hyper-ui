@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/menu/HyperDropdown.kt`
 - Preview ID：`dropdown`
 
-`HyperDropdown` 是无蒙层的 Popup 菜单容器。组件负责浮层定位、实色面板、滚动、菜单项点击关闭与分割线；文字、图标和业务动作由 slot 提供。
+`HyperDropdown` 是无蒙层的 Popup 菜单容器。组件负责浮层定位、不透明连续磨砂玻璃面板、滚动、菜单项点击关闭与分割线；文字、图标和业务动作由 slot 提供。
 
 ## 公开 API
 
@@ -28,7 +28,6 @@ fun HyperDropdown(
     offset: DpOffset = DpOffset(0.dp, HyperDropdownDefaults.AnchorOffsetY),
     shape: Shape = HyperDropdownDefaults.Shape,
     colors: HyperDropdownColors = HyperDropdownDefaults.colors(),
-    border: BorderStroke? = HyperDropdownDefaults.border(),
     content: @Composable HyperDropdownScope.() -> Unit
 )
 
@@ -56,6 +55,7 @@ object HyperDropdownDefaults {
     val MaxHeight = 420.dp
     val ItemHeight = 48.dp
     val AnchorOffsetY = 52.dp
+    val Elevation = 8.dp
     val Shape: Shape = RoundedCornerShape(20.dp)
     val MenuPadding = PaddingValues(vertical = 8.dp)
     val ItemPadding = PaddingValues(horizontal = 20.dp)
@@ -67,9 +67,6 @@ object HyperDropdownDefaults {
         disabledContentColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
     ): HyperDropdownColors
-
-    @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke
 }
 ```
 
@@ -85,7 +82,6 @@ object HyperDropdownDefaults {
 | `offset` | `DpOffset` | 否 | `(0.dp, AnchorOffsetY)` | 在 `alignment` 基础上的密度无关偏移。 |
 | `shape` | `Shape` | 否 | `HyperDropdownDefaults.Shape` | 菜单面板形状。 |
 | `colors` | `HyperDropdownColors` | 否 | `HyperDropdownDefaults.colors()` | 面板、内容、禁用内容和分割线颜色。 |
-| `border` | `BorderStroke?` | 否 | `HyperDropdownDefaults.border()` | 菜单描边；传 `null` 移除。 |
 | `content` | `@Composable HyperDropdownScope.() -> Unit` | 是 | 无 | 菜单项与分割线 slot。 |
 
 ## Item 参数
@@ -119,6 +115,7 @@ HyperDropdown(
 - 不存在 `text`、`leadingIcon`、`textColor` 或 `contentPadding` 参数。
 - 菜单不渲染遮罩；`PopupProperties(focusable = true)` 负责外部点击和返回关闭请求。
 - 面板默认宽 184dp、最大高 420dp，超出后在组件内部纵向滚动。
-- 组件会将面板、内容、禁用内容、分割线和默认描边与实色背景合成，避免底层页面透出。
+- 默认面板使用 `HyperColors.cardContainer` 的不透明玻璃基底，并用单层 `8.dp` 阴影与页面拉开空间。
+- 组件不绘制硬边框；自定义 `containerColor` 若带 alpha，会与 `HyperColors.pageBackground` 合成为不透明颜色，分割线仍采用低对比度颜色。
 
 <WasmPreview demo="dropdown" title="HyperDropdown 交互预览" />

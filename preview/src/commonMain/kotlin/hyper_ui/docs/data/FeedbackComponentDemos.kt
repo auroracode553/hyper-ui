@@ -20,7 +20,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "empty_state",
         group = GROUP_FEEDBACK,
         title = "HyperEmptyState",
-        description = "页面级空数据状态使用居中的 HyperPanel，图标和操作通过 Slot 注入。",
+        description = "页面级空数据状态使用低抬升连续玻璃面板，图标和操作通过 Slot 注入。",
         code = """
             HyperEmptyState(
                 title = "暂无历史记录",
@@ -37,6 +37,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("纯标题", "description = null", "紧凑空状态文案"),
             DemoVariant("辅助说明", "description", "居中次级说明"),
             DemoVariant("图标", "iconContent", "由调用方注入图标资源"),
+            DemoVariant("玻璃形状", "shape", "可替换默认 28dp 圆角结构面"),
             DemoVariant("操作", "actionContent", "由调用方持有交互和结果状态")
         ),
         apiDocumentPaths = listOf("feedback/hyper-empty-state.md"),
@@ -46,7 +47,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dropdown",
         group = GROUP_FEEDBACK,
         title = "HyperDropdown",
-        description = "浮层菜单使用不透明实色面板，菜单项和分割线不依赖透明度，可配置点击后是否关闭。",
+        description = "浮层菜单使用不透明连续磨砂玻璃和单层空间阴影，可配置点击后是否关闭。",
         code = """
             HyperDropdown(
                 expanded = expanded,
@@ -65,10 +66,10 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("展开/关闭", "expanded", "实色浮层菜单"),
+            DemoVariant("展开/关闭", "expanded", "主题不透明浮层玻璃"),
             DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制菜单内部内容"),
             DemoVariant("菜单项", "Item(closeOnClick)", "图标、文字与点击回调"),
-            DemoVariant("分隔线", "Divider()", "不透明实色分隔")
+            DemoVariant("分隔线", "Divider()", "低对比度半透明分隔")
         ),
         apiDocumentPaths = listOf("feedback/hyper-dropdown.md"),
         content = { DropdownMenuDemo() }
@@ -134,7 +135,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("百分比文案", "label", "居中单行反馈"),
             DemoVariant("图标插槽", "iconContent", "亮度、音量或业务状态图标"),
             DemoVariant("自定义尺寸", "modifier.width/height", "覆盖默认 52×156dp"),
-            DemoVariant("自定义配色", "HyperLevelCapsuleDefaults.colors", "容器、填充、内容、柔光与描边")
+            DemoVariant("自定义配色", "HyperLevelCapsuleDefaults.colors", "容器、填充与内容色；材质光影保持统一")
         ),
         apiDocumentPaths = listOf("feedback/hyper-level-capsule.md"),
         content = { LevelCapsuleDemo() }
@@ -156,7 +157,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("默认档位", "SpeedOptions", "0.25x 到 4x 八档刻度"),
             DemoVariant("当前速度", "selectedSpeed", "高亮最近的速度刻度"),
             DemoVariant("图标插槽", "leadingContent", "可替换默认双箭头"),
-            DemoVariant("自定义配色", "HyperPlaybackSpeedScaleDefaults.colors", "玻璃层、轨道、刻度与文案")
+            DemoVariant("自定义配色", "HyperPlaybackSpeedScaleDefaults.colors", "容器、轨道、刻度与文案；不暴露硬边框")
         ),
         apiDocumentPaths = listOf("feedback/hyper-playback-speed-scale.md"),
         content = { PlaybackSpeedScaleDemo() }
@@ -177,7 +178,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("常规电量", "percentage", "百分比内显并按比例填充"),
+            DemoVariant("常规电量", "percentage", "无描边玻璃壳体内按比例填充"),
             DemoVariant("低电量", "percentage <= 20", "默认切换红色填充"),
             DemoVariant("充电中", "charging = true", "绿色填充且右侧展示闪电"),
             DemoVariant("隐藏数字", "showPercentage = false", "仅展示图形电量")

@@ -1,29 +1,20 @@
 /** 文件职责：提供等宽分段控制器及其选中、禁用视觉状态。 */
 package hyper_ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import hyper_ui.core.interaction.hyperNoRippleClickable
 
 @Immutable
 data class HyperSegmentedColors(
@@ -33,8 +24,7 @@ data class HyperSegmentedColors(
     val selectedContentColor: Color,
     val unselectedContentColor: Color,
     val disabledItemColor: Color,
-    val disabledContentColor: Color,
-    val selectedBorderColor: Color
+    val disabledContentColor: Color
 )
 
 class HyperSegmentedItemScope internal constructor(
@@ -65,76 +55,60 @@ fun <T> HyperSegmented(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .hyperSolidSurface(
-                containerColor = colors.containerColor,
-                shape = shape
+            .hyperGlassSurface(
+                shape = shape,
+                visuals = hyperGlassSurfaceVisuals(
+                    containerColor = colors.containerColor,
+                    elevation = HyperSegmentedDefaults.ContainerElevation,
+                    topLightAlpha = if (HyperColors.isLight) 0.24f else 0.10f,
+                    bottomShadeAlpha = if (HyperColors.isLight) 0.035f else 0.10f,
+                    shadowAlpha = if (HyperColors.isLight) 0.08f else 0.18f
+                )
             )
             .padding(containerPadding)
     ) {
         items.forEach { item ->
             val selected = item == selectedItem
             val actualEnabled = enabled && itemEnabled(item)
-            val itemColor = when {
-                !actualEnabled -> colors.disabledItemColor
-                selected -> colors.selectedItemColor
-                else -> colors.unselectedItemColor
-            }
-            val contentColor = when {
-                !actualEnabled -> colors.disabledContentColor
-                selected -> colors.selectedContentColor
-                else -> colors.unselectedContentColor
-            }
-            val elevationModifier = if (selected && actualEnabled) {
-                Modifier.shadow(
-                    elevation = HyperSegmentedDefaults.SelectedElevation,
-                    shape = itemShape,
-                    clip = false
-                )
-            } else {
-                Modifier
-            }
-            val borderModifier = if (selected && actualEnabled) {
-                Modifier.border(
-                    width = HyperSegmentedDefaults.SelectedBorderWidth,
-                    color = colors.selectedBorderColor,
-                    shape = itemShape
-                )
-            } else {
-                Modifier
-            }
             val scope = HyperSegmentedItemScope(
                 selected = selected,
                 enabled = actualEnabled
             )
 
-            Box(
+            HyperButton(
+                onClick = { onSelected(item) },
                 modifier = Modifier
                     .weight(1f)
-                    .defaultMinSize(minHeight = HyperSegmentedDefaults.MinHeight)
-                    .then(elevationModifier)
-                    .background(itemColor, itemShape)
-                    .then(borderModifier)
-                    .semantics { this.selected = selected }
-                    .hyperNoRippleClickable(
-                        enabled = actualEnabled,
-                        role = Role.Tab,
-                        onClick = { onSelected(item) }
-                    )
-                    .padding(itemContentPadding),
-                contentAlignment = Alignment.Center
+                    .semantics { this.selected = selected },
+                enabled = actualEnabled,
+                tone = if (selected) HyperButtonTone.Primary else HyperButtonTone.Plain,
+                colors = HyperButtonColors(
+                    containerColor = if (selected) {
+                        colors.selectedItemColor
+                    } else {
+                        colors.unselectedItemColor
+                    },
+                    contentColor = if (selected) {
+                        colors.selectedContentColor
+                    } else {
+                        colors.unselectedContentColor
+                    },
+                    disabledContainerColor = colors.disabledItemColor,
+                    disabledContentColor = colors.disabledContentColor
+                ),
+                border = null,
+                shape = itemShape,
+                contentPadding = itemContentPadding,
+                role = Role.Tab
             ) {
-                CompositionLocalProvider(LocalContentColor provides contentColor) {
-                    scope.itemContent(item)
-                }
+                scope.itemContent(item)
             }
         }
     }
 }
 
 object HyperSegmentedDefaults {
-    val MinHeight = 40.dp
-    val SelectedElevation = 2.dp
-    val SelectedBorderWidth = 1.dp
+    val ContainerElevation = 1.dp
     val ContainerPadding = PaddingValues(3.dp)
     val ItemContentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
     val Shape: Shape = RoundedCornerShape(5.dp)
@@ -148,32 +122,33 @@ object HyperSegmentedDefaults {
         selectedContentColor: Color = Color.Unspecified,
         unselectedContentColor: Color = Color.Unspecified,
         disabledItemColor: Color = Color.Unspecified,
-        disabledContentColor: Color = Color.Unspecified,
-        selectedBorderColor: Color = Color.Unspecified
+        disabledContentColor: Color = Color.Unspecified
     ): HyperSegmentedColors {
-        val resolvedContainerColor = resolveHyperOpaqueColor(
-            color = containerColor,
-            fallbackColor = HyperColors.fieldContainer,
-            backgroundColor = HyperColors.pageBackground
+        val resolvedContainerColor = resolveHyperContainerColor(
+            containerColor,
+            Color(1f, 1f, 1f, if (HyperColors.isLight) 0.48f else 0.14f)
         )
-        val resolvedSelectedItemColor = resolveHyperOpaqueColor(
-            color = selectedItemColor,
-            fallbackColor = HyperColors.cardContainer,
-            backgroundColor = resolvedContainerColor
+        val resolvedSelectedItemColor = resolveHyperContainerColor(
+            selectedItemColor,
+            HyperColors.accent
         )
 
         return HyperSegmentedColors(
             containerColor = resolvedContainerColor,
             selectedItemColor = resolvedSelectedItemColor,
-            unselectedItemColor = resolveHyperContainerColor(unselectedItemColor, Color.Transparent),
-            selectedContentColor = resolveHyperContainerColor(selectedContentColor, HyperColors.primaryText),
-            unselectedContentColor = resolveHyperContainerColor(unselectedContentColor, HyperColors.secondaryText),
-            disabledItemColor = resolveHyperContainerColor(disabledItemColor, HyperColors.disabledContainer),
-            disabledContentColor = resolveHyperContainerColor(disabledContentColor, HyperColors.disabledText),
-            selectedBorderColor = resolveHyperOpaqueColor(
-                color = selectedBorderColor,
-                fallbackColor = HyperColors.fieldBorder,
-                backgroundColor = resolvedSelectedItemColor
+            unselectedItemColor = resolveHyperContainerColor(unselectedItemColor, HyperColors.cardContainer),
+            selectedContentColor = resolveHyperContainerColor(
+                selectedContentColor,
+                Color(1f, 1f, 1f, 1f)
+            ),
+            unselectedContentColor = resolveHyperContainerColor(unselectedContentColor, HyperColors.primaryText),
+            disabledItemColor = resolveHyperContainerColor(
+                disabledItemColor,
+                HyperColors.softContainer
+            ),
+            disabledContentColor = resolveHyperContainerColor(
+                disabledContentColor,
+                HyperColors.secondaryText
             )
         )
     }

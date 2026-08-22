@@ -3,7 +3,6 @@ package hyper_ui
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.sp
 @Immutable
 data class HyperBatteryIndicatorColors(
     val containerColor: Color,
-    val borderColor: Color,
     val levelColor: Color,
     val lowLevelColor: Color,
     val chargingLevelColor: Color,
@@ -91,16 +90,25 @@ fun HyperBatteryIndicator(
                 modifier = Modifier
                     .width(HyperBatteryIndicatorDefaults.BodyWidth)
                     .height(HyperBatteryIndicatorDefaults.Height)
-                    .clip(shape)
-                    .background(colors.containerColor, shape)
-                    .border(HyperBatteryIndicatorDefaults.BorderWidth, colors.borderColor, shape)
+                    .hyperGlassSurface(
+                        shape = shape,
+                        visuals = hyperGlassSurfaceVisuals(
+                            containerColor = colors.containerColor,
+                            elevation = HyperBatteryIndicatorDefaults.Elevation,
+                            topLightAlpha = if (HyperColors.isLight) 0.34f else 0.13f,
+                            bottomShadeAlpha = if (HyperColors.isLight) 0.06f else 0.16f,
+                            shadowAlpha = if (HyperColors.isLight) 0.14f else 0.28f
+                        )
+                    )
+                    .padding(HyperBatteryIndicatorDefaults.BodyInset)
             ) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .fillMaxHeight()
                         .fillMaxWidth(resolvedPercentage / 100f)
-                        .background(fillColor)
+                        .clip(HyperBatteryIndicatorDefaults.LevelShape)
+                        .background(fillColor, HyperBatteryIndicatorDefaults.LevelShape)
                 )
                 if (showPercentage) {
                     Text(
@@ -125,8 +133,16 @@ fun HyperBatteryIndicator(
                 modifier = Modifier
                     .width(HyperBatteryIndicatorDefaults.TerminalWidth)
                     .height(HyperBatteryIndicatorDefaults.TerminalHeight)
-                    .clip(HyperBatteryIndicatorDefaults.TerminalShape)
-                    .background(colors.terminalColor)
+                    .hyperGlassSurface(
+                        shape = HyperBatteryIndicatorDefaults.TerminalShape,
+                        visuals = hyperGlassSurfaceVisuals(
+                            containerColor = colors.terminalColor,
+                            elevation = HyperBatteryIndicatorDefaults.TerminalElevation,
+                            topLightAlpha = if (HyperColors.isLight) 0.28f else 0.12f,
+                            bottomShadeAlpha = if (HyperColors.isLight) 0.06f else 0.14f,
+                            shadowAlpha = if (HyperColors.isLight) 0.10f else 0.22f
+                        )
+                    )
             )
         }
 
@@ -162,10 +178,13 @@ object HyperBatteryIndicatorDefaults {
     val BodyWidth = 38.dp
     val Height = 18.dp
     val Shape: Shape = RoundedCornerShape(4.dp)
-    val BorderWidth = 1.dp
+    val LevelShape: Shape = RoundedCornerShape(2.dp)
+    val BodyInset = 2.dp
+    val Elevation = 1.dp
     val TerminalWidth = 2.dp
     val TerminalHeight = 8.dp
     val TerminalShape: Shape = RoundedCornerShape(percent = 50)
+    val TerminalElevation = 1.dp
     val TerminalSpacing = 1.dp
     val ElementSpacing = 4.dp
     val ChargingIconWidth = 9.dp
@@ -175,7 +194,6 @@ object HyperBatteryIndicatorDefaults {
     @Composable
     fun colors(
         containerColor: Color = Color.Unspecified,
-        borderColor: Color = Color.Unspecified,
         levelColor: Color = Color.Unspecified,
         lowLevelColor: Color = Color.Unspecified,
         chargingLevelColor: Color = Color.Unspecified,
@@ -185,11 +203,7 @@ object HyperBatteryIndicatorDefaults {
     ): HyperBatteryIndicatorColors = HyperBatteryIndicatorColors(
         containerColor = resolveHyperContainerColor(
             containerColor,
-            Color(0f, 0f, 0f, 0.34f)
-        ),
-        borderColor = resolveHyperContainerColor(
-            borderColor,
-            Color(1f, 1f, 1f, 0.92f)
+            Color(1f, 1f, 1f, if (HyperColors.isLight) 0.52f else 0.18f)
         ),
         levelColor = resolveHyperContainerColor(
             levelColor,
@@ -209,7 +223,7 @@ object HyperBatteryIndicatorDefaults {
         ),
         terminalColor = resolveHyperContainerColor(
             terminalColor,
-            Color(1f, 1f, 1f, 0.92f)
+            Color(1f, 1f, 1f, if (HyperColors.isLight) 0.72f else 0.40f)
         ),
         chargingIconColor = resolveHyperContainerColor(
             chargingIconColor,

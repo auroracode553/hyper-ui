@@ -34,7 +34,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "segmented",
         group = GROUP_FORM,
         title = "HyperSegmented",
-        description = "等宽分段控制器；调用方维护选中项，组件渲染选中抬升、未选中与禁用状态。",
+        description = "等宽分段控制器；轨道负责布局，每个分段直接复用 HyperButton，调用方维护选中项。",
         code = """
             HyperSegmented(
                 items = periods,
@@ -45,7 +45,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认", "selectedItem", "浅色容器与实色抬升选中项"),
+            DemoVariant("默认", "selectedItem", "玻璃轨道与标准 HyperButton 分段"),
             DemoVariant("禁用项", "itemEnabled", "单独禁用指定分段"),
             DemoVariant("自定义颜色", "HyperSegmentedDefaults.colors", "覆盖选中项和内容色")
         ),

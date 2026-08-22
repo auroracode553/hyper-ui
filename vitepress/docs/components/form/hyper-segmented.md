@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/selection/HyperSegmented.kt`
 - Preview ID：`segmented`
 
-`HyperSegmented` 是等宽分段控制器。外层使用不透明浅色容器，选中项使用实色面板、轻描边和阴影形成参考图中的抬升效果；状态即时切换，不执行动画。
+`HyperSegmented` 是等宽分段控制器。组件只负责低抬升轨道、等宽布局、选中状态与 Tab 语义；每个分段直接复用 `HyperButton`，不再维护独立按钮绘制实现。
 
 ## 公开 API
 
@@ -18,8 +18,7 @@ data class HyperSegmentedColors(
     val selectedContentColor: Color,
     val unselectedContentColor: Color,
     val disabledItemColor: Color,
-    val disabledContentColor: Color,
-    val selectedBorderColor: Color
+    val disabledContentColor: Color
 )
 
 class HyperSegmentedItemScope {
@@ -48,9 +47,7 @@ fun <T> HyperSegmented(
 
 ```kotlin
 object HyperSegmentedDefaults {
-    val MinHeight = 40.dp
-    val SelectedElevation = 2.dp
-    val SelectedBorderWidth = 1.dp
+    val ContainerElevation = 1.dp
     val ContainerPadding = PaddingValues(3.dp)
     val ItemContentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
     val Shape: Shape = RoundedCornerShape(5.dp)
@@ -64,8 +61,7 @@ object HyperSegmentedDefaults {
         selectedContentColor: Color = Color.Unspecified,
         unselectedContentColor: Color = Color.Unspecified,
         disabledItemColor: Color = Color.Unspecified,
-        disabledContentColor: Color = Color.Unspecified,
-        selectedBorderColor: Color = Color.Unspecified
+        disabledContentColor: Color = Color.Unspecified
     ): HyperSegmentedColors
 }
 ```
@@ -82,7 +78,7 @@ object HyperSegmentedDefaults {
 | `itemEnabled` | `(T) -> Boolean` | 否 | `{ true }` | 单项可用状态；最终状态为 `enabled && itemEnabled(item)`。 |
 | `shape` | `Shape` | 否 | `HyperSegmentedDefaults.Shape` | 外层容器形状。 |
 | `itemShape` | `Shape` | 否 | `HyperSegmentedDefaults.ItemShape` | 每个分段的形状。 |
-| `colors` | `HyperSegmentedColors` | 否 | `HyperSegmentedDefaults.colors()` | 容器、项目、内容和选中描边颜色。 |
+| `colors` | `HyperSegmentedColors` | 否 | `HyperSegmentedDefaults.colors()` | 轨道、项目与内容颜色。 |
 | `containerPadding` | `PaddingValues` | 否 | `ContainerPadding` | 外层容器到各分段的内部留白。 |
 | `itemContentPadding` | `PaddingValues` | 否 | `ItemContentPadding` | 每个分段内部 slot 的留白。 |
 | `itemContent` | `@Composable HyperSegmentedItemScope.(T) -> Unit` | 是 | 无 | 分段内容；作用域提供 `selected`、`enabled`。 |
@@ -91,14 +87,13 @@ object HyperSegmentedDefaults {
 
 | 属性 | 默认来源 | 作用 |
 | --- | --- | --- |
-| `containerColor` | `HyperColors.fieldContainer` | 外层不透明浅灰容器。 |
-| `selectedItemColor` | `HyperColors.cardContainer` | 选中分段实色背景。 |
-| `unselectedItemColor` | `Color.Transparent` | 未选中分段透出外层容器。 |
-| `selectedContentColor` | `HyperColors.primaryText` | 选中内容色。 |
-| `unselectedContentColor` | `HyperColors.secondaryText` | 未选中内容色。 |
-| `disabledItemColor` | `HyperColors.disabledContainer` | 禁用分段背景。 |
-| `disabledContentColor` | `HyperColors.disabledText` | 禁用内容色。 |
-| `selectedBorderColor` | `HyperColors.fieldBorder` | 选中分段的 1dp 描边。 |
+| `containerColor` | 浅色白色 `0.48f` / 深色白色 `0.14f` | 外层半透明玻璃轨道。 |
+| `selectedItemColor` | `HyperColors.accent` | 选中分段的 `HyperButton` 容器色。 |
+| `unselectedItemColor` | `HyperColors.cardContainer` | 未选中分段的 `HyperButton` 容器色。 |
+| `selectedContentColor` | 白色不透明 | 选中按钮内容色。 |
+| `unselectedContentColor` | `HyperColors.primaryText` | 未选中按钮内容色。 |
+| `disabledItemColor` | `HyperColors.softContainer` | 禁用按钮背景。 |
+| `disabledContentColor` | `HyperColors.secondaryText` | 禁用按钮内容色。 |
 
 ## 最小用法
 
@@ -121,6 +116,7 @@ HyperSegmented(
 - 各项等分当前可用宽度，不提供横向滚动；项目很多时应改用 `HyperSlideMenu`。
 - `items` 应使用按相等性可唯一识别的值；重复值会同时呈现选中语义。
 - `itemContent` 负责文字、图标和业务标签，组件不内置字符串模型。
-- 组件不绘制遮罩，也不执行颜色、阴影或位移动画。
+- 每项由 `HyperButton` 提供最小高度、实色表面、禁用态和点击行为；`HyperSegmented` 传入 `Role.Tab` 并补充 `selected` 语义。
+- 分段按钮不绘制边框，也不执行颜色、阴影或位移动画。
 
 <WasmPreview demo="segmented" title="HyperSegmented 交互预览" />

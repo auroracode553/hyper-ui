@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/drawer/HyperDrawer.kt`
 - 预览：`drawer`
 
-`HyperDrawer` 是使用不透明实色面板和状态色的四方向抽屉容器，无遮罩。深色模式下抽屉面板采用当前 `MaterialTheme.colorScheme.background`，默认使用 1dp 低对比度柔光轮廓标明外露圆角，不使用阴影；浅色模式使用实色卡片背景。`open` 直接控制面板是否渲染，打开与关闭均不执行动画。抽屉默认启用方向化内容间距与系统栏安全区；需要内容延伸到完整面板范围时，将 `defaultSetPadding` 设为 `false`。
+`HyperDrawer` 是四方向结构玻璃抽屉，无遮罩。面板在明暗主题中使用对应的 `HyperColors.cardContainer` 不透明基底，以宽柔光、底部弱阴影和一层低抬升投影建立空间关系；内部未选中项不重复铺底，选中项只增加轻量主题染色。`open` 直接控制面板是否渲染，不执行动画。
 
 ## 公开签名
 
@@ -33,7 +33,6 @@ fun HyperDrawer(
     drawerContentScrollEnabled: Boolean = true,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = false,
-    border: BorderStroke? = HyperDrawerDefaults.border(),
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 )
@@ -68,14 +67,14 @@ fun HyperDrawerItem(
 ```kotlin
 object HyperDrawerDefaults {
     val Width = 320.dp
-    val BorderWidth = 1.dp
+    val Elevation = 5.dp
+    val SelectedItemElevation = 1.dp
     val HeaderPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp)
     val ItemPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp)
     val ItemMinHeight = 54.dp
     const val MaxWidthFraction = 0.88f
     const val MaxHeightFraction = 0.88f
     const val DrawerZIndex = 9f
-    const val DarkBorderAlpha = 0.12f
 
     fun contentPadding(position: HyperDrawerPosition): PaddingValues
 
@@ -89,9 +88,6 @@ object HyperDrawerDefaults {
         disabledContentColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
     ): HyperDrawerColors
-
-    @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke
 }
 ```
 
@@ -144,12 +140,11 @@ HyperDrawer(
 - `drawerContentScrollEnabled = true` 时，普通内容超过最大高度后由面板负责滚动。
 - `drawerContent` 包含 `LazyColumn`、`HyperList` 等纵向滚动组件时，必须设置 `drawerContentScrollEnabled = false`，由内层列表独立负责滚动，避免嵌套滚动导致无限高度测量异常。
 - `HyperDrawerItem` 默认最小高度由 `HyperDrawerDefaults.ItemMinHeight` 提供，其他尺寸通过 `modifier` 控制。
-- 默认面板在浅色模式使用不透明白色卡片背景；深色模式直接使用当前 `MaterialTheme.colorScheme.background`。
-- 面板、文字、选中项和分隔线均以不透明实色绘制；`HyperDrawerDefaults.colors(...)` 接收的自定义颜色同样以实色绘制。
-- 深色默认描边将白色 `0.12f` alpha 预合成到面板底色，形成 1dp 低对比度柔光轮廓；它用于标明外露圆角，不模拟阴影或发光。`HyperDrawerDefaults.border(...)` 接收的自定义颜色同样会预合成为实色。
+- 默认面板使用 `HyperColors.cardContainer` 的不透明材质；自定义 `containerColor` 若带 alpha，会与 `HyperColors.pageBackground` 合成为不透明颜色。
+- 面板不提供描边入口；连续面内渐变和单层 `5.dp` 投影共同建立厚度，避免外露圆角出现硬轮廓。
+- 未选中 Item 透明显示在同一面板内，选中 Item 使用主题色半透明层和 `1.dp` 轻抬升。
 - 抽屉打开与关闭均直接渲染或移除，不执行过渡动画。
 - Header/Item 不提供 `title`、`description`、`leadingIcon` 参数。
 - `open`、选中项和路由由调用方持有。
-- 默认描边来自 `HyperDrawerDefaults.border()`；如需无边框，传入 `border = null`。
 
 <WasmPreview demo="drawer" title="HyperDrawer 交互预览" />

@@ -2,7 +2,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +21,6 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -38,9 +36,7 @@ data class HyperLevelCapsuleColors(
     val containerColor: Color,
     val progressColor: Color,
     val labelColor: Color,
-    val iconColor: Color,
-    val highlightColor: Color,
-    val borderColor: Color
+    val iconColor: Color
 )
 
 /**
@@ -62,25 +58,15 @@ fun HyperLevelCapsule(
         modifier = modifier
             .width(HyperLevelCapsuleDefaults.Width)
             .height(HyperLevelCapsuleDefaults.Height)
-            .shadow(
-                elevation = HyperLevelCapsuleDefaults.Elevation,
+            .hyperGlassSurface(
                 shape = shape,
-                clip = false
-            )
-            .border(
-                width = HyperLevelCapsuleDefaults.BorderWidth,
-                color = colors.borderColor,
-                shape = shape
-            )
-            .clip(shape)
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        colors.highlightColor.copy(alpha = colors.highlightColor.alpha * 0.34f),
-                        colors.containerColor
-                    )
-                ),
-                shape = shape
+                visuals = hyperGlassSurfaceVisuals(
+                    containerColor = colors.containerColor,
+                    elevation = HyperLevelCapsuleDefaults.Elevation,
+                    topLightAlpha = if (HyperColors.isLight) 0.36f else 0.14f,
+                    bottomShadeAlpha = if (HyperColors.isLight) 0.05f else 0.16f,
+                    shadowAlpha = if (HyperColors.isLight) 0.18f else 0.34f
+                )
             )
             .padding(HyperLevelCapsuleDefaults.ContentInset)
             .semantics {
@@ -93,16 +79,14 @@ fun HyperLevelCapsule(
                 .fillMaxWidth()
                 .fillMaxHeight(coercedProgress)
                 .clip(shape)
-                .background(colors.progressColor)
-        )
-
-        // 顶部柔光边缘让半透明容器在明暗视频画面上都保持玻璃层次。
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .fillMaxWidth(HyperLevelCapsuleDefaults.HighlightWidthFraction)
-                .height(HyperLevelCapsuleDefaults.HighlightHeight)
-                .background(colors.highlightColor)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            colors.progressColor.copy(alpha = colors.progressColor.alpha * 0.72f),
+                            colors.progressColor
+                        )
+                    )
+                )
         )
 
         Column(
@@ -136,27 +120,26 @@ object HyperLevelCapsuleDefaults {
     val Width = 52.dp
     val Height = 156.dp
     val Shape: Shape = RoundedCornerShape(percent = 50)
-    val BorderWidth = 1.dp
     val ContentInset = 3.dp
     val ContentSpacing = 6.dp
     val IconSize = 20.dp
-    val HighlightHeight = 1.dp
-    const val HighlightWidthFraction = 0.52f
-    val Elevation = 12.dp
+    val Elevation = 8.dp
 
     @Composable
     fun colors(
         containerColor: Color = Color.Unspecified,
         progressColor: Color = Color.Unspecified,
         labelColor: Color = Color.Unspecified,
-        iconColor: Color = Color.Unspecified,
-        highlightColor: Color = Color.Unspecified,
-        borderColor: Color = Color.Unspecified
+        iconColor: Color = Color.Unspecified
     ): HyperLevelCapsuleColors {
-        val defaultContentColor = Color(1f, 1f, 1f, 0.94f)
+        val defaultContentColor = if (HyperColors.isLight) {
+            HyperColors.primaryText.copy(alpha = 0.94f)
+        } else {
+            Color(1f, 1f, 1f, 0.94f)
+        }
         return HyperLevelCapsuleColors(
             containerColor = if (containerColor == Color.Unspecified) {
-                Color(0.04f, 0.05f, 0.07f, 0.68f)
+                Color(1f, 1f, 1f, if (HyperColors.isLight) 0.56f else 0.20f)
             } else {
                 containerColor
             },
@@ -174,16 +157,6 @@ object HyperLevelCapsuleDefaults {
                 defaultContentColor
             } else {
                 iconColor
-            },
-            highlightColor = if (highlightColor == Color.Unspecified) {
-                Color(1f, 1f, 1f, 0.52f)
-            } else {
-                highlightColor
-            },
-            borderColor = if (borderColor == Color.Unspecified) {
-                Color(1f, 1f, 1f, 0.28f)
-            } else {
-                borderColor
             }
         )
     }

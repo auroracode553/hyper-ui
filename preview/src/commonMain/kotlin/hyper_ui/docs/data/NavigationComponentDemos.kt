@@ -71,7 +71,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "drawer",
         group = GROUP_NAVIGATION,
         title = "HyperDrawer",
-        description = "抽屉使用不透明实色面板和状态色并即时显示、关闭；深色模式使用 1dp 低对比度柔光轮廓标明外露圆角，不使用阴影。支持四个方向，默认启用方向化内容间距与系统安全区，也可关闭以使用完整内容区；支持可配置内容滚动，无遮罩、无动画。",
+        description = "抽屉使用低抬升的不透明大面积玻璃并即时显示、关闭；选中项只增加轻量主题染色。支持四个方向、方向化内容间距、系统安全区与可配置滚动，无遮罩、无动画。",
         code = """
             HyperDrawer(
                 open = open,
@@ -103,9 +103,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("完整内容区", "defaultSetPadding = false", "不注入默认间距或系统栏避让"),
             DemoVariant("场景间距", "drawerContentModifier", "在默认策略之后追加调用方布局"),
             DemoVariant("滚动职责", "drawerContentScrollEnabled", "普通内容由面板滚动，懒列表关闭外层滚动"),
-            DemoVariant("不透明背景", "colors.containerColor", "浅色使用实色卡片背景，深色继承页面背景"),
-            DemoVariant("柔光轮廓", "border = HyperDrawerDefaults.border()", "深色使用 12% 白色预合成的 1dp 边界，可交互关闭"),
-            DemoVariant("选中项", "selected = true", "使用不透明主题容器色"),
+            DemoVariant("结构玻璃", "colors.containerColor", "主题不透明基底、宽柔光与单层阴影"),
+            DemoVariant("选中项", "selected = true", "轻量主题染色，不重复铺设面板底色"),
             DemoVariant("无蒙层", "dismissOnClickOutside", "仅处理外部点击，不绘制背景或遮罩")
         ),
         apiDocumentPaths = listOf("navigation/hyper-drawer.md"),
@@ -115,7 +114,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "slide-menu",
         group = GROUP_NAVIGATION,
         title = "HyperSlideMenu",
-        description = "横向分组菜单。未选中项默认带细描边，菜单文字、计数或图标由 item slot 渲染。",
+        description = "横向分组菜单。每个胶囊使用无硬边框的连续玻璃，菜单文字、计数或图标由 item slot 渲染。",
         code = """
             HyperSlideMenu(
                 items = categories,
@@ -126,10 +125,10 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("选中项", "selectedItem", "主题实色胶囊"),
+            DemoVariant("选中项", "selectedItem", "主题染色玻璃与更清晰抬升"),
             DemoVariant("单项布局", "contentModifier = Modifier.padding(...)", "独立控制单项内容区"),
-            DemoVariant("未选中项", "itemEnabled = true", "中性实色与轻描边"),
-            DemoVariant("禁用项", "itemEnabled = false", "禁用实色状态")
+            DemoVariant("未选中项", "itemEnabled = true", "白色半透明玻璃与轻量投影"),
+            DemoVariant("禁用项", "itemEnabled = false", "移除抬升并降低材质强度")
         ),
         apiDocumentPaths = listOf("navigation/hyper-slide-menu.md"),
         content = { SlideMenuDemo() }

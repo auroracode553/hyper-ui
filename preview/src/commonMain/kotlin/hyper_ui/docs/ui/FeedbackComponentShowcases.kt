@@ -60,6 +60,7 @@ import hyper_ui.HyperUpdateDialogState
 @Composable
 fun EmptyStateDemo() {
     var showDescription by remember { mutableStateOf(true) }
+    var compactCorners by remember { mutableStateOf(false) }
     var feedback by remember { mutableStateOf("等待操作") }
 
     Column(
@@ -76,6 +77,12 @@ fun EmptyStateDemo() {
             ) {
                 Text(if (showDescription) "隐藏说明" else "显示说明")
             }
+            HyperButton(
+                tone = HyperButtonTone.Tonal,
+                onClick = { compactCorners = !compactCorners }
+            ) {
+                Text(if (compactCorners) "柔和圆角" else "紧凑圆角")
+            }
             Text(
                 text = feedback,
                 modifier = Modifier.align(Alignment.CenterVertically),
@@ -87,6 +94,7 @@ fun EmptyStateDemo() {
             title = "暂无历史记录",
             modifier = Modifier.weight(1f),
             description = if (showDescription) "浏览过的页面会显示在这里" else null,
+            shape = RoundedCornerShape(if (compactCorners) 18.dp else 28.dp),
             iconContent = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -119,7 +127,7 @@ fun DropdownMenuDemo() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "菜单面板：不透明实色",
+                text = "菜单面板：不透明磨砂玻璃",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 13.sp
             )

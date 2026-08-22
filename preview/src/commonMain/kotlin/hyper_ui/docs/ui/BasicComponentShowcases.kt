@@ -3,6 +3,7 @@ package hyper_ui.docs.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -27,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonDefaults
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
@@ -99,7 +99,8 @@ fun ButtonDemo() {
         }
         HyperButton(
             onClick = { clicks += 1 },
-            modifier = Modifier.height(32.dp)
+            modifier = Modifier.height(32.dp),
+            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
         ) {
             Text(
                 text = "小尺寸 slot",

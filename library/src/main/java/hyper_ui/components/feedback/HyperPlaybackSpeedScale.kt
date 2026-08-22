@@ -2,8 +2,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -23,10 +21,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
@@ -40,9 +35,7 @@ import kotlin.math.abs
 
 @Immutable
 data class HyperPlaybackSpeedScaleColors(
-    val glassHighlightColor: Color,
-    val glassContainerColor: Color,
-    val borderColor: Color,
+    val containerColor: Color,
     val trackColor: Color,
     val activeTrackColor: Color,
     val tickColor: Color,
@@ -73,15 +66,16 @@ fun HyperPlaybackSpeedScale(
         modifier = modifier
             .widthIn(max = HyperPlaybackSpeedScaleDefaults.MaxWidth)
             .fillMaxWidth(HyperPlaybackSpeedScaleDefaults.WidthFraction)
-            .shadow(HyperPlaybackSpeedScaleDefaults.Elevation, shape, clip = false)
-            .clip(shape)
-            .background(
-                brush = Brush.verticalGradient(
-                    listOf(colors.glassHighlightColor, colors.glassContainerColor)
-                ),
-                shape = shape
+            .hyperGlassSurface(
+                shape = shape,
+                visuals = hyperGlassSurfaceVisuals(
+                    containerColor = colors.containerColor,
+                    elevation = HyperPlaybackSpeedScaleDefaults.Elevation,
+                    topLightAlpha = if (HyperColors.isLight) 0.34f else 0.13f,
+                    bottomShadeAlpha = if (HyperColors.isLight) 0.045f else 0.14f,
+                    shadowAlpha = if (HyperColors.isLight) 0.18f else 0.34f
+                )
             )
-            .border(HyperPlaybackSpeedScaleDefaults.BorderWidth, colors.borderColor, shape)
             .padding(HyperPlaybackSpeedScaleDefaults.ContentPadding)
             .semantics {
                 progressBarRangeInfo = ProgressBarRangeInfo(
@@ -230,8 +224,7 @@ object HyperPlaybackSpeedScaleDefaults {
     val MaxWidth = 480.dp
     const val WidthFraction = 0.9f
     val Shape: Shape = RoundedCornerShape(percent = 50)
-    val Elevation = 16.dp
-    val BorderWidth = 1.dp
+    val Elevation = 9.dp
     val ContentPadding = androidx.compose.foundation.layout.PaddingValues(
         horizontal = 20.dp,
         vertical = 12.dp
@@ -253,9 +246,7 @@ object HyperPlaybackSpeedScaleDefaults {
 
     @Composable
     fun colors(
-        glassHighlightColor: Color = Color.Unspecified,
-        glassContainerColor: Color = Color.Unspecified,
-        borderColor: Color = Color.Unspecified,
+        containerColor: Color = Color.Unspecified,
         trackColor: Color = Color.Unspecified,
         activeTrackColor: Color = Color.Unspecified,
         tickColor: Color = Color.Unspecified,
@@ -265,22 +256,19 @@ object HyperPlaybackSpeedScaleDefaults {
         valueColor: Color = Color.Unspecified
     ): HyperPlaybackSpeedScaleColors {
         val accent = HyperColors.accent
+        val primaryContent = if (HyperColors.isLight) {
+            HyperColors.primaryText
+        } else {
+            Color(1f, 1f, 1f, 0.96f)
+        }
         return HyperPlaybackSpeedScaleColors(
-            glassHighlightColor = resolveHyperContainerColor(
-                glassHighlightColor,
-                Color(1f, 1f, 1f, 0.2f)
-            ),
-            glassContainerColor = resolveHyperContainerColor(
-                glassContainerColor,
-                Color(0.05f, 0.06f, 0.08f, 0.76f)
-            ),
-            borderColor = resolveHyperContainerColor(
-                borderColor,
-                Color(1f, 1f, 1f, 0.24f)
+            containerColor = resolveHyperContainerColor(
+                containerColor,
+                Color(1f, 1f, 1f, if (HyperColors.isLight) 0.62f else 0.20f)
             ),
             trackColor = resolveHyperContainerColor(
                 trackColor,
-                Color(1f, 1f, 1f, 0.34f)
+                primaryContent.copy(alpha = 0.24f)
             ),
             activeTrackColor = resolveHyperContainerColor(
                 activeTrackColor,
@@ -288,17 +276,17 @@ object HyperPlaybackSpeedScaleDefaults {
             ),
             tickColor = resolveHyperContainerColor(
                 tickColor,
-                Color(1f, 1f, 1f, 0.86f)
+                primaryContent.copy(alpha = 0.74f)
             ),
             selectedTickColor = resolveHyperContainerColor(selectedTickColor, accent),
             labelColor = resolveHyperContainerColor(
                 labelColor,
-                Color(1f, 1f, 1f, 0.84f)
+                primaryContent.copy(alpha = 0.72f)
             ),
             selectedLabelColor = resolveHyperContainerColor(selectedLabelColor, accent),
             valueColor = resolveHyperContainerColor(
                 valueColor,
-                Color(1f, 1f, 1f, 0.96f)
+                primaryContent
             )
         )
     }

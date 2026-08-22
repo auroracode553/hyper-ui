@@ -3,6 +3,7 @@ package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
@@ -54,6 +55,8 @@ fun HyperButton(
     colors: HyperButtonColors = HyperButtonDefaults.colors(tone),
     border: BorderStroke? = HyperButtonDefaults.border(tone),
     shape: Shape = HyperButtonDefaults.Shape,
+    contentPadding: PaddingValues = HyperButtonDefaults.ContentPadding,
+    role: Role = Role.Button,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
         HyperButtonDefaults.ContentSpacing,
         Alignment.CenterHorizontally
@@ -85,10 +88,10 @@ fun HyperButton(
             )
             .hyperNoRippleClickable(
                 enabled = enabled,
-                role = Role.Button,
+                role = role,
                 onClick = onClick
             )
-            .padding(HyperButtonDefaults.ContentPadding),
+            .padding(contentPadding),
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {
