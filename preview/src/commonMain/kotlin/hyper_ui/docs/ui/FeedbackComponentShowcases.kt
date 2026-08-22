@@ -48,6 +48,7 @@ import hyper_ui.HyperCircularProgressIndicator
 import hyper_ui.HyperLevelCapsule
 import hyper_ui.HyperLevelCapsuleDefaults
 import hyper_ui.HyperBatteryIndicator
+import hyper_ui.HyperPlaybackSpeedPanelOverlay
 import hyper_ui.HyperPlaybackSpeedScale
 import hyper_ui.HyperPlaybackSpeedScaleDefaults
 import hyper_ui.HyperProgressIndicatorDefaults
@@ -432,10 +433,48 @@ fun PlaybackSpeedScaleDemo() {
             }
         }
         Text(
-            text = "分段轨道复用只读 HyperSlider；长按与横向手势仍由调用方持有。",
+            text = "固定深色，不跟随页面主题；长按与横向手势仍由调用方持有。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun PlaybackSpeedPanelDemo() {
+    var currentSpeed by remember { mutableStateOf(1f) }
+    var panelVisible by remember { mutableStateOf(true) }
+    var feedback by remember { mutableStateOf("拖动滑块可实时更新速度") }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(420.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            HyperButton(onClick = { panelVisible = true }) {
+                Text("打开速度面板")
+            }
+            Text(
+                text = feedback,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 13.sp
+            )
+        }
+        HyperPlaybackSpeedPanelOverlay(
+            visible = panelVisible,
+            currentSpeed = currentSpeed,
+            onSpeedChange = { speed ->
+                currentSpeed = speed
+                feedback = "当前 ${speed}x"
+            },
+            onDismissRequest = { panelVisible = false },
+            onCustomSpeedRequest = { feedback = "已请求自定义速度" }
         )
     }
 }

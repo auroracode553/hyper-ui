@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/feedback/HyperPlaybackSpeedScale.kt`
 - 预览：`playback_speed_scale`
 
-`HyperPlaybackSpeedScale` 是播放器长按临时加速使用的横向柔性玻璃刻度。组件只负责展示候选档位、当前高亮档位和实时倍速；内部轨道统一复用只读 `HyperSlider` 的分段点与三层圆点视觉，长按识别、横向拖动、临时设置播放器速度以及松手恢复仍由调用方处理。
+`HyperPlaybackSpeedScale` 是播放器长按临时加速使用的横向固定深色玻璃刻度。组件只负责展示候选档位、当前高亮档位和实时倍速；内部轨道统一复用只读 `HyperSlider` 的分段点与三层圆点视觉，长按识别、横向拖动、临时设置播放器速度以及松手恢复仍由调用方处理。
 
 ## 公开签名
 
@@ -90,6 +90,7 @@ HyperPlaybackSpeedScale(
 - `leadingContent` 为空时显示内置双箭头；传入图标时通过 `LocalContentColor` 接收 `valueColor`。
 - 默认最大宽度为 `480.dp`、占可用宽度的 90%；可用 `modifier` 继续约束外部尺寸与位置。
 - 组件提供确定进度语义，当前档位会映射为无障碍进度。
-- 默认玻璃使用浅色白色 `0.62f`、深色白色 `0.20f` 的透明基底和一层 `9.dp` 投影；没有边框或独立高光色入口。
+- 默认容器固定为深色 `Color(0.10f, 0.11f, 0.14f, 0.96f)`，主要内容固定为近白色，不读取外层 `MaterialTheme` 的明暗模式；强调色仍来自 `HyperThemeConfig`。
+- 固定深色玻璃使用 `0.13f` 顶部柔光、`0.14f` 底部折射和一层 `9.dp`、`0.34f` 黑色投影；没有边框或独立高光色入口。
 
 <WasmPreview demo="playback_speed_scale" title="HyperPlaybackSpeedScale 交互预览" />
