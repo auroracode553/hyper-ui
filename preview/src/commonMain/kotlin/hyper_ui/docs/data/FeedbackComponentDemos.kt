@@ -21,7 +21,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "empty_state",
         group = GROUP_FEEDBACK,
         title = "HyperEmptyState",
-        description = "页面级空数据状态使用低抬升连续玻璃面板，图标和操作通过 Slot 注入。",
+        description = "页面级空数据状态统一由 HyperPanel 承载，图标和操作通过 Slot 注入。",
         code = """
             HyperEmptyState(
                 title = "暂无历史记录",
@@ -38,7 +38,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("纯标题", "description = null", "紧凑空状态文案"),
             DemoVariant("辅助说明", "description", "居中次级说明"),
             DemoVariant("图标", "iconContent", "由调用方注入图标资源"),
-            DemoVariant("玻璃形状", "shape", "可替换默认 28dp 圆角结构面"),
+            DemoVariant("统一面板", "HyperPanel", "直接复用通用面板的默认样式"),
             DemoVariant("操作", "actionContent", "由调用方持有交互和结果状态")
         ),
         apiDocumentPaths = listOf("feedback/hyper-empty-state.md"),

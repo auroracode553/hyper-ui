@@ -50,7 +50,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperEmptyState](components/feedback/hyper-empty-state.md) | 使用居中低抬升玻璃面板的页面级空数据状态 | 调用方提供文案、图标与可选操作 |
+| [HyperEmptyState](components/feedback/hyper-empty-state.md) | 直接复用 `HyperPanel` 的页面级空数据状态 | 调用方提供文案、图标与可选操作 |
 | [HyperDropdown](components/feedback/hyper-dropdown.md) | 内容自适应并复用公共浮层描边和阴影的柔雾 Popup 菜单 | 调用方提供 `expanded` |
 | [hyperToast](components/feedback/hyper-toast.md) | Android 原生 Toast 的线程安全封装 | 调用即显示，无持久业务状态 |
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 无动画、不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |

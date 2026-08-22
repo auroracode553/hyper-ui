@@ -1,17 +1,14 @@
-/** 文件职责：提供使用低抬升连续玻璃承载的页面级空数据状态。 */
+/** 文件职责：提供由 HyperPanel 承载的页面级空数据状态。 */
 package hyper_ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,14 +18,12 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Immutable
 data class HyperEmptyStateColors(
-    val containerColor: Color,
     val iconContentColor: Color,
     val titleColor: Color,
     val descriptionColor: Color
@@ -37,8 +32,9 @@ data class HyperEmptyStateColors(
 /**
  * 页面级空数据状态。
  *
- * 组件只负责居中布局和空状态视觉；图标、操作及其业务行为由调用方通过 Slot 注入。
- * [modifier] 控制页面占位区域，[panelModifier] 控制内部卡片外壳。
+ * 组件只负责居中布局和空状态内容；面板样式统一由 [HyperPanel] 提供。
+ * 图标、操作及其业务行为由调用方通过 Slot 注入。
+ * [modifier] 控制页面占位区域，[panelModifier] 控制内部 [HyperPanel] 外壳。
  */
 @Composable
 fun HyperEmptyState(
@@ -46,7 +42,6 @@ fun HyperEmptyState(
     modifier: Modifier = Modifier,
     description: String? = null,
     panelModifier: Modifier = Modifier,
-    shape: Shape = HyperEmptyStateDefaults.Shape,
     colors: HyperEmptyStateColors = HyperEmptyStateDefaults.colors(),
     iconContent: (@Composable () -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null
@@ -60,21 +55,9 @@ fun HyperEmptyState(
             .padding(horizontal = HyperEmptyStateDefaults.HorizontalPadding),
         contentAlignment = Alignment.Center
     ) {
-        Column(
+        HyperPanel(
             modifier = panelModifier
-                .widthIn(max = HyperEmptyStateDefaults.PanelMaxWidth)
-                .hyperGlassSurface(
-                    shape = shape,
-                    visuals = hyperGlassSurfaceVisuals(
-                        containerColor = resolvedColors.containerColor,
-                        elevation = HyperEmptyStateDefaults.Elevation,
-                        topLightAlpha = if (HyperColors.isLight) 0.30f else 0.11f,
-                        bottomShadeAlpha = if (HyperColors.isLight) 0.035f else 0.11f,
-                        shadowAlpha = if (HyperColors.isLight) 0.12f else 0.25f
-                    )
-                )
-                .padding(HyperEmptyStateDefaults.ContentPadding),
-            verticalArrangement = Arrangement.spacedBy(HyperEmptyStateDefaults.ContentSpacing),
+                .widthIn(max = HyperEmptyStateDefaults.PanelMaxWidth),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             iconContent?.let { icon ->
@@ -122,21 +105,15 @@ fun HyperEmptyState(
 object HyperEmptyStateDefaults {
     val HorizontalPadding = 24.dp
     val PanelMaxWidth = 520.dp
-    val ContentPadding = PaddingValues(horizontal = 24.dp, vertical = 28.dp)
-    val ContentSpacing = 12.dp
     val ActionSpacing = 8.dp
-    val Elevation = 4.dp
-    val Shape: Shape = RoundedCornerShape(28.dp)
 
     @Composable
     fun colors(
-        containerColor: Color = Color.Unspecified,
         iconContentColor: Color = Color.Unspecified,
         titleColor: Color = Color.Unspecified,
         descriptionColor: Color = Color.Unspecified
     ): HyperEmptyStateColors = resolveHyperEmptyStateColors(
         HyperEmptyStateColors(
-            containerColor = containerColor,
             iconContentColor = iconContentColor,
             titleColor = titleColor,
             descriptionColor = descriptionColor
@@ -148,12 +125,7 @@ object HyperEmptyStateDefaults {
 private fun resolveHyperEmptyStateColors(
     colors: HyperEmptyStateColors
 ): HyperEmptyStateColors {
-    val containerColor = resolveHyperContainerColor(
-        colors.containerColor,
-        Color(1f, 1f, 1f, if (HyperColors.isLight) 0.72f else 0.15f)
-    )
     return HyperEmptyStateColors(
-        containerColor = containerColor,
         iconContentColor = resolveHyperContainerColor(colors.iconContentColor, HyperColors.accent),
         titleColor = resolveHyperContainerColor(colors.titleColor, HyperColors.primaryText),
         descriptionColor = resolveHyperContainerColor(colors.descriptionColor, HyperColors.secondaryText)
