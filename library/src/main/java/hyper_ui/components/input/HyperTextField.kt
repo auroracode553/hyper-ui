@@ -1,10 +1,8 @@
 /** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/input/HyperTextField 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -28,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextRange
@@ -42,7 +39,7 @@ import androidx.compose.ui.unit.sp
 /**
  * 文本输入框组件。
  *
- * 组件内部已包含输入内容与边框的默认间距，外部间距请通过 modifier.padding(...) 控制。
+ * 组件内部已包含输入内容与玻璃容器的默认间距，外部间距请通过 modifier.padding(...) 控制。
  */
 @Composable
 fun HyperTextField(
@@ -84,6 +81,7 @@ fun HyperTextField(
         )
     }
     val textFieldValue = textFieldValueState.copy(text = value)
+    val focused by interactionSource.collectIsFocusedAsState()
     SideEffect {
         if (
             textFieldValue.text != textFieldValueState.text ||
@@ -96,7 +94,9 @@ fun HyperTextField(
 
     val visuals = hyperInputFieldVisuals(
         enabled = enabled,
+        readOnly = readOnly,
         isError = isError,
+        isFocused = focused,
         colors = colors
     )
     val verticalAlignment = if (singleLine) Alignment.CenterVertically else Alignment.Top
@@ -136,14 +136,9 @@ fun HyperTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .defaultMinSize(minHeight = HyperTextFieldDefaults.MinHeight)
-                        .clip(shape)
-                        .background(color = visuals.containerColor, shape)
-                        .border(
-                            border = BorderStroke(
-                                width = HyperTextFieldDefaults.BorderWidth,
-                                color = visuals.borderColor
-                            ),
-                            shape = shape
+                        .hyperTextFieldGlass(
+                            shape = shape,
+                            visuals = visuals.glass
                         )
                         .padding(HyperTextFieldDefaults.ContentPadding),
                     verticalAlignment = verticalAlignment
@@ -197,7 +192,6 @@ object HyperTextFieldDefaults {
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
     val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 6.dp)
     val SlotSpacing = 8.dp
-    val BorderWidth = 1.dp
 
     @Composable
     fun colors(
@@ -215,12 +209,18 @@ object HyperTextFieldDefaults {
         val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
         val resolvedPlaceholderColor = resolveHyperContainerColor(placeholderColor, HyperColors.secondaryText)
         val resolvedErrorColor = resolveHyperContainerColor(errorColor, HyperColors.danger)
+        val defaultContainerColor = rgba(
+            red = 255,
+            green = 255,
+            blue = 255,
+            alpha = if (HyperColors.isLight) 0.66f else 0.18f
+        )
 
         return HyperTextFieldColors(
-            containerColor = resolveHyperContainerColor(containerColor, HyperColors.fieldContainer),
+            containerColor = resolveHyperContainerColor(containerColor, defaultContainerColor),
             errorContainerColor = resolveHyperContainerColor(
                 errorContainerColor,
-                HyperColors.fieldContainer
+                defaultContainerColor
             ),
             contentColor = resolvedContentColor,
             placeholderColor = resolvedPlaceholderColor,
@@ -230,7 +230,12 @@ object HyperTextFieldDefaults {
             cursorColor = resolveHyperContainerColor(cursorColor, HyperColors.accent),
             disabledContainerColor = resolveHyperContainerColor(
                 disabledContainerColor,
-                HyperColors.fieldContainer
+                rgba(
+                    red = 255,
+                    green = 255,
+                    blue = 255,
+                    alpha = if (HyperColors.isLight) 0.42f else 0.10f
+                )
             ),
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,

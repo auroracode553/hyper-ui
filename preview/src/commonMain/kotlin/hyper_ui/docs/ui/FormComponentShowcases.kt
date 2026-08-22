@@ -41,6 +41,7 @@ import hyper_ui.HyperSlider
 import hyper_ui.HyperSliderDefaults
 import hyper_ui.HyperSwitch
 import hyper_ui.HyperTextField
+import hyper_ui.HyperTextFieldDefaults
 
 @Composable
 fun RadioDemo() {
@@ -165,8 +166,9 @@ fun TextFieldDemo() {
     var name by remember { mutableStateOf("HyperUI") }
     var note by remember { mutableStateOf("") }
     var keyword by remember { mutableStateOf("HyperUI") }
+    var forceNoteError by remember { mutableStateOf(false) }
     val nameFocusRequester = remember { FocusRequester() }
-    val isNoteError = note.length > 80
+    val isNoteError = forceNoteError || note.length > 80
 
     Column(
         modifier = Modifier.widthIn(max = 520.dp),
@@ -179,8 +181,13 @@ fun TextFieldDemo() {
             placeholderContent = { FieldPlaceholder("请输入名称") },
             inputModifier = Modifier.focusRequester(nameFocusRequester)
         )
-        HyperButton(onClick = { nameFocusRequester.requestFocus() }) {
-            Text("首次聚焦已有文本")
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton(onClick = { nameFocusRequester.requestFocus() }) {
+                Text("查看聚焦态")
+            }
+            HyperButton(onClick = { forceNoteError = !forceNoteError }) {
+                Text(if (forceNoteError) "关闭错误态" else "查看错误态")
+            }
         }
         HyperTextField(
             value = note,
@@ -201,9 +208,18 @@ fun TextFieldDemo() {
             enabled = false
         )
         HyperTextField(
+            value = "只读内容",
+            onValueChange = {},
+            labelContent = { FieldLabel("只读态") },
+            readOnly = true
+        )
+        HyperTextField(
             value = keyword,
             onValueChange = { keyword = it },
             placeholderContent = { FieldPlaceholder("搜索组件") },
+            colors = HyperTextFieldDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.34f)
+            ),
             startContent = {
                 Icon(
                     imageVector = Icons.Default.Search,
