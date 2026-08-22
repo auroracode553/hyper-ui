@@ -186,7 +186,7 @@ HyperIconButton(onClick = onSearch) {
 
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
-- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 紧凑型容器，内容由调用方渲染；所有 tone、禁用态和图标按钮容器均使用不透明实色；`HyperIconButton` 默认 40dp，自定义尺寸通过 `modifier` 控制）
+- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；`HyperButton` 的 tone 与禁用态使用不透明实色；`HyperIconButton` 默认 38dp，默认图标 18dp，使用均匀白色半透明磨砂底材、宽上沿柔光、面内折射边缘与单层悬浮阴影，不绘制硬边框；自定义尺寸通过 `modifier` 控制）
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadio`, `HyperSegmented`, `HyperSlider`（输入框默认使用不透明背景、轻描边和 40dp 紧凑最小高度，已有文本首次聚焦时光标位于末尾；`HyperSegmented` 提供等宽分段与抬升选中态；`HyperSlider` 支持点击定位、连续/等距吸附、可选分段点、指定业务标记和只读态，并统一使用柔光环、外圆、中心点三层滑块视觉）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperSectionedList`, `HyperMenuList`, `HyperListItem`（`HyperList` 提供单一连续卡片的页面级 `LazyColumn`、可滚动 `contentPadding` 与 `LazyListScope` Slot；`HyperSectionedList` 面向日期、历史等动态分组数据，保持标题和数据行独立懒加载并自动处理组内圆角与分割线；`HyperMenuList` 只能用于少量菜单、设置项和操作入口；所有列表容器均使用不透明实色，`HyperListItem` 根据 supporting slot 自动使用单行 44dp、双行 54dp 的基础高度和 4dp 纵向留白）

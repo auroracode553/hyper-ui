@@ -29,6 +29,7 @@ AI 生成代码时必须遵守：
 - 不把网络请求、数据库访问、权限申请、路由实现或 ViewModel 写入 HyperUI 组件。
 - `hyperToast` 是 Android-only 工具；传入 `Context` 与文本或字符串资源 ID，内部只负责主线程调度和原生 Toast 显示。
 - 模态 `HyperDialog`、`HyperAlertDialog` 和 `HyperUpdateDialog` 保留平台标准背景调暗；Popup、菜单和当前抽屉组件只渲染自身面板。`HyperButton`、`HyperList`、`HyperSectionedList`、`HyperMenuList`、`HyperDrawer`、进度指示器以及各类弹窗面板使用不透明实色。`HyperDrawer` 在深色模式下默认继承页面背景色，并使用 1dp 低对比度柔光轮廓标明外露圆角；`HyperTabBar` 深色模式继承页面背景色，浅色模式保留轻量透明度，并只使用 0.5dp 低对比度顶部发丝线分层。
+- `HyperIconButton` 是玻璃材质例外：默认使用均匀白色半透明底材、宽上沿柔光、面内折射边缘与单层悬浮阴影，不绘制硬边框，也不暴露 border 或 outline 配置。
 - HyperUI 不强制绑定图标库；Android 项目需要图标时，默认优先推荐 `com.composables:icons-lucide-android:2.2.1`，通过 `painterResource` 使用其 VectorDrawable 资源。
 - 除非调用方已有明确依赖，否则不要为少量图标引入 `material-icons-extended`；Release 构建应开启代码与资源裁剪。
 - 文档示例中的 Compose、图标和状态 API 仍需从各自标准包导入。

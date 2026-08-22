@@ -40,7 +40,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         id = "icon_button",
         group = GROUP_BASIC,
         title = "HyperIconButton",
-        description = "Slot-first 紧凑型图标按钮容器。默认 40dp，并提供圆形、圆角、语义色、大尺寸和禁用实色变体。",
+        description = "Slot-first 磨砂玻璃图标按钮。默认 38dp，以均匀白色透明底材、宽上沿柔光、面内折射边缘与单层悬浮阴影还原澎湃 OS 风格，不绘制硬边框。",
         code = """
             HyperIconButton(
                 onClick = onSearch
@@ -56,21 +56,21 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
                 onClick = onPlay,
                 modifier = Modifier.size(56.dp),
                 colors = HyperIconButtonDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    pressedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.64f),
+                    pressedContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.76f),
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             ) {
                 Icon(Icons.Default.PlayArrow, contentDescription = "播放")
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认圆形", "shape = CircleShape", "默认 40dp 实色容器与描边"),
-            DemoVariant("主题实色", "colors = primaryContainer", "主题色按压反馈"),
-            DemoVariant("危险圆角", "shape = RoundedCornerShape(12.dp)", "危险语义实色"),
-            DemoVariant("禁用状态", "enabled = false", "禁用容器、文字与描边"),
-            DemoVariant("大尺寸主要", "modifier = Modifier.size(56.dp)", "主要实色媒体按钮"),
-            DemoVariant("大尺寸中性", "modifier = Modifier.size(56.dp)", "中性实色工具按钮")
+            DemoVariant("默认玻璃", "shape = CircleShape", "38dp 容器、18dp 图标与柔和折射边缘"),
+            DemoVariant("主题玻璃", "colors = primaryContainer.copy(alpha = 0.52f)", "主题色玻璃与按压反馈"),
+            DemoVariant("危险玻璃", "shape = RoundedCornerShape(12.dp)", "危险语义色玻璃"),
+            DemoVariant("禁用状态", "enabled = false", "降低磨砂底材、内容和投影强度"),
+            DemoVariant("大尺寸主题", "modifier = Modifier.size(56.dp)", "主题色媒体按钮"),
+            DemoVariant("大尺寸中性", "modifier = Modifier.size(56.dp)", "中性玻璃工具按钮")
         ),
         apiDocumentPaths = listOf("basic/hyper-icon-button.md"),
         content = { IconButtonDemo() }

@@ -128,7 +128,7 @@ fun IconButtonDemo() {
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButtonVariantLabel(label = "默认圆形") {
+            IconButtonVariantLabel(label = "默认玻璃") {
                 HyperIconButton(onClick = { selectedAction = "搜索" }) {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -137,12 +137,12 @@ fun IconButtonDemo() {
                     )
                 }
             }
-            IconButtonVariantLabel(label = "主题实色") {
+            IconButtonVariantLabel(label = "主题玻璃") {
                 HyperIconButton(
                     onClick = { selectedAction = "通知" },
                     colors = HyperIconButtonDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        pressedContainerColor = MaterialTheme.colorScheme.primary,
+                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.52f),
+                        pressedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.68f),
                         contentColor = MaterialTheme.colorScheme.primary,
                         pressedContentColor = MaterialTheme.colorScheme.onPrimary
                     )
@@ -154,13 +154,13 @@ fun IconButtonDemo() {
                     )
                 }
             }
-            IconButtonVariantLabel(label = "危险圆角") {
+            IconButtonVariantLabel(label = "危险玻璃") {
                 HyperIconButton(
                     onClick = { selectedAction = "删除" },
                     shape = RoundedCornerShape(12.dp),
                     colors = HyperIconButtonDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        pressedContainerColor = MaterialTheme.colorScheme.error,
+                        containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.54f),
+                        pressedContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
                         contentColor = MaterialTheme.colorScheme.error,
                         pressedContentColor = MaterialTheme.colorScheme.onError
                     )
@@ -186,14 +186,14 @@ fun IconButtonDemo() {
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButtonVariantLabel(label = "大尺寸主要") {
+            IconButtonVariantLabel(label = "大尺寸主题") {
                 HyperIconButton(
                     onClick = { selectedAction = "媒体控制" },
                     modifier = Modifier.size(56.dp),
                     colors = HyperIconButtonDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        pressedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.64f),
+                        pressedContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.76f),
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                         pressedContentColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
@@ -209,8 +209,8 @@ fun IconButtonDemo() {
                     onClick = { selectedAction = "中性操作" },
                     modifier = Modifier.size(56.dp),
                     colors = HyperIconButtonDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        pressedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.58f),
+                        pressedContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.72f),
                         contentColor = MaterialTheme.colorScheme.onSurface
                     )
                 ) {
