@@ -84,6 +84,7 @@ export default defineConfig({
         text: '导航组件',
         items: [
           { text: 'HyperNavBar', link: '/components/navigation/hyper-nav-bar' },
+          { text: 'HyperImmersiveNavBar', link: '/components/navigation/hyper-immersive-nav-bar' },
           { text: 'HyperDrawer', link: '/components/navigation/hyper-drawer' },
           { text: 'HyperSlideMenu', link: '/components/navigation/hyper-slide-menu' },
           { text: 'HyperTabBar', link: '/components/navigation/hyper-tab-bar' }

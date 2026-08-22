@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -29,13 +30,14 @@ data class HyperListColors(
  * 页面级懒加载列表。
  *
  * 组件只负责 LazyColumn 与统一容器样式，项目结构完全由 LazyListScope slot 提供。
- * modifier 控制列表外壳，contentModifier 控制容器内部内容布局。
+ * modifier 控制列表外壳，contentModifier 控制容器节点布局，contentPadding 随列表内容滚动。
  */
 @Composable
 fun HyperList(
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
+    contentPadding: PaddingValues = HyperListDefaults.ContentPadding,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     shape: Shape = HyperListDefaults.Shape,
     border: BorderStroke? = null,
@@ -60,6 +62,7 @@ fun HyperList(
                 .then(if (border != null) Modifier.border(border, shape) else Modifier)
                 .then(contentModifier),
             state = state,
+            contentPadding = contentPadding,
             verticalArrangement = verticalArrangement,
             content = content
         )
@@ -68,6 +71,7 @@ fun HyperList(
 
 object HyperListDefaults {
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius)
+    val ContentPadding: PaddingValues = PaddingValues(0.dp)
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperListColors = HyperListColors(

@@ -30,6 +30,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("懒加载", "LazyListScope", "固定使用 LazyColumn 页面列表"),
             DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制容器内部留白"),
+            DemoVariant("滚动留白", "contentPadding", "Padding 随 LazyColumn 内容一起滚动"),
             DemoVariant("Slot 列表", "item/items/itemsIndexed", "调用方组合异构项目"),
             DemoVariant("默认外观", "colors + shape", "不透明卡片背景与 12dp 轻圆角"),
             DemoVariant("自适应行高", "44.dp / 54.dp", "单行保持紧凑，带描述项增加纵向呼吸空间"),

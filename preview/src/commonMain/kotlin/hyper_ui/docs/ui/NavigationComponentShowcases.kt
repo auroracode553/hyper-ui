@@ -6,7 +6,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -52,6 +56,7 @@ import hyper_ui.HyperIconButtonDefaults
 import hyper_ui.HyperPanel
 import hyper_ui.HyperPanelDefaults
 import hyper_ui.HyperNavBar
+import hyper_ui.HyperImmersiveNavBar
 import hyper_ui.docs.theme.DocsBorder
 
 private data class DemoNavItem(
@@ -108,6 +113,97 @@ fun NavBarDemo() {
                 tone = HyperButtonTone.Tonal
             ) {
                 Text(text = if (showBack) "隐藏返回 slot" else "显示返回 slot")
+            }
+        }
+    }
+}
+
+@Composable
+fun ImmersiveNavBarDemo() {
+    var showHeader by remember { mutableStateOf(false) }
+    val sections = listOf(
+        "未命名笔记",
+        "公司手机",
+        "1472",
+        "向上滚动列表",
+        "正文会进入透明导航栏后方",
+        "返回、标题和更多按钮保持固定"
+    )
+
+    HyperImmersiveNavBar(
+        modifier = Modifier
+            .widthIn(max = 440.dp)
+            .height(460.dp)
+            .clip(RoundedCornerShape(28.dp))
+            .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(28.dp)),
+        windowInsets = WindowInsets(top = 22.dp),
+        navigationContent = {
+            TopBarIconButton(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "返回",
+                onClick = {}
+            )
+        },
+        titleContent = {
+            Text(text = "沉浸页面", maxLines = 1)
+        },
+        actionContent = {
+            TopBarIconButton(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "切换固定头部",
+                onClick = { showHeader = !showHeader }
+            )
+        },
+        headerContent = if (showHeader) {
+            {
+                Text(
+                    text = "固定头部也会计入首屏净空",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 10.dp),
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+            }
+        } else null
+    ) { immersivePadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.secondaryContainer),
+            contentPadding = immersivePadding,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            item(key = "hero") {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 28.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = "透明导航栏下的内容",
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "初始位置自动避让顶部操作区；现在向上滚动查看沉浸效果。",
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+            }
+            items(items = sections, key = { it }) { section ->
+                HyperPanel(
+                    modifier = Modifier.padding(horizontal = 14.dp),
+                    colors = HyperPanelDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                ) {
+                    Text(text = section, modifier = Modifier.padding(16.dp))
+                }
+            }
+            item(key = "bottom_clearance") {
+                Box(modifier = Modifier.padding(PaddingValues(bottom = 20.dp)))
             }
         }
     }

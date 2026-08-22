@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -130,6 +131,7 @@ fun HyperListDemo() {
     )
     var roundedCorners by remember { mutableStateOf(true) }
     var comfortableContent by remember { mutableStateOf(false) }
+    var contentPaddingEnabled by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -170,9 +172,31 @@ fun HyperListDemo() {
             )
         }
 
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = if (contentPaddingEnabled) "可滚动内容留白" else "无内容留白",
+                color = LocalContentColor.current,
+                fontSize = 14.sp,
+                lineHeight = 20.sp
+            )
+            HyperSwitch(
+                checked = contentPaddingEnabled,
+                onCheckedChange = { contentPaddingEnabled = it }
+            )
+        }
+
         Box(modifier = Modifier.height(280.dp)) {
             HyperList(
                 contentModifier = Modifier.padding(vertical = 4.dp),
+                contentPadding = if (contentPaddingEnabled) {
+                    PaddingValues(vertical = 24.dp)
+                } else {
+                    HyperListDefaults.ContentPadding
+                },
                 shape = if (roundedCorners) HyperListDefaults.Shape else RectangleShape
             ) {
                 itemsIndexed(

@@ -8,6 +8,8 @@
 
 `HyperNavBar` 是三段式顶部导航栏容器：`navigationContent`、`titleContent`、`actionContent`。默认背景透明，直接继承页面底色。
 
+如果页面需要“按钮固定、首屏内容位于栏下、滚动后内容进入透明栏与状态栏后方”的效果，请使用 [HyperImmersiveNavBar](hyper-immersive-nav-bar.md)。该行为需要导航层与滚动内容共同参与布局，不能由 `HyperNavBar` 上的单一布尔属性独立完成。
+
 ## 公开 API
 
 ```kotlin

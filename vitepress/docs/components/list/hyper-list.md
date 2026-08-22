@@ -15,6 +15,7 @@ fun HyperList(
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
+    contentPadding: PaddingValues = HyperListDefaults.ContentPadding,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     shape: Shape = HyperListDefaults.Shape,
     border: BorderStroke? = null,
@@ -32,6 +33,7 @@ data class HyperListColors(
 
 object HyperListDefaults {
     val Shape: Shape
+    val ContentPadding: PaddingValues = PaddingValues(0.dp)
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperListColors
@@ -48,6 +50,7 @@ object HyperListDefaults {
 | `modifier` | `Modifier` | `Modifier` | 列表根容器修饰符 |
 | `contentModifier` | `Modifier` | `Modifier` | 列表容器内部的布局修饰符 |
 | `state` | `LazyListState` | `rememberLazyListState()` | 懒列表滚动状态 |
+| `contentPadding` | `PaddingValues` | `HyperListDefaults.ContentPadding` | `LazyColumn` 的可滚动内容间距，可用于沉浸式页面首屏净空 |
 | `verticalArrangement` | `Arrangement.Vertical` | 间距 `0.dp` | 条目纵向排列 |
 | `shape` | `Shape` | `HyperListDefaults.Shape` | 容器与内容裁剪形状，默认 12dp 轻圆角 |
 | `border` | `BorderStroke?` | `null` | 可选同形边框 |
@@ -97,7 +100,7 @@ HyperList(state = listState) {
 - 多个分组需要各自的圆角、背景和自动末项分割线时使用 [HyperSectionedList](hyper-sectioned-list.md)，不要在每个 `HyperListItem` 上重复拼接分组样式。
 - 数据量很少且不需要独立滚动时，直接使用 Compose `Column`；设置分组和少量操作入口使用 [HyperMenuList](hyper-menu-list.md)。
 - 容器颜色始终以不透明实色绘制；含 alpha 的自定义颜色会先与页面背景合成。
-- 列表内部留白使用 `contentModifier`，页面级外部留白使用 `modifier` 或父布局约束。
+- 随条目一起滚动的首尾留白使用 `contentPadding`；列表节点内部布局使用 `contentModifier`，页面级外部留白使用 `modifier` 或父布局约束。
 - `HyperList` 不解析 Slot 内容，最后一项分割线由调用方通过 `HyperListItem.dividerVisible` 控制。
 - 大量或动态数据应提供稳定 `key`；结构不同的项目建议提供 `contentType`。
 - 放入另一个同方向无界滚动容器前，应明确尺寸约束，避免嵌套滚动测量异常。

@@ -32,6 +32,7 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperNavBar](components/navigation/hyper-nav-bar.md) | 默认透明、继承页面背景的顶部栏三段 slot 容器 | 调用方处理事件 |
+| [HyperImmersiveNavBar](components/navigation/hyper-immersive-nav-bar.md) | 固定透明导航操作层，首屏避让、滚动后内容进入导航栏与状态栏后方 | 调用方持有滚动状态并消费组件返回的内容 Padding |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 使用不透明实色面板，默认提供方向化间距与系统安全区且可关闭、无遮罩、无动画的四方向 slot 抽屉 | 调用方提供 `open`、默认 Padding 策略、附加间距、选中态与嵌套列表滚动策略 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 横向分组菜单，未选中项默认带细描边 | 调用方提供 `selectedItem` |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | 深色与页面同色、浅色轻量透明且无玻璃高光，总高 60dp 的底部栏容器 | 调用方处理内容、选择与导航 |
@@ -40,7 +41,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperList](components/list/hyper-list.md) | 固定使用 LazyColumn 的页面级 Slot 懒列表 | 调用方提供 LazyListScope 项目 |
+| [HyperList](components/list/hyper-list.md) | 固定使用 LazyColumn、支持可滚动 contentPadding 的页面级 Slot 懒列表 | 调用方提供 LazyListScope 项目与可选滚动状态 |
 | [HyperSectionedList](components/list/hyper-sectioned-list.md) | 日期、历史等动态数据的分段懒列表 | 调用方提供分组数据、稳定 key 与行内容 |
 | [HyperMenuList](components/list/hyper-menu-list.md) | 仅用于少量菜单、设置项和操作入口的圆角菜单容器 | 调用方提供菜单 Slot；不用于数据列表 |
 | [HyperListItem](components/list/hyper-list-item.md) | 单行 44dp、带说明 54dp 的自适应实色列表项 | 调用方处理点击和尾部状态 |

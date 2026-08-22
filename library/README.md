@@ -68,7 +68,7 @@ src/main/java/hyper_ui/
     ├── dialog/           # HyperAlertDialog 结构化弹窗
     ├── popup/            # HyperPopup 基础浮层
     ├── drawer/
-    ├── navigation/       # HyperNavBar / HyperTabBar
+    ├── navigation/       # HyperNavBar / HyperImmersiveNavBar / HyperTabBar
     ├── feedback/         # Android-only hyperToast
     └── progress/         # 只读进度指示器与可拖动 HyperSlider
 ```

@@ -2,6 +2,7 @@
 package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.NavBarDemo
+import hyper_ui.docs.ui.ImmersiveNavBarDemo
 import hyper_ui.docs.ui.DrawerDemo
 import hyper_ui.docs.ui.SlideMenuDemo
 import hyper_ui.docs.ui.TabBarDemo
@@ -38,6 +39,33 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         ),
         apiDocumentPaths = listOf("navigation/hyper-nav-bar.md"),
         content = { NavBarDemo() }
+    ),
+    ComponentDemo(
+        id = "immersive-nav-bar",
+        group = GROUP_NAVIGATION,
+        title = "HyperImmersiveNavBar",
+        description = "固定透明导航按钮，首屏内容位于导航栏下方；滚动后内容可进入导航栏与状态栏后方。",
+        code = """
+            HyperImmersiveNavBar(
+                navigationContent = { BackButton(onClick = onBack) },
+                titleContent = { Text("详情") },
+                actionContent = { MoreButton(onClick = onMore) },
+                contentPadding = PaddingValues(bottom = bottomClearance)
+            ) { immersivePadding ->
+                LazyColumn(contentPadding = immersivePadding) {
+                    items(notes) { note -> NoteCard(note) }
+                }
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("固定操作层", "navigation/title/action", "按钮不随正文滚动"),
+            DemoVariant("附加头部", "headerContent", "搜索或筛选区域固定并计入首屏净空"),
+            DemoVariant("首屏净空", "immersivePadding", "初始内容从状态栏与导航栏下方开始"),
+            DemoVariant("沉浸滚动", "LazyColumn.contentPadding", "顶部净空滚出后，内容绘制到透明栏后方"),
+            DemoVariant("系统栏", "windowInsets = WindowInsets.statusBars", "默认避让状态栏，不修改窗口配置")
+        ),
+        apiDocumentPaths = listOf("navigation/hyper-immersive-nav-bar.md"),
+        content = { ImmersiveNavBarDemo() }
     ),
     ComponentDemo(
         id = "drawer",
