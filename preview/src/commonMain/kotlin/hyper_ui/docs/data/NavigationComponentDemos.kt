@@ -71,7 +71,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "drawer",
         group = GROUP_NAVIGATION,
         title = "HyperDrawer",
-        description = "抽屉使用不透明实色面板和状态色并即时显示、关闭；深色模式默认与页面背景同色且无灰色边界。支持四个方向，默认启用方向化内容间距与系统安全区，也可关闭以使用完整内容区；支持可配置内容滚动，无遮罩、无动画。",
+        description = "抽屉使用不透明实色面板和状态色并即时显示、关闭；深色模式使用 1dp 低对比度柔光轮廓标明外露圆角，不使用阴影。支持四个方向，默认启用方向化内容间距与系统安全区，也可关闭以使用完整内容区；支持可配置内容滚动，无遮罩、无动画。",
         code = """
             HyperDrawer(
                 open = open,
@@ -104,6 +104,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("场景间距", "drawerContentModifier", "在默认策略之后追加调用方布局"),
             DemoVariant("滚动职责", "drawerContentScrollEnabled", "普通内容由面板滚动，懒列表关闭外层滚动"),
             DemoVariant("不透明背景", "colors.containerColor", "浅色使用实色卡片背景，深色继承页面背景"),
+            DemoVariant("柔光轮廓", "border = HyperDrawerDefaults.border()", "深色使用 12% 白色预合成的 1dp 边界，可交互关闭"),
             DemoVariant("选中项", "selected = true", "使用不透明主题容器色"),
             DemoVariant("无蒙层", "dismissOnClickOutside", "仅处理外部点击，不绘制背景或遮罩")
         ),

@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/drawer/HyperDrawer.kt`
 - 预览：`drawer`
 
-`HyperDrawer` 是使用不透明实色面板和状态色的四方向抽屉容器，无遮罩。深色模式下抽屉面板和默认描边直接采用当前 `MaterialTheme.colorScheme.background`，与页面保持同色；浅色模式使用实色卡片背景。`open` 直接控制面板是否渲染，打开与关闭均不执行动画。抽屉默认启用方向化内容间距与系统栏安全区；需要内容延伸到完整面板范围时，将 `defaultSetPadding` 设为 `false`。
+`HyperDrawer` 是使用不透明实色面板和状态色的四方向抽屉容器，无遮罩。深色模式下抽屉面板采用当前 `MaterialTheme.colorScheme.background`，默认使用 1dp 低对比度柔光轮廓标明外露圆角，不使用阴影；浅色模式使用实色卡片背景。`open` 直接控制面板是否渲染，打开与关闭均不执行动画。抽屉默认启用方向化内容间距与系统栏安全区；需要内容延伸到完整面板范围时，将 `defaultSetPadding` 设为 `false`。
 
 ## 公开签名
 
@@ -68,12 +68,14 @@ fun HyperDrawerItem(
 ```kotlin
 object HyperDrawerDefaults {
     val Width = 320.dp
+    val BorderWidth = 1.dp
     val HeaderPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp)
     val ItemPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp)
     val ItemMinHeight = 54.dp
     const val MaxWidthFraction = 0.88f
     const val MaxHeightFraction = 0.88f
     const val DrawerZIndex = 9f
+    const val DarkBorderAlpha = 0.12f
 
     fun contentPadding(position: HyperDrawerPosition): PaddingValues
 
@@ -144,7 +146,7 @@ HyperDrawer(
 - `HyperDrawerItem` 默认最小高度由 `HyperDrawerDefaults.ItemMinHeight` 提供，其他尺寸通过 `modifier` 控制。
 - 默认面板在浅色模式使用不透明白色卡片背景；深色模式直接使用当前 `MaterialTheme.colorScheme.background`。
 - 面板、文字、选中项和分隔线均以不透明实色绘制；`HyperDrawerDefaults.colors(...)` 接收的自定义颜色同样以实色绘制。
-- 深色默认描边与页面背景同色，因此不会出现灰色边界；`HyperDrawerDefaults.border(...)` 接收的自定义颜色同样以实色绘制。
+- 深色默认描边将白色 `0.12f` alpha 预合成到面板底色，形成 1dp 低对比度柔光轮廓；它用于标明外露圆角，不模拟阴影或发光。`HyperDrawerDefaults.border(...)` 接收的自定义颜色同样会预合成为实色。
 - 抽屉打开与关闭均直接渲染或移除，不执行过渡动画。
 - Header/Item 不提供 `title`、`description`、`leadingIcon` 参数。
 - `open`、选中项和路由由调用方持有。

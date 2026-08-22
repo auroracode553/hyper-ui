@@ -322,12 +322,14 @@ private fun drawerSafeDrawingSides(position: HyperDrawerPosition): WindowInsetsS
 
 object HyperDrawerDefaults {
     val Width = 320.dp
+    val BorderWidth = 1.dp
     val HeaderPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp)
     val ItemPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp)
     val ItemMinHeight = 54.dp
     const val MaxWidthFraction = 0.88f
     const val MaxHeightFraction = 0.88f
     const val DrawerZIndex = 9f
+    const val DarkBorderAlpha = 0.12f
 
     /** 默认 Padding 开启时使用的方向化内容留白。 */
     fun contentPadding(position: HyperDrawerPosition): PaddingValues = when (position) {
@@ -362,10 +364,15 @@ object HyperDrawerDefaults {
     fun border(color: Color = Color.Unspecified): BorderStroke {
         val containerColor = defaultHyperDrawerContainerColor()
         return BorderStroke(
-            width = 1.dp,
+            width = BorderWidth,
             color = resolveHyperOpaqueColor(
                 color = color,
-                fallbackColor = if (HyperColors.isLight) HyperColors.divider else containerColor,
+                fallbackColor = if (HyperColors.isLight) {
+                    HyperColors.divider
+                } else {
+                    // 深色抽屉需要沿外露圆角保留柔和高光，黑色阴影无法提供有效层次。
+                    rgba(255, 255, 255, DarkBorderAlpha)
+                },
                 backgroundColor = containerColor
             )
         )
