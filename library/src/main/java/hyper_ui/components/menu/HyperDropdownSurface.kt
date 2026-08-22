@@ -1,28 +1,20 @@
 /** 文件职责：绘制 HyperDropdown 参考图风格的柔雾面板，并集中维护主题视觉参数。 */
 package hyper_ui
 
-import androidx.compose.foundation.border
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 @Immutable
 internal data class HyperDropdownSurfaceVisuals(
     val topLightColor: Color,
     val bottomShadeColor: Color,
-    val edgeColor: Color,
-    val edgeWidth: Dp,
-    val elevation: Dp,
-    val ambientShadowColor: Color,
-    val spotShadowColor: Color
+    val depth: HyperSurfaceDepthVisuals
 )
 
 /**
@@ -33,18 +25,9 @@ internal fun Modifier.hyperDropdownSurface(
     shape: Shape,
     containerColor: Color,
     visuals: HyperDropdownSurfaceVisuals
-): Modifier = then(
-    if (visuals.elevation > 0.dp) {
-        Modifier.shadow(
-            elevation = visuals.elevation,
-            shape = shape,
-            clip = false,
-            ambientColor = visuals.ambientShadowColor,
-            spotColor = visuals.spotShadowColor
-        )
-    } else {
-        Modifier
-    }
+): Modifier = hyperSurfaceDepth(
+    shape = shape,
+    visuals = visuals.depth
 )
     .clip(shape)
     .drawWithCache {
@@ -63,11 +46,6 @@ internal fun Modifier.hyperDropdownSurface(
             drawContent()
         }
     }
-    .border(
-        width = visuals.edgeWidth,
-        color = visuals.edgeColor,
-        shape = shape
-    )
 
 @Composable
 internal fun hyperDropdownSurfaceVisuals(): HyperDropdownSurfaceVisuals {
@@ -83,23 +61,10 @@ internal fun hyperDropdownSurfaceVisuals(): HyperDropdownSurfaceVisuals {
         } else {
             Color(0f, 0f, 0f, 0.035f)
         },
-        edgeColor = if (isLight) {
-            Color(0f, 0f, 0f, 0.065f)
-        } else {
-            Color(1f, 1f, 1f, 0.14f)
-        },
-        edgeWidth = 1.dp,
-        elevation = HyperDropdownDefaults.Elevation,
-        ambientShadowColor = if (isLight) {
-            Color(0f, 0f, 0f, 0.075f)
-        } else {
-            Color(0f, 0f, 0f, 0.14f)
-        },
-        spotShadowColor = if (isLight) {
-            Color(0f, 0f, 0f, 0.15f)
-        } else {
-            Color(0f, 0f, 0f, 0.24f)
-        }
+        depth = hyperSurfaceDepthVisuals(
+            role = HyperSurfaceDepthRole.FloatingPanel,
+            elevation = HyperDropdownDefaults.Elevation
+        )
     )
 }
 

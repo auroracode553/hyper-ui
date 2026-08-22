@@ -131,7 +131,11 @@ fun HyperDrawer(
                                 elevation = HyperDrawerDefaults.Elevation,
                                 topLightAlpha = if (HyperColors.isLight) 0.24f else 0.10f,
                                 bottomShadeAlpha = if (HyperColors.isLight) 0.035f else 0.12f,
-                                shadowAlpha = if (HyperColors.isLight) 0.16f else 0.32f
+                                shadowAlpha = if (HyperColors.isLight) 0.16f else 0.32f,
+                                depth = hyperSurfaceDepthVisuals(
+                                    role = HyperSurfaceDepthRole.StructuralPanel,
+                                    elevation = HyperDrawerDefaults.Elevation
+                                )
                             )
                         )
                         .then(

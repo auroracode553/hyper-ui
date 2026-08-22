@@ -6,11 +6,9 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Immutable
@@ -19,9 +17,7 @@ internal data class HyperTextFieldGlassVisuals(
     val topLightColor: Color,
     val bottomShadeColor: Color,
     val indicatorColor: Color,
-    val elevation: Dp,
-    val ambientShadowColor: Color,
-    val spotShadowColor: Color
+    val depth: HyperSurfaceDepthVisuals
 ) {
     companion object {
         val RestingElevation = 2.dp
@@ -35,12 +31,9 @@ internal fun Modifier.hyperTextFieldGlass(
     shape: Shape,
     visuals: HyperTextFieldGlassVisuals
 ): Modifier {
-    val material = shadow(
-        elevation = visuals.elevation,
+    val material = hyperSurfaceDepth(
         shape = shape,
-        clip = false,
-        ambientColor = visuals.ambientShadowColor,
-        spotColor = visuals.spotShadowColor
+        visuals = visuals.depth
     )
         .clip(shape)
         .drawWithCache {

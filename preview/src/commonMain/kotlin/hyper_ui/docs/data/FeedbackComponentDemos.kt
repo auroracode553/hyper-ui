@@ -47,7 +47,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dropdown",
         group = GROUP_FEEDBACK,
         title = "HyperDropdown",
-        description = "参考系统菜单的柔雾浮层：宽圆角、克制阴影、18sp 文本与内建危险项语义。",
+        description = "参考系统菜单的柔雾浮层：宽圆角、公共浮层描边与阴影、18sp 文本及危险项语义。",
         code = """
             HyperDropdown(
                 expanded = expanded,
@@ -65,7 +65,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("展开/关闭", "expanded", "浅色乳白、深色炭灰柔雾面板"),
+            DemoVariant("展开/关闭", "expanded", "乳白/炭灰面板与公共浮层深度"),
             DemoVariant("菜单项", "Item(closeOnClick)", "48dp 行高与即时按压反馈"),
             DemoVariant("危险项", "tone = Danger", "自动使用主题危险色"),
             DemoVariant("禁用态", "enabled = false", "降低文字对比度并取消反馈"),

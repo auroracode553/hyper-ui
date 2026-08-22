@@ -5,42 +5,29 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 @Immutable
 internal data class HyperGlassSurfaceVisuals(
     val containerColor: Color,
     val topLightColor: Color,
     val bottomShadeColor: Color,
-    val elevation: Dp,
-    val ambientShadowColor: Color,
-    val spotShadowColor: Color
+    val depth: HyperSurfaceDepthVisuals
 )
 
 /**
  * 以单一连续表面绘制玻璃：容器色负责透光，上方宽柔光与底部弱阴影负责厚度。
- * 这里不绘制边框，避免在圆角或胶囊表面形成塑料感的双重轮廓。
+ * 描边与空间阴影统一委托给 HyperSurfaceDepth，未指定描边色时保持无描边。
  */
 internal fun Modifier.hyperGlassSurface(
     shape: Shape,
     visuals: HyperGlassSurfaceVisuals
-): Modifier = then(
-    if (visuals.elevation > 0.dp) {
-        Modifier.shadow(
-            elevation = visuals.elevation,
-            shape = shape,
-            clip = false,
-            ambientColor = visuals.ambientShadowColor,
-            spotColor = visuals.spotShadowColor
-        )
-    } else {
-        Modifier
-    }
+): Modifier = hyperSurfaceDepth(
+    shape = shape,
+    visuals = visuals.depth
 )
     .clip(shape)
     .drawWithCache {
@@ -67,12 +54,21 @@ internal fun hyperGlassSurfaceVisuals(
     elevation: Dp,
     topLightAlpha: Float,
     bottomShadeAlpha: Float,
-    shadowAlpha: Float
+    shadowAlpha: Float,
+    depth: HyperSurfaceDepthVisuals? = null
 ): HyperGlassSurfaceVisuals = HyperGlassSurfaceVisuals(
     containerColor = containerColor,
     topLightColor = Color(1f, 1f, 1f, topLightAlpha.coerceIn(0f, 1f)),
     bottomShadeColor = Color(0f, 0f, 0f, bottomShadeAlpha.coerceIn(0f, 1f)),
-    elevation = elevation,
-    ambientShadowColor = Color(0f, 0f, 0f, (shadowAlpha * 0.72f).coerceIn(0f, 1f)),
-    spotShadowColor = Color(0f, 0f, 0f, shadowAlpha.coerceIn(0f, 1f))
+    depth = depth ?: hyperSurfaceDepthVisuals(
+        strokeColor = Color.Transparent,
+        elevation = elevation,
+        ambientShadowColor = Color(
+            0f,
+            0f,
+            0f,
+            (shadowAlpha * 0.72f).coerceIn(0f, 1f)
+        ),
+        spotShadowColor = Color(0f, 0f, 0f, shadowAlpha.coerceIn(0f, 1f))
+    )
 )

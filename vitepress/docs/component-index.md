@@ -7,7 +7,7 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperButton](components/basic/hyper-button.md) | 不透明实色的 Slot-first 按钮容器 | 调用方处理点击 |
-| [HyperIconButton](components/basic/hyper-icon-button.md) | Slot-first 磨砂玻璃图标按钮，内置柔和折射边缘与单层悬浮阴影 | 调用方处理点击 |
+| [HyperIconButton](components/basic/hyper-icon-button.md) | Slot-first 磨砂玻璃图标按钮，复用公共描边与阴影深度层 | 调用方处理点击 |
 
 ## 表单组件
 
@@ -31,9 +31,9 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperNavBar](components/navigation/hyper-nav-bar.md) | 默认透明、继承页面背景的顶部栏三段 slot 容器 | 调用方处理事件 |
+| [HyperNavBar](components/navigation/hyper-nav-bar.md) | 默认透明，以轻描边和 3dp 阴影分层的顶部栏 slot 容器 | 调用方处理事件 |
 | [HyperImmersiveNavBar](components/navigation/hyper-immersive-nav-bar.md) | 固定透明导航操作层，首屏避让、滚动后内容进入导航栏与状态栏后方 | 调用方持有滚动状态并消费组件返回的内容 Padding |
-| [HyperDrawer](components/navigation/hyper-drawer.md) | 不透明低抬升结构玻璃、默认方向化间距与系统安全区、无遮罩无动画的四方向抽屉 | 调用方提供 `open`、默认 Padding 策略、附加间距、选中态与嵌套列表滚动策略 |
+| [HyperDrawer](components/navigation/hyper-drawer.md) | 带公共结构描边和低抬升阴影的四方向不透明玻璃抽屉 | 调用方提供 `open`、默认 Padding 策略、附加间距、选中态与嵌套列表滚动策略 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 无硬边框的横向玻璃胶囊菜单 | 调用方提供 `selectedItem` |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | 使用低对比度顶部发丝线、无阴影与玻璃高光，总高 60dp 的贴底栏容器 | 调用方处理内容、选择与导航 |
 
@@ -51,7 +51,7 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperEmptyState](components/feedback/hyper-empty-state.md) | 使用居中低抬升玻璃面板的页面级空数据状态 | 调用方提供文案、图标与可选操作 |
-| [HyperDropdown](components/feedback/hyper-dropdown.md) | 乳白/炭灰柔雾 Popup 菜单，支持即时按压与危险项语义 | 调用方提供 `expanded` |
+| [HyperDropdown](components/feedback/hyper-dropdown.md) | 复用公共浮层描边和阴影的乳白/炭灰柔雾 Popup 菜单 | 调用方提供 `expanded` |
 | [hyperToast](components/feedback/hyper-toast.md) | Android 原生 Toast 的线程安全封装 | 调用即显示，无持久业务状态 |
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 无动画、不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |
 | [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | 柔性玻璃竖向比例反馈，支持图标插槽 | 调用方提供 `progress`、文案、图标与显示时机 |

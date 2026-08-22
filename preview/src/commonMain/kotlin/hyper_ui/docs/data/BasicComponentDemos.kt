@@ -41,7 +41,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         id = "icon_button",
         group = GROUP_BASIC,
         title = "HyperIconButton",
-        description = "Slot-first 磨砂玻璃图标按钮。默认 38dp，以均匀白色透明底材、宽上沿柔光、面内折射边缘与单层悬浮阴影还原澎湃 OS 风格，不绘制硬边框。",
+        description = "Slot-first 磨砂玻璃图标按钮。默认 38dp，由公共深度层提供 1dp 低对比度描边与增强单层阴影。",
         code = """
             HyperIconButton(
                 onClick = onSearch
@@ -66,10 +66,11 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认玻璃", "shape = CircleShape", "38dp 容器、18dp 图标与柔和折射边缘"),
+            DemoVariant("默认玻璃", "shape = CircleShape", "38dp 容器、1dp 主题描边与 6dp 单层阴影"),
             DemoVariant("主题玻璃", "colors = primaryContainer.copy(alpha = 0.52f)", "主题色玻璃与按压反馈"),
             DemoVariant("危险玻璃", "shape = RoundedCornerShape(12.dp)", "危险语义色玻璃"),
-            DemoVariant("禁用状态", "enabled = false", "降低磨砂底材、内容和投影强度"),
+            DemoVariant("按压状态", "pointer down", "描边、容器和阴影立即收低"),
+            DemoVariant("禁用状态", "enabled = false", "保留淡边缘并移除投影"),
             DemoVariant("大尺寸主题", "modifier = Modifier.size(56.dp)", "主题色媒体按钮"),
             DemoVariant("大尺寸中性", "modifier = Modifier.size(56.dp)", "中性玻璃工具按钮")
         ),

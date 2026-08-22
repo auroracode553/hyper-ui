@@ -7,21 +7,18 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 
 @Immutable
 internal data class HyperIconButtonGlassVisuals(
     val topLightColor: Color,
     val edgeLightColor: Color,
     val bottomShadeColor: Color,
-    val elevation: Dp,
-    val ambientShadowColor: Color,
-    val spotShadowColor: Color
+    val depth: HyperSurfaceDepthVisuals
 )
 
 /**
  * 用宽而弱的迎光面、底部阴影和渐隐折射带建立磨砂玻璃厚度。
- * 折射带是面内渐变而非描边，因此不会出现硬边或双重同心圆。
+ * 外层描边与阴影由组件组合公共 HyperSurfaceDepth，当前方法只负责按钮自身材质。
  */
 internal fun Modifier.hyperIconButtonGlass(
     containerColor: Color,

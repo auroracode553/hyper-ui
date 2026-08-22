@@ -14,7 +14,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "nav-bar",
         group = GROUP_NAVIGATION,
         title = "HyperNavBar",
-        description = "默认透明的顶部栏容器；navigation、title、action 三个区域由调用方通过 slot 渲染。",
+        description = "默认透明的顶部栏容器，以共享的低对比度描边和轻量阴影区分导航层；三个区域由 slot 渲染。",
         code = """
             HyperNavBar(
                 navigationContent = {
@@ -34,7 +34,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("三段布局", "navigation/title/action", "左右操作与居中标题"),
-            DemoVariant("默认背景", "Color.Transparent", "继承页面底色，不绘制独立色块"),
+            DemoVariant("默认背景", "Color.Transparent", "继承页面底色并保留结构描边"),
+            DemoVariant("导航层级", "shared surface depth", "1dp 主题描边与 3dp 单层阴影"),
             DemoVariant("Slot 内容", "content slots", "图标按钮和标题文字")
         ),
         apiDocumentPaths = listOf("navigation/hyper-nav-bar.md"),
@@ -71,7 +72,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "drawer",
         group = GROUP_NAVIGATION,
         title = "HyperDrawer",
-        description = "抽屉使用低抬升的不透明大面积玻璃并即时显示、关闭；选中项只增加轻量主题染色。支持四个方向、方向化内容间距、系统安全区与可配置滚动，无遮罩、无动画。",
+        description = "抽屉使用共享结构描边和低抬升阴影的不透明玻璃；支持四向、方向化间距、安全区与可配置滚动。",
         code = """
             HyperDrawer(
                 open = open,
@@ -103,7 +104,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("完整内容区", "defaultSetPadding = false", "不注入默认间距或系统栏避让"),
             DemoVariant("场景间距", "drawerContentModifier", "在默认策略之后追加调用方布局"),
             DemoVariant("滚动职责", "drawerContentScrollEnabled", "普通内容由面板滚动，懒列表关闭外层滚动"),
-            DemoVariant("结构玻璃", "colors.containerColor", "主题不透明基底、宽柔光与单层阴影"),
+            DemoVariant("结构玻璃", "colors.containerColor", "主题不透明基底、1dp 描边与单层阴影"),
             DemoVariant("选中项", "selected = true", "轻量主题染色，不重复铺设面板底色"),
             DemoVariant("无蒙层", "dismissOnClickOutside", "仅处理外部点击，不绘制背景或遮罩")
         ),

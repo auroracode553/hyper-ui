@@ -109,6 +109,13 @@ fun NavBarDemo() {
                     }
                 }
             )
+            Text(
+                text = "透明底色保留页面连续性；共享的低对比度描边与 3dp 阴影负责区分导航层。",
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 13.sp,
+                lineHeight = 18.sp
+            )
             HyperButton(
                 onClick = { showBack = !showBack },
                 tone = HyperButtonTone.Tonal
@@ -312,7 +319,7 @@ fun DrawerDemo() {
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "抽屉使用低抬升不透明玻璃面，选中项只增加轻量主题染色；不绘制硬边框。不执行动画，外部区域不绘制遮罩。",
+                    text = "抽屉使用共享的低对比度描边和低抬升单层阴影；选中项只增加轻量主题染色。不执行动画，外部区域不绘制遮罩。",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 13.sp,
                     lineHeight = 18.sp

@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/menu/HyperDropdown.kt`
 - Preview ID：`dropdown`
 
-`HyperDropdown` 是无蒙层的 Popup 菜单容器。组件负责浮层定位、参考系统菜单的柔雾面板、滚动、即时按压反馈、危险项语义与点击关闭；文字、图标和业务动作仍由 slot 提供。
+`HyperDropdown` 是无蒙层的 Popup 菜单容器。组件负责浮层定位、参考系统菜单的柔雾面板、滚动、即时按压反馈、危险项语义与点击关闭；描边和阴影复用内部公共 `HyperSurfaceDepth` 浮层强度，文字、图标和业务动作仍由 slot 提供。
 
 ## 公开 API
 
@@ -138,7 +138,7 @@ HyperDropdown(
 - 不存在 `text`、`leadingIcon` 或业务动作参数；内容继续由 slot 注入。
 - 菜单不渲染遮罩；`PopupProperties(focusable = true)` 负责外部点击和返回关闭请求。
 - 面板默认宽 220dp、最大高 432dp，26dp 圆角；超出后在组件内部纵向滚动。
-- 默认容器在浅色主题使用 96% 乳白色、深色主题使用 96% 炭灰色，并以极弱明暗渐变、1dp 低对比度软边缘和单层 10dp 阴影建立层级。
+- 默认容器在浅色主题使用 96% 乳白色、深色主题使用 96% 炭灰色；公共深度层以 1dp 低对比度描边和单层 10dp 阴影建立浮层层级。
 - 自定义 `containerColor` 的 alpha 会被保留，可让底层内容轻微透出；组件不执行真实背景模糊。
 - 菜单项固定 48dp 高，按下时立即显示低对比度背景；禁用态不响应点击，也不显示按压反馈。
 

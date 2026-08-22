@@ -186,14 +186,14 @@ HyperIconButton(onClick = onSearch) {
 
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
-- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；`HyperButton` 的 tone 与禁用态使用不透明实色；`HyperIconButton` 默认 38dp，默认图标 18dp，使用均匀白色半透明磨砂底材、宽上沿柔光、面内折射边缘与单层悬浮阴影，不绘制硬边框；自定义尺寸通过 `modifier` 控制）
+- 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；`HyperButton` 的 tone 与禁用态使用不透明实色；`HyperIconButton` 默认 38dp，默认图标 18dp，使用白色半透明磨砂底材、宽上沿柔光、面内折射边缘，以及公共深度层提供的 1dp 描边和增强单层阴影；自定义尺寸通过 `modifier` 控制）
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadio`, `HyperSegmented`, `HyperSlider`（输入框默认使用结构性磨砂玻璃、普通态无硬边框、聚焦/错误态单一语义边缘和 40dp 紧凑最小高度，已有文本首次聚焦时光标位于末尾；`HyperSegmented` 只负责玻璃轨道、等宽布局与选择语义，每个分段直接复用 `HyperButton`；`HyperSlider` 支持点击定位、连续/等距吸附、可选分段点、指定业务标记和只读态，并统一使用柔光环、外圆、中心点三层滑块视觉）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperSectionedList`, `HyperMenuList`, `HyperListItem`（`HyperList` 提供单一连续卡片的页面级 `LazyColumn`、可滚动 `contentPadding` 与 `LazyListScope` Slot；`HyperSectionedList` 面向日期、历史等动态分组数据，保持标题和数据行独立懒加载并自动处理组内圆角与分割线；`HyperMenuList` 只能用于少量菜单、设置项和操作入口；所有列表容器均使用不透明实色，`HyperListItem` 根据 supporting slot 自动使用单行 44dp、双行 54dp 的基础高度和 4dp 纵向留白）
-- 状态与浮层反馈：`HyperEmptyState`, `HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `HyperDropdownItemTone`, `hyperToast`, `HyperToastDuration`（`HyperEmptyState` 使用居中的低抬升连续玻璃承载空数据文案；`HyperDropdown` 使用乳白/炭灰柔雾面板、宽圆角、即时按压反馈和内建危险项语义；`HyperPopup` 使用轻量 Popup，`HyperDialog` 使用 Compose 标准模态 Dialog；Dialog 保留平台背景调暗、焦点、外部点击、返回键和窗口过渡；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
+- 状态与浮层反馈：`HyperEmptyState`, `HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `HyperDropdownItemTone`, `hyperToast`, `HyperToastDuration`（`HyperEmptyState` 使用居中的低抬升连续玻璃承载空数据文案；`HyperDropdown` 使用乳白/炭灰柔雾面板，并由公共深度层提供描边和浮层阴影；`HyperPopup` 使用轻量 Popup，`HyperDialog` 使用 Compose 标准模态 Dialog；Dialog 保留平台背景调暗、焦点、外部点击、返回键和窗口过渡；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`, `HyperPlaybackSpeedScale`, `HyperBatteryIndicator`（加载进度支持确定/不确定状态；比例胶囊和倍速刻度共享白色半透明连续玻璃材质与单层空间阴影，不再暴露高光/边框颜色；电池组件使用无描边玻璃壳体，将百分比显示在内部并在充电时把闪电展示在右侧；组件本身不主动读取系统状态）
 - Android 系统工具：`HyperBatteryState`, `readHyperBatteryState`, `rememberHyperBatteryState`（支持一次性读取与 Compose 生命周期安全订阅；内部使用 Application Context，并在离开 Composition 时注销电池广播）
-- 导航组件：`HyperNavBar`, `HyperImmersiveNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明并继承页面底色；`HyperImmersiveNavBar` 固定透明导航层，通过实测内容 Padding 让首屏避让顶部、滚动内容进入导航栏与状态栏后方；`HyperDrawer` 使用低抬升的不透明大面积结构玻璃，未选中项透明、选中项轻量主题染色；`HyperSlideMenu` 使用无硬边框的玻璃胶囊；`HyperTabBar` 深色模式默认继承页面背景色，浅色模式保留轻量透明度，并以 0.5dp 低对比度顶部发丝线分层；`HyperDrawer` 默认提供方向化内容间距与系统安全区，可通过 `defaultSetPadding = false` 关闭，并支持可配置内容滚动；页面切换由调用方处理）
+- 导航组件：`HyperNavBar`, `HyperImmersiveNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明并以公共深度层的轻描边和 3dp 阴影区分导航层；`HyperImmersiveNavBar` 复用该导航视觉并允许内容滚入其后方；`HyperDrawer` 使用公共结构描边和低抬升阴影的不透明玻璃；`HyperSlideMenu` 使用无硬边框的玻璃胶囊；`HyperTabBar` 继续只使用 0.5dp 顶部发丝线；`HyperDrawer` 默认提供方向化内容间距与系统安全区，并支持可配置内容滚动；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
 ## 状态管理原则
@@ -262,7 +262,7 @@ preview/
 - 公开组件源码按功能组放在 `library/src/main/java/hyper_ui/components/` 下，但包名统一声明为 `hyper_ui`，方便调用方 `import hyper_ui.*`。
 - UI 库内部公共工具放在 `library/src/main/java/hyper_ui/core/` 下，供组件实现复用，不作为调用方公开入口。
 - Android-only 工具不能进入 `commonMain` 编译链；Preview 页面只展示说明、可交互模拟和 Android 调用片段。
-- `HyperDrawer` 的四个方向均使用主题卡片色的不透明结构玻璃，通过宽柔光、底部弱阴影和单层 `5.dp` 投影形成空间层次，不绘制硬边框。自定义 `containerColor` 若带 alpha，会先与页面背景合成为不透明颜色。打开与关闭直接渲染或移除，不执行动画，外部点击区域不绘制遮罩。组件默认提供方向化内容间距与 `safeDrawing` 系统栏避让；需要完整内容区时传入 `defaultSetPadding = false`，附加场景布局继续通过 `drawerContentModifier` 提供。上下抽屉默认由内容撑高，达到窗口最大占比后在面板内部滚动；承载 `LazyColumn`、`HyperList` 等纵向滚动内容时设置 `drawerContentScrollEnabled = false`，由内层列表独立滚动。
+- `HyperDrawer` 的四个方向均使用主题卡片色的不透明结构玻璃，通过公共深度层的 1dp 低对比度主题描边和单层 `5.dp` 投影形成空间层次。自定义 `containerColor` 若带 alpha，会先与页面背景合成为不透明颜色。打开与关闭直接渲染或移除，不执行动画，外部点击区域不绘制遮罩。组件默认提供方向化内容间距与 `safeDrawing` 系统栏避让；需要完整内容区时传入 `defaultSetPadding = false`，附加场景布局继续通过 `drawerContentModifier` 提供。上下抽屉默认由内容撑高，达到窗口最大占比后在面板内部滚动；承载 `LazyColumn`、`HyperList` 等纵向滚动内容时设置 `drawerContentScrollEnabled = false`，由内层列表独立滚动。
 - `HyperTabBar` 不依赖任何导航框架；默认只绘制 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边。深色模式下使用 `MaterialTheme.colorScheme.background` 并隐藏灰边，浅色模式保留白色 `0.92f` alpha，均不叠加玻璃高光。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp；页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
 - 调用方接入时不需要依赖 `preview` 模块。
 - Wasm 入口接受 `#组件-id`，例如 `index.html#button`，供 VitePress 组件页选择初始预览项；未知 ID 回退到第一个组件。

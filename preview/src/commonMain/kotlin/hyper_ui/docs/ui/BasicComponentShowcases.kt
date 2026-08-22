@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperButton
@@ -227,6 +228,12 @@ fun IconButtonDemo() {
             text = selectedAction,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp
+        )
+        Text(
+            text = "按住任一按钮可观察描边与阴影立即收低；禁用态不产生投影。",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
+            textAlign = TextAlign.Center
         )
     }
 }

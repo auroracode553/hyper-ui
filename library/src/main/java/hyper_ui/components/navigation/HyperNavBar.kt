@@ -1,4 +1,4 @@
-/** 文件职责：提供透明背景的三段式 HyperNavBar 导航容器。 */
+/** 文件职责：提供带轻量结构描边和阴影的三段式 HyperNavBar 导航容器。 */
 package hyper_ui
 
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +29,7 @@ data class HyperNavBarColors(
 /**
  * 顶部导航栏组件。
  *
- * 默认背景透明，由页面容器统一提供底色，避免顶部出现独立色块。
+ * 默认背景透明，由页面容器统一提供底色；轻量描边和阴影负责区分导航层级。
  * 组件内部已包含默认水平内容间距（16dp），外部间距请通过 modifier.padding(...) 控制。
  */
 @Composable
@@ -46,6 +46,10 @@ fun HyperNavBar(
         modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = HyperNavBarDefaults.MinHeight)
+            .hyperSurfaceDepth(
+                shape = HyperNavBarDefaults.Shape,
+                visuals = hyperNavBarDepthVisuals()
+            )
             .hyperSurface(
                 containerColor = colors.containerColor,
                 shape = HyperNavBarDefaults.Shape
@@ -87,3 +91,10 @@ object HyperNavBarDefaults {
         contentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
     )
 }
+
+@Composable
+private fun hyperNavBarDepthVisuals(): HyperSurfaceDepthVisuals =
+    hyperSurfaceDepthVisuals(
+        role = HyperSurfaceDepthRole.NavigationBar,
+        elevation = 3.dp
+    )

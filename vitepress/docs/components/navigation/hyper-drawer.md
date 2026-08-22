@@ -4,7 +4,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/drawer/HyperDrawer.kt`
 - 预览：`drawer`
 
-`HyperDrawer` 是四方向结构玻璃抽屉，无遮罩。面板在明暗主题中使用对应的 `HyperColors.cardContainer` 不透明基底，以宽柔光、底部弱阴影和一层低抬升投影建立空间关系；内部未选中项不重复铺底，选中项只增加轻量主题染色。`open` 直接控制面板是否渲染，不执行动画。
+`HyperDrawer` 是四方向结构玻璃抽屉，无遮罩。面板使用 `HyperColors.cardContainer` 不透明基底，并通过公共 `HyperSurfaceDepth` 的 1dp 低对比度主题描边和单层 5dp 阴影建立空间关系；内部未选中项不重复铺底，选中项只增加轻量主题染色。`open` 直接控制面板是否渲染，不执行动画。
 
 ## 公开签名
 
@@ -141,7 +141,7 @@ HyperDrawer(
 - `drawerContent` 包含 `LazyColumn`、`HyperList` 等纵向滚动组件时，必须设置 `drawerContentScrollEnabled = false`，由内层列表独立负责滚动，避免嵌套滚动导致无限高度测量异常。
 - `HyperDrawerItem` 默认最小高度由 `HyperDrawerDefaults.ItemMinHeight` 提供，其他尺寸通过 `modifier` 控制。
 - 默认面板使用 `HyperColors.cardContainer` 的不透明材质；自定义 `containerColor` 若带 alpha，会与 `HyperColors.pageBackground` 合成为不透明颜色。
-- 面板不提供描边入口；连续面内渐变和单层 `5.dp` 投影共同建立厚度，避免外露圆角出现硬轮廓。
+- 面板不提供公开描边入口；内部公共深度层按主题生成 1dp 低对比度描边，并与单层 `5.dp` 投影共同建立厚度。
 - 未选中 Item 透明显示在同一面板内，选中 Item 使用主题色半透明层和 `1.dp` 轻抬升。
 - 抽屉打开与关闭均直接渲染或移除，不执行过渡动画。
 - Header/Item 不提供 `title`、`description`、`leadingIcon` 参数。

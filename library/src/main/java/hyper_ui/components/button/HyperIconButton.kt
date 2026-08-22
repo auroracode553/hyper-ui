@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
@@ -68,12 +67,9 @@ fun HyperIconButton(
                 scaleX = pressedScale
                 scaleY = pressedScale
             }
-            .shadow(
-                elevation = glassVisuals.elevation,
+            .hyperSurfaceDepth(
                 shape = shape,
-                clip = false,
-                ambientColor = glassVisuals.ambientShadowColor,
-                spotColor = glassVisuals.spotShadowColor
+                visuals = glassVisuals.depth
             )
             .clip(shape)
             .hyperIconButtonGlass(
@@ -174,25 +170,30 @@ object HyperIconButtonDefaults {
                 topLightColor = rgba(255, 255, 255, if (isLight) 0.06f else 0.08f),
                 edgeLightColor = rgba(255, 255, 255, if (isLight) 0.06f else 0.10f),
                 bottomShadeColor = rgba(0, 0, 0, if (isLight) 0.01f else 0.035f),
-                elevation = 0.dp,
-                ambientShadowColor = Color.Transparent,
-                spotShadowColor = Color.Transparent
+                depth = hyperSurfaceDepthVisuals(
+                    role = HyperSurfaceDepthRole.CompactControl,
+                    elevation = 0.dp,
+                    state = HyperSurfaceDepthState.Disabled
+                )
             )
             pressed -> HyperIconButtonGlassVisuals(
                 topLightColor = rgba(255, 255, 255, if (isLight) 0.08f else 0.12f),
                 edgeLightColor = rgba(255, 255, 255, if (isLight) 0.08f else 0.16f),
                 bottomShadeColor = rgba(0, 0, 0, if (isLight) 0.025f else 0.08f),
-                elevation = 1.75.dp,
-                ambientShadowColor = rgba(0, 0, 0, if (isLight) 0.015f else 0.05f),
-                spotShadowColor = rgba(0, 0, 0, if (isLight) 0.04f else 0.10f)
+                depth = hyperSurfaceDepthVisuals(
+                    role = HyperSurfaceDepthRole.CompactControl,
+                    elevation = 1.75.dp,
+                    state = HyperSurfaceDepthState.Pressed
+                )
             )
             else -> HyperIconButtonGlassVisuals(
                 topLightColor = rgba(255, 255, 255, if (isLight) 0.12f else 0.18f),
                 edgeLightColor = rgba(255, 255, 255, if (isLight) 0.10f else 0.22f),
                 bottomShadeColor = rgba(0, 0, 0, if (isLight) 0.018f else 0.07f),
-                elevation = 6.dp,
-                ambientShadowColor = rgba(0, 0, 0, if (isLight) 0.025f else 0.08f),
-                spotShadowColor = rgba(0, 0, 0, if (isLight) 0.075f else 0.16f)
+                depth = hyperSurfaceDepthVisuals(
+                    role = HyperSurfaceDepthRole.CompactControl,
+                    elevation = 6.dp
+                )
             )
         }
     }

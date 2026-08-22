@@ -92,9 +92,12 @@ internal fun hyperInputFieldVisuals(
                 }
             ),
             indicatorColor = indicatorColor,
-            elevation = elevation,
-            ambientShadowColor = ambientShadowColor,
-            spotShadowColor = spotShadowColor
+            depth = hyperSurfaceDepthVisuals(
+                strokeColor = Color.Transparent,
+                elevation = elevation,
+                ambientShadowColor = ambientShadowColor,
+                spotShadowColor = spotShadowColor
+            )
         ),
         contentColor = if (enabled) colors.contentColor else colors.disabledContentColor,
         placeholderColor = if (enabled) colors.placeholderColor else colors.disabledContentColor,

@@ -6,7 +6,7 @@
 - 源码：`library/src/main/java/hyper_ui/components/navigation/HyperNavBar.kt`
 - Preview ID：`nav-bar`
 
-`HyperNavBar` 是三段式顶部导航栏容器：`navigationContent`、`titleContent`、`actionContent`。默认背景透明，直接继承页面底色。
+`HyperNavBar` 是三段式顶部导航栏容器：`navigationContent`、`titleContent`、`actionContent`。默认背景透明并继承页面底色，内部公共 `HyperSurfaceDepth` 以 1dp 低对比度主题描边和单层 3dp 阴影区分导航层。
 
 如果页面需要“按钮固定、首屏内容位于栏下、滚动后内容进入透明栏与状态栏后方”的效果，请使用 [HyperImmersiveNavBar](hyper-immersive-nav-bar.md)。该行为需要导航层与滚动内容共同参与布局，不能由 `HyperNavBar` 上的单一布尔属性独立完成。
 
@@ -50,7 +50,7 @@ object HyperNavBarDefaults {
 }
 ```
 
-`colors()` 默认把 `containerColor` 解析为 `Color.Transparent`，把 `contentColor` 解析为 `HyperColors.primaryText`。
+`colors()` 默认把 `containerColor` 解析为 `Color.Transparent`，把 `contentColor` 解析为 `HyperColors.primaryText`。描边与阴影属于内部固定结构视觉，不进入公开颜色 API。
 
 ## 参数
 
@@ -90,5 +90,6 @@ HyperNavBar(
 - 标题 slot 占用剩余宽度，但组件不强制文本居中；对齐方式由 slot 内容决定。
 - 返回按钮是否出现、图标和导航行为均由调用方控制。
 - 自定义高度使用 `modifier.height(...)` 或 `heightIn(...)`；背景色使用 `HyperNavBarDefaults.colors(...)`。
+- 默认透明容器仍绘制轻量主题描边和 3dp 单层阴影；沉浸式布局会复用同一导航视觉。
 
 <WasmPreview demo="nav-bar" title="HyperNavBar 交互预览" />
