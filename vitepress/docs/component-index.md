@@ -17,7 +17,7 @@
 | [HyperSwitch](components/form/hyper-switch.md) | 开关，轨道和滑块默认有轮廓层次 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 使用 Lucide `check` 的多选项 | 调用方提供 `checked` |
 | [HyperRadio](components/form/hyper-radio.md) | 单选项 | 调用方提供 `selected` |
-| [HyperSegmented](components/form/hyper-segmented.md) | 玻璃轨道上的等宽分段控制器，各分段直接复用 HyperButton | 调用方提供 `selectedItem` |
+| [HyperSegmented](components/form/hyper-segmented.md) | 默认总高 36dp 的紧凑玻璃等宽分段控制器 | 调用方提供 `selectedItem` |
 | [HyperSlider](components/form/hyper-slider.md) | 支持连续/分段轨道、指定标记、只读态与三层圆点的受控滑块 | 调用方提供 `value` |
 
 ## 容器组件

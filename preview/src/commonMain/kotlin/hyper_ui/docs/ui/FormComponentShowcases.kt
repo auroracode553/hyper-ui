@@ -97,7 +97,9 @@ fun SegmentedDemo() {
         ) { period ->
             Text(
                 text = period,
-                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                fontSize = 13.sp,
+                lineHeight = 18.sp
             )
         }
         Text(
@@ -118,7 +120,9 @@ fun SegmentedDemo() {
         ) { mode ->
             Text(
                 text = mode,
-                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                fontSize = 13.sp,
+                lineHeight = 18.sp
             )
         }
     }

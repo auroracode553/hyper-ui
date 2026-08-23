@@ -1,13 +1,17 @@
 /** 文件职责：提供等宽分段控制器及其选中、禁用视觉状态。 */
 package hyper_ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -55,6 +59,7 @@ fun <T> HyperSegmented(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .height(HyperSegmentedDefaults.Height)
             .hyperGlassSurface(
                 shape = shape,
                 visuals = hyperGlassSurfaceVisuals(
@@ -79,6 +84,7 @@ fun <T> HyperSegmented(
                 onClick = { onSelected(item) },
                 modifier = Modifier
                     .weight(1f)
+                    .fillMaxHeight()
                     .semantics { this.selected = selected },
                 enabled = actualEnabled,
                 tone = if (selected) HyperButtonTone.Primary else HyperButtonTone.Plain,
@@ -99,7 +105,11 @@ fun <T> HyperSegmented(
                 border = null,
                 shape = itemShape,
                 contentPadding = itemContentPadding,
-                role = Role.Tab
+                role = Role.Tab,
+                horizontalArrangement = Arrangement.spacedBy(
+                    HyperSegmentedDefaults.ItemContentSpacing,
+                    Alignment.CenterHorizontally
+                )
             ) {
                 scope.itemContent(item)
             }
@@ -108,9 +118,11 @@ fun <T> HyperSegmented(
 }
 
 object HyperSegmentedDefaults {
+    val Height = 36.dp
     val ContainerElevation = 1.dp
-    val ContainerPadding = PaddingValues(3.dp)
-    val ItemContentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+    val ContainerPadding = PaddingValues(2.dp)
+    val ItemContentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+    val ItemContentSpacing = 6.dp
     val Shape: Shape = RoundedCornerShape(5.dp)
     val ItemShape: Shape = RoundedCornerShape(4.dp)
 
