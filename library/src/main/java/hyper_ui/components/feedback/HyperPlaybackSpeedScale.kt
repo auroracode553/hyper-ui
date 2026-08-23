@@ -5,9 +5,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,6 +29,7 @@ import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.abs
@@ -62,7 +63,7 @@ fun HyperPlaybackSpeedScale(
         abs(resolvedOptions[index] - selectedSpeed)
     } ?: 0
 
-    Column(
+    Box(
         modifier = modifier
             .widthIn(max = HyperPlaybackSpeedScaleDefaults.MaxWidth)
             .fillMaxWidth(HyperPlaybackSpeedScaleDefaults.WidthFraction)
@@ -71,9 +72,9 @@ fun HyperPlaybackSpeedScale(
                 visuals = hyperGlassSurfaceVisuals(
                     containerColor = colors.containerColor,
                     elevation = HyperPlaybackSpeedScaleDefaults.Elevation,
-                    topLightAlpha = 0.13f,
-                    bottomShadeAlpha = 0.14f,
-                    shadowAlpha = 0.34f
+                    topLightAlpha = 0.12f,
+                    bottomShadeAlpha = 0.12f,
+                    shadowAlpha = 0.30f
                 )
             )
             .padding(HyperPlaybackSpeedScaleDefaults.ContentPadding)
@@ -83,80 +84,113 @@ fun HyperPlaybackSpeedScale(
                     range = 0f..resolvedOptions.lastIndex.toFloat(),
                     steps = (resolvedOptions.size - 2).coerceAtLeast(0)
                 )
-            },
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(HyperPlaybackSpeedScaleDefaults.ContentSpacing)
+            }
     ) {
-        SpeedLabels(
+        CompactSpeedScaleContent(
             speedOptions = resolvedOptions,
             selectedIndex = selectedIndex,
-            colors = colors
+            selectedSpeed = selectedSpeed,
+            colors = colors,
+            leadingContent = leadingContent
         )
-        SpeedTrack(
-            itemCount = resolvedOptions.size,
-            selectedIndex = selectedIndex,
-            colors = colors
-        )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(7.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier.size(HyperPlaybackSpeedScaleDefaults.LeadingIconSize),
-                contentAlignment = Alignment.Center
-            ) {
-                CompositionLocalProvider(LocalContentColor provides colors.valueColor) {
-                    if (leadingContent == null) {
-                        DefaultSpeedGlyph()
-                    } else {
-                        leadingContent()
-                    }
-                }
-            }
-            Text(
-                text = "${formatHyperPlaybackSpeed(selectedSpeed)}x",
-                color = colors.valueColor,
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp
-            )
-        }
     }
 }
 
 @Composable
-private fun SpeedLabels(
+private fun CompactSpeedScaleContent(
     speedOptions: List<Float>,
     selectedIndex: Int,
-    colors: HyperPlaybackSpeedScaleColors
+    selectedSpeed: Float,
+    colors: HyperPlaybackSpeedScaleColors,
+    leadingContent: (@Composable () -> Unit)?
 ) {
-    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(CompactScaleHeight)
+    ) {
+        val endpointAreaWidth = minOf(EndpointAreaWidth, maxWidth * 0.25f)
+        val trackWidth = (maxWidth - endpointAreaWidth * 2f).coerceAtLeast(0.dp)
+        val thumbHaloSize = HyperPlaybackSpeedScaleDefaults.TrackThumbSize *
+            HyperSliderDefaults.ThumbHaloScale
+        val markerTravelWidth = (trackWidth - thumbHaloSize).coerceAtLeast(0.dp)
+
         speedOptions.forEachIndexed { index, speed ->
+            val isOnlyOption = speedOptions.size == 1
             val fraction = if (speedOptions.size <= 1) {
                 0f
             } else {
                 index / speedOptions.lastIndex.toFloat()
             }
-            Box(
+            val isEndpoint = !isOnlyOption &&
+                (index == 0 || index == speedOptions.lastIndex)
+            val markerCenter = endpointAreaWidth + thumbHaloSize * 0.5f +
+                markerTravelWidth * fraction
+            val labelOffset = if (isOnlyOption) {
+                (maxWidth - HyperPlaybackSpeedScaleDefaults.LabelWidth) * 0.5f
+            } else if (index == 0) {
+                0.dp
+            } else if (index == speedOptions.lastIndex) {
+                maxWidth - endpointAreaWidth
+            } else {
+                markerCenter - HyperPlaybackSpeedScaleDefaults.LabelWidth * 0.5f
+            }
+
+            SpeedLabel(
+                speed = speed,
+                selected = index == selectedIndex,
+                colors = colors,
                 modifier = Modifier
                     .offset(
-                        x = (maxWidth - HyperPlaybackSpeedScaleDefaults.LabelWidth) * fraction
+                        x = labelOffset,
+                        y = if (isEndpoint) EndpointLabelTopOffset else 0.dp
                     )
-                    .width(HyperPlaybackSpeedScaleDefaults.LabelWidth),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "${formatHyperPlaybackSpeed(speed)}x",
-                    color = if (index == selectedIndex) {
-                        colors.selectedLabelColor
-                    } else {
-                        colors.labelColor
-                    },
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Medium,
-                    maxLines = 1
-                )
-            }
+                    .width(
+                        if (isEndpoint) {
+                            endpointAreaWidth
+                        } else {
+                            HyperPlaybackSpeedScaleDefaults.LabelWidth
+                        }
+                    )
+            )
         }
+
+        SpeedTrack(
+            itemCount = speedOptions.size,
+            selectedIndex = selectedIndex,
+            colors = colors,
+            modifier = Modifier
+                .offset(x = endpointAreaWidth, y = TrackTopOffset)
+                .width(trackWidth)
+        )
+
+        CurrentSpeedValue(
+            selectedSpeed = selectedSpeed,
+            colors = colors,
+            leadingContent = leadingContent,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .height(CurrentValueHeight)
+        )
+    }
+}
+
+@Composable
+private fun SpeedLabel(
+    speed: Float,
+    selected: Boolean,
+    colors: HyperPlaybackSpeedScaleColors,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        Text(
+            text = "${formatHyperPlaybackSpeed(speed)}x",
+            color = if (selected) colors.selectedLabelColor else colors.labelColor,
+            fontSize = 9.sp,
+            lineHeight = 10.sp,
+            fontWeight = FontWeight.Medium,
+            maxLines = 1
+        )
     }
 }
 
@@ -164,13 +198,14 @@ private fun SpeedLabels(
 private fun SpeedTrack(
     itemCount: Int,
     selectedIndex: Int,
-    colors: HyperPlaybackSpeedScaleColors
+    colors: HyperPlaybackSpeedScaleColors,
+    modifier: Modifier = Modifier
 ) {
     val sliderMaximum = (itemCount - 1).coerceAtLeast(1).toFloat()
     HyperSlider(
         value = selectedIndex.toFloat(),
         onValueChange = {},
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         readOnly = true,
         valueRange = 0f..sliderMaximum,
         steps = (itemCount - 2).coerceAtLeast(0),
@@ -189,6 +224,41 @@ private fun SpeedTrack(
             thumbHaloColor = colors.selectedTickColor.copy(alpha = 0.22f)
         )
     )
+}
+
+@Composable
+private fun CurrentSpeedValue(
+    selectedSpeed: Float,
+    colors: HyperPlaybackSpeedScaleColors,
+    leadingContent: (@Composable () -> Unit)?,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.size(HyperPlaybackSpeedScaleDefaults.LeadingIconSize),
+            contentAlignment = Alignment.Center
+        ) {
+            CompositionLocalProvider(LocalContentColor provides colors.valueColor) {
+                if (leadingContent == null) {
+                    DefaultSpeedGlyph()
+                } else {
+                    leadingContent()
+                }
+            }
+        }
+        Text(
+            text = "${formatHyperPlaybackSpeed(selectedSpeed)}x",
+            color = colors.valueColor,
+            fontWeight = FontWeight.Bold,
+            fontSize = 11.sp,
+            lineHeight = 12.sp,
+            maxLines = 1
+        )
+    }
 }
 
 @Composable
@@ -221,21 +291,20 @@ private fun DefaultSpeedGlyph() {
 object HyperPlaybackSpeedScaleDefaults {
     val SpeedOptions = listOf(0.25f, 0.5f, 1f, 1.5f, 2f, 2.5f, 3f, 4f)
     val DragStep = 42.dp
-    val MaxWidth = 480.dp
-    const val WidthFraction = 0.9f
+    val MaxWidth = 360.dp
+    const val WidthFraction = 0.86f
     val Shape: Shape = RoundedCornerShape(percent = 50)
-    val Elevation = 9.dp
+    val Elevation = 6.dp
     val ContentPadding = androidx.compose.foundation.layout.PaddingValues(
-        horizontal = 20.dp,
-        vertical = 12.dp
+        horizontal = 12.dp,
+        vertical = 5.dp
     )
-    val ContentSpacing = 4.dp
-    val TrackHeight = 34.dp
+    val TrackHeight = 22.dp
     val TrackStrokeWidth = 3.dp
-    val TrackThumbSize = 18.dp
-    val TrackMarkerSize = 5.dp
-    val LabelWidth = 34.dp
-    val LeadingIconSize = 17.dp
+    val TrackThumbSize = 12.dp
+    val TrackMarkerSize = 4.dp
+    val LabelWidth = 28.dp
+    val LeadingIconSize = 13.dp
 
     fun closestSpeed(
         targetSpeed: Float,
@@ -293,3 +362,9 @@ private fun formatHyperPlaybackSpeed(speed: Float): String = if (speed % 1f == 0
 } else {
     speed.toString()
 }
+
+private val CompactScaleHeight = 49.dp
+private val EndpointAreaWidth = 30.dp
+private val EndpointLabelTopOffset = 18.dp
+private val TrackTopOffset = 12.dp
+private val CurrentValueHeight: Dp = 14.dp

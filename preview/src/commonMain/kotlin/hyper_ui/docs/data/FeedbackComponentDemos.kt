@@ -171,7 +171,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "playback_speed_scale",
         group = GROUP_FEEDBACK,
         title = "HyperPlaybackSpeedScale",
-        description = "播放器长按临时加速使用的固定深色玻璃刻度，轨道统一复用 HyperSlider 分段与三层圆点视觉。",
+        description = "播放器长按临时加速使用的紧凑型固定深色玻璃刻度，两端标签让出轨道上方空间。",
         code = """
             HyperPlaybackSpeedScale(
                 selectedSpeed = temporarySpeed,
@@ -181,6 +181,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("紧凑布局", "默认尺寸", "约 310dp 宽、59dp 高，两端档位位于轨道左右"),
             DemoVariant("默认档位", "SpeedOptions", "0.25x 到 4x 八档刻度"),
             DemoVariant("当前速度", "selectedSpeed", "高亮最近的速度刻度"),
             DemoVariant("固定深色", "默认配色", "不跟随应用浅色/深色模式切换"),

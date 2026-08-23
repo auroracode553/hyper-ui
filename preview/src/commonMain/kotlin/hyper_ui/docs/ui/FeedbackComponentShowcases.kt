@@ -400,15 +400,29 @@ fun LevelCapsuleDemo() {
 @Composable
 fun PlaybackSpeedScaleDemo() {
     var selectedSpeed by remember { mutableStateOf(2f) }
+    var useCustomColors by remember { mutableStateOf(false) }
     val speedOptions = HyperPlaybackSpeedScaleDefaults.SpeedOptions
     val selectedIndex = speedOptions.indexOf(selectedSpeed).coerceAtLeast(0)
+    val scaleColors = if (useCustomColors) {
+        HyperPlaybackSpeedScaleDefaults.colors(
+            containerColor = Color(0.12f, 0.10f, 0.18f, 0.96f),
+            activeTrackColor = Color(0.62f, 0.48f, 1f, 0.88f),
+            selectedTickColor = Color(0.78f, 0.70f, 1f, 1f),
+            selectedLabelColor = Color(0.78f, 0.70f, 1f, 1f)
+        )
+    } else {
+        HyperPlaybackSpeedScaleDefaults.colors()
+    }
 
     Column(
         modifier = Modifier.widthIn(max = 560.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        HyperPlaybackSpeedScale(selectedSpeed = selectedSpeed)
+        HyperPlaybackSpeedScale(
+            selectedSpeed = selectedSpeed,
+            colors = scaleColors
+        )
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
                 tone = HyperButtonTone.Outline,
@@ -424,8 +438,14 @@ fun PlaybackSpeedScaleDemo() {
                 Text("向右调速")
             }
         }
+        HyperButton(
+            tone = HyperButtonTone.Outline,
+            onClick = { useCustomColors = !useCustomColors }
+        ) {
+            Text(if (useCustomColors) "恢复默认配色" else "查看自定义配色")
+        }
         Text(
-            text = "固定深色，不跟随页面主题；长按与横向手势仍由调用方持有。",
+            text = "紧凑双层布局；固定深色不跟随页面主题，手势仍由调用方持有。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center

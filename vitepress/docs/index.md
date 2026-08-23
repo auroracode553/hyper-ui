@@ -31,7 +31,7 @@ AI 生成代码时必须遵守：
 - `HyperDialog`、`HyperAlertDialog` 和 `HyperUpdateDialog` 使用 Compose Dialog，但设置 `usePlatformDefaultWidth = false`，在稳定的全尺寸根节点内居中面板，并屏蔽 Android 窗口过渡；返回键与外部点击行为以组件参数为准。需要描边与阴影的玻璃组件统一复用内部公共深度层，也可只复用其中的公共阴影能力。
 - `HyperIconButton` 只使用紧凑级阴影，`HyperDropdown` 使用内容自适应的浮层级深度，`HyperDrawer` 使用结构级深度；透明 `HyperNavBar` 不绘制描边和阴影。这些视觉参数不作为公开 border 或 outline API 暴露。
 - `HyperTextField` 使用同一玻璃语言的结构性变体：投影低于按钮，普通态无硬边框，聚焦和错误状态只使用一条渐变语义边缘。
-- `HyperPlaybackSpeedPanel`、`HyperPlaybackSpeedPanelOverlay` 与 `HyperPlaybackSpeedScale` 默认固定使用深色播放器视觉，不随外层 `MaterialTheme` 的明暗模式变化；强调色仍读取 `HyperThemeConfig`。
+- `HyperPlaybackSpeedPanel`、`HyperPlaybackSpeedPanelOverlay` 与 `HyperPlaybackSpeedScale` 默认固定使用深色播放器视觉，不随外层 `MaterialTheme` 的明暗模式变化；强调色仍读取 `HyperThemeConfig`。其中倍速刻度采用约 `310dp × 59dp` 的紧凑布局，适合叠放在视频画面上。
 - HyperUI 不强制绑定图标库；Android 项目需要图标时，默认优先推荐 `com.composables:icons-lucide-android:2.2.1`，通过 `painterResource` 使用其 VectorDrawable 资源。
 - 除非调用方已有明确依赖，否则不要为少量图标引入 `material-icons-extended`；Release 构建应开启代码与资源裁剪。
 - 文档示例中的 Compose、图标和状态 API 仍需从各自标准包导入。

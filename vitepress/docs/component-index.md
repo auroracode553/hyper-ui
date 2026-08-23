@@ -56,7 +56,7 @@
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 无动画、不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |
 | [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | 柔性玻璃竖向比例反馈，支持图标插槽 | 调用方提供 `progress`、文案、图标与显示时机 |
 | [HyperPlaybackSpeedPanel](components/feedback/hyper-playback-speed-panel.md) | 固定深色的播放速度设置面板与播放器覆盖层 | 调用方提供显示状态、当前速度与操作回调 |
-| [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 固定深色、复用 HyperSlider 分段视觉的长按临时加速刻度 | 调用方提供当前速度，并处理长按与横向手势 |
+| [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 固定深色、约 310dp × 59dp 的紧凑型长按临时加速刻度 | 调用方提供当前速度，并处理长按与横向手势 |
 | [HyperBatteryIndicator](components/feedback/hyper-battery-indicator.md) | 无描边玻璃壳体、百分比内显、充电闪电外置的紧凑电池图标 | 调用方提供电量和充电状态 |
 | [HyperPopup](components/feedback/hyper-popup.md) | 最大高度为窗口 70%、长内容可滚动的居中内容浮层 | 调用方提供 `visible` 和内容状态 |
 | [HyperDialog](components/feedback/hyper-dialog.md) | 禁用平台默认宽度、固定根节点且无窗口动画的 Compose Dialog | 调用方提供 `visible` 并处理结果 |
