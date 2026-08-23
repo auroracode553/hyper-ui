@@ -28,7 +28,7 @@ AI 生成代码时必须遵守：
 - 页面级空数据或筛选无结果使用 `HyperEmptyState`；图标和可选操作通过 Slot 注入，加载中与错误态仍由页面分别处理。
 - 不把网络请求、数据库访问、权限申请、路由实现或 ViewModel 写入 HyperUI 组件。
 - `hyperToast` 是 Android-only 工具；传入 `Context` 与文本或字符串资源 ID，内部只负责主线程调度和原生 Toast 显示。
-- 模态 `HyperDialog`、`HyperAlertDialog` 和 `HyperUpdateDialog` 保留平台标准背景调暗；Popup、菜单和抽屉只渲染自身面板。需要描边与阴影的玻璃组件统一复用内部公共深度层，也可只复用其中的公共阴影能力。
+- `HyperDialog`、`HyperAlertDialog` 和 `HyperUpdateDialog` 使用 Compose Dialog，但设置 `usePlatformDefaultWidth = false`，在稳定的全尺寸根节点内居中面板，并屏蔽 Android 窗口过渡；返回键与外部点击行为以组件参数为准。需要描边与阴影的玻璃组件统一复用内部公共深度层，也可只复用其中的公共阴影能力。
 - `HyperIconButton` 只使用紧凑级阴影，`HyperDropdown` 使用内容自适应的浮层级深度，`HyperDrawer` 使用结构级深度；透明 `HyperNavBar` 不绘制描边和阴影。这些视觉参数不作为公开 border 或 outline API 暴露。
 - `HyperTextField` 使用同一玻璃语言的结构性变体：投影低于按钮，普通态无硬边框，聚焦和错误状态只使用一条渐变语义边缘。
 - `HyperPlaybackSpeedPanel`、`HyperPlaybackSpeedPanelOverlay` 与 `HyperPlaybackSpeedScale` 默认固定使用深色播放器视觉，不随外层 `MaterialTheme` 的明暗模式变化；强调色仍读取 `HyperThemeConfig`。

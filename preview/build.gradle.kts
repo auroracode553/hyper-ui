@@ -28,7 +28,8 @@ kotlin {
             kotlin.exclude("**/HyperToast.kt")
             // Android 电池状态读取由跨平台 Preview 使用交互模拟展示，避免引入 Android 编译链。
             kotlin.exclude("**/HyperBatteryState.kt")
-
+            // Android Dialog 窗口动画配置由跨平台 Preview 使用同包宿主替代。
+            kotlin.exclude("**/HyperDialogHost.kt")
             dependencies {
                 // Preview 与正式组件保持一致，不额外引入动画运行时。
                 implementation("org.jetbrains.compose.foundation:foundation:${libs.versions.composeMultiplatform.get()}")

@@ -543,10 +543,10 @@ fun HyperDialogDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HyperButton(onClick = { visible = true }) {
-            Text("显示标准 Dialog")
+            Text("显示 Dialog")
         }
         Text(
-            text = "使用 Compose 标准 Dialog；平台负责模态背景、焦点、外部点击和窗口过渡。",
+            text = "禁用平台默认宽度；面板在稳定的全尺寸 Dialog 根节点内居中。",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center

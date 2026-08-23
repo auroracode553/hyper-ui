@@ -221,7 +221,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "使用 Compose 标准 Dialog 的模态对话框；保留平台背景调暗与窗口行为。",
+        description = "禁用平台默认宽度，在稳定的全尺寸 Dialog 根节点内居中面板。",
         code = """
             HyperDialog(
                 visible = visible,
@@ -238,10 +238,10 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("标准模态", "Compose Dialog", "保留平台 scrim、焦点和窗口过渡"),
-            DemoVariant("内容窗口", "wrap content", "不创建透明全屏 Dialog 根节点"),
+            DemoVariant("Dialog 宿主", "Compose Dialog", "usePlatformDefaultWidth = false"),
+            DemoVariant("稳定根节点", "fillMaxSize", "面板始终在固定窗口内居中"),
             DemoVariant("稳定输入", "HyperTextField", "输入重组只更新面板内容"),
-            DemoVariant("外部关闭", "dismissOnClickOutside", "通过 DialogProperties 交给平台处理"),
+            DemoVariant("外部关闭", "dismissOnClickOutside", "由背景命中层控制"),
             DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
         ),
         apiDocumentPaths = listOf("feedback/hyper-dialog.md"),
@@ -313,7 +313,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "update_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperUpdateDialog",
-        description = "使用标准模态窗口的应用更新弹窗；调用方持有状态并注入 Release 加载与下载动作。",
+        description = "继承稳定全尺寸 Dialog 根节点的应用更新弹窗；调用方持有状态并注入 Release 加载与下载动作。",
         code = """
             val checker = HyperUpdateChecker(
                 HyperReleaseLoader { releaseUrl ->

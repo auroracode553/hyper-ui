@@ -59,9 +59,9 @@
 | [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 固定深色、复用 HyperSlider 分段视觉的长按临时加速刻度 | 调用方提供当前速度，并处理长按与横向手势 |
 | [HyperBatteryIndicator](components/feedback/hyper-battery-indicator.md) | 无描边玻璃壳体、百分比内显、充电闪电外置的紧凑电池图标 | 调用方提供电量和充电状态 |
 | [HyperPopup](components/feedback/hyper-popup.md) | 最大高度为窗口 70%、长内容可滚动的居中内容浮层 | 调用方提供 `visible` 和内容状态 |
-| [HyperDialog](components/feedback/hyper-dialog.md) | 保留平台标准模态背景与窗口行为的 Compose 对话框 | 调用方提供 `visible` 并处理结果 |
+| [HyperDialog](components/feedback/hyper-dialog.md) | 禁用平台默认宽度、固定根节点且无窗口动画的 Compose Dialog | 调用方提供 `visible` 并处理结果 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 遵循平台窗口约束、正文可滚动的 Slot-first Alert 弹窗 | 调用方提供 `visible` 并处理结果 |
-| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 使用标准模态窗口的应用更新状态与下载确认弹窗 | 调用方持有状态，并注入 Release 加载和下载动作 |
+| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 使用无默认窗口动画 Dialog 的应用更新状态与下载确认弹窗 | 调用方持有状态，并注入 Release 加载和下载动作 |
 
 ## Android 系统工具
 

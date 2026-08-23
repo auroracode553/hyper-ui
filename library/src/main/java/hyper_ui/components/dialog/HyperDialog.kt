@@ -1,27 +1,33 @@
-/** 文件职责：基于 Compose 标准 Dialog 提供模态窗口和可复用实色面板。 */
+/** 文件职责：基于 Compose Dialog 提供无窗口动画的模态窗口和可复用实色面板。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 
 @Immutable
 data class HyperDialogColors(
     val containerColor: Color
 )
 
-/** 使用标准模态窗口；平台负责背景调暗、焦点、返回键和外部点击。 */
+/** 使用稳定的全尺寸 Dialog 根节点；显示状态与关闭结果由调用方管理。 */
 @Composable
 fun HyperDialog(
     visible: Boolean,
@@ -45,37 +51,67 @@ fun HyperDialog(
 ) {
     if (!visible) return
 
+    val currentOnDismissRequest by rememberUpdatedState(onDismissRequest)
     val containerColor = resolveHyperOpaqueColor(
         color = colors.containerColor,
         fallbackColor = HyperColors.cardContainer,
         backgroundColor = HyperColors.pageBackground
     )
 
-    Dialog(
+    HyperDialogHost(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            dismissOnBackPress = dismissOnBackPress,
-            dismissOnClickOutside = dismissOnClickOutside
-        )
+        dismissOnBackPress = dismissOnBackPress
     ) {
-        HyperFloatingPanel(
-            title = title,
-            modifier = modifier.widthIn(
-                min = HyperDialogDefaults.MinWidth,
-                max = HyperDialogDefaults.MaxWidth
-            ),
-            shape = shape,
-            containerColor = containerColor,
-            border = border,
-            horizontalAlignment = horizontalAlignment,
-            verticalArrangement = verticalArrangement,
-            actionArrangement = actionArrangement,
-            showScrollIndicator = showScrollIndicator,
-            actionContent = actionContent,
-            content = content
-        )
+        BoxWithConstraints(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (dismissOnClickOutside) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .pointerInput(Unit) {
+                            detectTapGestures { currentOnDismissRequest() }
+                        }
+                )
+            }
+
+            val availableWidth = (maxWidth - HyperDialogWindowPadding * 2)
+                .coerceAtLeast(0.dp)
+            val availableHeight = (maxHeight - HyperDialogWindowPadding * 2)
+                .coerceAtLeast(0.dp)
+            val resolvedMaxWidth = HyperDialogDefaults.MaxWidth.coerceAtMost(availableWidth)
+            val resolvedMinWidth = HyperDialogDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
+
+            HyperFloatingPanel(
+                title = title,
+                modifier = modifier
+                    .widthIn(
+                        min = resolvedMinWidth,
+                        max = resolvedMaxWidth
+                    )
+                    .heightIn(max = availableHeight)
+                    // 注册面板命中区域，但不消费事件，避免空白处点击穿透到关闭层。
+                    .pointerInput(Unit) {
+                        awaitPointerEventScope {
+                            while (true) awaitPointerEvent()
+                        }
+                    },
+                shape = shape,
+                containerColor = containerColor,
+                border = border,
+                horizontalAlignment = horizontalAlignment,
+                verticalArrangement = verticalArrangement,
+                actionArrangement = actionArrangement,
+                showScrollIndicator = showScrollIndicator,
+                actionContent = actionContent,
+                content = content
+            )
+        }
     }
 }
+
+private val HyperDialogWindowPadding = 16.dp
 
 object HyperDialogDefaults {
     val MinWidth = 280.dp
