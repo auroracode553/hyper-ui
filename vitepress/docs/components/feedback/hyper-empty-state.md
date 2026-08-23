@@ -84,7 +84,7 @@ HyperEmptyState(
 ## 使用约束
 
 - 仅用于数据为空或筛选无结果，不用于加载中和错误态；加载反馈使用进度组件，错误处理由页面根据业务决定。
-- 图标库和 Drawable 属于调用方，HyperUI 不绑定具体图标依赖。
+- 此组件的 `iconContent` 资源由调用方提供；HyperUI 内部的 Lucide 默认图标不会为 `HyperEmptyState` 注入默认内容。
 - `modifier` 应获得明确的可用高度，例如页面根布局的 `fillMaxSize()` 或 `Column` 中的 `weight(1f)`。
 - 组件只渲染自身面板，不添加遮罩或蒙层。
 - 面板容器、内间距、内容间距、形状、描边和投影均使用 `HyperPanel` 默认值；`HyperEmptyState` 不维护第二套面板样式。

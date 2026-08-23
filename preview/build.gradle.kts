@@ -31,7 +31,7 @@ kotlin {
             // Android Dialog 窗口动画配置由跨平台 Preview 使用同包宿主替代。
             kotlin.exclude("**/HyperDialogHost.kt")
             // Android Lucide VectorDrawable 由跨平台 Preview 使用同包图标替身。
-            kotlin.exclude("**/HyperPlaybackSpeedPanelGlyphs.kt")
+            kotlin.exclude("**/HyperLucideIcons.kt")
             dependencies {
                 // Preview 与正式组件保持一致，不额外引入动画运行时。
                 implementation("org.jetbrains.compose.foundation:foundation:${libs.versions.composeMultiplatform.get()}")

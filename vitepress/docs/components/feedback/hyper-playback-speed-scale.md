@@ -2,6 +2,7 @@
 
 - 包名：`hyper_ui`
 - 源码：`library/src/main/java/hyper_ui/components/feedback/HyperPlaybackSpeedScale.kt`
+- 默认图标：Lucide Android `fast-forward`
 - 预览：`playback_speed_scale`
 
 `HyperPlaybackSpeedScale` 是播放器长按临时加速使用的紧凑横向固定深色玻璃刻度。默认八档时，首尾档位位于轨道左右，中间档位位于轨道上方，当前倍速在下方居中显示；组件在常见手机宽度下约为 `310dp × 59dp`。组件只负责展示候选档位、当前高亮档位和实时倍速；内部轨道统一复用只读 `HyperSlider` 的分段点与三层圆点视觉，长按识别、横向拖动、临时设置播放器速度以及松手恢复仍由调用方处理。
@@ -86,7 +87,7 @@ HyperPlaybackSpeedScale(
 - `DragStep` 是调用方实现横向离散调速时可复用的推荐手势距离，组件自身不拦截指针事件。
 - `closestSpeed` 可将初始速度或拖动结果吸附到最近档位。
 - 刻度轨道通过 `HyperSlider(readOnly = true)` 渲染，档位列表会映射为显式 `segmentValues`，因此与通用滑块保持同一套轨道、分段点和圆点样式。
-- `leadingContent` 为空时显示内置双箭头；传入图标时通过 `LocalContentColor` 接收 `valueColor`。
+- `leadingContent` 为空时通过 Lucide Android 的 `fast-forward` VectorDrawable 显示快进图标，不再用 Canvas 手绘；传入自定义内容时通过 `LocalContentColor` 接收 `valueColor`。
 - 默认先将可用宽度限制到 `360.dp`，再取其 86%，因此空间充足时最终宽度约为 `310.dp`；内部内容高 `49.dp`，加上下内边距后约为 `59dp`。可用 `modifier` 继续约束外部尺寸与位置。
 - 默认八档时，`0.25x` 与 `4x` 位于轨道左右，中间六档与分段点对齐排列在轨道上方，避免为所有标签单独占用一整行宽度。
 - 组件提供确定进度语义，当前档位会映射为无障碍进度。

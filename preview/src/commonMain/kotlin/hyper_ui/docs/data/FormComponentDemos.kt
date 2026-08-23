@@ -56,7 +56,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "checkbox",
         group = GROUP_FORM,
         title = "HyperCheckbox",
-        description = "复选框组件，支持选中、未选中和禁用状态。",
+        description = "使用 Lucide check 默认图标的复选框，支持选中、未选中和禁用状态。",
         code = """
             HyperCheckbox(
                 checked = checked,
@@ -64,7 +64,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("选中", "checked = true", "主题实色与勾号"),
+            DemoVariant("选中", "checked = true", "主题实色与 Lucide check 图标"),
             DemoVariant("未选中", "checked = false", "实色容器与主题描边"),
             DemoVariant("禁用", "enabled = false", "禁用实色状态")
         ),

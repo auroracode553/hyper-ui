@@ -15,7 +15,7 @@
 | --- | --- | --- |
 | [HyperTextField](components/form/hyper-text-field.md) | 澎湃 OS 风格白色单色表面，复用公共控件描边与阴影 | 调用方提供 `value` |
 | [HyperSwitch](components/form/hyper-switch.md) | 开关，轨道和滑块默认有轮廓层次 | 调用方提供 `checked` |
-| [HyperCheckbox](components/form/hyper-checkbox.md) | 多选项 | 调用方提供 `checked` |
+| [HyperCheckbox](components/form/hyper-checkbox.md) | 使用 Lucide `check` 的多选项 | 调用方提供 `checked` |
 | [HyperRadio](components/form/hyper-radio.md) | 单选项 | 调用方提供 `selected` |
 | [HyperSegmented](components/form/hyper-segmented.md) | 玻璃轨道上的等宽分段控制器，各分段直接复用 HyperButton | 调用方提供 `selectedItem` |
 | [HyperSlider](components/form/hyper-slider.md) | 支持连续/分段轨道、指定标记、只读态与三层圆点的受控滑块 | 调用方提供 `value` |
@@ -55,9 +55,9 @@
 | [hyperToast](components/feedback/hyper-toast.md) | Android 原生 Toast 的线程安全封装 | 调用即显示，无持久业务状态 |
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 无动画、不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |
 | [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | 柔性玻璃竖向比例反馈，支持图标插槽 | 调用方提供 `progress`、文案、图标与显示时机 |
-| [HyperPlaybackSpeedPanel](components/feedback/hyper-playback-speed-panel.md) | 固定深色、约 468dp × 157dp 的紧凑播放速度面板与覆盖层 | 调用方提供显示状态、当前速度与操作回调 |
-| [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 固定深色、约 310dp × 59dp 的紧凑型长按临时加速刻度 | 调用方提供当前速度，并处理长按与横向手势 |
-| [HyperBatteryIndicator](components/feedback/hyper-battery-indicator.md) | 无描边玻璃壳体、百分比内显、充电闪电外置的紧凑电池图标 | 调用方提供电量和充电状态 |
+| [HyperPlaybackSpeedPanel](components/feedback/hyper-playback-speed-panel.md) | 使用 Lucide 默认图标、约 468dp × 157dp 的紧凑播放速度面板 | 调用方提供显示状态、当前速度与操作回调 |
+| [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 使用 Lucide `fast-forward`、约 310dp × 59dp 的紧凑倍速刻度 | 调用方提供当前速度，并处理长按与横向手势 |
+| [HyperBatteryIndicator](components/feedback/hyper-battery-indicator.md) | 无描边玻璃壳体、百分比内显并使用 Lucide `zap` 的紧凑电池图标 | 调用方提供电量和充电状态 |
 | [HyperPopup](components/feedback/hyper-popup.md) | 最大高度为窗口 70%、长内容可滚动的居中内容浮层 | 调用方提供 `visible` 和内容状态 |
 | [HyperDialog](components/feedback/hyper-dialog.md) | 禁用平台默认宽度、固定根节点且无窗口动画的 Compose Dialog | 调用方提供 `visible` 并处理结果 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 遵循平台窗口约束、正文可滚动的 Slot-first Alert 弹窗 | 调用方提供 `visible` 并处理结果 |

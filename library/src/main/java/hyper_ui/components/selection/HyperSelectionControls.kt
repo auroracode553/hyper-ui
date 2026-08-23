@@ -2,7 +2,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -12,19 +11,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import hyper_ui.core.interaction.hyperNoRippleClickable
+import hyper_ui.core.icon.HyperCheckIcon
 
 @Composable
 fun HyperSwitch(
@@ -177,22 +175,12 @@ fun HyperCheckbox(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Canvas(modifier = Modifier.size(checkmarkSize)) {
-            val path = Path().apply {
-                moveTo(size.width * 0.22f, size.height * 0.52f)
-                lineTo(size.width * 0.42f, size.height * 0.72f)
-                lineTo(size.width * 0.80f, size.height * 0.28f)
+        if (checked) {
+            CompositionLocalProvider(
+                LocalContentColor provides resolvedCheckmarkColor
+            ) {
+                HyperCheckIcon(modifier = Modifier.size(checkmarkSize))
             }
-
-            drawPath(
-                path = path,
-                color = resolvedCheckmarkColor,
-                style = Stroke(
-                    width = size.width * 0.14f,
-                    cap = StrokeCap.Round,
-                    join = StrokeJoin.Round
-                )
-            )
         }
     }
 }

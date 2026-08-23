@@ -1,7 +1,6 @@
 /** 文件职责：提供播放器长按临时倍速使用的柔性玻璃刻度反馈组件。 */
 package hyper_ui
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -21,10 +20,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.semantics
@@ -32,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hyper_ui.core.icon.HyperFastForwardIcon
 import kotlin.math.abs
 
 @Immutable
@@ -244,7 +242,9 @@ private fun CurrentSpeedValue(
         ) {
             CompositionLocalProvider(LocalContentColor provides colors.valueColor) {
                 if (leadingContent == null) {
-                    DefaultSpeedGlyph()
+                    HyperFastForwardIcon(
+                        Modifier.size(HyperPlaybackSpeedScaleDefaults.LeadingIconSize)
+                    )
                 } else {
                     leadingContent()
                 }
@@ -258,33 +258,6 @@ private fun CurrentSpeedValue(
             lineHeight = 12.sp,
             maxLines = 1
         )
-    }
-}
-
-@Composable
-private fun DefaultSpeedGlyph() {
-    val color = LocalContentColor.current
-    Canvas(modifier = Modifier.size(HyperPlaybackSpeedScaleDefaults.LeadingIconSize)) {
-        val strokeWidth = 2.dp.toPx()
-        val middleY = size.height / 2f
-        val quarterWidth = size.width / 4f
-        repeat(2) { index ->
-            val startX = quarterWidth * index + quarterWidth * 0.35f
-            drawLine(
-                color = color,
-                start = Offset(startX, size.height * 0.22f),
-                end = Offset(startX + quarterWidth, middleY),
-                strokeWidth = strokeWidth,
-                cap = StrokeCap.Round
-            )
-            drawLine(
-                color = color,
-                start = Offset(startX + quarterWidth, middleY),
-                end = Offset(startX, size.height * 0.78f),
-                strokeWidth = strokeWidth,
-                cap = StrokeCap.Round
-            )
-        }
     }
 }
 

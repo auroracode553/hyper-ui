@@ -1,7 +1,6 @@
 /** 文件职责：提供电量内显、充电图标外置的紧凑型系统电池指示器。 */
 package hyper_ui
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,15 +15,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.progressBarRangeInfo
@@ -33,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hyper_ui.core.icon.HyperChargingIcon
 
 @Immutable
 data class HyperBatteryIndicatorColors(
@@ -147,30 +148,17 @@ fun HyperBatteryIndicator(
         }
 
         if (charging) {
-            ChargingBolt(
-                color = colors.chargingIconColor,
-                modifier = Modifier.size(
-                    width = HyperBatteryIndicatorDefaults.ChargingIconWidth,
-                    height = HyperBatteryIndicatorDefaults.ChargingIconHeight
+            CompositionLocalProvider(
+                LocalContentColor provides colors.chargingIconColor
+            ) {
+                HyperChargingIcon(
+                    modifier = Modifier.size(
+                        width = HyperBatteryIndicatorDefaults.ChargingIconWidth,
+                        height = HyperBatteryIndicatorDefaults.ChargingIconHeight
+                    )
                 )
-            )
+            }
         }
-    }
-}
-
-@Composable
-private fun ChargingBolt(color: Color, modifier: Modifier = Modifier) {
-    Canvas(modifier = modifier) {
-        val path = Path().apply {
-            moveTo(size.width * 0.58f, 0f)
-            lineTo(size.width * 0.18f, size.height * 0.54f)
-            lineTo(size.width * 0.49f, size.height * 0.54f)
-            lineTo(size.width * 0.36f, size.height)
-            lineTo(size.width * 0.84f, size.height * 0.40f)
-            lineTo(size.width * 0.53f, size.height * 0.40f)
-            close()
-        }
-        drawPath(path = path, color = color)
     }
 }
 
@@ -187,7 +175,7 @@ object HyperBatteryIndicatorDefaults {
     val TerminalElevation = 1.dp
     val TerminalSpacing = 1.dp
     val ElementSpacing = 4.dp
-    val ChargingIconWidth = 9.dp
+    val ChargingIconWidth = 14.dp
     val ChargingIconHeight = 14.dp
     const val LowLevelThreshold = 20
 

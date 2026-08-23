@@ -3,6 +3,7 @@
 - 包名：`hyper_ui`
 - 源码：`library/src/main/java/hyper_ui/components/feedback/HyperPlaybackSpeedPanel.kt`
 - 默认值与格式工具：`library/src/main/java/hyper_ui/components/feedback/HyperPlaybackSpeedPanelDefaults.kt`
+- 默认图标映射：`library/src/main/java/hyper_ui/core/icon/HyperLucideIcons.kt`
 - 默认图标依赖：`com.composables:icons-lucide-android:2.2.1`
 - 预览：`playback_speed_panel`
 
@@ -161,6 +162,6 @@ HyperPlaybackSpeedPanelOverlay(
 - 标题图标与关闭按钮为 `30dp`，滑块操作层为 `36dp`，快捷档位层为 `24dp`，底部操作约为 `32dp`；紧凑化不会移除或合并任何操作。
 - `modifier` 控制覆盖层，`panelModifier` 控制覆盖层内的面板；单独使用 `HyperPlaybackSpeedPanel` 时通过其 `modifier` 控制尺寸与位置。
 - 五个图标插槽均通过 `LocalContentColor` 接收当前语义色；为空时分别使用 Lucide Android 的 `gauge`、`x`、`rotate-ccw`、`move-horizontal` 与 `pencil` VectorDrawable，不再使用 Canvas 代码绘制图标。
-- Android 正式组件通过 `implementation` 使用 Lucide；Desktop/Wasm Preview 会排除 Android 资源适配文件，并使用同包跨平台图标替身模拟交互。Wasm 画面不是图标资源 API 的事实来源。
+- Android 正式组件通过 `implementation` 使用 Lucide；Desktop/Wasm Preview 会排除 Android 图标映射文件，并使用 `hyper_ui.core.icon` 下的跨平台替身模拟交互。Wasm 画面不是图标资源 API 的事实来源。
 
 <WasmPreview demo="playback_speed_panel" title="HyperPlaybackSpeedPanel 交互预览" />

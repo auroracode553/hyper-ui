@@ -4,6 +4,7 @@
 - 包名：`hyper_ui`
 - 状态模型：受控组件；`checked` 由调用方持有
 - 源码：`library/src/main/java/hyper_ui/components/selection/HyperSelectionControls.kt`
+- 选中图标：Lucide Android `check`
 - Preview 注册：`preview/src/commonMain/kotlin/hyper_ui/docs/data/FormComponentDemos.kt`
 - Preview 交互：`preview/src/commonMain/kotlin/hyper_ui/docs/ui/FormComponentShowcases.kt`
 
@@ -53,7 +54,7 @@ object HyperCheckboxDefaults {
 
 - 组件不会在内部保存业务选中值。
 - 调用方必须把 `onCheckedChange` 返回的新值写回自己的状态。
-- 组件内部只处理背景、描边、勾号和禁用实色状态；切换时即时更新，不执行动画。
+- 组件内部只处理背景、描边、Lucide `check` 图标和禁用实色状态；切换时即时更新，不执行动画。
 
 ## 最小用法
 
@@ -71,6 +72,7 @@ HyperCheckbox(
 - 这是无涟漪点击的受控组件，语义角色为 `Role.Checkbox`。
 - `enabled = false` 时既不切换，也不调用 `onCheckedChange`。
 - 未选中态默认使用卡片背景和主题色 `2.dp` 描边。
+- 选中态通过 Lucide Android 的 `check` VectorDrawable 显示勾号，不使用 Canvas 手绘路径。
 - 尺寸来自 `HyperCheckboxDefaults`，当前公开签名没有单独的尺寸参数。
 - 项目颜色规范禁止十六进制硬编码；自定义颜色使用项目允许的 RGBA 写法。
 

@@ -55,7 +55,7 @@ import androidx.compose.runtime.setValue
 
 ## 推荐图标方案（Android）
 
-除 `HyperPlaybackSpeedPanel` 的五个默认图标外，HyperUI 组件都通过 slot 接收图标内容。倍速面板已在库内部使用 `icons-lucide-android`；调用方若要直接引用 Lucide 资源，需要在自己的模块显式声明：
+HyperUI 的内置语义图标统一使用 `icons-lucide-android` VectorDrawable，不再使用 Canvas 手绘；支持自定义的组件仍保留图标 slot。调用方若要直接引用 Lucide 资源，需要在自己的模块显式声明：
 
 ```kotlin
 dependencies {
@@ -96,7 +96,7 @@ android {
 }
 ```
 
-代码与资源裁剪启用后，未引用的 Lucide drawable 可以从最终产物中移除。该依赖只添加到需要图标的 Android 应用模块，不添加到 HyperUI；除非现有项目已经使用，否则不要为少量图标引入 `material-icons-extended`。其他 AGP 版本应使用该版本对应的代码压缩和资源缩减配置。
+代码与资源裁剪启用后，未引用的 Lucide drawable 可以从最终产物中移除。HyperUI 已通过内部 `implementation` 引用默认语义图标；调用方仅在自己的源码需要直接访问 `LucideR.drawable` 时重复声明依赖。不要为少量图标引入 `material-icons-extended`。其他 AGP 版本应使用该版本对应的代码压缩和资源缩减配置。
 
 ## 应用根节点
 

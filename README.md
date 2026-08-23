@@ -13,7 +13,7 @@
 - 调用方可以通过 Maven 坐标、源码模块或 AAR 引入 HyperUI。
 - 当前项目使用 AGP 9.1.1，Kotlin Android 支持由 AGP 内置，不再额外应用 `org.jetbrains.kotlin.android` 插件。
 - 当前库的 `minSdk` 为 `30`，调用方应用的 `minSdk` 不能低于 30。
-- `HyperPlaybackSpeedPanel` 的五个默认图标使用 `com.composables:icons-lucide-android:2.2.1`；其他组件继续通过 slot 接收图标，不引入 `material-icons-extended`。
+- HyperUI 内置语义图标统一使用 `com.composables:icons-lucide-android:2.2.1` VectorDrawable，不再用 Canvas 手绘图标；可替换图标继续保留 slot。
 - AI 或新调用者应优先阅读 [vitepress/docs/index.md](vitepress/docs/index.md)，再按 [组件索引](vitepress/docs/component-index.md) 打开具体组件页。
 - `vitepress/docs/` 是权威 Markdown 文档，`vitepress/` 负责网页渲染，`preview/` 负责 Desktop 与 Wasm 交互预览。
 
@@ -55,7 +55,7 @@ https://gitee.com/my_new_way/hyper_ui/blob/master/vitepress/docs/index.md
 - HyperUI 公开 API 统一在 `hyper_ui` 包，可使用 `import hyper_ui.*`。
 - 使用前包裹 `HyperThemeConfig`。
 - 组件不持有业务状态，状态由调用方管理。
-- `HyperPlaybackSpeedPanel` 已在库内部使用 `com.composables:icons-lucide-android:2.2.1`；调用方若要直接引用 `LucideR.drawable`，仍应显式声明该依赖。
+- HyperUI 已在库内部使用 `com.composables:icons-lucide-android:2.2.1` 提供默认语义图标；调用方若要直接引用 `LucideR.drawable`，仍应显式声明该依赖。
 ```
 
 ## 适用范围
@@ -155,7 +155,7 @@ fun App() {
 
 ## 推荐图标方案（Android）
 
-HyperUI 的按钮、列表项和导航组件通过 slot 接收图标内容；`HyperPlaybackSpeedPanel` 的五个默认图标直接使用 [Lucide Android](https://github.com/composablehorizons/compose-icons/tree/main/icons-lucide-android)。调用方若要在自己的代码中直接引用 Lucide 资源，也需要显式声明：
+HyperUI 内置的勾选、充电、快进及播放速度面板语义图标统一使用 [Lucide Android](https://github.com/composablehorizons/compose-icons/tree/main/icons-lucide-android)；支持自定义的组件仍保留图标 slot。调用方若要在自己的代码中直接引用 Lucide 资源，也需要显式声明：
 
 ```kotlin
 dependencies {
@@ -180,18 +180,18 @@ HyperIconButton(onClick = onSearch) {
 }
 ```
 
-该 Android artifact 使用 `VectorDrawable` 资源。HyperUI 内部仅引用倍速面板需要的 `gauge`、`x`、`rotate-ccw`、`move-horizontal` 与 `pencil`；Release 资源裁剪可移除未引用资源。其他组件仍通过 slot 接收图标，不引入 `material-icons-extended`。
+该 Android artifact 使用 `VectorDrawable` 资源。HyperUI 当前引用 `check`、`zap`、`fast-forward`、`gauge`、`x`、`rotate-ccw`、`move-horizontal` 与 `pencil`；Release 资源裁剪可移除未引用资源。项目不引入 `material-icons-extended`。
 
 ## 组件范围
 
 - 公开 API 包名统一为 `hyper_ui`，调用方可以用 `import hyper_ui.*` 一次导入 HyperUI 组件、配置、枚举和工具方法。Kotlin 通配符导入只影响源码可见性，不会因为写了 `import hyper_ui.*` 就强制把所有组件打进调用方最终产物；最终未使用代码裁剪取决于调用方的 release/minify/R8 配置。
 - 主题与样式：`HyperThemeConfig`, `HyperTheme`, `HyperColors`, `HyperStyleDefaults`, `rgba`
 - 基础组件：`HyperButton`, `HyperIconButton`（slot-first 容器，内容由调用方渲染；`HyperButton` 的 tone 与禁用态使用不透明实色，并统一复用公共 `hyperSurfaceDepth` 的控件描边和单层阴影，按下时立即收低，禁用态保留弱描边并移除阴影；`Outline` 或调用方传入的描边会替换公共中性描边，不会叠加第二圈；`HyperIconButton` 默认 38dp，默认图标 18dp，使用白色半透明磨砂底材、宽上沿柔光、面内折射边缘，以及无描边的公共单层阴影，浅色模式使用更清晰的 8dp 投影；自定义尺寸通过 `modifier` 控制）
-- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadio`, `HyperSegmented`, `HyperSlider`（输入框采用澎湃 OS 风格的白色单色表面，直接复用公共 `hyperSurfaceDepth` 的单层控件描边与阴影：浅色主题为不透明纯白，普通态使用 4dp、聚焦态使用 5dp 抬升，保证白底可辨识；深色主题为白色低透明度材质；不叠加高光、明暗渐变或纹理层；聚焦/错误态使用语义色替换公共中性描边，不叠加第二圈；禁用态降低材质透明度、保留弱描边并关闭阴影，最小高度为 40dp；已有文本首次聚焦时光标位于末尾；`HyperSegmented` 只负责玻璃轨道、等宽布局与选择语义，每个分段直接复用 `HyperButton`；`HyperSlider` 支持点击定位、连续/等距吸附、可选分段点、指定业务标记和只读态，并统一使用柔光环、外圆、中心点三层滑块视觉）
+- 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadio`, `HyperSegmented`, `HyperSlider`（输入框采用澎湃 OS 风格的白色单色表面，直接复用公共 `hyperSurfaceDepth` 的单层控件描边与阴影：浅色主题为不透明纯白，普通态使用 4dp、聚焦态使用 5dp 抬升，保证白底可辨识；深色主题为白色低透明度材质；不叠加高光、明暗渐变或纹理层；聚焦/错误态使用语义色替换公共中性描边，不叠加第二圈；禁用态降低材质透明度、保留弱描边并关闭阴影，最小高度为 40dp；已有文本首次聚焦时光标位于末尾；`HyperCheckbox` 使用 Lucide `check`；`HyperSegmented` 只负责玻璃轨道、等宽布局与选择语义，每个分段直接复用 `HyperButton`；`HyperSlider` 支持点击定位、连续/等距吸附、可选分段点、指定业务标记和只读态，并统一使用柔光环、外圆、中心点三层滑块视觉）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperSectionedList`, `HyperMenuList`, `HyperListItem`（`HyperList` 提供单一连续卡片的页面级 `LazyColumn`、可滚动 `contentPadding` 与 `LazyListScope` Slot；`HyperSectionedList` 面向日期、历史等动态分组数据，保持标题和数据行独立懒加载并自动处理组内圆角与分割线；`HyperMenuList` 只能用于少量菜单、设置项和操作入口；所有列表容器均使用不透明实色，`HyperListItem` 根据 supporting slot 自动使用单行 44dp、双行 54dp 的基础高度和 4dp 纵向留白）
 - 状态与浮层反馈：`HyperEmptyState`, `HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `HyperDropdownItemTone`, `hyperToast`, `HyperToastDuration`（`HyperEmptyState` 直接复用 `HyperPanel` 承载居中的空数据内容；`HyperDropdown` 使用按最宽菜单项收缩、最大 220dp 的乳白/炭灰柔雾面板，并由公共深度层提供描边和浮层阴影；`HyperPopup` 使用轻量 Popup；`HyperDialog` 使用 Compose Dialog，设置 `usePlatformDefaultWidth = false` 并在稳定的全尺寸根节点内居中面板；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
-- 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`, `HyperPlaybackSpeedPanel`, `HyperPlaybackSpeedPanelOverlay`, `HyperPlaybackSpeedScale`, `HyperBatteryIndicator`（加载进度支持确定/不确定状态；播放速度面板与长按倍速刻度默认固定深色、不跟随应用明暗模式，状态和自定义速度流程由调用方持有；倍速面板约为 468dp × 157dp，并使用 Lucide Android 默认图标；长按倍速刻度约为 310dp × 59dp；比例胶囊使用白色半透明连续玻璃材质与单层空间阴影；电池组件使用无描边玻璃壳体，将百分比显示在内部并在充电时把闪电展示在右侧；组件本身不主动读取系统状态）
+- 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`, `HyperPlaybackSpeedPanel`, `HyperPlaybackSpeedPanelOverlay`, `HyperPlaybackSpeedScale`, `HyperBatteryIndicator`（加载进度支持确定/不确定状态；播放速度面板与长按倍速刻度默认固定深色、不跟随应用明暗模式，状态和自定义速度流程由调用方持有；倍速面板约为 468dp × 157dp，长按倍速刻度约为 310dp × 59dp；面板默认图标、刻度快进图标与电池充电图标均使用 Lucide Android；比例胶囊使用白色半透明连续玻璃材质与单层空间阴影；组件本身不主动读取系统状态）
 - Android 系统工具：`HyperBatteryState`, `readHyperBatteryState`, `rememberHyperBatteryState`（支持一次性读取与 Compose 生命周期安全订阅；内部使用 Application Context，并在离开 Composition 时注销电池广播）
 - 导航组件：`HyperNavBar`, `HyperImmersiveNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明且不绘制描边和阴影；`HyperImmersiveNavBar` 复用该纯平导航视觉并允许内容滚入其后方；`HyperDrawer` 使用公共结构描边和低抬升阴影的不透明玻璃；`HyperSlideMenu` 使用无硬边框的玻璃胶囊；`HyperTabBar` 继续只使用 0.5dp 顶部发丝线；`HyperDrawer` 默认提供方向化内容间距与系统安全区，并支持可配置内容滚动；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。

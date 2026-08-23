@@ -32,7 +32,7 @@ AI 生成代码时必须遵守：
 - `HyperIconButton` 只使用紧凑级阴影，`HyperDropdown` 使用内容自适应的浮层级深度，`HyperDrawer` 使用结构级深度；透明 `HyperNavBar` 不绘制描边和阴影。这些视觉参数不作为公开 border 或 outline API 暴露。
 - `HyperTextField` 使用同一玻璃语言的结构性变体：投影低于按钮，普通态无硬边框，聚焦和错误状态只使用一条渐变语义边缘。
 - `HyperPlaybackSpeedPanel`、`HyperPlaybackSpeedPanelOverlay` 与 `HyperPlaybackSpeedScale` 默认固定使用深色播放器视觉，不随外层 `MaterialTheme` 的明暗模式变化；强调色仍读取 `HyperThemeConfig`。倍速面板约为 `468dp × 157dp`，倍速刻度约为 `310dp × 59dp`，都适合紧凑叠放在视频画面上。
-- `HyperPlaybackSpeedPanel` 的默认图标使用 `com.composables:icons-lucide-android:2.2.1` VectorDrawable；其他组件继续通过 slot 接收图标。调用方直接引用 `LucideR.drawable` 时需显式声明依赖。
+- HyperUI 内置语义图标统一使用 `com.composables:icons-lucide-android:2.2.1` VectorDrawable，不使用 Canvas 手绘图标；支持自定义的组件继续保留 slot。调用方直接引用 `LucideR.drawable` 时需显式声明依赖。
 - 除非调用方已有明确依赖，否则不要为少量图标引入 `material-icons-extended`；Release 构建应开启代码与资源裁剪。
 - 文档示例中的 Compose、图标和状态 API 仍需从各自标准包导入。
 - `preview/` 与 Wasm 预览是文档演示工程，不是调用方依赖。

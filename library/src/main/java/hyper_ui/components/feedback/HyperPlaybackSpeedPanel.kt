@@ -43,6 +43,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
+import hyper_ui.core.icon.HyperCloseIcon
+import hyper_ui.core.icon.HyperEditIcon
+import hyper_ui.core.icon.HyperGaugeIcon
+import hyper_ui.core.icon.HyperHorizontalDragIcon
+import hyper_ui.core.icon.HyperResetIcon
 import kotlin.math.abs
 
 /**
@@ -232,7 +237,7 @@ private fun HyperPlaybackSpeedPanelHeader(
         ) {
             CompositionLocalProvider(LocalContentColor provides colors.accentColor) {
                 if (leadingContent == null) {
-                    HyperPlaybackSpeedGaugeGlyph(Modifier.size(16.dp))
+                    HyperGaugeIcon(Modifier.size(16.dp))
                 } else {
                     leadingContent()
                 }
@@ -271,7 +276,7 @@ private fun HyperPlaybackSpeedPanelHeader(
             colors = panelIconButtonColors(colors)
         ) {
             if (closeContent == null) {
-                HyperPlaybackSpeedCloseGlyph(Modifier.size(15.dp))
+                HyperCloseIcon(Modifier.size(15.dp))
             } else {
                 closeContent()
             }
@@ -401,7 +406,7 @@ private fun HyperPlaybackSpeedPanelFooter(
                 LocalContentColor provides colors.supportingContentColor
             ) {
                 if (hintLeadingContent == null) {
-                    HyperPlaybackSpeedHintGlyph()
+                    HyperHorizontalDragIcon()
                 } else {
                     hintLeadingContent()
                 }
@@ -427,7 +432,7 @@ private fun HyperPlaybackSpeedPanelFooter(
             colors = panelIconButtonColors(colors)
         ) {
             if (resetContent == null) {
-                HyperPlaybackSpeedResetGlyph(Modifier.size(17.dp))
+                HyperResetIcon(Modifier.size(17.dp))
             } else {
                 resetContent()
             }
@@ -471,7 +476,7 @@ private fun HyperPlaybackSpeedCustomAction(
         ) {
             CompositionLocalProvider(LocalContentColor provides colors.accentColor) {
                 if (leadingContent == null) {
-                    HyperPlaybackSpeedEditGlyph()
+                    HyperEditIcon()
                 } else {
                     leadingContent()
                 }

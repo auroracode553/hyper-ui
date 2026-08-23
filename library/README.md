@@ -82,4 +82,4 @@ src/main/java/hyper_ui/
 
 ## 图标依赖策略
 
-`HyperPlaybackSpeedPanel` 的五个默认图标通过内部 `implementation` 依赖使用 `com.composables:icons-lucide-android:2.2.1`；其余组件仍由调用方通过 slot 提供图标。调用方若要直接引用 `LucideR.drawable`，需要显式声明依赖；完整方式见 [接入与最小配置](../vitepress/docs/getting-started.md#推荐图标方案android)。
+HyperUI 内置语义图标通过内部 `implementation` 依赖统一使用 `com.composables:icons-lucide-android:2.2.1` VectorDrawable，不再用 Canvas 手绘。可替换图标仍保留 slot；调用方若要直接引用 `LucideR.drawable`，需要显式声明依赖。完整方式见 [接入与最小配置](../vitepress/docs/getting-started.md#推荐图标方案android)。
