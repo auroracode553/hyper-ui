@@ -34,7 +34,7 @@
 | [HyperNavBar](components/navigation/hyper-nav-bar.md) | 默认透明、无描边且无阴影的顶部栏 slot 容器 | 调用方处理事件 |
 | [HyperImmersiveNavBar](components/navigation/hyper-immersive-nav-bar.md) | 固定透明导航操作层，首屏避让、滚动后内容进入导航栏与状态栏后方 | 调用方持有滚动状态并消费组件返回的内容 Padding |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 带公共结构描边和低抬升阴影的四方向不透明玻璃抽屉 | 调用方提供 `open`、默认 Padding 策略、附加间距、选中态与嵌套列表滚动策略 |
-| [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 无硬边框的横向玻璃胶囊菜单 | 调用方提供 `selectedItem` |
+| [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 直接复用 `HyperButton` 的横向同级菜单 | 调用方提供 `selectedItem` |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | 使用低对比度顶部发丝线、无阴影与玻璃高光，总高 60dp 的贴底栏容器 | 调用方处理内容、选择与导航 |
 
 ## 列表组件

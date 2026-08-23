@@ -115,7 +115,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "slide-menu",
         group = GROUP_NAVIGATION,
         title = "HyperSlideMenu",
-        description = "横向分组菜单。每个胶囊使用无硬边框的连续玻璃，菜单文字、计数或图标由 item slot 渲染。",
+        description = "横向分组菜单。每个项目直接复用 HyperButton 的表面、描边、按压与禁用态，菜单文字、计数或图标由 item slot 渲染。",
         code = """
             HyperSlideMenu(
                 items = categories,
@@ -126,10 +126,11 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("选中项", "selectedItem", "主题染色玻璃与更清晰抬升"),
-            DemoVariant("单项布局", "contentModifier = Modifier.padding(...)", "独立控制单项内容区"),
-            DemoVariant("未选中项", "itemEnabled = true", "白色半透明玻璃与轻量投影"),
-            DemoVariant("禁用项", "itemEnabled = false", "移除抬升并降低材质强度")
+            DemoVariant("选中项", "selectedItem", "默认使用 HyperButtonTone.Primary"),
+            DemoVariant("未选中项", "unselectedTone", "默认使用 HyperButtonTone.Secondary"),
+            DemoVariant("描边选中态", "selectedTone = Outline", "直接使用 HyperButton 的 1dp 强调色描边"),
+            DemoVariant("自定义配色", "selectedColors", "直接接收 HyperButtonColors"),
+            DemoVariant("禁用项", "itemEnabled = false", "复用 HyperButton 禁用态")
         ),
         apiDocumentPaths = listOf("navigation/hyper-slide-menu.md"),
         content = { SlideMenuDemo() }

@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import hyper_ui.HyperTabBar
 import hyper_ui.HyperTabBarDefaults
 import hyper_ui.HyperButton
+import hyper_ui.HyperButtonDefaults
 import hyper_ui.HyperButtonTone
 import hyper_ui.HyperDrawer
 import hyper_ui.HyperDrawerHeader
@@ -370,18 +371,50 @@ fun SlideMenuDemo() {
         listOf("全部", "恶意网址", "广告", "恶意跳转", "打开应用")
     }
     var selected by remember { mutableStateOf("全部") }
+    var useOutlineSelection by remember { mutableStateOf(false) }
+    var useCustomSelectionColors by remember { mutableStateOf(false) }
+    val selectedTone = if (useOutlineSelection) {
+        HyperButtonTone.Outline
+    } else {
+        HyperButtonTone.Primary
+    }
+    val selectedColors = if (useCustomSelectionColors) {
+        HyperButtonDefaults.colors(
+            tone = selectedTone,
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+        )
+    } else {
+        HyperButtonDefaults.colors(selectedTone)
+    }
 
     Column(
         modifier = Modifier.widthIn(max = 520.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton(
+                onClick = { useOutlineSelection = !useOutlineSelection },
+                tone = if (useOutlineSelection) HyperButtonTone.Tonal else HyperButtonTone.Secondary
+            ) {
+                Text(if (useOutlineSelection) "选中项：描边" else "选中项：实色")
+            }
+            HyperButton(
+                onClick = { useCustomSelectionColors = !useCustomSelectionColors },
+                tone = if (useCustomSelectionColors) HyperButtonTone.Tonal else HyperButtonTone.Secondary
+            ) {
+                Text(if (useCustomSelectionColors) "自定义配色：开" else "自定义配色：关")
+            }
+        }
         // 示例只把分类文本交给 slot；组件本身不拥有分类、计数或业务筛选规则。
         HyperSlideMenu(
             items = categories,
             selectedItem = selected,
             onSelected = { selected = it },
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            itemEnabled = { it != "打开应用" }
+            itemEnabled = { it != "打开应用" },
+            selectedTone = selectedTone,
+            selectedColors = selectedColors
         ) { item ->
             Text(text = item, fontSize = 13.sp)
         }
