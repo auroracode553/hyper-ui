@@ -55,7 +55,7 @@ import androidx.compose.runtime.setValue
 
 ## 推荐图标方案（Android）
 
-HyperUI 通过 slot 接收图标内容，本身不传递图标库。Android 调用方需要通用图标时，默认推荐 `icons-lucide-android`：
+除 `HyperPlaybackSpeedPanel` 的五个默认图标外，HyperUI 组件都通过 slot 接收图标内容。倍速面板已在库内部使用 `icons-lucide-android`；调用方若要直接引用 Lucide 资源，需要在自己的模块显式声明：
 
 ```kotlin
 dependencies {

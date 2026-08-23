@@ -221,18 +221,18 @@ private fun HyperPlaybackSpeedPanelHeader(
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(7.dp)
     ) {
         Box(
             modifier = Modifier
-                .size(36.dp)
+                .size(30.dp)
                 .clip(CircleShape)
                 .background(colors.accentColor.copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center
         ) {
             CompositionLocalProvider(LocalContentColor provides colors.accentColor) {
                 if (leadingContent == null) {
-                    HyperPlaybackSpeedGaugeGlyph(Modifier.size(20.dp))
+                    HyperPlaybackSpeedGaugeGlyph(Modifier.size(16.dp))
                 } else {
                     leadingContent()
                 }
@@ -242,7 +242,7 @@ private fun HyperPlaybackSpeedPanelHeader(
             text = texts.title,
             modifier = Modifier.weight(1f),
             color = colors.contentColor,
-            fontSize = 16.sp,
+            fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -251,13 +251,13 @@ private fun HyperPlaybackSpeedPanelHeader(
             modifier = Modifier
                 .clip(RoundedCornerShape(percent = 50))
                 .background(colors.accentColor.copy(alpha = 0.2f))
-                .padding(horizontal = 13.dp, vertical = 7.dp),
+                .padding(horizontal = 10.dp, vertical = 4.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "${HyperPlaybackSpeedPanelDefaults.formatFixed(currentSpeed)}x",
                 color = colors.contentColor,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 softWrap = false
@@ -266,12 +266,12 @@ private fun HyperPlaybackSpeedPanelHeader(
         HyperIconButton(
             onClick = onDismissRequest,
             modifier = Modifier
-                .size(36.dp)
+                .size(30.dp)
                 .semantics { contentDescription = texts.closeContentDescription },
             colors = panelIconButtonColors(colors)
         ) {
             if (closeContent == null) {
-                HyperPlaybackSpeedCloseGlyph(Modifier.size(18.dp))
+                HyperPlaybackSpeedCloseGlyph(Modifier.size(15.dp))
             } else {
                 closeContent()
             }
@@ -342,6 +342,7 @@ private fun HyperPlaybackSpeedLabels(
                         x = (maxWidth - HyperPlaybackSpeedPanelDefaults.SpeedLabelWidth) * fraction
                     )
                     .width(HyperPlaybackSpeedPanelDefaults.SpeedLabelWidth)
+                    .height(HyperPlaybackSpeedPanelDefaults.SpeedLabelHeight)
                     .clip(RoundedCornerShape(percent = 50))
                     .background(
                         if (selected) {
@@ -355,8 +356,7 @@ private fun HyperPlaybackSpeedLabels(
                         indication = null,
                         role = Role.Button,
                         onClick = { onSpeedChange(speed) }
-                    )
-                    .padding(vertical = 5.dp),
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -394,7 +394,7 @@ private fun HyperPlaybackSpeedPanelFooter(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = Modifier.size(16.dp),
+            modifier = Modifier.size(14.dp),
             contentAlignment = Alignment.Center
         ) {
             CompositionLocalProvider(
@@ -413,7 +413,7 @@ private fun HyperPlaybackSpeedPanelFooter(
                 .weight(1f)
                 .padding(start = 6.dp),
             color = colors.supportingContentColor,
-            fontSize = 11.sp,
+            fontSize = 10.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -421,8 +421,8 @@ private fun HyperPlaybackSpeedPanelFooter(
             onClick = onResetRequest,
             enabled = abs(currentSpeed - defaultSpeed) > 0.001f,
             modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .size(38.dp)
+                .padding(horizontal = 5.dp)
+                .size(32.dp)
                 .semantics { contentDescription = texts.resetContentDescription },
             colors = panelIconButtonColors(colors)
         ) {
@@ -452,7 +452,7 @@ private fun HyperPlaybackSpeedCustomAction(
 ) {
     Row(
         modifier = Modifier
-            .defaultMinSize(minHeight = 38.dp)
+            .defaultMinSize(minHeight = 32.dp)
             .clip(RoundedCornerShape(percent = 50))
             .background(colors.accentColor.copy(alpha = 0.16f))
             .clickable(
@@ -461,8 +461,8 @@ private fun HyperPlaybackSpeedCustomAction(
                 role = Role.Button,
                 onClick = onClick
             )
-            .padding(horizontal = 13.dp, vertical = 7.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
+            .padding(horizontal = 10.dp, vertical = 5.dp),
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -480,7 +480,7 @@ private fun HyperPlaybackSpeedCustomAction(
         Text(
             text = text,
             color = colors.contentColor,
-            fontSize = 12.sp,
+            fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
             maxLines = 1,
             softWrap = false

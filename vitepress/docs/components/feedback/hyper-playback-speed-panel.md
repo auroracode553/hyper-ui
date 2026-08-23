@@ -3,9 +3,10 @@
 - 包名：`hyper_ui`
 - 源码：`library/src/main/java/hyper_ui/components/feedback/HyperPlaybackSpeedPanel.kt`
 - 默认值与格式工具：`library/src/main/java/hyper_ui/components/feedback/HyperPlaybackSpeedPanelDefaults.kt`
+- 默认图标依赖：`com.composables:icons-lucide-android:2.2.1`
 - 预览：`playback_speed_panel`
 
-`HyperPlaybackSpeedPanel` 是固定深色、受控的播放速度设置面板；`HyperPlaybackSpeedPanelOverlay` 在其外层补充全屏点击关闭区域。两者不读取外层应用的明暗模式，适合直接覆盖在视频画面上。组件只分发速度、关闭和自定义速度事件，不持有播放器或输入框业务状态。
+`HyperPlaybackSpeedPanel` 是紧凑、固定深色且受控的播放速度设置面板；空间充足时默认约为 `468dp × 157dp`。`HyperPlaybackSpeedPanelOverlay` 在其外层补充全屏点击关闭区域。两者不读取外层应用的明暗模式，适合直接覆盖在视频画面上。组件只分发速度、关闭和自定义速度事件，不持有播放器或输入框业务状态。
 
 ## 公开签名
 
@@ -96,19 +97,19 @@ object HyperPlaybackSpeedPanelDefaults {
 
     val SliderRange = SliderMinimum..SliderMaximum
     val MajorSpeeds = listOf(0.25f, 1f, 2f, 3f, 4f)
-    val Shape: Shape = RoundedCornerShape(26.dp)
-    val MaxWidth = 680.dp
-    const val WidthFraction = 0.92f
-    val Elevation = 24.dp
-    val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 16.dp)
-    val ContentSpacing = 8.dp
-    val OverlayHorizontalPadding = 16.dp
-    val SliderTouchHeight = 46.dp
-    val SliderTrackHeight = 7.dp
-    val SliderThumbSize = 24.dp
-    val SliderMarkerSize = 5.dp
-    val SpeedLabelWidth = 44.dp
-    val SpeedLabelHeight = 30.dp
+    val Shape: Shape = RoundedCornerShape(20.dp)
+    val MaxWidth = 520.dp
+    const val WidthFraction = 0.9f
+    val Elevation = 14.dp
+    val ContentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
+    val ContentSpacing = 5.dp
+    val OverlayHorizontalPadding = 12.dp
+    val SliderTouchHeight = 36.dp
+    val SliderTrackHeight = 5.dp
+    val SliderThumbSize = 18.dp
+    val SliderMarkerSize = 4.dp
+    val SpeedLabelWidth = 38.dp
+    val SpeedLabelHeight = 24.dp
 
     @Composable
     fun colors(
@@ -156,8 +157,10 @@ HyperPlaybackSpeedPanelOverlay(
 - `onSpeedChange` 会在滑块拖动、预设档位点击和重置时调用。组件不直接操作播放器。
 - `onCustomSpeedRequest` 为 `null` 时不显示自定义入口；非空时只回调事件，不内置文本输入弹窗。
 - `valueRange` 必须由有限数值组成且结束值大于起始值，`steps` 不能小于零。超出范围或非有限的预设档位会被过滤。
-- 面板默认最大宽度为 `680.dp`、占可用宽度的 92%；覆盖层默认提供 16dp 水平安全间距。
+- 面板默认先将可用宽度限制到 `520.dp`，再取其 90%，空间充足时最终宽度约为 `468.dp`；默认内容高度约为 `157dp`，覆盖层提供 `12dp` 水平安全间距。
+- 标题图标与关闭按钮为 `30dp`，滑块操作层为 `36dp`，快捷档位层为 `24dp`，底部操作约为 `32dp`；紧凑化不会移除或合并任何操作。
 - `modifier` 控制覆盖层，`panelModifier` 控制覆盖层内的面板；单独使用 `HyperPlaybackSpeedPanel` 时通过其 `modifier` 控制尺寸与位置。
-- 五个图标插槽均通过 `LocalContentColor` 接收当前语义色；为空时使用不依赖外部图标库的内置 Canvas 图形。
+- 五个图标插槽均通过 `LocalContentColor` 接收当前语义色；为空时分别使用 Lucide Android 的 `gauge`、`x`、`rotate-ccw`、`move-horizontal` 与 `pencil` VectorDrawable，不再使用 Canvas 代码绘制图标。
+- Android 正式组件通过 `implementation` 使用 Lucide；Desktop/Wasm Preview 会排除 Android 资源适配文件，并使用同包跨平台图标替身模拟交互。Wasm 画面不是图标资源 API 的事实来源。
 
 <WasmPreview demo="playback_speed_panel" title="HyperPlaybackSpeedPanel 交互预览" />

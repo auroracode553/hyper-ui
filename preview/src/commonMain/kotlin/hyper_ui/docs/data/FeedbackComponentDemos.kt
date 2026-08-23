@@ -147,7 +147,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "playback_speed_panel",
         group = GROUP_FEEDBACK,
         title = "HyperPlaybackSpeedPanel",
-        description = "固定深色的播放器倍速设置面板与覆盖层；速度、显示状态和自定义速度流程均由调用方持有。",
+        description = "紧凑型固定深色播放器倍速面板与覆盖层；速度、显示状态和自定义速度流程均由调用方持有。",
         code = """
             HyperPlaybackSpeedPanelOverlay(
                 visible = panelVisible,
@@ -158,11 +158,13 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("紧凑布局", "默认尺寸", "空间充足时约 468dp 宽、157dp 高"),
             DemoVariant("固定深色", "默认配色", "不跟随应用浅色/深色模式切换"),
             DemoVariant("受控状态", "visible/currentSpeed", "调用方持有显示状态和实时速度"),
             DemoVariant("预设档位", "speedOptions", "默认 0.25x、1x、2x、3x、4x"),
             DemoVariant("自定义入口", "onCustomSpeedRequest", "仅分发事件，不承载输入业务"),
-            DemoVariant("图标插槽", "leadingContent 等", "可替换标题、关闭、重置及编辑图标")
+            DemoVariant("Lucide 默认图标", "leadingContent 等", "Android 使用五个 Lucide VectorDrawable，也可通过 Slot 替换"),
+            DemoVariant("自定义配色", "HyperPlaybackSpeedPanelDefaults.colors", "Preview 可切换容器与强调色")
         ),
         apiDocumentPaths = listOf("feedback/hyper-playback-speed-panel.md"),
         content = { PlaybackSpeedPanelDemo() }

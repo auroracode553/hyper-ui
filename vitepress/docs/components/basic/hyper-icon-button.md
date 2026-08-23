@@ -93,7 +93,7 @@ HyperIconButton(
 
 - 不存在 `imageVector`、`contentDescription`、`tint`、`backgroundColor` 参数；这些通过 slot 或 `colors` 表达。
 - 默认尺寸为 `HyperIconButtonDefaults.Size`；自定义尺寸使用 `modifier = Modifier.size(...)`。
-- Android 调用方需要通用图标时，优先使用可通过资源裁剪按引用保留的 `com.composables:icons-lucide-android:2.2.1`；HyperUI 不传递该可选依赖。
+- Android 调用方需要通用图标时，优先使用可通过资源裁剪按引用保留的 `com.composables:icons-lucide-android:2.2.1`。`HyperPlaybackSpeedPanel` 已通过内部依赖使用该图标库，但调用方要直接引用 `LucideR.drawable` 时仍需显式声明依赖。
 - 默认容器在浅色主题使用白色 `0.72f` alpha，在深色主题使用白色 `0.34f` alpha；深色模式不再使用近黑底材。内容色使用 `HyperColors.primaryText`。
 - 默认态通过公共阴影能力绘制单层投影：浅色模式为 8dp，并使用 `0.10f` 环境阴影和 `0.24f` 聚光阴影；深色模式维持 6dp。按压时阴影收低，禁用态不产生投影，所有状态都不绘制外层描边。
 - 自定义 `containerColor` 会作为玻璃底色继续叠加材质高光。需要保留背景透色时，应传入带 alpha 的颜色；传入完全不透明的颜色则得到更厚重的染色玻璃。

@@ -44,19 +44,19 @@ object HyperPlaybackSpeedPanelDefaults {
 
     val SliderRange = SliderMinimum..SliderMaximum
     val MajorSpeeds = listOf(0.25f, DefaultSpeed, 2f, 3f, 4f)
-    val Shape: Shape = RoundedCornerShape(26.dp)
-    val MaxWidth = 680.dp
-    const val WidthFraction = 0.92f
-    val Elevation = 24.dp
-    val ContentPadding = PaddingValues(horizontal = 18.dp, vertical = 16.dp)
-    val ContentSpacing = 8.dp
-    val OverlayHorizontalPadding = 16.dp
-    val SliderTouchHeight = 46.dp
-    val SliderTrackHeight = 7.dp
-    val SliderThumbSize = 24.dp
-    val SliderMarkerSize = 5.dp
-    val SpeedLabelWidth = 44.dp
-    val SpeedLabelHeight = 30.dp
+    val Shape: Shape = RoundedCornerShape(20.dp)
+    val MaxWidth = 520.dp
+    const val WidthFraction = 0.9f
+    val Elevation = 14.dp
+    val ContentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
+    val ContentSpacing = 5.dp
+    val OverlayHorizontalPadding = 12.dp
+    val SliderTouchHeight = 36.dp
+    val SliderTrackHeight = 5.dp
+    val SliderThumbSize = 18.dp
+    val SliderMarkerSize = 4.dp
+    val SpeedLabelWidth = 38.dp
+    val SpeedLabelHeight = 24.dp
 
     @Composable
     fun colors(
