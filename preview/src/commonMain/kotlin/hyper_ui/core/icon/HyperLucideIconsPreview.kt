@@ -60,6 +60,7 @@ internal fun HyperFastForwardIcon(modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1f)
             )
         }
+    }
 }
 
 @Composable
