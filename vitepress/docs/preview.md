@@ -5,7 +5,7 @@
 Markdown 中的公开签名、参数、状态与约束仍是 AI 的文档来源。Preview 会在示例代码下方加载同一份 Markdown，并从公开签名自动生成属性表；不存在第二份维护正文。
 
 <WasmPreview title="HyperUI 组件交互预览" :height="760">
-若此区域显示空白或加载失败，请确认 Wasm 完整静态产物已由使用者手动放入 `vitepress/public/wasm-preview/`，并保留原始目录结构。
+若此区域显示“尚未发布”，请等待 `dev:watch` 首次构建完成，或按手动发布说明生成完整 Wasm 产物。
 </WasmPreview>
 
 ## 按组件嵌入
@@ -18,12 +18,17 @@ Markdown 中的公开签名、参数、状态与约束仍是 AI 的文档来源�
 
 `demo` 会作为 URL hash 传给 preview。浏览器入口支持该 ID 时直接选中对应组件；无法识别时回退到文档首页。
 
+日常开发可在 `vitepress/` 执行 `npm run dev:watch`。它会启动文档、后台构建预览，并在 Kotlin 源码保存后自动重新发布；产物就绪后 iframe 自动加载和刷新。
+
+开发时可按 [开发期实时预览](preview-update-workflow.md#开发期实时预览) 手动启动 Wasm 开发服务器，并在 VitePress 终端设置 `VITE_HYPER_UI_PREVIEW_DEV_URL`。此时 iframe 直接加载开发服务器，保存 Kotlin 源码后由其刷新预览。未设置变量时使用下方静态产物。
+
 ## 静态产物位置
 
 组件、示例或 preview 主题更新后，按 [组件更新后刷新预览](preview-update-workflow.md) 在 `preview/` 目录下手动执行：
 
 ```powershell
 cd preview
+.\gradlew.bat kotlinWasmUpgradePackageLock
 .\gradlew.bat publishWasmToVitePress
 ```
 
@@ -33,13 +38,13 @@ Preview 的默认发布产物目录：
 preview/build/dist/wasmJs/productionExecutable/
 ```
 
-使用者需要手动将该目录的全部内容复制到：
+手动执行 `publishWasmToVitePress` 后，完整产物会复制到：
 
 ```text
 vitepress/public/wasm-preview/
 ```
 
-不能只复制 `index.html`，其关联的 Wasm、JavaScript 和资源文件也必须保持原目录结构。
+不能只复制 `index.html`，其关联的 Wasm、JavaScript 和资源文件也必须保持原目录结构。发布任务会写入 `preview-ready.json`，供文档页判断预览是否可用。
 
 ## 职责边界
 

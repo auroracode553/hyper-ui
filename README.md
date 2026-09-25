@@ -298,7 +298,13 @@ vitepress/
 
 生产构建会从 `vitepress/docs/` 自动派生 `llms.txt`、`llms-full.txt`、`sitemap.xml`、`robots.txt` 和每篇文档的 `.md` 静态直链；这些都是构建产物，不维护第二份组件正文。
 
-Wasm 静态产物不会自动复制，也不提交到仓库。使用者手动生成后，需要把 `preview/build/dist/wasmJs/productionExecutable/` 的**全部内容**放入 `vitepress/public/wasm-preview/`，不能只复制 `index.html`。
+Wasm 静态产物不提交到仓库。使用者手动执行 `preview/` 中的 `publishWasmToVitePress` 后，完整产物会复制到 `vitepress/public/wasm-preview/`，并写入 `preview-ready.json`。产物未就绪时文档显示说明，不加载 404 iframe。
+
+开发期需要在 VitePress 组件页实时查看 Kotlin 修改时，可手动启动 `preview/` 的 `wasmJsBrowserDevelopmentRun`，再把终端打印的地址通过 `VITE_HYPER_UI_PREVIEW_DEV_URL` 传给 VitePress。此时文档 iframe 直接嵌入开发服务器，源码保存后的重编译与刷新由它处理；具体步骤见 [预览更新流程](vitepress/docs/preview-update-workflow.md)。
+
+日常开发也可在 `vitepress/` 手动执行 `npm run dev:watch`：一个命令启动文档，先更新 Kotlin/Wasm npm 锁文件、再后台构建预览，并在 Kotlin 源码保存后串行重新发布；预览区域会在产物就绪后自动加载和刷新。
+
+若首次构建因访问 GitHub Release 下载 Binaryen 超时，可按 [预览更新流程](vitepress/docs/preview-update-workflow.md#github-连接超时时使用本地-binaryen-压缩包) 设置可选的 `HYPER_UI_BINARYEN_ARCHIVE_DIR`，使用已手动取得并校验的官方压缩包。变量未设置时仍由 Gradle 下载。
 
 站点默认部署在域名根路径 `/`。部署到仓库子路径时，在手动启动或构建前设置 `VITEPRESS_BASE`，值必须以 `/` 开头和结尾，例如 `/hyper_ui/`；`WasmPreview` 会使用同一个 base 生成 iframe 地址。
 
@@ -335,10 +341,11 @@ Wasm preview（由使用者手动执行）：
 
 ```powershell
 cd preview
-.\gradlew.bat wasmJsBrowserDistribution
+.\gradlew.bat kotlinWasmUpgradePackageLock
+.\gradlew.bat publishWasmToVitePress
 ```
 
-产物位于 `preview/build/dist/wasmJs/productionExecutable/`。将完整内容手动放入 `vitepress/public/wasm-preview/` 后，可在 `vitepress/` 目录按需手动执行：
+产物位于 `preview/build/dist/wasmJs/productionExecutable/`，上述任务会复制完整内容到 VitePress 静态目录。只阅读文档时，无需执行 Gradle；在 `vitepress/` 目录按需手动执行：
 
 ```powershell
 npm install
@@ -346,7 +353,7 @@ npx vitepress dev .
 npx vitepress build .
 ```
 
-VitePress 默认静态输出位于 `vitepress/.vitepress/dist/`。本仓库不提供自动构建、自动复制或一键部署逻辑。
+VitePress 默认静态输出位于 `vitepress/.vitepress/dist/`。普通 `npm run dev` 不会执行 Gradle；`npm run dev:watch` 会按需构建和更新 Wasm 预览。
 
 如果静态站点部署在 `/hyper_ui/` 子路径，可由使用者在同一终端手动设置：
 

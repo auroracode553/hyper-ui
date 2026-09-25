@@ -6,6 +6,30 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
 }
 
+// GitHub Release 无法直连时，可把官方 Binaryen 压缩包放在本地目录并通过环境变量注入。
+// 只接管 Binaryen 模块，其他依赖继续使用常规仓库；未设置变量时保持默认下载行为。
+System.getenv("HYPER_UI_BINARYEN_ARCHIVE_DIR")?.takeIf { it.isNotBlank() }?.let { archivePath ->
+    val archiveDirectory = file(archivePath)
+    require(archiveDirectory.isDirectory) {
+        "HYPER_UI_BINARYEN_ARCHIVE_DIR 不是已存在的目录：$archivePath"
+    }
+    repositories {
+        exclusiveContent {
+            forRepository {
+                ivy {
+                    name = "localBinaryenArchives"
+                    url = uri(archiveDirectory)
+                    patternLayout {
+                        artifact("binaryen-version_[revision]-[classifier].[ext]")
+                    }
+                    metadataSources { artifact() }
+                }
+            }
+            filter { includeModule("com.github.webassembly", "binaryen") }
+        }
+    }
+}
+
 kotlin {
     jvm("desktop")
 
@@ -88,10 +112,22 @@ compose.desktop {
 // 自动将 Wasm 静态产物复制到 VitePress 静态目录，省去手动复制的步骤
 tasks.register<Copy>("publishWasmToVitePress") {
     dependsOn("wasmJsBrowserDistribution")
+    outputs.upToDateWhen { false }
     from("build/dist/wasmJs/productionExecutable")
     into("../vitepress/public/wasm-preview")
+    val outputDirectory = layout.projectDirectory.dir("../vitepress/public/wasm-preview")
+    val readinessFile = outputDirectory.file("preview-ready.json").asFile
+    doFirst {
+        // 复制期间不向文档站声明旧产物可用。
+        readinessFile.delete()
+    }
     doLast {
+        val output = outputDirectory.asFile
+        check(output.resolve("index.html").isFile && output.resolve("hyper-ui-preview.js").isFile) {
+            "Wasm 预览发布不完整：缺少 index.html 或 hyper-ui-preview.js"
+        }
+        readinessFile.writeText("{\"version\":\"${System.currentTimeMillis()}\"}\n")
         println("Wasm 产物已复制到 vitepress/public/wasm-preview/")
-        println("刷新 http://localhost:5173 即可在文档中看到交互预览")
+        println("刷新 VitePress 页面即可在文档中看到交互预览")
     }
 }

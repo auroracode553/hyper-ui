@@ -3,34 +3,25 @@
 import { withBase } from 'vitepress'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
-// 开发期热更新：dev-watch.mjs 每次发布 Wasm 产物后会更新该标记文件，
-// 页面内所有 WasmPreview 共享一个轮询器，检测到变化即重载各自的 iframe。
-const VERSION_FILE = '/wasm-preview/.build-version'
-const VERSION_EVENT = 'hyper-ui:wasm-preview-updated'
-const versionPollInterval = 2000
-let lastVersion: string | null = null
-let versionPollStarted = false
+const READINESS_FILE = '/wasm-preview/preview-ready.json'
+const POLL_INTERVAL_MS = 5000
 
-async function pollPreviewVersion() {
-  if (versionPollStarted) return
-  versionPollStarted = true
-  const check = async () => {
-    try {
-      const response = await fetch(withBase(VERSION_FILE), { cache: 'no-store' })
-      if (!response.ok) return
-      const version = (await response.text()).trim()
-      if (lastVersion === null) {
-        lastVersion = version
-      } else if (version && version !== lastVersion) {
-        lastVersion = version
-        window.dispatchEvent(new Event(VERSION_EVENT))
-      }
-    } catch {
-      // 标记文件尚不存在（未运行过 publish）时静默忽略。
-    }
+function resolveDevelopmentSource(rawUrl: string | undefined): string | null {
+  if (!import.meta.env.DEV || !rawUrl?.trim()) return null
+  try {
+    const base = new URL(rawUrl.endsWith('/') ? rawUrl : `${rawUrl}/`)
+    if (base.protocol !== 'http:' && base.protocol !== 'https:') return null
+    return new URL('index.html', base).href
+  } catch {
+    return null
   }
-  await check()
-  setInterval(check, versionPollInterval)
+}
+
+// 开发服务器独立运行；VitePress 只嵌入它的页面，不负责启动 Gradle。
+const developmentSource = resolveDevelopmentSource(import.meta.env.VITE_HYPER_UI_PREVIEW_DEV_URL)
+
+function encodeDemoHash(demo: string | undefined): string {
+  return (demo?.trim() || '').split('/').map(encodeURIComponent).join('/')
 }
 
 interface WasmPreviewProps {
@@ -46,19 +37,42 @@ const props = withDefaults(defineProps<WasmPreviewProps>(), {
   height: 720
 })
 
-const resolvedSource = computed(() => {
-  const source = withBase(DEFAULT_PREVIEW_SOURCE)
-  const demo = props.demo?.trim()
+const previewState = ref<'checking' | 'ready' | 'missing'>('checking')
+const publishedVersion = ref('')
+let pollTimer: ReturnType<typeof setInterval> | undefined
 
-  if (!demo) {
+async function checkPreview() {
+  try {
+    if (developmentSource) {
+      // 跨端口开发服务器无需 CORS 响应头；网络请求失败时保留可操作的占位提示。
+      await fetch(developmentSource, { mode: 'no-cors', cache: 'no-store' })
+      previewState.value = 'ready'
+      return
+    }
+    const response = await fetch(withBase(READINESS_FILE), { cache: 'no-store' })
+    if (!response.ok) throw new Error('Preview is not published')
+    const manifest: unknown = await response.json()
+    if (typeof manifest !== 'object' || manifest === null || !('version' in manifest)
+      || typeof manifest.version !== 'string' || !manifest.version) {
+      throw new Error('Invalid preview manifest')
+    }
+    publishedVersion.value = manifest.version
+    previewState.value = 'ready'
+  } catch {
+    previewState.value = 'missing'
+  }
+}
+
+const resolvedSource = computed(() => {
+  if (developmentSource) {
+    const demoHash = encodeDemoHash(props.demo)
+    return demoHash ? `${developmentSource}#${demoHash}` : developmentSource
+  }
+  const source = `${withBase(DEFAULT_PREVIEW_SOURCE)}?v=${encodeURIComponent(publishedVersion.value)}`
+  const demoHash = encodeDemoHash(props.demo)
+  if (!demoHash) {
     return source
   }
-
-  const demoHash = demo
-    .split('/')
-    .map((segment) => encodeURIComponent(segment))
-    .join('/')
-
   return `${source}#${demoHash}`
 })
 
@@ -66,24 +80,15 @@ const frameHeight = computed(() =>
   typeof props.height === 'number' ? `${props.height}px` : props.height
 )
 
-const frame = ref<HTMLIFrameElement | null>(null)
-
-function reloadFrame() {
-  try {
-    frame.value?.contentWindow?.location.reload()
-  } catch {
-    // iframe 跨域或尚未加载完成时忽略，等待下一次轮询。
-  }
-}
-
 onMounted(() => {
-  if (!import.meta.env.DEV) return
-  void pollPreviewVersion()
-  window.addEventListener(VERSION_EVENT, reloadFrame)
+  void checkPreview()
+  if (import.meta.env.DEV) {
+    pollTimer = setInterval(() => { void checkPreview() }, POLL_INTERVAL_MS)
+  }
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener(VERSION_EVENT, reloadFrame)
+  if (pollTimer) clearInterval(pollTimer)
 })
 </script>
 
@@ -92,6 +97,7 @@ onBeforeUnmount(() => {
     <figcaption class="wasm-preview__header">
       <span class="wasm-preview__title">{{ title }}</span>
       <a
+        v-if="previewState === 'ready'"
         class="wasm-preview__open-link"
         :href="resolvedSource"
         target="_blank"
@@ -104,7 +110,8 @@ onBeforeUnmount(() => {
 
     <div class="wasm-preview__viewport">
       <iframe
-        ref="frame"
+        v-if="previewState === 'ready'"
+        :key="publishedVersion"
         class="wasm-preview__frame"
         :src="resolvedSource"
         :title="title"
@@ -114,6 +121,19 @@ onBeforeUnmount(() => {
         allow="clipboard-write; fullscreen"
         allowfullscreen
       />
+      <div v-else class="wasm-preview__status" :aria-busy="previewState === 'checking'">
+        <p role="status">
+          {{ previewState === 'checking'
+            ? '正在检查交互预览…'
+            : developmentSource
+              ? 'Wasm 开发服务器尚未连接。启动后预览会自动加载。'
+              : '交互预览尚未发布，文档内容仍可正常阅读。' }}
+        </p>
+        <div v-if="previewState === 'missing'" class="wasm-preview__status-actions">
+          <button type="button" @click="checkPreview">重新检查</button>
+          <a :href="withBase('/preview-update-workflow.html')">查看手动发布说明</a>
+        </div>
+      </div>
     </div>
 
     <div v-if="$slots.default" class="wasm-preview__caption">

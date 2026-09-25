@@ -15,22 +15,22 @@
 │                                      │   │  两者之间没有任何自动连接！   │
 │                                      │   │                              │
 │  文档里的 <WasmPreview> 组件          │   │                              │
-│  通过 iframe 加载自己端口下的         │   │                              │
-│  /wasm-preview/index.html            │   │                              │
-│  而不是去连 8081 端口!                │   │                              │
+│  默认加载同站点静态产物；配置开发      │   │                              │
+│  服务器地址后直接嵌入右侧页面。        │   │                              │
 └──────────────────────────────────────┘   └──────────────────────────────┘
 ```
 
 **关键结论：**
 
-- VitePress 文档站的 `<WasmPreview>` iframe 只能加载 VitePress 自己端口下的静态文件。它不会去连接 `wasmJsBrowserDevelopmentRun` 启动的开发服务器（8081 等端口）。
-- 要让文档里出现组件预览，必须先 `wasmJsBrowserDistribution` 构建静态产物，再手动复制到 `vitepress/public/wasm-preview/`。
-- 组件、示例或 preview 主题更新后，按 [组件更新后刷新预览](preview-update-workflow.md) 在 `preview/` 目录下执行 `.\gradlew.bat publishWasmToVitePress`。
+- 日常开发可在 `vitepress/` 手动执行 `npm run dev:watch`：一条命令启动文档、首次发布和 Kotlin 源码监听；预览就绪后自动加载与刷新。
+- `<WasmPreview>` 默认加载 VitePress 静态产物；设置 `VITE_HYPER_UI_PREVIEW_DEV_URL` 后会直接嵌入独立的 Wasm 开发服务器。
+- 使用静态模式时，由使用者手动执行 `publishWasmToVitePress`，一次生成并复制完整静态产物和就绪标记。
+- 静态模式下组件、示例或 preview 主题更新后，按 [组件更新后刷新预览](preview-update-workflow.md) 在 `preview/` 目录下执行 `.\gradlew.bat publishWasmToVitePress`。
 - 如果你只想看文档/写文档，只启动 VitePress 就够了，不需要碰 preview。
 
 ---
 
-### 第一步：启动 VitePress 文档站（必须）
+### 第一步：启动 VitePress 文档站
 
 ```powershell
 # 从项目根目录开始
@@ -46,7 +46,15 @@ npm run dev
 
 浏览器访问 **`http://localhost:5173`**。Markdown 修改自动热更新，立刻能看到效果。
 
-如果文档页面没有 `<WasmPreview>` 组件，到这一步就够了，preview 项目完全不需要启动。
+如需组件源码保存后也自动更新文档里的预览，请在同一目录改用 `npm run dev:watch`，不要同时启动两个 VitePress 进程。该命令在后台串行执行 Wasm 发布；首次产物就绪前页面会显示说明。
+
+只阅读文档时，到这一步就够了，preview 项目不需要启动。
+
+### 实时预览组件修改
+
+需要在文档页面看到 Kotlin 修改的实时结果时，先在一个终端手动执行 `cd preview`、`.\gradlew.bat wasmJsBrowserDevelopmentRun`。等待终端打印实际地址后，在另一个 PowerShell 终端进入 `vitepress/`，将 `VITE_HYPER_UI_PREVIEW_DEV_URL` 设置为该地址，再手动执行 `npm run dev`。具体示例见 [开发期实时预览](preview-update-workflow.md#开发期实时预览)。
+
+在这个双终端模式下，普通 `npm run dev` 不会启动 Gradle；保存源码后的重编译和浏览器刷新由已启动的 Wasm 开发服务器处理。
 
 ---
 
@@ -54,16 +62,17 @@ npm run dev
 
 ```powershell
 cd preview
+.\gradlew.bat kotlinWasmUpgradePackageLock
 .\gradlew.bat publishWasmToVitePress
 ```
 
-这个 task 会自动执行 `wasmJsBrowserDistribution` 并把产物复制到 `vitepress/public/wasm-preview/`，一步完成。刷新 `http://localhost:5173` 即可。
+这个 task 会执行 `wasmJsBrowserDistribution` 并把产物复制到 `vitepress/public/wasm-preview/`，最后写入 `preview-ready.json`。VitePress 开发页会检测就绪标记并加载新预览；首次发布前显示说明，不显示 404 iframe。
 
-**为什么不能直接用 `wasmJsBrowserDevelopmentRun`？**
+**静态模式与开发服务器的关系**
 
-`wasmJsBrowserDevelopmentRun` 启动的是一个**独立的** webpack-dev-server（端口号不固定，比如 8081），它提供源代码级热更新，适合开发/调试组件交互代码。但 VitePress 的 `<WasmPreview>` 组件通过 iframe 加载的是 VitePress 自己 5173 端口下的 `/wasm-preview/index.html`，**根本不会去连接 8081 端口的服务**。
+`wasmJsBrowserDevelopmentRun` 启动独立的 webpack 开发服务器，端口以终端输出为准。只有设置 `VITE_HYPER_UI_PREVIEW_DEV_URL` 后，文档 iframe 才会嵌入这个开发服务器；未设置时仍加载 VitePress 自己端口下的 `/wasm-preview/index.html`。
 
-所以正确的做法只有：`wasmJsBrowserDistribution` → 复制静态文件 → VitePress 从自己端口提供。
+静态预览由 `publishWasmToVitePress` 构建并复制；实时预览直接嵌入开发服务器。两种模式均由使用者按需手动启动。
 
 ---
 

@@ -37,5 +37,5 @@ node_modules
 Thumbs.db
 
 # Wasm 预览是外部构建产物，只允许提交目录说明。
-public/wasm-preview/*
-!public/wasm-preview/README.md
+vitepress/public/wasm-preview/*
+!vitepress/public/wasm-preview/README.md
