@@ -50,6 +50,25 @@ http://localhost:5173/wasm-preview/index.html#button
 
 其中 `#button` 可以替换为具体组件页使用的 demo id。
 
+## 开发期自动热更新（dev:watch）
+
+开发组件时不需要手动反复执行上面的流程。在 `vitepress/` 目录执行：
+
+```powershell
+cd vitepress
+npm run dev:watch
+```
+
+该命令由 `tools/dev-watch.mjs` 实现，会：
+
+1. 启动时先执行一次 `publishWasmToVitePress`，然后拉起 VitePress dev。
+2. 监听 `library/` 和 `preview/` 下的 `.kt` / `.kts` 文件（忽略 `build/` 产物目录），保存后防抖 2 秒自动重新发布 Wasm 产物；构建期间的新变化会记账并在本次构建结束后补跑一次。
+3. 发布成功后更新 `public/wasm-preview/.build-version` 标记文件；页面中的 `<WasmPreview>` 组件在开发模式下每 2 秒轮询该标记，变化后自动重载预览 iframe，无需手动刷新浏览器。
+
+可用环境变量：`HYPER_UI_VITE_PORT`（默认 5173）、`HYPER_UI_WATCH_DEBOUNCE`（默认 2000 毫秒）。按 Ctrl+C 同时停止文件监听与 VitePress。
+
+注意：`npm run dev`（不带 watch）不会监听 Kotlin 源码，仍按上面的手动流程发布。
+
 ## 常见误区
 
 不要用下面的命令来更新 VitePress iframe：

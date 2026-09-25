@@ -139,25 +139,30 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tab-bar",
         group = GROUP_NAVIGATION,
         title = "HyperTabBar",
-        description = "贴底栏默认使用 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式与页面同色，浅色模式保留轻量透明度。包含 55dp 操作区和 5dp 轻量底部留白，总高度 60dp。",
+        description = "通过 type 参数在两种样式间切换：Docked 贴底样式使用 0.5dp 低对比度顶部发丝线、无阴影；Floating 悬浮样式使用玻璃胶囊容器、弹簧吸附的滑动指示胶囊与按压加深反馈。",
         code = """
-            HyperTabBar {
-                bottomItems.forEach { item ->
-                    Column(
-                        modifier = Modifier.weight(1f).clickable { selectedItemId = item.id },
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(item.icon, contentDescription = item.label)
-                        Text(item.label)
-                    }
+            HyperTabBar(
+                items = bottomItems,
+                type = HyperTabBarType.Floating,
+                itemSelected = { item -> item.id == selectedItemId },
+                onItemClick = { item -> selectedItemId = item.id }
+            ) { item ->
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(item.icon, contentDescription = item.label)
+                    Text(item.label)
                 }
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("顶部发丝线", "topDivider = HyperTabBarDefaults.topDivider()", "0.5dp 低对比分隔，可交互关闭"),
-            DemoVariant("底部留白", "BottomPadding = 5.dp", "与系统手势小白条保持少量距离"),
-            DemoVariant("操作区高度", "Height = 55.dp", "搭配留白后总高度为 60dp"),
-            DemoVariant("完整 Slot", "content: RowScope", "调用方控制按钮布局"),
+            DemoVariant("样式切换", "type = Docked/Floating", "同一个 items 入口切换贴底与悬浮胶囊"),
+            DemoVariant("玻璃胶囊容器", "Margin / Height / Elevation", "悬浮留白、胶囊高度与抬升阴影"),
+            DemoVariant("滑动指示胶囊", "SelectionSpring", "弹簧吸附选中项，宽度夹在 16dp~112dp"),
+            DemoVariant("按压加深", "PressWidthGrowth / PressHeightGrowth", "按下吸附所按项目并放大指示胶囊"),
+            DemoVariant("内容色渐变", "selectionStrength", "指示位置在选中色与未选中色间连续插值"),
+            DemoVariant("顶部发丝线", "topDivider = HyperTabBarDefaults.topDivider()", "0.5dp 低对比分隔，仅贴底样式生效，可交互关闭"),
+            DemoVariant("底部留白", "BottomPadding = 5.dp", "贴底样式与系统手势小白条保持少量距离"),
+            DemoVariant("操作区高度", "Height = 55.dp", "贴底样式搭配留白后总高度为 60dp"),
+            DemoVariant("完整 Slot", "content: RowScope", "调用方控制按钮布局；Floating 下不绘制指示胶囊"),
             DemoVariant("泛型项目", "items + itemSelected", "统一点击、选中与禁用状态"),
             DemoVariant("明暗背景", "colors.containerColor", "深色继承页面背景并隐藏分隔线，浅色保留轻量透明度")
         ),

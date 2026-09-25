@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",
+    "dev:watch": "node ../tools/dev-watch.mjs",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },

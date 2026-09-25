@@ -3,14 +3,19 @@
 - 分类：导航组件
 - 包名：`hyper_ui`
 - 状态模型：页面选择和导航由调用方持有
-- 源码：`library/src/main/java/hyper_ui/components/navigation/HyperTabBar.kt`
+- 源码：`library/src/main/java/hyper_ui/components/navigation/HyperTabBar.kt`、`library/src/main/java/hyper_ui/components/navigation/HyperFloatingTabBar.kt`
 - Preview ID：`tab-bar`
 
-`HyperTabBar` 是默认总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。贴底容器默认只绘制 0.5dp 的低对比度顶部发丝线，不使用阴影或整框描边；深色模式下容器与发丝线采用当前 `MaterialTheme.colorScheme.background`，浅色模式保留轻量透明度。两种模式均不叠加玻璃高光或渐变。
+`HyperTabBar` 通过 `type` 参数在两种样式间切换：
+
+- **Docked（贴底，默认）**：总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。贴底容器默认只绘制 0.5dp 的低对比度顶部发丝线，不使用阴影或整框描边；深色模式下容器与发丝线采用当前 `MaterialTheme.colorScheme.background`，浅色模式保留轻量透明度。两种模式均不叠加玻璃高光或渐变。
+- **Floating（悬浮玻璃胶囊）**：参考 Flutter `HyTabBar` 的悬浮样式。玻璃胶囊容器悬浮于页面（四周留白 16/8/16/10dp），内部指示胶囊以弹簧吸附选中项；按下时指示胶囊吸附到所按项目并放大，内容颜色随指示位置在选中色与未选中色之间连续渐变。
 
 ## 公开 API
 
 ```kotlin
+enum class HyperTabBarType { Docked, Floating }
+
 enum class HyperTabBarItemLayout { Equal, Packed }
 
 data class HyperTabBarColors(
@@ -20,9 +25,18 @@ data class HyperTabBarColors(
     val disabledContentColor: Color
 )
 
+data class HyperFloatingTabBarColors(
+    val containerColor: Color,
+    val indicatorColor: Color,
+    val selectedContentColor: Color,
+    val unselectedContentColor: Color,
+    val disabledContentColor: Color
+)
+
 class HyperTabBarItemScope {
     val selected: Boolean
     val enabled: Boolean
+    val selectionStrength: Float
 }
 
 @Composable
@@ -34,6 +48,8 @@ fun HyperTabBar(
     shape: Shape = HyperTabBarDefaults.Shape,
     topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
+    type: HyperTabBarType = HyperTabBarType.Docked,
+    floatingColors: HyperFloatingTabBarColors = HyperFloatingTabBarDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 )
 
@@ -50,6 +66,8 @@ fun <T> HyperTabBar(
     shape: Shape = HyperTabBarDefaults.Shape,
     topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
+    type: HyperTabBarType = HyperTabBarType.Docked,
+    floatingColors: HyperFloatingTabBarColors = HyperFloatingTabBarDefaults.colors(),
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
 )
@@ -80,20 +98,51 @@ object HyperTabBarDefaults {
 }
 ```
 
+```kotlin
+object HyperFloatingTabBarDefaults {
+    val Height = 50.dp
+    val Margin = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 10.dp)
+    val InnerPadding = 3.dp
+    val IndicatorVerticalInset = 2.dp
+    val Elevation = 4.dp
+    val MinPillWidth = 16.dp
+    val MaxPillWidth = 112.dp
+    val PillGap = 8.dp
+    val PressWidthGrowth = 5.dp
+    val PressHeightGrowth = 2.dp
+    val PressInMillis = 85
+    val PressOutMillis = 180
+    val SelectionSpring: SpringSpec<Float>   // 对应 Flutter settleSpring(mass=1, stiffness=470, damping=42)
+    val ItemTextStyle: TextStyle
+        @Composable get() = MaterialTheme.typography.labelSmall
+
+    @Composable
+    fun colors(
+        containerColor: Color = Color.Unspecified,
+        indicatorColor: Color = Color.Unspecified,
+        selectedContentColor: Color = Color.Unspecified,
+        unselectedContentColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified
+    ): HyperFloatingTabBarColors
+}
+```
+
 ## Slot 入口参数
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | `modifier` | `Modifier` | 否 | `Modifier` | 整个标签栏的宽高和外部间距。 |
-| `enabled` | `Boolean` | 否 | `true` | 只控制 Slot 入口提供的默认内容色；slot 内点击逻辑仍由调用方控制。 |
+| `enabled` | `Boolean` | 否 | `true` | 只控制入口提供的默认内容色；slot 内点击逻辑仍由调用方控制。 |
 | `horizontalArrangement` | `Arrangement.Horizontal` | 否 | `SpaceBetween` | Row 内容的横向排列。 |
 | `verticalAlignment` | `Alignment.Vertical` | 否 | `CenterVertically` | Row 内容的垂直对齐。 |
-| `shape` | `Shape` | 否 | `HyperTabBarDefaults.Shape` | 标签栏形状。 |
-| `topDivider` | `BorderStroke?` | 否 | `HyperTabBarDefaults.topDivider()` | 顶部分隔线；只绘制顶边，传 `null` 移除。 |
-| `colors` | `HyperTabBarColors` | 否 | `HyperTabBarDefaults.colors()` | 容器与三种内容状态色。 |
+| `shape` | `Shape` | 否 | `HyperTabBarDefaults.Shape` | 仅 Docked 样式使用。 |
+| `topDivider` | `BorderStroke?` | 否 | `HyperTabBarDefaults.topDivider()` | 仅 Docked 样式使用；只绘制顶边，传 `null` 移除。 |
+| `colors` | `HyperTabBarColors` | 否 | `HyperTabBarDefaults.colors()` | 仅 Docked 样式使用。 |
+| `type` | `HyperTabBarType` | 否 | `Docked` | `Docked` 贴底；`Floating` 悬浮玻璃胶囊容器。 |
+| `floatingColors` | `HyperFloatingTabBarColors` | 否 | `HyperFloatingTabBarDefaults.colors()` | 仅 Floating 样式使用。 |
 | `content` | `@Composable RowScope.() -> Unit` | 是 | 无 | 完整自定义内容。 |
 
-Slot 入口固定提供水平 16dp 内边距、5dp 底部留白和 `ItemTextStyle`。
+Docked 入口固定提供水平 16dp 内边距、5dp 底部留白和 `ItemTextStyle`。Floating 入口固定提供 16/8/16/10dp 悬浮留白、3dp 胶囊内边距和 `ItemTextStyle`，不使用发丝线、整框描边或贴底留白。
 
 ## Items 入口附加参数
 
@@ -101,18 +150,33 @@ Slot 入口固定提供水平 16dp 内边距、5dp 底部留白和 `ItemTextStyl
 | --- | --- | --- | --- | --- |
 | `items` | `List<T>` | 是 | 无 | 按顺序渲染的标签项。 |
 | `onItemClick` | `(T) -> Unit` | 是 | 无 | 点击可用标签后的回调。 |
-| `itemLayout` | `HyperTabBarItemLayout` | 否 | `Equal` | `Equal` 等分宽度；`Packed` 使用最小项目宽度。 |
-| `itemSelected` | `(T) -> Boolean` | 否 | `{ false }` | 选中判定。 |
-| `itemSlotAlignment` | `Alignment` | 否 | `Alignment.Center` | 每项内部 slot 的对齐。 |
-| `horizontalArrangement` | `Arrangement.Horizontal` | 否 | `SpaceBetween` | 仅 `Packed` 模式使用；`Equal` 内部固定从起点等分。 |
+| `itemLayout` | `HyperTabBarItemLayout` | 否 | `Equal` | 仅 Docked 样式使用：`Equal` 等分宽度；`Packed` 使用最小项目宽度。 |
+| `itemSelected` | `(T) -> Boolean` | 否 | `{ false }` | 选中判定；Floating 下至少应有一项命中，否则指示胶囊隐藏。 |
+| `itemSlotAlignment` | `Alignment` | 否 | `Alignment.Center` | 仅 Docked 样式使用。 |
+| `horizontalArrangement` | `Arrangement.Horizontal` | 否 | `SpaceBetween` | 仅 Docked 样式使用：`Packed` 模式生效。 |
+| `shape` | `Shape` | 否 | `HyperTabBarDefaults.Shape` | 仅 Docked 样式使用。 |
+| `topDivider` | `BorderStroke?` | 否 | `HyperTabBarDefaults.topDivider()` | 仅 Docked 样式使用。 |
+| `colors` | `HyperTabBarColors` | 否 | `HyperTabBarDefaults.colors()` | 仅 Docked 样式使用。 |
+| `type` | `HyperTabBarType` | 否 | `Docked` | `Docked` 贴底；`Floating` 悬浮玻璃胶囊。 |
+| `floatingColors` | `HyperFloatingTabBarColors` | 否 | `HyperFloatingTabBarDefaults.colors()` | 仅 Floating 样式使用。 |
 | `itemEnabled` | `(T) -> Boolean` | 否 | `{ true }` | 单项可用状态，最终与全局 `enabled` 合并。 |
-| `itemContent` | `@Composable HyperTabBarItemScope.(T) -> Unit` | 是 | 无 | 标签内容，作用域提供 `selected`、`enabled`。 |
+| `itemContent` | `@Composable HyperTabBarItemScope.(T) -> Unit` | 是 | 无 | 标签内容，作用域提供 `selected`、`enabled` 与 `selectionStrength`。 |
 
-其余 `modifier`、`enabled`、`shape`、`topDivider`、`colors` 与 Slot 入口相同。
+Floating 模式下项目固定等分宽度，忽略 `itemLayout`、`itemSlotAlignment`、`horizontalArrangement`、`shape`、`topDivider` 与 `colors`。其余参数与 Docked 相同。
+
+## Floating 样式行为
+
+- 指示胶囊宽度取「等分格宽度 - 8dp」，夹在 `MinPillWidth`(16dp) 与 `MaxPillWidth`(112dp) 之间；高度为内容区高度减去 2dp 单侧垂直留白。
+- 选中切换使用 `SelectionSpring` 弹簧吸附；按下时指示胶囊先吸附到所按项目并放大（宽度 +5dp、高度 +2dp），释放未命中选中则弹回。
+- 内容颜色按 `selectionStrength` 在 `unselectedContentColor` 与 `selectedContentColor` 间连续插值；`selectionStrength` 随指示胶囊位置在 0f~1f 间连续变化。
+- 指示胶囊底色使用独立 `indicatorColor`（浅色 `#F1F3F5` / 深色 `#272C35`），不随主题强调色变化。
+- 容器使用玻璃表面：浅色白色 `0.92f` alpha、深色 `#1B1F27` 玻璃，叠加顶部高光与 4dp 抬升阴影。
+- 不实现 Flutter 版的拖拽释放惯性滑动；项目交互为按下吸附 + 点击选中。
 
 ## 最小用法
 
 ```kotlin
+// 贴底样式（默认）
 HyperTabBar(
     items = tabs,
     itemSelected = { it.id == selectedTabId },
@@ -123,17 +187,28 @@ HyperTabBar(
         Text(item.label)
     }
 }
+
+// 悬浮玻璃胶囊样式
+HyperTabBar(
+    items = tabs,
+    type = HyperTabBarType.Floating,
+    itemSelected = { it.id == selectedTabId },
+    onItemClick = { selectedTabId = it.id }
+) { item ->
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Icon(item.icon, contentDescription = item.label, modifier = Modifier.size(20.dp))
+        Text(item.label, fontSize = 11.sp)
+    }
+}
 ```
 
 ## 约束
 
 - 不存在 `HyperTabBarItem`、`selectedItemId` 或 `HyperTabBarConfig`。
 - 组件不依赖导航框架，也不会在 `onItemClick` 后自动切换页面。
-- `Equal` 项目等分宽度；`Packed` 项目至少 60dp 宽，内容可继续撑宽。
-- 默认容器在浅色模式使用白色 `0.92f` alpha；深色模式直接使用当前 `MaterialTheme.colorScheme.background`，不再使用会发灰的白色透明层。
-- `topDivider` 只绘制顶边，不包围容器四周；浅色模式默认使用 0.5dp、黑色 `0.055f` alpha 的低对比度发丝线，深色模式使用页面背景色隐藏灰边。传 `null` 可移除，显式传入时按调用方的宽度与画刷绘制。
-- 容器只绘制普通颜色背景和可选顶部发丝线，不叠加阴影、玻璃高光或渐变。
-- `HyperTabBarDefaults.Height` 表示 55dp 标签操作区；默认底栏总高度为 60dp，包含 5dp 的 `BottomPadding`。
+- Docked 样式：`Equal` 项目等分宽度；`Packed` 项目至少 60dp 宽，内容可继续撑宽。默认容器在浅色模式使用白色 `0.92f` alpha；深色模式直接使用当前 `MaterialTheme.colorScheme.background`。`topDivider` 只绘制顶边，不包围容器四周；浅色模式默认使用 0.5dp、黑色 `0.055f` alpha 的低对比度发丝线，深色模式使用页面背景色隐藏灰边。`Height` 表示 55dp 标签操作区，默认底栏总高度为 60dp。
+- Floating 样式：需要至少 2 个标签项；项目等分宽度且不提供 Packed 布局。胶囊悬浮留白、高度与阴影已内置于组件，外部间距无需再通过 `modifier.padding(...)` 添加。指示胶囊仅在存在选中项或被按下时可见；无任何选中时隐藏。
 - 通常不应使用 `modifier.height(...)` 强制压缩底栏总高度，否则可能挤占内部操作区或底部留白。
+- Floating 样式内容以 LTR 布局渲染，不处理 RTL 镜像。
 
 <WasmPreview demo="tab-bar" title="HyperTabBar 交互预览" />

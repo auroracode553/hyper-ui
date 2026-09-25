@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperTabBar
 import hyper_ui.HyperTabBarDefaults
+import hyper_ui.HyperTabBarType
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonDefaults
 import hyper_ui.HyperButtonTone
@@ -431,12 +432,15 @@ fun SlideMenuDemo() {
 fun TabBarDemo() {
     var selectedItemId by remember { mutableStateOf("home") }
     var showTopDivider by remember { mutableStateOf(true) }
+    var barType by remember { mutableStateOf(HyperTabBarType.Docked) }
     val bottomItems = listOf(
         DemoNavItem("home", "首页", Icons.Default.Home),
         DemoNavItem("recent", "最近", Icons.Default.Info),
+        DemoNavItem("notice", "消息", Icons.Default.Notifications),
         DemoNavItem("settings", "设置", Icons.Default.Settings)
     )
     val selectedTitle = bottomItems.first { it.id == selectedItemId }.label
+    val floating = barType == HyperTabBarType.Floating
 
     Column(
         modifier = Modifier
@@ -446,7 +450,7 @@ fun TabBarDemo() {
     ) {
         Box(
             modifier = Modifier
-                .height(430.dp)
+                .height(460.dp)
                 .clip(RoundedCornerShape(28.dp))
                 .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(28.dp))
                 .background(MaterialTheme.colorScheme.background)
@@ -465,35 +469,72 @@ fun TabBarDemo() {
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "贴底栏默认使用 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式下分隔线与页面同色。底栏总高度为 60dp，按钮布局、选中态和点击逻辑仍由调用方组合。",
+                        text = if (floating) {
+                            "悬浮胶囊样式：玻璃胶囊悬浮于页面，指示胶囊以弹簧吸附选中项；按下时胶囊放大并吸附到所按项目，内容色随指示位置渐变。"
+                        } else {
+                            "贴底样式：0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式与页面同色。底栏总高度为 60dp。"
+                        },
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     )
-                    HyperButton(
-                        onClick = { showTopDivider = !showTopDivider },
-                        tone = HyperButtonTone.Tonal
-                    ) {
-                        Text(text = if (showTopDivider) "隐藏顶部发丝线" else "显示顶部发丝线")
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        HyperButton(
+                            onClick = { barType = HyperTabBarType.Docked },
+                            tone = if (!floating) {
+                                HyperButtonTone.Primary
+                            } else {
+                                HyperButtonTone.Tonal
+                            }
+                        ) {
+                            Text(text = "贴底样式")
+                        }
+                        HyperButton(
+                            onClick = { barType = HyperTabBarType.Floating },
+                            tone = if (floating) {
+                                HyperButtonTone.Primary
+                            } else {
+                                HyperButtonTone.Tonal
+                            }
+                        ) {
+                            Text(text = "悬浮胶囊")
+                        }
+                    }
+                    if (!floating) {
+                        HyperButton(
+                            onClick = { showTopDivider = !showTopDivider },
+                            tone = HyperButtonTone.Tonal
+                        ) {
+                            Text(text = if (showTopDivider) "隐藏顶部发丝线" else "显示顶部发丝线")
+                        }
                     }
                 }
                 HyperTabBar(
                     items = bottomItems,
+                    type = barType,
                     itemSelected = { item -> item.id == selectedItemId },
                     onItemClick = { item -> selectedItemId = item.id },
-                    topDivider = if (showTopDivider) HyperTabBarDefaults.topDivider() else null
+                    topDivider = if (showTopDivider && !floating) {
+                        HyperTabBarDefaults.topDivider()
+                    } else {
+                        null
+                    }
                 ) { item ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.label,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(text = item.label)
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = if (floating) {
+                            Arrangement.spacedBy(2.dp)
+                        } else {
+                            Arrangement.Center
                         }
+                    ) {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.label,
+                            modifier = Modifier.size(if (floating) 20.dp else 24.dp)
+                        )
+                        Text(text = item.label, fontSize = 11.sp)
+                    }
                 }
             }
         }

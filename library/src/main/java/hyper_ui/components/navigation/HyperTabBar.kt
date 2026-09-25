@@ -29,6 +29,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
+/** 标签栏样式。 */
+enum class HyperTabBarType {
+    /** 贴底样式：0.5dp 顶部发丝线、无阴影的贴底容器（默认）。 */
+    Docked,
+
+    /** 悬浮样式：玻璃胶囊容器、滑动指示胶囊与按压加深反馈。 */
+    Floating
+}
+
 enum class HyperTabBarItemLayout {
     Equal,
     Packed
@@ -44,7 +53,9 @@ data class HyperTabBarColors(
 
 class HyperTabBarItemScope internal constructor(
     val selected: Boolean,
-    val enabled: Boolean
+    val enabled: Boolean,
+    /** 0f~1f 的选中强度；贴底样式恒为 0f/1f，悬浮样式随指示胶囊位置连续变化。 */
+    val selectionStrength: Float
 )
 
 /**
@@ -52,6 +63,9 @@ class HyperTabBarItemScope internal constructor(
  *
  * 组件内部已包含默认水平内容间距（16dp）和少量底部安全留白。
  * 外部间距请通过 modifier.padding(...) 控制。
+ *
+ * [type] 为 [HyperTabBarType.Floating] 时渲染悬浮玻璃胶囊容器：不使用 [topDivider]、
+ * [shape] 与贴底留白，选中指示胶囊由调用方在 slot 中自行绘制。
  */
 @Composable
 fun HyperTabBar(
@@ -62,8 +76,21 @@ fun HyperTabBar(
     shape: Shape = HyperTabBarDefaults.Shape,
     topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
+    type: HyperTabBarType = HyperTabBarType.Docked,
+    floatingColors: HyperFloatingTabBarColors = HyperFloatingTabBarDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
+    if (type == HyperTabBarType.Floating) {
+        HyperFloatingTabBar(
+            modifier = modifier,
+            enabled = enabled,
+            horizontalArrangement = horizontalArrangement,
+            verticalAlignment = verticalAlignment,
+            colors = floatingColors,
+            content = content
+        )
+        return
+    }
     val resolvedColors = colors
     val contentColor = if (enabled) {
         resolvedColors.unselectedContentColor
@@ -101,6 +128,10 @@ fun HyperTabBar(
  *
  * 组件内部已包含默认水平内容间距（16dp）和少量底部安全留白。
  * 外部间距请通过 modifier.padding(...) 控制。
+ *
+ * [type] 为 [HyperTabBarType.Floating] 时渲染悬浮玻璃胶囊：忽略 [itemLayout]、
+ * [itemSlotAlignment]、[horizontalArrangement]、[shape]、[topDivider] 与 [colors]，
+ * 使用 [floatingColors]；项目等分宽度，指示胶囊随选中与按压状态滑动、加深。
  */
 @Composable
 fun <T> HyperTabBar(
@@ -115,9 +146,24 @@ fun <T> HyperTabBar(
     shape: Shape = HyperTabBarDefaults.Shape,
     topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
+    type: HyperTabBarType = HyperTabBarType.Docked,
+    floatingColors: HyperFloatingTabBarColors = HyperFloatingTabBarDefaults.colors(),
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
 ) {
+    if (type == HyperTabBarType.Floating) {
+        HyperFloatingTabBar(
+            items = items,
+            onItemClick = onItemClick,
+            modifier = modifier,
+            enabled = enabled,
+            itemSelected = itemSelected,
+            itemEnabled = itemEnabled,
+            colors = floatingColors,
+            itemContent = itemContent
+        )
+        return
+    }
     val resolvedColors = colors
     HyperTabBar(
         modifier = modifier,
@@ -136,7 +182,8 @@ fun <T> HyperTabBar(
             val actualEnabled = enabled && itemEnabled(item)
             val scope = HyperTabBarItemScope(
                 selected = selected,
-                enabled = actualEnabled
+                enabled = actualEnabled,
+                selectionStrength = if (selected) 1f else 0f
             )
             val contentColor = when {
                 !actualEnabled -> resolvedColors.disabledContentColor

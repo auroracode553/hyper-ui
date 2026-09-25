@@ -193,7 +193,7 @@ HyperIconButton(onClick = onSearch) {
 - 状态与浮层反馈：`HyperEmptyState`, `HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `HyperDropdownItemTone`, `hyperToast`, `HyperToastDuration`（`HyperEmptyState` 直接复用 `HyperPanel` 承载居中的空数据内容；`HyperDropdown` 使用按最宽菜单项收缩、最大 220dp 的乳白/炭灰柔雾面板，并由公共深度层提供描边和浮层阴影；`HyperPopup` 使用轻量 Popup；`HyperDialog` 使用 Compose Dialog，设置 `usePlatformDefaultWidth = false` 并在稳定的全尺寸根节点内居中面板；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`, `HyperPlaybackSpeedPanel`, `HyperPlaybackSpeedPanelOverlay`, `HyperPlaybackSpeedScale`, `HyperBatteryIndicator`（加载进度支持确定/不确定状态；播放速度面板与长按倍速刻度默认固定深色、不跟随应用明暗模式，状态和自定义速度流程由调用方持有；倍速面板约为 468dp × 157dp，长按倍速刻度约为 310dp × 59dp；面板默认图标、刻度快进图标与电池充电图标均使用 Lucide Android；比例胶囊使用白色半透明连续玻璃材质与单层空间阴影；组件本身不主动读取系统状态）
 - Android 系统工具：`HyperBatteryState`, `readHyperBatteryState`, `rememberHyperBatteryState`（支持一次性读取与 Compose 生命周期安全订阅；内部使用 Application Context，并在离开 Composition 时注销电池广播）
-- 导航组件：`HyperNavBar`, `HyperImmersiveNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`（`HyperNavBar` 默认透明且不绘制描边和阴影；`HyperImmersiveNavBar` 复用该纯平导航视觉并允许内容滚入其后方；`HyperDrawer` 使用公共结构描边和低抬升阴影的不透明玻璃；`HyperSlideMenu` 的每个项目直接复用 `HyperButton` 的表面、描边与交互状态；`HyperTabBar` 继续只使用 0.5dp 顶部发丝线；`HyperDrawer` 默认提供方向化内容间距与系统安全区，并支持可配置内容滚动；页面切换由调用方处理）
+- 导航组件：`HyperNavBar`, `HyperImmersiveNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`, `HyperTabBarType`, `HyperFloatingTabBarColors`, `HyperFloatingTabBarDefaults`（`HyperNavBar` 默认透明且不绘制描边和阴影；`HyperImmersiveNavBar` 复用该纯平导航视觉并允许内容滚入其后方；`HyperDrawer` 使用公共结构描边和低抬升阴影的不透明玻璃；`HyperSlideMenu` 的每个项目直接复用 `HyperButton` 的表面、描边与交互状态；`HyperTabBar` 通过 `type` 参数切换贴底发丝线样式与悬浮玻璃胶囊样式；`HyperDrawer` 默认提供方向化内容间距与系统安全区，并支持可配置内容滚动；页面切换由调用方处理）
 - 内部公共工具：`hyper_ui.core` 目录仅供 UI 库内部复用，调用方不要直接依赖。
 
 ## 状态管理原则
@@ -263,7 +263,7 @@ preview/
 - UI 库内部公共工具放在 `library/src/main/java/hyper_ui/core/` 下，供组件实现复用，不作为调用方公开入口。
 - Android-only 工具不能进入 `commonMain` 编译链；Preview 页面只展示说明、可交互模拟和 Android 调用片段。
 - `HyperDrawer` 的四个方向均使用主题卡片色的不透明结构玻璃，通过公共深度层的 1dp 低对比度主题描边和单层 `5.dp` 投影形成空间层次。自定义 `containerColor` 若带 alpha，会先与页面背景合成为不透明颜色。打开与关闭直接渲染或移除，不执行动画，外部点击区域不绘制遮罩。组件默认提供方向化内容间距与 `safeDrawing` 系统栏避让；需要完整内容区时传入 `defaultSetPadding = false`，附加场景布局继续通过 `drawerContentModifier` 提供。上下抽屉默认由内容撑高，达到窗口最大占比后在面板内部滚动；承载 `LazyColumn`、`HyperList` 等纵向滚动内容时设置 `drawerContentScrollEnabled = false`，由内层列表独立滚动。
-- `HyperTabBar` 不依赖任何导航框架；默认只绘制 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边。深色模式下使用 `MaterialTheme.colorScheme.background` 并隐藏灰边，浅色模式保留白色 `0.92f` alpha，均不叠加玻璃高光。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp；页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
+- `HyperTabBar` 不依赖任何导航框架，通过 `type` 参数提供两种样式。Docked 贴底样式默认只绘制 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式下使用 `MaterialTheme.colorScheme.background` 并隐藏灰边，浅色模式保留白色 `0.92f` alpha，均不叠加玻璃高光。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp。Floating 悬浮样式参考 Flutter `HyTabBar`：50dp 玻璃胶囊容器带 16/8/16/10dp 悬浮留白与 4dp 抬升阴影，指示胶囊以弹簧吸附选中项（宽度夹在 16dp~112dp），按下时吸附所按项目并放大，内容色随 `selectionStrength` 连续渐变；该样式忽略 `itemLayout`、`shape`、`topDivider` 与 `colors`，使用独立的 `floatingColors` 与 `HyperFloatingTabBarDefaults`。页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
 - 调用方接入时不需要依赖 `preview` 模块。
 - Wasm 入口接受 `#组件-id`，例如 `index.html#button`，供 VitePress 组件页选择初始预览项；未知 ID 回退到第一个组件。
 
