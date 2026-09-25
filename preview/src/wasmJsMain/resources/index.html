@@ -31,6 +31,38 @@
 </head>
 <body>
 <div id="hyper-ui-preview-root" aria-label="HyperUI 交互式组件预览"></div>
+<script>
+    // ComposeViewport 将 Canvas 放在开放的 Shadow DOM 中；就绪检查需要进入 shadowRoot。
+    (() => {
+        if (window.parent === window) return;
+        let acknowledged = false;
+        const previewRoot = document.getElementById('hyper-ui-preview-root');
+        const findCanvas = (root) => {
+            const directCanvas = root.querySelector('canvas');
+            if (directCanvas) return directCanvas;
+            for (const element of root.querySelectorAll('*')) {
+                if (!element.shadowRoot) continue;
+                const canvas = findCanvas(element.shadowRoot);
+                if (canvas) return canvas;
+            }
+            return null;
+        };
+        const reportReady = () => {
+            if (acknowledged || !findCanvas(previewRoot)) return;
+            window.parent.postMessage({ type: 'hyper-ui-preview:ready' }, '*');
+        };
+        const readyObserver = new MutationObserver(reportReady);
+        readyObserver.observe(previewRoot, { childList: true, subtree: true });
+        const retryTimer = window.setInterval(reportReady, 500);
+        window.addEventListener('message', (event) => {
+            if (event.source !== window.parent || event.data?.type !== 'hyper-ui-preview:ack') return;
+            acknowledged = true;
+            readyObserver.disconnect();
+            window.clearInterval(retryTimer);
+        });
+        reportReady();
+    })();
+</script>
 <script src="./hyper-ui-preview.js"></script>
 </body>
 </html>

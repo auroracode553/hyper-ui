@@ -231,6 +231,8 @@ HyperTextField(
 - `vitepress/`：将 `vitepress/docs/` 渲染为语义化静态网页，并通过 iframe 嵌入 Wasm 预览。
 - `preview/`：Compose Multiplatform Desktop/Wasm 组件演示，用来操作真实组件状态。
 
+VitePress 的 `WasmPreview` iframe 使用 `embedded=1`，只绘制当前组件的交互示例；组件参数、变体说明和最小用法由 Markdown 组件页承载。独立打开 Preview 应用时仍可使用其目录导航。
+
 调用方只依赖 `hyper_ui`，不依赖文档源码、`vitepress/` 或 `preview/`。AI 不应从 Wasm 画面推断 API，应读取 [vitepress/docs/index.md](vitepress/docs/index.md) 和具体组件页。
 
 Preview 中可见的组件卡片必须与 `library/src/main/java/hyper_ui/components/` 下公开的可视化组件和 Android-only 组件工具保持一致：组件目录有的，preview 和文档要有；组件目录没有的，不作为组件卡片展示。`State`、`Defaults`、`Config`、枚举等辅助 API 不单独登记为组件卡片；主题色切换等文档外壳能力可以保留在 docs UI 中，但不登记为组件 demo。
@@ -265,7 +267,7 @@ preview/
 - `HyperDrawer` 的四个方向均使用主题卡片色的不透明结构玻璃，通过公共深度层的 1dp 低对比度主题描边和单层 `5.dp` 投影形成空间层次。自定义 `containerColor` 若带 alpha，会先与页面背景合成为不透明颜色。打开与关闭直接渲染或移除，不执行动画，外部点击区域不绘制遮罩。组件默认提供方向化内容间距与 `safeDrawing` 系统栏避让；需要完整内容区时传入 `defaultSetPadding = false`，附加场景布局继续通过 `drawerContentModifier` 提供。上下抽屉默认由内容撑高，达到窗口最大占比后在面板内部滚动；承载 `LazyColumn`、`HyperList` 等纵向滚动内容时设置 `drawerContentScrollEnabled = false`，由内层列表独立滚动。
 - `HyperTabBar` 不依赖任何导航框架，通过 `type` 参数提供两种样式。Docked 贴底样式默认只绘制 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式下使用 `MaterialTheme.colorScheme.background` 并隐藏灰边，浅色模式保留白色 `0.92f` alpha，均不叠加玻璃高光。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp。Floating 悬浮样式参考 Flutter `HyTabBar`：50dp 玻璃胶囊容器带 16/8/16/10dp 悬浮留白与 4dp 抬升阴影，指示胶囊以弹簧吸附选中项（宽度夹在 16dp~112dp），按下时吸附所按项目并放大，内容色随 `selectionStrength` 连续渐变；该样式忽略 `itemLayout`、`shape`、`topDivider` 与 `colors`，使用独立的 `floatingColors` 与 `HyperFloatingTabBarDefaults`。页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
 - 调用方接入时不需要依赖 `preview` 模块。
-- Wasm 入口接受 `#组件-id`，例如 `index.html#button`，供 VitePress 组件页选择初始预览项；未知 ID 回退到第一个组件。
+- Wasm 入口接受 `#组件-id`，例如 `index.html?embedded=1#button`，供 VitePress 组件页选择纯组件预览；未知 ID 回退到第一个组件。
 
 维护 preview 时优先看：
 
@@ -298,11 +300,11 @@ vitepress/
 
 生产构建会从 `vitepress/docs/` 自动派生 `llms.txt`、`llms-full.txt`、`sitemap.xml`、`robots.txt` 和每篇文档的 `.md` 静态直链；这些都是构建产物，不维护第二份组件正文。
 
-Wasm 静态产物不提交到仓库。使用者手动执行 `preview/` 中的 `publishWasmToVitePress` 后，完整产物会复制到 `vitepress/public/wasm-preview/`，并写入 `preview-ready.json`。产物未就绪时文档显示说明，不加载 404 iframe。
+Wasm 静态产物不提交到仓库。使用者手动执行 `preview/` 中的 `publishWasmToVitePress` 后，完整产物会复制到 `vitepress/public/wasm-preview/`，并写入 `preview-ready.json`。`dev:watch` 额外写入本地构建阶段；首次产物未就绪时页面显示依赖准备或编译进度，不加载 404 iframe。
 
 开发期需要在 VitePress 组件页实时查看 Kotlin 修改时，可手动启动 `preview/` 的 `wasmJsBrowserDevelopmentRun`，再把终端打印的地址通过 `VITE_HYPER_UI_PREVIEW_DEV_URL` 传给 VitePress。此时文档 iframe 直接嵌入开发服务器，源码保存后的重编译与刷新由它处理；具体步骤见 [预览更新流程](vitepress/docs/preview-update-workflow.md)。
 
-日常开发也可在 `vitepress/` 手动执行 `npm run dev:watch`：一个命令启动文档，先更新 Kotlin/Wasm npm 锁文件、再后台构建预览，并在 Kotlin 源码保存后串行重新发布；预览区域会在产物就绪后自动加载和刷新。
+日常开发也可在 `vitepress/` 手动执行 `npm run dev:watch`：一个命令启动文档，先更新 Kotlin/Wasm npm 锁文件、再后台构建预览，并在 Kotlin 源码或 Wasm 入口资源保存后串行重新发布；预览区域显示四个真实阶段（依赖准备、编译发布、资源加载、组件渲染），产物就绪后自动加载和刷新。阶段条不代表 Gradle 百分比。
 
 若首次构建因访问 GitHub Release 下载 Binaryen 超时，可按 [预览更新流程](vitepress/docs/preview-update-workflow.md#github-连接超时时使用本地-binaryen-压缩包) 设置可选的 `HYPER_UI_BINARYEN_ARCHIVE_DIR`，使用已手动取得并校验的官方压缩包。变量未设置时仍由 Gradle 下载。
 

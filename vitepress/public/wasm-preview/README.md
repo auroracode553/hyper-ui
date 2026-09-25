@@ -17,6 +17,7 @@ cd preview
 ```
 
 该任务会生成 Wasm 静态产物、复制到本目录，并在确认入口文件后写入 `preview-ready.json`。
+`dev:watch` 运行期间还会写入 `preview-build-status.json`，供 VitePress 显示依赖准备、编译发布和失败状态；浏览器加载资源与渲染首帧的阶段由页面自身判断。这两个 JSON 都是本地生成文件，不需要提交。
 
 复制完成后的入口应位于：
 

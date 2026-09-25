@@ -55,7 +55,8 @@ import hyper_ui.docs.theme.DocsSidebar
 @Composable
 fun HyperDocsApp(
     themeColorController: ThemeColorController,
-    initialSelectedId: String? = null
+    initialSelectedId: String? = null,
+    embeddedPreview: Boolean = false
 ) {
     CompositionLocalProvider(LocalThemeColor provides themeColorController) {
         val demos = remember { componentDemos() }
@@ -68,26 +69,30 @@ fun HyperDocsApp(
         }
         val selectedDemo = demos.firstOrNull { it.id == selectedId } ?: demos.first()
 
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            SelectionContainer {
-                BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-                    if (maxWidth < 840.dp) {
-                        MobileDocsLayout(
-                            demos = demos,
-                            selectedId = selectedId,
-                            selectedDemo = selectedDemo,
-                            onSelect = { selectedId = it }
-                        )
-                    } else {
-                        DesktopDocsLayout(
-                            demos = demos,
-                            selectedId = selectedId,
-                            selectedDemo = selectedDemo,
-                            onSelect = { selectedId = it }
-                        )
+        if (embeddedPreview) {
+            EmbeddedComponentPreview(demo = selectedDemo)
+        } else {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                SelectionContainer {
+                    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                        if (maxWidth < 840.dp) {
+                            MobileDocsLayout(
+                                demos = demos,
+                                selectedId = selectedId,
+                                selectedDemo = selectedDemo,
+                                onSelect = { selectedId = it }
+                            )
+                        } else {
+                            DesktopDocsLayout(
+                                demos = demos,
+                                selectedId = selectedId,
+                                selectedDemo = selectedDemo,
+                                onSelect = { selectedId = it }
+                            )
+                        }
                     }
                 }
             }

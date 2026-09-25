@@ -1,8 +1,8 @@
-// 文件职责：启动 VitePress 并串行发布 Wasm 预览；源码变化后重新发布。
+// 文件职责：启动 VitePress 并串行发布 Wasm 预览；Kotlin 与 Wasm 入口资源变化后重新发布。
 // WasmPreview 读取 Gradle 发布任务写入的 preview-ready.json 并自动加载新版本。
 // 手动运行：在 vitepress/ 目录执行 `npm run dev:watch`，按 Ctrl+C 停止全部进程。
 import { spawn, spawnSync } from 'node:child_process';
-import { existsSync, watch } from 'node:fs';
+import { existsSync, watch, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -11,6 +11,7 @@ const repositoryRoot = resolve(scriptDirectory, '..');
 const libraryDirectory = resolve(repositoryRoot, 'library');
 const previewDirectory = resolve(repositoryRoot, 'preview');
 const vitepressDirectory = resolve(repositoryRoot, 'vitepress');
+const buildStatusFile = resolve(vitepressDirectory, 'public/wasm-preview/preview-build-status.json');
 const vitepressPort = process.env.HYPER_UI_VITE_PORT || '5173';
 const debounceMs = Number(process.env.HYPER_UI_WATCH_DEBOUNCE || 2000);
 const generatedDirectories = new Set(['build', '.gradle', '.kotlin', 'kotlin-js-store', 'node_modules', 'dist']);
@@ -21,6 +22,17 @@ for (const directory of [libraryDirectory, previewDirectory, vitepressDirectory]
 
 // 当前正在执行的 Gradle 子进程（首次构建与增量重建共用），退出时统一清理，避免残留僵尸进程。
 let activeGradleChild = null;
+let buildAttempt = 0;
+
+function updateBuildStatus(phase, message) {
+  // 浏览器只读取阶段与结果；Gradle 的真实输出仍在当前终端，避免伪造百分比。
+  writeFileSync(buildStatusFile, JSON.stringify({
+    phase,
+    message,
+    attempt: buildAttempt,
+    updatedAt: Date.now(),
+  }));
+}
 
 function stopProcessTree(child) {
   if (!child?.pid || child.exitCode !== null) return;
@@ -74,9 +86,18 @@ function runGradleTask(taskName) {
 }
 
 async function runPublish() {
-  // CI 也先更新 Kotlin/Wasm 的 npm 锁文件，再发布预览。
-  if (!(await runGradleTask('kotlinWasmUpgradePackageLock'))) return false;
-  if (!(await runGradleTask('publishWasmToVitePress'))) return false;
+  buildAttempt += 1;
+  updateBuildStatus('preparing', '正在准备 Wasm 依赖与包锁文件');
+  if (!(await runGradleTask('kotlinWasmUpgradePackageLock'))) {
+    updateBuildStatus('error', '依赖准备失败，请查看 dev:watch 终端日志');
+    return false;
+  }
+  updateBuildStatus('compiling', '正在编译并发布 Wasm 组件预览');
+  if (!(await runGradleTask('publishWasmToVitePress'))) {
+    updateBuildStatus('error', '组件编译失败，请查看 dev:watch 终端日志');
+    return false;
+  }
+  updateBuildStatus('ready', 'Wasm 预览产物已发布');
   console.log('Wasm 预览产物已更新，浏览器中的预览将自动重载。');
   return true;
 }
@@ -91,7 +112,7 @@ const vitepress = spawn(process.execPath, [
   stdio: 'inherit',
   windowsHide: true,
   // 此命令负责静态产物发布，避免继承另一个终端的开发服务器地址。
-  env: { ...process.env, VITE_HYPER_UI_PREVIEW_DEV_URL: '' },
+  env: { ...process.env, VITE_HYPER_UI_PREVIEW_DEV_URL: '', VITE_HYPER_UI_DEV_WATCH: '1' },
 });
 
 // 构建期间的文件变化先记账，构建结束后补跑一次，避免并发调用 Gradle。
@@ -118,9 +139,10 @@ async function scheduleRebuild(reason) {
 }
 
 function isWatchable(file) {
-  if (!/\.(kt|kts)$/i.test(file)) return false;
   const segments = file.split(/[\\/]/);
-  return !segments.some((segment) => generatedDirectories.has(segment));
+  if (segments.some((segment) => generatedDirectories.has(segment))) return false;
+  if (/\.(kt|kts)$/i.test(file)) return true;
+  return segments.includes('wasmJsMain') && segments.includes('resources') && /\.(html|css|js)$/i.test(file);
 }
 
 const watchers = [libraryDirectory, previewDirectory].map((directory) =>

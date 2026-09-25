@@ -31,12 +31,13 @@ fun rememberThemeColorController(initial: Color = DefaultDocsThemeColor): ThemeC
 
 /** Shared document root used by the Desktop window and the browser viewport. */
 @Composable
-fun HyperDocsRoot(initialSelectedId: String? = null) {
+fun HyperDocsRoot(initialSelectedId: String? = null, embeddedPreview: Boolean = false) {
     val themeColorController = rememberThemeColorController()
     HyperDocsTheme(themeColor = themeColorController.color) {
         HyperDocsApp(
             themeColorController = themeColorController,
-            initialSelectedId = initialSelectedId
+            initialSelectedId = initialSelectedId,
+            embeddedPreview = embeddedPreview
         )
     }
 }

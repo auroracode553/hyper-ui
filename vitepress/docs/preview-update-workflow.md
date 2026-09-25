@@ -4,7 +4,7 @@
 
 ## 一条命令更新文档和预览
 
-在 `vitepress/` 目录手动执行 `npm run dev:watch`。该命令会启动文档站，先执行 `kotlinWasmUpgradePackageLock` 更新 Kotlin/Wasm 的 npm 锁文件，再执行 `publishWasmToVitePress`；之后监听 `library/`、`preview/` 的 Kotlin 源码变化并按相同顺序串行重新发布。Gradle 生成目录不会触发重建。文档可先打开；首次构建完成前预览区域显示说明，发布成功后自动加载，后续保存源码也会自动刷新 iframe。按 Ctrl+C 停止监听和文档站。
+在 `vitepress/` 目录手动执行 `npm run dev:watch`。该命令会启动文档站，先执行 `kotlinWasmUpgradePackageLock` 更新 Kotlin/Wasm 的 npm 锁文件，再执行 `publishWasmToVitePress`；之后监听 `library/`、`preview/` 的 Kotlin 源码和 `preview/src/wasmJsMain/resources/` 的入口资源变化，并按相同顺序串行重新发布。Gradle 生成目录不会触发重建。文档可先打开；预览区域依次显示依赖准备、Wasm 编译、资源加载和组件渲染四个阶段，失败时显示错误提示，成功后自动加载并在后续保存源码时刷新。阶段条表示当前步骤，不是 Gradle 的百分比；详细任务日志仍在终端。按 Ctrl+C 停止监听和文档站。
 
 首次构建仍需下载 Binaryen 等 Wasm 工具依赖，耗时取决于仓库连接；日志持续停在依赖解析时参照下方诊断步骤。`dev:watch` 不会把文档 404 当作 Gradle 错误。
 
@@ -33,7 +33,7 @@
 - 修改 `preview/src/commonMain/kotlin/hyper_ui/docs/ui/` 下交互 Showcase。
 - 修改 `preview/src/commonMain/kotlin/hyper_ui/docs/theme/` 或 Wasm 入口资源，例如字体、主题、布局。
 
-只查看 VitePress 页面时，修改普通 Markdown 不需要执行本流程；如果还要让 Wasm Preview 内嵌的 API 正文同步更新，则需要重新发布 Preview 资源。
+只查看 VitePress 页面时，修改普通 Markdown 不需要执行本流程；嵌入的 Wasm Preview 只显示组件示例，不承载 API 正文。
 
 ## 正确命令
 

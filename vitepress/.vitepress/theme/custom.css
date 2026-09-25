@@ -50,6 +50,7 @@
 }
 
 .wasm-preview__viewport {
+  position: relative;
   width: 100%;
   background: var(--vp-c-bg-alt);
 }
@@ -57,21 +58,102 @@
 .wasm-preview__frame {
   display: block;
   width: 100%;
-  min-height: 480px;
   border: 0;
   background: var(--vp-c-bg);
 }
 
 .wasm-preview__status {
   display: flex;
-  min-height: 240px;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px;
+  gap: 24px;
+  padding: 32px 24px;
   color: var(--vp-c-text-2);
   text-align: center;
+  background: var(--vp-c-bg-alt);
+}
+
+.wasm-preview__status--overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.wasm-preview__skeleton {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: min(100%, 360px);
+  min-height: 88px;
+  padding: 18px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+}
+
+.wasm-preview__skeleton span {
+  width: 76px;
+  height: 34px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 999px;
+  background: var(--vp-c-bg);
+}
+
+.wasm-preview__skeleton span:nth-child(2) {
+  background: var(--vp-c-brand-soft);
+}
+
+.wasm-preview__status-copy {
+  width: min(100%, 420px);
+}
+
+.wasm-preview__status-title {
+  color: var(--vp-c-text-1);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.wasm-preview__status-detail {
+  padding-top: 6px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.wasm-preview__steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 18px;
+}
+
+.wasm-preview__steps span {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--vp-c-divider);
+}
+
+.wasm-preview__steps .is-complete {
+  background: var(--vp-c-brand-1);
+}
+
+.wasm-preview__steps .is-active::after {
+  display: block;
+  width: 45%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--vp-c-brand-1);
+  content: '';
+  animation: wasm-preview-progress 1.6s ease-in-out infinite alternate;
+}
+
+.wasm-preview__step-label {
+  padding-top: 5px;
+  font-size: 12px;
 }
 
 .wasm-preview__status p {
@@ -83,6 +165,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 16px;
+  margin-top: 14px;
 }
 
 .wasm-preview__status-actions button,
@@ -121,6 +204,18 @@
   margin-bottom: 0;
 }
 
+@keyframes wasm-preview-progress {
+  from { transform: translateX(0); }
+  to { transform: translateX(120%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wasm-preview__steps .is-active::after {
+    width: 100%;
+    animation: none;
+  }
+}
+
 @media (max-width: 640px) {
   .wasm-preview {
     margin-right: -8px;
@@ -134,7 +229,4 @@
     gap: 4px;
   }
 
-  .wasm-preview__frame {
-    min-height: 420px;
-  }
 }

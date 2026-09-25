@@ -1,11 +1,11 @@
 # Wasm 交互预览
 
-该区域加载 Compose Multiplatform Wasm 文档应用，用于让浏览器访问者操作真实组件示例。
+该区域加载 Compose Multiplatform Wasm 组件示例，用于让浏览器访问者操作真实组件。嵌入 VitePress 时只显示所选组件的交互样式；公开签名、默认值、状态和约束写在对应的 Markdown 组件页。
 
-Markdown 中的公开签名、参数、状态与约束仍是 AI 的文档来源。Preview 会在示例代码下方加载同一份 Markdown，并从公开签名自动生成属性表；不存在第二份维护正文。
+Markdown 是开发者和 AI 的 API 文档来源。独立打开 Preview 应用仍可浏览组件目录；VitePress 内的 iframe 不重复显示目录、代码卡片或属性表。
 
-<WasmPreview title="HyperUI 组件交互预览" :height="760">
-若此区域显示“尚未发布”，请等待 `dev:watch` 首次构建完成，或按手动发布说明生成完整 Wasm 产物。
+<WasmPreview demo="button" title="HyperButton 交互预览" :height="480">
+执行 `dev:watch` 时，此处依次显示依赖准备、Wasm 编译、资源加载和组件渲染阶段。编译失败时请查看终端日志。
 </WasmPreview>
 
 ## 按组件嵌入
@@ -16,7 +16,7 @@ Markdown 中的公开签名、参数、状态与约束仍是 AI 的文档来源�
 <WasmPreview demo="button" title="HyperButton 交互预览" />
 ```
 
-`demo` 会作为 URL hash 传给 preview。浏览器入口支持该 ID 时直接选中对应组件；无法识别时回退到文档首页。
+`demo` 会作为 URL hash 传给 preview，`embedded=1` 使 iframe 只渲染该组件示例。未知 ID 当前回退到第一个组件。
 
 日常开发可在 `vitepress/` 执行 `npm run dev:watch`。它会启动文档、后台构建预览，并在 Kotlin 源码保存后自动重新发布；产物就绪后 iframe 自动加载和刷新。
 
@@ -50,5 +50,5 @@ vitepress/public/wasm-preview/
 
 - `vitepress/docs/`：语义化 Markdown，供 AI、搜索和开发者阅读。
 - VitePress：渲染 Markdown、导航和本地搜索。
-- `WasmPreview.vue`：通过 iframe 隔离并嵌入交互预览。
-- `preview/`：维护 Compose 交互示例、变体属性/样式标识，并渲染构建时同步的 Markdown API 资源。
+- `WasmPreview.vue`：显示构建和首帧加载阶段，通过 iframe 嵌入交互示例。
+- `preview/`：维护 Compose 交互示例；嵌入模式只渲染组件，独立模式保留目录浏览。

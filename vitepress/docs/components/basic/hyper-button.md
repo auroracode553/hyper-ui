@@ -86,6 +86,21 @@ HyperButton(onClick = onSave) {
 组件尺寸和外部间距通过 `Modifier` 控制，例如 `Modifier.height(32.dp)`、`Modifier.widthIn(...)` 与 `Modifier.padding(...)`。
 `HyperButton` 作为原子组件，内部默认使用 `HyperButtonDefaults.ContentPadding`；分段控制器等组合组件可以通过 `contentPadding` 复用按钮交互和表面，同时保持自己的紧凑布局。
 
+## 预览变体与属性
+
+下方交互预览只显示按钮本身。各示例对应的配置与反馈在此说明：
+
+| 预览项 | 关键属性或操作 | 样式与行为 |
+| --- | --- | --- |
+| 轮廓 | `tone = HyperButtonTone.Outline` | 主题描边替换公共中性描边，保留公共阴影 |
+| 主要 | `tone = HyperButtonTone.Primary` | 主题实色、公共控件描边与阴影 |
+| 弱强调 | `tone = HyperButtonTone.Tonal` | 主题混合实色 |
+| 语义色 | `tone = Success / Danger` | 成功与危险实色 |
+| 按压 | 指针按下 | 公共描边和阴影立即收低 |
+| 禁用 | `enabled = false` | 弱描边、无阴影的不透明禁用态 |
+| 紧凑 | `modifier = Modifier.height(32.dp)` | 小尺寸内容 Slot |
+| 组合复用 | `contentPadding`、`role` | 供分段等组合组件复用布局和语义 |
+
 ## 约束
 
 - 不存在 `text`、`leadingIcon`、`trailingIcon` 参数；这些内容必须由调用方放入 `content`。
