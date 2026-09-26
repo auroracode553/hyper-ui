@@ -8,6 +8,8 @@ HyperUI 提供线性和圆形进度指示器。`progress` 为 `0f..1f` 表示确
 
 需要用户点击或拖动进度时，应使用 [HyperSlider](../form/hyper-slider.md)，不要给只读进度指示器叠加调用方手势和样式。
 
+<WasmPreview demo="progress" title="HyperProgressIndicator 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -76,5 +78,3 @@ HyperCircularProgressIndicator(progress = null)
 - 圆形进度指示器本身是 stroke 图形，不额外渲染外框。
 - `progress` 会被限制在 `0f..1f`。
 - `progress = null` 时线性组件显示居中的静态指示段，圆形组件显示静态弧段；语义仍保持 `Indeterminate`。
-
-<WasmPreview demo="progress" title="HyperProgressIndicator 交互预览" />

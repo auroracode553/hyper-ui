@@ -7,6 +7,8 @@
 `HyperIconButton` 是默认 38dp 的 slot-first 点击容器，默认图标尺寸为 18dp。它不接收 `ImageVector`；调用方在 `content` slot 中放入任意 `Icon`、进度或状态内容。
 默认容器按澎湃 OS 风格的磨砂玻璃圆片实现：明暗主题都以白色半透明材质叠在页面上，深色背景自然混合为中灰玻璃；宽而弱的上沿柔光、底部轻微压暗和面内渐隐折射带表达材质。组件不绘制描边，只复用公共 `hyperSurfaceShadow` 内部能力提供单层悬浮阴影；浅色模式使用更高抬升和更深的黑色阴影，避免按钮消失在白色背景中。
 
+<WasmPreview demo="icon_button" title="HyperIconButton 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -107,5 +109,3 @@ HyperIconButton(
 - 删除 `HyperIconButtonColors` 中的 `outlineColor`、`pressedOutlineColor`、`disabledOutlineColor`。
 - 删除 `HyperIconButtonDefaults.colors(...)` 中同名参数以及 `HyperIconButtonDefaults.OutlineWidth`。
 - 旧调用点直接移除这些参数即可；当前组件内部也不再生成低对比度描边，不恢复公开描边参数或兼容别名。
-
-<WasmPreview demo="icon_button" title="HyperIconButton 交互预览" />

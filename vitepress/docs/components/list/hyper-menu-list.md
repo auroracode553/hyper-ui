@@ -9,6 +9,8 @@
 
 > **注意：** `HyperMenuList` 不是通用数据列表，不推荐用于页面级、动态或大量数据渲染。单一连续页面列表使用 [`HyperList`](hyper-list.md)，多个独立卡片分组使用 [`HyperSectionedList`](hyper-sectioned-list.md)；少量非菜单的静态详情直接使用 `Column` 等 Compose 布局。
 
+<WasmPreview demo="hyper_menu_list" title="HyperMenuList 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -104,5 +106,3 @@ fun SettingsGroup(enabled: Boolean, onEnabledChange: (Boolean) -> Unit) {
 - 首尾圆角和卡片背景由菜单容器处理，不要在每项重复计算外层形状；组件没有 `border` API，额外边框通过 `modifier` 组合。
 
 ## 交互预览
-
-<WasmPreview demo="hyper_menu_list" title="HyperMenuList 交互预览" />

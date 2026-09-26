@@ -8,6 +8,8 @@
 默认容器采用澎湃 OS 风格的白色单色底面：浅色主题为不透明纯白，深色主题为白色 `0.18f` alpha 材质；不叠加高光、明暗渐变或纹理层，直接复用公共 `hyperSurfaceDepth` 的控件描边与单层阴影。聚焦与错误状态会用对应语义色替换中性描边，不会叠加第二圈，错误状态优先。
 组件内部维护 selection/composition，首次挂载已有文本时，光标默认位于文本末尾；用户开始编辑后会保留当前选区。
 
+<WasmPreview demo="text_field" title="HyperTextField 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -143,5 +145,3 @@ HyperTextField(
 
 - 删除 `HyperTextFieldDefaults.BorderWidth`；描边宽度和主题强度统一由内部公共 `hyperSurfaceDepth` 管理，不再作为输入框独立公开参数。
 - 调用方无需为默认迁移新增参数；如曾直接读取该常量，应删除对应自定义描边，避免与组件的公共描边重复。
-
-<WasmPreview demo="text_field" title="HyperTextField 交互预览" />

@@ -8,6 +8,8 @@
 
 `HyperSegmented` 是默认总高 36dp 的紧凑等宽分段控制器。组件只负责低抬升轨道、等宽布局、选中状态与 Tab 语义；每个分段直接复用 `HyperButton`，不再维护独立按钮绘制实现。
 
+<WasmPreview demo="segmented" title="HyperSegmented 交互预览" />
+
 ## 公开 API
 
 ```kotlin
@@ -121,5 +123,3 @@ HyperSegmented(
 - `itemContent` 负责文字、图标和业务标签，组件不内置字符串模型。
 - 每项由 `HyperButton` 提供实色表面、即时按压反馈、禁用态和点击行为，并填满轨道扣除留白后的高度；`HyperSegmented` 传入 `Role.Tab` 并补充 `selected` 语义。
 - 分段按钮不绘制边框，也不执行颜色、阴影或位移动画。
-
-<WasmPreview demo="segmented" title="HyperSegmented 交互预览" />

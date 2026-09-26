@@ -6,6 +6,8 @@
 
 `HyperButton` 是不透明实色的 slot-first 按钮容器。组件只负责点击、禁用态、tone、颜色、边框、形状和内容排列；按钮里的文字、图标、计数或加载状态全部由调用方通过 `content` slot 渲染。所有 tone 统一复用公共 `hyperSurfaceDepth` 的控件描边和单层阴影，不叠加玻璃高光，也不通过透明度表达 tone 或禁用状态。
 
+<WasmPreview demo="button" title="HyperButton 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -112,5 +114,3 @@ HyperButton(onClick = onSave) {
 - `border = null` 表示不提供覆盖描边，组件仍会绘制公共中性描边；禁用态忽略覆盖描边并切换为公共弱描边。
 - 指针按下时立即切换为公共 `Pressed` 深度，阴影降至 1.5dp；松开或取消时恢复。禁用态使用不透明的 `softContainer` 与 `secondaryText`、保留公共弱描边并移除阴影。
 - 通过 `HyperButtonColors` 或 `HyperButtonDefaults.colors(...)` 传入含 alpha 的颜色时，组件会先与自身实色背景合成再绘制，不会透出下层内容。
-
-<WasmPreview demo="button" title="HyperButton 交互预览" />

@@ -102,10 +102,17 @@ export default defineConfig({
       {
         text: '反馈组件',
         items: [
+          { text: 'HyperEmptyState', link: '/components/feedback/hyper-empty-state' },
           { text: 'HyperDropdown', link: '/components/feedback/hyper-dropdown' },
           { text: 'hyperToast', link: '/components/feedback/hyper-toast' },
           { text: 'HyperProgressIndicator', link: '/components/feedback/hyper-progress-indicator' },
+          { text: 'HyperLevelCapsule', link: '/components/feedback/hyper-level-capsule' },
+          { text: 'HyperPlaybackSpeedPanel', link: '/components/feedback/hyper-playback-speed-panel' },
+          { text: 'HyperPlaybackSpeedScale', link: '/components/feedback/hyper-playback-speed-scale' },
+          { text: 'HyperBatteryIndicator', link: '/components/feedback/hyper-battery-indicator' },
+          { text: 'HyperTooltip', link: '/components/feedback/hyper-tooltip' },
           { text: 'HyperPopup', link: '/components/feedback/hyper-popup' },
+          { text: 'HyperDialog', link: '/components/feedback/hyper-dialog' },
           { text: 'HyperAlertDialog', link: '/components/feedback/hyper-alert-dialog' },
           { text: 'HyperUpdateDialog', link: '/components/feedback/hyper-update-dialog' }
         ]

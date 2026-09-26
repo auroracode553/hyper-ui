@@ -7,6 +7,8 @@
 
 `HyperDialog` 基于 `androidx.compose.ui.window.Dialog` 承载对话框内容。宿主设置 `usePlatformDefaultWidth = false`，让 Dialog 使用稳定的全宽 Window；内部全尺寸根节点固定首帧测量，并把 280–360dp 面板居中，避免平台默认 `WRAP_CONTENT` Window 在首次布局时产生位置变化。Android 宿主另外应用空动画样式，屏蔽真实的 enter、exit、show、hide 窗口过渡。返回键与外部点击行为由公开参数控制。
 
+<WasmPreview demo="hyper_dialog" title="HyperDialog 交互预览" />
+
 ## 问题原因与实现方向
 
 本组件曾在 `usePlatformDefaultWidth` 使用默认值 `true` 时出现面板由上向下进入的视觉效果。该效果不是 `HyperFloatingPanel` 的 Compose 位移或补间动画；默认宽度会让 Dialog Window 使用 `WRAP_CONTENT`，首次显示时窗口测量与居中定位可能形成可见的位置变化。
@@ -96,5 +98,3 @@ HyperDialog(
 - 根节点通过 `BoxWithConstraints` 读取固定窗口约束，只计算面板可用边界，不反向修改 Window 尺寸。
 - 标题与底部操作区固定，正文超出高度时独立滚动。
 - 输入框焦点、输入值和校验状态由调用方管理。
-
-<WasmPreview demo="hyper_dialog" title="HyperDialog 交互预览" />

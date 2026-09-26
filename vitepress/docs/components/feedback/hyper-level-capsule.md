@@ -6,6 +6,8 @@
 
 `HyperLevelCapsule` 是竖向连续比例反馈组件，适合播放器亮度、音量等短时状态提示。组件使用半透明分层、柔光边缘和主题色填充形成柔性玻璃风格，并提供可选图标插槽。组件不处理手势、窗口亮度、系统音量、显示时机或自动隐藏。
 
+<WasmPreview demo="level_capsule" title="HyperLevelCapsule 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -77,5 +79,3 @@ HyperLevelCapsule(
 - 默认容器在明暗主题中都以白色半透明基底呈现，填充使用主题强调色；宽柔光、底部弱阴影和单层 `8.dp` 投影形成厚度。
 - 组件不再暴露高光色或边框色，也不绘制顶边亮线；材质光源由库统一维护，颜色 API 只表达容器、填充和内容语义。
 - 组件提供确定进度语义，便于无障碍服务读取当前比例。
-
-<WasmPreview demo="level_capsule" title="HyperLevelCapsule 交互预览" />

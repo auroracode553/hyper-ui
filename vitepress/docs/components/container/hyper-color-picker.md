@@ -7,6 +7,8 @@
 - Preview 注册：`preview/src/commonMain/kotlin/hyper_ui/docs/data/ContainerComponentDemos.kt`
 - Preview 交互：`preview/src/commonMain/kotlin/hyper_ui/docs/ui/ContainerComponentShowcases.kt`
 
+<WasmPreview demo="color-picker" title="HyperColorPicker 交互预览" />
+
 ## 公开 API
 
 ```kotlin
@@ -154,5 +156,3 @@ HyperColorPicker(
 - `HyperThemeConfig`
 
 ## 交互预览
-
-<WasmPreview demo="color-picker" title="HyperColorPicker 交互预览" />

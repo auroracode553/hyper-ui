@@ -6,6 +6,8 @@
 
 `HyperPopup` 是轻量 Popup 浮层。组件使用窗口级位置提供器忽略调用节点锚点并居中，不创建模态 Dialog。它负责可选固定顶部标题、尺寸、滚动内容区和底部 action slot。点击面板外的空白区域默认通过 `onDismissRequest` 请求关闭，传入 `dismissOnClickOutside = false` 可禁用。面板默认取扣除窗口间距后可用宽度的 90%，限制在 280–360dp，最大高度为窗口高度的 70%，并在窗口四周保留 16dp 间距。模态确认、表单和必须处理的任务使用 `HyperDialog`。
 
+<WasmPreview demo="custom_popup" title="HyperPopup 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -95,5 +97,3 @@ HyperPopup(
 - `HyperPopupDefaults.WindowPadding` 是组件内部安全边距；自定义尺寸仍会被限制在窗口可用范围内，不会越界。
 - slot 内容默认继承 `HyperColors.primaryText`，裸 `Text` 在深色模式下也会使用浅色文字；调用方显式传入 `color` 时以调用方为准。
 - 默认描边来自 `HyperPopupDefaults.border()`，使用合成后的实色轻描边；如需无边框，传入 `border = null`。
-
-<WasmPreview demo="custom_popup" title="HyperPopup 交互预览" />

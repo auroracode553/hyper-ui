@@ -7,6 +7,8 @@
 - Preview 注册：`preview/src/commonMain/kotlin/hyper_ui/docs/data/FormComponentDemos.kt`
 - Preview 交互：`preview/src/commonMain/kotlin/hyper_ui/docs/ui/FormComponentShowcases.kt`
 
+<WasmPreview demo="radio" title="HyperRadio 交互预览" />
+
 ## 公开 API
 
 ```kotlin
@@ -90,5 +92,3 @@ HyperRadio(selected = false, onClick = { })
 - `HyperColors.accent`
 
 ## 交互预览
-
-<WasmPreview demo="radio" title="HyperRadio 交互预览" />

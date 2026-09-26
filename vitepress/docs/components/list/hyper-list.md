@@ -7,6 +7,8 @@
 
 页面级连续懒加载列表，适合列表页、消息页、记录流和分页内容。`HyperList` 固定使用 `LazyColumn`，只负责一个连续的不透明实色卡片背景、12dp 轻圆角、可选边框和滚动状态；项目结构完全由调用方通过 `LazyListScope` Slot 描述。需要按日期或类别形成多个独立圆角卡片时使用 [`HyperSectionedList`](hyper-sectioned-list.md)。
 
+<WasmPreview demo="hyper_list" title="HyperList 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -106,5 +108,3 @@ HyperList(state = listState) {
 - 放入另一个同方向无界滚动容器前，应明确尺寸约束，避免嵌套滚动测量异常。
 
 ## 交互预览
-
-<WasmPreview demo="hyper_list" title="HyperList 交互预览" />

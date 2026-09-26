@@ -8,6 +8,8 @@
 
 `HyperDropdown` 是无蒙层的 Popup 菜单容器。面板宽度按最宽菜单项内容自动收缩，并以 220dp 为上限，避免短菜单右侧出现大块空白。组件同时负责浮层定位、参考系统菜单的柔雾面板、滚动、即时按压反馈、危险项语义与点击关闭；描边和阴影复用内部公共 `HyperSurfaceDepth` 浮层强度，文字、图标和业务动作仍由 slot 提供。
 
+<WasmPreview demo="dropdown" title="HyperDropdown 交互预览" />
+
 ## 公开 API
 
 ```kotlin
@@ -141,5 +143,3 @@ HyperDropdown(
 - 默认容器在浅色主题使用 96% 乳白色、深色主题使用 96% 炭灰色；公共深度层以 1dp 低对比度描边和单层 10dp 阴影建立浮层层级。
 - 自定义 `containerColor` 的 alpha 会被保留，可让底层内容轻微透出；组件不执行真实背景模糊。
 - 菜单项固定 48dp 高，按下时立即显示低对比度背景；禁用态不响应点击，也不显示按压反馈。
-
-<WasmPreview demo="dropdown" title="HyperDropdown 交互预览" />

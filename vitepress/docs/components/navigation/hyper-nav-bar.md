@@ -10,6 +10,8 @@
 
 如果页面需要“按钮固定、首屏内容位于栏下、滚动后内容进入透明栏与状态栏后方”的效果，请使用 [HyperImmersiveNavBar](hyper-immersive-nav-bar.md)。该行为需要导航层与滚动内容共同参与布局，不能由 `HyperNavBar` 上的单一布尔属性独立完成。
 
+<WasmPreview demo="nav-bar" title="HyperNavBar 交互预览" />
+
 ## 公开 API
 
 ```kotlin
@@ -91,5 +93,3 @@ HyperNavBar(
 - 返回按钮是否出现、图标和导航行为均由调用方控制。
 - 自定义高度使用 `modifier.height(...)` 或 `heightIn(...)`；背景色使用 `HyperNavBarDefaults.colors(...)`。
 - 默认透明容器不绘制描边和阴影；沉浸式布局复用同一纯平导航视觉。
-
-<WasmPreview demo="nav-bar" title="HyperNavBar 交互预览" />

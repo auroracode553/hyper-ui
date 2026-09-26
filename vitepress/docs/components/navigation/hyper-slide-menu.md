@@ -8,6 +8,8 @@
 
 `HyperSlideMenu` 是可横向滚动的同级菜单，适合分类、筛选和标签较多的视图切换。每个项目直接复用 `HyperButton`，因此尺寸、形状、内容间距、中性细描边、`Outline` 强调色描边、按压反馈和禁用态都与按钮保持一致。
 
+<WasmPreview demo="slide-menu" title="HyperSlideMenu 交互预览" />
+
 ## 公开 API
 
 ```kotlin
@@ -105,5 +107,3 @@ HyperSlideMenu(
 - 菜单只管理横向排列、选中判断、禁用判断和 `Role.Tab` 语义；单项表面和交互统一由 `HyperButton` 提供。
 - `selectedColors`、`unselectedColors`、描边、形状和内容间距直接使用按钮类型，不再维护菜单专属按钮样式。
 - 选中状态即时更新，不执行滚动定位或选中动画。
-
-<WasmPreview demo="slide-menu" title="HyperSlideMenu 交互预览" />

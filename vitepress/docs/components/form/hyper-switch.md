@@ -7,6 +7,8 @@
 - Preview 注册：`preview/src/commonMain/kotlin/hyper_ui/docs/data/FormComponentDemos.kt`
 - Preview 交互：`preview/src/commonMain/kotlin/hyper_ui/docs/ui/FormComponentShowcases.kt`
 
+<WasmPreview demo="switch" title="HyperSwitch 交互预览" />
+
 ## 公开 API
 
 ```kotlin
@@ -96,5 +98,3 @@ HyperSwitch(
 - `HyperColors.accent`
 
 ## 交互预览
-
-<WasmPreview demo="switch" title="HyperSwitch 交互预览" />

@@ -6,6 +6,8 @@
 
 `HyperDrawer` 是四方向结构玻璃抽屉，无遮罩。面板使用 `HyperColors.cardContainer` 不透明基底，并通过公共 `HyperSurfaceDepth` 的 1dp 低对比度主题描边和单层 5dp 阴影建立空间关系；内部未选中项不重复铺底，选中项只增加轻量主题染色。`open` 直接控制面板是否渲染，不执行动画。
 
+<WasmPreview demo="drawer" title="HyperDrawer 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -146,5 +148,3 @@ HyperDrawer(
 - 抽屉打开与关闭均直接渲染或移除，不执行过渡动画。
 - Header/Item 不提供 `title`、`description`、`leadingIcon` 参数。
 - `open`、选中项和路由由调用方持有。
-
-<WasmPreview demo="drawer" title="HyperDrawer 交互预览" />

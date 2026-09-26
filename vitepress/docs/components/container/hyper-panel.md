@@ -7,6 +7,8 @@
 `HyperPanel` 是通用 slot 容器，只负责面板视觉与内容排列，不内置点击、标题、图标或业务状态。
 默认容器带 1dp 轻描边，白色背景下也能保持面板边界。
 
+<WasmPreview demo="panel" title="HyperPanel 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -68,5 +70,3 @@ HyperPanel(
 - 内容始终按 `shape` 裁剪，不再暴露无调用方使用价值的 `clipContent` 开关。
 - 自定义内容间距时使用 `contentModifier = Modifier.padding(...)`，不提供重复的 `contentPadding` 参数。
 - 需要完全无边框面板时显式传入 `border = null`；需要阴影时使用 `elevation`。
-
-<WasmPreview demo="panel" title="HyperPanel 交互预览" />

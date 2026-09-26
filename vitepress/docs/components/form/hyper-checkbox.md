@@ -8,6 +8,8 @@
 - Preview 注册：`preview/src/commonMain/kotlin/hyper_ui/docs/data/FormComponentDemos.kt`
 - Preview 交互：`preview/src/commonMain/kotlin/hyper_ui/docs/ui/FormComponentShowcases.kt`
 
+<WasmPreview demo="checkbox" title="HyperCheckbox 交互预览" />
+
 ## 公开 API
 
 ```kotlin
@@ -93,5 +95,3 @@ HyperCheckbox(
 - `HyperColors.accent`
 
 ## 交互预览
-
-<WasmPreview demo="checkbox" title="HyperCheckbox 交互预览" />

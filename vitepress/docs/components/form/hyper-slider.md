@@ -6,6 +6,8 @@
 
 `HyperSlider` 是可点击、可拖动的受控滑块，适合媒体播放进度、音量和数值范围选择。轨道可以保持连续，也可以显示等距或业务指定的分段点；滑块圆点统一使用“主题柔光环 + 外圆 + 中心点”三层视觉。
 
+<WasmPreview demo="slider" title="HyperSlider 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -131,5 +133,3 @@ HyperSlider(
 - 点击轨道会直接定位，拖动过程中持续调用 `onValueChange`。
 - 业务值、拖动预览和最终提交均由调用方持有；组件只维护拖动中的纯 UI 状态。
 - 自定义 `activeTrackColor` 时，未单独指定的中心点和柔光环会自动继承该颜色。
-
-<WasmPreview demo="slider" title="HyperSlider 交互预览" />

@@ -10,6 +10,8 @@
 
 它没有给 `HyperNavBar` 增加一个表面化的 `immersive` 布尔值，因为单独的导航栏无法控制兄弟节点的滚动起点和绘制层级。该组件负责精确测量并把顶部净空交给滚动容器，原 `HyperNavBar` 继续只负责三段式导航视觉和交互。
 
+<WasmPreview demo="immersive-nav-bar" title="HyperImmersiveNavBar 交互预览" />
+
 ## 公开 API
 
 ```kotlin
@@ -105,5 +107,3 @@ HyperImmersiveNavBar(
 - 不要把 `immersivePadding` 作为 `LazyColumn` 外层 Modifier 的固定 Padding，否则列表视口仍会被永久限制在导航栏下方。
 - 导航栏位于内容上层，其可见按钮区域会优先处理触摸；滚动内容的状态仍完全归调用方。
 - 若不需要系统状态栏避让，可显式传入零值 `WindowInsets`；默认行为适合 Android edge-to-edge 页面。
-
-<WasmPreview demo="immersive-nav-bar" title="HyperImmersiveNavBar 交互预览" />

@@ -7,6 +7,8 @@
 
 页面级分段懒列表，适合历史记录、最近文件、消息日期分组等动态数据。日期标题和每一条数据都会成为独立懒加载项目；每个非空分组自动形成独立的 16dp 圆角实色卡片，并由组件统一绘制组内分割线。调用方不需要计算首项、中间项、尾项圆角，也不需要判断最后一项是否显示分割线。
 
+<WasmPreview demo="hyper_sectioned_list" title="HyperSectionedList 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -112,5 +114,3 @@ HyperSectionedList(
 - 放入另一个同方向无界滚动容器前，应明确尺寸约束，避免嵌套滚动测量异常。
 
 ## 交互预览
-
-<WasmPreview demo="hyper_sectioned_list" title="HyperSectionedList 交互预览" />

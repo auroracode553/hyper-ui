@@ -5,6 +5,8 @@
 
 `HyperEmptyState` 是页面级空数据状态。组件直接使用 `HyperPanel` 承载标题、可选说明、图标 Slot 和操作 Slot，不自行绘制面板样式，也不持有加载、筛选、重试或导航等业务状态。
 
+<WasmPreview demo="empty_state" title="HyperEmptyState 交互预览" />
+
 ## 公开 API
 
 ```kotlin
@@ -90,5 +92,3 @@ HyperEmptyState(
 - 面板容器、内间距、内容间距、形状、描边和投影均使用 `HyperPanel` 默认值；`HyperEmptyState` 不维护第二套面板样式。
 
 ## Preview
-
-<WasmPreview demo="empty_state" title="HyperEmptyState 交互预览" />

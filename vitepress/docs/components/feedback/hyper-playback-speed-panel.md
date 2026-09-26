@@ -9,6 +9,8 @@
 
 `HyperPlaybackSpeedPanel` 是紧凑、固定深色且受控的播放速度设置面板；空间充足时默认约为 `468dp × 157dp`。`HyperPlaybackSpeedPanelOverlay` 在其外层补充全屏点击关闭区域。两者不读取外层应用的明暗模式，适合直接覆盖在视频画面上。组件只分发速度、关闭和自定义速度事件，不持有播放器或输入框业务状态。
 
+<WasmPreview demo="playback_speed_panel" title="HyperPlaybackSpeedPanel 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -163,5 +165,3 @@ HyperPlaybackSpeedPanelOverlay(
 - `modifier` 控制覆盖层，`panelModifier` 控制覆盖层内的面板；单独使用 `HyperPlaybackSpeedPanel` 时通过其 `modifier` 控制尺寸与位置。
 - 五个图标插槽均通过 `LocalContentColor` 接收当前语义色；为空时分别使用 Lucide Android 的 `gauge`、`x`、`rotate-ccw`、`move-horizontal` 与 `pencil` VectorDrawable，不再使用 Canvas 代码绘制图标。
 - Android 正式组件通过 `implementation` 使用 Lucide；Desktop/Wasm Preview 会排除 Android 图标映射文件，并使用 `hyper_ui.core.icon` 下的跨平台替身模拟交互。Wasm 画面不是图标资源 API 的事实来源。
-
-<WasmPreview demo="playback_speed_panel" title="HyperPlaybackSpeedPanel 交互预览" />

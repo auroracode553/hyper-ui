@@ -6,6 +6,8 @@
 
 `HyperListItem` 是 slot-first 列表行。它提供 leading、headline、supporting、trailing 四个区域，以及点击、禁用态和分割线。内容色、禁用态和分割线均以不透明实色绘制；组件会向各 slot 注入默认 `LocalTextStyle` 和 `LocalContentColor`，因此调用方直接写 `Text(...)` 也能得到稳定的标题/描述层级。
 
+<WasmPreview demo="hyper_list" title="HyperListItem 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -97,5 +99,3 @@ object HyperListItemDefaults {
 - 通过 `HyperListItemColors` 或 `HyperListItemDefaults.colors(...)` 传入含 alpha 的颜色时，会先与父 `HyperList` 或 `HyperMenuList` 的实际容器背景合成为实色；独立使用时按页面背景解析。
 - 行点击和 trailing 控件点击是否独立，由调用方在 slot 中组合。
 - 放入 `HyperMenuList`、`HyperList` 或 `HyperSectionedList` 时，父容器负责对应层级的圆角背景与裁剪。
-
-<WasmPreview demo="hyper_list" title="HyperListItem 交互预览" />

@@ -7,6 +7,8 @@
 
 `HyperBatteryIndicator` 是紧凑系统状态电池组件。电量百分比显示在电池内部，电量按比例填充；充电时使用充电色并在电池右侧展示独立闪电图标。组件保持纯渲染；Android 项目可通过 [HyperBatteryState 工具](../tools/hyper-battery-state.md) 获取系统状态。
 
+<WasmPreview demo="battery_indicator" title="HyperBatteryIndicator 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -88,5 +90,3 @@ if (batteryState.isAvailable) {
 - 建议调用方传入本地化的 `contentDescription`，其中包含电量和充电状态。
 - 默认电池主体为 `38×18dp`；Lucide 充电图标出现后组件整体宽度会自然增加。
 - 主体和端子均使用无描边的连续玻璃面，内部预留 `2.dp` 让电量填充与壳体自然分层；信息组件仅使用 `1.dp` 轻抬升，不呈现为按钮。
-
-<WasmPreview demo="battery_indicator" title="HyperBatteryIndicator 交互预览" />

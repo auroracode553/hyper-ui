@@ -6,6 +6,8 @@
 
 `HyperBatteryState` 工具统一读取 Android 的电量百分比和充电状态。非 Compose 场景可一次性读取；Compose 页面可直接订阅，工具会使用 Application Context 注册广播，并在离开 Composition 时自动注销。
 
+<WasmPreview demo="battery_indicator" title="HyperBatteryState 状态模拟" />
+
 ## 公开签名
 
 ```kotlin
@@ -59,5 +61,3 @@ if (batteryState.isAvailable) {
 - `rememberHyperBatteryState` 持有并返回 Compose `State`，广播变化会触发读取该状态的界面重组。
 - 工具不申请权限、不持有 Activity Context，也不负责渲染电池图标。
 - `readHyperBatteryState` 只读取调用当下状态，不会持续监听。
-
-<WasmPreview demo="battery_indicator" title="HyperBatteryState 状态模拟" />

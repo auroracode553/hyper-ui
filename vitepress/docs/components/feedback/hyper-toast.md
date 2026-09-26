@@ -9,6 +9,8 @@
 
 `hyperToast` 封装 Android 原生 `Toast`。调用方显式传入 `Context`，组件把短/长时长映射到平台常量，并保证最终在 Android 主线程显示。
 
+<WasmPreview demo="toast" title="hyperToast 交互模拟" />
+
 ## 公开 API
 
 ```kotlin
@@ -65,5 +67,3 @@ hyperToast(
 - 工具只负责原生 Toast 的显示与主线程调度，不保存队列、不去重，也不承载业务状态。
 - `messageResource` 必须是有效字符串资源 ID；数字消息应先转换为文本再调用 `message` 重载。
 - Desktop/Wasm Preview 不引入 Android 类，因而展示等价的交互模拟和真实 Android 调用片段。
-
-<WasmPreview demo="toast" title="hyperToast 交互模拟" />

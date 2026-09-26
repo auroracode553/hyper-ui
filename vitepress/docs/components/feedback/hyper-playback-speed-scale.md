@@ -7,6 +7,8 @@
 
 `HyperPlaybackSpeedScale` 是播放器长按临时加速使用的紧凑横向固定深色玻璃刻度。默认八档时，首尾档位位于轨道左右，中间档位位于轨道上方，当前倍速在下方居中显示；组件在常见手机宽度下约为 `310dp × 59dp`。组件只负责展示候选档位、当前高亮档位和实时倍速；内部轨道统一复用只读 `HyperSlider` 的分段点与三层圆点视觉，长按识别、横向拖动、临时设置播放器速度以及松手恢复仍由调用方处理。
 
+<WasmPreview demo="playback_speed_scale" title="HyperPlaybackSpeedScale 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -93,5 +95,3 @@ HyperPlaybackSpeedScale(
 - 组件提供确定进度语义，当前档位会映射为无障碍进度。
 - 默认容器固定为深色 `Color(0.10f, 0.11f, 0.14f, 0.96f)`，主要内容固定为近白色，不读取外层 `HyperTheme` 的明暗模式；强调色仍来自 `HyperThemeConfig`。
 - 固定深色玻璃使用 `0.12f` 顶部柔光、`0.12f` 底部折射和一层 `6.dp`、`0.30f` 黑色投影；没有边框或独立高光色入口。
-
-<WasmPreview demo="playback_speed_scale" title="HyperPlaybackSpeedScale 交互预览" />

@@ -6,6 +6,8 @@
 
 `HyperUpdateDialog` 使用不透明实色面板，统一展示检查中、已是最新、发现新版本、下载已入队和错误状态；内部按钮与进度指示器也不使用透明度。`HyperUpdateChecker` 负责版本判断，但不发起网络请求；调用方通过 `HyperReleaseLoader` 提供 Release 加载实现，并通过 `HyperUpdateRequest.releaseUrl` 传入检查地址。
 
+<WasmPreview demo="update_dialog" title="HyperUpdateDialog 交互预览" />
+
 ## 公开签名
 
 ```kotlin
@@ -128,5 +130,3 @@ HyperUpdateDialog(
 - `onDownload` 只表达用户确认；实际下载、权限和安装流程由调用方实现。
 - `texts` 可完整替换可见文案；默认提供简体中文。
 - 弹窗继承 `HyperAlertDialog` 禁用平台默认宽度、固定全尺寸根节点和屏蔽窗口动画的 Dialog 宿主；面板保持不透明实色。
-
-<WasmPreview demo="update_dialog" title="HyperUpdateDialog 交互预览" />
