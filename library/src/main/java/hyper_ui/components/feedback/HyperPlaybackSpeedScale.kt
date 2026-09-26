@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -181,7 +179,7 @@ private fun SpeedLabel(
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        Text(
+        HyperText(
             text = "${formatHyperPlaybackSpeed(speed)}x",
             color = if (selected) colors.selectedLabelColor else colors.labelColor,
             fontSize = 9.sp,
@@ -240,7 +238,7 @@ private fun CurrentSpeedValue(
             modifier = Modifier.size(HyperPlaybackSpeedScaleDefaults.LeadingIconSize),
             contentAlignment = Alignment.Center
         ) {
-            CompositionLocalProvider(LocalContentColor provides colors.valueColor) {
+            CompositionLocalProvider(LocalHyperContentColor provides colors.valueColor) {
                 if (leadingContent == null) {
                     HyperFastForwardIcon(
                         Modifier.size(HyperPlaybackSpeedScaleDefaults.LeadingIconSize)
@@ -250,7 +248,7 @@ private fun CurrentSpeedValue(
                 }
             }
         }
-        Text(
+        HyperText(
             text = "${formatHyperPlaybackSpeed(selectedSpeed)}x",
             color = colors.valueColor,
             fontWeight = FontWeight.Bold,

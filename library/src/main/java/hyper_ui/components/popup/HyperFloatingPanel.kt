@@ -20,9 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -63,7 +60,7 @@ internal fun HyperFloatingPanel(
         horizontalAlignment = horizontalAlignment,
         verticalArrangement = Arrangement.spacedBy(HyperFloatingPanelDefaults.ContentSpacing)
     ) {
-        CompositionLocalProvider(LocalContentColor provides HyperColors.primaryText) {
+        CompositionLocalProvider(LocalHyperContentColor provides HyperColors.primaryText) {
             if (resolvedTitle != null) {
                 HyperFloatingPanelTitle(title = resolvedTitle)
             }
@@ -111,11 +108,11 @@ internal fun HyperFloatingPanel(
 
 @Composable
 private fun HyperFloatingPanelTitle(title: String) {
-    Text(
+    HyperText(
         text = title,
         modifier = Modifier.fillMaxWidth(),
         color = HyperColors.primaryText,
-        style = MaterialTheme.typography.titleLarge,
+        style = HyperTheme.typography.titleLarge,
         fontWeight = FontWeight.SemiBold,
         textAlign = TextAlign.Center,
         maxLines = 2,

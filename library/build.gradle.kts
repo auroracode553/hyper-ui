@@ -29,13 +29,12 @@ android {
 }
 
 dependencies {
-    // HyperUI 状态切换均为即时渲染，组件层不引入 Compose Animation。
+    // 组件层不引入 Compose Animation。
     api(platform(libs.androidx.compose.bom))
     api("androidx.compose.foundation:foundation")
     api("androidx.compose.runtime:runtime")
     api("androidx.compose.ui:ui")
     api("androidx.compose.ui:ui-graphics")
-    api("androidx.compose.material3:material3")
     implementation(libs.lucide.icons.android)
 }
 

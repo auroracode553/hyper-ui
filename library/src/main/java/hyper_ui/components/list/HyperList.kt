@@ -71,7 +71,8 @@ fun HyperList(
 
 object HyperListDefaults {
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius)
-    val ContentPadding: PaddingValues = PaddingValues(0.dp)
+    /** 列表容器默认提供左右 16.dp 内容留白，子项（HyperListItem 等）无需重复设置水平 padding。 */
+    val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperListColors = HyperListColors(

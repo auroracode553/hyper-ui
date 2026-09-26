@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -62,27 +59,27 @@ fun HyperEmptyState(
         ) {
             iconContent?.let { icon ->
                 CompositionLocalProvider(
-                    LocalContentColor provides resolvedColors.iconContentColor
+                    LocalHyperContentColor provides resolvedColors.iconContentColor
                 ) {
                     icon()
                 }
             }
 
-            Text(
+            HyperText(
                 text = title,
                 modifier = Modifier.fillMaxWidth(),
                 color = resolvedColors.titleColor,
-                style = MaterialTheme.typography.titleMedium,
+                style = HyperTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center
             )
 
             if (supportingText != null) {
-                Text(
+                HyperText(
                     text = supportingText,
                     modifier = Modifier.fillMaxWidth(),
                     color = resolvedColors.descriptionColor,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = HyperTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center
                 )
             }

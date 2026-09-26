@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -24,7 +23,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.progressBarRangeInfo
@@ -112,7 +110,7 @@ fun HyperBatteryIndicator(
                         .background(fillColor, HyperBatteryIndicatorDefaults.LevelShape)
                 )
                 if (showPercentage) {
-                    Text(
+                    HyperText(
                         text = "$resolvedPercentage%",
                         modifier = Modifier.align(Alignment.Center),
                         color = colors.percentageColor,
@@ -149,7 +147,7 @@ fun HyperBatteryIndicator(
 
         if (charging) {
             CompositionLocalProvider(
-                LocalContentColor provides colors.chargingIconColor
+                LocalHyperContentColor provides colors.chargingIconColor
             ) {
                 HyperChargingIcon(
                     modifier = Modifier.size(

@@ -4,7 +4,6 @@ package hyper_ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -68,7 +67,7 @@ internal fun resolveHyperDisabledContainerColor(
 internal fun hyperPageMatchedContainerColor(lightContainerColor: Color): Color = if (HyperColors.isLight) {
     lightContainerColor
 } else {
-    MaterialTheme.colorScheme.background
+    HyperColors.pageBackground
 }
 
 @Composable

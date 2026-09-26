@@ -64,8 +64,8 @@ object HyperListItemDefaults {
     val SupportingMinHeight = 54.dp
     val ContentGap = 12.dp
     val TextGap = 3.dp
-    val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
-    val DividerInset = 16.dp
+    val ContentPadding = PaddingValues(vertical = 4.dp)
+    val DividerInset = 0.dp
     val DividerHeight = 1.dp
 
     fun minHeight(hasSupportingContent: Boolean): Dp
@@ -89,11 +89,11 @@ object HyperListItemDefaults {
 
 - 不存在 `title`、`description`、`leadingIcon`、`trailing` 参数。
 - 组件根据 `supportingContent` 自动选择行高：纯单行项保持紧凑的 `44.dp`，带说明文字的项使用 `54.dp` 增加纵向呼吸空间；长文本和较大 slot 仍会自然撑高。
-- `contentModifier` 默认应用水平 `16.dp`、垂直 `4.dp` 的 `HyperListItemDefaults.ContentPadding`；调用页面无需为单行/双行分别设置高度或 padding。
+- `contentModifier` 默认应用垂直 `4.dp` 的 `HyperListItemDefaults.ContentPadding`；左右留白统一由页面根容器或父列表容器（`HyperList` / `HyperMenuList` / `HyperSectionedList`）提供，行组件不再自带水平 padding。
 - `modifier` 作用于包含内容行和分割线的完整列表项外壳；圆角、背景、裁剪和组合手势不会再遗漏分割线。
 - `headlineContent` 默认使用 16sp/22sp，`supportingContent` 默认使用 13sp/17sp，两者间距为 `3.dp`；调用方显式传入 `style` 或 `fontSize` 时以调用方为准。
 - `dividerVisible = true` 时会绘制分割线；`HyperList` 不解析 Slot 顺序，最后一项由调用方关闭分割线；`HyperMenuList(items)` 会自动隐藏最后一项分割线；`HyperSectionedList` 由分段容器统一绘制分割线，行组件保持默认值即可。
-- 分割线默认使用 `HyperListItemDefaults.DividerInset` 缩进；自定义缩进或尺寸使用 `dividerModifier`，不提供 `dividerInset` 数值参数。
+- 分割线默认使用 `HyperListItemDefaults.DividerInset`（`0.dp`，与内容起点对齐）；自定义缩进或尺寸使用 `dividerModifier`，不提供 `dividerInset` 数值参数。
 - 通过 `HyperListItemColors` 或 `HyperListItemDefaults.colors(...)` 传入含 alpha 的颜色时，会先与父 `HyperList` 或 `HyperMenuList` 的实际容器背景合成为实色；独立使用时按页面背景解析。
 - 行点击和 trailing 控件点击是否独立，由调用方在 slot 中组合。
 - 放入 `HyperMenuList`、`HyperList` 或 `HyperSectionedList` 时，父容器负责对应层级的圆角背景与裁剪。

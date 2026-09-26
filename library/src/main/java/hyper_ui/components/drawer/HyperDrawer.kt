@@ -26,8 +26,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -164,7 +162,7 @@ fun HyperDrawer(
                         ),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    CompositionLocalProvider(LocalContentColor provides resolvedColors.contentColor) {
+                    CompositionLocalProvider(LocalHyperContentColor provides resolvedColors.contentColor) {
                         drawerContent()
                     }
                 }
@@ -274,7 +272,7 @@ fun HyperDrawerItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (leadingContent != null) {
-                CompositionLocalProvider(LocalContentColor provides contentColor) {
+                CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
                     leadingContent()
                 }
             }
@@ -288,25 +286,25 @@ fun HyperDrawerItem(
                     ),
                 verticalArrangement = Arrangement.spacedBy(3.dp)
             ) {
-                CompositionLocalProvider(LocalContentColor provides contentColor) {
+                CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
                     headlineContent()
                 }
                 if (supportingContent != null) {
-                    CompositionLocalProvider(LocalContentColor provides supportingColor) {
+                    CompositionLocalProvider(LocalHyperContentColor provides supportingColor) {
                         supportingContent()
                     }
                 }
             }
 
             if (trailingContent != null) {
-                CompositionLocalProvider(LocalContentColor provides contentColor) {
+                CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
                     trailingContent()
                 }
             }
         }
 
         if (dividerVisible) {
-            HorizontalDivider(
+            HyperDivider(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
                 color = resolvedColors.dividerColor
             )

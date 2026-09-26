@@ -10,9 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -46,7 +43,7 @@ fun <S, T> HyperSectionedList(
     itemKey: (S, T) -> Any,
     modifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = HyperSectionedListDefaults.ContentPadding,
     firstSectionTopSpacing: Dp = HyperSectionedListDefaults.FirstSectionTopSpacing,
     sectionSpacing: Dp = HyperSectionedListDefaults.SectionSpacing,
     headerBottomSpacing: Dp = HyperSectionedListDefaults.HeaderBottomSpacing,
@@ -103,8 +100,8 @@ fun <S, T> HyperSectionedList(
                         )
                 ) {
                     CompositionLocalProvider(
-                        LocalContentColor provides headerContentColor,
-                        LocalTextStyle provides HyperSectionedListDefaults.HeaderTextStyle
+                        LocalHyperContentColor provides headerContentColor,
+                        LocalHyperTextStyle provides HyperSectionedListDefaults.HeaderTextStyle
                     ) {
                         headerContent(section)
                     }
@@ -136,9 +133,11 @@ object HyperSectionedListDefaults {
     val SectionSpacing = 16.dp
     val HeaderBottomSpacing = 8.dp
     val DividerInset = HyperListItemDefaults.DividerInset
+    /** 分段列表默认提供左右 16.dp 内容留白，子项（HyperListItem 等）无需重复设置水平 padding。 */
+    val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
 
     val HeaderTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.titleSmall.copy(
+        @Composable get() = HyperTheme.typography.titleSmall.copy(
             fontSize = 15.sp,
             lineHeight = 20.sp,
             fontWeight = FontWeight.SemiBold

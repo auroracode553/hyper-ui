@@ -33,7 +33,7 @@ data class HyperListColors(
 
 object HyperListDefaults {
     val Shape: Shape
-    val ContentPadding: PaddingValues = PaddingValues(0.dp)
+    val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperListColors
@@ -50,7 +50,7 @@ object HyperListDefaults {
 | `modifier` | `Modifier` | `Modifier` | 列表根容器修饰符 |
 | `contentModifier` | `Modifier` | `Modifier` | 列表容器内部的布局修饰符 |
 | `state` | `LazyListState` | `rememberLazyListState()` | 懒列表滚动状态 |
-| `contentPadding` | `PaddingValues` | `HyperListDefaults.ContentPadding` | `LazyColumn` 的可滚动内容间距，可用于沉浸式页面首屏净空 |
+| `contentPadding` | `PaddingValues` | `HyperListDefaults.ContentPadding`（左右 `16.dp`） | `LazyColumn` 的可滚动内容间距，左右留白由容器统一提供，亦可用于沉浸式页面首屏净空 |
 | `verticalArrangement` | `Arrangement.Vertical` | 间距 `0.dp` | 条目纵向排列 |
 | `shape` | `Shape` | `HyperListDefaults.Shape` | 容器与内容裁剪形状，默认 12dp 轻圆角 |
 | `border` | `BorderStroke?` | `null` | 可选同形边框 |

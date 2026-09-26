@@ -14,9 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -114,8 +111,8 @@ fun HyperTabBar(
         ) {
             // Slot 模式只提供底栏外壳和默认内容色；具体点击、选中与禁用逻辑由调用方组合。
             CompositionLocalProvider(
-                LocalContentColor provides contentColor,
-                LocalTextStyle provides HyperTabBarDefaults.ItemTextStyle
+                LocalHyperContentColor provides contentColor,
+                LocalHyperTextStyle provides HyperTabBarDefaults.ItemTextStyle
             ) {
                 content()
             }
@@ -268,7 +265,7 @@ private fun RowScope.HyperTabBarItemContainer(
         ),
         contentAlignment = contentAlignment
     ) {
-        CompositionLocalProvider(LocalContentColor provides contentColor) {
+        CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
             content()
         }
     }
@@ -287,7 +284,7 @@ object HyperTabBarDefaults {
     val Shape: Shape = RoundedCornerShape(0.dp)
 
     val ItemTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.labelSmall
+        @Composable get() = HyperTheme.typography.labelSmall
 
     @Composable
     fun colors(
@@ -326,7 +323,7 @@ object HyperTabBarDefaults {
             if (HyperColors.isLight) {
                 rgba(0, 0, 0, 0.055f)
             } else {
-                MaterialTheme.colorScheme.background
+                HyperColors.pageBackground
             }
         )
     )

@@ -23,9 +23,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -341,8 +338,8 @@ internal fun <T> HyperFloatingTabBar(
                         contentAlignment = Alignment.Center
                     ) {
                         CompositionLocalProvider(
-                            LocalContentColor provides contentColor,
-                            LocalTextStyle provides HyperFloatingTabBarDefaults.ItemTextStyle
+                            LocalHyperContentColor provides contentColor,
+                            LocalHyperTextStyle provides HyperFloatingTabBarDefaults.ItemTextStyle
                         ) {
                             scope.itemContent(item)
                         }
@@ -416,8 +413,8 @@ internal fun HyperFloatingTabBar(
             verticalAlignment = verticalAlignment
         ) {
             CompositionLocalProvider(
-                LocalContentColor provides contentColor,
-                LocalTextStyle provides HyperFloatingTabBarDefaults.ItemTextStyle
+                LocalHyperContentColor provides contentColor,
+                LocalHyperTextStyle provides HyperFloatingTabBarDefaults.ItemTextStyle
             ) {
                 content()
             }
@@ -500,7 +497,7 @@ object HyperFloatingTabBarDefaults {
     val SelectionSpring: SpringSpec<Float> = spring(dampingRatio = 0.9686f, stiffness = 470f)
 
     val ItemTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.labelSmall
+        @Composable get() = HyperTheme.typography.labelSmall
 
     @Composable
     fun colors(
@@ -527,7 +524,7 @@ object HyperFloatingTabBarDefaults {
             ),
             selectedContentColor = resolveHyperContainerColor(
                 selectedContentColor,
-                MaterialTheme.colorScheme.primary
+                HyperColors.accent
             ),
             unselectedContentColor = resolvedUnselected,
             disabledContentColor = resolveHyperContainerColor(

@@ -2,12 +2,12 @@
 package hyper_ui.core.icon
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.composables.icons.lucide.R as LucideR
+import hyper_ui.HyperIcon
+import hyper_ui.LocalHyperContentColor
 
 @Composable
 internal fun HyperGaugeIcon(modifier: Modifier = Modifier) {
@@ -54,10 +54,10 @@ private fun HyperLucideIcon(
     drawableResource: Int,
     modifier: Modifier
 ) {
-    Icon(
+    HyperIcon(
         painter = painterResource(drawableResource),
         contentDescription = null,
         modifier = modifier.fillMaxSize(),
-        tint = LocalContentColor.current
+        tint = LocalHyperContentColor.current
     )
 }

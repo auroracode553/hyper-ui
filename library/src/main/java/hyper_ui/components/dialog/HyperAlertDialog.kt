@@ -3,7 +3,6 @@ package hyper_ui
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -29,7 +28,7 @@ fun HyperAlertDialog(
         val dialogColumnScope = this
 
         bodyContent?.let { body ->
-            CompositionLocalProvider(LocalContentColor provides HyperColors.secondaryText) {
+            CompositionLocalProvider(LocalHyperContentColor provides HyperColors.secondaryText) {
                 body.invoke(dialogColumnScope)
             }
         }

@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,13 +48,13 @@ fun HyperUpdateDialog(
                         modifier = Modifier.weight(1f),
                         tone = HyperButtonTone.Secondary
                     ) {
-                        Text(texts.cancelAction)
+                        HyperText(texts.cancelAction)
                     }
                     HyperButton(
                         onClick = onDownload,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(texts.downloadAction)
+                        HyperText(texts.downloadAction)
                     }
                 }
                 is HyperUpdateDialogState.Error -> {
@@ -65,13 +63,13 @@ fun HyperUpdateDialog(
                         modifier = Modifier.weight(1f),
                         tone = HyperButtonTone.Secondary
                     ) {
-                        Text(texts.closeAction)
+                        HyperText(texts.closeAction)
                     }
                     HyperButton(
                         onClick = onRetry,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(texts.retryAction)
+                        HyperText(texts.retryAction)
                     }
                 }
                 else -> {
@@ -80,7 +78,7 @@ fun HyperUpdateDialog(
                         modifier = Modifier.fillMaxWidth(),
                         tone = HyperButtonTone.Secondary
                     ) {
-                        Text(texts.closeAction)
+                        HyperText(texts.closeAction)
                     }
                 }
             }
@@ -114,7 +112,7 @@ private fun CheckingContent(
             strokeWidth = 3.dp
         )
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(texts.checkingMessage)
+            HyperText(texts.checkingMessage)
             SecondaryText("${texts.currentVersionLabel}：${state.currentVersionName}")
         }
     }
@@ -126,7 +124,7 @@ private fun UpToDateContent(
     texts: HyperUpdateDialogTexts
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(texts.upToDateMessage)
+        HyperText(texts.upToDateMessage)
         SecondaryText("${texts.currentVersionLabel}：${state.currentVersionName}")
     }
 }
@@ -137,9 +135,9 @@ private fun UpdateAvailableContent(
     texts: HyperUpdateDialogTexts
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
+        HyperText(
             text = state.release.displayName.ifBlank { state.release.versionName },
-            style = MaterialTheme.typography.titleMedium,
+            style = HyperTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold
         )
         SecondaryText("${texts.currentVersionLabel}：${state.currentVersionName}")
@@ -147,14 +145,14 @@ private fun UpdateAvailableContent(
         SecondaryText("${texts.packageFileLabel}：${state.release.packageFileName}")
 
         if (state.release.isPrerelease) {
-            Text(
+            HyperText(
                 text = texts.prereleaseWarning,
                 color = HyperColors.danger,
                 fontWeight = FontWeight.Medium
             )
         }
 
-        Text(
+        HyperText(
             text = texts.releaseNotesLabel,
             fontWeight = FontWeight.SemiBold
         )
@@ -170,7 +168,7 @@ private fun DownloadQueuedContent(
     texts: HyperUpdateDialogTexts
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(texts.downloadQueuedMessage)
+        HyperText(texts.downloadQueuedMessage)
         SecondaryText(state.release.packageFileName)
         SecondaryText(texts.downloadNotificationHint)
     }
@@ -178,7 +176,7 @@ private fun DownloadQueuedContent(
 
 @Composable
 private fun ErrorContent(state: HyperUpdateDialogState.Error) {
-    Text(
+    HyperText(
         text = state.message,
         color = HyperColors.danger
     )
@@ -186,7 +184,7 @@ private fun ErrorContent(state: HyperUpdateDialogState.Error) {
 
 @Composable
 private fun SecondaryText(text: String) {
-    Text(
+    HyperText(
         text = text,
         color = HyperColors.secondaryText
     )

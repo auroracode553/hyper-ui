@@ -18,7 +18,7 @@ fun <S, T> HyperSectionedList(
     itemKey: (S, T) -> Any,
     modifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = HyperSectionedListDefaults.ContentPadding,
     firstSectionTopSpacing: Dp = HyperSectionedListDefaults.FirstSectionTopSpacing,
     sectionSpacing: Dp = HyperSectionedListDefaults.SectionSpacing,
     headerBottomSpacing: Dp = HyperSectionedListDefaults.HeaderBottomSpacing,
@@ -45,6 +45,7 @@ object HyperSectionedListDefaults {
     val SectionSpacing = 16.dp
     val HeaderBottomSpacing = 8.dp
     val DividerInset = HyperListItemDefaults.DividerInset
+    val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
     val HeaderTextStyle: TextStyle
 
     @Composable
@@ -66,11 +67,11 @@ object HyperSectionedListDefaults {
 | `itemKey` | `(S, T) -> Any` | 必填 | 数据行的稳定且全局唯一 key |
 | `modifier` | `Modifier` | `Modifier` | 列表根容器尺寸和外部间距 |
 | `state` | `LazyListState` | `rememberLazyListState()` | 懒列表滚动状态 |
-| `contentPadding` | `PaddingValues` | `PaddingValues(0.dp)` | `LazyColumn` 内容区内边距 |
+| `contentPadding` | `PaddingValues` | `HyperSectionedListDefaults.ContentPadding`（左右 `16.dp`） | `LazyColumn` 内容区内边距，左右留白由容器统一提供 |
 | `firstSectionTopSpacing` | `Dp` | `0.dp` | 第一个非空分组标题上方间距 |
 | `sectionSpacing` | `Dp` | `16.dp` | 后续分组标题与上一组卡片之间的间距 |
 | `headerBottomSpacing` | `Dp` | `8.dp` | 分组标题与本组卡片之间的间距 |
-| `dividerModifier` | `Modifier` | 左侧缩进 `16.dp` | 组件自动绘制的组内分割线修饰符 |
+| `dividerModifier` | `Modifier` | 无缩进，与内容起点对齐 | 组件自动绘制的组内分割线修饰符 |
 | `colors` | `HyperSectionedListColors` | `HyperSectionedListDefaults.colors()` | 标题、卡片和分割线颜色，最终均解析为不透明实色 |
 | `headerContent` | `@Composable (S) -> Unit` | 必填 | 分组标题 Slot，默认获得 15sp/20sp 半粗体样式和次要文字色 |
 | `itemContent` | `@Composable (S, T) -> Unit` | 必填 | 单行内容 Slot，通常直接使用 `HyperListItem` |

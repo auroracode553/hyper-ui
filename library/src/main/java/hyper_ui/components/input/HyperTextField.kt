@@ -15,8 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -55,7 +53,7 @@ fun HyperTextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(
+    textStyle: TextStyle = HyperTheme.typography.bodyMedium.copy(
         fontSize = 16.sp,
         lineHeight = 22.sp
     ),
@@ -103,7 +101,7 @@ fun HyperTextField(
 
     Column(modifier = modifier) {
         if (labelContent != null) {
-            CompositionLocalProvider(LocalContentColor provides visuals.labelColor) {
+            CompositionLocalProvider(LocalHyperContentColor provides visuals.labelColor) {
                 Column(
                     modifier = Modifier.padding(start = 18.dp, bottom = 6.dp),
                     content = labelContent
@@ -144,7 +142,7 @@ fun HyperTextField(
                     verticalAlignment = verticalAlignment
                 ) {
                     if (startContent != null) {
-                        CompositionLocalProvider(LocalContentColor provides visuals.contentColor) {
+                        CompositionLocalProvider(LocalHyperContentColor provides visuals.contentColor) {
                             startContent()
                         }
                     }
@@ -159,7 +157,7 @@ fun HyperTextField(
                         contentAlignment = if (singleLine) Alignment.CenterStart else Alignment.TopStart
                     ) {
                         if (value.isEmpty() && placeholderContent != null) {
-                            CompositionLocalProvider(LocalContentColor provides visuals.placeholderColor) {
+                            CompositionLocalProvider(LocalHyperContentColor provides visuals.placeholderColor) {
                                 placeholderContent()
                             }
                         }
@@ -167,7 +165,7 @@ fun HyperTextField(
                     }
 
                     if (endContent != null) {
-                        CompositionLocalProvider(LocalContentColor provides visuals.contentColor) {
+                        CompositionLocalProvider(LocalHyperContentColor provides visuals.contentColor) {
                             endContent()
                         }
                     }
@@ -176,7 +174,7 @@ fun HyperTextField(
         )
 
         if (supportingContent != null) {
-            CompositionLocalProvider(LocalContentColor provides visuals.supportingColor) {
+            CompositionLocalProvider(LocalHyperContentColor provides visuals.supportingColor) {
                 Column(
                     modifier = Modifier.padding(start = 18.dp, top = 6.dp),
                     content = supportingContent

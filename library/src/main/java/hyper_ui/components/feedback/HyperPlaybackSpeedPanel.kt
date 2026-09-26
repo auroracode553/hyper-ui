@@ -21,10 +21,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -235,7 +231,7 @@ private fun HyperPlaybackSpeedPanelHeader(
                 .background(colors.accentColor.copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center
         ) {
-            CompositionLocalProvider(LocalContentColor provides colors.accentColor) {
+            CompositionLocalProvider(LocalHyperContentColor provides colors.accentColor) {
                 if (leadingContent == null) {
                     HyperGaugeIcon(Modifier.size(16.dp))
                 } else {
@@ -243,7 +239,7 @@ private fun HyperPlaybackSpeedPanelHeader(
                 }
             }
         }
-        Text(
+        HyperText(
             text = texts.title,
             modifier = Modifier.weight(1f),
             color = colors.contentColor,
@@ -259,7 +255,7 @@ private fun HyperPlaybackSpeedPanelHeader(
                 .padding(horizontal = 10.dp, vertical = 4.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
+            HyperText(
                 text = "${HyperPlaybackSpeedPanelDefaults.formatFixed(currentSpeed)}x",
                 color = colors.contentColor,
                 fontSize = 14.sp,
@@ -364,7 +360,7 @@ private fun HyperPlaybackSpeedLabels(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
+                HyperText(
                     text = "${HyperPlaybackSpeedPanelDefaults.formatCompact(speed)}x",
                     color = if (selected) {
                         colors.accentColor
@@ -403,7 +399,7 @@ private fun HyperPlaybackSpeedPanelFooter(
             contentAlignment = Alignment.Center
         ) {
             CompositionLocalProvider(
-                LocalContentColor provides colors.supportingContentColor
+                LocalHyperContentColor provides colors.supportingContentColor
             ) {
                 if (hintLeadingContent == null) {
                     HyperHorizontalDragIcon()
@@ -412,7 +408,7 @@ private fun HyperPlaybackSpeedPanelFooter(
                 }
             }
         }
-        Text(
+        HyperText(
             text = texts.realtimeHint,
             modifier = Modifier
                 .weight(1f)
@@ -474,7 +470,7 @@ private fun HyperPlaybackSpeedCustomAction(
             modifier = Modifier.size(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            CompositionLocalProvider(LocalContentColor provides colors.accentColor) {
+            CompositionLocalProvider(LocalHyperContentColor provides colors.accentColor) {
                 if (leadingContent == null) {
                     HyperEditIcon()
                 } else {
@@ -482,7 +478,7 @@ private fun HyperPlaybackSpeedCustomAction(
                 }
             }
         }
-        Text(
+        HyperText(
             text = text,
             color = colors.contentColor,
             fontSize = 11.sp,
@@ -509,25 +505,11 @@ private fun HyperPlaybackSpeedPanelDarkTheme(
     colors: HyperPlaybackSpeedPanelColors,
     content: @Composable () -> Unit
 ) {
-    val typography = MaterialTheme.typography
-    val shapes = MaterialTheme.shapes
-    val colorScheme = remember(colors) {
-        darkColorScheme(
-            primary = colors.accentColor,
-            onPrimary = colors.contentColor,
-            background = colors.containerBottomColor,
-            onBackground = colors.contentColor,
-            surface = colors.containerTopColor,
-            onSurface = colors.contentColor,
-            surfaceVariant = colors.contentColor.copy(alpha = 0.12f),
-            onSurfaceVariant = colors.supportingContentColor,
-            outline = colors.panelBorderColor
-        )
+    CompositionLocalProvider(
+        LocalHyperIsDark provides true,
+        LocalHyperContentColor provides colors.contentColor,
+        LocalHyperTextStyle provides HyperTheme.typography.bodyMedium
+    ) {
+        content()
     }
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = typography,
-        shapes = shapes,
-        content = content
-    )
 }

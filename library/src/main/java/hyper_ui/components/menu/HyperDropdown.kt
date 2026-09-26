@@ -19,9 +19,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -157,8 +154,8 @@ class HyperDropdownScope internal constructor(
                 .then(contentModifier),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CompositionLocalProvider(LocalContentColor provides contentColor) {
-                ProvideTextStyle(HyperDropdownDefaults.ItemTextStyle) {
+            CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
+                CompositionLocalProvider(LocalHyperTextStyle provides HyperDropdownDefaults.ItemTextStyle) {
                     content()
                 }
             }
@@ -167,7 +164,7 @@ class HyperDropdownScope internal constructor(
 
     @Composable
     fun Divider(modifier: Modifier = Modifier) {
-        HorizontalDivider(
+        HyperDivider(
             modifier = modifier.padding(HyperDropdownDefaults.DividerPadding),
             color = colors.dividerColor
         )

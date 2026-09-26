@@ -12,9 +12,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -105,8 +102,8 @@ fun HyperListItem(
         ) {
             if (leadingContent != null) {
                 CompositionLocalProvider(
-                    LocalContentColor provides contentColor,
-                    LocalTextStyle provides HyperListItemDefaults.LeadingTextStyle
+                    LocalHyperContentColor provides contentColor,
+                    LocalHyperTextStyle provides HyperListItemDefaults.LeadingTextStyle
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -124,17 +121,17 @@ fun HyperListItem(
                     ),
                 verticalArrangement = Arrangement.spacedBy(HyperListItemDefaults.TextGap)
             ) {
-                // 为裸 Text(...) 提供稳定的列表层级，调用方显式 style 仍可覆盖。
+                // 为裸 HyperText(...) 提供稳定的列表层级，调用方显式 style 仍可覆盖。
                 CompositionLocalProvider(
-                    LocalContentColor provides contentColor,
-                    LocalTextStyle provides HyperListItemDefaults.HeadlineTextStyle
+                    LocalHyperContentColor provides contentColor,
+                    LocalHyperTextStyle provides HyperListItemDefaults.HeadlineTextStyle
                 ) {
                     headlineContent()
                 }
                 if (supportingContent != null) {
                     CompositionLocalProvider(
-                        LocalContentColor provides supportingColor,
-                        LocalTextStyle provides HyperListItemDefaults.SupportingTextStyle
+                        LocalHyperContentColor provides supportingColor,
+                        LocalHyperTextStyle provides HyperListItemDefaults.SupportingTextStyle
                     ) {
                         supportingContent()
                     }
@@ -143,8 +140,8 @@ fun HyperListItem(
 
             if (trailingContent != null) {
                 CompositionLocalProvider(
-                    LocalContentColor provides contentColor,
-                    LocalTextStyle provides HyperListItemDefaults.TrailingTextStyle
+                    LocalHyperContentColor provides contentColor,
+                    LocalHyperTextStyle provides HyperListItemDefaults.TrailingTextStyle
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -183,8 +180,9 @@ object HyperListItemDefaults {
     val SupportingMinHeight = 54.dp
     val ContentGap = 12.dp
     val TextGap = 3.dp
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 4.dp)
-    val DividerInset = 16.dp
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 4.dp)
+    /** 分割线起点与内容起点保持一致（均从容器内容区开始）。 */
+    val DividerInset = 0.dp
     val DividerHeight = 1.dp
 
     /** 根据是否存在 supporting slot 返回稳定的默认行高，调用方无需判断内容密度。 */
@@ -195,25 +193,25 @@ object HyperListItemDefaults {
     }
 
     val LeadingTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.bodyMedium.copy(
+        @Composable get() = HyperTheme.typography.bodyMedium.copy(
             fontSize = 15.sp,
             lineHeight = 20.sp
         )
 
     val HeadlineTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.bodyLarge.copy(
+        @Composable get() = HyperTheme.typography.bodyLarge.copy(
             fontSize = 16.sp,
             lineHeight = 22.sp
         )
 
     val SupportingTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.bodyMedium.copy(
+        @Composable get() = HyperTheme.typography.bodyMedium.copy(
             fontSize = 13.sp,
             lineHeight = 17.sp
         )
 
     val TrailingTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.labelMedium.copy(
+        @Composable get() = HyperTheme.typography.labelMedium.copy(
             fontSize = 13.sp,
             lineHeight = 18.sp
         )

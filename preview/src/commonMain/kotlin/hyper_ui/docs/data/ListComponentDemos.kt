@@ -71,7 +71,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("数据入口", "items + itemContent", "静态菜单数据"),
             DemoVariant("外部修饰", "modifier", "间距或额外边框由调用方组合"),
-            DemoVariant("首尾留白", "ContentPadding = 4.dp", "紧凑避开卡片上下圆角边界"),
+            DemoVariant("统一留白", "ContentPadding = 16.dp 左右", "容器统一接管左右 16.dp 内容留白，子项无需重复设置水平 padding"),
             DemoVariant("Slot 入口", "content slot", "设置项与选择控件组合"),
             DemoVariant("列表条目", "trailingContent", "值、开关、复选与单选尾部内容")
         ),

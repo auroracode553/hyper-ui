@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -54,9 +51,9 @@ fun HyperNavBar(
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {
-        CompositionLocalProvider(LocalContentColor provides colors.contentColor) {
+        CompositionLocalProvider(LocalHyperContentColor provides colors.contentColor) {
             navigationContent?.invoke(this)
-            CompositionLocalProvider(LocalTextStyle provides HyperNavBarDefaults.TitleTextStyle) {
+            CompositionLocalProvider(LocalHyperTextStyle provides HyperNavBarDefaults.TitleTextStyle) {
                 Row(
                     modifier = Modifier.weight(1f),
                     verticalAlignment = verticalAlignment,
@@ -74,7 +71,7 @@ object HyperNavBarDefaults {
     val Shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
 
     val TitleTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.titleLarge.copy(
+        @Composable get() = HyperTheme.typography.titleLarge.copy(
             fontWeight = FontWeight.SemiBold
         )
 
