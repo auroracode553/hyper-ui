@@ -1,14 +1,5 @@
-:root {
-  --hyper-doc-preview-radius: 14px;
-}
-
 .wasm-preview {
   margin: 24px 0;
-  overflow: hidden;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: var(--hyper-doc-preview-radius);
-  background: var(--vp-c-bg);
-  box-shadow: var(--vp-shadow-2);
 }
 
 .wasm-preview__header {
@@ -16,10 +7,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 48px;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--vp-c-divider);
-  background: var(--vp-c-bg-soft);
+  padding: 2px 4px 14px;
 }
 
 .wasm-preview__title {
@@ -49,35 +37,109 @@
   outline-offset: 3px;
 }
 
-.wasm-preview__viewport {
+/* 舞台：居中放手机 */
+.wasm-preview__stage {
+  display: flex;
+  justify-content: center;
+  padding: 12px 4px 28px;
+  background: transparent;
+}
+
+/* 手机外壳：固定 350x680，大圆角 + 双层金属边框 */
+.wasm-preview__device {
   position: relative;
-  width: 100%;
-  background: var(--vp-c-bg-alt);
+  flex: 0 0 auto;
+  width: 350px;
+  height: 680px;
+  overflow: hidden;
+  border-radius: 48px;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 2px #0e1013,
+    0 0 0 5px #2a2d36,
+    0 18px 44px -22px rgba(28, 40, 72, 0.45);
+}
+
+.dark .wasm-preview__device {
+  background: #0b0d11;
+}
+
+/* 屏幕区域：让出顶部灵动岛安全区 */
+.wasm-preview__screen {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  background: var(--vp-c-bg);
 }
 
 .wasm-preview__frame {
   display: block;
   width: 100%;
+  height: 100%;
   border: 0;
   background: var(--vp-c-bg);
 }
 
+/* 灵动岛 + 摄像头 */
+.wasm-preview__notch {
+  position: absolute;
+  z-index: 5;
+  top: 12px;
+  left: 50%;
+  width: 100px;
+  height: 26px;
+  border-radius: 99px;
+  background: #0b0d11;
+  transform: translateX(-50%);
+}
+
+.wasm-preview__camera {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 14px);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1c2735;
+  box-shadow: inset 0 0 0 2px #274b66;
+  transform: translateY(-50%);
+}
+
+/* Home 指示条 */
+.wasm-preview__home-indicator {
+  position: absolute;
+  z-index: 10;
+  bottom: 8px;
+  left: 50%;
+  width: 134px;
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(0, 0, 0, 0.85);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.dark .wasm-preview__home-indicator {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* 加载/错误状态：覆盖在手机屏幕内 */
 .wasm-preview__status {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 24px;
-  padding: 32px 24px;
+  gap: 20px;
+  padding: 24px 18px;
   color: var(--vp-c-text-2);
   text-align: center;
   background: var(--vp-c-bg-alt);
-}
-
-.wasm-preview__status--overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
 }
 
 .wasm-preview__skeleton {
@@ -85,18 +147,19 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  width: min(100%, 360px);
-  min-height: 88px;
-  padding: 18px;
+  gap: 8px;
+  width: 100%;
+  max-width: 240px;
+  min-height: 72px;
+  padding: 14px;
   border: 1px solid var(--vp-c-divider);
-  border-radius: 12px;
+  border-radius: 14px;
   background: var(--vp-c-bg-soft);
 }
 
 .wasm-preview__skeleton span {
-  width: 76px;
-  height: 34px;
+  width: 64px;
+  height: 28px;
   border: 1px solid var(--vp-c-divider);
   border-radius: 999px;
   background: var(--vp-c-bg);
@@ -107,19 +170,20 @@
 }
 
 .wasm-preview__status-copy {
-  width: min(100%, 420px);
+  width: 100%;
+  max-width: 260px;
 }
 
 .wasm-preview__status-title {
   color: var(--vp-c-text-1);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1.5;
 }
 
 .wasm-preview__status-detail {
   padding-top: 6px;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.6;
 }
 
@@ -127,7 +191,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 .wasm-preview__steps span {
@@ -164,8 +228,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 16px;
-  margin-top: 14px;
+  gap: 14px;
+  margin-top: 12px;
 }
 
 .wasm-preview__status-actions button,
@@ -189,8 +253,7 @@
 }
 
 .wasm-preview__caption {
-  padding: 12px 16px;
-  border-top: 1px solid var(--vp-c-divider);
+  padding: 0 4px 4px;
   color: var(--vp-c-text-2);
   font-size: 13px;
   line-height: 1.6;
@@ -202,6 +265,22 @@
 
 .wasm-preview__caption > :last-child {
   margin-bottom: 0;
+}
+
+.wasm-preview__device:fullscreen {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.wasm-preview__device:fullscreen .wasm-preview__notch,
+.wasm-preview__device:fullscreen .wasm-preview__home-indicator {
+  display: none;
+}
+
+.wasm-preview__device:fullscreen .wasm-preview__screen {
+  top: 0;
 }
 
 @keyframes wasm-preview-progress {
@@ -216,17 +295,16 @@
   }
 }
 
-@media (max-width: 640px) {
-  .wasm-preview {
-    margin-right: -8px;
-    margin-left: -8px;
-    border-radius: 10px;
+/* 极窄窗口防溢出：手机撑满内容区，仅作兜底，不做布局切换 */
+@media (max-width: 420px) {
+  .wasm-preview__stage {
+    padding-right: 0;
+    padding-left: 0;
   }
 
-  .wasm-preview__header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 4px;
+  .wasm-preview__device {
+    width: 100%;
+    max-width: 350px;
+    height: 640px;
   }
-
 }

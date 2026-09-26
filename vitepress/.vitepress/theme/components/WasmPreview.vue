@@ -65,10 +65,6 @@ const resolvedSource = computed(() => {
   return `${source}${separator}embedded=1${demoHash ? `#${demoHash}` : ''}`
 })
 
-const frameHeight = computed(() =>
-  typeof props.height === 'number' ? `${props.height}px` : props.height
-)
-
 const displayPhase = computed<DisplayPhase>(() => {
   if (buildStatus.value?.phase === 'preparing') return 'preparing'
   if (buildStatus.value?.phase === 'compiling') return 'compiling'
@@ -253,46 +249,51 @@ onBeforeUnmount(() => {
       >在新窗口打开</a>
     </figcaption>
 
-    <div class="wasm-preview__viewport" :style="{ minHeight: frameHeight }">
-      <iframe
-        v-if="sourceAvailable"
-        :key="`${publishedVersion}-${props.demo || ''}-${frameAttempt}`"
-        ref="frame"
-        class="wasm-preview__frame"
-        :src="resolvedSource"
-        :title="title"
-        :style="{ height: frameHeight }"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allow="clipboard-write; fullscreen"
-        allowfullscreen
-        @load="onFrameLoad"
-      />
-      <div
-        v-if="displayPhase !== 'ready'"
-        class="wasm-preview__status"
-        :class="{ 'wasm-preview__status--overlay': sourceAvailable }"
-        :style="sourceAvailable ? undefined : { minHeight: frameHeight }"
-        :aria-busy="progressStep > 0 || displayPhase === 'checking'"
-      >
-        <div class="wasm-preview__skeleton" aria-hidden="true">
-          <span /><span /><span />
+    <div class="wasm-preview__stage">
+      <div class="wasm-preview__device">
+        <div class="wasm-preview__notch" aria-hidden="true">
+          <span class="wasm-preview__camera" />
         </div>
-        <div class="wasm-preview__status-copy">
-          <p class="wasm-preview__status-title" role="status">{{ statusText }}</p>
-          <p class="wasm-preview__status-detail">{{ statusDetail }}</p>
-          <div v-if="progressStep" class="wasm-preview__steps" :aria-label="`加载阶段 ${progressStep}/4`">
-            <span
-              v-for="step in 4"
-              :key="step"
-              :class="{ 'is-complete': step < progressStep, 'is-active': step === progressStep }"
-            />
-          </div>
-          <p v-if="progressStep" class="wasm-preview__step-label">{{ progressStep }} / 4</p>
-          <div v-if="displayPhase === 'error' || displayPhase === 'missing'" class="wasm-preview__status-actions">
-            <button type="button" @click="retryPreview">重新检查</button>
-            <a :href="withBase('/preview-update-workflow.html')">查看构建说明</a>
+        <div class="wasm-preview__screen">
+          <iframe
+            v-if="sourceAvailable"
+            :key="`${publishedVersion}-${props.demo || ''}-${frameAttempt}`"
+            ref="frame"
+            class="wasm-preview__frame"
+            :src="resolvedSource"
+            :title="title"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="clipboard-write; fullscreen"
+            allowfullscreen
+            @load="onFrameLoad"
+          />
+          <div
+            v-if="displayPhase !== 'ready'"
+            class="wasm-preview__status"
+            :aria-busy="progressStep > 0 || displayPhase === 'checking'"
+          >
+            <div class="wasm-preview__skeleton" aria-hidden="true">
+              <span /><span /><span />
+            </div>
+            <div class="wasm-preview__status-copy">
+              <p class="wasm-preview__status-title" role="status">{{ statusText }}</p>
+              <p class="wasm-preview__status-detail">{{ statusDetail }}</p>
+              <div v-if="progressStep" class="wasm-preview__steps" :aria-label="`加载阶段 ${progressStep}/4`">
+                <span
+                  v-for="step in 4"
+                  :key="step"
+                  :class="{ 'is-complete': step < progressStep, 'is-active': step === progressStep }"
+                />
+              </div>
+              <p v-if="progressStep" class="wasm-preview__step-label">{{ progressStep }} / 4</p>
+              <div v-if="displayPhase === 'error' || displayPhase === 'missing'" class="wasm-preview__status-actions">
+                <button type="button" @click="retryPreview">重新检查</button>
+                <a :href="withBase('/preview-update-workflow.html')">查看构建说明</a>
+              </div>
+            </div>
           </div>
         </div>
+        <div class="wasm-preview__home-indicator" aria-hidden="true" />
       </div>
     </div>
 
