@@ -59,7 +59,6 @@ kotlin {
             dependencies {
                 // Preview 与正式组件保持一致，不额外引入动画运行时。
                 implementation("org.jetbrains.compose.foundation:foundation:${libs.versions.composeMultiplatform.get()}")
-                implementation("org.jetbrains.compose.material3:material3:${libs.versions.composeMaterial3Version.get()}")
                 implementation("org.jetbrains.compose.material:material-icons-core:${libs.versions.composeMaterialIconsVersion.get()}")
                 implementation("org.jetbrains.compose.components:components-resources:${libs.versions.composeMultiplatform.get()}")
                 implementation("org.jetbrains.compose.runtime:runtime:${libs.versions.composeMultiplatform.get()}")

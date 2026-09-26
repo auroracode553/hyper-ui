@@ -1,5 +1,8 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/FormComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+import hyper_ui.*
+import hyper_ui.LocalHyperContentColor
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,10 +16,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -95,16 +94,16 @@ fun SegmentedDemo() {
             selectedItem = selectedPeriod,
             onSelected = { selectedPeriod = it }
         ) { period ->
-            Text(
+            HyperText(
                 text = period,
                 fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
                 fontSize = 13.sp,
                 lineHeight = 18.sp
             )
         }
-        Text(
+        HyperText(
             text = "当前周期：$selectedPeriod",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )
 
@@ -118,7 +117,7 @@ fun SegmentedDemo() {
                 selectedContentColor = Color(1f, 1f, 1f, 1f)
             )
         ) { mode ->
-            Text(
+            HyperText(
                 text = mode,
                 fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
                 fontSize = 13.sp,
@@ -187,10 +186,10 @@ fun TextFieldDemo() {
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton(onClick = { nameFocusRequester.requestFocus() }) {
-                Text("查看聚焦描边与阴影")
+                HyperText("查看聚焦描边与阴影")
             }
             HyperButton(onClick = { forceNoteError = !forceNoteError }) {
-                Text(if (forceNoteError) "关闭错误态" else "查看错误态")
+                HyperText(if (forceNoteError) "关闭错误态" else "查看错误态")
             }
         }
         HyperTextField(
@@ -222,13 +221,13 @@ fun TextFieldDemo() {
             onValueChange = { keyword = it },
             placeholderContent = { FieldPlaceholder("搜索组件") },
             colors = HyperTextFieldDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
+                containerColor = LocalDocsColorScheme.current.primaryContainer
             ),
             startContent = {
-                Icon(
+                HyperIcon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    tint = LocalContentColor.current,
+                    tint = LocalHyperContentColor.current,
                     modifier = Modifier.size(20.dp)
                 )
             },
@@ -238,7 +237,7 @@ fun TextFieldDemo() {
                         onClick = { keyword = "" },
                         modifier = Modifier.size(32.dp)
                     ) {
-                        Icon(
+                        HyperIcon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "清空搜索",
                             modifier = Modifier.size(HyperIconButtonDefaults.IconSize - 4.dp)
@@ -249,13 +248,13 @@ fun TextFieldDemo() {
                 null
             }
         )
-        Text(
+        HyperText(
             text = if (keyword.isBlank()) {
                 "左右插槽示例：当前未输入关键词"
             } else {
                 "左右插槽示例：当前关键词为 $keyword"
             },
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp
         )
@@ -309,7 +308,7 @@ fun SliderDemo() {
         modifier = Modifier.widthIn(max = 520.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(text = "紧凑连续进度 ${(continuousValue * 100).toInt()}%")
+        HyperText(text = "紧凑连续进度 ${(continuousValue * 100).toInt()}%")
         HyperSlider(
             value = continuousValue,
             onValueChange = { continuousValue = it },
@@ -324,9 +323,9 @@ fun SliderDemo() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "分段进度 ${steppedValue.toInt()}/5")
+            HyperText(text = "分段进度 ${steppedValue.toInt()}/5")
             HyperButton(onClick = { showSegmentMarkers = !showSegmentMarkers }) {
-                Text(if (showSegmentMarkers) "隐藏分段点" else "显示分段点")
+                HyperText(if (showSegmentMarkers) "隐藏分段点" else "显示分段点")
             }
         }
         HyperSlider(
@@ -341,7 +340,7 @@ fun SliderDemo() {
             )
         )
 
-        Text(text = "只读分段 · 指定主刻度")
+        HyperText(text = "只读分段 · 指定主刻度")
         HyperSlider(
             value = 3f,
             onValueChange = {},
@@ -352,7 +351,7 @@ fun SliderDemo() {
             modifier = Modifier.fillMaxWidth()
         )
 
-        Text(text = "禁用状态")
+        HyperText(text = "禁用状态")
         HyperSlider(
             value = 0.65f,
             onValueChange = {},
@@ -364,9 +363,9 @@ fun SliderDemo() {
 
 @Composable
 private fun FieldLabel(text: String) {
-    Text(
+    HyperText(
         text = text,
-        color = LocalContentColor.current,
+        color = LocalHyperContentColor.current,
         fontSize = 13.sp,
         lineHeight = 18.sp
     )
@@ -374,9 +373,9 @@ private fun FieldLabel(text: String) {
 
 @Composable
 private fun FieldPlaceholder(text: String) {
-    Text(
+    HyperText(
         text = text,
-        color = LocalContentColor.current,
+        color = LocalHyperContentColor.current,
         fontSize = 16.sp,
         lineHeight = 22.sp
     )
@@ -384,9 +383,9 @@ private fun FieldPlaceholder(text: String) {
 
 @Composable
 private fun FieldSupporting(text: String) {
-    Text(
+    HyperText(
         text = text,
-        color = LocalContentColor.current,
+        color = LocalHyperContentColor.current,
         fontSize = 12.sp,
         lineHeight = 16.sp
     )
@@ -425,12 +424,12 @@ private fun FormControlOption(
             verticalAlignment = Alignment.CenterVertically,
             content = control
         )
-        Text(
+        HyperText(
             text = text,
             color = if (enabled) {
-                MaterialTheme.colorScheme.onSurface
+                LocalDocsColorScheme.current.onSurface
             } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
+                LocalDocsColorScheme.current.onSurfaceVariant
             },
             fontSize = 15.sp,
             lineHeight = 20.sp

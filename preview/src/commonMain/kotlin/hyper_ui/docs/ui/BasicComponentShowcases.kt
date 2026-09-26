@@ -1,5 +1,7 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/BasicComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+import hyper_ui.*
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,9 +17,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,16 +46,16 @@ fun ButtonDemo() {
                 onClick = { clicks += 1 },
                 tone = HyperButtonTone.Outline
             ) {
-                Text(text = "轮廓")
+                HyperText(text = "轮廓")
             }
             HyperButton(onClick = { clicks += 1 }) {
-                Text(text = "主要")
+                HyperText(text = "主要")
             }
             HyperButton(
                 onClick = { clicks += 1 },
                 tone = HyperButtonTone.Tonal
             ) {
-                Text(text = "弱强调")
+                HyperText(text = "弱强调")
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -64,38 +63,38 @@ fun ButtonDemo() {
                 onClick = { clicks += 1 },
                 tone = HyperButtonTone.Secondary
             ) {
-                Text(text = "次要")
+                HyperText(text = "次要")
             }
             HyperButton(
                 onClick = { clicks += 1 },
                 tone = HyperButtonTone.Success
             ) {
-                Text(text = "成功")
+                HyperText(text = "成功")
             }
             HyperButton(
                 onClick = { clicks = 0 },
                 tone = HyperButtonTone.Danger
             ) {
-                Text(text = "危险")
+                HyperText(text = "危险")
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
                 onClick = { clicks += 1 }
             ) {
-                Icon(
+                HyperIcon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
                     modifier = Modifier.size(18.dp)
                 )
-                Text(text = "搜索")
+                HyperText(text = "搜索")
             }
             HyperButton(
                 onClick = {},
                 enabled = false,
                 tone = HyperButtonTone.Outline
             ) {
-                Text(text = "禁用")
+                HyperText(text = "禁用")
             }
         }
         HyperButton(
@@ -103,14 +102,14 @@ fun ButtonDemo() {
             modifier = Modifier.height(32.dp),
             contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
         ) {
-            Text(
+            HyperText(
                 text = "小尺寸 slot",
                 fontSize = 13.sp
             )
         }
-        Text(
+        HyperText(
             text = "点击次数：$clicks · 所有按钮均复用公共描边与阴影",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp
         )
@@ -132,7 +131,7 @@ fun IconButtonDemo() {
         ) {
             IconButtonVariantLabel(label = "默认玻璃") {
                 HyperIconButton(onClick = { selectedAction = "搜索" }) {
-                    Icon(
+                    HyperIcon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "搜索",
                         modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
@@ -143,13 +142,13 @@ fun IconButtonDemo() {
                 HyperIconButton(
                     onClick = { selectedAction = "通知" },
                     colors = HyperIconButtonDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.52f),
-                        pressedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.68f),
-                        contentColor = MaterialTheme.colorScheme.primary,
-                        pressedContentColor = MaterialTheme.colorScheme.onPrimary
+                        containerColor = LocalDocsColorScheme.current.primaryContainer.copy(alpha = 0.52f),
+                        pressedContainerColor = LocalDocsColorScheme.current.primary.copy(alpha = 0.68f),
+                        contentColor = LocalDocsColorScheme.current.primary,
+                        pressedContentColor = LocalDocsColorScheme.current.onPrimary
                     )
                 ) {
-                    Icon(
+                    HyperIcon(
                         imageVector = Icons.Default.Notifications,
                         contentDescription = "通知",
                         modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
@@ -161,13 +160,13 @@ fun IconButtonDemo() {
                     onClick = { selectedAction = "删除" },
                     shape = RoundedCornerShape(12.dp),
                     colors = HyperIconButtonDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.54f),
-                        pressedContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
-                        contentColor = MaterialTheme.colorScheme.error,
-                        pressedContentColor = MaterialTheme.colorScheme.onError
+                        containerColor = LocalDocsColorScheme.current.errorContainer.copy(alpha = 0.54f),
+                        pressedContainerColor = LocalDocsColorScheme.current.error.copy(alpha = 0.7f),
+                        contentColor = LocalDocsColorScheme.current.error,
+                        pressedContentColor = LocalDocsColorScheme.current.onError
                     )
                 ) {
-                    Icon(
+                    HyperIcon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "删除",
                         modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
@@ -176,7 +175,7 @@ fun IconButtonDemo() {
             }
             IconButtonVariantLabel(label = "禁用状态") {
                 HyperIconButton(onClick = {}, enabled = false) {
-                    Icon(
+                    HyperIcon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "关闭",
                         modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
@@ -193,13 +192,13 @@ fun IconButtonDemo() {
                     onClick = { selectedAction = "媒体控制" },
                     modifier = Modifier.size(56.dp),
                     colors = HyperIconButtonDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.64f),
-                        pressedContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.76f),
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        pressedContentColor = MaterialTheme.colorScheme.primary
+                        containerColor = LocalDocsColorScheme.current.primary.copy(alpha = 0.64f),
+                        pressedContainerColor = LocalDocsColorScheme.current.primaryContainer.copy(alpha = 0.76f),
+                        contentColor = LocalDocsColorScheme.current.onPrimaryContainer,
+                        pressedContentColor = LocalDocsColorScheme.current.primary
                     )
                 ) {
-                    Icon(
+                    HyperIcon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "媒体控制",
                         modifier = Modifier.size(24.dp)
@@ -211,12 +210,12 @@ fun IconButtonDemo() {
                     onClick = { selectedAction = "中性操作" },
                     modifier = Modifier.size(56.dp),
                     colors = HyperIconButtonDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.58f),
-                        pressedContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.72f),
-                        contentColor = MaterialTheme.colorScheme.onSurface
+                        containerColor = LocalDocsColorScheme.current.surfaceVariant.copy(alpha = 0.58f),
+                        pressedContainerColor = LocalDocsColorScheme.current.secondaryContainer.copy(alpha = 0.72f),
+                        contentColor = LocalDocsColorScheme.current.onSurface
                     )
                 ) {
-                    Icon(
+                    HyperIcon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "中性操作",
                         modifier = Modifier.size(24.dp)
@@ -224,14 +223,14 @@ fun IconButtonDemo() {
                 }
             }
         }
-        Text(
+        HyperText(
             text = selectedAction,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )
-        Text(
+        HyperText(
             text = "按钮始终无描边；浅色模式增强默认阴影，按住后阴影立即收低。",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center
         )
@@ -248,9 +247,9 @@ private fun IconButtonVariantLabel(
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         content()
-        Text(
+        HyperText(
             text = label,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 12.sp,
             lineHeight = 16.sp
         )

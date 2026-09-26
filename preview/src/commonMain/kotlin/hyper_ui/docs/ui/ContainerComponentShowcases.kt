@@ -1,5 +1,7 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/ContainerComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+import hyper_ui.*
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import hyper_ui.*
 import androidx.compose.foundation.background
@@ -17,10 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,10 +60,10 @@ fun ColorPickerDemo() {
                     .clip(CircleShape)
                     .background(currentOption.color)
             )
-            Text(
+            HyperText(
                 text = "当前选择：${currentOption.label}",
                 fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurface
+                color = LocalDocsColorScheme.current.onSurface
             )
         }
     }
@@ -78,7 +76,7 @@ fun PanelDemo() {
     HyperPanel(
         modifier = Modifier.widthIn(max = 520.dp),
         colors = HyperPanelDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = LocalDocsColorScheme.current.surface
         )
     ) {
         Row(
@@ -87,36 +85,36 @@ fun PanelDemo() {
         ) {
             ContainerIconBadge(
                 imageVector = if (acknowledged) Icons.Default.Star else Icons.Default.Check,
-                tint = MaterialTheme.colorScheme.secondary,
-                background = MaterialTheme.colorScheme.secondaryContainer
+                tint = LocalDocsColorScheme.current.secondary,
+                background = LocalDocsColorScheme.current.secondaryContainer
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(
+                HyperText(
                     text = "系统状态",
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = LocalDocsColorScheme.current.onSurface,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                Text(
+                HyperText(
                     text = if (acknowledged) "已查看状态详情" else "运行正常，最近同步 2 分钟前",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = LocalDocsColorScheme.current.onSurfaceVariant,
                     fontSize = 14.sp
                 )
             }
         }
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        HyperDivider(color = LocalDocsColorScheme.current.outlineVariant)
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
                 onClick = { acknowledged = true }
             ) {
-                Text(text = "查看详情")
+                HyperText(text = "查看详情")
             }
             HyperButton(
                 onClick = { acknowledged = false },
                 tone = HyperButtonTone.Outline
             ) {
-                Text(text = "重置")
+                HyperText(text = "重置")
             }
         }
     }
@@ -135,7 +133,7 @@ private fun ContainerIconBadge(
             .background(background),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
+        HyperIcon(
             imageVector = imageVector,
             contentDescription = null,
             tint = tint,

@@ -1,12 +1,15 @@
 /** 文件职责：在 hyper_ui 中负责维护 preview/src/commonMain/kotlin/hyper_ui/docs/theme/DocsTheme 的主题、样式与布局规范。 */
 package hyper_ui.docs.theme
 
-import hyper_ui.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import hyper_ui.HyperThemeConfig
+import hyper_ui.LocalHyperContentColor
+import hyper_ui.LocalHyperTextStyle
+import hyper_ui.rgba
 
 internal val DocsBackground = rgba(247, 248, 250, 1f)
 internal val DocsSidebar = rgba(255, 255, 255, 1f)
@@ -16,6 +19,72 @@ internal val DocsCodeText = rgba(229, 236, 247, 1f)
 internal val DocsPreviewBackground = rgba(242, 242, 247, 1f)
 
 internal val DefaultDocsThemeColor = rgba(255, 103, 0, 1f)
+
+// 文档浅色主题的固定语义色，替代原 material3 lightColorScheme 的对应槽位。
+internal val DocsOnBackground = rgba(28, 28, 30, 1f)
+internal val DocsOnSurface = rgba(28, 28, 30, 1f)
+internal val DocsOnSurfaceVariant = rgba(142, 142, 147, 1f)
+internal val DocsSecondary = rgba(5, 150, 105, 1f)
+internal val DocsSecondaryContainer = rgba(204, 232, 220, 1f)
+internal val DocsOnSecondaryContainer = rgba(0, 32, 26, 1f)
+internal val DocsTertiaryContainer = rgba(255, 220, 194, 1f)
+internal val DocsOnTertiaryContainer = rgba(58, 40, 0, 1f)
+internal val DocsError = rgba(220, 38, 38, 1f)
+internal val DocsOnError = rgba(255, 255, 255, 1f)
+internal val DocsErrorContainer = rgba(254, 226, 226, 1f)
+internal val DocsInverseSurface = rgba(44, 44, 46, 1f)
+internal val DocsInverseOnSurface = rgba(242, 242, 247, 1f)
+
+/** 文档主题语义色集合：替代原 material3 ColorScheme 的对应槽位，随主题色动态生成。 */
+internal data class DocsColorScheme(
+    val background: Color,
+    val onBackground: Color,
+    val surface: Color,
+    val onSurface: Color,
+    val surfaceVariant: Color,
+    val onSurfaceVariant: Color,
+    val primary: Color,
+    val onPrimary: Color,
+    val primaryContainer: Color,
+    val onPrimaryContainer: Color,
+    val secondary: Color,
+    val secondaryContainer: Color,
+    val onSecondaryContainer: Color,
+    val tertiaryContainer: Color,
+    val onTertiaryContainer: Color,
+    val error: Color,
+    val onError: Color,
+    val errorContainer: Color,
+    val outlineVariant: Color,
+    val inverseSurface: Color,
+    val inverseOnSurface: Color,
+)
+
+internal val LocalDocsColorScheme = staticCompositionLocalOf {
+    DocsColorScheme(
+        background = DocsBackground,
+        onBackground = DocsOnBackground,
+        surface = DocsSidebar,
+        onSurface = DocsOnSurface,
+        surfaceVariant = DocsPreviewBackground,
+        onSurfaceVariant = DocsOnSurfaceVariant,
+        primary = DefaultDocsThemeColor,
+        onPrimary = rgba(255, 255, 255, 1f),
+        primaryContainer = rgba(255, 233, 214, 1f),
+        onPrimaryContainer = rgba(61, 24, 0, 1f),
+        secondary = DocsSecondary,
+        secondaryContainer = DocsSecondaryContainer,
+        onSecondaryContainer = DocsOnSecondaryContainer,
+        tertiaryContainer = DocsTertiaryContainer,
+        onTertiaryContainer = DocsOnTertiaryContainer,
+        error = DocsError,
+        onError = DocsOnError,
+        errorContainer = DocsErrorContainer,
+        outlineVariant = DocsBorder,
+        inverseSurface = DocsInverseSurface,
+        inverseOnSurface = DocsInverseOnSurface,
+    )
+}
 
 internal fun Color.blendWith(white: Color, ratio: Float): Color {
     val r = red * (1f - ratio) + white.red * ratio
@@ -38,6 +107,10 @@ internal fun Color.darken(ratio: Float): Color {
     )
 }
 
+/**
+ * 文档主题：基于 hyper-ui 自有主题体系（HyperThemeConfig + 文档语义色 + 默认字体样式），
+ * 替代原 material3 MaterialTheme/lightColorScheme 包裹。
+ */
 @Composable
 fun HyperDocsTheme(
     themeColor: Color = DefaultDocsThemeColor,
@@ -56,26 +129,20 @@ fun HyperDocsTheme(
         themeColor.blendWith(rgba(255, 255, 255, 1f), 0.2f)
     }
 
+    val scheme = LocalDocsColorScheme.current.copy(
+        primary = themeColor,
+        onPrimary = onPrimaryColor,
+        primaryContainer = primaryContainerColor,
+        onPrimaryContainer = onPrimaryContainerColor,
+    )
+
     HyperThemeConfig(themeColor = themeColor) {
-        MaterialTheme(
-            colorScheme = lightColorScheme(
-                primary = themeColor,
-                onPrimary = onPrimaryColor,
-                primaryContainer = primaryContainerColor,
-                onPrimaryContainer = onPrimaryContainerColor,
-                secondary = rgba(5, 150, 105, 1f),
-                background = DocsBackground,
-                onBackground = rgba(28, 28, 30, 1f),
-                surface = rgba(255, 255, 255, 1f),
-                onSurface = rgba(28, 28, 30, 1f),
-                surfaceVariant = rgba(242, 242, 247, 1f),
-                onSurfaceVariant = rgba(142, 142, 147, 1f),
-                outlineVariant = DocsBorder,
-                error = rgba(220, 38, 38, 1f),
-                errorContainer = rgba(254, 226, 226, 1f)
-            ),
-            typography = docsTypography(),
-            content = content
-        )
+        CompositionLocalProvider(
+            LocalDocsColorScheme provides scheme,
+            LocalHyperContentColor provides scheme.onSurface,
+            LocalHyperTextStyle provides docsTextStyle(),
+        ) {
+            content()
+        }
     }
 }

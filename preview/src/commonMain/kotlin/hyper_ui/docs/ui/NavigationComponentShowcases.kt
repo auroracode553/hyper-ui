@@ -1,5 +1,7 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/NavigationComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+import hyper_ui.*
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,9 +31,6 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -80,7 +79,7 @@ fun NavBarDemo() {
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(20.dp))
-                .background(MaterialTheme.colorScheme.surface)
+                .background(LocalDocsColorScheme.current.surface)
                 .padding(vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -97,7 +96,7 @@ fun NavBarDemo() {
                     null
                 },
                 titleContent = {
-                    Text(text = if (showBack) "可返回页面" else "一级页面")
+                    HyperText(text = if (showBack) "可返回页面" else "一级页面")
                 },
                 actionContent = {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -114,10 +113,10 @@ fun NavBarDemo() {
                     }
                 }
             )
-            Text(
+            HyperText(
                 text = "透明底色保留页面连续性；导航栏自身不绘制描边和阴影。",
                 modifier = Modifier.padding(horizontal = 16.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = LocalDocsColorScheme.current.onSurfaceVariant,
                 fontSize = 13.sp,
                 lineHeight = 18.sp
             )
@@ -125,7 +124,7 @@ fun NavBarDemo() {
                 onClick = { showBack = !showBack },
                 tone = HyperButtonTone.Tonal
             ) {
-                Text(text = if (showBack) "隐藏返回 slot" else "显示返回 slot")
+                HyperText(text = if (showBack) "隐藏返回 slot" else "显示返回 slot")
             }
         }
     }
@@ -158,7 +157,7 @@ fun ImmersiveNavBarDemo() {
             )
         },
         titleContent = {
-            Text(text = "沉浸页面", maxLines = 1)
+            HyperText(text = "沉浸页面", maxLines = 1)
         },
         actionContent = {
             TopBarIconButton(
@@ -169,12 +168,12 @@ fun ImmersiveNavBarDemo() {
         },
         headerContent = if (showHeader) {
             {
-                Text(
+                HyperText(
                     text = "固定头部也会计入首屏净空",
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 10.dp),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    color = LocalDocsColorScheme.current.onSecondaryContainer
                 )
             }
         } else null
@@ -182,7 +181,7 @@ fun ImmersiveNavBarDemo() {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.secondaryContainer),
+                .background(LocalDocsColorScheme.current.secondaryContainer),
             contentPadding = immersivePadding,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -193,15 +192,15 @@ fun ImmersiveNavBarDemo() {
                         .padding(horizontal = 20.dp, vertical = 28.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Text(
+                    HyperText(
                         text = "透明导航栏下的内容",
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = LocalDocsColorScheme.current.onSecondaryContainer,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Text(
+                    HyperText(
                         text = "初始位置自动避让顶部操作区；现在向上滚动查看沉浸效果。",
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = LocalDocsColorScheme.current.onSecondaryContainer
                     )
                 }
             }
@@ -209,10 +208,10 @@ fun ImmersiveNavBarDemo() {
                 HyperPanel(
                     modifier = Modifier.padding(horizontal = 14.dp),
                     colors = HyperPanelDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surface
+                        containerColor = LocalDocsColorScheme.current.surface
                     )
                 ) {
-                    Text(text = section, modifier = Modifier.padding(16.dp))
+                    HyperText(text = section, modifier = Modifier.padding(16.dp))
                 }
             }
             item(key = "bottom_clearance") {
@@ -242,7 +241,7 @@ fun DrawerDemo() {
             .height(420.dp)
             .clip(RoundedCornerShape(28.dp))
             .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(28.dp))
-            .background(MaterialTheme.colorScheme.background)
+            .background(LocalDocsColorScheme.current.background)
     ) {
         HyperDrawer(
             open = open,
@@ -261,7 +260,7 @@ fun DrawerDemo() {
                 HyperDrawerHeader(
                     leadingContent = {
                         DrawerBadge {
-                            Icon(
+                            HyperIcon(
                                 imageVector = Icons.Default.Menu,
                                 contentDescription = null,
                                 modifier = Modifier.size(22.dp)
@@ -269,7 +268,7 @@ fun DrawerDemo() {
                         }
                     },
                     headlineContent = {
-                        Text(
+                        HyperText(
                             text = "HyperUI",
                             fontSize = 20.sp,
                             lineHeight = 26.sp,
@@ -277,7 +276,7 @@ fun DrawerDemo() {
                         )
                     },
                     supportingContent = {
-                        Text(
+                        HyperText(
                             text = "${drawerPosition.label()}抽屉",
                             fontSize = 13.sp,
                             lineHeight = 18.sp
@@ -293,14 +292,14 @@ fun DrawerDemo() {
                             open = false
                         },
                         leadingContent = {
-                            Icon(
+                            HyperIcon(
                                 imageVector = item.icon,
                                 contentDescription = null,
                                 modifier = Modifier.size(22.dp)
                             )
                         },
                         headlineContent = {
-                            Text(
+                            HyperText(
                                 text = item.label,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium
@@ -313,19 +312,19 @@ fun DrawerDemo() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(LocalDocsColorScheme.current.background)
                     .padding(14.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text(
+                HyperText(
                     text = "${drawerPosition.label()}抽屉示例 · 当前选中: $selectedPageId",
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = LocalDocsColorScheme.current.onSurface,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                Text(
+                HyperText(
                     text = "抽屉使用共享的低对比度描边和低抬升单层阴影；选中项只增加轻量主题染色。不执行动画，外部区域不绘制遮罩。",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = LocalDocsColorScheme.current.onSurfaceVariant,
                     fontSize = 13.sp,
                     lineHeight = 18.sp
                 )
@@ -339,7 +338,7 @@ fun DrawerDemo() {
                     },
                     tone = HyperButtonTone.Tonal
                 ) {
-                    Text(
+                    HyperText(
                         text = if (drawerContentScrollEnabled) {
                             "面板滚动"
                         } else {
@@ -351,7 +350,7 @@ fun DrawerDemo() {
                     onClick = { defaultSetPadding = !defaultSetPadding },
                     tone = HyperButtonTone.Tonal
                 ) {
-                    Text(
+                    HyperText(
                         text = if (defaultSetPadding) {
                             "默认 Padding 已开启"
                         } else {
@@ -360,7 +359,7 @@ fun DrawerDemo() {
                     )
                 }
                 HyperButton(onClick = { open = true }) {
-                    Text(text = "打开${drawerPosition.label()}抽屉")
+                    HyperText(text = "打开${drawerPosition.label()}抽屉")
                 }
             }
         }
@@ -383,8 +382,8 @@ fun SlideMenuDemo() {
     val selectedColors = if (useCustomSelectionColors) {
         HyperButtonDefaults.colors(
             tone = selectedTone,
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+            containerColor = LocalDocsColorScheme.current.tertiaryContainer,
+            contentColor = LocalDocsColorScheme.current.onTertiaryContainer
         )
     } else {
         HyperButtonDefaults.colors(selectedTone)
@@ -399,13 +398,13 @@ fun SlideMenuDemo() {
                 onClick = { useOutlineSelection = !useOutlineSelection },
                 tone = if (useOutlineSelection) HyperButtonTone.Tonal else HyperButtonTone.Secondary
             ) {
-                Text(if (useOutlineSelection) "选中项：描边" else "选中项：实色")
+                HyperText(if (useOutlineSelection) "选中项：描边" else "选中项：实色")
             }
             HyperButton(
                 onClick = { useCustomSelectionColors = !useCustomSelectionColors },
                 tone = if (useCustomSelectionColors) HyperButtonTone.Tonal else HyperButtonTone.Secondary
             ) {
-                Text(if (useCustomSelectionColors) "自定义配色：开" else "自定义配色：关")
+                HyperText(if (useCustomSelectionColors) "自定义配色：开" else "自定义配色：关")
             }
         }
         // 示例只把分类文本交给 slot；组件本身不拥有分类、计数或业务筛选规则。
@@ -418,11 +417,11 @@ fun SlideMenuDemo() {
             selectedTone = selectedTone,
             selectedColors = selectedColors
         ) { item ->
-            Text(text = item, fontSize = 13.sp)
+            HyperText(text = item, fontSize = 13.sp)
         }
-        Text(
+        HyperText(
             text = "当前选中：$selected",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp
         )
@@ -460,7 +459,7 @@ fun TabBarDemo() {
                 .height(460.dp)
                 .clip(RoundedCornerShape(28.dp))
                 .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(28.dp))
-                .background(MaterialTheme.colorScheme.background)
+                .background(LocalDocsColorScheme.current.background)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Column(
@@ -469,19 +468,19 @@ fun TabBarDemo() {
                         .padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text(
+                    HyperText(
                         text = "$selectedTitle 内容区",
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = LocalDocsColorScheme.current.onSurface,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    Text(
+                    HyperText(
                         text = if (floating) {
                             "悬浮样式：静止时是紧凑选中托盘，按住后展开水珠；拖动可跟手移动，松手后按速度投影并弹簧吸附。"
                         } else {
                             "贴底样式：0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式与页面同色。底栏总高度为 60dp。"
                         },
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = LocalDocsColorScheme.current.onSurfaceVariant,
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     )
@@ -494,7 +493,7 @@ fun TabBarDemo() {
                                 HyperButtonTone.Tonal
                             }
                         ) {
-                            Text(text = "贴底样式")
+                            HyperText(text = "贴底样式")
                         }
                         HyperButton(
                             onClick = { barType = HyperTabBarType.Floating },
@@ -504,7 +503,7 @@ fun TabBarDemo() {
                                 HyperButtonTone.Tonal
                             }
                         ) {
-                            Text(text = "悬浮胶囊")
+                            HyperText(text = "悬浮胶囊")
                         }
                     }
                     if (!floating) {
@@ -512,7 +511,7 @@ fun TabBarDemo() {
                             onClick = { showTopDivider = !showTopDivider },
                             tone = HyperButtonTone.Tonal
                         ) {
-                            Text(text = if (showTopDivider) "隐藏顶部发丝线" else "显示顶部发丝线")
+                            HyperText(text = if (showTopDivider) "隐藏顶部发丝线" else "显示顶部发丝线")
                         }
                     } else {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -520,18 +519,18 @@ fun TabBarDemo() {
                                 showFiveItems = !showFiveItems
                                 if (!showFiveItems && selectedItemId == "search") selectedItemId = "home"
                             }, tone = HyperButtonTone.Tonal) {
-                                Text(if (showFiveItems) "显示 4 项" else "显示 5 项")
+                                HyperText(if (showFiveItems) "显示 4 项" else "显示 5 项")
                             }
                             HyperButton(onClick = { useAccent = !useAccent }, tone = HyperButtonTone.Tonal) {
-                                Text(if (useAccent) "默认配色" else "强调配色")
+                                HyperText(if (useAccent) "默认配色" else "强调配色")
                             }
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             HyperButton(onClick = { disableNotice = !disableNotice }, tone = HyperButtonTone.Tonal) {
-                                Text(if (disableNotice) "启用消息" else "禁用消息")
+                                HyperText(if (disableNotice) "启用消息" else "禁用消息")
                             }
                             HyperButton(onClick = { barEnabled = !barEnabled }, tone = HyperButtonTone.Tonal) {
-                                Text(if (barEnabled) "禁用整栏" else "启用整栏")
+                                HyperText(if (barEnabled) "禁用整栏" else "启用整栏")
                             }
                         }
                     }
@@ -545,8 +544,8 @@ fun TabBarDemo() {
                     onItemClick = { item -> selectedItemId = item.id },
                     floatingColors = if (useAccent) {
                         HyperFloatingTabBarDefaults.colors(
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer,
-                            selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            indicatorColor = LocalDocsColorScheme.current.primaryContainer,
+                            selectedContentColor = LocalDocsColorScheme.current.onPrimaryContainer
                         )
                     } else {
                         HyperFloatingTabBarDefaults.colors()
@@ -565,12 +564,12 @@ fun TabBarDemo() {
                             Arrangement.Center
                         }
                     ) {
-                        Icon(
+                        HyperIcon(
                             imageVector = item.icon,
                             contentDescription = item.label,
                             modifier = Modifier.size(if (floating) 20.dp else 24.dp)
                         )
-                        Text(text = item.label, fontSize = 11.sp)
+                        HyperText(text = item.label, fontSize = 11.sp)
                     }
                 }
             }
@@ -585,7 +584,7 @@ private fun TopBarIconButton(
     onClick: () -> Unit
 ) {
     HyperIconButton(onClick = onClick) {
-        Icon(
+        HyperIcon(
             imageVector = imageVector,
             contentDescription = contentDescription,
             modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
@@ -599,7 +598,7 @@ private fun DrawerBadge(content: @Composable () -> Unit) {
         modifier = Modifier
             .size(42.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primaryContainer),
+            .background(LocalDocsColorScheme.current.primaryContainer),
         contentAlignment = Alignment.Center
     ) {
         content()
@@ -650,7 +649,7 @@ private fun DrawerPositionButton(
         modifier = Modifier.height(36.dp),
         tone = if (selected) HyperButtonTone.Primary else HyperButtonTone.Outline
     ) {
-        Text(
+        HyperText(
             text = text,
             fontSize = 13.sp
         )

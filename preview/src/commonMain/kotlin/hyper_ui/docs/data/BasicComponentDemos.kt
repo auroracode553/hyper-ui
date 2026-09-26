@@ -1,5 +1,7 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/data/BasicComponentDemos 可复用界面组件及交互封装。 */
 package hyper_ui.docs.data
+import hyper_ui.*
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import hyper_ui.docs.ui.ButtonDemo
 import hyper_ui.docs.ui.IconButtonDemo
@@ -14,15 +16,15 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         description = "Slot-first 实色按钮容器。所有 tone 复用公共控件描边与单层阴影，按下时立即收低，禁用态移除阴影。",
         code = """
             HyperButton(onClick = onSave) {
-                Icon(Icons.Default.Search, contentDescription = null)
-                Text("搜索")
+                HyperIcon(Icons.Default.Search, contentDescription = null)
+                HyperText("搜索")
             }
 
             HyperButton(
                 onClick = onDelete,
                 tone = HyperButtonTone.Danger
             ) {
-                Text("删除")
+                HyperText("删除")
             }
         """.trimIndent(),
         variants = listOf(
@@ -47,7 +49,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             HyperIconButton(
                 onClick = onSearch
             ) {
-                Icon(
+                HyperIcon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "搜索",
                     modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
@@ -58,12 +60,12 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
                 onClick = onPlay,
                 modifier = Modifier.size(56.dp),
                 colors = HyperIconButtonDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.64f),
-                    pressedContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.76f),
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = LocalDocsColorScheme.current.primary.copy(alpha = 0.64f),
+                    pressedContainerColor = LocalDocsColorScheme.current.primaryContainer.copy(alpha = 0.76f),
+                    contentColor = LocalDocsColorScheme.current.onPrimaryContainer
                 )
             ) {
-                Icon(Icons.Default.PlayArrow, contentDescription = "播放")
+                HyperIcon(Icons.Default.PlayArrow, contentDescription = "播放")
             }
         """.trimIndent(),
         variants = listOf(

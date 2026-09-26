@@ -1,5 +1,8 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/FeedbackComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+import hyper_ui.*
+import hyper_ui.LocalHyperContentColor
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,10 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -72,12 +71,12 @@ fun EmptyStateDemo() {
                 tone = HyperButtonTone.Outline,
                 onClick = { showDescription = !showDescription }
             ) {
-                Text(if (showDescription) "隐藏说明" else "显示说明")
+                HyperText(if (showDescription) "隐藏说明" else "显示说明")
             }
-            Text(
+            HyperText(
                 text = feedback,
                 modifier = Modifier.align(Alignment.CenterVertically),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = LocalDocsColorScheme.current.onSurfaceVariant,
                 fontSize = 13.sp
             )
         }
@@ -86,7 +85,7 @@ fun EmptyStateDemo() {
             modifier = Modifier.weight(1f),
             description = if (showDescription) "浏览过的页面会显示在这里" else null,
             iconContent = {
-                Icon(
+                HyperIcon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
                     modifier = Modifier.size(44.dp)
@@ -94,7 +93,7 @@ fun EmptyStateDemo() {
             },
             actionContent = {
                 HyperButton(onClick = { feedback = "已请求重新加载" }) {
-                    Text("重新加载")
+                    HyperText("重新加载")
                 }
             }
         )
@@ -119,9 +118,9 @@ fun DropdownMenuDemo() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text(
+            HyperText(
                 text = "内容自适应宽度 · 纯文字菜单",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = LocalDocsColorScheme.current.onSurfaceVariant,
                 fontSize = 13.sp
             )
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -129,13 +128,13 @@ fun DropdownMenuDemo() {
                     onClick = { expanded = true },
                     tone = HyperButtonTone.Outline
                 ) {
-                    Text(text = "打开菜单")
+                    HyperText(text = "打开菜单")
                 }
                 HyperButton(
                     onClick = { useCoolTint = !useCoolTint },
                     tone = HyperButtonTone.Tonal
                 ) {
-                    Text(text = if (useCoolTint) "恢复默认色" else "冷色面板")
+                    HyperText(text = if (useCoolTint) "恢复默认色" else "冷色面板")
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -143,18 +142,18 @@ fun DropdownMenuDemo() {
                     onClick = { desktopEnabled = !desktopEnabled },
                     tone = HyperButtonTone.Outline
                 ) {
-                    Text(text = if (desktopEnabled) "禁用桌面项" else "启用桌面项")
+                    HyperText(text = if (desktopEnabled) "禁用桌面项" else "启用桌面项")
                 }
                 HyperButton(
                     onClick = { showDivider = !showDivider },
                     tone = HyperButtonTone.Tonal
                 ) {
-                    Text(text = if (showDivider) "隐藏分隔线" else "显示分隔线")
+                    HyperText(text = if (showDivider) "隐藏分隔线" else "显示分隔线")
                 }
             }
-            Text(
+            HyperText(
                 text = selectedAction,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = LocalDocsColorScheme.current.onSurfaceVariant,
                 fontSize = 13.sp
             )
         }
@@ -175,19 +174,19 @@ fun DropdownMenuDemo() {
             }
         ) {
             Item(onClick = { selectedAction = "已选择：更换背景" }) {
-                Text(text = "更换背景")
+                HyperText(text = "更换背景")
             }
             Item(onClick = { selectedAction = "已选择：设为私密" }) {
-                Text(text = "设为私密")
+                HyperText(text = "设为私密")
             }
             Item(onClick = { selectedAction = "已选择：移动到" }) {
-                Text(text = "移动到")
+                HyperText(text = "移动到")
             }
             Item(
                 onClick = { selectedAction = "已选择：设置提醒（菜单保持展开）" },
                 closeOnClick = false
             ) {
-                Text(text = "设置提醒")
+                HyperText(text = "设置提醒")
             }
             if (showDivider) {
                 Divider()
@@ -196,13 +195,13 @@ fun DropdownMenuDemo() {
                 onClick = { selectedAction = "已选择：发送到桌面" },
                 enabled = desktopEnabled
             ) {
-                Text(text = "发送到桌面")
+                HyperText(text = "发送到桌面")
             }
             Item(
                 onClick = { selectedAction = "已选择：删除" },
                 tone = HyperDropdownItemTone.Danger
             ) {
-                Text(text = "删除")
+                HyperText(text = "删除")
             }
         }
     }
@@ -224,7 +223,7 @@ fun ToastDemo() {
                 message = "保存成功"
                 duration = "Short"
             }) {
-                Text("短提示")
+                HyperText("短提示")
             }
             HyperButton(
                 onClick = {
@@ -233,28 +232,28 @@ fun ToastDemo() {
                 },
                 tone = HyperButtonTone.Outline
             ) {
-                Text("长提示")
+                HyperText("长提示")
             }
         }
         Box(
             modifier = Modifier
                 .widthIn(min = 220.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.inverseSurface,
+                    color = LocalDocsColorScheme.current.inverseSurface,
                     shape = RoundedCornerShape(8.dp)
                 )
                 .padding(horizontal = 16.dp, vertical = 10.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
+            HyperText(
                 text = message,
-                color = MaterialTheme.colorScheme.inverseOnSurface,
+                color = LocalDocsColorScheme.current.inverseOnSurface,
                 textAlign = TextAlign.Center
             )
         }
-        Text(
+        HyperText(
             text = "模拟时长：HyperToastDuration.$duration",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )
     }
@@ -274,15 +273,15 @@ fun ProgressDemo() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
+                HyperText(
                     text = "确定进度 · 实色轨道",
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = LocalDocsColorScheme.current.onSurface,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                Text(
+                HyperText(
                     text = "${(progress * 100).toInt()}%",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = LocalDocsColorScheme.current.onSurfaceVariant,
                     fontSize = 13.sp
                 )
             }
@@ -297,20 +296,20 @@ fun ProgressDemo() {
                     tone = HyperButtonTone.Outline,
                     onClick = { progress = (progress - 0.1f).coerceAtLeast(0f) }
                 ) {
-                    Text(text = "减少")
+                    HyperText(text = "减少")
                 }
                 HyperButton(
                     onClick = { progress = (progress + 0.1f).coerceAtMost(1f) }
                 ) {
-                    Text(text = "增加")
+                    HyperText(text = "增加")
                 }
             }
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(
+            HyperText(
                 text = "自定义颜色",
-                color = MaterialTheme.colorScheme.onSurface,
+                color = LocalDocsColorScheme.current.onSurface,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -332,7 +331,7 @@ fun ProgressDemo() {
                 modifier = Modifier.size(44.dp),
                 strokeWidth = 4.dp,
                 colors = HyperProgressIndicatorDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.primary
+                    indicatorColor = LocalDocsColorScheme.current.primary
                 )
             )
         }
@@ -353,7 +352,7 @@ fun LevelCapsuleDemo() {
             label = "${(progress * 100).toInt()}%",
             iconContent = if (showIcon) {
                 {
-                    Icon(
+                    HyperIcon(
                         imageVector = Icons.Default.Info,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp)
@@ -377,18 +376,18 @@ fun LevelCapsuleDemo() {
                 tone = HyperButtonTone.Outline,
                 onClick = { progress = (progress - 0.1f).coerceAtLeast(0f) }
             ) {
-                Text("降低")
+                HyperText("降低")
             }
             HyperButton(
                 onClick = { progress = (progress + 0.1f).coerceAtMost(1f) }
             ) {
-                Text("提高")
+                HyperText("提高")
             }
             HyperButton(
                 tone = HyperButtonTone.Outline,
                 onClick = { showIcon = !showIcon }
             ) {
-                Text(if (showIcon) "隐藏图标" else "显示图标")
+                HyperText(if (showIcon) "隐藏图标" else "显示图标")
             }
         }
     }
@@ -421,23 +420,23 @@ fun BatteryIndicatorDemo() {
                 tone = HyperButtonTone.Outline,
                 onClick = { percentage = (percentage - 10).coerceAtLeast(0) }
             ) {
-                Text("减少电量")
+                HyperText("减少电量")
             }
             HyperButton(
                 onClick = { percentage = (percentage + 10).coerceAtMost(100) }
             ) {
-                Text("增加电量")
+                HyperText("增加电量")
             }
             HyperButton(
                 tone = HyperButtonTone.Outline,
                 onClick = { charging = !charging }
             ) {
-                Text(if (charging) "停止充电" else "开始充电")
+                HyperText(if (charging) "停止充电" else "开始充电")
             }
         }
-        Text(
+        HyperText(
             text = "模拟 Android 电池工具输出：常规、低电量与充电状态。",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center
         )
@@ -466,11 +465,11 @@ fun HyperDialogDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HyperButton(onClick = { visible = true }) {
-            Text("显示 Dialog")
+            HyperText("显示 Dialog")
         }
-        Text(
+        HyperText(
             text = "禁用平台默认宽度；面板在稳定的全尺寸 Dialog 根节点内居中。",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center
         )
@@ -482,7 +481,7 @@ fun HyperDialogDemo() {
         title = "稳定输入",
         actionContent = {
             HyperButton(onClick = { visible = false }) {
-                Text("确定")
+                HyperText("确定")
             }
         }
     ) {
@@ -513,7 +512,7 @@ fun DialogDemo() {
                 showDialog = true
             }
         ) {
-            Text(text = "删除数据")
+            HyperText(text = "删除数据")
         }
         HyperButton(
             tone = HyperButtonTone.Outline,
@@ -522,22 +521,22 @@ fun DialogDemo() {
                 showDialog = true
             }
         ) {
-            Text(text = "查看 70% 高度长内容")
+            HyperText(text = "查看 70% 高度长内容")
         }
         HyperButton(
             tone = HyperButtonTone.Outline,
             onClick = { dismissOnClickOutside = !dismissOnClickOutside }
         ) {
-            Text(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
+            HyperText(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
         }
-        Text(
+        HyperText(
             text = resultText,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )
-        Text(
+        HyperText(
             text = "Alert 打开时直接居中，无顶部位移或显示动画",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )
     }
@@ -553,10 +552,10 @@ fun DialogDemo() {
         bodyContent = {
             if (showLongContent) {
                 repeat(18) { index ->
-                    Text(
+                    HyperText(
                         text = "第 ${index + 1} 项可滚动内容",
                         modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = LocalDocsColorScheme.current.onSurfaceVariant,
                         fontSize = 15.sp
                     )
                 }
@@ -573,7 +572,7 @@ fun DialogDemo() {
                     showDialog = false
                 }
             ) {
-                Text(text = "取消")
+                HyperText(text = "取消")
             }
             HyperButton(
                 modifier = Modifier.weight(1f),
@@ -583,7 +582,7 @@ fun DialogDemo() {
                     showDialog = false
                 }
             ) {
-                Text(text = "继续删除")
+                HyperText(text = "继续删除")
             }
         }
     )
@@ -607,30 +606,30 @@ fun HyperPopupDemo() {
                 showPopup = true
             }
         ) {
-            Text(text = "编辑备注")
+            HyperText(text = "编辑备注")
         }
         HyperButton(
             tone = HyperButtonTone.Outline,
             onClick = { dismissOnClickOutside = !dismissOnClickOutside }
         ) {
-            Text(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
+            HyperText(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
         }
-        Text(
+        HyperText(
             text = "当前备注：$savedNote",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp
         )
-        Text(
+        HyperText(
             text = "可缩放预览窗口验证：浮层始终相对窗口居中，宽度限制在 280–360dp，最大高度为窗口的 70%。",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp,
             textAlign = TextAlign.Center
         )
-        Text(
+        HyperText(
             text = "基础浮层由 Popup 位置提供器居中；模态任务应使用独立的 HyperDialog。",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center
         )
@@ -646,7 +645,7 @@ fun HyperPopupDemo() {
                 tone = HyperButtonTone.Outline,
                 onClick = { showPopup = false }
             ) {
-                Text(text = "取消")
+                HyperText(text = "取消")
             }
             HyperButton(
                 onClick = {
@@ -654,7 +653,7 @@ fun HyperPopupDemo() {
                     showPopup = false
                 }
             ) {
-                Text(text = "保存")
+                HyperText(text = "保存")
             }
         }
     ) {
@@ -690,13 +689,13 @@ fun UpdateDialogDemo() {
                     )
                 }
             ) {
-                Text("发现更新")
+                HyperText("发现更新")
             }
             HyperButton(
                 tone = HyperButtonTone.Outline,
                 onClick = { state = HyperUpdateDialogState.Checking("1.0.0") }
             ) {
-                Text("检查中")
+                HyperText("检查中")
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -704,7 +703,7 @@ fun UpdateDialogDemo() {
                 tone = HyperButtonTone.Outline,
                 onClick = { state = HyperUpdateDialogState.UpToDate("1.2.0") }
             ) {
-                Text("已是最新")
+                HyperText("已是最新")
             }
             HyperButton(
                 tone = HyperButtonTone.Outline,
@@ -715,17 +714,17 @@ fun UpdateDialogDemo() {
                     )
                 }
             ) {
-                Text("请求失败")
+                HyperText("请求失败")
             }
         }
-        Text(
+        HyperText(
             text = resultText,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )
-        Text(
+        HyperText(
             text = "更新弹窗及内部按钮、进度指示器均为实色",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )
     }
@@ -756,9 +755,9 @@ private fun ColumnScope.popupContent(
     value: String,
     onValueChange: (String) -> Unit
 ) {
-    Text(
+    HyperText(
         text = "标题固定在顶部，正文内容和输入框在中间区域滚动。",
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        color = LocalDocsColorScheme.current.onSurfaceVariant,
         fontSize = 13.sp,
         lineHeight = 18.sp
     )
@@ -768,9 +767,9 @@ private fun ColumnScope.popupContent(
         modifier = Modifier.fillMaxWidth(),
         inputModifier = Modifier.heightIn(min = 88.dp, max = 220.dp),
         placeholderContent = {
-            Text(
+            HyperText(
                 text = "请输入备注",
-                color = LocalContentColor.current
+                color = LocalHyperContentColor.current
             )
         },
         singleLine = false,
@@ -781,9 +780,9 @@ private fun ColumnScope.popupContent(
 
 @Composable
 private fun DialogBody(text: String) {
-    Text(
+    HyperText(
         text = text,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        color = LocalDocsColorScheme.current.onSurfaceVariant,
         fontSize = 16.sp,
         lineHeight = 22.sp,
         textAlign = TextAlign.Center,

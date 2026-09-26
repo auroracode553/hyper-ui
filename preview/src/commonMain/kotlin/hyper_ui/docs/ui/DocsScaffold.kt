@@ -1,5 +1,7 @@
 /** 文件职责：在 hyper_ui 中负责承载 preview/src/commonMain/kotlin/hyper_ui/docs/ui/DocsScaffold 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui.docs.ui
+import hyper_ui.*
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import hyper_ui.*
 import androidx.compose.foundation.background
@@ -25,9 +27,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -72,9 +71,10 @@ fun HyperDocsApp(
         if (embeddedPreview) {
             EmbeddedComponentPreview(demo = selectedDemo)
         } else {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(LocalDocsColorScheme.current.background)
             ) {
                 SelectionContainer {
                     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -162,16 +162,16 @@ private fun DocsSidebar(
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text(
+            HyperText(
                 text = "HyperUI",
-                color = MaterialTheme.colorScheme.onSurface,
+                color = LocalDocsColorScheme.current.onSurface,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
                 lineHeight = 32.sp
             )
-            Text(
+            HyperText(
                 text = "Android Compose 组件文档",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = LocalDocsColorScheme.current.onSurfaceVariant,
                 fontSize = 13.sp,
                 lineHeight = 18.sp
             )
@@ -184,9 +184,9 @@ private fun DocsSidebar(
 
         groupedDemos.forEach { (group, items) ->
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
+                HyperText(
                     text = group,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = LocalDocsColorScheme.current.onSurfaceVariant,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     lineHeight = 16.sp
@@ -209,9 +209,9 @@ private fun ThemeColorPicker(
     onColorChange: (Color) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(
+        HyperText(
             text = "主题色",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             lineHeight = 16.sp
@@ -251,9 +251,9 @@ private fun MobileTopNav(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text(
+        HyperText(
             text = "HyperUI",
-            color = MaterialTheme.colorScheme.onSurface,
+            color = LocalDocsColorScheme.current.onSurface,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             lineHeight = 28.sp
@@ -273,7 +273,7 @@ private fun MobileTopNav(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(10.dp))
+                .background(LocalDocsColorScheme.current.surfaceVariant, RoundedCornerShape(10.dp))
                 .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(10.dp))
                 .padding(horizontal = 10.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -286,9 +286,9 @@ private fun MobileTopNav(
                     .background(themeController.color)
                     .border(width = 1.dp, color = DocsBorder, shape = CircleShape)
             )
-            Text(
+            HyperText(
                 text = "主题色",
-                color = MaterialTheme.colorScheme.onSurface,
+                color = LocalDocsColorScheme.current.onSurface,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -303,12 +303,12 @@ private fun DocsNavItem(
     onClick: () -> Unit
 ) {
     val textColor = if (selected) {
-        MaterialTheme.colorScheme.primary
+        LocalDocsColorScheme.current.primary
     } else {
-        MaterialTheme.colorScheme.onSurface
+        LocalDocsColorScheme.current.onSurface
     }
 
-    Text(
+    HyperText(
         text = title,
         modifier = Modifier
             .fillMaxWidth()
@@ -320,7 +320,7 @@ private fun DocsNavItem(
             .then(
                 if (selected) {
                     Modifier.background(
-                        MaterialTheme.colorScheme.primaryContainer,
+                        LocalDocsColorScheme.current.primaryContainer,
                         RoundedCornerShape(8.dp)
                     )
                 } else {
@@ -341,10 +341,10 @@ private fun DocsNavChip(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    val background = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
-    val textColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+    val background = if (selected) LocalDocsColorScheme.current.primary else LocalDocsColorScheme.current.surfaceVariant
+    val textColor = if (selected) LocalDocsColorScheme.current.onPrimary else LocalDocsColorScheme.current.onSurface
 
-    Text(
+    HyperText(
         text = title,
         modifier = Modifier
             .background(background, RoundedCornerShape(8.dp))
@@ -385,16 +385,16 @@ private fun ComponentContent(
 @Composable
 private fun ComponentHeader(demo: ComponentDemo) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
+        HyperText(
             text = demo.title,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = LocalDocsColorScheme.current.onBackground,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             lineHeight = 36.sp
         )
-        Text(
+        HyperText(
             text = demo.description,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 15.sp,
             lineHeight = 22.sp
         )
@@ -431,7 +431,7 @@ private fun PreviewCard(demo: ComponentDemo) {
 private fun CodeCard(code: String) {
     DocsCard {
         SectionLabel(title = "示例代码")
-        Text(
+        HyperText(
             text = code,
             modifier = Modifier
                 .fillMaxWidth()
@@ -450,7 +450,7 @@ internal fun DocsCard(content: @Composable () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
+            .background(LocalDocsColorScheme.current.surface, RoundedCornerShape(8.dp))
             .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(8.dp))
             .padding(18.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -461,9 +461,9 @@ internal fun DocsCard(content: @Composable () -> Unit) {
 
 @Composable
 internal fun SectionLabel(title: String) {
-    Text(
+    HyperText(
         text = title,
-        color = MaterialTheme.colorScheme.onSurface,
+        color = LocalDocsColorScheme.current.onSurface,
         fontSize = 16.sp,
         lineHeight = 22.sp,
         fontWeight = FontWeight.SemiBold

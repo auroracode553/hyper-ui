@@ -1,5 +1,6 @@
 /** 文件职责：为 Desktop/Wasm Preview 提供 Android Lucide 图标的跨平台替身。 */
 package hyper_ui.core.icon
+import hyper_ui.*
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -78,7 +78,7 @@ private fun HyperPreviewIcon(
     imageVector: ImageVector,
     modifier: Modifier
 ) {
-    Icon(
+    HyperIcon(
         imageVector = imageVector,
         contentDescription = null,
         modifier = modifier.fillMaxSize()

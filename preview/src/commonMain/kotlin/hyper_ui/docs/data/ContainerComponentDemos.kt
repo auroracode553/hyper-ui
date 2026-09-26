@@ -1,5 +1,7 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/data/ContainerComponentDemos 可复用界面组件及交互封装。 */
 package hyper_ui.docs.data
+import hyper_ui.*
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import hyper_ui.docs.ui.ColorPickerDemo
 import hyper_ui.docs.ui.PanelDemo
@@ -33,13 +35,13 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperPanel(
                 colors = HyperPanelDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = LocalDocsColorScheme.current.surface
                 )
             ) {
-                Text("系统状态")
-                Text("运行正常")
+                HyperText("系统状态")
+                HyperText("运行正常")
                 HyperButton(onClick = onOpen) {
-                    Text("查看详情")
+                    HyperText("查看详情")
                 }
             }
         """.trimIndent(),

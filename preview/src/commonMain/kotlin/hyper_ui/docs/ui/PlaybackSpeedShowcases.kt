@@ -1,5 +1,7 @@
 /** 文件职责：集中提供播放速度刻度与设置面板的交互 Preview。 */
 package hyper_ui.docs.ui
+import hyper_ui.*
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,8 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,24 +60,24 @@ fun PlaybackSpeedScaleDemo() {
                 enabled = selectedIndex > 0,
                 onClick = { selectedSpeed = speedOptions[selectedIndex - 1] }
             ) {
-                Text("向左调速")
+                HyperText("向左调速")
             }
             HyperButton(
                 enabled = selectedIndex < speedOptions.lastIndex,
                 onClick = { selectedSpeed = speedOptions[selectedIndex + 1] }
             ) {
-                Text("向右调速")
+                HyperText("向右调速")
             }
         }
         HyperButton(
             tone = HyperButtonTone.Outline,
             onClick = { useCustomColors = !useCustomColors }
         ) {
-            Text(if (useCustomColors) "恢复默认配色" else "查看自定义配色")
+            HyperText(if (useCustomColors) "恢复默认配色" else "查看自定义配色")
         }
-        Text(
+        HyperText(
             text = "紧凑双层布局；固定深色不跟随页面主题，手势仍由调用方持有。",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center
         )
@@ -112,18 +112,18 @@ fun PlaybackSpeedPanelDemo() {
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 HyperButton(onClick = { panelVisible = true }) {
-                    Text("打开速度面板")
+                    HyperText("打开速度面板")
                 }
                 HyperButton(
                     tone = HyperButtonTone.Outline,
                     onClick = { useCustomColors = !useCustomColors }
                 ) {
-                    Text(if (useCustomColors) "恢复默认配色" else "查看自定义配色")
+                    HyperText(if (useCustomColors) "恢复默认配色" else "查看自定义配色")
                 }
             }
-            Text(
+            HyperText(
                 text = feedback,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = LocalDocsColorScheme.current.onSurfaceVariant,
                 fontSize = 13.sp
             )
         }

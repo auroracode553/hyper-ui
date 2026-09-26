@@ -1,5 +1,8 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/ListComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+import hyper_ui.*
+import hyper_ui.LocalHyperContentColor
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,10 +22,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,9 +57,9 @@ fun HyperMenuListDemo() {
         modifier = Modifier.widthIn(max = 560.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text(
+        HyperText(
             text = "菜单列表使用 44dp 单行与 54dp 描述行，外部视觉由 modifier 组合",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )
         Box(modifier = Modifier.height(220.dp)) {
@@ -78,8 +77,8 @@ fun HyperMenuListDemo() {
         HyperMenuList {
             HyperListItem(
                 leadingContent = { ListIcon(Icons.Default.Notifications) },
-                headlineContent = { Text("推送通知") },
-                supportingContent = { Text("接收系统消息提醒") },
+                headlineContent = { HyperText("推送通知") },
+                supportingContent = { HyperText("接收系统消息提醒") },
                 dividerVisible = true,
                 dividerModifier = Modifier.padding(start = 70.dp),
                 trailingContent = {
@@ -91,8 +90,8 @@ fun HyperMenuListDemo() {
             )
             HyperListItem(
                 leadingContent = { ListIcon(Icons.Default.Check) },
-                headlineContent = { Text("自动同步") },
-                supportingContent = { Text("网络可用时自动刷新数据") },
+                headlineContent = { HyperText("自动同步") },
+                supportingContent = { HyperText("网络可用时自动刷新数据") },
                 dividerVisible = true,
                 dividerModifier = Modifier.padding(start = 70.dp),
                 trailingContent = {
@@ -104,8 +103,8 @@ fun HyperMenuListDemo() {
             )
             HyperListItem(
                 leadingContent = { ListIcon(Icons.Default.Settings) },
-                headlineContent = { Text("性能模式") },
-                supportingContent = { Text("优先保证流畅度") },
+                headlineContent = { HyperText("性能模式") },
+                supportingContent = { HyperText("优先保证流畅度") },
                 trailingContent = {
                     HyperRadio(
                         selected = performanceMode,
@@ -143,9 +142,9 @@ fun HyperListDemo() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            HyperText(
                 text = if (roundedCorners) "轻圆角开启" else "直角容器",
-                color = LocalContentColor.current,
+                color = LocalHyperContentColor.current,
                 fontSize = 14.sp,
                 lineHeight = 20.sp
             )
@@ -160,9 +159,9 @@ fun HyperListDemo() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            HyperText(
                 text = if (comfortableContent) "宽松条目间距" else "默认自适应间距",
-                color = LocalContentColor.current,
+                color = LocalHyperContentColor.current,
                 fontSize = 14.sp,
                 lineHeight = 20.sp
             )
@@ -177,9 +176,9 @@ fun HyperListDemo() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            HyperText(
                 text = if (contentPaddingEnabled) "可滚动内容留白" else "无内容留白",
-                color = LocalContentColor.current,
+                color = LocalHyperContentColor.current,
                 fontSize = 14.sp,
                 lineHeight = 20.sp
             )
@@ -256,9 +255,9 @@ fun HyperSectionedListDemo() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            HyperText(
                 text = if (compactSections) "紧凑分段间距" else "标准分段间距",
-                color = LocalContentColor.current,
+                color = LocalHyperContentColor.current,
                 fontSize = 14.sp,
                 lineHeight = 20.sp
             )
@@ -279,7 +278,7 @@ fun HyperSectionedListDemo() {
                 } else {
                     HyperSectionedListDefaults.SectionSpacing
                 },
-                headerContent = { group -> Text(group.title) }
+                headerContent = { group -> HyperText(group.title) }
             ) { _, entry ->
                 HyperListItem(
                     onClick = { selectedEntry = entry },
@@ -306,13 +305,13 @@ private fun ListIcon(imageVector: ImageVector) {
         modifier = Modifier
             .size(36.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.primaryContainer),
+            .background(LocalDocsColorScheme.current.primaryContainer),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
+        HyperIcon(
             imageVector = imageVector,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = LocalDocsColorScheme.current.primary,
             modifier = Modifier.size(20.dp)
         )
     }
@@ -320,9 +319,9 @@ private fun ListIcon(imageVector: ImageVector) {
 
 @Composable
 private fun ListTitle(text: String) {
-    Text(
+    HyperText(
         text = text,
-        color = LocalContentColor.current,
+        color = LocalHyperContentColor.current,
         fontSize = 17.sp,
         lineHeight = 22.sp,
         fontWeight = FontWeight.Medium
@@ -331,9 +330,9 @@ private fun ListTitle(text: String) {
 
 @Composable
 private fun ListDescription(text: String) {
-    Text(
+    HyperText(
         text = text,
-        color = LocalContentColor.current,
+        color = LocalHyperContentColor.current,
         fontSize = 14.sp,
         lineHeight = 19.sp
     )

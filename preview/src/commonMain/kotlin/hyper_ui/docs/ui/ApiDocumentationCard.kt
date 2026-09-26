@@ -1,5 +1,7 @@
 /** 文件职责：在 Preview 示例代码下方加载并渲染 VitePress API Markdown。 */
 package hyper_ui.docs.ui
+import hyper_ui.*
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,8 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -54,14 +54,14 @@ internal fun ApiDocumentationCard(documentPaths: List<String>) {
     DocsCard {
         SectionLabel(title = "API 文档与属性表")
         when {
-            loadError != null -> Text(
+            loadError != null -> HyperText(
                 text = "API 文档加载失败：$loadError",
-                color = MaterialTheme.colorScheme.error,
+                color = LocalDocsColorScheme.current.error,
                 fontSize = 13.sp
             )
-            documents.isEmpty() -> Text(
+            documents.isEmpty() -> HyperText(
                 text = "正在加载 API 文档…",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = LocalDocsColorScheme.current.onSurfaceVariant,
                 fontSize = 13.sp
             )
             else -> documents.forEach { (path, markdown) ->
@@ -76,9 +76,9 @@ private fun ApiDocumentSection(path: String, markdown: String) {
     val blocks = remember(markdown) { parseMarkdown(markdown) }
     val signatures = remember(blocks) { extractApiSignatures(blocks) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(
+        HyperText(
             text = path.substringAfterLast('/').removeSuffix(".md"),
-            color = MaterialTheme.colorScheme.primary,
+            color = LocalDocsColorScheme.current.primary,
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold
         )
@@ -92,9 +92,9 @@ private fun ApiDocumentSection(path: String, markdown: String) {
 @Composable
 private fun ApiSignatureTable(signature: ApiSignature) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
+        HyperText(
             text = "${signature.name} · ${signature.kind}",
-            color = MaterialTheme.colorScheme.onSurface,
+            color = LocalDocsColorScheme.current.onSurface,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold
         )
@@ -119,17 +119,17 @@ private fun MarkdownContent(blocks: List<MarkdownBlock>) {
                     MarkdownText("•")
                     MarkdownText(block.text, modifier = Modifier.weight(1f))
                 }
-                is MarkdownBlock.Quote -> Text(
+                is MarkdownBlock.Quote -> HyperText(
                     text = block.text,
                     modifier = Modifier
                         .fillMaxWidth()
                         .border(width = 1.dp, color = DocsBorder)
                         .padding(12.dp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = LocalDocsColorScheme.current.onSurfaceVariant,
                     fontSize = 14.sp,
                     lineHeight = 21.sp
                 )
-                is MarkdownBlock.Code -> Text(
+                is MarkdownBlock.Code -> HyperText(
                     text = block.content,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -164,9 +164,9 @@ private fun MarkdownHeading(block: MarkdownBlock.Heading) {
         3 -> 23.sp
         else -> 21.sp
     }
-    Text(
+    HyperText(
         text = block.text,
-        color = MaterialTheme.colorScheme.onSurface,
+        color = LocalDocsColorScheme.current.onSurface,
         fontSize = fontSize,
         lineHeight = lineHeight,
         fontWeight = FontWeight.Bold
@@ -175,10 +175,10 @@ private fun MarkdownHeading(block: MarkdownBlock.Heading) {
 
 @Composable
 private fun MarkdownText(text: String, modifier: Modifier = Modifier) {
-    Text(
+    HyperText(
         text = text,
         modifier = modifier,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        color = LocalDocsColorScheme.current.onSurfaceVariant,
         fontSize = 14.sp,
         lineHeight = 21.sp
     )
@@ -220,17 +220,17 @@ private fun DocumentationTableRow(
 ) {
     Row {
         cells.forEachIndexed { index, cell ->
-            Text(
+            HyperText(
                 text = cell,
                 modifier = Modifier
                     .width(columnWidths[index])
                     .background(
-                        if (header) MaterialTheme.colorScheme.surfaceVariant
-                        else MaterialTheme.colorScheme.surface
+                        if (header) LocalDocsColorScheme.current.surfaceVariant
+                        else LocalDocsColorScheme.current.surface
                     )
                     .border(width = 1.dp, color = DocsBorder)
                     .padding(horizontal = 10.dp, vertical = 9.dp),
-                color = MaterialTheme.colorScheme.onSurface,
+                color = LocalDocsColorScheme.current.onSurface,
                 fontSize = 12.sp,
                 lineHeight = 18.sp,
                 fontWeight = if (header) FontWeight.SemiBold else FontWeight.Normal
