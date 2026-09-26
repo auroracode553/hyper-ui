@@ -59,7 +59,6 @@ import hyper_ui.HyperIconButtonDefaults
 import hyper_ui.HyperPanel
 import hyper_ui.HyperPanelDefaults
 import hyper_ui.HyperNavBar
-import hyper_ui.HyperImmersiveNavBar
 import hyper_ui.docs.theme.DocsBorder
 
 private data class DemoNavItem(
@@ -70,68 +69,6 @@ private data class DemoNavItem(
 
 @Composable
 fun NavBarDemo() {
-    var showBack by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier.widthIn(max = 640.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .background(LocalDocsColorScheme.current.surface)
-                .padding(vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            HyperNavBar(
-                navigationContent = if (showBack) {
-                    {
-                        TopBarIconButton(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "返回",
-                            onClick = {}
-                        )
-                    }
-                } else {
-                    null
-                },
-                titleContent = {
-                    HyperText(text = if (showBack) "可返回页面" else "一级页面")
-                },
-                actionContent = {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        TopBarIconButton(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "搜索",
-                            onClick = {}
-                        )
-                        TopBarIconButton(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = "更多",
-                            onClick = {}
-                        )
-                    }
-                }
-            )
-            HyperText(
-                text = "透明底色保留页面连续性；导航栏自身不绘制描边和阴影。",
-                modifier = Modifier.padding(horizontal = 16.dp),
-                color = LocalDocsColorScheme.current.onSurfaceVariant,
-                fontSize = 13.sp,
-                lineHeight = 18.sp
-            )
-            HyperButton(
-                onClick = { showBack = !showBack },
-                tone = HyperButtonTone.Tonal
-            ) {
-                HyperText(text = if (showBack) "隐藏返回 slot" else "显示返回 slot")
-            }
-        }
-    }
-}
-
-@Composable
-fun ImmersiveNavBarDemo() {
     var showHeader by remember { mutableStateOf(false) }
     val sections = listOf(
         "未命名笔记",
@@ -142,10 +79,10 @@ fun ImmersiveNavBarDemo() {
         "返回、标题和更多按钮保持固定"
     )
 
-    HyperImmersiveNavBar(
+    HyperNavBar(
         modifier = Modifier
-            .widthIn(max = 440.dp)
-            .height(460.dp)
+            .fillMaxWidth()
+            .height(620.dp)
             .clip(RoundedCornerShape(28.dp))
             .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(28.dp)),
         windowInsets = WindowInsets(top = 22.dp),

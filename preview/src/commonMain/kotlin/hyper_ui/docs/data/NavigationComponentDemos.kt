@@ -2,7 +2,6 @@
 package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.NavBarDemo
-import hyper_ui.docs.ui.ImmersiveNavBarDemo
 import hyper_ui.docs.ui.DrawerDemo
 import hyper_ui.docs.ui.SlideMenuDemo
 import hyper_ui.docs.ui.TabBarDemo
@@ -14,40 +13,9 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "nav-bar",
         group = GROUP_NAVIGATION,
         title = "HyperNavBar",
-        description = "默认透明且无描边、无阴影的顶部栏容器；三个区域由 slot 渲染。",
+        description = "固定透明导航操作层，首屏内容从状态栏与导航栏下方开始；上滚后内容进入导航栏与状态栏后方。",
         code = """
             HyperNavBar(
-                navigationContent = {
-                    HyperIconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
-                    }
-                },
-                titleContent = {
-                    Text("通知设置")
-                },
-                actionContent = {
-                    HyperIconButton(onClick = onSearch) {
-                        Icon(Icons.Default.Search, contentDescription = "搜索")
-                    }
-                }
-            )
-        """.trimIndent(),
-        variants = listOf(
-            DemoVariant("三段布局", "navigation/title/action", "左右操作与居中标题"),
-            DemoVariant("默认背景", "Color.Transparent", "直接继承页面底色"),
-            DemoVariant("纯平表面", "no border / shadow", "不绘制描边和阴影"),
-            DemoVariant("Slot 内容", "content slots", "图标按钮和标题文字")
-        ),
-        apiDocumentPaths = listOf("navigation/hyper-nav-bar.md"),
-        content = { NavBarDemo() }
-    ),
-    ComponentDemo(
-        id = "immersive-nav-bar",
-        group = GROUP_NAVIGATION,
-        title = "HyperImmersiveNavBar",
-        description = "固定透明导航按钮，首屏内容位于导航栏下方；滚动后内容可进入导航栏与状态栏后方。",
-        code = """
-            HyperImmersiveNavBar(
                 navigationContent = { BackButton(onClick = onBack) },
                 titleContent = { Text("详情") },
                 actionContent = { MoreButton(onClick = onMore) },
@@ -65,8 +33,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("沉浸滚动", "LazyColumn.contentPadding", "顶部净空滚出后，内容绘制到透明栏后方"),
             DemoVariant("系统栏", "windowInsets = WindowInsets.statusBars", "默认避让状态栏，不修改窗口配置")
         ),
-        apiDocumentPaths = listOf("navigation/hyper-immersive-nav-bar.md"),
-        content = { ImmersiveNavBarDemo() }
+        apiDocumentPaths = listOf("navigation/hyper-nav-bar.md"),
+        content = { NavBarDemo() }
     ),
     ComponentDemo(
         id = "drawer",

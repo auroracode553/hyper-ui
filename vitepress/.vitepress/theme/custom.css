@@ -64,10 +64,10 @@
   background: #0b0d11;
 }
 
-/* 屏幕区域：让出顶部灵动岛安全区 */
+/* 屏幕区域：整屏交给 iframe，组件自行处理状态栏/灵动岛 inset */
 .wasm-preview__screen {
   position: absolute;
-  top: 52px;
+  top: 0;
   right: 0;
   bottom: 0;
   left: 0;

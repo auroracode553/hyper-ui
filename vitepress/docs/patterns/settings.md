@@ -21,24 +21,28 @@ import hyper_ui.*
 fun SettingsScreen() {
     var pushEnabled by remember { mutableStateOf(true) }
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(18.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        HyperNavBar(
-            titleContent = { Text("设置") }
-        )
-        HyperMenuList {
-            HyperListItem(
-                headlineContent = { Text("推送通知") },
-                supportingContent = { Text("接收重要消息提醒") },
-                trailingContent = {
-                    HyperSwitch(
-                        checked = pushEnabled,
-                        onCheckedChange = { pushEnabled = it }
-                    )
-                }
-            )
+    HyperNavBar(
+        titleContent = { Text("设置") }
+    ) { contentPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+                .padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            HyperMenuList {
+                HyperListItem(
+                    headlineContent = { Text("推送通知") },
+                    supportingContent = { Text("接收重要消息提醒") },
+                    trailingContent = {
+                        HyperSwitch(
+                            checked = pushEnabled,
+                            onCheckedChange = { pushEnabled = it }
+                        )
+                    }
+                )
+            }
         }
     }
 }
