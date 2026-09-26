@@ -5,8 +5,8 @@
 ```kotlin
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import hyper_ui.HyperIcon
+import hyper_ui.HyperText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

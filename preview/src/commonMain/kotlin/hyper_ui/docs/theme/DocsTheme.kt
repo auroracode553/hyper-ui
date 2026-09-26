@@ -20,7 +20,7 @@ internal val DocsPreviewBackground = rgba(242, 242, 247, 1f)
 
 internal val DefaultDocsThemeColor = rgba(255, 103, 0, 1f)
 
-// 文档浅色主题的固定语义色，替代原 material3 lightColorScheme 的对应槽位。
+// 文档浅色主题的固定语义色，替代原 系统浅色语义色 的对应槽位。
 internal val DocsOnBackground = rgba(28, 28, 30, 1f)
 internal val DocsOnSurface = rgba(28, 28, 30, 1f)
 internal val DocsOnSurfaceVariant = rgba(142, 142, 147, 1f)
@@ -35,7 +35,7 @@ internal val DocsErrorContainer = rgba(254, 226, 226, 1f)
 internal val DocsInverseSurface = rgba(44, 44, 46, 1f)
 internal val DocsInverseOnSurface = rgba(242, 242, 247, 1f)
 
-/** 文档主题语义色集合：替代原 material3 ColorScheme 的对应槽位，随主题色动态生成。 */
+/** 文档主题语义色集合：替代原 系统颜色方案 的对应槽位，随主题色动态生成。 */
 internal data class DocsColorScheme(
     val background: Color,
     val onBackground: Color,
@@ -109,7 +109,7 @@ internal fun Color.darken(ratio: Float): Color {
 
 /**
  * 文档主题：基于 hyper-ui 自有主题体系（HyperThemeConfig + 文档语义色 + 默认字体样式），
- * 替代原 material3 MaterialTheme/lightColorScheme 包裹。
+ * 替代原 系统主题包裹 包裹。
  */
 @Composable
 fun HyperDocsTheme(

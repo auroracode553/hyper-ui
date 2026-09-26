@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中提供核心文本组件 HyperText，基于 foundation BasicText，替代 material3 Text。 */
+/** 文件职责：在 hyper_ui 中提供核心文本组件 HyperText，基于 foundation BasicText，替代 基础文本组件。 */
 package hyper_ui
 
 import androidx.compose.foundation.text.BasicText
@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 
 /**
- * 超UI 文本组件，签名与 material3 Text 保持一致。
+ * 超UI 文本组件，签名与 基础文本组件 保持一致。
  * 默认颜色取 [LocalHyperContentColor]，默认样式取 [LocalHyperTextStyle]。
  */
 @Composable

@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中提供核心图标组件 HyperIcon，基于 foundation Image + ui-graphics，替代 material3 Icon。 */
+/** 文件职责：在 hyper_ui 中提供核心图标组件 HyperIcon，基于 foundation Image + ui-graphics，替代 基础图标组件。 */
 package hyper_ui
 
 import androidx.compose.foundation.Image
@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 
 /**
- * 超UI 图标组件，签名与 material3 Icon 保持一致。
+ * 超UI 图标组件，签名与 基础图标组件 保持一致。
  * 默认着色取 [LocalHyperContentColor]，传 [Color.Unspecified] 时不做着色。
  */
 @Composable

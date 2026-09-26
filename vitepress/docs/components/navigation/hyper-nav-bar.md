@@ -38,7 +38,7 @@ object HyperNavBarDefaults {
     val ContentGap = 8.dp
     val Shape: Shape = RoundedCornerShape(0.dp)
     val TitleTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.titleLarge.copy(
+        @Composable get() = HyperTheme.typography.titleLarge.copy(
             fontWeight = FontWeight.SemiBold
         )
 

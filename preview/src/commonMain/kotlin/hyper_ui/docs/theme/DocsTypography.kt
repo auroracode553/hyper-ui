@@ -11,7 +11,7 @@ import org.jetbrains.compose.resources.Font
 
 /**
  * 文档默认文本样式：为未显式指定字体的文档文本统一装配 Noto Sans SC 字体族，
- * 替代原 material3 Typography 体系。
+ * 替代原 系统 Typography 体系。
  */
 @Composable
 internal fun docsTextStyle(): TextStyle {

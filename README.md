@@ -132,22 +132,19 @@ dependencies {
 }
 ```
 
-如果只使用裸 AAR，需要调用方自行补齐 Compose、Material3 等依赖；推荐优先使用 Maven 方式，让 Gradle 读取 POM 中的依赖信息。
+如果只使用裸 AAR，需要调用方自行补齐 Compose 基础依赖；推荐优先使用 Maven 方式，让 Gradle 读取 POM 中的依赖信息。
 
 ## 最小使用示例
 
 ```kotlin
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import hyper_ui.*
 
 @Composable
 fun App() {
-    MaterialTheme {
-        HyperThemeConfig(themeColor = rgba(255, 103, 0)) {
-            HyperButton(onClick = { /* 调用方处理业务逻辑 */ }) {
-                Text("保存")
-            }
+    HyperThemeConfig(themeColor = rgba(255, 103, 0)) {
+        HyperButton(onClick = { /* 调用方处理业务逻辑 */ }) {
+            HyperText("保存")
         }
     }
 }
@@ -165,14 +162,14 @@ dependencies {
 
 ```kotlin
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
+import hyper_ui.HyperIcon
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.composables.icons.lucide.R as LucideR
 import hyper_ui.*
 
 HyperIconButton(onClick = onSearch) {
-    Icon(
+    HyperIcon(
         painter = painterResource(LucideR.drawable.lucide_ic_search),
         contentDescription = "搜索",
         modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
@@ -190,7 +187,7 @@ HyperIconButton(onClick = onSearch) {
 - 表单组件：`HyperTextField`, `HyperSwitch`, `HyperCheckbox`, `HyperRadio`, `HyperSegmented`, `HyperSlider`（输入框采用澎湃 OS 风格的白色单色表面，直接复用公共 `hyperSurfaceDepth` 的单层控件描边与阴影：浅色主题为不透明纯白，普通态使用 4dp、聚焦态使用 5dp 抬升，保证白底可辨识；深色主题为白色低透明度材质；不叠加高光、明暗渐变或纹理层；聚焦/错误态使用语义色替换公共中性描边，不叠加第二圈；禁用态降低材质透明度、保留弱描边并关闭阴影，最小高度为 40dp；已有文本首次聚焦时光标位于末尾；`HyperCheckbox` 使用 Lucide `check`；`HyperSegmented` 默认总高 36dp，只负责紧凑玻璃轨道、等宽布局与选择语义，每个分段直接复用 `HyperButton`；`HyperSlider` 支持点击定位、连续/等距吸附、可选分段点、指定业务标记和只读态，并统一使用柔光环、外圆、中心点三层滑块视觉）
 - 容器组件：`HyperPanel`, `HyperColorPicker`（面板默认带轻描边和 16dp 内容留白；主题色选择板色块默认带细描边，选中状态由调用方管理）
 - 列表组件：`HyperList`, `HyperSectionedList`, `HyperMenuList`, `HyperListItem`（`HyperList` 提供单一连续卡片的页面级 `LazyColumn`、可滚动 `contentPadding` 与 `LazyListScope` Slot；`HyperSectionedList` 面向日期、历史等动态分组数据，保持标题和数据行独立懒加载并自动处理组内圆角与分割线；`HyperMenuList` 只能用于少量菜单、设置项和操作入口；所有列表容器均使用不透明实色，`HyperListItem` 根据 supporting slot 自动使用单行 44dp、双行 54dp 的基础高度和 4dp 纵向留白）
-- 状态与浮层反馈：`HyperEmptyState`, `HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `HyperDropdownItemTone`, `hyperToast`, `HyperToastDuration`（`HyperEmptyState` 直接复用 `HyperPanel` 承载居中的空数据内容；`HyperDropdown` 使用按最宽菜单项收缩、最大 220dp 的乳白/炭灰柔雾面板，并由公共深度层提供描边和浮层阴影；`HyperPopup` 使用轻量 Popup；`HyperDialog` 使用 Compose Dialog，设置 `usePlatformDefaultWidth = false` 并在稳定的全尺寸根节点内居中面板；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
+- 状态与浮层反馈：`HyperTooltip`, `HyperEmptyState`, `HyperPopup`, `HyperPopupDefaults`, `HyperDialog`, `HyperDialogDefaults`, `HyperAlertDialog`, `HyperUpdateDialog`, `HyperDropdown`, `HyperDropdownItemTone`, `hyperToast`, `HyperToastDuration`（`HyperEmptyState` 直接复用 `HyperPanel` 承载居中的空数据内容；`HyperDropdown` 使用按最宽菜单项收缩、最大 220dp 的乳白/炭灰柔雾面板，并由公共深度层提供描边和浮层阴影；`HyperPopup` 使用轻量 Popup；`HyperDialog` 使用 Compose Dialog，设置 `usePlatformDefaultWidth = false` 并在稳定的全尺寸根节点内居中面板；`hyperToast` 封装 Android 原生 Toast 和主线程调度；更新组件通过 `HyperReleaseLoader` 注入数据加载，不在 UI 库中发起网络请求）
 - 进度反馈：`HyperLinearProgressIndicator`, `HyperCircularProgressIndicator`, `HyperLevelCapsule`, `HyperPlaybackSpeedPanel`, `HyperPlaybackSpeedPanelOverlay`, `HyperPlaybackSpeedScale`, `HyperBatteryIndicator`（加载进度支持确定/不确定状态；播放速度面板与长按倍速刻度默认固定深色、不跟随应用明暗模式，状态和自定义速度流程由调用方持有；倍速面板约为 468dp × 157dp，长按倍速刻度约为 310dp × 59dp；面板默认图标、刻度快进图标与电池充电图标均使用 Lucide Android；比例胶囊使用白色半透明连续玻璃材质与单层空间阴影；组件本身不主动读取系统状态）
 - Android 系统工具：`HyperBatteryState`, `readHyperBatteryState`, `rememberHyperBatteryState`（支持一次性读取与 Compose 生命周期安全订阅；内部使用 Application Context，并在离开 Composition 时注销电池广播）
 - 导航组件：`HyperNavBar`, `HyperImmersiveNavBar`, `HyperDrawer`, `HyperDrawerHeader`, `HyperDrawerItem`, `HyperDrawerPosition`, `HyperSlideMenu`, `HyperTabBar`, `HyperTabBarItemLayout`, `HyperTabBarType`, `HyperFloatingTabBarColors`, `HyperFloatingTabBarDefaults`（`HyperNavBar` 默认透明且不绘制描边和阴影；`HyperImmersiveNavBar` 复用该纯平导航视觉并允许内容滚入其后方；`HyperDrawer` 使用公共结构描边和低抬升阴影的不透明玻璃；`HyperSlideMenu` 的每个项目直接复用 `HyperButton` 的表面、描边与交互状态；`HyperTabBar` 通过 `type` 参数切换贴底发丝线样式与悬浮玻璃胶囊样式；`HyperDrawer` 默认提供方向化内容间距与系统安全区，并支持可配置内容滚动；页面切换由调用方处理）
@@ -213,9 +210,9 @@ var keyword by remember { mutableStateOf("") }
 HyperTextField(
     value = keyword,
     onValueChange = { keyword = it },
-    placeholderContent = { Text("搜索") },
+    placeholderContent = { HyperText("搜索") },
     startContent = {
-        Icon(
+    HyperIcon(
             painter = painterResource(LucideR.drawable.lucide_ic_search),
             contentDescription = null
         )
@@ -265,7 +262,7 @@ preview/
 - UI 库内部公共工具放在 `library/src/main/java/hyper_ui/core/` 下，供组件实现复用，不作为调用方公开入口。
 - Android-only 工具不能进入 `commonMain` 编译链；Preview 页面只展示说明、可交互模拟和 Android 调用片段。
 - `HyperDrawer` 的四个方向均使用主题卡片色的不透明结构玻璃，通过公共深度层的 1dp 低对比度主题描边和单层 `5.dp` 投影形成空间层次。自定义 `containerColor` 若带 alpha，会先与页面背景合成为不透明颜色。打开与关闭直接渲染或移除，不执行动画，外部点击区域不绘制遮罩。组件默认提供方向化内容间距与 `safeDrawing` 系统栏避让；需要完整内容区时传入 `defaultSetPadding = false`，附加场景布局继续通过 `drawerContentModifier` 提供。上下抽屉默认由内容撑高，达到窗口最大占比后在面板内部滚动；承载 `LazyColumn`、`HyperList` 等纵向滚动内容时设置 `drawerContentScrollEnabled = false`，由内层列表独立滚动。
-- `HyperTabBar` 不依赖任何导航框架，通过 `type` 参数提供两种样式。Docked 贴底样式默认只绘制 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式下使用 `MaterialTheme.colorScheme.background` 并隐藏灰边，浅色模式保留白色 `0.92f` alpha，均不叠加玻璃高光。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp。Floating 悬浮样式使用 56dp 轻薄玻璃胶囊，带 20/8/20/12dp 悬浮留白与 5dp 柔和阴影；静止时显示与标签格接近等宽的选中托盘，按下展开水珠，拖动跟手并在边缘增加阻力，松手按速度投影后弹簧吸附并收回。该样式忽略 `itemLayout`、`shape`、`topDivider` 与 `colors`，使用独立的 `floatingColors` 与 `HyperFloatingTabBarDefaults`。页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
+- `HyperTabBar` 不依赖任何导航框架，通过 `type` 参数提供两种样式。Docked 贴底样式默认只绘制 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式下使用 `HyperColors.pageBackground` 并隐藏灰边，浅色模式保留白色 `0.92f` alpha，均不叠加玻璃高光。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp。Floating 悬浮样式使用 56dp 轻薄玻璃胶囊，带 20/8/20/12dp 悬浮留白与 5dp 柔和阴影；静止时显示与标签格接近等宽的选中托盘，按下展开水珠，拖动跟手并在边缘增加阻力，松手按速度投影后弹簧吸附并收回。该样式忽略 `itemLayout`、`shape`、`topDivider` 与 `colors`，使用独立的 `floatingColors` 与 `HyperFloatingTabBarDefaults`。页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
 - 调用方接入时不需要依赖 `preview` 模块。
 - Wasm 入口接受 `#组件-id`，例如 `index.html?embedded=1#button`，供 VitePress 组件页选择纯组件预览；未知 ID 回退到第一个组件。
 

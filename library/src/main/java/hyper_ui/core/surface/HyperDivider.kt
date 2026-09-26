@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中提供核心分隔线组件 HyperDivider，基于 foundation layout，替代 material3 HorizontalDivider。 */
+/** 文件职责：在 hyper_ui 中提供核心分隔线组件 HyperDivider，基于 foundation layout，替代 基础分隔线组件。 */
 package hyper_ui
 
 import androidx.compose.foundation.background
@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * 超UI 水平分隔线，签名与 material3 HorizontalDivider 保持一致。
+ * 超UI 水平分隔线，签名与 基础分隔线组件 保持一致。
  */
 @Composable
 fun HyperDivider(

@@ -1,5 +1,5 @@
 /** 文件职责：在 hyper_ui 中负责维护 library/src/main/java/hyper_ui/theme/HyperStyle 的主题、样式与布局规范。
- *  自建主题体系：颜色 / 字体排版 / 形状 / 内容色 / 文本样式，全部基于 Compose 基础库（foundation/ui/runtime），不依赖 material3。 */
+ *  自建主题体系：颜色 / 字体排版 / 形状 / 内容色 / 文本样式，全部基于 Compose 基础库（foundation/ui/runtime），不依赖外部设计组件库。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -43,9 +43,15 @@ private val LocalHyperThemeColors = staticCompositionLocalOf {
 
 internal val LocalHyperIsDark = staticCompositionLocalOf { false }
 
-/** 字体排版体系：替代 material3 Typography 的对应槽位。 */
+/** 字体排版体系：替代 系统 Typography 的对应槽位。 */
 @Immutable
 data class HyperTypography(
+    val headlineSmall: TextStyle = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+    ),
     val bodyLarge: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
@@ -95,6 +101,13 @@ data class HyperTypography(
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     ),
+    val labelLarge: TextStyle = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.1.sp,
+    ),
     val labelSmall: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
@@ -104,7 +117,7 @@ data class HyperTypography(
     )
 )
 
-/** 形状体系：替代 material3 Shapes 的对应槽位。 */
+/** 形状体系：替代 系统 Shapes 的对应槽位。 */
 @Immutable
 data class HyperShapes(
     val extraSmall: Shape = RoundedCornerShape(4.dp),
@@ -116,10 +129,10 @@ data class HyperShapes(
 private val LocalHyperTypography = staticCompositionLocalOf { HyperTypography() }
 private val LocalHyperShapes = staticCompositionLocalOf { HyperShapes() }
 
-/** 全局内容色：替代 material3 LocalContentColor。 */
+/** 全局内容色：替代 系统内容色。 */
 val LocalHyperContentColor = staticCompositionLocalOf { HyperStyleDefaults.LightPrimaryText }
 
-/** 全局默认文本样式：替代 material3 LocalTextStyle。 */
+/** 全局默认文本样式：替代 系统文本样式。 */
 val LocalHyperTextStyle = staticCompositionLocalOf { HyperTypography().bodyLarge }
 
 @Composable
@@ -140,6 +153,8 @@ fun HyperThemeConfig(
             successColor = successColor
         ),
         LocalHyperIsDark provides darkTheme,
+        LocalHyperTypography provides HyperStyleDefaults.Typography,
+        LocalHyperShapes provides HyperStyleDefaults.Shapes,
         LocalHyperContentColor provides defaultContentColor,
         LocalHyperTextStyle provides HyperStyleDefaults.Typography.bodyLarge,
         content = content

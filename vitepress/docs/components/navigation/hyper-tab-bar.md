@@ -8,7 +8,7 @@
 
 `HyperTabBar` 通过 `type` 参数在两种样式间切换：
 
-- **Docked（贴底，默认）**：总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。贴底容器默认只绘制 0.5dp 的低对比度顶部发丝线，不使用阴影或整框描边；深色模式下容器与发丝线采用当前 `MaterialTheme.colorScheme.background`，浅色模式保留轻量透明度。两种模式均不叠加玻璃高光或渐变。
+- **Docked（贴底，默认）**：总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。贴底容器默认只绘制 0.5dp 的低对比度顶部发丝线，不使用阴影或整框描边；深色模式下容器与发丝线采用当前 `HyperColors.pageBackground`，浅色模式保留轻量透明度。两种模式均不叠加玻璃高光或渐变。
 - **Floating（悬浮玻璃胶囊）**：56dp 轻薄磨砂底座悬浮于页面（四周留白 20/8/20/12dp）。静止时选中项显示与标签格接近等宽的灰色托盘；按下立即展开为半透明水珠，拖动时按 1:1 跟手并对标签做轻微放大，边缘使用渐进阻力；松手后按释放速度投影并用弹簧吸附到最近标签，再收回为静态托盘。
 
 ## 公开 API
@@ -83,7 +83,7 @@ object HyperTabBarDefaults {
     val ItemWidth = 60.dp
     val Shape: Shape = RoundedCornerShape(0.dp)
     val ItemTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.labelSmall
+        @Composable get() = HyperTheme.typography.labelSmall
 
     @Composable
     fun colors(
@@ -117,7 +117,7 @@ object HyperFloatingTabBarDefaults {
     val LensScaleGrowth = 0.15f
     val SelectionSpring: SpringSpec<Float>   // 外部选中状态变化时的吸附弹簧
     val ItemTextStyle: TextStyle
-        @Composable get() = MaterialTheme.typography.labelSmall
+        @Composable get() = HyperTheme.typography.labelSmall
 
     @Composable
     fun colors(
@@ -210,7 +210,7 @@ HyperTabBar(
 
 - 不存在 `HyperTabBarItem`、`selectedItemId` 或 `HyperTabBarConfig`。
 - 组件不依赖导航框架，也不会在 `onItemClick` 后自动切换页面。
-- Docked 样式：`Equal` 项目等分宽度；`Packed` 项目至少 60dp 宽，内容可继续撑宽。默认容器在浅色模式使用白色 `0.92f` alpha；深色模式直接使用当前 `MaterialTheme.colorScheme.background`。`topDivider` 只绘制顶边，不包围容器四周；浅色模式默认使用 0.5dp、黑色 `0.055f` alpha 的低对比度发丝线，深色模式使用页面背景色隐藏灰边。`Height` 表示 55dp 标签操作区，默认底栏总高度为 60dp。
+- Docked 样式：`Equal` 项目等分宽度；`Packed` 项目至少 60dp 宽，内容可继续撑宽。默认容器在浅色模式使用白色 `0.92f` alpha；深色模式直接使用当前 `HyperColors.pageBackground`。`topDivider` 只绘制顶边，不包围容器四周；浅色模式默认使用 0.5dp、黑色 `0.055f` alpha 的低对比度发丝线，深色模式使用页面背景色隐藏灰边。`Height` 表示 55dp 标签操作区，默认底栏总高度为 60dp。
 - Floating 样式：需要至少 2 个标签项；项目等分宽度且不提供 Packed 布局。胶囊悬浮留白、高度与阴影已内置于组件，外部间距无需再通过 `modifier.padding(...)` 添加。指示胶囊仅在存在选中项或被按下时可见；无任何选中时隐藏。
 - 通常不应使用 `modifier.height(...)` 强制压缩底栏总高度，否则可能挤占内部操作区或底部留白。
 - Floating 样式随布局方向排列标签与托盘；slot 模式的选中视觉仍由调用方绘制。

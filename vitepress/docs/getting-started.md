@@ -67,14 +67,14 @@ dependencies {
 
 ```kotlin
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
+import hyper_ui.HyperIcon
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.composables.icons.lucide.R as LucideR
 import hyper_ui.*
 
 HyperIconButton(onClick = onSearch) {
-    Icon(
+        HyperIcon(
         painter = painterResource(LucideR.drawable.lucide_ic_search),
         contentDescription = "搜索",
         modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
@@ -100,27 +100,25 @@ android {
 
 ## 应用根节点
 
-HyperUI 会读取 `MaterialTheme.colorScheme` 判断明暗配色，并从 `HyperThemeConfig` 获取主题色和成功色。
+HyperUI 会读取 `HyperColors` 判断明暗配色，并从 `HyperThemeConfig` 获取主题色和成功色。
 
 ```kotlin
-import androidx.compose.material3.MaterialTheme
+import hyper_ui.HyperTheme
 import androidx.compose.runtime.Composable
 import hyper_ui.*
 
 @Composable
 fun AppRoot() {
-    MaterialTheme {
-        HyperThemeConfig(
-            themeColor = rgba(255, 103, 0),
-            successColor = rgba(52, 199, 89)
-        ) {
-            AppContent()
-        }
+    HyperThemeConfig(
+        themeColor = rgba(255, 103, 0),
+        successColor = rgba(52, 199, 89)
+    ) {
+        AppContent()
     }
 }
 ```
 
-如果应用已经有自己的 `MaterialTheme`，保留原有主题，只在其内容中增加 `HyperThemeConfig`。
+应用内容直接放在 `HyperThemeConfig` 中即可。
 
 ## 最小状态示例
 

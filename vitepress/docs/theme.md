@@ -37,7 +37,7 @@ fun HyperThemeConfig(
 )
 ```
 
-`HyperThemeConfig` 只提供 HyperUI 的品牌色，不替代应用的 `MaterialTheme`。
+`HyperThemeConfig` 提供 HyperUI 的品牌色、排版和形状配置。
 
 ## `HyperThemeColors`
 
@@ -74,7 +74,7 @@ object HyperStyleDefaults {
 }
 ```
 
-`HyperColors` 根据当前 `MaterialTheme` 明暗模式提供以下只读值：
+`HyperColors` 根据当前系统明暗模式提供以下只读值：
 
 | 属性 | 类型 | 用途 |
 | --- | --- | --- |

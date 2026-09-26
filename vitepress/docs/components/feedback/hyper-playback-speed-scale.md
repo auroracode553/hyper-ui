@@ -91,7 +91,7 @@ HyperPlaybackSpeedScale(
 - 默认先将可用宽度限制到 `360.dp`，再取其 86%，因此空间充足时最终宽度约为 `310.dp`；内部内容高 `49.dp`，加上下内边距后约为 `59dp`。可用 `modifier` 继续约束外部尺寸与位置。
 - 默认八档时，`0.25x` 与 `4x` 位于轨道左右，中间六档与分段点对齐排列在轨道上方，避免为所有标签单独占用一整行宽度。
 - 组件提供确定进度语义，当前档位会映射为无障碍进度。
-- 默认容器固定为深色 `Color(0.10f, 0.11f, 0.14f, 0.96f)`，主要内容固定为近白色，不读取外层 `MaterialTheme` 的明暗模式；强调色仍来自 `HyperThemeConfig`。
+- 默认容器固定为深色 `Color(0.10f, 0.11f, 0.14f, 0.96f)`，主要内容固定为近白色，不读取外层 `HyperTheme` 的明暗模式；强调色仍来自 `HyperThemeConfig`。
 - 固定深色玻璃使用 `0.12f` 顶部柔光、`0.12f` 底部折射和一层 `6.dp`、`0.30f` 黑色投影；没有边框或独立高光色入口。
 
 <WasmPreview demo="playback_speed_scale" title="HyperPlaybackSpeedScale 交互预览" />

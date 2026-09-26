@@ -6,6 +6,7 @@ import hyper_ui.docs.ui.DropdownMenuDemo
 import hyper_ui.docs.ui.EmptyStateDemo
 import hyper_ui.docs.ui.HyperDialogDemo
 import hyper_ui.docs.ui.HyperPopupDemo
+import hyper_ui.docs.ui.HyperTooltipDemo
 import hyper_ui.docs.ui.LevelCapsuleDemo
 import hyper_ui.docs.ui.BatteryIndicatorDemo
 import hyper_ui.docs.ui.PlaybackSpeedPanelDemo
@@ -313,6 +314,19 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         content = { DialogDemo() }
     ),
     ComponentDemo(
+        id = "tooltip",
+        group = GROUP_FEEDBACK,
+        title = "HyperTooltip",
+        description = "不依赖外部设计组件库 的轻量提示浮层，支持悬停提示。",
+        code = """
+            HyperTooltip(text = "提示文本") {
+                HyperText("悬停查看")
+            }
+        """.trimIndent(),
+        variants = listOf(DemoVariant("悬停", "text", "锚点上方显示提示")),
+        apiDocumentPaths = listOf("feedback/hyper-tooltip.md"),
+        content = { HyperTooltipDemo() }
+    ),    ComponentDemo(
         id = "update_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperUpdateDialog",

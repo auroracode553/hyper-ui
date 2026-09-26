@@ -55,7 +55,7 @@ object HyperIconButtonDefaults {
 
 ```kotlin
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
+import hyper_ui.HyperIcon
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.composables.icons.lucide.R as LucideR
@@ -76,10 +76,10 @@ HyperIconButton(
     onClick = onPlay,
     modifier = Modifier.size(56.dp),
     colors = HyperIconButtonDefaults.colors(
-        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.64f),
-        pressedContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.76f),
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        pressedContentColor = MaterialTheme.colorScheme.primary
+        containerColor = HyperColors.accent.copy(alpha = 0.64f),
+        pressedContainerColor = HyperColors.accentContainer.copy(alpha = 0.76f),
+        contentColor = HyperColors.primaryText,
+        pressedContentColor = HyperColors.accent
     )
 ) {
     Icon(

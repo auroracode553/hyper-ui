@@ -38,7 +38,7 @@ fun HyperTextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(
+    textStyle: TextStyle = HyperTheme.typography.bodyMedium.copy(
         fontSize = 16.sp,
         lineHeight = 22.sp
     ),

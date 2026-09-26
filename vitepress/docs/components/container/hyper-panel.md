@@ -50,7 +50,7 @@ object HyperPanelDefaults {
 ```kotlin
 HyperPanel(
     colors = HyperPanelDefaults.colors(
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = HyperColors.cardContainer
     )
 ) {
     Text("系统状态")
