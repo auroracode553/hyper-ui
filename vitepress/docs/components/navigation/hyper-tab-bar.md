@@ -9,7 +9,7 @@
 `HyperTabBar` 通过 `type` 参数在两种样式间切换：
 
 - **Docked（贴底，默认）**：总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。贴底容器默认只绘制 0.5dp 的低对比度顶部发丝线，不使用阴影或整框描边；深色模式下容器与发丝线采用当前 `MaterialTheme.colorScheme.background`，浅色模式保留轻量透明度。两种模式均不叠加玻璃高光或渐变。
-- **Floating（悬浮玻璃胶囊）**：参考 Flutter `HyTabBar` 的悬浮样式。玻璃胶囊容器悬浮于页面（四周留白 16/8/16/10dp），内部指示胶囊以弹簧吸附选中项；按下时指示胶囊吸附到所按项目并放大，内容颜色随指示位置在选中色与未选中色之间连续渐变。
+- **Floating（悬浮玻璃胶囊）**：56dp 轻薄磨砂底座悬浮于页面（四周留白 16/8/16/12dp）。选中托盘按实际标签格中心定位，以弹簧吸附选中项；按下时轻微放大，内容颜色随托盘位置渐变。
 
 ## 公开 API
 
@@ -100,15 +100,14 @@ object HyperTabBarDefaults {
 
 ```kotlin
 object HyperFloatingTabBarDefaults {
-    val Height = 50.dp
-    val Margin = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 10.dp)
-    val InnerPadding = 3.dp
-    val IndicatorVerticalInset = 2.dp
-    val Elevation = 4.dp
-    val MinPillWidth = 16.dp
-    val MaxPillWidth = 112.dp
-    val PillGap = 8.dp
-    val PressWidthGrowth = 5.dp
+    val Height = 56.dp
+    val Margin = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 12.dp)
+    val InnerPadding = 5.dp
+    val IndicatorVerticalInset = 7.dp
+    val Elevation = 5.dp
+    val MaxPillWidth = 80.dp
+    val PillGap = 16.dp
+    val PressWidthGrowth = 4.dp
     val PressHeightGrowth = 2.dp
     val PressInMillis = 85
     val PressOutMillis = 180
@@ -142,7 +141,7 @@ object HyperFloatingTabBarDefaults {
 | `floatingColors` | `HyperFloatingTabBarColors` | 否 | `HyperFloatingTabBarDefaults.colors()` | 仅 Floating 样式使用。 |
 | `content` | `@Composable RowScope.() -> Unit` | 是 | 无 | 完整自定义内容。 |
 
-Docked 入口固定提供水平 16dp 内边距、5dp 底部留白和 `ItemTextStyle`。Floating 入口固定提供 16/8/16/10dp 悬浮留白、3dp 胶囊内边距和 `ItemTextStyle`，不使用发丝线、整框描边或贴底留白。
+Docked 入口固定提供水平 16dp 内边距、5dp 底部留白和 `ItemTextStyle`。Floating 入口固定提供 16/8/16/12dp 悬浮留白、5dp 胶囊内边距和 `ItemTextStyle`，不使用发丝线、整框描边或贴底留白。
 
 ## Items 入口附加参数
 
@@ -166,11 +165,11 @@ Floating 模式下项目固定等分宽度，忽略 `itemLayout`、`itemSlotAlig
 
 ## Floating 样式行为
 
-- 指示胶囊宽度取「等分格宽度 - 8dp」，夹在 `MinPillWidth`(16dp) 与 `MaxPillWidth`(112dp) 之间；高度为内容区高度减去 2dp 单侧垂直留白。
-- 选中切换使用 `SelectionSpring` 弹簧吸附；按下时指示胶囊先吸附到所按项目并放大（宽度 +5dp、高度 +2dp），释放未命中选中则弹回。
+- 选中托盘中心与内边距后的等分标签格中心一致，LTR 和 RTL 排列都能对齐；宽度取「标签格宽度 - 16dp」，上限为 `MaxPillWidth`(80dp)，窄屏下不超过格宽。默认高度 42dp，垂直居中。
+- 选中切换使用 `SelectionSpring` 弹簧吸附；按下时托盘先吸附到所按项目并轻微放大（宽度最多 +4dp、高度 +2dp），释放未命中选中则弹回。
 - 内容颜色按 `selectionStrength` 在 `unselectedContentColor` 与 `selectedContentColor` 间连续插值；`selectionStrength` 随指示胶囊位置在 0f~1f 间连续变化。
-- 指示胶囊底色使用独立 `indicatorColor`（浅色 `#F1F3F5` / 深色 `#272C35`），不随主题强调色变化。
-- 容器使用玻璃表面：浅色白色 `0.92f` alpha、深色 `#1B1F27` 玻璃，叠加顶部高光与 4dp 抬升阴影。
+- 托盘底色使用独立 `indicatorColor`（浅色中性蓝灰 `0.82f` alpha / 深色白色 `0.14f` alpha），调用方可用 `floatingColors` 覆盖。
+- 容器在两种主题下均以白色半透明底混合页面：浅色 `0.78f` alpha、深色 `0.30f` alpha，配合克制的顶部柔光与单层 5dp 阴影。
 - 不实现 Flutter 版的拖拽释放惯性滑动；项目交互为按下吸附 + 点击选中。
 
 ## 最小用法
@@ -209,6 +208,6 @@ HyperTabBar(
 - Docked 样式：`Equal` 项目等分宽度；`Packed` 项目至少 60dp 宽，内容可继续撑宽。默认容器在浅色模式使用白色 `0.92f` alpha；深色模式直接使用当前 `MaterialTheme.colorScheme.background`。`topDivider` 只绘制顶边，不包围容器四周；浅色模式默认使用 0.5dp、黑色 `0.055f` alpha 的低对比度发丝线，深色模式使用页面背景色隐藏灰边。`Height` 表示 55dp 标签操作区，默认底栏总高度为 60dp。
 - Floating 样式：需要至少 2 个标签项；项目等分宽度且不提供 Packed 布局。胶囊悬浮留白、高度与阴影已内置于组件，外部间距无需再通过 `modifier.padding(...)` 添加。指示胶囊仅在存在选中项或被按下时可见；无任何选中时隐藏。
 - 通常不应使用 `modifier.height(...)` 强制压缩底栏总高度，否则可能挤占内部操作区或底部留白。
-- Floating 样式内容以 LTR 布局渲染，不处理 RTL 镜像。
+- Floating 样式随布局方向排列标签与托盘；slot 模式的选中视觉仍由调用方绘制。
 
 <WasmPreview demo="tab-bar" title="HyperTabBar 交互预览" />

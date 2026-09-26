@@ -265,7 +265,7 @@ preview/
 - UI 库内部公共工具放在 `library/src/main/java/hyper_ui/core/` 下，供组件实现复用，不作为调用方公开入口。
 - Android-only 工具不能进入 `commonMain` 编译链；Preview 页面只展示说明、可交互模拟和 Android 调用片段。
 - `HyperDrawer` 的四个方向均使用主题卡片色的不透明结构玻璃，通过公共深度层的 1dp 低对比度主题描边和单层 `5.dp` 投影形成空间层次。自定义 `containerColor` 若带 alpha，会先与页面背景合成为不透明颜色。打开与关闭直接渲染或移除，不执行动画，外部点击区域不绘制遮罩。组件默认提供方向化内容间距与 `safeDrawing` 系统栏避让；需要完整内容区时传入 `defaultSetPadding = false`，附加场景布局继续通过 `drawerContentModifier` 提供。上下抽屉默认由内容撑高，达到窗口最大占比后在面板内部滚动；承载 `LazyColumn`、`HyperList` 等纵向滚动内容时设置 `drawerContentScrollEnabled = false`，由内层列表独立滚动。
-- `HyperTabBar` 不依赖任何导航框架，通过 `type` 参数提供两种样式。Docked 贴底样式默认只绘制 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式下使用 `MaterialTheme.colorScheme.background` 并隐藏灰边，浅色模式保留白色 `0.92f` alpha，均不叠加玻璃高光。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp。Floating 悬浮样式参考 Flutter `HyTabBar`：50dp 玻璃胶囊容器带 16/8/16/10dp 悬浮留白与 4dp 抬升阴影，指示胶囊以弹簧吸附选中项（宽度夹在 16dp~112dp），按下时吸附所按项目并放大，内容色随 `selectionStrength` 连续渐变；该样式忽略 `itemLayout`、`shape`、`topDivider` 与 `colors`，使用独立的 `floatingColors` 与 `HyperFloatingTabBarDefaults`。页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
+- `HyperTabBar` 不依赖任何导航框架，通过 `type` 参数提供两种样式。Docked 贴底样式默认只绘制 0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式下使用 `MaterialTheme.colorScheme.background` 并隐藏灰边，浅色模式保留白色 `0.92f` alpha，均不叠加玻璃高光。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp。Floating 悬浮样式使用 56dp 轻薄玻璃胶囊，带 16/8/16/12dp 悬浮留白与 5dp 柔和阴影；选中托盘以实际标签格中心定位，宽度不超过 80dp，按下时吸附并轻微放大，内容色随 `selectionStrength` 连续渐变。该样式忽略 `itemLayout`、`shape`、`topDivider` 与 `colors`，使用独立的 `floatingColors` 与 `HyperFloatingTabBarDefaults`。页面状态、内部按钮布局或跳转由调用方在 slot / `onItemClick` 中处理。
 - 调用方接入时不需要依赖 `preview` 模块。
 - Wasm 入口接受 `#组件-id`，例如 `index.html?embedded=1#button`，供 VitePress 组件页选择纯组件预览；未知 ID 回退到第一个组件。
 

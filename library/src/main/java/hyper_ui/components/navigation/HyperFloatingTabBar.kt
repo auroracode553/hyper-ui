@@ -15,11 +15,11 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,8 +40,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 import kotlin.math.abs
@@ -58,7 +62,7 @@ data class HyperFloatingTabBarColors(
 /**
  * 悬浮玻璃胶囊样式的底部标签栏（items 模式）。
  *
- * 胶囊内边距 3dp，指示胶囊宽度取「等分格宽度 - 8dp」并夹在 16dp~112dp 之间；
+ * 指示托盘以实际标签格中心定位，宽度限制在格宽之内；
  * 按下时指示胶囊吸附到所按项目并略微放大，释放未命中选中则弹回；选中切换使用
  * 与 Flutter HyTabBar 一致的弹簧吸附。内容颜色按指示位置在选中/未选中色之间渐变。
  */
@@ -78,6 +82,7 @@ internal fun <T> HyperFloatingTabBar(
     val position = remember { Animatable(selectedIndex.coerceAtLeast(0).toFloat()) }
     val pressDepth = remember { Animatable(0f) }
     var pressedIndex by remember { mutableStateOf<Int?>(null) }
+    val layoutDirection = LocalLayoutDirection.current
 
     LaunchedEffect(pressedIndex) {
         pressDepth.animateTo(
@@ -98,35 +103,50 @@ internal fun <T> HyperFloatingTabBar(
         }
     }
 
-    HyperFloatingTabBarSurface(modifier = modifier, colors = colors) {
+    HyperFloatingTabBarSurface(modifier = modifier, colors = colors, enabled = enabled) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             val itemCount = items.size
-            val pillWidth = (maxWidth / itemCount - HyperFloatingTabBarDefaults.PillGap)
-                .coerceAtMost(HyperFloatingTabBarDefaults.MaxPillWidth)
-                .coerceAtLeast(HyperFloatingTabBarDefaults.MinPillWidth)
-            val step = ((maxWidth - pillWidth) / (itemCount - 1)).coerceAtLeast(0.dp)
+            val contentWidth = (maxWidth - HyperFloatingTabBarDefaults.InnerPadding * 2)
+                .coerceAtLeast(0.dp)
+            val itemWidth = contentWidth / itemCount
+            val pillWidth = (itemWidth - HyperFloatingTabBarDefaults.PillGap)
+                .coerceIn(0.dp, HyperFloatingTabBarDefaults.MaxPillWidth)
             val press = pressDepth.value
-            val indicatorWidth =
-                pillWidth + HyperFloatingTabBarDefaults.PressWidthGrowth * press
+            val indicatorWidth = (pillWidth + HyperFloatingTabBarDefaults.PressWidthGrowth * press)
+                .coerceAtMost(itemWidth)
             val indicatorHeight = (
                 maxHeight -
-                    HyperFloatingTabBarDefaults.InnerPadding * 2 -
                     HyperFloatingTabBarDefaults.IndicatorVerticalInset * 2 +
                     HyperFloatingTabBarDefaults.PressHeightGrowth * press
-                ).coerceAtLeast(0.dp)
-            val centerX = pillWidth / 2 + step * position.value
+                ).coerceIn(0.dp, maxHeight)
+            val visualPosition = if (layoutDirection == LayoutDirection.Rtl) {
+                itemCount - 1 - position.value
+            } else {
+                position.value
+            }
+            val centerX = HyperFloatingTabBarDefaults.InnerPadding +
+                itemWidth * (visualPosition + 0.5f)
             val left = (centerX - indicatorWidth / 2)
-                .coerceIn(0.dp, (maxWidth - indicatorWidth).coerceAtLeast(0.dp))
+                .coerceIn(
+                    HyperFloatingTabBarDefaults.InnerPadding,
+                    (maxWidth - HyperFloatingTabBarDefaults.InnerPadding - indicatorWidth)
+                        .coerceAtLeast(HyperFloatingTabBarDefaults.InnerPadding)
+                )
             val top = (maxHeight - indicatorHeight) / 2
             val indicatorVisible = selectedIndex >= 0 || pressedIndex != null
+            val indicatorAlpha = when {
+                !indicatorVisible -> 0f
+                !enabled -> 0.5f
+                else -> 1f
+            }
 
             // 指示胶囊先绘制，位于内容 Row 下层。
             Box(
                 modifier = Modifier
-                    .offset(x = left, y = top)
+                    .absoluteOffset(x = left, y = top)
                     .width(indicatorWidth)
                     .height(indicatorHeight)
-                    .alpha(if (indicatorVisible) 1f else 0f)
+                    .alpha(indicatorAlpha)
                     .clip(RoundedCornerShape(percent = 50))
                     .background(color = colors.indicatorColor)
             )
@@ -141,10 +161,12 @@ internal fun <T> HyperFloatingTabBar(
                         MutableInteractionSource()
                     }
                     val isPressed by interactionSource.collectIsPressedAsState()
-                    if (isPressed) {
-                        pressedIndex = index
-                    } else if (pressedIndex == index) {
-                        pressedIndex = null
+                    LaunchedEffect(isPressed, index) {
+                        if (isPressed) {
+                            pressedIndex = index
+                        } else if (pressedIndex == index) {
+                            pressedIndex = null
+                        }
                     }
                     val actualEnabled = enabled && itemEnabled(item)
                     val selected = selectedIndex == index
@@ -167,9 +189,10 @@ internal fun <T> HyperFloatingTabBar(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
+                            .semantics { this.selected = selected }
                             .hyperNoRippleClickable(
                                 enabled = actualEnabled,
-                                role = Role.Button,
+                                role = Role.Tab,
                                 interactionSource = interactionSource,
                                 onClick = { onItemClick(item) }
                             ),
@@ -208,7 +231,7 @@ internal fun HyperFloatingTabBar(
     } else {
         colors.disabledContentColor
     }
-    HyperFloatingTabBarSurface(modifier = modifier, colors = colors) {
+    HyperFloatingTabBarSurface(modifier = modifier, colors = colors, enabled = enabled) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -230,6 +253,7 @@ internal fun HyperFloatingTabBar(
 private fun HyperFloatingTabBarSurface(
     modifier: Modifier,
     colors: HyperFloatingTabBarColors,
+    enabled: Boolean,
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
@@ -240,11 +264,13 @@ private fun HyperFloatingTabBarSurface(
             .hyperGlassSurface(
                 shape = RoundedCornerShape(HyperFloatingTabBarDefaults.Height / 2),
                 visuals = hyperGlassSurfaceVisuals(
-                    containerColor = colors.containerColor,
-                    elevation = HyperFloatingTabBarDefaults.Elevation,
-                    topLightAlpha = if (HyperColors.isLight) 0.36f else 0.14f,
-                    bottomShadeAlpha = if (HyperColors.isLight) 0.05f else 0.12f,
-                    shadowAlpha = if (HyperColors.isLight) 0.16f else 0.30f
+                    containerColor = if (enabled) colors.containerColor else {
+                        colors.containerColor.copy(alpha = colors.containerColor.alpha * 0.6f)
+                    },
+                    elevation = if (enabled) HyperFloatingTabBarDefaults.Elevation else 0.dp,
+                    topLightAlpha = if (!enabled) 0f else if (HyperColors.isLight) 0.10f else 0.06f,
+                    bottomShadeAlpha = if (!enabled) 0f else if (HyperColors.isLight) 0.02f else 0.04f,
+                    shadowAlpha = if (!enabled) 0f else if (HyperColors.isLight) 0.12f else 0.22f
                 )
             )
     ) {
@@ -254,31 +280,28 @@ private fun HyperFloatingTabBarSurface(
 
 object HyperFloatingTabBarDefaults {
     /** 胶囊高度。 */
-    val Height = 50.dp
+    val Height = 56.dp
 
     /** 胶囊与页面边缘的悬浮留白。 */
-    val Margin = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 10.dp)
+    val Margin = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 12.dp)
 
     /** 胶囊内边距；指示胶囊与内容均在此范围内居中。 */
-    val InnerPadding = 3.dp
+    val InnerPadding = 5.dp
 
-    /** 指示胶囊相对内容区的单侧垂直留白。 */
-    val IndicatorVerticalInset = 2.dp
+    /** 指示托盘相对外层胶囊的单侧垂直留白。 */
+    val IndicatorVerticalInset = 7.dp
 
     /** 悬浮抬升高度，控制阴影强度。 */
-    val Elevation = 4.dp
-
-    /** 指示胶囊最小宽度。 */
-    val MinPillWidth = 16.dp
+    val Elevation = 5.dp
 
     /** 指示胶囊最大宽度。 */
-    val MaxPillWidth = 112.dp
+    val MaxPillWidth = 80.dp
 
-    /** 指示胶囊相对等分格子的单侧间隙。 */
-    val PillGap = 8.dp
+    /** 指示托盘相对等分格子的总宽度差。 */
+    val PillGap = 16.dp
 
     /** 按压时指示胶囊的宽度增长。 */
-    val PressWidthGrowth = 5.dp
+    val PressWidthGrowth = 4.dp
 
     /** 按压时指示胶囊的高度增长。 */
     val PressHeightGrowth = 2.dp
@@ -315,7 +338,8 @@ object HyperFloatingTabBarDefaults {
             ),
             indicatorColor = resolveHyperContainerColor(
                 indicatorColor,
-                if (isLight) rgba(241, 243, 245, 1f) else rgba(39, 44, 53, 1f)
+                if (isLight) Color(220f / 255f, 226f / 255f, 233f / 255f, 0.82f)
+                else Color(1f, 1f, 1f, 0.14f)
             ),
             selectedContentColor = resolveHyperContainerColor(
                 selectedContentColor,
@@ -330,10 +354,10 @@ object HyperFloatingTabBarDefaults {
     }
 }
 
-/** 浅色保留轻量透明度；深色使用略高于页面背景的深色玻璃。 */
+/** 两种主题都以白色半透明底形成中性磨砂材质。 */
 @Composable
 private fun defaultHyperFloatingContainerColor(): Color = if (HyperColors.isLight) {
-    rgba(255, 255, 255, 0.92f)
+    Color(1f, 1f, 1f, 0.78f)
 } else {
-    rgba(27, 31, 39, 0.92f)
+    Color(1f, 1f, 1f, 0.30f)
 }

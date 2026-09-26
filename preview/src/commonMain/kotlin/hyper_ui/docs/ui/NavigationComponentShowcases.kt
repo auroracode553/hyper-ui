@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import hyper_ui.HyperTabBar
 import hyper_ui.HyperTabBarDefaults
 import hyper_ui.HyperTabBarType
+import hyper_ui.HyperFloatingTabBarDefaults
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonDefaults
 import hyper_ui.HyperButtonTone
@@ -433,13 +434,19 @@ fun TabBarDemo() {
     var selectedItemId by remember { mutableStateOf("home") }
     var showTopDivider by remember { mutableStateOf(true) }
     var barType by remember { mutableStateOf(HyperTabBarType.Docked) }
-    val bottomItems = listOf(
+    var showFiveItems by remember { mutableStateOf(false) }
+    var useAccent by remember { mutableStateOf(false) }
+    var disableNotice by remember { mutableStateOf(false) }
+    var barEnabled by remember { mutableStateOf(true) }
+    val allItems = listOf(
         DemoNavItem("home", "首页", Icons.Default.Home),
         DemoNavItem("recent", "最近", Icons.Default.Info),
         DemoNavItem("notice", "消息", Icons.Default.Notifications),
-        DemoNavItem("settings", "设置", Icons.Default.Settings)
+        DemoNavItem("settings", "设置", Icons.Default.Settings),
+        DemoNavItem("search", "搜索", Icons.Default.Search)
     )
-    val selectedTitle = bottomItems.first { it.id == selectedItemId }.label
+    val bottomItems = if (showFiveItems) allItems else allItems.dropLast(1)
+    val selectedTitle = bottomItems.firstOrNull { it.id == selectedItemId }?.label ?: "首页"
     val floating = barType == HyperTabBarType.Floating
 
     Column(
@@ -470,7 +477,7 @@ fun TabBarDemo() {
                     )
                     Text(
                         text = if (floating) {
-                            "悬浮胶囊样式：玻璃胶囊悬浮于页面，指示胶囊以弹簧吸附选中项；按下时胶囊放大并吸附到所按项目，内容色随指示位置渐变。"
+                            "悬浮样式：柔和玻璃底座，选中托盘居中于标签格；点按标签可查看吸附与颜色变化。"
                         } else {
                             "贴底样式：0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式与页面同色。底栏总高度为 60dp。"
                         },
@@ -507,13 +514,43 @@ fun TabBarDemo() {
                         ) {
                             Text(text = if (showTopDivider) "隐藏顶部发丝线" else "显示顶部发丝线")
                         }
+                    } else {
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            HyperButton(onClick = {
+                                showFiveItems = !showFiveItems
+                                if (!showFiveItems && selectedItemId == "search") selectedItemId = "home"
+                            }, tone = HyperButtonTone.Tonal) {
+                                Text(if (showFiveItems) "显示 4 项" else "显示 5 项")
+                            }
+                            HyperButton(onClick = { useAccent = !useAccent }, tone = HyperButtonTone.Tonal) {
+                                Text(if (useAccent) "默认配色" else "强调配色")
+                            }
+                        }
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            HyperButton(onClick = { disableNotice = !disableNotice }, tone = HyperButtonTone.Tonal) {
+                                Text(if (disableNotice) "启用消息" else "禁用消息")
+                            }
+                            HyperButton(onClick = { barEnabled = !barEnabled }, tone = HyperButtonTone.Tonal) {
+                                Text(if (barEnabled) "禁用整栏" else "启用整栏")
+                            }
+                        }
                     }
                 }
                 HyperTabBar(
                     items = bottomItems,
                     type = barType,
+                    enabled = barEnabled,
                     itemSelected = { item -> item.id == selectedItemId },
+                    itemEnabled = { item -> !disableNotice || item.id != "notice" },
                     onItemClick = { item -> selectedItemId = item.id },
+                    floatingColors = if (useAccent) {
+                        HyperFloatingTabBarDefaults.colors(
+                            indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                            selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    } else {
+                        HyperFloatingTabBarDefaults.colors()
+                    },
                     topDivider = if (showTopDivider && !floating) {
                         HyperTabBarDefaults.topDivider()
                     } else {

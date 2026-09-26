@@ -139,7 +139,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tab-bar",
         group = GROUP_NAVIGATION,
         title = "HyperTabBar",
-        description = "通过 type 参数在两种样式间切换：Docked 贴底样式使用 0.5dp 低对比度顶部发丝线、无阴影；Floating 悬浮样式使用玻璃胶囊容器、弹簧吸附的滑动指示胶囊与按压加深反馈。",
+        description = "通过 type 参数切换贴底与悬浮样式：Floating 使用轻薄玻璃底座，选中托盘按标签格中心定位；可切换 4/5 项、配色与禁用态。",
         code = """
             HyperTabBar(
                 items = bottomItems,
@@ -155,10 +155,13 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("样式切换", "type = Docked/Floating", "同一个 items 入口切换贴底与悬浮胶囊"),
-            DemoVariant("玻璃胶囊容器", "Margin / Height / Elevation", "悬浮留白、胶囊高度与抬升阴影"),
-            DemoVariant("滑动指示胶囊", "SelectionSpring", "弹簧吸附选中项，宽度夹在 16dp~112dp"),
+            DemoVariant("玻璃胶囊容器", "Margin / Height / Elevation", "56dp 轻薄磨砂底座与单层柔和阴影"),
+            DemoVariant("居中选中托盘", "SelectionSpring", "按实际标签格中心弹簧吸附，宽度不超过 80dp"),
             DemoVariant("按压加深", "PressWidthGrowth / PressHeightGrowth", "按下吸附所按项目并放大指示胶囊"),
             DemoVariant("内容色渐变", "selectionStrength", "指示位置在选中色与未选中色间连续插值"),
+            DemoVariant("项目数量", "4/5 items", "切换项目数验证托盘始终对齐标签中心"),
+            DemoVariant("强调配色", "floatingColors", "切换选中托盘与内容色"),
+            DemoVariant("禁用态", "enabled / itemEnabled", "切换整栏与消息项禁用状态"),
             DemoVariant("顶部发丝线", "topDivider = HyperTabBarDefaults.topDivider()", "0.5dp 低对比分隔，仅贴底样式生效，可交互关闭"),
             DemoVariant("底部留白", "BottomPadding = 5.dp", "贴底样式与系统手势小白条保持少量距离"),
             DemoVariant("操作区高度", "Height = 55.dp", "贴底样式搭配留白后总高度为 60dp"),
