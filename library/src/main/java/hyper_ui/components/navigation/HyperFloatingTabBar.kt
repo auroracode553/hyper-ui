@@ -6,8 +6,8 @@ import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -33,11 +33,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -47,8 +50,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.input.pointer.util.VelocityTracker
+import androidx.compose.ui.input.pointer.pointerInput
 import hyper_ui.core.interaction.hyperNoRippleClickable
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 @Immutable
 data class HyperFloatingTabBarColors(
@@ -62,9 +70,8 @@ data class HyperFloatingTabBarColors(
 /**
  * 悬浮玻璃胶囊样式的底部标签栏（items 模式）。
  *
- * 指示托盘以实际标签格中心定位，宽度限制在格宽之内；
- * 按下时指示胶囊吸附到所按项目并略微放大，释放未命中选中则弹回；选中切换使用
- * 与 Flutter HyTabBar 一致的弹簧吸附。内容颜色按指示位置在选中/未选中色之间渐变。
+ * 静止时托盘以实际标签格中心定位；按下展开为半透明水珠，拖动时跟手移动并在边界增加阻力，
+ * 松手后按速度投影并用弹簧吸附。内容颜色和缩放按水珠位置连续变化。
  */
 @Composable
 internal fun <T> HyperFloatingTabBar(
@@ -78,54 +85,178 @@ internal fun <T> HyperFloatingTabBar(
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
 ) {
     require(items.size >= 2) { "HyperFloatingTabBar 至少需要 2 个标签项" }
-    val selectedIndex = items.indexOfFirst(itemSelected)
-    val position = remember { Animatable(selectedIndex.coerceAtLeast(0).toFloat()) }
-    val pressDepth = remember { Animatable(0f) }
-    var pressedIndex by remember { mutableStateOf<Int?>(null) }
     val layoutDirection = LocalLayoutDirection.current
-
-    LaunchedEffect(pressedIndex) {
-        pressDepth.animateTo(
-            targetValue = if (pressedIndex != null) 1f else 0f,
-            animationSpec = tween(
-                durationMillis = if (pressedIndex != null) {
-                    HyperFloatingTabBarDefaults.PressInMillis
-                } else {
-                    HyperFloatingTabBarDefaults.PressOutMillis
-                }
-            )
-        )
+    val selectedIndex = items.indexOfFirst(itemSelected)
+    val visualSelectedIndex = if (selectedIndex >= 0) {
+        if (layoutDirection == LayoutDirection.Rtl) {
+            items.lastIndex - selectedIndex
+        } else {
+            selectedIndex
+        }
+    } else {
+        0
     }
-    LaunchedEffect(pressedIndex, selectedIndex) {
-        val target = pressedIndex ?: selectedIndex
+    val position = remember { Animatable(visualSelectedIndex.toFloat()) }
+    val lensExpansion = remember { Animatable(0f) }
+    var pressedIndex by remember { mutableStateOf<Int?>(null) }
+    var dragActive by remember { mutableStateOf(false) }
+    var dragVelocity by remember { mutableStateOf(0f) }
+    var grabOffsetPx by remember { mutableStateOf(0f) }
+    var pointerDownX by remember { mutableStateOf(0f) }
+    val velocityTracker = remember { VelocityTracker() }
+    val latestOnItemClick by rememberUpdatedState(onItemClick)
+    val latestItemEnabled by rememberUpdatedState(itemEnabled)
+    val latestSelectedIndex by rememberUpdatedState(selectedIndex)
+    val latestVisualSelectedIndex by rememberUpdatedState(visualSelectedIndex)
+
+    LaunchedEffect(selectedIndex, layoutDirection) {
+        val target = visualSelectedIndex
         if (target >= 0) {
             position.animateTo(target.toFloat(), HyperFloatingTabBarDefaults.SelectionSpring)
         }
     }
 
     HyperFloatingTabBarSurface(modifier = modifier, colors = colors, enabled = enabled) {
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        BoxWithConstraints(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(items, enabled, layoutDirection) {
+                    coroutineScope {
+                        var positionJob: kotlinx.coroutines.Job? = null
+                        var lensJob: kotlinx.coroutines.Job? = null
+                        awaitEachGesture {
+                        val down = awaitFirstDown(requireUnconsumed = false)
+                        if (!enabled) return@awaitEachGesture
+                        val inset = HyperFloatingTabBarDefaults.InnerPadding.toPx()
+                        val cell = (size.width - inset * 2f) / items.size
+                        if (cell <= 0f) return@awaitEachGesture
+                        val visual = ((down.position.x - inset) / cell)
+                            .toInt()
+                            .coerceIn(0, items.lastIndex)
+                        val logicalDown = if (layoutDirection == LayoutDirection.Rtl) {
+                            items.lastIndex - visual
+                        } else {
+                            visual
+                        }
+                        if (!latestItemEnabled(items[logicalDown])) return@awaitEachGesture
+                        val center = inset + cell * (visual + 0.5f)
+                        pointerDownX = down.position.x
+                        grabOffsetPx = down.position.x - center
+                        pressedIndex = visual
+                        dragActive = false
+                        dragVelocity = 0f
+                        velocityTracker.resetTracking()
+                        velocityTracker.addPosition(down.uptimeMillis, down.position)
+                        positionJob?.cancel()
+                        positionJob = launch {
+                            position.snapTo(visual.toFloat())
+                        }
+                        lensJob?.cancel()
+                        lensJob = launch {
+                            lensExpansion.snapTo(0f)
+                            lensExpansion.animateTo(
+                                1f,
+                                tween(HyperFloatingTabBarDefaults.LensInMillis)
+                            )
+                        }
+
+                        var finished = false
+                        try {
+                            while (!finished) {
+                                val event = awaitPointerEvent()
+                                val change = event.changes.firstOrNull { it.id == down.id }
+                                    ?: break
+                                velocityTracker.addPosition(change.uptimeMillis, change.position)
+                                if (!change.pressed) {
+                                    finished = true
+                                    continue
+                                }
+                                if (!dragActive && kotlin.math.abs(change.position.x - pointerDownX) <
+                                    HyperFloatingTabBarDefaults.DragSlop.toPx()
+                                ) continue
+                                dragActive = true
+                                val minCenter = inset + cell / 2f
+                                val maxCenter = minCenter + cell * items.lastIndex
+                                val desired = change.position.x - grabOffsetPx
+                                val resisted = resistDrag(desired, minCenter, maxCenter, cell)
+                                positionJob?.cancel()
+                                positionJob = launch {
+                                    position.snapTo((resisted - minCenter) / cell)
+                                }
+                                dragVelocity = velocityTracker.calculateVelocity().x / cell
+                                change.consume()
+                            }
+                            val releaseVelocity = velocityTracker.calculateVelocity().x / cell
+                            val projected = position.value + releaseVelocity *
+                                HyperFloatingTabBarDefaults.ProjectionSeconds
+                            val wasDragging = dragActive
+                            val targetVisual = if (wasDragging) {
+                                projected.roundToInt().coerceIn(0, items.lastIndex)
+                            } else {
+                                pressedIndex ?: latestVisualSelectedIndex
+                            }
+                            val logical = if (layoutDirection == LayoutDirection.Rtl) {
+                                items.lastIndex - targetVisual
+                            } else {
+                                targetVisual
+                            }
+                            pressedIndex = null
+                            dragActive = false
+                            dragVelocity = releaseVelocity
+                            lensJob?.cancel()
+                            lensJob = launch {
+                                lensExpansion.animateTo(
+                                    0f,
+                                    tween(HyperFloatingTabBarDefaults.LensOutMillis)
+                                )
+                            }
+                            positionJob?.cancel()
+                            positionJob = launch {
+                                position.animateTo(
+                                    targetVisual.toFloat(),
+                                    spring(
+                                        dampingRatio = HyperFloatingTabBarDefaults.SnapDampingRatio,
+                                        stiffness = HyperFloatingTabBarDefaults.SnapStiffness
+                                    )
+                                )
+                            }
+                            if (wasDragging && logical != latestSelectedIndex) {
+                                latestOnItemClick(items[logical])
+                            }
+                        } catch (_: kotlinx.coroutines.CancellationException) {
+                            pressedIndex = null
+                            dragActive = false
+                            lensJob?.cancel()
+                            lensJob = launch {
+                                lensExpansion.animateTo(
+                                    0f,
+                                    tween(HyperFloatingTabBarDefaults.LensOutMillis)
+                                )
+                            }
+                            positionJob?.cancel()
+                            positionJob = launch {
+                                position.animateTo(
+                                    latestVisualSelectedIndex.toFloat(),
+                                    HyperFloatingTabBarDefaults.SelectionSpring
+                                )
+                            }
+                        }
+                        }
+                    }
+                }
+        ) {
             val itemCount = items.size
             val contentWidth = (maxWidth - HyperFloatingTabBarDefaults.InnerPadding * 2)
                 .coerceAtLeast(0.dp)
             val itemWidth = contentWidth / itemCount
             val pillWidth = (itemWidth - HyperFloatingTabBarDefaults.PillGap)
                 .coerceIn(0.dp, HyperFloatingTabBarDefaults.MaxPillWidth)
-            val press = pressDepth.value
-            val indicatorWidth = (pillWidth + HyperFloatingTabBarDefaults.PressWidthGrowth * press)
-                .coerceAtMost(itemWidth)
-            val indicatorHeight = (
-                maxHeight -
-                    HyperFloatingTabBarDefaults.IndicatorVerticalInset * 2 +
-                    HyperFloatingTabBarDefaults.PressHeightGrowth * press
-                ).coerceIn(0.dp, maxHeight)
-            val visualPosition = if (layoutDirection == LayoutDirection.Rtl) {
-                itemCount - 1 - position.value
-            } else {
-                position.value
-            }
+            val expansion = lensExpansion.value
+            val indicatorWidth = pillWidth.coerceAtMost(itemWidth)
+            val indicatorHeight = (maxHeight - HyperFloatingTabBarDefaults.IndicatorVerticalInset * 2)
+                .coerceAtLeast(0.dp)
             val centerX = HyperFloatingTabBarDefaults.InnerPadding +
-                itemWidth * (visualPosition + 0.5f)
+                itemWidth * (position.value + 0.5f)
             val left = (centerX - indicatorWidth / 2)
                 .coerceIn(
                     HyperFloatingTabBarDefaults.InnerPadding,
@@ -137,8 +268,19 @@ internal fun <T> HyperFloatingTabBar(
             val indicatorAlpha = when {
                 !indicatorVisible -> 0f
                 !enabled -> 0.5f
-                else -> 1f
+                else -> (1f - expansion * 1.5f).coerceIn(0f, 1f)
             }
+            val lensWidth = (
+                pillWidth + HyperFloatingTabBarDefaults.LensWidthGrowth * expansion +
+                    (HyperFloatingTabBarDefaults.VelocityWidthGrowth * abs(dragVelocity))
+                        .coerceAtMost(HyperFloatingTabBarDefaults.MaxVelocityWidthGrowth) * expansion
+                ).coerceAtMost(maxWidth + 24.dp)
+            val lensHeight = (
+                maxHeight - 8.dp + HyperFloatingTabBarDefaults.LensHeightGrowth * expansion
+                ).coerceAtMost(maxHeight + 18.dp)
+            val lensLeft = (centerX - lensWidth / 2)
+                .coerceIn(-12.dp, (maxWidth + 12.dp - lensWidth).coerceAtLeast(-12.dp))
+            val lensTop = (maxHeight - lensHeight) / 2
 
             // 指示胶囊先绘制，位于内容 Row 下层。
             Box(
@@ -157,20 +299,15 @@ internal fun <T> HyperFloatingTabBar(
                     .padding(HyperFloatingTabBarDefaults.InnerPadding)
             ) {
                 items.forEachIndexed { index, item ->
-                    val interactionSource = remember(item, enabled) {
-                        MutableInteractionSource()
-                    }
-                    val isPressed by interactionSource.collectIsPressedAsState()
-                    LaunchedEffect(isPressed, index) {
-                        if (isPressed) {
-                            pressedIndex = index
-                        } else if (pressedIndex == index) {
-                            pressedIndex = null
-                        }
-                    }
                     val actualEnabled = enabled && itemEnabled(item)
                     val selected = selectedIndex == index
-                    val strength = (1f - abs(position.value - index.toFloat()))
+                    val visualIndex = if (layoutDirection == LayoutDirection.Rtl) {
+                        itemCount - 1 - index
+                    } else {
+                        index
+                    }
+                    val strength = (1f - abs(position.value - visualIndex.toFloat()) *
+                        HyperFloatingTabBarDefaults.SelectionDistanceFalloff)
                         .coerceIn(0f, 1f)
                     val scope = HyperTabBarItemScope(
                         selected = selected,
@@ -189,11 +326,16 @@ internal fun <T> HyperFloatingTabBar(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
+                            .graphicsLayer {
+                                val scale = 1f + strength * expansion *
+                                    HyperFloatingTabBarDefaults.LensScaleGrowth
+                                scaleX = scale
+                                scaleY = scale
+                            }
                             .semantics { this.selected = selected }
                             .hyperNoRippleClickable(
                                 enabled = actualEnabled,
                                 role = Role.Tab,
-                                interactionSource = interactionSource,
                                 onClick = { onItemClick(item) }
                             ),
                         contentAlignment = Alignment.Center
@@ -207,8 +349,42 @@ internal fun <T> HyperFloatingTabBar(
                     }
                 }
             }
+
+            // 水珠最后绘制，使经过的图文保留在其下方并得到放大反馈。
+            if (expansion > 0.001f) {
+                Box(
+                    modifier = Modifier
+                        .absoluteOffset(x = lensLeft, y = lensTop)
+                        .width(lensWidth)
+                        .height(lensHeight)
+                        .alpha(if (enabled) expansion else 0f)
+                        .clip(RoundedCornerShape(percent = 50))
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.White.copy(alpha = expansion * 0.22f),
+                                    colors.indicatorColor.copy(alpha = 0.22f + expansion * 0.12f),
+                                    Color.Black.copy(alpha = expansion * 0.04f)
+                                )
+                            )
+                        )
+                )
+            }
         }
     }
+}
+
+/** 拖动越过首尾标签时逐渐增加阻力，避免托盘硬撞边缘。 */
+private fun resistDrag(value: Float, minimum: Float, maximum: Float, cell: Float): Float {
+    if (value < minimum) {
+        val overshoot = minimum - value
+        return minimum - overshoot * cell * 0.32f / (cell + overshoot * 0.32f)
+    }
+    if (value > maximum) {
+        val overshoot = value - maximum
+        return maximum + overshoot * cell * 0.32f / (cell + overshoot * 0.32f)
+    }
+    return value
 }
 
 /**
@@ -283,36 +459,44 @@ object HyperFloatingTabBarDefaults {
     val Height = 56.dp
 
     /** 胶囊与页面边缘的悬浮留白。 */
-    val Margin = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 12.dp)
+    val Margin = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 12.dp)
 
     /** 胶囊内边距；指示胶囊与内容均在此范围内居中。 */
-    val InnerPadding = 5.dp
+    val InnerPadding = 4.dp
 
     /** 指示托盘相对外层胶囊的单侧垂直留白。 */
-    val IndicatorVerticalInset = 7.dp
+    val IndicatorVerticalInset = 4.dp
 
     /** 悬浮抬升高度，控制阴影强度。 */
     val Elevation = 5.dp
 
     /** 指示胶囊最大宽度。 */
-    val MaxPillWidth = 80.dp
+    val MaxPillWidth = 112.dp
 
     /** 指示托盘相对等分格子的总宽度差。 */
-    val PillGap = 16.dp
+    val PillGap = 2.dp
 
-    /** 按压时指示胶囊的宽度增长。 */
-    val PressWidthGrowth = 4.dp
+    /** 水珠进入/收回动画时长。 */
+    const val LensInMillis = 180
+    const val LensOutMillis = 230
 
-    /** 按压时指示胶囊的高度增长。 */
-    val PressHeightGrowth = 2.dp
+    /** 拖动越过边界前的触摸阈值与速度投影时间。 */
+    val DragSlop = 6.dp
+    const val ProjectionSeconds = 0.09f
 
-    /** 按压加深动画时长（毫秒）。 */
-    const val PressInMillis = 85
+    /** 水珠相对静态托盘的膨胀参数。 */
+    val LensWidthGrowth = 38.dp
+    val LensHeightGrowth = 18.dp
+    val VelocityWidthGrowth = 1.1.dp
+    val MaxVelocityWidthGrowth = 14.dp
+    const val LensScaleGrowth = 0.15f
+    const val SelectionDistanceFalloff = 1.6f
 
-    /** 按压释放动画时长（毫秒）。 */
-    const val PressOutMillis = 180
+    /** Flutter HyTabBar 的弹簧参数。 */
+    const val SnapDampingRatio = 0.9686f
+    const val SnapStiffness = 520f
 
-    /** 选中吸附弹簧，对应 Flutter HyTabBar 的 settleSpring（mass=1, stiffness=470, damping=42）。 */
+    /** 外部选中状态变化时的吸附弹簧。拖动释放使用上方的 Snap 参数。 */
     val SelectionSpring: SpringSpec<Float> = spring(dampingRatio = 0.9686f, stiffness = 470f)
 
     val ItemTextStyle: TextStyle
@@ -343,7 +527,7 @@ object HyperFloatingTabBarDefaults {
             ),
             selectedContentColor = resolveHyperContainerColor(
                 selectedContentColor,
-                if (isLight) rgba(26, 29, 38, 1f) else rgba(243, 244, 246, 1f)
+                MaterialTheme.colorScheme.primary
             ),
             unselectedContentColor = resolvedUnselected,
             disabledContentColor = resolveHyperContainerColor(

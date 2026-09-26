@@ -9,7 +9,7 @@
 `HyperTabBar` 通过 `type` 参数在两种样式间切换：
 
 - **Docked（贴底，默认）**：总高 60dp 的底部标签栏，由 55dp 标签操作区和 5dp 轻量底部留白组成。贴底容器默认只绘制 0.5dp 的低对比度顶部发丝线，不使用阴影或整框描边；深色模式下容器与发丝线采用当前 `MaterialTheme.colorScheme.background`，浅色模式保留轻量透明度。两种模式均不叠加玻璃高光或渐变。
-- **Floating（悬浮玻璃胶囊）**：56dp 轻薄磨砂底座悬浮于页面（四周留白 16/8/16/12dp）。选中托盘按实际标签格中心定位，以弹簧吸附选中项；按下时轻微放大，内容颜色随托盘位置渐变。
+- **Floating（悬浮玻璃胶囊）**：56dp 轻薄磨砂底座悬浮于页面（四周留白 20/8/20/12dp）。静止时选中项显示与标签格接近等宽的灰色托盘；按下立即展开为半透明水珠，拖动时按 1:1 跟手并对标签做轻微放大，边缘使用渐进阻力；松手后按释放速度投影并用弹簧吸附到最近标签，再收回为静态托盘。
 
 ## 公开 API
 
@@ -101,17 +101,21 @@ object HyperTabBarDefaults {
 ```kotlin
 object HyperFloatingTabBarDefaults {
     val Height = 56.dp
-    val Margin = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 12.dp)
-    val InnerPadding = 5.dp
-    val IndicatorVerticalInset = 7.dp
+    val Margin = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 12.dp)
+    val InnerPadding = 4.dp
+    val IndicatorVerticalInset = 4.dp
     val Elevation = 5.dp
-    val MaxPillWidth = 80.dp
-    val PillGap = 16.dp
-    val PressWidthGrowth = 4.dp
-    val PressHeightGrowth = 2.dp
-    val PressInMillis = 85
-    val PressOutMillis = 180
-    val SelectionSpring: SpringSpec<Float>   // 对应 Flutter settleSpring(mass=1, stiffness=470, damping=42)
+    val MaxPillWidth = 112.dp
+    val PillGap = 2.dp
+    val LensInMillis = 180
+    val LensOutMillis = 230
+    val DragSlop = 6.dp
+    val ProjectionSeconds = 0.09f
+    val LensWidthGrowth = 38.dp
+    val LensHeightGrowth = 18.dp
+    val MaxVelocityWidthGrowth = 14.dp
+    val LensScaleGrowth = 0.15f
+    val SelectionSpring: SpringSpec<Float>   // 外部选中状态变化时的吸附弹簧
     val ItemTextStyle: TextStyle
         @Composable get() = MaterialTheme.typography.labelSmall
 
@@ -141,7 +145,7 @@ object HyperFloatingTabBarDefaults {
 | `floatingColors` | `HyperFloatingTabBarColors` | 否 | `HyperFloatingTabBarDefaults.colors()` | 仅 Floating 样式使用。 |
 | `content` | `@Composable RowScope.() -> Unit` | 是 | 无 | 完整自定义内容。 |
 
-Docked 入口固定提供水平 16dp 内边距、5dp 底部留白和 `ItemTextStyle`。Floating 入口固定提供 16/8/16/12dp 悬浮留白、5dp 胶囊内边距和 `ItemTextStyle`，不使用发丝线、整框描边或贴底留白。
+Docked 入口固定提供水平 16dp 内边距、5dp 底部留白和 `ItemTextStyle`。Floating 入口固定提供 20/8/20/12dp 悬浮留白、4dp 胶囊内边距和 `ItemTextStyle`，不使用发丝线、整框描边或贴底留白。
 
 ## Items 入口附加参数
 
@@ -165,12 +169,13 @@ Floating 模式下项目固定等分宽度，忽略 `itemLayout`、`itemSlotAlig
 
 ## Floating 样式行为
 
-- 选中托盘中心与内边距后的等分标签格中心一致，LTR 和 RTL 排列都能对齐；宽度取「标签格宽度 - 16dp」，上限为 `MaxPillWidth`(80dp)，窄屏下不超过格宽。默认高度 42dp，垂直居中。
-- 选中切换使用 `SelectionSpring` 弹簧吸附；按下时托盘先吸附到所按项目并轻微放大（宽度最多 +4dp、高度 +2dp），释放未命中选中则弹回。
+- 选中托盘中心与内边距后的等分标签格中心一致，LTR 和 RTL 排列都能对齐；宽度取「标签格宽度 - 2dp」，上限为 `MaxPillWidth`(112dp)，窄屏下不超过格宽。默认高度 48dp，垂直居中。
+- 按下时托盘立即吸附到触点标签并展开水珠；拖动位置直接跟随手指，边界采用渐进阻力。松手按 `ProjectionSeconds` 投影释放速度，再由 `SelectionSpring` 吸附到最近标签。
 - 内容颜色按 `selectionStrength` 在 `unselectedContentColor` 与 `selectedContentColor` 间连续插值；`selectionStrength` 随指示胶囊位置在 0f~1f 间连续变化。
-- 托盘底色使用独立 `indicatorColor`（浅色中性蓝灰 `0.82f` alpha / 深色白色 `0.14f` alpha），调用方可用 `floatingColors` 覆盖。
+- 默认选中内容色使用当前 Material 主题的 `primary`，未选中内容保持中性灰；可通过 `floatingColors` 覆盖。
+- 静态托盘底色使用独立 `indicatorColor`（浅色中性蓝灰 `0.82f` alpha / 深色白色 `0.14f` alpha）；拖动水珠使用同色低透明度扩张层，调用方可用 `floatingColors` 覆盖。
 - 容器在两种主题下均以白色半透明底混合页面：浅色 `0.78f` alpha、深色 `0.30f` alpha，配合克制的顶部柔光与单层 5dp 阴影。
-- 不实现 Flutter 版的拖拽释放惯性滑动；项目交互为按下吸附 + 点击选中。
+- 拖拽释放会继承归一化速度进行短距离投影，再交给弹簧吸附；普通点击仍由 `onItemClick` 处理。
 
 ## 最小用法
 

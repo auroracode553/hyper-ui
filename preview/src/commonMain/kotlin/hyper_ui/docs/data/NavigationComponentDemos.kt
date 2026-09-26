@@ -139,7 +139,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tab-bar",
         group = GROUP_NAVIGATION,
         title = "HyperTabBar",
-        description = "通过 type 参数切换贴底与悬浮样式：Floating 使用轻薄玻璃底座，选中托盘按标签格中心定位；可切换 4/5 项、配色与禁用态。",
+        description = "通过 type 参数切换贴底与悬浮样式：Floating 参考 Flutter HyTabBar，静止托盘按下展开水珠，拖动跟手并按速度弹簧吸附；可切换 4/5 项、配色与禁用态。",
         code = """
             HyperTabBar(
                 items = bottomItems,
@@ -156,8 +156,10 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("样式切换", "type = Docked/Floating", "同一个 items 入口切换贴底与悬浮胶囊"),
             DemoVariant("玻璃胶囊容器", "Margin / Height / Elevation", "56dp 轻薄磨砂底座与单层柔和阴影"),
-            DemoVariant("居中选中托盘", "SelectionSpring", "按实际标签格中心弹簧吸附，宽度不超过 80dp"),
-            DemoVariant("按压加深", "PressWidthGrowth / PressHeightGrowth", "按下吸附所按项目并放大指示胶囊"),
+            DemoVariant("居中选中托盘", "SelectionSpring", "静止时按标签格中心显示紧凑托盘"),
+            DemoVariant("液态按压", "LensInMillis / LensWidthGrowth", "按下展开半透明水珠并放大经过的标签"),
+            DemoVariant("拖动跟手", "DragSlop / resistDrag", "拖动时 1:1 跟随，边缘使用渐进阻力"),
+            DemoVariant("速度吸附", "ProjectionSeconds", "松手投影释放速度后吸附到最近标签"),
             DemoVariant("内容色渐变", "selectionStrength", "指示位置在选中色与未选中色间连续插值"),
             DemoVariant("项目数量", "4/5 items", "切换项目数验证托盘始终对齐标签中心"),
             DemoVariant("强调配色", "floatingColors", "切换选中托盘与内容色"),
