@@ -70,94 +70,41 @@ private data class DemoNavItem(
 @Composable
 fun NavBarDemo() {
     var showHeader by remember { mutableStateOf(false) }
-    val sections = listOf(
-        "未命名笔记",
-        "公司手机",
-        "1472",
-        "向上滚动列表",
-        "正文会进入透明导航栏后方",
-        "返回、标题和更多按钮保持固定"
-    )
-
-    HyperNavBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(620.dp)
-            .clip(RoundedCornerShape(28.dp))
-            .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(28.dp)),
-        windowInsets = WindowInsets(top = 22.dp),
-        navigationContent = {
-            TopBarIconButton(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "返回",
-                onClick = {}
-            )
-        },
-        titleContent = {
-            HyperText(text = "沉浸页面", maxLines = 1)
-        },
-        actionContent = {
-            TopBarIconButton(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "切换固定头部",
-                onClick = { showHeader = !showHeader }
-            )
-        },
-        headerContent = if (showHeader) {
-            {
-                HyperText(
-                    text = "固定头部也会计入首屏净空",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 10.dp),
-                    color = LocalDocsColorScheme.current.onSecondaryContainer
-                )
-            }
-        } else null
-    ) { immersivePadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(LocalDocsColorScheme.current.secondaryContainer),
-            contentPadding = immersivePadding,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+    var centerTitle by remember { mutableStateOf(false) }
+    var showSubtitle by remember { mutableStateOf(false) }
+    var safeArea by remember { mutableStateOf(false) }
+    val sections = listOf("未命名笔记", "公司手机", "1472", "向上滚动列表", "正文会进入透明导航栏后方", "返回、标题和更多按钮保持固定")
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Box(Modifier.fillMaxWidth().height(620.dp).clip(RoundedCornerShape(28.dp)).border(1.dp, DocsBorder, RoundedCornerShape(28.dp))) {
+        LazyColumn(Modifier.fillMaxSize().background(LocalDocsColorScheme.current.secondaryContainer), contentPadding = PaddingValues(top = 66.dp, bottom = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             item(key = "hero") {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 28.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    HyperText(
-                        text = "透明导航栏下的内容",
-                        color = LocalDocsColorScheme.current.onSecondaryContainer,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    HyperText(
-                        text = "初始位置自动避让顶部操作区；现在向上滚动查看沉浸效果。",
-                        color = LocalDocsColorScheme.current.onSecondaryContainer
-                    )
+                Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 28.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    HyperText("透明导航栏下的内容", color = LocalDocsColorScheme.current.onSecondaryContainer, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    HyperText("初始位置自动避让顶部操作区；现在向上滚动查看沉浸效果。", color = LocalDocsColorScheme.current.onSecondaryContainer)
                 }
             }
+            if (showHeader) item(key = "header") { HyperText("固定头部示例", Modifier.padding(horizontal = 20.dp, vertical = 10.dp), color = LocalDocsColorScheme.current.onSecondaryContainer) }
             items(items = sections, key = { it }) { section ->
-                HyperPanel(
-                    modifier = Modifier.padding(horizontal = 14.dp),
-                    colors = HyperPanelDefaults.colors(
-                        containerColor = LocalDocsColorScheme.current.surface
-                    )
-                ) {
-                    HyperText(text = section, modifier = Modifier.padding(16.dp))
-                }
-            }
-            item(key = "bottom_clearance") {
-                Box(modifier = Modifier.padding(PaddingValues(bottom = 20.dp)))
+                HyperPanel(Modifier.padding(horizontal = 14.dp), colors = HyperPanelDefaults.colors(containerColor = LocalDocsColorScheme.current.surface)) { HyperText(section, Modifier.padding(16.dp)) }
             }
         }
+        HyperNavBar(
+            modifier = Modifier.fillMaxWidth(),
+            navigationContent = { TopBarIconButton(Icons.AutoMirrored.Filled.ArrowBack, "返回", {}) },
+            titleContent = { HyperText("沉浸页面", maxLines = 1) },
+            subtitleContent = if (showSubtitle) ({ HyperText("副标题", maxLines = 1) }) else null,
+            centerTitle = centerTitle,
+            safeArea = safeArea,
+            trailingContent = { TopBarIconButton(Icons.Default.MoreVert, "切换固定头部") { showHeader = !showHeader } }
+        )
+    }
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        HyperButton(onClick = { centerTitle = !centerTitle }, variant = HyperButtonVariant.Tonal) { HyperText(if (centerTitle) "起始标题" else "居中标题") }
+        HyperButton(onClick = { showSubtitle = !showSubtitle }, variant = HyperButtonVariant.Tonal) { HyperText(if (showSubtitle) "隐藏副标题" else "显示副标题") }
+        HyperButton(onClick = { safeArea = !safeArea }, variant = HyperButtonVariant.Tonal) { HyperText(if (safeArea) "关闭安全区" else "启用安全区") }
+    }
     }
 }
-
 @Composable
 fun DrawerDemo() {
     var drawerOpen by remember { mutableStateOf(false) }

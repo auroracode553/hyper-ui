@@ -39,20 +39,15 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             HyperNavBar(
                 navigationContent = { BackButton(onClick = onBack) },
                 titleContent = { Text("详情") },
-                actionContent = { MoreButton(onClick = onMore) },
-                contentPadding = PaddingValues(bottom = bottomClearance)
-            ) { immersivePadding ->
-                LazyColumn(contentPadding = immersivePadding) {
-                    items(notes) { note -> NoteCard(note) }
-                }
-            }
+                trailingContent = { MoreButton(onClick = onMore) }
+            )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("固定操作层", "navigation/title/action", "按钮不随正文滚动"),
-            DemoVariant("附加头部", "headerContent", "搜索或筛选区域固定并计入首屏净空"),
-            DemoVariant("首屏净空", "immersivePadding", "初始内容从状态栏与导航栏下方开始"),
-            DemoVariant("沉浸滚动", "LazyColumn.contentPadding", "顶部净空滚出后，内容绘制到透明栏后方"),
-            DemoVariant("系统栏", "windowInsets = WindowInsets.statusBars", "默认避让状态栏，不修改窗口配置")
+            DemoVariant("固定操作层", "navigation/title/trailing", "按钮不随正文滚动"),
+            DemoVariant("透明表面", "containerColor = Transparent", "导航栏不绘制背景、模糊、描边或阴影"),
+            DemoVariant("默认尺寸", "height = 44.dp", "高度不包含顶部安全区"),
+            DemoVariant("标题布局", "centerTitle = false/true", "支持起始侧与整栏居中"),
+            DemoVariant("安全区", "safeArea = true/false", "顶部安全区独立于导航栏高度")
         ),
         apiDocumentPaths = listOf("navigation/hyper-nav-bar.md"),
         content = { NavBarDemo() }
