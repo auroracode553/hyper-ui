@@ -32,15 +32,22 @@ internal fun EmbeddedComponentPreview(demo: ComponentDemo) {
     CompositionLocalProvider(LocalEmbeddedDarkMode provides darkMode) {
         HyperThemeConfig(themeColor = themeColor, darkTheme = darkMode.value,
             typography = typography, shapes = shapes) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(if (HyperColors.isLight) HyperColors.cardContainer else HyperColors.pageBackground)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 0.dp, vertical = 56.dp),
-                contentAlignment = Alignment.TopCenter
-            ) {
-                demo.content()
+            if (demo.fullScreenPreview) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(if (HyperColors.isLight) HyperColors.cardContainer else HyperColors.pageBackground),
+                    contentAlignment = Alignment.TopCenter
+                ) { demo.content() }
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(if (HyperColors.isLight) HyperColors.cardContainer else HyperColors.pageBackground)
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp, vertical = 20.dp),
+                    contentAlignment = Alignment.TopCenter
+                ) { demo.content() }
             }
         }
     }

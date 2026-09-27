@@ -69,40 +69,52 @@ private data class DemoNavItem(
 
 @Composable
 fun NavBarDemo() {
-    var showHeader by remember { mutableStateOf(false) }
-    var centerTitle by remember { mutableStateOf(false) }
-    var showSubtitle by remember { mutableStateOf(false) }
-    var safeArea by remember { mutableStateOf(false) }
-    val sections = listOf("未命名笔记", "公司手机", "1472", "向上滚动列表", "正文会进入透明导航栏后方", "返回、标题和更多按钮保持固定")
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-    Box(Modifier.fillMaxWidth().height(620.dp).clip(RoundedCornerShape(28.dp)).border(1.dp, DocsBorder, RoundedCornerShape(28.dp))) {
-        LazyColumn(Modifier.fillMaxSize().background(LocalDocsColorScheme.current.secondaryContainer), contentPadding = PaddingValues(top = 66.dp, bottom = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    val sections = listOf("留一点空白", "光影与秩序", "日常里的灵感", "透明导航栏下的连续滚动")
+    HyperNavBarPage(
+        modifier = Modifier.fillMaxSize(),
+        navBar = {
+            HyperNavBar(
+                // Wasm 手机外壳没有真实系统 WindowInsets；这里模拟 Flutter MediaQuery 的顶部安全区。
+                modifier = Modifier.padding(top = 44.dp),
+                titleContent = { HyperText("今日灵感", maxLines = 1) },
+                safeArea = false
+            )
+        },
+        navBarHeight = 44.dp,
+        contentPadding = PaddingValues(top = 44.dp, bottom = 24.dp),
+        safeArea = false,
+        bottomSafeArea = false
+    ) { immersivePadding ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().background(LocalDocsColorScheme.current.background),
+            contentPadding = immersivePadding,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             item(key = "hero") {
-                Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 28.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    HyperText("透明导航栏下的内容", color = LocalDocsColorScheme.current.onSecondaryContainer, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                    HyperText("初始位置自动避让顶部操作区；现在向上滚动查看沉浸效果。", color = LocalDocsColorScheme.current.onSecondaryContainer)
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp)
+                        .background(LocalDocsColorScheme.current.primaryContainer, RoundedCornerShape(20.dp))
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    HyperIcon(Icons.Default.Home, "灵感", Modifier.size(28.dp))
+                    HyperText("让内容延伸到\n屏幕的每一寸", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    HyperText("向上滚动，观察内容经过透明导航标题与状态栏。", fontSize = 14.sp)
                 }
             }
-            if (showHeader) item(key = "header") { HyperText("固定头部示例", Modifier.padding(horizontal = 20.dp, vertical = 10.dp), color = LocalDocsColorScheme.current.onSecondaryContainer) }
             items(items = sections, key = { it }) { section ->
-                HyperPanel(Modifier.padding(horizontal = 14.dp), colors = HyperPanelDefaults.colors(containerColor = LocalDocsColorScheme.current.surface)) { HyperText(section, Modifier.padding(16.dp)) }
+                HyperPanel(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    colors = HyperPanelDefaults.colors(containerColor = LocalDocsColorScheme.current.surface)
+                ) {
+                    Column(Modifier.padding(4.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        HyperText("灵感 ${sections.indexOf(section) + 1}", fontSize = 12.sp, color = LocalDocsColorScheme.current.onSurfaceVariant)
+                        HyperText(section, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                        HyperText("导航栏保持透明，内容沿同一个滚动视口连续向上移动。", fontSize = 13.sp)
+                    }
+                }
             }
         }
-        HyperNavBar(
-            modifier = Modifier.fillMaxWidth(),
-            navigationContent = { TopBarIconButton(Icons.AutoMirrored.Filled.ArrowBack, "返回", {}) },
-            titleContent = { HyperText("沉浸页面", maxLines = 1) },
-            subtitleContent = if (showSubtitle) ({ HyperText("副标题", maxLines = 1) }) else null,
-            centerTitle = centerTitle,
-            safeArea = safeArea,
-            trailingContent = { TopBarIconButton(Icons.Default.MoreVert, "切换固定头部") { showHeader = !showHeader } }
-        )
-    }
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        HyperButton(onClick = { centerTitle = !centerTitle }, variant = HyperButtonVariant.Tonal) { HyperText(if (centerTitle) "起始标题" else "居中标题") }
-        HyperButton(onClick = { showSubtitle = !showSubtitle }, variant = HyperButtonVariant.Tonal) { HyperText(if (showSubtitle) "隐藏副标题" else "显示副标题") }
-        HyperButton(onClick = { safeArea = !safeArea }, variant = HyperButtonVariant.Tonal) { HyperText(if (safeArea) "关闭安全区" else "启用安全区") }
-    }
     }
 }
 @Composable

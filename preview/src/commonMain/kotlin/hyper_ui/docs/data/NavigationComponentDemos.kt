@@ -50,7 +50,9 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("安全区", "safeArea = true/false", "顶部安全区独立于导航栏高度")
         ),
         apiDocumentPaths = listOf("navigation/hyper-nav-bar.md"),
-        content = { NavBarDemo() }
+        content = { NavBarDemo() },
+        fullScreenPreview = true,
+        useReferencePreview = false
     ),
     ComponentDemo(
         id = "drawer",

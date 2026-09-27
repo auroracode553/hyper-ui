@@ -4,6 +4,8 @@
 
 Markdown 是开发者和 AI 的 API 文档来源。独立打开 Preview 应用仍可浏览组件目录；VitePress 内的 iframe 不重复显示目录、代码卡片或属性表。
 
+独立 Preview 的窄屏模式采用与 Flutter 文档一致的手机视口结构：顶部导航栏、横向组件标签和真实组件视口分层排列。支持全面屏滚动的组件（例如 `HyperNavBar`）直接占满视口，不再套用演示卡片、圆角设备框或额外工具栏。
+
 <WasmPreview demo="button" title="HyperButton 交互预览" :height="480">
 执行 `dev:watch` 时，此处依次显示依赖准备、Wasm 编译、资源加载和组件渲染阶段。编译失败时请查看终端日志。
 </WasmPreview>

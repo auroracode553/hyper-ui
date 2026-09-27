@@ -27,6 +27,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -131,15 +133,13 @@ private fun MobileDocsLayout(
     onSelect: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        MobileTopNav(
+        MobilePreviewTopBar(
             demos = demos,
             selectedId = selectedId,
+            selectedDemo = selectedDemo,
             onSelect = onSelect
         )
-        ComponentContent(
-            demo = selectedDemo,
-            modifier = Modifier.weight(1f)
-        )
+        MobilePreviewContent(demo = selectedDemo, modifier = Modifier.weight(1f))
     }
 }
 
@@ -236,63 +236,47 @@ private fun ThemeColorPicker(
 }
 
 @Composable
-private fun MobileTopNav(
+private fun MobilePreviewTopBar(
     demos: List<ComponentDemo>,
     selectedId: String,
+    selectedDemo: ComponentDemo,
     onSelect: (String) -> Unit
 ) {
-    val themeController = LocalThemeColor.current
-
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(DocsSidebar)
-            .border(width = 1.dp, color = DocsBorder)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = Modifier.fillMaxWidth().background(DocsSidebar).border(1.dp, DocsBorder)
     ) {
-        HyperText(
-            text = "HyperUI",
-            color = LocalDocsColorScheme.current.onSurface,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            lineHeight = 28.sp
+        HyperNavBar(
+            modifier = Modifier.fillMaxWidth(),
+            safeArea = true,
+            titleContent = { HyperText("HyperUI Preview", maxLines = 1) },
+            subtitleContent = { HyperText(selectedDemo.description, maxLines = 1) },
+            trailingContent = {
+                HyperIconButton(onClick = { }) {
+                    HyperIcon(Icons.Default.Settings, "预览设置", Modifier.size(HyperIconButtonDefaults.IconSize))
+                }
+            }
         )
         Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            modifier = Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             demos.forEach { demo ->
-                DocsNavChip(
-                    title = demo.title,
-                    selected = selectedId == demo.id,
-                    onClick = { onSelect(demo.id) }
-                )
+                DocsNavChip(demo.title, selectedId == demo.id) { onSelect(demo.id) }
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(LocalDocsColorScheme.current.surfaceVariant, RoundedCornerShape(10.dp))
-                .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(10.dp))
-                .padding(horizontal = 10.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(22.dp)
-                    .clip(CircleShape)
-                    .background(themeController.color)
-                    .border(width = 1.dp, color = DocsBorder, shape = CircleShape)
-            )
-            HyperText(
-                text = "主题色",
-                color = LocalDocsColorScheme.current.onSurface,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium
-            )
-        }
+    }
+}
+
+/** 手机模式只展示真实组件视口，代码和 API 详情留在桌面文档布局。 */
+@Composable
+private fun MobilePreviewContent(demo: ComponentDemo, modifier: Modifier = Modifier) {
+    if (demo.fullScreenPreview) {
+        Box(modifier = modifier.fillMaxSize()) { demo.content() }
+    } else {
+        Column(
+            modifier = modifier.fillMaxSize().background(DocsBackground).verticalScroll(rememberScrollState()).padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) { demo.content() }
     }
 }
 
