@@ -15,7 +15,7 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperTextField](components/form/hyper-text-field.md) | 与 Flutter 参考一致的玻璃输入表面 | 调用方提供 `value` |
+| [HyperTextField](components/form/hyper-text-field.md) | `type` 驱动的单行、Textarea、密码输入框，支持清空、字数限制和插槽 | 调用方提供 `value` |
 | [HyperSwitch](components/form/hyper-switch.md) | 受控玻璃开关，关闭态有清晰中性轨道与细描边 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 使用 Lucide `check` 的多选项 | 调用方提供 `checked` |
 | [HyperRadio](components/form/hyper-radio.md) | 单选项 | 调用方提供 `selected` |

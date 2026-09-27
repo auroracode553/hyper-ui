@@ -13,12 +13,15 @@ fun HyperTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     inputModifier: Modifier = Modifier,
+    type: HyperTextFieldType = HyperTextFieldType.Text,
+    rows: Int = HyperTextFieldDefaults.TextareaRows,
     enabled: Boolean = true,
     readOnly: Boolean = false,
     isError: Boolean = false,
-    singleLine: Boolean = true,
-    minLines: Int = 1,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    clearable: Boolean = false,
+    showPasswordToggle: Boolean = true,
+    maxlength: Int? = null,
+    showWordLimit: Boolean = false,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
     textStyle: TextStyle = HyperTheme.typography.bodyMedium.copy(
@@ -44,16 +47,16 @@ fun HyperTextField(
 HyperTextField(
     value = value,
     onValueChange = { value = it },
+    type = HyperTextFieldType.Textarea,
+    rows = 5,
     labelContent = { Text("备注") },
     placeholderContent = { Text("写一点说明") },
-    supportingContent = { Text("${value.length}/80") },
-    singleLine = false,
-    minLines = 3,
-    maxLines = 5
+    maxlength = 80,
+    showWordLimit = true
 )
 ```
 
-清空按钮放在 `endContent`，由调用方将 `value` 置空；密码显隐由调用方切换 `visualTransformation`。字符上限应在 `onValueChange` 中约束，例如 `value = it.take(80)`。
+`type = Text` 为 68dp 单行输入，`type = Textarea` 使用 `rows` 控制多行高度，`type = Password` 自动使用密码变换并显示显隐操作。`clearable`、`maxlength` 和 `showWordLimit` 由组件统一处理；前后缀仍通过 `startContent` / `endContent` 注入。
 
 ## 使用约束
 

@@ -48,8 +48,8 @@ fun EditNoteAction() {
         HyperTextField(
             value = draft,
             onValueChange = { draft = it },
-            singleLine = false,
-            minLines = 3
+            type = HyperTextFieldType.Textarea,
+            rows = 3
         )
     }
 }

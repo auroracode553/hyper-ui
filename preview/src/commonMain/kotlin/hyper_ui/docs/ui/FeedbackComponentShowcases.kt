@@ -755,9 +755,8 @@ private fun ColumnScope.popupContent(
                 color = LocalHyperContentColor.current
             )
         },
-        singleLine = false,
-        minLines = 3,
-        maxLines = 6
+        type = HyperTextFieldType.Textarea,
+        rows = 6
     )
 }
 

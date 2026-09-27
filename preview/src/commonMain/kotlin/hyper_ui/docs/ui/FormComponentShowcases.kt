@@ -240,9 +240,8 @@ fun TextFieldDemo() {
             labelContent = { FieldLabel("多行输入") },
             placeholderContent = { FieldPlaceholder("请输入多行内容") },
             supportingContent = { FieldSupporting("${note.length}/80") },
-            singleLine = false,
-            minLines = 3,
-            maxLines = 5,
+            type = HyperTextFieldType.Textarea,
+            rows = 5,
             inputModifier = Modifier.heightIn(min = 92.dp),
             isError = isNoteError
         )
