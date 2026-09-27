@@ -15,8 +15,8 @@ internal data class HyperTextFieldSurfaceVisuals(
     val depth: HyperSurfaceDepthVisuals
 ) {
     companion object {
-        val RestingElevation = 4.dp
-        val FocusedElevation = 5.dp
+        val RestingElevation = 0.dp
+        val FocusedElevation = 0.dp
         val DisabledElevation = 0.dp
     }
 }
@@ -33,4 +33,5 @@ internal fun Modifier.hyperTextFieldSurface(
         visuals = visuals.depth
     )
         .clip(shape)
+        .hyperBackdropEffect(14.dp)
         .background(visuals.containerColor)

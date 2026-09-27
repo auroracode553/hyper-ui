@@ -55,21 +55,9 @@ fun <S, T> HyperSectionedList(
     itemContent: @Composable (section: S, item: T) -> Unit
 ) {
     val pageBackground = HyperColors.pageBackground
-    val itemContainerColor = resolveHyperOpaqueColor(
-        color = colors.itemContainerColor,
-        fallbackColor = HyperColors.cardContainer,
-        backgroundColor = pageBackground
-    )
-    val headerContentColor = resolveHyperOpaqueColor(
-        color = colors.headerContentColor,
-        fallbackColor = HyperColors.secondaryText,
-        backgroundColor = pageBackground
-    )
-    val dividerColor = resolveHyperOpaqueColor(
-        color = colors.dividerColor,
-        fallbackColor = HyperColors.divider,
-        backgroundColor = itemContainerColor
-    )
+    val itemContainerColor = resolveHyperContainerColor(colors.itemContainerColor, hyperGlass.surface)
+    val headerContentColor = resolveHyperContainerColor(colors.headerContentColor, HyperColors.secondaryText)
+    val dividerColor = resolveHyperContainerColor(colors.dividerColor, HyperColors.divider)
 
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -138,9 +126,9 @@ object HyperSectionedListDefaults {
 
     val HeaderTextStyle: TextStyle
         @Composable get() = HyperTheme.typography.titleSmall.copy(
-            fontSize = 15.sp,
+            fontSize = 14.sp,
             lineHeight = 20.sp,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.Bold
         )
 
     @Composable
@@ -149,23 +137,11 @@ object HyperSectionedListDefaults {
         itemContainerColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
     ): HyperSectionedListColors {
-        val resolvedItemContainerColor = resolveHyperOpaqueColor(
-            color = itemContainerColor,
-            fallbackColor = HyperColors.cardContainer,
-            backgroundColor = HyperColors.pageBackground
-        )
+        val resolvedItemContainerColor = resolveHyperContainerColor(itemContainerColor, hyperGlass.surface)
         return HyperSectionedListColors(
-            headerContentColor = resolveHyperOpaqueColor(
-                color = headerContentColor,
-                fallbackColor = HyperColors.secondaryText,
-                backgroundColor = HyperColors.pageBackground
-            ),
+            headerContentColor = resolveHyperContainerColor(headerContentColor, HyperColors.secondaryText),
             itemContainerColor = resolvedItemContainerColor,
-            dividerColor = resolveHyperOpaqueColor(
-                color = dividerColor,
-                fallbackColor = HyperColors.divider,
-                backgroundColor = resolvedItemContainerColor
-            )
+            dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
         )
     }
 }
@@ -183,7 +159,7 @@ private fun HyperSectionedListItemContainer(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .hyperSolidSurface(
+            .hyperFrostedSurface(
                 containerColor = containerColor,
                 shape = sectionItemShape(itemIndex, lastItemIndex)
             )
@@ -204,7 +180,7 @@ private fun HyperSectionedListItemContainer(
 }
 
 private fun sectionItemShape(itemIndex: Int, lastItemIndex: Int): Shape {
-    val radius = HyperStyleDefaults.MediumCornerRadius
+    val radius = 18.dp
     return when {
         lastItemIndex == 0 -> RoundedCornerShape(radius)
         itemIndex == 0 -> RoundedCornerShape(

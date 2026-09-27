@@ -46,7 +46,7 @@ fun HyperUpdateDialog(
                     HyperButton(
                         onClick = onDismissRequest,
                         modifier = Modifier.weight(1f),
-                        tone = HyperButtonTone.Secondary
+                        variant = HyperButtonVariant.Tonal
                     ) {
                         HyperText(texts.cancelAction)
                     }
@@ -61,7 +61,7 @@ fun HyperUpdateDialog(
                     HyperButton(
                         onClick = onDismissRequest,
                         modifier = Modifier.weight(1f),
-                        tone = HyperButtonTone.Secondary
+                        variant = HyperButtonVariant.Tonal
                     ) {
                         HyperText(texts.closeAction)
                     }
@@ -76,7 +76,7 @@ fun HyperUpdateDialog(
                     HyperButton(
                         onClick = onDismissRequest,
                         modifier = Modifier.fillMaxWidth(),
-                        tone = HyperButtonTone.Secondary
+                        variant = HyperButtonVariant.Tonal
                     ) {
                         HyperText(texts.closeAction)
                     }

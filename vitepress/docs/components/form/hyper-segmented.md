@@ -1,33 +1,12 @@
 # HyperSegmented
 
-- 分类：表单组件
-- 包名：`hyper_ui`
-- 状态模型：受控组件；选中项由调用方持有
-- 源码：`library/src/main/java/hyper_ui/components/selection/HyperSegmented.kt`
-- Preview ID：`segmented`
-
-`HyperSegmented` 是默认总高 36dp 的紧凑等宽分段控制器。组件只负责低抬升轨道、等宽布局、选中状态与 Tab 语义；每个分段直接复用 `HyperButton`，不再维护独立按钮绘制实现。
+`HyperSegmented` 的公开 API 位于 `hyper_ui` 包。组件状态由调用方持有，通过参数和回调传入。外部间距使用 `modifier`；尺寸、颜色和插槽按下列源码签名配置。
 
 <WasmPreview demo="segmented" title="HyperSegmented 交互预览" />
 
-## 公开 API
+## 公开签名与默认值
 
 ```kotlin
-data class HyperSegmentedColors(
-    val containerColor: Color,
-    val selectedItemColor: Color,
-    val unselectedItemColor: Color,
-    val selectedContentColor: Color,
-    val unselectedContentColor: Color,
-    val disabledItemColor: Color,
-    val disabledContentColor: Color
-)
-
-class HyperSegmentedItemScope {
-    val selected: Boolean
-    val enabled: Boolean
-}
-
 @Composable
 fun <T> HyperSegmented(
     items: List<T>,
@@ -36,6 +15,7 @@ fun <T> HyperSegmented(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     itemEnabled: (T) -> Boolean = { true },
+    equalWidth: Boolean = true,
     shape: Shape = HyperSegmentedDefaults.Shape,
     itemShape: Shape = HyperSegmentedDefaults.ItemShape,
     colors: HyperSegmentedColors = HyperSegmentedDefaults.colors(),
@@ -44,60 +24,6 @@ fun <T> HyperSegmented(
     itemContent: @Composable HyperSegmentedItemScope.(item: T) -> Unit
 )
 ```
-
-## 默认值
-
-```kotlin
-object HyperSegmentedDefaults {
-    val Height = 36.dp
-    val ContainerElevation = 1.dp
-    val ContainerPadding = PaddingValues(2.dp)
-    val ItemContentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
-    val ItemContentSpacing = 6.dp
-    val Shape: Shape = RoundedCornerShape(5.dp)
-    val ItemShape: Shape = RoundedCornerShape(4.dp)
-
-    @Composable
-    fun colors(
-        containerColor: Color = Color.Unspecified,
-        selectedItemColor: Color = Color.Unspecified,
-        unselectedItemColor: Color = Color.Unspecified,
-        selectedContentColor: Color = Color.Unspecified,
-        unselectedContentColor: Color = Color.Unspecified,
-        disabledItemColor: Color = Color.Unspecified,
-        disabledContentColor: Color = Color.Unspecified
-    ): HyperSegmentedColors
-}
-```
-
-## 参数
-
-| 参数 | 类型 | 必填 | 默认值 | 作用 |
-| --- | --- | --- | --- | --- |
-| `items` | `List<T>` | 是 | 无 | 按列表顺序渲染的分段；各项按 `equals` 比较。 |
-| `selectedItem` | `T` | 是 | 无 | 调用方持有的当前选中项。 |
-| `onSelected` | `(T) -> Unit` | 是 | 无 | 点击可用分段后的回调。 |
-| `modifier` | `Modifier` | 否 | `Modifier` | 控制整个分段控制器的宽高和外部间距；默认高度为 36dp，可用 `Modifier.height(...)` 覆盖。 |
-| `enabled` | `Boolean` | 否 | `true` | 全局可用状态。 |
-| `itemEnabled` | `(T) -> Boolean` | 否 | `{ true }` | 单项可用状态；最终状态为 `enabled && itemEnabled(item)`。 |
-| `shape` | `Shape` | 否 | `HyperSegmentedDefaults.Shape` | 外层容器形状。 |
-| `itemShape` | `Shape` | 否 | `HyperSegmentedDefaults.ItemShape` | 每个分段的形状。 |
-| `colors` | `HyperSegmentedColors` | 否 | `HyperSegmentedDefaults.colors()` | 轨道、项目与内容颜色。 |
-| `containerPadding` | `PaddingValues` | 否 | `ContainerPadding` | 外层容器到各分段的内部留白。 |
-| `itemContentPadding` | `PaddingValues` | 否 | `ItemContentPadding` | 每个分段内部 slot 的留白。 |
-| `itemContent` | `@Composable HyperSegmentedItemScope.(T) -> Unit` | 是 | 无 | 分段内容；作用域提供 `selected`、`enabled`。 |
-
-## 颜色属性
-
-| 属性 | 默认来源 | 作用 |
-| --- | --- | --- |
-| `containerColor` | 浅色白色 `0.48f` / 深色白色 `0.14f` | 外层半透明玻璃轨道。 |
-| `selectedItemColor` | `HyperColors.accent` | 选中分段的 `HyperButton` 容器色。 |
-| `unselectedItemColor` | `HyperColors.cardContainer` | 未选中分段的 `HyperButton` 容器色。 |
-| `selectedContentColor` | 白色不透明 | 选中按钮内容色。 |
-| `unselectedContentColor` | `HyperColors.primaryText` | 未选中按钮内容色。 |
-| `disabledItemColor` | `HyperColors.softContainer` | 禁用按钮背景。 |
-| `disabledContentColor` | `HyperColors.secondaryText` | 禁用按钮内容色。 |
 
 ## 最小用法
 
@@ -114,12 +40,8 @@ HyperSegmented(
 }
 ```
 
-## 约束
+## 使用约束
 
-- 组件不持有选择状态；`onSelected` 不会自动改变 `selectedItem`。
-- 默认总高为 36dp：2dp 上下轨道留白之间提供 32dp 分段高度；内容默认使用水平 10dp、垂直 4dp 留白和 6dp 间距。
-- 各项等分当前可用宽度，不提供横向滚动；项目很多时应改用 `HyperSlideMenu`。
-- `items` 应使用按相等性可唯一识别的值；重复值会同时呈现选中语义。
-- `itemContent` 负责文字、图标和业务标签，组件不内置字符串模型。
-- 每项由 `HyperButton` 提供实色表面、即时按压反馈、禁用态和点击行为，并填满轨道扣除留白后的高度；`HyperSegmented` 传入 `Role.Tab` 并补充 `selected` 语义。
-- 分段按钮不绘制边框，也不执行颜色、阴影或位移动画。
+- 使用 `HyperThemeConfig` 提供主题；需要采样背景时，将可视内容置于 `HyperBackdrop` 中。
+- 组件不持有业务数据、导航或网络请求；`visible`、`value`、`selected` 等由调用方控制。
+- Android 原生窗口和系统工具仅在 Android 目标可用；Preview 使用跨平台示例。

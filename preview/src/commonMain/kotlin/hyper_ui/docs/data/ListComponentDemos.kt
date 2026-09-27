@@ -12,7 +12,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_list",
         group = GROUP_LIST,
         title = "HyperList",
-        description = "不透明实色的轻圆角页面级懒列表，通过 LazyListScope Slot 组合项目。",
+        description = "18dp 圆角玻璃页面级懒列表，通过 LazyListScope Slot 组合项目。",
         code = """
             HyperList(state = listState) {
                 item(key = "overview", contentType = "header") {
@@ -32,7 +32,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "使用 Modifier 控制容器内部留白"),
             DemoVariant("滚动留白", "contentPadding", "Padding 随 LazyColumn 内容一起滚动"),
             DemoVariant("Slot 列表", "item/items/itemsIndexed", "调用方组合异构项目"),
-            DemoVariant("默认外观", "colors + shape", "不透明卡片背景与 12dp 轻圆角"),
+            DemoVariant("默认外观", "colors + shape", "玻璃背景与 18dp 圆角"),
             DemoVariant("自适应行高", "44.dp / 54.dp", "单行保持紧凑，带描述项增加纵向呼吸空间"),
             DemoVariant("列表条目", "leading/headline/supporting", "图标、双行文字与分隔线")
         ),

@@ -68,9 +68,7 @@ fun HyperPlaybackSpeedScale(
                 visuals = hyperGlassSurfaceVisuals(
                     containerColor = colors.containerColor,
                     elevation = HyperPlaybackSpeedScaleDefaults.Elevation,
-                    topLightAlpha = 0.12f,
-                    bottomShadeAlpha = 0.12f,
-                    shadowAlpha = 0.30f
+
                 )
             )
             .padding(HyperPlaybackSpeedScaleDefaults.ContentPadding)
@@ -296,11 +294,11 @@ object HyperPlaybackSpeedScaleDefaults {
         valueColor: Color = Color.Unspecified
     ): HyperPlaybackSpeedScaleColors {
         val accent = HyperColors.accent
-        val primaryContent = Color(1f, 1f, 1f, 0.96f)
+        val primaryContent = HyperColors.primaryText
         return HyperPlaybackSpeedScaleColors(
             containerColor = resolveHyperContainerColor(
                 containerColor,
-                Color(0.10f, 0.11f, 0.14f, 0.96f)
+                hyperGlass.surfaceStrong
             ),
             trackColor = resolveHyperContainerColor(
                 trackColor,

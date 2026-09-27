@@ -4,6 +4,7 @@ package hyper_ui.docs.theme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import hyper_ui.HyperThemeConfig
@@ -11,14 +12,14 @@ import hyper_ui.LocalHyperContentColor
 import hyper_ui.LocalHyperTextStyle
 import hyper_ui.rgba
 
-internal val DocsBackground = rgba(247, 248, 250, 1f)
+internal val DocsBackground = rgba(241, 243, 247, 1f)
 internal val DocsSidebar = rgba(255, 255, 255, 1f)
 internal val DocsBorder = rgba(229, 229, 234, 1f)
 internal val DocsCodeBackground = rgba(17, 24, 39, 1f)
 internal val DocsCodeText = rgba(229, 236, 247, 1f)
-internal val DocsPreviewBackground = rgba(242, 242, 247, 1f)
+internal val DocsPreviewBackground = rgba(241, 243, 247, 1f)
 
-internal val DefaultDocsThemeColor = rgba(255, 103, 0, 1f)
+internal val DefaultDocsThemeColor = rgba(71, 111, 232, 1f)
 
 // 文档浅色主题的固定语义色，替代原 系统浅色语义色 的对应槽位。
 internal val DocsOnBackground = rgba(28, 28, 30, 1f)
@@ -33,7 +34,7 @@ internal val DocsError = rgba(220, 38, 38, 1f)
 internal val DocsOnError = rgba(255, 255, 255, 1f)
 internal val DocsErrorContainer = rgba(254, 226, 226, 1f)
 internal val DocsInverseSurface = rgba(44, 44, 46, 1f)
-internal val DocsInverseOnSurface = rgba(242, 242, 247, 1f)
+internal val DocsInverseOnSurface = rgba(241, 243, 247, 1f)
 
 /** 文档主题语义色集合：替代原 系统颜色方案 的对应槽位，随主题色动态生成。 */
 internal data class DocsColorScheme(
@@ -114,6 +115,7 @@ internal fun Color.darken(ratio: Float): Color {
 @Composable
 fun HyperDocsTheme(
     themeColor: Color = DefaultDocsThemeColor,
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val isLightTheme = themeColor.luminance() < 0.7f
@@ -136,7 +138,7 @@ fun HyperDocsTheme(
         onPrimaryContainer = onPrimaryContainerColor,
     )
 
-    HyperThemeConfig(themeColor = themeColor) {
+    HyperThemeConfig(themeColor = themeColor, darkTheme = darkTheme, typography = docsTypography()) {
         CompositionLocalProvider(
             LocalDocsColorScheme provides scheme,
             LocalHyperContentColor provides scheme.onSurface,

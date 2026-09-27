@@ -1,40 +1,34 @@
-/** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/button/HyperButton 可复用界面组件及交互封装。 */
+/** 文件职责：按钮布局、状态和语义；材质由 HyperButtonSurface 绘制。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
-enum class HyperButtonTone {
-    Primary,
-    Secondary,
-    Tonal,
-    Outline,
-    Plain,
-    Success,
-    Info,
-    Warning,
-    Danger
-}
+enum class HyperButtonVariant { Filled, Tonal, Outline, Ghost, Danger }
 
 @Immutable
 data class HyperButtonColors(
@@ -44,162 +38,108 @@ data class HyperButtonColors(
     val disabledContentColor: Color
 )
 
-/**
- * 按钮组件。
- *
- * 组件内部已包含文字与边框的默认间距，外部间距请通过 modifier.padding(...) 控制。
- */
+/** 受控动作按钮。loading 由调用方持有，加载期间阻止重复触发。 */
 @Composable
 fun HyperButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    tone: HyperButtonTone = HyperButtonTone.Primary,
-    colors: HyperButtonColors = HyperButtonDefaults.colors(tone),
-    border: BorderStroke? = HyperButtonDefaults.border(tone),
+    loading: Boolean = false,
+    variant: HyperButtonVariant = HyperButtonVariant.Filled,
+    height: Dp = HyperButtonDefaults.MinHeight,
+    colors: HyperButtonColors = HyperButtonDefaults.colors(variant),
+    border: BorderStroke? = HyperButtonDefaults.border(variant, enabled),
     shape: Shape = HyperButtonDefaults.Shape,
-    contentPadding: PaddingValues = HyperButtonDefaults.ContentPadding,
+    contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(height),
     role: Role = Role.Button,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
-        HyperButtonDefaults.ContentSpacing,
-        Alignment.CenterHorizontally
-    ),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     content: @Composable RowScope.() -> Unit
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val pressed by interactionSource.collectIsPressedAsState()
-    val surfaceColor = HyperColors.cardContainer
-    val requestedContainerColor = if (enabled) colors.containerColor else colors.disabledContainerColor
-    val requestedContentColor = if (enabled) colors.contentColor else colors.disabledContentColor
-    val containerColor = resolveHyperOpaqueColor(
-        color = requestedContainerColor,
-        fallbackColor = if (enabled) HyperColors.accent else HyperColors.softContainer,
-        backgroundColor = surfaceColor
-    )
-    val contentColor = resolveHyperOpaqueColor(
-        color = requestedContentColor,
-        fallbackColor = if (enabled) HyperColors.primaryText else HyperColors.secondaryText,
-        backgroundColor = containerColor
-    )
-    val surfaceVisuals = hyperButtonSurfaceVisuals(
-        enabled = enabled,
-        pressed = pressed
-    )
-
+    require(height > 0.dp) { "height 必须大于 0.dp" }
+    val container = if (enabled) colors.containerColor else colors.disabledContainerColor
+    val foreground = if (enabled) colors.contentColor else colors.disabledContentColor
     Row(
         modifier = modifier
-            .defaultMinSize(minHeight = HyperButtonDefaults.MinHeight)
-            .hyperButtonSurface(
-                containerColor = containerColor,
-                shape = shape,
-                visuals = surfaceVisuals,
-                borderOverride = if (enabled) border else null
-            )
-            .hyperNoRippleClickable(
-                enabled = enabled,
-                role = role,
-                interactionSource = interactionSource,
-                onClick = onClick
-            )
+            .defaultMinSize(minWidth = (68 + (height.value - 38) * 2.5f).coerceAtLeast(0f).dp)
+            .height(height)
+            .hyperNoRippleClickable(enabled = enabled && !loading, role = role, onClick = onClick)
+            .hyperButtonSurface(container, shape, variant, enabled, border)
+            .semantics { if (loading) stateDescription = "正在处理" }
             .padding(contentPadding),
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {
-        CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
+        CompositionLocalProvider(
+            LocalHyperContentColor provides foreground,
+            LocalHyperTextStyle provides HyperButtonDefaults.textStyle(height)
+        ) {
+            if (loading) HyperCircularProgressIndicator(
+                modifier = Modifier.size(16.dp),
+                strokeWidth = 2.dp,
+                colors = HyperProgressIndicatorDefaults.colors(Color.Transparent, foreground)
+            )
             content()
         }
     }
 }
 
 object HyperButtonDefaults {
-    val MinHeight = 40.dp
+    val MinHeight = 38.dp
     val ContentSpacing = 8.dp
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 14.dp, vertical = 8.dp)
-    val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
+    val ContentPadding = PaddingValues(horizontal = 14.dp)
+    val Shape: Shape = RoundedCornerShape(16.dp)
+
+    fun contentPadding(height: Dp = MinHeight): PaddingValues =
+        PaddingValues(horizontal = (14 + (height.value - 38) * 2 / 3).coerceAtLeast(0f).dp)
+
+    @Composable
+    fun textStyle(height: Dp = MinHeight): TextStyle {
+        val size = (13 + (height.value - 38) / 6).coerceAtLeast(1f)
+        return HyperTheme.typography.labelLarge.copy(fontSize = size.sp, lineHeight = (size * 1.2f).sp,
+            fontWeight = FontWeight.SemiBold, letterSpacing = 0.05.sp)
+    }
 
     @Composable
     fun colors(
-        tone: HyperButtonTone = HyperButtonTone.Primary,
+        variant: HyperButtonVariant = HyperButtonVariant.Filled,
         containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified,
         disabledContainerColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
     ): HyperButtonColors {
-        val surfaceColor = HyperColors.cardContainer
-        val accentColor = resolveHyperOpaqueColor(
-            color = HyperColors.accent,
-            fallbackColor = HyperColors.accent,
-            backgroundColor = surfaceColor
-        )
-        val defaultContainerColor = when (tone) {
-            HyperButtonTone.Primary -> accentColor
-            HyperButtonTone.Secondary -> HyperColors.softContainer
-            HyperButtonTone.Tonal -> blendHyperOpaqueColors(
-                backgroundColor = surfaceColor,
-                foregroundColor = accentColor,
-                foregroundFraction = 0.14f
-            )
-            HyperButtonTone.Outline,
-            HyperButtonTone.Plain -> surfaceColor
-            HyperButtonTone.Success -> HyperColors.success
-            HyperButtonTone.Info -> HyperColors.info
-            HyperButtonTone.Warning -> HyperColors.warning
-            HyperButtonTone.Danger -> HyperColors.danger
+        val fill = when (variant) {
+            HyperButtonVariant.Filled -> HyperColors.accent
+            HyperButtonVariant.Danger -> HyperColors.danger
+            HyperButtonVariant.Tonal -> hyperGlass.selection
+            HyperButtonVariant.Outline -> hyperGlass.surfaceSubtle
+            HyperButtonVariant.Ghost -> Color.Transparent
         }
-        val defaultContentColor = when (tone) {
-            HyperButtonTone.Primary,
-            HyperButtonTone.Success,
-            HyperButtonTone.Info,
-            HyperButtonTone.Warning,
-            HyperButtonTone.Danger -> rgba(255, 255, 255, 1f)
-            HyperButtonTone.Tonal -> HyperColors.accent
-            HyperButtonTone.Secondary,
-            HyperButtonTone.Outline,
-            HyperButtonTone.Plain -> HyperColors.primaryText
-        }
-        val resolvedContainerColor = resolveHyperOpaqueColor(
-            color = containerColor,
-            fallbackColor = defaultContainerColor,
-            backgroundColor = surfaceColor
-        )
-        val resolvedContentColor = resolveHyperOpaqueColor(
-            color = contentColor,
-            fallbackColor = defaultContentColor,
-            backgroundColor = resolvedContainerColor
-        )
-        val resolvedDisabledContainerColor = resolveHyperOpaqueColor(
-            color = disabledContainerColor,
-            fallbackColor = HyperColors.softContainer,
-            backgroundColor = surfaceColor
-        )
-        val resolvedDisabledContentColor = resolveHyperOpaqueColor(
-            color = disabledContentColor,
-            fallbackColor = HyperColors.secondaryText,
-            backgroundColor = resolvedDisabledContainerColor
-        )
-
+        val foreground = if (variant == HyperButtonVariant.Filled || variant == HyperButtonVariant.Danger)
+            Color(1f, 1f, 1f, 1f) else HyperColors.primaryText
         return HyperButtonColors(
-            containerColor = resolvedContainerColor,
-            contentColor = resolvedContentColor,
-            disabledContainerColor = resolvedDisabledContainerColor,
-            disabledContentColor = resolvedDisabledContentColor
+            resolveHyperContainerColor(containerColor, fill),
+            resolveHyperContainerColor(contentColor, foreground),
+            resolveHyperContainerColor(disabledContainerColor,
+                if (variant == HyperButtonVariant.Ghost) Color.Transparent else hyperGlass.controlTrack),
+            resolveHyperContainerColor(disabledContentColor, HyperColors.secondaryText.copy(alpha = 150 / 255f))
         )
     }
 
     @Composable
     fun border(
-        tone: HyperButtonTone = HyperButtonTone.Primary,
+        variant: HyperButtonVariant = HyperButtonVariant.Filled,
+        enabled: Boolean = true,
         color: Color = Color.Unspecified
-    ): BorderStroke? = when (tone) {
-        HyperButtonTone.Outline -> BorderStroke(
-            width = 1.dp,
-            color = resolveHyperOpaqueColor(
-                color = color,
-                fallbackColor = HyperColors.accent,
-                backgroundColor = HyperColors.cardContainer
-            )
-        )
-        else -> null
+    ): BorderStroke? {
+        val fallback = when {
+            variant == HyperButtonVariant.Ghost -> Color.Transparent
+            !enabled -> HyperColors.divider.copy(alpha = 110 / 255f)
+            variant == HyperButtonVariant.Outline -> HyperColors.divider
+            variant == HyperButtonVariant.Tonal -> hyperGlass.edgeHighlight
+            else -> Color(1f, 1f, 1f, 45 / 255f)
+        }
+        val resolved = resolveHyperContainerColor(color, fallback)
+        return if (resolved.alpha == 0f) null else BorderStroke(1.dp, resolved)
     }
 }

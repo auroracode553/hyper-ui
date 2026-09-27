@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonTone
+import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperPlaybackSpeedPanelDefaults
 import hyper_ui.HyperPlaybackSpeedPanelOverlay
 import hyper_ui.HyperPlaybackSpeedScale
@@ -56,7 +56,7 @@ fun PlaybackSpeedScaleDemo() {
         )
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 enabled = selectedIndex > 0,
                 onClick = { selectedSpeed = speedOptions[selectedIndex - 1] }
             ) {
@@ -70,7 +70,7 @@ fun PlaybackSpeedScaleDemo() {
             }
         }
         HyperButton(
-            tone = HyperButtonTone.Outline,
+            variant = HyperButtonVariant.Outline,
             onClick = { useCustomColors = !useCustomColors }
         ) {
             HyperText(if (useCustomColors) "恢复默认配色" else "查看自定义配色")
@@ -92,8 +92,7 @@ fun PlaybackSpeedPanelDemo() {
     var feedback by remember { mutableStateOf("拖动滑块可实时更新速度") }
     val panelColors = if (useCustomColors) {
         HyperPlaybackSpeedPanelDefaults.colors(
-            containerTopColor = Color(0.12f, 0.10f, 0.18f, 0.96f),
-            containerBottomColor = Color(0.07f, 0.06f, 0.11f, 0.97f),
+            containerColor = Color(0.12f, 0.10f, 0.18f, 0.96f),
             accentColor = Color(0.62f, 0.48f, 1f, 1f)
         )
     } else {
@@ -115,7 +114,7 @@ fun PlaybackSpeedPanelDemo() {
                     HyperText("打开速度面板")
                 }
                 HyperButton(
-                    tone = HyperButtonTone.Outline,
+                    variant = HyperButtonVariant.Outline,
                     onClick = { useCustomColors = !useCustomColors }
                 ) {
                     HyperText(if (useCustomColors) "恢复默认配色" else "查看自定义配色")

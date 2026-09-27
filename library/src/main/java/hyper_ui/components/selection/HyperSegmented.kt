@@ -49,6 +49,7 @@ fun <T> HyperSegmented(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     itemEnabled: (T) -> Boolean = { true },
+    equalWidth: Boolean = true,
     shape: Shape = HyperSegmentedDefaults.Shape,
     itemShape: Shape = HyperSegmentedDefaults.ItemShape,
     colors: HyperSegmentedColors = HyperSegmentedDefaults.colors(),
@@ -58,16 +59,15 @@ fun <T> HyperSegmented(
 ) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
+            .then(if (equalWidth) Modifier.fillMaxWidth() else Modifier)
             .height(HyperSegmentedDefaults.Height)
             .hyperGlassSurface(
                 shape = shape,
                 visuals = hyperGlassSurfaceVisuals(
                     containerColor = colors.containerColor,
                     elevation = HyperSegmentedDefaults.ContainerElevation,
-                    topLightAlpha = if (HyperColors.isLight) 0.24f else 0.10f,
-                    bottomShadeAlpha = if (HyperColors.isLight) 0.035f else 0.10f,
-                    shadowAlpha = if (HyperColors.isLight) 0.08f else 0.18f
+                    blur = 14.dp,
+
                 )
             )
             .padding(containerPadding)
@@ -83,11 +83,12 @@ fun <T> HyperSegmented(
             HyperButton(
                 onClick = { onSelected(item) },
                 modifier = Modifier
-                    .weight(1f)
+                    .then(if (equalWidth) Modifier.weight(1f) else Modifier)
                     .fillMaxHeight()
                     .semantics { this.selected = selected },
                 enabled = actualEnabled,
-                tone = if (selected) HyperButtonTone.Primary else HyperButtonTone.Plain,
+                variant = HyperButtonVariant.Ghost,
+                height = 32.dp,
                 colors = HyperButtonColors(
                     containerColor = if (selected) {
                         colors.selectedItemColor
@@ -118,13 +119,13 @@ fun <T> HyperSegmented(
 }
 
 object HyperSegmentedDefaults {
-    val Height = 36.dp
-    val ContainerElevation = 1.dp
-    val ContainerPadding = PaddingValues(2.dp)
-    val ItemContentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+    val Height = 40.dp
+    val ContainerElevation = 0.dp
+    val ContainerPadding = PaddingValues(4.dp)
+    val ItemContentPadding = PaddingValues(horizontal = 12.dp)
     val ItemContentSpacing = 6.dp
-    val Shape: Shape = RoundedCornerShape(5.dp)
-    val ItemShape: Shape = RoundedCornerShape(4.dp)
+    val Shape: Shape = RoundedCornerShape(18.dp)
+    val ItemShape: Shape = RoundedCornerShape(16.dp)
 
     @Composable
     fun colors(
@@ -138,20 +139,20 @@ object HyperSegmentedDefaults {
     ): HyperSegmentedColors {
         val resolvedContainerColor = resolveHyperContainerColor(
             containerColor,
-            Color(1f, 1f, 1f, if (HyperColors.isLight) 0.48f else 0.14f)
+            hyperGlass.surfaceSubtle
         )
         val resolvedSelectedItemColor = resolveHyperContainerColor(
             selectedItemColor,
-            HyperColors.accent
+            HyperColors.softContainer
         )
 
         return HyperSegmentedColors(
             containerColor = resolvedContainerColor,
             selectedItemColor = resolvedSelectedItemColor,
-            unselectedItemColor = resolveHyperContainerColor(unselectedItemColor, HyperColors.cardContainer),
+            unselectedItemColor = resolveHyperContainerColor(unselectedItemColor, Color.Transparent),
             selectedContentColor = resolveHyperContainerColor(
                 selectedContentColor,
-                Color(1f, 1f, 1f, 1f)
+                HyperColors.primaryText
             ),
             unselectedContentColor = resolveHyperContainerColor(unselectedContentColor, HyperColors.primaryText),
             disabledItemColor = resolveHyperContainerColor(

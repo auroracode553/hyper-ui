@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
-internal val MenuListCornerRadius = HyperStyleDefaults.LargeCornerRadius
+internal val MenuListCornerRadius = 18.dp
 
 @Immutable
 data class HyperMenuListColors(
@@ -44,16 +44,12 @@ fun <T> HyperMenuList(
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
 ) {
-    val containerColor = resolveHyperOpaqueColor(
-        color = colors.containerColor,
-        fallbackColor = HyperColors.cardContainer,
-        backgroundColor = HyperColors.pageBackground
-    )
+    val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surface)
     val shape = HyperMenuListDefaults.Shape
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .hyperSolidSurface(
+            .hyperFrostedSurface(
                 containerColor = containerColor,
                 shape = shape
             )
@@ -68,7 +64,7 @@ fun <T> HyperMenuList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(menuListItemShape(isFirst, isLast))
-                    .background(containerColor)
+
             ) {
                 CompositionLocalProvider(
                     LocalHyperListItemDividerSuppressed provides isLast,
@@ -96,11 +92,7 @@ fun HyperMenuList(
     colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val containerColor = resolveHyperOpaqueColor(
-        color = colors.containerColor,
-        fallbackColor = HyperColors.cardContainer,
-        backgroundColor = HyperColors.pageBackground
-    )
+    val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surface)
     CompositionLocalProvider(
         LocalHyperListItemDividerSuppressed provides false,
         LocalHyperListItemContainerColor provides containerColor
@@ -108,7 +100,7 @@ fun HyperMenuList(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .hyperSolidSurface(
+                .hyperFrostedSurface(
                     containerColor = containerColor,
                     shape = HyperMenuListDefaults.Shape
                 )
@@ -122,15 +114,11 @@ fun HyperMenuList(
 object HyperMenuListDefaults {
     val Shape: Shape = RoundedCornerShape(MenuListCornerRadius)
     /** 菜单容器统一提供左右 16.dp 内容留白，子项（HyperListItem 等）无需重复设置水平 padding；垂直 4.dp 保留首尾圆角安全区。 */
-    val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
+    val ContentPadding = PaddingValues(4.dp)
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperMenuListColors = HyperMenuListColors(
-        containerColor = resolveHyperOpaqueColor(
-            color = containerColor,
-            fallbackColor = HyperColors.cardContainer,
-            backgroundColor = HyperColors.pageBackground
-        )
+        containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surface)
     )
 }
 

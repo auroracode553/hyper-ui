@@ -99,3 +99,7 @@ object HyperStyleDefaults {
 | `panelBorder` | `BorderStroke` | 面板描边 |
 
 不要把 `HyperColors` 的结果缓存到全局变量；这些值依赖当前 Composition，应在 Composable 上下文中读取。
+
+## Flutter 参考玻璃令牌
+
+`HyperGlassTokens.light()` 与 `dark()` 移植 Flutter `HyGlassTheme` 的十项 RGBA 令牌；`HyperThemeConfig(glass = tokens)` 注入自定义材质。默认主色为 `rgba(71, 111, 232)`。页面有动态背景时通过 `HyperBackdrop(background = { ... }) { ... }` 提供背景采样；静态环境色使用 `HyperSoftBackground(intensity = 1f)`。组件保留受控状态，主题只提供视觉参数。

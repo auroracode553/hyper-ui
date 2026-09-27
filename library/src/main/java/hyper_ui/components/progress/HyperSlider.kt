@@ -28,6 +28,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.semantics
@@ -97,6 +100,7 @@ fun HyperSlider(
     val currentOnValueChangeStarted by rememberUpdatedState(onValueChangeStarted)
     val currentOnValueChangeFinished by rememberUpdatedState(onValueChangeFinished)
     val density = LocalDensity.current
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val thumbHaloSize = maxOf(
         thumbSize,
         thumbSize * HyperSliderDefaults.ThumbHaloScale
@@ -146,6 +150,7 @@ fun HyperSlider(
     val interactionModifier = Modifier
         .pointerInput(
             interactionEnabled,
+            isRtl,
             valueRange.start,
             valueRange.endInclusive,
             steps,
@@ -159,7 +164,7 @@ fun HyperSlider(
                     currentOnValueChangeStarted?.invoke()
                     currentOnValueChange(
                         pointerPositionToValue(
-                            pointerX = offset.x,
+                            pointerX = if (isRtl) size.width - offset.x else offset.x,
                             widthPx = size.width.toFloat(),
                             thumbHaloSizePx = thumbHaloSizePx,
                             valueRange = valueRange,
@@ -178,7 +183,7 @@ fun HyperSlider(
                 onDrag = { change, _ ->
                     currentOnValueChange(
                         pointerPositionToValue(
-                            pointerX = change.position.x,
+                            pointerX = if (isRtl) size.width - change.position.x else change.position.x,
                             widthPx = size.width.toFloat(),
                             thumbHaloSizePx = thumbHaloSizePx,
                             valueRange = valueRange,
@@ -191,6 +196,7 @@ fun HyperSlider(
         }
         .pointerInput(
             interactionEnabled,
+            isRtl,
             valueRange.start,
             valueRange.endInclusive,
             steps,
@@ -203,7 +209,7 @@ fun HyperSlider(
                     currentOnValueChangeStarted?.invoke()
                     currentOnValueChange(
                         pointerPositionToValue(
-                            pointerX = offset.x,
+                            pointerX = if (isRtl) size.width - offset.x else offset.x,
                             widthPx = size.width.toFloat(),
                             thumbHaloSizePx = thumbHaloSizePx,
                             valueRange = valueRange,
@@ -221,6 +227,7 @@ fun HyperSlider(
             .height(maxOf(minimumTouchHeight, thumbHaloSize))
             .then(interactionModifier)
             .semantics {
+                if (!enabled) disabled()
                 progressBarRangeInfo = ProgressBarRangeInfo(
                     current = coercedValue,
                     range = valueRange,
@@ -267,7 +274,7 @@ fun HyperSlider(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .offset(
-                        x = availableTrackWidth * markerFraction +
+                        x = availableTrackWidth * (if (isRtl) 1f - markerFraction else markerFraction) +
                             (thumbHaloSize - segmentMarkerSize) * 0.5f
                     )
                     .size(segmentMarkerSize)
@@ -277,9 +284,9 @@ fun HyperSlider(
 
         Box(
             modifier = Modifier
-                .offset(x = availableTrackWidth * valueFraction)
+                .offset(x = availableTrackWidth * (if (isRtl) 1f - valueFraction else valueFraction))
                 .size(thumbHaloSize)
-                .background(resolvedThumbHaloColor, thumbShape),
+                .background(if (isDragging) resolvedThumbHaloColor else Color.Transparent, thumbShape),
             contentAlignment = Alignment.Center
         ) {
             Box(
@@ -288,6 +295,7 @@ fun HyperSlider(
                     .hyperSurface(
                         containerColor = resolvedThumbColor,
                         shape = thumbShape,
+                        elevation = if (isDragging) 5.dp else 3.dp,
                         border = thumbBorder
                     ),
                 contentAlignment = Alignment.Center
@@ -305,10 +313,10 @@ fun HyperSlider(
 object HyperSliderDefaults {
     val MinTouchHeight = 40.dp
     val TrackHeight = 6.dp
-    val ThumbSize = 18.dp
+    val ThumbSize = 20.dp
     val SegmentMarkerSize = 5.dp
-    const val ThumbHaloScale = 1.85f
-    const val ThumbCenterScale = 0.52f
+    const val ThumbHaloScale = 2.2f
+    const val ThumbCenterScale = 0f
     val TrackShape: Shape = RoundedCornerShape(percent = 50)
     val ThumbShape: Shape = CircleShape
 
@@ -331,7 +339,7 @@ object HyperSliderDefaults {
         val resolvedActiveTrackColor = resolveHyperContainerColor(activeTrackColor, accent)
         val defaultMarkerColor = HyperColors.primaryText.copy(alpha = 0.56f)
         return HyperSliderColors(
-            trackColor = resolveHyperContainerColor(trackColor, HyperColors.fieldContainer),
+            trackColor = resolveHyperContainerColor(trackColor, hyperGlass.controlTrack),
             activeTrackColor = resolvedActiveTrackColor,
             segmentMarkerColor = resolveHyperContainerColor(
                 segmentMarkerColor,
@@ -347,7 +355,7 @@ object HyperSliderDefaults {
             ),
             thumbHaloColor = resolveHyperContainerColor(
                 thumbHaloColor,
-                resolvedActiveTrackColor.copy(alpha = 0.22f)
+                resolvedActiveTrackColor.copy(alpha = 24 / 255f)
             ),
             disabledTrackColor = resolveHyperContainerColor(
                 disabledTrackColor,
@@ -355,7 +363,7 @@ object HyperSliderDefaults {
             ),
             disabledActiveTrackColor = resolveHyperContainerColor(
                 disabledActiveTrackColor,
-                HyperColors.disabledText
+                accent.copy(alpha = 80 / 255f)
             ),
             disabledSegmentMarkerColor = resolveHyperContainerColor(
                 disabledSegmentMarkerColor,

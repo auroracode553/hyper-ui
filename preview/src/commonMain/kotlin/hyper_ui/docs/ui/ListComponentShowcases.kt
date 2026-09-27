@@ -58,7 +58,7 @@ fun HyperMenuListDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HyperText(
-            text = "菜单列表使用 44dp 单行与 54dp 描述行，外部视觉由 modifier 组合",
+            text = "菜单列表使用 44dp 单行与 58dp 描述行，外部视觉由 modifier 组合",
             color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )

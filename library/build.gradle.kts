@@ -29,10 +29,12 @@ android {
 }
 
 dependencies {
-    // 组件层不引入 Compose Animation。
+    // 动画和背景采样均保持在组件材质层。
     api(platform(libs.androidx.compose.bom))
     api("androidx.compose.foundation:foundation")
     api("androidx.compose.runtime:runtime")
+    implementation("androidx.compose.animation:animation-core")
+    implementation("dev.chrisbanes.haze:haze:1.7.1")
     api("androidx.compose.ui:ui")
     api("androidx.compose.ui:ui-graphics")
     implementation(libs.lucide.icons.android)

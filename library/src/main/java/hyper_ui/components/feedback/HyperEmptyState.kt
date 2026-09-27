@@ -1,8 +1,14 @@
-/** 文件职责：提供由 HyperPanel 承载的页面级空数据状态。 */
+/** 文件职责：提供 Flutter HyEmptyState 风格的图标玻璃块与居中文案。 */
 package hyper_ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,16 +35,16 @@ data class HyperEmptyStateColors(
 /**
  * 页面级空数据状态。
  *
- * 组件只负责居中布局和空状态内容；面板样式统一由 [HyperPanel] 提供。
+ * 组件只负责居中布局和空状态内容；图标有独立玻璃底面。
  * 图标、操作及其业务行为由调用方通过 Slot 注入。
- * [modifier] 控制页面占位区域，[panelModifier] 控制内部 [HyperPanel] 外壳。
+ * [modifier] 控制页面占位区域，[contentModifier] 控制内部内容列。
  */
 @Composable
 fun HyperEmptyState(
     title: String,
     modifier: Modifier = Modifier,
     description: String? = null,
-    panelModifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier,
     colors: HyperEmptyStateColors = HyperEmptyStateDefaults.colors(),
     iconContent: (@Composable () -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null
@@ -52,16 +58,20 @@ fun HyperEmptyState(
             .padding(horizontal = HyperEmptyStateDefaults.HorizontalPadding),
         contentAlignment = Alignment.Center
     ) {
-        HyperPanel(
-            modifier = panelModifier
+        Column(
+            modifier = contentModifier
                 .widthIn(max = HyperEmptyStateDefaults.PanelMaxWidth),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             iconContent?.let { icon ->
                 CompositionLocalProvider(
                     LocalHyperContentColor provides resolvedColors.iconContentColor
                 ) {
-                    icon()
+                    Box(Modifier.size(56.dp).hyperFrostedSurface(
+                        hyperGlass.surfaceSubtle, RoundedCornerShape(24.dp), elevation = 0.dp,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, HyperColors.fieldBorder), blur = 14.dp
+                    ), contentAlignment = Alignment.Center) { icon() }
                 }
             }
 
@@ -69,7 +79,7 @@ fun HyperEmptyState(
                 text = title,
                 modifier = Modifier.fillMaxWidth(),
                 color = resolvedColors.titleColor,
-                style = HyperTheme.typography.titleMedium,
+                style = HyperTheme.typography.titleMedium.copy(fontSize = 16.sp, lineHeight = 20.sp),
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center
             )
@@ -79,7 +89,7 @@ fun HyperEmptyState(
                     text = supportingText,
                     modifier = Modifier.fillMaxWidth(),
                     color = resolvedColors.descriptionColor,
-                    style = HyperTheme.typography.bodyMedium,
+                    style = HyperTheme.typography.bodyMedium.copy(fontSize = 13.sp, lineHeight = 18.85.sp),
                     textAlign = TextAlign.Center
                 )
             }

@@ -57,11 +57,13 @@ kotlin {
             // Android Lucide VectorDrawable 由跨平台 Preview 使用同包图标替身。
             kotlin.exclude("**/HyperLucideIcons.kt")
             dependencies {
-                // Preview 与正式组件保持一致，不额外引入动画运行时。
+                // Preview 与正式组件复用同一动画和背景模糊实现。
                 implementation("org.jetbrains.compose.foundation:foundation:${libs.versions.composeMultiplatform.get()}")
                 implementation("org.jetbrains.compose.material:material-icons-core:${libs.versions.composeMaterialIconsVersion.get()}")
                 implementation("org.jetbrains.compose.components:components-resources:${libs.versions.composeMultiplatform.get()}")
                 implementation("org.jetbrains.compose.runtime:runtime:${libs.versions.composeMultiplatform.get()}")
+                implementation("org.jetbrains.compose.animation:animation-core:${libs.versions.composeMultiplatform.get()}")
+                implementation("dev.chrisbanes.haze:haze:1.7.1")
                 implementation("org.jetbrains.compose.ui:ui:${libs.versions.composeMultiplatform.get()}")
             }
         }

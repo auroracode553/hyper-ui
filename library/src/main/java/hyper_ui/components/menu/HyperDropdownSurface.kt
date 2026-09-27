@@ -9,6 +9,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.dp
 
 @Immutable
 internal data class HyperDropdownSurfaceVisuals(
@@ -25,27 +26,7 @@ internal fun Modifier.hyperDropdownSurface(
     shape: Shape,
     containerColor: Color,
     visuals: HyperDropdownSurfaceVisuals
-): Modifier = hyperSurfaceDepth(
-    shape = shape,
-    visuals = visuals.depth
-)
-    .clip(shape)
-    .drawWithCache {
-        val faceBrush = Brush.verticalGradient(
-            colorStops = arrayOf(
-                0f to visuals.topLightColor,
-                0.42f to visuals.topLightColor.copy(alpha = 0f),
-                0.68f to visuals.bottomShadeColor.copy(alpha = 0f),
-                1f to visuals.bottomShadeColor
-            )
-        )
-
-        onDrawWithContent {
-            drawRect(color = containerColor)
-            drawRect(brush = faceBrush)
-            drawContent()
-        }
-    }
+): Modifier = hyperGlassSurface(shape, HyperGlassSurfaceVisuals(containerColor, visuals.depth, 28.dp))
 
 @Composable
 internal fun hyperDropdownSurfaceVisuals(): HyperDropdownSurfaceVisuals {

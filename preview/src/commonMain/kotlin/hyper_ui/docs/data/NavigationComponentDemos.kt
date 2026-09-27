@@ -10,6 +10,27 @@ private const val GROUP_NAVIGATION = "导航组件"
 
 internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
+        id = "slide_menu", group = GROUP_NAVIGATION, title = "HyperSlideMenu",
+        description = "列表侧滑操作，逻辑方向、速度投影和弹簧吸附。展开状态由调用方管理。",
+        code = """
+            HyperSlideMenu(
+                reveal = reveal,
+                onRevealChange = { reveal = it },
+                endActions = listOf(HyperSlideAction("删除", onDelete))
+            ) {
+                HyperListItem(headlineContent = { HyperText("向左滑动") })
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("两侧操作", "startActions / endActions", "每项 64dp，逻辑方向自动镜像"),
+            DemoVariant("禁用", "enabled = false", "停止拖动并收起操作"),
+            DemoVariant("吸附", "release", "0.09s 速度投影与 470 刚度弹簧")
+        ),
+        apiDocumentPaths = listOf("navigation/hyper-slide-menu.md"),
+        content = { hyper_ui.docs.ui.SlideActionMenuDemo() }
+    ),
+
+    ComponentDemo(
         id = "nav-bar",
         group = GROUP_NAVIGATION,
         title = "HyperNavBar",
@@ -72,7 +93,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("完整内容区", "defaultSetPadding = false", "不注入默认间距或系统栏避让"),
             DemoVariant("场景间距", "drawerContentModifier", "在默认策略之后追加调用方布局"),
             DemoVariant("滚动职责", "drawerContentScrollEnabled", "普通内容由面板滚动，懒列表关闭外层滚动"),
-            DemoVariant("结构玻璃", "colors.containerColor", "主题不透明基底、1dp 描边与单层阴影"),
+            DemoVariant("结构玻璃", "colors.containerColor", "玻璃表面、柔和描边与双层阴影"),
             DemoVariant("选中项", "selected = true", "轻量主题染色，不重复铺设面板底色"),
             DemoVariant("无蒙层", "dismissOnClickOutside", "仅处理外部点击，不绘制背景或遮罩")
         ),
@@ -80,12 +101,12 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         content = { DrawerDemo() }
     ),
     ComponentDemo(
-        id = "slide-menu",
+        id = "filter_bar",
         group = GROUP_NAVIGATION,
-        title = "HyperSlideMenu",
+        title = "HyperFilterBar",
         description = "横向分组菜单。每个项目直接复用 HyperButton 的表面、描边、按压与禁用态，菜单文字、计数或图标由 item slot 渲染。",
         code = """
-            HyperSlideMenu(
+            HyperFilterBar(
                 items = categories,
                 selectedItem = selected,
                 onSelected = { selected = it }
@@ -94,13 +115,13 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("选中项", "selectedItem", "默认使用 HyperButtonTone.Primary"),
-            DemoVariant("未选中项", "unselectedTone", "默认使用 HyperButtonTone.Secondary"),
-            DemoVariant("描边选中态", "selectedTone = Outline", "直接使用 HyperButton 的 1dp 强调色描边"),
+            DemoVariant("选中项", "selectedItem", "默认使用 HyperButtonVariant.Filled"),
+            DemoVariant("未选中项", "unselectedVariant", "默认使用 HyperButtonVariant.Tonal"),
+            DemoVariant("描边选中态", "selectedVariant = Outline", "直接使用 HyperButton 的 1dp 强调色描边"),
             DemoVariant("自定义配色", "selectedColors", "直接接收 HyperButtonColors"),
             DemoVariant("禁用项", "itemEnabled = false", "复用 HyperButton 禁用态")
         ),
-        apiDocumentPaths = listOf("navigation/hyper-slide-menu.md"),
+        apiDocumentPaths = listOf("navigation/hyper-filter-bar.md"),
         content = { SlideMenuDemo() }
     ),
     ComponentDemo(

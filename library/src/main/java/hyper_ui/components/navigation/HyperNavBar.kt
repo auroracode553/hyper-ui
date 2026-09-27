@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 
 @Immutable
@@ -77,7 +78,7 @@ fun HyperNavBar(
                         .windowInsetsPadding(windowInsets)
                         .then(navBarModifier)
                         .defaultMinSize(minHeight = HyperNavBarDefaults.MinHeight)
-                        .hyperSurface(
+                        .hyperFrostedSurface(
                             containerColor = colors.containerColor,
                             shape = HyperNavBarDefaults.Shape
                         )
@@ -127,12 +128,14 @@ fun HyperNavBar(
 object HyperNavBarDefaults {
     val MinHeight = 56.dp
     val ContentGap = 8.dp
-    val ContentPadding: PaddingValues = PaddingValues(0.dp)
+    val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
     val Shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
 
     val TitleTextStyle: TextStyle
         @Composable get() = HyperTheme.typography.titleLarge.copy(
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            lineHeight = 20.7.sp
         )
 
     @Composable
@@ -140,7 +143,7 @@ object HyperNavBarDefaults {
         containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified
     ): HyperNavBarColors = HyperNavBarColors(
-        containerColor = resolveHyperContainerColor(containerColor, Color.Transparent),
+        containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surface),
         contentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
     )
 }

@@ -49,14 +49,11 @@ fun HyperDialog(
     border: BorderStroke? = HyperDialogDefaults.border(),
     content: @Composable ColumnScope.() -> Unit
 ) {
-    if (!visible) return
+    val transitionProgress = hyperOverlayProgress(visible)
+    if (!visible && transitionProgress == 0f) return
 
     val currentOnDismissRequest by rememberUpdatedState(onDismissRequest)
-    val containerColor = resolveHyperOpaqueColor(
-        color = colors.containerColor,
-        fallbackColor = HyperColors.cardContainer,
-        backgroundColor = HyperColors.pageBackground
-    )
+    val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surfaceStrong)
 
     HyperDialogHost(
         onDismissRequest = onDismissRequest,
@@ -86,6 +83,7 @@ fun HyperDialog(
             HyperFloatingPanel(
                 title = title,
                 modifier = modifier
+                    .hyperOverlayMotion(transitionProgress)
                     .widthIn(
                         min = resolvedMinWidth,
                         max = resolvedMaxWidth
@@ -123,16 +121,9 @@ object HyperDialogDefaults {
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperDialogColors = HyperDialogColors(
-        containerColor = resolveHyperOpaqueColor(
-            color = containerColor,
-            fallbackColor = HyperColors.cardContainer,
-            backgroundColor = HyperColors.pageBackground
-        )
+        containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surfaceStrong)
     )
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
-        color = color,
-        backgroundColor = HyperColors.cardContainer
-    )
+    fun border(color: Color = Color.Unspecified): BorderStroke = BorderStroke(1.dp, resolveHyperContainerColor(color, hyperGlass.border))
 }

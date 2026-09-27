@@ -27,6 +27,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
@@ -82,6 +84,7 @@ fun RadioDemo() {
 fun SegmentedDemo() {
     val periods = remember { listOf("日", "周", "月", "年") }
     var selectedPeriod by remember { mutableStateOf("年") }
+    var equalWidth by remember { mutableStateOf(true) }
     val modes = remember { listOf("轻量", "标准", "停用") }
     var selectedMode by remember { mutableStateOf("标准") }
 
@@ -89,7 +92,11 @@ fun SegmentedDemo() {
         modifier = Modifier.widthIn(max = 520.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        HyperButton({ equalWidth = !equalWidth }, variant = HyperButtonVariant.Ghost) {
+            HyperText(if (equalWidth) "等宽分段" else "内容宽度分段")
+        }
         HyperSegmented(
+            equalWidth = equalWidth,
             items = periods,
             selectedItem = selectedPeriod,
             onSelected = { selectedPeriod = it }
@@ -166,37 +173,72 @@ fun CheckboxDemo() {
 
 @Composable
 fun TextFieldDemo() {
-    var name by remember { mutableStateOf("HyperUI") }
+    var name by remember { mutableStateOf("") }
+    var clearableValue by remember { mutableStateOf("示例内容") }
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
     var note by remember { mutableStateOf("") }
-    var keyword by remember { mutableStateOf("HyperUI") }
+    var keyword by remember { mutableStateOf("") }
+    var errorValue by remember { mutableStateOf("") }
     var forceNoteError by remember { mutableStateOf(false) }
     val nameFocusRequester = remember { FocusRequester() }
     val isNoteError = forceNoteError || note.length > 80
 
     Column(
-        modifier = Modifier.widthIn(max = 520.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier.widthIn(max = 320.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         HyperTextField(
             value = name,
             onValueChange = { name = it },
-            labelContent = { FieldLabel("组件名称") },
-            placeholderContent = { FieldPlaceholder("请输入名称") },
+            labelContent = { FieldLabel("基础输入") },
+            placeholderContent = { FieldPlaceholder("请输入内容") },
             inputModifier = Modifier.focusRequester(nameFocusRequester)
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(onClick = { nameFocusRequester.requestFocus() }) {
-                HyperText("查看聚焦描边与阴影")
+        HyperTextField(
+            value = clearableValue,
+            onValueChange = { clearableValue = it },
+            labelContent = { FieldLabel("可清空") },
+            placeholderContent = { FieldPlaceholder("请输入内容") },
+            endContent = if (clearableValue.isNotEmpty()) {{
+                HyperIconButton(onClick = { clearableValue = "" }, modifier = Modifier.size(32.dp)) {
+                    HyperIcon(Icons.Default.Close, contentDescription = "清空内容", modifier = Modifier.size(18.dp))
+                }
+            }} else null
+        )
+        HyperTextField(
+            value = password,
+            onValueChange = { password = it },
+            labelContent = { FieldLabel("密码显隐") },
+            placeholderContent = { FieldPlaceholder("请输入密码") },
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            endContent = {
+                HyperButton(
+                    onClick = { passwordVisible = !passwordVisible },
+                    variant = HyperButtonVariant.Ghost,
+                    height = 28.dp
+                ) { HyperText(if (passwordVisible) "隐藏" else "显示") }
             }
-            HyperButton(onClick = { forceNoteError = !forceNoteError }) {
-                HyperText(if (forceNoteError) "关闭错误态" else "查看错误态")
+        )
+        HyperTextField(
+            value = keyword,
+            onValueChange = { keyword = it },
+            labelContent = { FieldLabel("前区与后区插槽") },
+            placeholderContent = { FieldPlaceholder("搜索组件") },
+            startContent = {
+                HyperIcon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(20.dp))
+            },
+            endContent = {
+                HyperIconButton(onClick = { keyword = "" }, modifier = Modifier.size(32.dp)) {
+                    HyperIcon(Icons.Default.Close, contentDescription = "清空搜索", modifier = Modifier.size(18.dp))
+                }
             }
-        }
+        )
         HyperTextField(
             value = note,
-            onValueChange = { note = it },
-            labelContent = { FieldLabel("备注") },
-            placeholderContent = { FieldPlaceholder("写一点说明") },
+            onValueChange = { note = it.take(80) },
+            labelContent = { FieldLabel("多行输入") },
+            placeholderContent = { FieldPlaceholder("请输入多行内容") },
             supportingContent = { FieldSupporting("${note.length}/80") },
             singleLine = false,
             minLines = 3,
@@ -204,96 +246,46 @@ fun TextFieldDemo() {
             inputModifier = Modifier.heightIn(min = 92.dp),
             isError = isNoteError
         )
-        HyperTextField(
-            value = "不可编辑内容",
-            onValueChange = {},
-            labelContent = { FieldLabel("禁用态") },
-            enabled = false
-        )
+        HyperTextField(value = "禁用内容", onValueChange = {},
+            labelContent = { FieldLabel("禁用态") }, enabled = false)
         HyperTextField(
             value = "只读内容",
             onValueChange = {},
             labelContent = { FieldLabel("只读态") },
             readOnly = true
         )
-        HyperTextField(
-            value = keyword,
-            onValueChange = { keyword = it },
-            placeholderContent = { FieldPlaceholder("搜索组件") },
-            colors = HyperTextFieldDefaults.colors(
-                containerColor = LocalDocsColorScheme.current.primaryContainer
-            ),
-            startContent = {
-                HyperIcon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null,
-                    tint = LocalHyperContentColor.current,
-                    modifier = Modifier.size(20.dp)
-                )
-            },
-            endContent = if (keyword.isNotEmpty()) {
-                {
-                    HyperIconButton(
-                        onClick = { keyword = "" },
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        HyperIcon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "清空搜索",
-                            modifier = Modifier.size(HyperIconButtonDefaults.IconSize - 4.dp)
-                        )
-                    }
-                }
-            } else {
-                null
+        HyperTextField(value = errorValue, onValueChange = { errorValue = it },
+            labelContent = { FieldLabel("错误态") },
+            placeholderContent = { FieldPlaceholder("请输入有效内容") },
+            isError = true)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton(onClick = { nameFocusRequester.requestFocus() }) { HyperText("查看聚焦") }
+            HyperButton(onClick = { forceNoteError = !forceNoteError }) {
+                HyperText(if (forceNoteError) "关闭多行错误" else "多行错误态")
             }
-        )
-        HyperText(
-            text = if (keyword.isBlank()) {
-                "左右插槽示例：当前未输入关键词"
-            } else {
-                "左右插槽示例：当前关键词为 $keyword"
-            },
-            color = LocalDocsColorScheme.current.onSurfaceVariant,
-            fontSize = 13.sp,
-            lineHeight = 18.sp
-        )
+        }
     }
 }
 
 @Composable
 fun SwitchDemo() {
-    var enabled by remember { mutableStateOf(true) }
-    var quietMode by remember { mutableStateOf(false) }
-
-    FormControlGroup {
-        FormControlOption(
-            text = "启用状态",
-            onClick = { enabled = !enabled }
-        ) {
-            HyperSwitch(
-                checked = enabled,
-                onCheckedChange = { enabled = it }
-            )
+    var notifications by remember { mutableStateOf(true) }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(24.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            HyperText("受控开关", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 12.sp)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically) {
+                HyperText("接收消息通知", fontSize = 14.sp)
+                HyperSwitch(checked = notifications, onCheckedChange = { notifications = it })
+            }
         }
-        FormControlOption(
-            text = "勿扰模式",
-            onClick = { quietMode = !quietMode }
-        ) {
-            HyperSwitch(
-                checked = quietMode,
-                onCheckedChange = { quietMode = it }
-            )
-        }
-        FormControlOption(
-            text = "禁用状态",
-            enabled = false
-        ) {
-            HyperSwitch(
-                checked = true,
-                onCheckedChange = {},
-                enabled = false
-            )
+        Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            HyperText("禁用状态", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 12.sp)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically) {
+                HyperText("禁用 · 开启", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 14.sp)
+                HyperSwitch(checked = true, onCheckedChange = {}, enabled = false)
+            }
         }
     }
 }

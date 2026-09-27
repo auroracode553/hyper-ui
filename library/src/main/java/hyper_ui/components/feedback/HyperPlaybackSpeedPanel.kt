@@ -1,4 +1,4 @@
-/** 文件职责：提供固定深色、受控且可直接覆盖在播放器上的播放速度设置面板。 */
+/** 文件职责：提供主题玻璃、受控且可直接覆盖在播放器上的播放速度设置面板。 */
 package hyper_ui
 
 import androidx.compose.foundation.background
@@ -47,7 +47,7 @@ import hyper_ui.core.icon.HyperResetIcon
 import kotlin.math.abs
 
 /**
- * 播放速度覆盖层。业务速度与显示状态均由调用方持有，组件只处理固定深色布局与点击分发。
+ * 播放速度覆盖层。业务速度与显示状态均由调用方持有，组件只处理主题玻璃布局与点击分发。
  */
 @Composable
 fun HyperPlaybackSpeedPanelOverlay(
@@ -104,7 +104,7 @@ fun HyperPlaybackSpeedPanelOverlay(
     }
 }
 
-/** 固定深色的受控播放速度面板，可脱离覆盖层单独组合。 */
+/** 主题玻璃的受控播放速度面板，可脱离覆盖层单独组合。 */
 @Composable
 fun HyperPlaybackSpeedPanel(
     currentSpeed: Float,
@@ -144,27 +144,13 @@ fun HyperPlaybackSpeedPanel(
             .ifEmpty { listOf(valueRange.start, valueRange.endInclusive) }
     }
 
-    HyperPlaybackSpeedPanelDarkTheme(colors) {
+    HyperPlaybackSpeedPanelTheme(colors) {
         Column(
             modifier = modifier
                 .widthIn(max = HyperPlaybackSpeedPanelDefaults.MaxWidth)
                 .fillMaxWidth(HyperPlaybackSpeedPanelDefaults.WidthFraction)
-                .hyperSurfaceDepth(
-                    shape = shape,
-                    visuals = hyperSurfaceDepthVisuals(
-                        strokeColor = colors.panelBorderColor,
-                        elevation = HyperPlaybackSpeedPanelDefaults.Elevation,
-                        ambientShadowColor = Color(0f, 0f, 0f, 0.24f),
-                        spotShadowColor = Color(0f, 0f, 0f, 0.36f)
-                    )
-                )
-                .clip(shape)
-                .background(
-                    Brush.verticalGradient(
-                        listOf(colors.containerTopColor, colors.containerBottomColor)
-                    )
-                )
-                .hyperNoRippleClickable(onClick = {})
+                .hyperFrostedSurface(colors.containerColor, shape, blur = 28.dp,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, colors.panelBorderColor))
                 .padding(HyperPlaybackSpeedPanelDefaults.ContentPadding),
             verticalArrangement = Arrangement.spacedBy(
                 HyperPlaybackSpeedPanelDefaults.ContentSpacing
@@ -501,12 +487,11 @@ private fun panelIconButtonColors(
 )
 
 @Composable
-private fun HyperPlaybackSpeedPanelDarkTheme(
+private fun HyperPlaybackSpeedPanelTheme(
     colors: HyperPlaybackSpeedPanelColors,
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalHyperIsDark provides true,
         LocalHyperContentColor provides colors.contentColor,
         LocalHyperTextStyle provides HyperTheme.typography.bodyMedium
     ) {

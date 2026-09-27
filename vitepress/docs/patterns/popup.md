@@ -30,7 +30,7 @@ fun EditNoteAction() {
         title = "编辑备注",
         actionContent = {
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = { showPopup = false }
             ) {
                 Text("取消")

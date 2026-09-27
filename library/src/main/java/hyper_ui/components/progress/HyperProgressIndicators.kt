@@ -1,6 +1,8 @@
 /** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/progress/HyperProgressIndicators 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui
 
+import androidx.compose.animation.core.*
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
@@ -35,23 +37,15 @@ data class HyperProgressIndicatorColors(
 
 @Composable
 fun HyperLinearProgressIndicator(
-    progress: Float?,
+    progress: Float? = null,
     modifier: Modifier = Modifier,
     shape: Shape = HyperProgressIndicatorDefaults.LinearShape,
     colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors(),
-    trackBorder: BorderStroke? = HyperProgressIndicatorDefaults.linearTrackBorder()
+    trackBorder: BorderStroke? = null
 ) {
     val coercedProgress = progress?.coerceIn(0f, 1f)
-    val resolvedTrackColor = resolveHyperOpaqueColor(
-        color = colors.trackColor,
-        fallbackColor = HyperColors.softContainer,
-        backgroundColor = HyperColors.pageBackground
-    )
-    val resolvedIndicatorColor = resolveHyperOpaqueColor(
-        color = colors.indicatorColor,
-        fallbackColor = HyperColors.accent,
-        backgroundColor = resolvedTrackColor
-    )
+    val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
+    val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
     val semanticsInfo = if (coercedProgress == null) {
         ProgressBarRangeInfo.Indeterminate
     } else {
@@ -93,22 +87,15 @@ fun HyperLinearProgressIndicator(
 
 @Composable
 fun HyperCircularProgressIndicator(
-    progress: Float?,
+    progress: Float? = null,
     modifier: Modifier = Modifier,
     strokeWidth: Dp = HyperProgressIndicatorDefaults.CircularStrokeWidth,
     colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors()
 ) {
     val coercedProgress = progress?.coerceIn(0f, 1f)
-    val resolvedTrackColor = resolveHyperOpaqueColor(
-        color = colors.trackColor,
-        fallbackColor = HyperColors.softContainer,
-        backgroundColor = HyperColors.pageBackground
-    )
-    val resolvedIndicatorColor = resolveHyperOpaqueColor(
-        color = colors.indicatorColor,
-        fallbackColor = HyperColors.accent,
-        backgroundColor = resolvedTrackColor
-    )
+    val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
+    val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
+    val rotation = if (coercedProgress == null) hyperIndeterminatePhase() * 360f else 0f
     val displayedProgress = coercedProgress
         ?: HyperProgressIndicatorDefaults.CircularIndeterminateSweepFraction
     val semanticsInfo = if (coercedProgress == null) {
@@ -139,7 +126,7 @@ fun HyperCircularProgressIndicator(
         )
         drawArc(
             color = resolvedIndicatorColor,
-            startAngle = -90f,
+            startAngle = -90f + rotation,
             sweepAngle = sweepAngle,
             useCenter = false,
             topLeft = Offset(inset, inset),
@@ -155,6 +142,7 @@ private fun IndeterminateLinearSegment(
     segmentWidth: Dp,
     segmentShape: Shape
 ) {
+    val phase = hyperIndeterminatePhase()
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,7 +152,7 @@ private fun IndeterminateLinearSegment(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(segmentWidth)
-                .offset(x = (maxWidth - segmentWidth) / 2)
+                .offset(x = (maxWidth + segmentWidth) * phase - segmentWidth)
                 .hyperSolidSurface(
                     containerColor = indicatorColor,
                     shape = segmentShape
@@ -186,24 +174,25 @@ object HyperProgressIndicatorDefaults {
         trackColor: Color = Color.Unspecified,
         indicatorColor: Color = Color.Unspecified
     ): HyperProgressIndicatorColors {
-        val resolvedTrackColor = resolveHyperOpaqueColor(
-            color = trackColor,
-            fallbackColor = HyperColors.softContainer,
-            backgroundColor = HyperColors.pageBackground
-        )
+        val resolvedTrackColor = resolveHyperContainerColor(trackColor, hyperGlass.controlTrack)
         return HyperProgressIndicatorColors(
             trackColor = resolvedTrackColor,
-            indicatorColor = resolveHyperOpaqueColor(
-                color = indicatorColor,
-                fallbackColor = HyperColors.accent,
-                backgroundColor = resolvedTrackColor
-            )
+            indicatorColor = resolveHyperContainerColor(indicatorColor, HyperColors.accent)
         )
     }
 
     @Composable
     fun linearTrackBorder(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
         color = color,
-        backgroundColor = HyperColors.softContainer
+        backgroundColor = hyperGlass.controlTrack
     )
+}
+
+/** 语义加载动画只在未指定进度时运行，确定进度不创建无限动画。 */
+@Composable
+private fun hyperIndeterminatePhase(): Float {
+    val transition = rememberInfiniteTransition(label = "HyperLoading")
+    val phase by transition.animateFloat(0f, 1f,
+        infiniteRepeatable(tween(1333, easing = LinearEasing)), label = "HyperLoadingPhase")
+    return phase
 }

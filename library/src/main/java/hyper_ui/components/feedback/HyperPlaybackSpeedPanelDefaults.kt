@@ -23,8 +23,7 @@ data class HyperPlaybackSpeedPanelTexts(
 @Immutable
 data class HyperPlaybackSpeedPanelColors(
     val scrimColor: Color,
-    val containerTopColor: Color,
-    val containerBottomColor: Color,
+    val containerColor: Color,
     val panelBorderColor: Color,
     val contentColor: Color,
     val supportingContentColor: Color,
@@ -44,7 +43,7 @@ object HyperPlaybackSpeedPanelDefaults {
 
     val SliderRange = SliderMinimum..SliderMaximum
     val MajorSpeeds = listOf(0.25f, DefaultSpeed, 2f, 3f, 4f)
-    val Shape: Shape = RoundedCornerShape(20.dp)
+    val Shape: Shape = RoundedCornerShape(24.dp)
     val MaxWidth = 520.dp
     const val WidthFraction = 0.9f
     val Elevation = 14.dp
@@ -53,7 +52,7 @@ object HyperPlaybackSpeedPanelDefaults {
     val OverlayHorizontalPadding = 12.dp
     val SliderTouchHeight = 36.dp
     val SliderTrackHeight = 5.dp
-    val SliderThumbSize = 18.dp
+    val SliderThumbSize = 20.dp
     val SliderMarkerSize = 4.dp
     val SpeedLabelWidth = 38.dp
     val SpeedLabelHeight = 24.dp
@@ -61,8 +60,7 @@ object HyperPlaybackSpeedPanelDefaults {
     @Composable
     fun colors(
         scrimColor: Color = Color.Unspecified,
-        containerTopColor: Color = Color.Unspecified,
-        containerBottomColor: Color = Color.Unspecified,
+        containerColor: Color = Color.Unspecified,
         panelBorderColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified,
         supportingContentColor: Color = Color.Unspecified,
@@ -72,38 +70,31 @@ object HyperPlaybackSpeedPanelDefaults {
     ): HyperPlaybackSpeedPanelColors {
         val resolvedContentColor = resolveHyperContainerColor(
             contentColor,
-            Color(1f, 1f, 1f, 1f)
+            HyperColors.primaryText
         )
         return HyperPlaybackSpeedPanelColors(
             scrimColor = resolveHyperContainerColor(
                 scrimColor,
-                Color(0f, 0f, 0f, 0.08f)
+                hyperGlass.scrim
             ),
-            containerTopColor = resolveHyperContainerColor(
-                containerTopColor,
-                Color(0.145f, 0.157f, 0.2f, 0.95f)
-            ),
-            containerBottomColor = resolveHyperContainerColor(
-                containerBottomColor,
-                Color(0.086f, 0.09f, 0.114f, 0.96f)
-            ),
+            containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surfaceStrong),
             panelBorderColor = resolveHyperContainerColor(
                 panelBorderColor,
-                Color(1f, 1f, 1f, 0.15f)
+                hyperGlass.border
             ),
             contentColor = resolvedContentColor,
             supportingContentColor = resolveHyperContainerColor(
                 supportingContentColor,
-                Color(1f, 1f, 1f, 0.58f)
+                HyperColors.secondaryText
             ),
             accentColor = resolveHyperContainerColor(accentColor, HyperColors.accent),
             trackColor = resolveHyperContainerColor(
                 trackColor,
-                Color(1f, 1f, 1f, 0.16f)
+                hyperGlass.controlTrack
             ),
             segmentMarkerColor = resolveHyperContainerColor(
                 segmentMarkerColor,
-                Color(1f, 1f, 1f, 0.58f)
+                HyperColors.secondaryText
             )
         )
     }

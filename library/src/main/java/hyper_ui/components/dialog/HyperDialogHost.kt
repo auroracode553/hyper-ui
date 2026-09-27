@@ -24,6 +24,8 @@ internal fun HyperDialogHost(
         )
     ) {
         val dialogWindow = (LocalView.current.parent as? DialogWindowProvider)?.window
+        val dimAmount = if (HyperTheme.isDark) 153 / 255f else 82 / 255f
+        androidx.compose.runtime.SideEffect { dialogWindow?.setDimAmount(dimAmount) }
         remember(dialogWindow) {
             // 这里必须同步设置非零的空动画样式：0 会允许 PhoneWindow 回退到系统/厂商主题。
             dialogWindow?.setWindowAnimations(R.style.HyperDialogNoWindowAnimation)

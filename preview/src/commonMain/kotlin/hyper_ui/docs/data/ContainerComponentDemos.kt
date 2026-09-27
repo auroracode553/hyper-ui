@@ -10,6 +10,24 @@ private const val GROUP_CONTAINER = "容器组件"
 
 internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
+        id = "glass_material", group = GROUP_CONTAINER, title = "HyperBackdrop / HyperGlassTokens",
+        description = "背景采样与轻薄、标准、强调、实色四档玻璃表面；可调透明度。",
+        code = """
+            HyperThemeConfig {
+                HyperBackdrop {
+                    HyperPanel { HyperText("玻璃容器") }
+                }
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("材质重量", "glass.surfaceSubtle / surface / surfaceStrong / cardContainer", "不同表面使用同一背景采样"),
+            DemoVariant("透明度", "glass.surface.alpha", "材质令牌通过主题注入")
+        ),
+        apiDocumentPaths = listOf("container/hyper-backdrop.md"),
+        content = { hyper_ui.docs.ui.GlassMaterialDemo() }
+    ),
+
+    ComponentDemo(
         id = "color-picker",
         group = GROUP_CONTAINER,
         title = "HyperColorPicker",

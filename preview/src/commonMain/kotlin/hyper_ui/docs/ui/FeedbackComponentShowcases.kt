@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonTone
+import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperDialog
 import hyper_ui.HyperDropdown
 import hyper_ui.HyperDropdownDefaults
@@ -68,7 +68,7 @@ fun EmptyStateDemo() {
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = { showDescription = !showDescription }
             ) {
                 HyperText(if (showDescription) "隐藏说明" else "显示说明")
@@ -126,13 +126,13 @@ fun DropdownMenuDemo() {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 HyperButton(
                     onClick = { expanded = true },
-                    tone = HyperButtonTone.Outline
+                    variant = HyperButtonVariant.Outline
                 ) {
                     HyperText(text = "打开菜单")
                 }
                 HyperButton(
                     onClick = { useCoolTint = !useCoolTint },
-                    tone = HyperButtonTone.Tonal
+                    variant = HyperButtonVariant.Tonal
                 ) {
                     HyperText(text = if (useCoolTint) "恢复默认色" else "冷色面板")
                 }
@@ -140,13 +140,13 @@ fun DropdownMenuDemo() {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 HyperButton(
                     onClick = { desktopEnabled = !desktopEnabled },
-                    tone = HyperButtonTone.Outline
+                    variant = HyperButtonVariant.Outline
                 ) {
                     HyperText(text = if (desktopEnabled) "禁用桌面项" else "启用桌面项")
                 }
                 HyperButton(
                     onClick = { showDivider = !showDivider },
-                    tone = HyperButtonTone.Tonal
+                    variant = HyperButtonVariant.Tonal
                 ) {
                     HyperText(text = if (showDivider) "隐藏分隔线" else "显示分隔线")
                 }
@@ -210,52 +210,24 @@ fun DropdownMenuDemo() {
 /** Android-only hyperToast 的跨平台交互模拟。 */
 @Composable
 fun ToastDemo() {
-    var message by remember { mutableStateOf("点击按钮模拟 Toast 反馈") }
-    var duration by remember { mutableStateOf("Short") }
-
-    Column(
-        modifier = Modifier.widthIn(max = 420.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(14.dp)
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            HyperButton(onClick = {
-                message = "保存成功"
-                duration = "Short"
-            }) {
-                HyperText("短提示")
-            }
-            HyperButton(
-                onClick = {
-                    message = "操作已完成，这是一条较长提示"
-                    duration = "Long"
-                },
-                tone = HyperButtonTone.Outline
-            ) {
-                HyperText("长提示")
-            }
+    var message by remember { mutableStateOf("保存成功") }
+    var visible by remember { mutableStateOf(false) }
+    var duration by remember { mutableStateOf(3000L) }
+    Column(Modifier.widthIn(max = 420.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton(onClick = { message = "保存成功"; duration = 3000L; visible = true }) { HyperText("短提示") }
+            HyperButton(onClick = { message = "操作已完成，这是一条较长提示"; duration = 6000L; visible = true },
+                variant = HyperButtonVariant.Outline) { HyperText("长提示") }
         }
-        Box(
-            modifier = Modifier
-                .widthIn(min = 220.dp)
-                .background(
-                    color = LocalDocsColorScheme.current.inverseSurface,
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .padding(horizontal = 16.dp, vertical = 10.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            HyperText(
-                text = message,
-                color = LocalDocsColorScheme.current.inverseOnSurface,
-                textAlign = TextAlign.Center
-            )
+        Box(Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.BottomCenter) {
+            HyperToast(visible, message, onDismissRequest = { visible = false }, durationMillis = duration,
+                actionContent = {
+                    HyperButton(onClick = { visible = false }, variant = HyperButtonVariant.Ghost, height = 28.dp) {
+                        HyperText("关闭")
+                    }
+                })
         }
-        HyperText(
-            text = "模拟时长：HyperToastDuration.$duration",
-            color = LocalDocsColorScheme.current.onSurfaceVariant,
-            fontSize = 13.sp
-        )
+        HyperText(if (visible) "显示中：${duration / 1000} 秒后关闭" else "提示已关闭", fontSize = 13.sp)
     }
 }
 
@@ -293,7 +265,7 @@ fun ProgressDemo() {
                 HyperCircularProgressIndicator(progress = progress)
                 HyperCircularProgressIndicator(progress = null)
                 HyperButton(
-                    tone = HyperButtonTone.Outline,
+                    variant = HyperButtonVariant.Outline,
                     onClick = { progress = (progress - 0.1f).coerceAtLeast(0f) }
                 ) {
                     HyperText(text = "减少")
@@ -373,7 +345,7 @@ fun LevelCapsuleDemo() {
         )
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = { progress = (progress - 0.1f).coerceAtLeast(0f) }
             ) {
                 HyperText("降低")
@@ -384,7 +356,7 @@ fun LevelCapsuleDemo() {
                 HyperText("提高")
             }
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = { showIcon = !showIcon }
             ) {
                 HyperText(if (showIcon) "隐藏图标" else "显示图标")
@@ -417,7 +389,7 @@ fun BatteryIndicatorDemo() {
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = { percentage = (percentage - 10).coerceAtLeast(0) }
             ) {
                 HyperText("减少电量")
@@ -428,7 +400,7 @@ fun BatteryIndicatorDemo() {
                 HyperText("增加电量")
             }
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = { charging = !charging }
             ) {
                 HyperText(if (charging) "停止充电" else "开始充电")
@@ -506,7 +478,7 @@ fun DialogDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HyperButton(
-            tone = HyperButtonTone.Danger,
+            variant = HyperButtonVariant.Danger,
             onClick = {
                 showLongContent = false
                 showDialog = true
@@ -515,7 +487,7 @@ fun DialogDemo() {
             HyperText(text = "删除数据")
         }
         HyperButton(
-            tone = HyperButtonTone.Outline,
+            variant = HyperButtonVariant.Outline,
             onClick = {
                 showLongContent = true
                 showDialog = true
@@ -524,7 +496,7 @@ fun DialogDemo() {
             HyperText(text = "查看 70% 高度长内容")
         }
         HyperButton(
-            tone = HyperButtonTone.Outline,
+            variant = HyperButtonVariant.Outline,
             onClick = { dismissOnClickOutside = !dismissOnClickOutside }
         ) {
             HyperText(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
@@ -535,7 +507,7 @@ fun DialogDemo() {
             fontSize = 13.sp
         )
         HyperText(
-            text = "Alert 打开时直接居中，无顶部位移或显示动画",
+            text = "Alert 居中淡入，关闭时从当前状态淡出",
             color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )
@@ -566,7 +538,7 @@ fun DialogDemo() {
         actionContent = {
             HyperButton(
                 modifier = Modifier.weight(1f),
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = {
                     resultText = "已取消"
                     showDialog = false
@@ -576,7 +548,7 @@ fun DialogDemo() {
             }
             HyperButton(
                 modifier = Modifier.weight(1f),
-                tone = HyperButtonTone.Danger,
+                variant = HyperButtonVariant.Danger,
                 onClick = {
                     resultText = "已确认删除"
                     showDialog = false
@@ -609,7 +581,7 @@ fun HyperPopupDemo() {
             HyperText(text = "编辑备注")
         }
         HyperButton(
-            tone = HyperButtonTone.Outline,
+            variant = HyperButtonVariant.Outline,
             onClick = { dismissOnClickOutside = !dismissOnClickOutside }
         ) {
             HyperText(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
@@ -642,7 +614,7 @@ fun HyperPopupDemo() {
         dismissOnClickOutside = dismissOnClickOutside,
         actionContent = {
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = { showPopup = false }
             ) {
                 HyperText(text = "取消")
@@ -692,7 +664,7 @@ fun UpdateDialogDemo() {
                 HyperText("发现更新")
             }
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = { state = HyperUpdateDialogState.Checking("1.0.0") }
             ) {
                 HyperText("检查中")
@@ -700,13 +672,13 @@ fun UpdateDialogDemo() {
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = { state = HyperUpdateDialogState.UpToDate("1.2.0") }
             ) {
                 HyperText("已是最新")
             }
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 onClick = {
                     state = HyperUpdateDialogState.Error(
                         currentVersionName = "1.0.0",

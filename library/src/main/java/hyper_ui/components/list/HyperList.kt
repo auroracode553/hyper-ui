@@ -44,11 +44,7 @@ fun HyperList(
     colors: HyperListColors = HyperListDefaults.colors(),
     content: LazyListScope.() -> Unit
 ) {
-    val containerColor = resolveHyperOpaqueColor(
-        color = colors.containerColor,
-        fallbackColor = HyperColors.cardContainer,
-        backgroundColor = HyperColors.pageBackground
-    )
+    val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surface)
 
     CompositionLocalProvider(
         LocalHyperListItemDividerSuppressed provides false,
@@ -57,9 +53,7 @@ fun HyperList(
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
-                .clip(shape)
-                .background(containerColor, shape)
-                .then(if (border != null) Modifier.border(border, shape) else Modifier)
+                .hyperFrostedSurface(containerColor, shape, blur = 18.dp, border = border)
                 .then(contentModifier),
             state = state,
             contentPadding = contentPadding,
@@ -70,22 +64,18 @@ fun HyperList(
 }
 
 object HyperListDefaults {
-    val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius)
+    val Shape: Shape = RoundedCornerShape(18.dp)
     /** 列表容器默认提供左右 16.dp 内容留白，子项（HyperListItem 等）无需重复设置水平 padding。 */
-    val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
+    val ContentPadding: PaddingValues = PaddingValues(4.dp)
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperListColors = HyperListColors(
-        containerColor = resolveHyperOpaqueColor(
-            color = containerColor,
-            fallbackColor = HyperColors.cardContainer,
-            backgroundColor = HyperColors.pageBackground
-        )
+        containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surface)
     )
 
     @Composable
     fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
         color = color,
-        backgroundColor = HyperColors.cardContainer
+        backgroundColor = hyperGlass.surface
     )
 }

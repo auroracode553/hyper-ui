@@ -228,7 +228,7 @@ private fun HyperTabBarSurface(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .hyperSurface(
+            .hyperFrostedSurface(
                 containerColor = colors.containerColor,
                 shape = shape
             )
@@ -294,9 +294,9 @@ object HyperTabBarDefaults {
         disabledContentColor: Color = Color.Unspecified
     ): HyperTabBarColors {
         val defaultUnselectedColor = if (HyperColors.isLight) {
-            rgba(0, 0, 0, 0.72f)
+            HyperColors.secondaryText
         } else {
-            rgba(255, 255, 255, 0.72f)
+            HyperColors.secondaryText
         }
         val resolvedSelectedColor = resolveHyperContainerColor(selectedContentColor, HyperColors.accent)
         val resolvedUnselectedColor = resolveHyperContainerColor(unselectedContentColor, defaultUnselectedColor)
@@ -331,6 +331,4 @@ object HyperTabBarDefaults {
 
 /** 浅色保留轻量透明度；深色与页面背景完全一致。 */
 @Composable
-private fun defaultHyperTabBarContainerColor(): Color = hyperPageMatchedContainerColor(
-    lightContainerColor = rgba(255, 255, 255, 0.92f)
-)
+private fun defaultHyperTabBarContainerColor(): Color = hyperGlass.surfaceStrong

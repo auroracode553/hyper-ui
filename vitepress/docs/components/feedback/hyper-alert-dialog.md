@@ -1,14 +1,10 @@
 # HyperAlertDialog
 
-- 包名：`hyper_ui`
-- 源码：`library/src/main/java/hyper_ui/components/dialog/HyperAlertDialog.kt`
-- 预览：`dialog`
-
-`HyperAlertDialog` 是基于 `HyperDialog` 的结构化弹窗。它通过可选 `title` 属性固定渲染顶部标题，只提供 body、action 两个 slot 区域，不内置确认、取消、危险操作等业务按钮。组件继承 `HyperDialog` 禁用平台默认宽度、固定全尺寸根节点和屏蔽窗口动画的宿主方案；正文超出可用高度时可滚动，标题与底部操作区保持固定。点击面板外是否请求关闭由 `dismissOnClickOutside` 控制。面板固定使用 UI 库标准实色描边，不暴露描边配置。
+`HyperAlertDialog` 的公开 API 位于 `hyper_ui` 包。组件状态由调用方持有，通过参数和回调传入。外部间距使用 `modifier`；尺寸、颜色和插槽按下列源码签名配置。
 
 <WasmPreview demo="dialog" title="HyperAlertDialog 交互预览" />
 
-## 公开签名
+## 公开签名与默认值
 
 ```kotlin
 @Composable
@@ -35,18 +31,14 @@ HyperAlertDialog(
         HyperButton(onClick = onDismiss) { Text("取消") }
         HyperButton(
             onClick = onDelete,
-            tone = HyperButtonTone.Danger
+            variant = HyperButtonVariant.Danger
         ) { Text("删除") }
     }
 )
 ```
 
-## 约束
+## 使用约束
 
-- 不存在 `titleContent`、`message`、`confirmText`、`cancelText` 参数。
-- 标题通过 `title` 属性提供，固定在顶部，不参与 `bodyContent` 的滚动；`title = null`、空字符串或全空白字符串时不渲染标题槽位，也不预留标题高度。
-- 如果项目需要二次确认语义，应该在业务项目中封装项目级 ConfirmDialog。
-- 弹窗继承 `HyperDialog` 的稳定全尺寸 Dialog 根节点与无窗口动画宿主，不使用 `Popup`。
-- `dismissOnClickOutside` 默认为 `true`；该参数由内部全尺寸 Dialog 根节点的背景命中层处理。
-- 面板宽度边界、内容间距、不透明实色背景、圆角和描边均由内部 `HyperDialog` 标准样式提供；高度服从平台窗口约束，`HyperAlertDialog` 不暴露 `border` 参数。
-- `bodyContent` 默认继承 `HyperColors.secondaryText`；slot 内显式传入的颜色优先。
+- 使用 `HyperThemeConfig` 提供主题；需要采样背景时，将可视内容置于 `HyperBackdrop` 中。
+- 组件不持有业务数据、导航或网络请求；`visible`、`value`、`selected` 等由调用方控制。
+- Android 原生窗口和系统工具仅在 Android 目标可用；Preview 使用跨平台示例。

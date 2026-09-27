@@ -1,23 +1,12 @@
 # HyperListItem
 
-- 包名：`hyper_ui`
-- 源码：`library/src/main/java/hyper_ui/components/list/HyperListItem.kt`
-- 预览：`hyper_list`
-
-`HyperListItem` 是 slot-first 列表行。它提供 leading、headline、supporting、trailing 四个区域，以及点击、禁用态和分割线。内容色、禁用态和分割线均以不透明实色绘制；组件会向各 slot 注入默认 `LocalTextStyle` 和 `LocalContentColor`，因此调用方直接写 `Text(...)` 也能得到稳定的标题/描述层级。
+`HyperListItem` 的公开 API 位于 `hyper_ui` 包。组件状态由调用方持有，通过参数和回调传入。外部间距使用 `modifier`；尺寸、颜色和插槽按下列源码签名配置。
 
 <WasmPreview demo="hyper_list" title="HyperListItem 交互预览" />
 
-## 公开签名
+## 公开签名与默认值
 
 ```kotlin
-data class HyperListItemColors(
-    val contentColor: Color,
-    val supportingColor: Color,
-    val disabledContentColor: Color,
-    val dividerColor: Color
-)
-
 @Composable
 fun HyperListItem(
     headlineContent: @Composable ColumnScope.() -> Unit,
@@ -58,44 +47,8 @@ HyperListItem(
 )
 ```
 
-## 关键公开类型
+## 使用约束
 
-```kotlin
-object HyperListItemDefaults {
-    val SingleLineMinHeight = 44.dp
-    val SupportingMinHeight = 54.dp
-    val ContentGap = 12.dp
-    val TextGap = 3.dp
-    val ContentPadding = PaddingValues(vertical = 4.dp)
-    val DividerInset = 0.dp
-    val DividerHeight = 1.dp
-
-    fun minHeight(hasSupportingContent: Boolean): Dp
-
-    val LeadingTextStyle: TextStyle
-    val HeadlineTextStyle: TextStyle
-    val SupportingTextStyle: TextStyle
-    val TrailingTextStyle: TextStyle
-
-    @Composable
-    fun colors(
-        contentColor: Color = Color.Unspecified,
-        supportingColor: Color = Color.Unspecified,
-        disabledContentColor: Color = Color.Unspecified,
-        dividerColor: Color = Color.Unspecified
-    ): HyperListItemColors
-}
-```
-
-## 约束
-
-- 不存在 `title`、`description`、`leadingIcon`、`trailing` 参数。
-- 组件根据 `supportingContent` 自动选择行高：纯单行项保持紧凑的 `44.dp`，带说明文字的项使用 `54.dp` 增加纵向呼吸空间；长文本和较大 slot 仍会自然撑高。
-- `contentModifier` 默认应用垂直 `4.dp` 的 `HyperListItemDefaults.ContentPadding`；左右留白统一由页面根容器或父列表容器（`HyperList` / `HyperMenuList` / `HyperSectionedList`）提供，行组件不再自带水平 padding。
-- `modifier` 作用于包含内容行和分割线的完整列表项外壳；圆角、背景、裁剪和组合手势不会再遗漏分割线。
-- `headlineContent` 默认使用 16sp/22sp，`supportingContent` 默认使用 13sp/17sp，两者间距为 `3.dp`；调用方显式传入 `style` 或 `fontSize` 时以调用方为准。
-- `dividerVisible = true` 时会绘制分割线；`HyperList` 不解析 Slot 顺序，最后一项由调用方关闭分割线；`HyperMenuList(items)` 会自动隐藏最后一项分割线；`HyperSectionedList` 由分段容器统一绘制分割线，行组件保持默认值即可。
-- 分割线默认使用 `HyperListItemDefaults.DividerInset`（`0.dp`，与内容起点对齐）；自定义缩进或尺寸使用 `dividerModifier`，不提供 `dividerInset` 数值参数。
-- 通过 `HyperListItemColors` 或 `HyperListItemDefaults.colors(...)` 传入含 alpha 的颜色时，会先与父 `HyperList` 或 `HyperMenuList` 的实际容器背景合成为实色；独立使用时按页面背景解析。
-- 行点击和 trailing 控件点击是否独立，由调用方在 slot 中组合。
-- 放入 `HyperMenuList`、`HyperList` 或 `HyperSectionedList` 时，父容器负责对应层级的圆角背景与裁剪。
+- 使用 `HyperThemeConfig` 提供主题；需要采样背景时，将可视内容置于 `HyperBackdrop` 中。
+- 组件不持有业务数据、导航或网络请求；`visible`、`value`、`selected` 等由调用方控制。
+- Android 原生窗口和系统工具仅在 Android 目标可用；Preview 使用跨平台示例。

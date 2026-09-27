@@ -34,7 +34,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "segmented",
         group = GROUP_FORM,
         title = "HyperSegmented",
-        description = "默认总高 36dp 的紧凑等宽分段控制器；轨道负责布局，每个分段直接复用 HyperButton。",
+        description = "默认总高 40dp 的等宽或内容宽度分段控制器；轨道负责布局，每个分段直接复用 HyperButton。",
         code = """
             HyperSegmented(
                 items = periods,
@@ -75,7 +75,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "text_field",
         group = GROUP_FORM,
         title = "HyperTextField",
-        description = "紧凑型 Slot-first 澎湃 OS 风格输入框。纯白表面直接复用公共控件描边与阴影，保证白底可辨识。",
+        description = "受控文本输入框：预览覆盖基础、清空、密码显隐、前后缀、多行计数、禁用、只读和错误态。",
         code = """
             HyperTextField(
                 value = value,
@@ -112,7 +112,8 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("默认光标", "selection = TextRange(value.length)", "首次聚焦位于现有文本末尾"),
             DemoVariant("多行/错误", "minLines = 3, isError", "错误色替换公共中性描边"),
             DemoVariant("禁用/只读", "enabled / readOnly", "禁用态保留弱描边并关闭阴影，只读态抑制聚焦强调"),
-            DemoVariant("左右插槽", "startContent / endContent", "自定义单色表面、搜索图标与清除操作")
+            DemoVariant("左右插槽", "startContent / endContent", "搜索图标与清除操作"),
+            DemoVariant("清空与密码", "endContent / visualTransformation", "清空按钮与密码显隐由调用方状态控制")
         ),
         apiDocumentPaths = listOf("form/hyper-text-field.md"),
         content = { TextFieldDemo() }
@@ -121,7 +122,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "switch",
         group = GROUP_FORM,
         title = "HyperSwitch",
-        description = "开关组件，轨道和滑块默认带轮廓层次，适合二元状态设置。",
+        description = "受控开关，展示通知设置与禁用状态；轨道和滑块采用 Flutter 参考尺寸。",
         code = """
             HyperSwitch(
                 checked = enabled,

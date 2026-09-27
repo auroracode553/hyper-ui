@@ -1,6 +1,7 @@
 /** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/drawer/HyperDrawer 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -72,10 +73,12 @@ fun HyperDrawer(
     drawerContentModifier: Modifier = Modifier,
     drawerContentScrollEnabled: Boolean = true,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
-    dismissOnClickOutside: Boolean = false,
+    dismissOnClickOutside: Boolean = true,
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
+    val transitionProgress = hyperOverlayProgress(open)
+    val isPresent = open || transitionProgress > 0f
     val resolvedColors = resolveHyperDrawerColors(colors)
     val drawerContentScrollState = rememberScrollState()
     val drawerAlignment = when (position) {
@@ -93,11 +96,12 @@ fun HyperDrawer(
                 .fillMaxSize()
                 .zIndex(HyperDrawerDefaults.DrawerZIndex)
         ) {
-            if (open && dismissOnClickOutside) {
+            if (isPresent) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .hyperNoRippleClickable(onClick = onDismissRequest)
+                        .background(hyperGlass.scrim.copy(alpha = hyperGlass.scrim.alpha * transitionProgress))
+                        .hyperNoRippleClickable(onClick = { if (dismissOnClickOutside) onDismissRequest() })
                 )
             }
 
@@ -118,18 +122,17 @@ fun HyperDrawer(
                     .fillMaxWidth()
             }
 
-            if (open) {
+            if (isPresent) {
                 Column(
                     modifier = drawerSizeModifier
                         .align(drawerAlignment)
+                        .hyperOverlayMotion(transitionProgress)
                         .hyperGlassSurface(
                             shape = drawerShape(position),
                             visuals = hyperGlassSurfaceVisuals(
                                 containerColor = resolvedColors.containerColor,
                                 elevation = HyperDrawerDefaults.Elevation,
-                                topLightAlpha = if (HyperColors.isLight) 0.24f else 0.10f,
-                                bottomShadeAlpha = if (HyperColors.isLight) 0.035f else 0.12f,
-                                shadowAlpha = if (HyperColors.isLight) 0.16f else 0.32f,
+
                                 depth = hyperSurfaceDepthVisuals(
                                     role = HyperSurfaceDepthRole.StructuralPanel,
                                     elevation = HyperDrawerDefaults.Elevation
@@ -244,28 +247,7 @@ fun HyperDrawerItem(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .hyperGlassSurface(
-                    shape = RoundedCornerShape(HyperStyleDefaults.SmallCornerRadius),
-                    visuals = hyperGlassSurfaceVisuals(
-                        containerColor = containerColor,
-                        elevation = if (selected && enabled) {
-                            HyperDrawerDefaults.SelectedItemElevation
-                        } else {
-                            0.dp
-                        },
-                        topLightAlpha = if (selected && enabled) {
-                            if (HyperColors.isLight) 0.22f else 0.10f
-                        } else {
-                            0f
-                        },
-                        bottomShadeAlpha = if (selected && enabled) {
-                            if (HyperColors.isLight) 0.025f else 0.08f
-                        } else {
-                            0f
-                        },
-                        shadowAlpha = if (HyperColors.isLight) 0.08f else 0.20f
-                    )
-                )
+                .hyperSolidSurface(containerColor, RoundedCornerShape(16.dp))
                 .then(rowClickModifier)
                 .defaultMinSize(minHeight = HyperDrawerDefaults.ItemMinHeight)
                 .then(contentModifier),
@@ -344,11 +326,11 @@ private fun drawerSafeDrawingSides(position: HyperDrawerPosition): WindowInsetsS
 
 object HyperDrawerDefaults {
     val Width = 320.dp
-    val Elevation = 5.dp
-    val SelectedItemElevation = 1.dp
+    val Elevation = 12.dp
+    val SelectedItemElevation = 0.dp
     val HeaderPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp)
     val ItemPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp)
-    val ItemMinHeight = 54.dp
+    val ItemMinHeight = 44.dp
     const val MaxWidthFraction = 0.88f
     const val MaxHeightFraction = 0.88f
     const val DrawerZIndex = 9f
@@ -385,14 +367,10 @@ object HyperDrawerDefaults {
 
 @Composable
 private fun resolveHyperDrawerColors(colors: HyperDrawerColors): HyperDrawerColors {
-    val containerColor = resolveHyperOpaqueColor(
-        color = colors.containerColor,
-        fallbackColor = defaultHyperDrawerContainerColor(),
-        backgroundColor = HyperColors.pageBackground
-    )
+    val containerColor = resolveHyperContainerColor(colors.containerColor, defaultHyperDrawerContainerColor())
     val selectedContainerColor = resolveHyperContainerColor(
         colors.selectedContainerColor,
-        HyperColors.accent.copy(alpha = if (HyperColors.isLight) 0.14f else 0.22f)
+        HyperColors.softContainer
     )
 
     return HyperDrawerColors(
@@ -400,7 +378,7 @@ private fun resolveHyperDrawerColors(colors: HyperDrawerColors): HyperDrawerColo
         contentColor = resolveHyperContainerColor(colors.contentColor, HyperColors.primaryText),
         supportingColor = resolveHyperContainerColor(colors.supportingColor, HyperColors.secondaryText),
         selectedContainerColor = selectedContainerColor,
-        selectedContentColor = resolveHyperContainerColor(colors.selectedContentColor, HyperColors.accent),
+        selectedContentColor = resolveHyperContainerColor(colors.selectedContentColor, HyperColors.primaryText),
         disabledContentColor = resolveHyperContainerColor(colors.disabledContentColor, HyperColors.disabledText),
         dividerColor = resolveHyperContainerColor(
             colors.dividerColor,
@@ -411,4 +389,4 @@ private fun resolveHyperDrawerColors(colors: HyperDrawerColors): HyperDrawerColo
 
 /** 抽屉属于大面积导航结构，默认使用主题卡片色的不透明玻璃基底。 */
 @Composable
-private fun defaultHyperDrawerContainerColor(): Color = HyperColors.cardContainer
+private fun defaultHyperDrawerContainerColor(): Color = hyperGlass.surfaceStrong

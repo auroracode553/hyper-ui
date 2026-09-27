@@ -48,12 +48,12 @@ import hyper_ui.HyperTabBarType
 import hyper_ui.HyperFloatingTabBarDefaults
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonDefaults
-import hyper_ui.HyperButtonTone
+import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperDrawer
 import hyper_ui.HyperDrawerHeader
 import hyper_ui.HyperDrawerItem
 import hyper_ui.HyperDrawerPosition
-import hyper_ui.HyperSlideMenu
+import hyper_ui.HyperFilterBar
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
 import hyper_ui.HyperPanel
@@ -160,146 +160,42 @@ fun NavBarDemo() {
 
 @Composable
 fun DrawerDemo() {
-    var open by remember { mutableStateOf(false) }
-    var selectedPageId by remember { mutableStateOf("home") }
-    var drawerPosition by remember { mutableStateOf(HyperDrawerPosition.Left) }
-    var drawerContentScrollEnabled by remember { mutableStateOf(true) }
-    var defaultSetPadding by remember { mutableStateOf(true) }
-    val items = listOf(
-        DemoNavItem("home", "首页", Icons.Default.Home),
-        DemoNavItem("notice", "通知", Icons.Default.Notifications),
-        DemoNavItem("settings", "设置", Icons.Default.Settings),
-        DemoNavItem("about", "关于", Icons.Default.Info)
-    )
-
-    Box(
-        modifier = Modifier
-            .widthIn(max = 440.dp)
-            .height(420.dp)
-            .clip(RoundedCornerShape(28.dp))
-            .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(28.dp))
-            .background(LocalDocsColorScheme.current.background)
-    ) {
+    var drawerOpen by remember { mutableStateOf(false) }
+    var selected by remember { mutableStateOf("首页") }
+    var position by remember { mutableStateOf(HyperDrawerPosition.Left) }
+    var padding by remember { mutableStateOf(true) }
+    var scroll by remember { mutableStateOf(true) }
+    Box(Modifier.widthIn(max = 440.dp).height(420.dp).clip(RoundedCornerShape(28.dp))) {
         HyperDrawer(
-            open = open,
-            onDismissRequest = { open = false },
-            drawerModifier = when (drawerPosition) {
-                HyperDrawerPosition.Left,
-                HyperDrawerPosition.Right -> Modifier.width(300.dp)
-                HyperDrawerPosition.Top,
-                HyperDrawerPosition.Bottom -> Modifier.height(260.dp)
-            },
-            position = drawerPosition,
-            defaultSetPadding = defaultSetPadding,
-            dismissOnClickOutside = true,
-            drawerContentScrollEnabled = drawerContentScrollEnabled,
+            open = drawerOpen,
+            onDismissRequest = { drawerOpen = false },
+            position = position,
+            defaultSetPadding = padding,
+            drawerContentScrollEnabled = scroll,
             drawerContent = {
-                HyperDrawerHeader(
-                    leadingContent = {
-                        DrawerBadge {
-                            HyperIcon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = null,
-                                modifier = Modifier.size(22.dp)
-                            )
-                        }
-                    },
-                    headlineContent = {
-                        HyperText(
-                            text = "HyperUI",
-                            fontSize = 20.sp,
-                            lineHeight = 26.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    supportingContent = {
-                        HyperText(
-                            text = "${drawerPosition.label()}抽屉",
-                            fontSize = 13.sp,
-                            lineHeight = 18.sp
-                        )
+                HyperDrawerHeader(headlineContent = { HyperText("HyperUI") },
+                    supportingContent = { HyperText("选择页面") })
+                listOf("首页", "通知", "设置", "关于").forEach { page ->
+                    HyperDrawerItem(selected = page == selected,
+                        onClick = { selected = page; drawerOpen = false },
+                        headlineContent = { HyperText(page) })
+                }
+            },
+            content = {
+                Column(Modifier.fillMaxSize().background(HyperColors.pageBackground).padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    HyperText("当前页面：$selected")
+                    DrawerPositionSelector(position, { position = it })
+                    HyperButton({ padding = !padding }, variant = HyperButtonVariant.Tonal) {
+                        HyperText(if (padding) "默认留白" else "自定义留白")
                     }
-                )
-                items.forEachIndexed { index, item ->
-                    HyperDrawerItem(
-                        selected = selectedPageId == item.id,
-                        dividerVisible = index == 2,
-                        onClick = {
-                            selectedPageId = item.id
-                            open = false
-                        },
-                        leadingContent = {
-                            HyperIcon(
-                                imageVector = item.icon,
-                                contentDescription = null,
-                                modifier = Modifier.size(22.dp)
-                            )
-                        },
-                        headlineContent = {
-                            HyperText(
-                                text = item.label,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                    )
+                    HyperButton({ scroll = !scroll }, variant = HyperButtonVariant.Tonal) {
+                        HyperText(if (scroll) "允许滚动" else "关闭滚动")
+                    }
+                    HyperButton({ drawerOpen = true }) { HyperText("打开抽屉") }
                 }
             }
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(LocalDocsColorScheme.current.background)
-                    .padding(14.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                HyperText(
-                    text = "${drawerPosition.label()}抽屉示例 · 当前选中: $selectedPageId",
-                    color = LocalDocsColorScheme.current.onSurface,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                HyperText(
-                    text = "抽屉使用共享的低对比度描边和低抬升单层阴影；选中项只增加轻量主题染色。不执行动画，外部区域不绘制遮罩。",
-                    color = LocalDocsColorScheme.current.onSurfaceVariant,
-                    fontSize = 13.sp,
-                    lineHeight = 18.sp
-                )
-                DrawerPositionSelector(
-                    selected = drawerPosition,
-                    onSelect = { drawerPosition = it }
-                )
-                HyperButton(
-                    onClick = {
-                        drawerContentScrollEnabled = !drawerContentScrollEnabled
-                    },
-                    tone = HyperButtonTone.Tonal
-                ) {
-                    HyperText(
-                        text = if (drawerContentScrollEnabled) {
-                            "面板滚动"
-                        } else {
-                            "内容滚动"
-                        }
-                    )
-                }
-                HyperButton(
-                    onClick = { defaultSetPadding = !defaultSetPadding },
-                    tone = HyperButtonTone.Tonal
-                ) {
-                    HyperText(
-                        text = if (defaultSetPadding) {
-                            "默认 Padding 已开启"
-                        } else {
-                            "默认 Padding 已关闭"
-                        }
-                    )
-                }
-                HyperButton(onClick = { open = true }) {
-                    HyperText(text = "打开${drawerPosition.label()}抽屉")
-                }
-            }
-        }
+        )
     }
 }
 
@@ -311,19 +207,19 @@ fun SlideMenuDemo() {
     var selected by remember { mutableStateOf("全部") }
     var useOutlineSelection by remember { mutableStateOf(false) }
     var useCustomSelectionColors by remember { mutableStateOf(false) }
-    val selectedTone = if (useOutlineSelection) {
-        HyperButtonTone.Outline
+    val selectedVariant = if (useOutlineSelection) {
+        HyperButtonVariant.Outline
     } else {
-        HyperButtonTone.Primary
+        HyperButtonVariant.Filled
     }
     val selectedColors = if (useCustomSelectionColors) {
         HyperButtonDefaults.colors(
-            tone = selectedTone,
+            variant = selectedVariant,
             containerColor = LocalDocsColorScheme.current.tertiaryContainer,
             contentColor = LocalDocsColorScheme.current.onTertiaryContainer
         )
     } else {
-        HyperButtonDefaults.colors(selectedTone)
+        HyperButtonDefaults.colors(selectedVariant)
     }
 
     Column(
@@ -333,25 +229,25 @@ fun SlideMenuDemo() {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton(
                 onClick = { useOutlineSelection = !useOutlineSelection },
-                tone = if (useOutlineSelection) HyperButtonTone.Tonal else HyperButtonTone.Secondary
+                variant = if (useOutlineSelection) HyperButtonVariant.Tonal else HyperButtonVariant.Tonal
             ) {
                 HyperText(if (useOutlineSelection) "选中项：描边" else "选中项：实色")
             }
             HyperButton(
                 onClick = { useCustomSelectionColors = !useCustomSelectionColors },
-                tone = if (useCustomSelectionColors) HyperButtonTone.Tonal else HyperButtonTone.Secondary
+                variant = if (useCustomSelectionColors) HyperButtonVariant.Tonal else HyperButtonVariant.Tonal
             ) {
                 HyperText(if (useCustomSelectionColors) "自定义配色：开" else "自定义配色：关")
             }
         }
         // 示例只把分类文本交给 slot；组件本身不拥有分类、计数或业务筛选规则。
-        HyperSlideMenu(
+        HyperFilterBar(
             items = categories,
             selectedItem = selected,
             onSelected = { selected = it },
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             itemEnabled = { it != "打开应用" },
-            selectedTone = selectedTone,
+            selectedVariant = selectedVariant,
             selectedColors = selectedColors
         ) { item ->
             HyperText(text = item, fontSize = 13.sp)
@@ -369,7 +265,7 @@ fun SlideMenuDemo() {
 fun TabBarDemo() {
     var selectedItemId by remember { mutableStateOf("home") }
     var showTopDivider by remember { mutableStateOf(true) }
-    var barType by remember { mutableStateOf(HyperTabBarType.Docked) }
+    var barType by remember { mutableStateOf(HyperTabBarType.Floating) }
     var showFiveItems by remember { mutableStateOf(false) }
     var useAccent by remember { mutableStateOf(false) }
     var disableNotice by remember { mutableStateOf(false) }
@@ -385,92 +281,32 @@ fun TabBarDemo() {
     val selectedTitle = bottomItems.firstOrNull { it.id == selectedItemId }?.label ?: "首页"
     val floating = barType == HyperTabBarType.Floating
 
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .widthIn(max = 360.dp),
+            .widthIn(max = 360.dp)
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Box(
             modifier = Modifier
                 .height(460.dp)
-                .clip(RoundedCornerShape(28.dp))
-                .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(28.dp))
+                .clip(RoundedCornerShape(44.dp))
+                .border(
+                    width = 2.dp,
+                    color = LocalDocsColorScheme.current.outlineVariant,
+                    shape = RoundedCornerShape(44.dp)
+                )
                 .background(LocalDocsColorScheme.current.background)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+                Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
                     HyperText(
-                        text = "$selectedTitle 内容区",
+                        text = "当前页面：$selectedTitle",
+                        modifier = Modifier.align(Alignment.Center),
                         color = LocalDocsColorScheme.current.onSurface,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontSize = 14.sp
                     )
-                    HyperText(
-                        text = if (floating) {
-                            "悬浮样式：静止时是紧凑选中托盘，按住后展开水珠；拖动可跟手移动，松手后按速度投影并弹簧吸附。"
-                        } else {
-                            "贴底样式：0.5dp 低对比度顶部发丝线，不使用阴影或整框描边；深色模式与页面同色。底栏总高度为 60dp。"
-                        },
-                        color = LocalDocsColorScheme.current.onSurfaceVariant,
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp
-                    )
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        HyperButton(
-                            onClick = { barType = HyperTabBarType.Docked },
-                            tone = if (!floating) {
-                                HyperButtonTone.Primary
-                            } else {
-                                HyperButtonTone.Tonal
-                            }
-                        ) {
-                            HyperText(text = "贴底样式")
-                        }
-                        HyperButton(
-                            onClick = { barType = HyperTabBarType.Floating },
-                            tone = if (floating) {
-                                HyperButtonTone.Primary
-                            } else {
-                                HyperButtonTone.Tonal
-                            }
-                        ) {
-                            HyperText(text = "悬浮胶囊")
-                        }
-                    }
-                    if (!floating) {
-                        HyperButton(
-                            onClick = { showTopDivider = !showTopDivider },
-                            tone = HyperButtonTone.Tonal
-                        ) {
-                            HyperText(text = if (showTopDivider) "隐藏顶部发丝线" else "显示顶部发丝线")
-                        }
-                    } else {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            HyperButton(onClick = {
-                                showFiveItems = !showFiveItems
-                                if (!showFiveItems && selectedItemId == "search") selectedItemId = "home"
-                            }, tone = HyperButtonTone.Tonal) {
-                                HyperText(if (showFiveItems) "显示 4 项" else "显示 5 项")
-                            }
-                            HyperButton(onClick = { useAccent = !useAccent }, tone = HyperButtonTone.Tonal) {
-                                HyperText(if (useAccent) "默认配色" else "强调配色")
-                            }
-                        }
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            HyperButton(onClick = { disableNotice = !disableNotice }, tone = HyperButtonTone.Tonal) {
-                                HyperText(if (disableNotice) "启用消息" else "禁用消息")
-                            }
-                            HyperButton(onClick = { barEnabled = !barEnabled }, tone = HyperButtonTone.Tonal) {
-                                HyperText(if (barEnabled) "禁用整栏" else "启用整栏")
-                            }
-                        }
-                    }
                 }
                 HyperTabBar(
                     items = bottomItems,
@@ -511,6 +347,43 @@ fun TabBarDemo() {
                 }
             }
         }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton(
+                onClick = { barType = HyperTabBarType.Docked },
+                variant = if (!floating) HyperButtonVariant.Filled else HyperButtonVariant.Tonal
+            ) { HyperText("贴底样式") }
+            HyperButton(
+                onClick = { barType = HyperTabBarType.Floating },
+                variant = if (floating) HyperButtonVariant.Filled else HyperButtonVariant.Tonal
+            ) { HyperText("悬浮胶囊") }
+        }
+        if (floating) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                HyperButton(onClick = {
+                    showFiveItems = !showFiveItems
+                    if (!showFiveItems && selectedItemId == "search") selectedItemId = "home"
+                }, variant = HyperButtonVariant.Tonal) {
+                    HyperText(if (showFiveItems) "显示 4 项" else "显示 5 项")
+                }
+                HyperButton(onClick = { useAccent = !useAccent }, variant = HyperButtonVariant.Tonal) {
+                    HyperText(if (useAccent) "默认配色" else "强调配色")
+                }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                HyperButton(onClick = { disableNotice = !disableNotice }, variant = HyperButtonVariant.Tonal) {
+                    HyperText(if (disableNotice) "启用消息" else "禁用消息")
+                }
+                HyperButton(onClick = { barEnabled = !barEnabled }, variant = HyperButtonVariant.Tonal) {
+                    HyperText(if (barEnabled) "禁用整栏" else "启用整栏")
+                }
+            }
+        } else {
+            HyperButton(
+                onClick = { showTopDivider = !showTopDivider },
+                variant = HyperButtonVariant.Tonal
+            ) { HyperText(if (showTopDivider) "隐藏顶部发丝线" else "显示顶部发丝线") }
+        }
+    }
     }
 }
 
@@ -584,7 +457,7 @@ private fun DrawerPositionButton(
     HyperButton(
         onClick = onClick,
         modifier = Modifier.height(36.dp),
-        tone = if (selected) HyperButtonTone.Primary else HyperButtonTone.Outline
+        variant = if (selected) HyperButtonVariant.Filled else HyperButtonVariant.Outline
     ) {
         HyperText(
             text = text,
@@ -598,4 +471,26 @@ private fun HyperDrawerPosition.label(): String = when (this) {
     HyperDrawerPosition.Right -> "右侧"
     HyperDrawerPosition.Top -> "顶部"
     HyperDrawerPosition.Bottom -> "底部"
+}
+
+/** 侧滑操作与分类按钮分开演示，保留受控展开和禁用状态。 */
+@Composable
+fun SlideActionMenuDemo() {
+    var reveal by remember { mutableStateOf(HyperSlideMenuReveal.Closed) }
+    var enabled by remember { mutableStateOf(true) }
+    var result by remember { mutableStateOf("拖动列表行或用按钮展开") }
+    Column(Modifier.widthIn(max = 440.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton({ reveal = HyperSlideMenuReveal.Start }, variant = HyperButtonVariant.Tonal) { HyperText("起始侧") }
+            HyperButton({ reveal = HyperSlideMenuReveal.End }, variant = HyperButtonVariant.Tonal) { HyperText("结束侧") }
+            HyperButton({ enabled = !enabled }, variant = HyperButtonVariant.Ghost) { HyperText(if (enabled) "禁用" else "启用") }
+        }
+        HyperSlideMenu(reveal, { reveal = it }, enabled = enabled,
+            startActions = listOf(HyperSlideAction("置顶", { result = "已置顶" })),
+            endActions = listOf(HyperSlideAction("删除", { result = "已删除" }))) {
+            HyperListItem(headlineContent = { HyperText("侧滑查看操作") },
+                supportingContent = { HyperText("释放时按位置与速度吸附") })
+        }
+        HyperText("$reveal · $result", fontSize = 13.sp)
+    }
 }

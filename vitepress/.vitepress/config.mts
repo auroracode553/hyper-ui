@@ -76,6 +76,7 @@ export default defineConfig({
       {
         text: '容器组件',
         items: [
+          { text: 'HyperBackdrop', link: '/components/container/hyper-backdrop' },
           { text: 'HyperPanel', link: '/components/container/hyper-panel' },
           { text: 'HyperColorPicker', link: '/components/container/hyper-color-picker' }
         ]
@@ -87,6 +88,7 @@ export default defineConfig({
           { text: 'HyperImmersiveNavBar', link: '/components/navigation/hyper-immersive-nav-bar' },
           { text: 'HyperDrawer', link: '/components/navigation/hyper-drawer' },
           { text: 'HyperSlideMenu', link: '/components/navigation/hyper-slide-menu' },
+          { text: 'HyperFilterBar', link: '/components/navigation/hyper-filter-bar' },
           { text: 'HyperTabBar', link: '/components/navigation/hyper-tab-bar' }
         ]
       },

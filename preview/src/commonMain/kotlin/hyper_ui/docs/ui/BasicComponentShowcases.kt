@@ -28,13 +28,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonTone
+import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
 
 @Composable
 fun ButtonDemo() {
     var clicks by remember { mutableStateOf(0) }
+    var loading by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.widthIn(max = 560.dp),
@@ -44,71 +45,68 @@ fun ButtonDemo() {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
                 onClick = { clicks += 1 },
-                tone = HyperButtonTone.Outline
+                height = 32.dp
             ) {
-                HyperText(text = "轮廓")
+                HyperText(text = "小按钮")
             }
             HyperButton(onClick = { clicks += 1 }) {
-                HyperText(text = "主要")
-            }
-            HyperButton(
-                onClick = { clicks += 1 },
-                tone = HyperButtonTone.Tonal
-            ) {
-                HyperText(text = "弱强调")
-            }
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            HyperButton(
-                onClick = { clicks += 1 },
-                tone = HyperButtonTone.Secondary
-            ) {
-                HyperText(text = "次要")
-            }
-            HyperButton(
-                onClick = { clicks += 1 },
-                tone = HyperButtonTone.Success
-            ) {
-                HyperText(text = "成功")
-            }
-            HyperButton(
-                onClick = { clicks = 0 },
-                tone = HyperButtonTone.Danger
-            ) {
-                HyperText(text = "危险")
-            }
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            HyperButton(
-                onClick = { clicks += 1 }
-            ) {
-                HyperIcon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null,
-                    modifier = Modifier.size(18.dp)
-                )
-                HyperText(text = "搜索")
+                HyperText(text = "默认按钮")
             }
             HyperButton(
                 onClick = {},
-                enabled = false,
-                tone = HyperButtonTone.Outline
+                loading = true,
+                variant = HyperButtonVariant.Outline
             ) {
-                HyperText(text = "禁用")
+                HyperText(text = "处理中")
             }
         }
-        HyperButton(
-            onClick = { clicks += 1 },
-            modifier = Modifier.height(32.dp),
-            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
-        ) {
-            HyperText(
-                text = "小尺寸 slot",
-                fontSize = 13.sp
-            )
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            HyperButton(
+                onClick = { clicks += 1 },
+                variant = HyperButtonVariant.Outline
+            ) {
+                HyperText(text = "导出")
+            }
+            HyperButton(
+                onClick = { clicks = 0 },
+                variant = HyperButtonVariant.Danger
+            ) {
+                HyperText(text = "删除")
+            }
+            HyperButton(onClick = { clicks += 1 }, variant = HyperButtonVariant.Tonal) {
+                HyperIcon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(18.dp))
+                HyperText(text = "带图标胶囊")
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            HyperIconButton(onClick = { clicks += 1 }) {
+                HyperIcon(Icons.Default.Search, contentDescription = "搜索", modifier = Modifier.size(18.dp))
+            }
+            HyperIconButton(onClick = { clicks += 1 }) {
+                HyperIcon(Icons.Default.Notifications, contentDescription = "通知", modifier = Modifier.size(18.dp))
+            }
+            HyperIconButton(onClick = { clicks = 0 }) {
+                HyperIcon(Icons.Default.Delete, contentDescription = "删除", modifier = Modifier.size(18.dp))
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            HyperButton(onClick = {}, enabled = false, variant = HyperButtonVariant.Outline) {
+                HyperText("禁用")
+            }
+            HyperButton(
+                onClick = { clicks += 1 },
+                height = 32.dp,
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+            ) {
+                HyperText(text = "小尺寸 slot", fontSize = 13.sp)
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton({ loading = !loading }, variant = HyperButtonVariant.Ghost) { HyperText("切换加载") }
+            HyperButton({ clicks += 1 }, loading = loading) { HyperText("提交") }
         }
         HyperText(
-            text = "点击次数：$clicks · 所有按钮均复用公共描边与阴影",
+            text = "点击次数：$clicks · 按住查看缩放与透明度反馈",
             color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp
@@ -229,7 +227,7 @@ fun IconButtonDemo() {
             fontSize = 13.sp
         )
         HyperText(
-            text = "按钮始终无描边；浅色模式增强默认阴影，按住后阴影立即收低。",
+            text = "默认 36dp 玻璃圆面，按住缩放至 0.975，透明度降至 0.92。",
             color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center

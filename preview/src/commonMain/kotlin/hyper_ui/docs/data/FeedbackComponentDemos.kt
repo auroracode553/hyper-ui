@@ -81,9 +81,12 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "toast",
         group = GROUP_FEEDBACK,
-        title = "hyperToast",
-        description = "Android 原生 Toast 封装，统一短/长时长并自动切换到主线程；跨平台 Preview 使用交互模拟。",
+        title = "HyperToast / hyperToast",
+        description = "受控玻璃 Toast，真实自动关闭与操作区；Android 原生工具另附调用示例。",
         code = """
+            HyperToast(visible, "保存成功", onDismissRequest = { visible = false })
+
+            // Android-only 原生工具
             hyperToast(context, "保存成功")
             hyperToast(
                 context = context,
@@ -104,7 +107,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "progress",
         group = GROUP_FEEDBACK,
         title = "HyperProgressIndicator",
-        description = "线性与圆形轨道均使用不透明实色；progress 为 null 时表示不确定加载。",
+        description = "线性与圆形轨道均使用参考令牌配色；progress 为 null 时表示不确定加载。",
         code = """
             HyperLinearProgressIndicator(progress = progress)
             HyperLinearProgressIndicator(progress = null)
@@ -148,7 +151,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "playback_speed_panel",
         group = GROUP_FEEDBACK,
         title = "HyperPlaybackSpeedPanel",
-        description = "紧凑型固定深色播放器倍速面板与覆盖层；速度、显示状态和自定义速度流程均由调用方持有。",
+        description = "紧凑型主题玻璃播放器倍速面板与覆盖层；速度、显示状态和自定义速度流程均由调用方持有。",
         code = """
             HyperPlaybackSpeedPanelOverlay(
                 visible = panelVisible,
@@ -160,7 +163,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("紧凑布局", "默认尺寸", "空间充足时约 468dp 宽、157dp 高"),
-            DemoVariant("固定深色", "默认配色", "不跟随应用浅色/深色模式切换"),
+            DemoVariant("主题玻璃", "默认配色", "不跟随应用浅色/深色模式切换"),
             DemoVariant("受控状态", "visible/currentSpeed", "调用方持有显示状态和实时速度"),
             DemoVariant("预设档位", "speedOptions", "默认 0.25x、1x、2x、3x、4x"),
             DemoVariant("自定义入口", "onCustomSpeedRequest", "仅分发事件，不承载输入业务"),
@@ -174,7 +177,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "playback_speed_scale",
         group = GROUP_FEEDBACK,
         title = "HyperPlaybackSpeedScale",
-        description = "播放器长按临时加速使用的紧凑型固定深色玻璃刻度，两端标签让出轨道上方空间。",
+        description = "播放器长按临时加速使用的紧凑型主题玻璃玻璃刻度，两端标签让出轨道上方空间。",
         code = """
             HyperPlaybackSpeedScale(
                 selectedSpeed = temporarySpeed,
@@ -187,7 +190,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("紧凑布局", "默认尺寸", "约 310dp 宽、59dp 高，两端档位位于轨道左右"),
             DemoVariant("默认档位", "SpeedOptions", "0.25x 到 4x 八档刻度"),
             DemoVariant("当前速度", "selectedSpeed", "高亮最近的速度刻度"),
-            DemoVariant("固定深色", "默认配色", "不跟随应用浅色/深色模式切换"),
+            DemoVariant("主题玻璃", "默认配色", "不跟随应用浅色/深色模式切换"),
             DemoVariant("图标插槽", "leadingContent", "Android 默认使用 Lucide fast-forward，也可替换"),
             DemoVariant("自定义配色", "HyperPlaybackSpeedScaleDefaults.colors", "容器、轨道、刻度与文案；不暴露硬边框")
         ),
@@ -210,7 +213,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("常规电量", "percentage", "无描边玻璃壳体内按比例填充"),
+            DemoVariant("常规电量", "percentage", "细边缘玻璃壳体内按比例填充"),
             DemoVariant("低电量", "percentage <= 20", "默认切换红色填充"),
             DemoVariant("充电中", "charging = true", "绿色填充且右侧展示 Lucide zap"),
             DemoVariant("隐藏数字", "showPercentage = false", "仅展示图形电量")
@@ -274,7 +277,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("基础面板", "visible + content", "响应式实色浮层面板"),
+            DemoVariant("基础面板", "visible + content", "响应式玻璃浮层面板"),
             DemoVariant("响应式高度", "MaxHeightFraction", "最大为窗口高度的 70%"),
             DemoVariant("窗口居中", "Popup host", "自定义位置提供器忽略调用节点锚点"),
             DemoVariant("外部关闭", "dismissOnClickOutside", "仅点击处理，不绘制遮罩"),
@@ -299,7 +302,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                     HyperButton(onClick = onDismiss) { Text("取消") }
                     HyperButton(
                         onClick = onDelete,
-                        tone = HyperButtonTone.Danger
+                        variant = HyperButtonVariant.Danger
                     ) { Text("删除") }
                 }
             )

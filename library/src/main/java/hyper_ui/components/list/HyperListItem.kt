@@ -177,10 +177,10 @@ internal fun HyperListDivider(
 object HyperListItemDefaults {
     /** 单行保持紧凑；带说明的双行项增加纵向呼吸空间，避免标题与描述显得拥挤。 */
     val SingleLineMinHeight = 44.dp
-    val SupportingMinHeight = 54.dp
+    val SupportingMinHeight = 58.dp
     val ContentGap = 12.dp
     val TextGap = 3.dp
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 4.dp)
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 14.dp, vertical = 8.dp)
     /** 分割线起点与内容起点保持一致（均从容器内容区开始）。 */
     val DividerInset = 0.dp
     val DividerHeight = 1.dp
@@ -200,14 +200,15 @@ object HyperListItemDefaults {
 
     val HeadlineTextStyle: TextStyle
         @Composable get() = HyperTheme.typography.bodyLarge.copy(
-            fontSize = 16.sp,
-            lineHeight = 22.sp
+            fontSize = 14.sp,
+            lineHeight = 17.5.sp,
+            fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
         )
 
     val SupportingTextStyle: TextStyle
         @Composable get() = HyperTheme.typography.bodyMedium.copy(
-            fontSize = 13.sp,
-            lineHeight = 17.sp
+            fontSize = 12.sp,
+            lineHeight = 16.2.sp
         )
 
     val TrailingTextStyle: TextStyle

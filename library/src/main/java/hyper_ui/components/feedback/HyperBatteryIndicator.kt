@@ -94,9 +94,7 @@ fun HyperBatteryIndicator(
                         visuals = hyperGlassSurfaceVisuals(
                             containerColor = colors.containerColor,
                             elevation = HyperBatteryIndicatorDefaults.Elevation,
-                            topLightAlpha = if (HyperColors.isLight) 0.34f else 0.13f,
-                            bottomShadeAlpha = if (HyperColors.isLight) 0.06f else 0.16f,
-                            shadowAlpha = if (HyperColors.isLight) 0.14f else 0.28f
+
                         )
                     )
                     .padding(HyperBatteryIndicatorDefaults.BodyInset)
@@ -137,9 +135,7 @@ fun HyperBatteryIndicator(
                         visuals = hyperGlassSurfaceVisuals(
                             containerColor = colors.terminalColor,
                             elevation = HyperBatteryIndicatorDefaults.TerminalElevation,
-                            topLightAlpha = if (HyperColors.isLight) 0.28f else 0.12f,
-                            bottomShadeAlpha = if (HyperColors.isLight) 0.06f else 0.14f,
-                            shadowAlpha = if (HyperColors.isLight) 0.10f else 0.22f
+
                         )
                     )
             )
@@ -189,19 +185,19 @@ object HyperBatteryIndicatorDefaults {
     ): HyperBatteryIndicatorColors = HyperBatteryIndicatorColors(
         containerColor = resolveHyperContainerColor(
             containerColor,
-            Color(1f, 1f, 1f, if (HyperColors.isLight) 0.52f else 0.18f)
+            hyperGlass.surfaceSubtle
         ),
         levelColor = resolveHyperContainerColor(
             levelColor,
-            Color(0.32f, 0.78f, 0.49f, 0.82f)
+            HyperColors.success
         ),
         lowLevelColor = resolveHyperContainerColor(
             lowLevelColor,
-            Color(1f, 0.27f, 0.23f, 0.94f)
+            HyperColors.danger
         ),
         chargingLevelColor = resolveHyperContainerColor(
             chargingLevelColor,
-            Color(0.22f, 0.86f, 0.39f, 1f)
+            HyperColors.success
         ),
         percentageColor = resolveHyperContainerColor(
             percentageColor,
@@ -209,11 +205,11 @@ object HyperBatteryIndicatorDefaults {
         ),
         terminalColor = resolveHyperContainerColor(
             terminalColor,
-            Color(1f, 1f, 1f, if (HyperColors.isLight) 0.72f else 0.40f)
+            hyperGlass.surfaceSubtle
         ),
         chargingIconColor = resolveHyperContainerColor(
             chargingIconColor,
-            Color(0.22f, 0.86f, 0.39f, 1f)
+            HyperColors.success
         )
     )
 }

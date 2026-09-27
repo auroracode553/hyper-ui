@@ -60,9 +60,7 @@ fun HyperLevelCapsule(
                 visuals = hyperGlassSurfaceVisuals(
                     containerColor = colors.containerColor,
                     elevation = HyperLevelCapsuleDefaults.Elevation,
-                    topLightAlpha = if (HyperColors.isLight) 0.36f else 0.14f,
-                    bottomShadeAlpha = if (HyperColors.isLight) 0.05f else 0.16f,
-                    shadowAlpha = if (HyperColors.isLight) 0.18f else 0.34f
+
                 )
             )
             .padding(HyperLevelCapsuleDefaults.ContentInset)
@@ -136,7 +134,7 @@ object HyperLevelCapsuleDefaults {
         }
         return HyperLevelCapsuleColors(
             containerColor = if (containerColor == Color.Unspecified) {
-                Color(1f, 1f, 1f, if (HyperColors.isLight) 0.56f else 0.20f)
+                hyperGlass.surfaceSubtle
             } else {
                 containerColor
             },

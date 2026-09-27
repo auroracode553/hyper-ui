@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ColorPickerDemo() {
     var selectedColorId by remember { mutableStateOf("ocean_blue") }
+    var pickerEnabled by remember { mutableStateOf(true) }
     val currentOption = remember(selectedColorId) {
         HyperColorPickerDefaults.presetOptions.find { it.id == selectedColorId }
             ?: HyperColorPickerDefaults.presetOptions.first()
@@ -45,7 +46,9 @@ fun ColorPickerDemo() {
         modifier = Modifier.widthIn(max = 400.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        HyperButton({ pickerEnabled = !pickerEnabled }, variant = HyperButtonVariant.Ghost) { HyperText(if (pickerEnabled) "禁用颜色选择" else "启用颜色选择") }
         HyperColorPicker(
+            enabled = pickerEnabled,
             selectedId = selectedColorId,
             onSelected = { option -> selectedColorId = option.id }
         )
@@ -112,7 +115,7 @@ fun PanelDemo() {
             }
             HyperButton(
                 onClick = { acknowledged = false },
-                tone = HyperButtonTone.Outline
+                variant = HyperButtonVariant.Outline
             ) {
                 HyperText(text = "重置")
             }
@@ -139,5 +142,35 @@ private fun ContainerIconBadge(
             tint = tint,
             modifier = Modifier.size(22.dp)
         )
+    }
+}
+
+/** 材质令牌可注入；使用已有主题方向，避免在预览中误重置深色模式。 */
+@Composable
+fun GlassMaterialDemo() {
+    var opacity by remember { mutableStateOf(217 / 255f) }
+    val glass = HyperTheme.glass.copy(surface = HyperTheme.glass.surface.copy(alpha = opacity))
+    HyperThemeConfig(
+        themeColor = HyperTheme.colors.themeColor,
+        darkTheme = HyperTheme.isDark,
+        typography = HyperTheme.typography,
+        shapes = HyperTheme.shapes,
+        glass = glass
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            HyperText("四档重量（weight 控制表面层级）", fontSize = 12.sp,
+                color = LocalDocsColorScheme.current.onSurfaceVariant)
+            listOf(
+                "Subtle · 小面积和辅助表面" to glass.surfaceSubtle,
+                "Regular · 常规内容表面" to glass.surface,
+                "Prominent · 浮层和模态表面" to glass.surfaceStrong,
+                "Solid · 不透明内容表面" to HyperColors.cardContainer
+            ).forEach { (label, surface) ->
+                HyperPanel(colors = HyperPanelDefaults.colors(surface), elevation = 8.dp) {
+                    HyperText(label, fontSize = 13.sp)
+                }
+            }
+            HyperSlider(opacity, { opacity = it }, valueRange = 0.1f..1f)
+        }
     }
 }

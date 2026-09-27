@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.delay
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +43,10 @@ fun HyperTooltip(
     content: @Composable () -> Unit,
 ) {
     var visible by remember { mutableStateOf(false) }
+    var pointerPressed by remember { mutableStateOf(false) }
+    LaunchedEffect(pointerPressed, enabled) {
+        if (pointerPressed && enabled) { delay(500); visible = true }
+    }
     var anchorBounds by remember { mutableStateOf<Rect?>(null) }
     val density = LocalDensity.current
 
@@ -49,10 +57,11 @@ fun HyperTooltip(
                 if (!enabled) return@pointerInput
                 awaitPointerEventScope {
                     while (true) {
-                        val event = awaitPointerEvent()
+                        val event = awaitPointerEvent(PointerEventPass.Initial)
+                        pointerPressed = event.changes.any { it.pressed }
                         when (event.type) {
                             PointerEventType.Enter -> visible = true
-                            PointerEventType.Exit -> visible = false
+                            PointerEventType.Exit -> { visible = false; pointerPressed = false }
                             PointerEventType.Release -> visible = false
                             else -> Unit
                         }
@@ -73,10 +82,10 @@ fun HyperTooltip(
             HyperText(
                 text = text,
                 modifier = Modifier
-                    .background(HyperColors.primaryText, RoundedCornerShape(8.dp))
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
-                color = HyperColors.pageBackground,
-                style = HyperTheme.typography.labelMedium,
+                    .hyperFrostedSurface(hyperGlass.surfaceStrong, RoundedCornerShape(12.dp), blur = 18.dp)
+                    .padding(horizontal = 10.dp, vertical = 7.dp),
+                color = HyperColors.primaryText,
+                style = HyperTheme.typography.bodySmall.copy(fontSize = 12.sp, lineHeight = 15.6.sp),
             )
         }
     }

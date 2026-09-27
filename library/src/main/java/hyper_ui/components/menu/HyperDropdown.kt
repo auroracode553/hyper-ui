@@ -2,7 +2,7 @@
 package hyper_ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import hyper_ui.core.interaction.hyperNoRippleClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
@@ -67,9 +67,8 @@ fun HyperDropdown(
     colors: HyperDropdownColors = HyperDropdownDefaults.colors(),
     content: @Composable HyperDropdownScope.() -> Unit
 ) {
-    if (!expanded) {
-        return
-    }
+    val transitionProgress = hyperOverlayProgress(expanded)
+    if (!expanded && transitionProgress == 0f) return
 
     val intOffset = LocalDensity.current.run {
         IntOffset(offset.x.roundToPx(), offset.y.roundToPx())
@@ -84,6 +83,7 @@ fun HyperDropdown(
     ) {
         Column(
             modifier = modifier
+                .hyperOverlayMotion(transitionProgress)
                 .width(IntrinsicSize.Max)
                 .widthIn(max = HyperDropdownDefaults.MaxWidth)
                 .heightIn(max = HyperDropdownDefaults.MaxHeight)
@@ -139,9 +139,8 @@ class HyperDropdownScope internal constructor(
                 .height(HyperDropdownDefaults.ItemHeight)
                 .clip(HyperDropdownDefaults.ItemShape)
                 .background(pressedContainerColor)
-                .clickable(
+                .hyperNoRippleClickable(
                     interactionSource = interactionSource,
-                    indication = null,
                     enabled = enabled,
                     role = Role.Button,
                     onClick = {
@@ -172,20 +171,20 @@ class HyperDropdownScope internal constructor(
 }
 
 object HyperDropdownDefaults {
-    val MaxWidth = 220.dp
+    val MaxWidth = 240.dp
     val MaxHeight = 432.dp
-    val ItemHeight = 48.dp
+    val ItemHeight = 44.dp
     val AnchorOffsetY = 52.dp
     val Elevation = 10.dp
-    val Shape: Shape = RoundedCornerShape(26.dp)
+    val Shape: Shape = RoundedCornerShape(18.dp)
     val ItemShape: Shape = RoundedCornerShape(16.dp)
-    val MenuPadding = PaddingValues(vertical = 8.dp)
-    val ItemPadding = PaddingValues(horizontal = 22.dp)
-    val DividerPadding = PaddingValues(horizontal = 22.dp, vertical = 6.dp)
+    val MenuPadding = PaddingValues(5.dp)
+    val ItemPadding = PaddingValues(horizontal = 14.dp)
+    val DividerPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
     val ItemTextStyle = TextStyle(
-        fontSize = 18.sp,
-        lineHeight = 24.sp,
-        fontWeight = FontWeight.Normal
+        fontSize = 14.sp,
+        lineHeight = 17.5.sp,
+        fontWeight = FontWeight.SemiBold
     )
 
     @Composable
@@ -201,11 +200,7 @@ object HyperDropdownDefaults {
         return HyperDropdownColors(
             containerColor = resolveHyperContainerColor(
                 containerColor,
-                if (isLight) {
-                    Color(1f, 1f, 1f, 0.96f)
-                } else {
-                    Color(0.14f, 0.14f, 0.15f, 0.96f)
-                }
+                hyperGlass.surfaceStrong
             ),
             contentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText),
             dangerContentColor = resolveHyperContainerColor(dangerContentColor, HyperColors.danger),
@@ -215,19 +210,11 @@ object HyperDropdownDefaults {
             ),
             pressedContainerColor = resolveHyperContainerColor(
                 pressedContainerColor,
-                if (isLight) {
-                    Color(0f, 0f, 0f, 0.055f)
-                } else {
-                    Color(1f, 1f, 1f, 0.075f)
-                }
+                hyperGlass.pressed
             ),
             dividerColor = resolveHyperContainerColor(
                 dividerColor,
-                if (isLight) {
-                    Color(0f, 0f, 0f, 0.07f)
-                } else {
-                    Color(1f, 1f, 1f, 0.09f)
-                }
+                HyperColors.divider
             )
         )
     }

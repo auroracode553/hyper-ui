@@ -1,15 +1,10 @@
 # HyperSwitch
 
-- 分类：表单组件
-- 包名：`hyper_ui`
-- 状态模型：受控组件；`checked` 由调用方持有
-- 源码：`library/src/main/java/hyper_ui/components/selection/HyperSelectionControls.kt`
-- Preview 注册：`preview/src/commonMain/kotlin/hyper_ui/docs/data/FormComponentDemos.kt`
-- Preview 交互：`preview/src/commonMain/kotlin/hyper_ui/docs/ui/FormComponentShowcases.kt`
+`HyperSwitch` 的公开 API 位于 `hyper_ui` 包。组件状态由调用方持有，通过参数和回调传入。外部间距使用 `modifier`；尺寸、颜色和插槽按下列源码签名配置。
 
 <WasmPreview demo="switch" title="HyperSwitch 交互预览" />
 
-## 公开 API
+## 公开签名与默认值
 
 ```kotlin
 @Composable
@@ -20,46 +15,10 @@ fun HyperSwitch(
     enabled: Boolean = true,
     checkedTrackColor: Color = Color.Unspecified,
     uncheckedTrackColor: Color = Color.Unspecified,
-    checkedThumbColor: Color = rgba(255, 255, 255, 1f),
-    uncheckedThumbColor: Color = rgba(255, 255, 255, 1f)
+    checkedThumbColor: Color = Color(1f, 1f, 1f, 1f),
+    uncheckedThumbColor: Color = Color.Unspecified
 )
 ```
-
-## 关键公开类型
-
-```kotlin
-object HyperSwitchDefaults {
-    val TrackWidth = 54.dp
-    val TrackHeight = 32.dp
-    val TrackPadding = 2.dp
-    val TrackElevation = 1.dp
-    val TrackBorderWidth = 1.dp
-    val ThumbSize = 28.dp
-    val ThumbElevation = 2.dp
-    val ThumbBorderWidth = 1.dp
-}
-```
-
-`HyperSwitchDefaults` 是公开视觉常量集合；当前 `HyperSwitch` 签名不接收该对象作为配置参数。源码会读取轨道、滑块、内边距、描边和阴影相关默认值。
-
-## 参数
-
-| 参数 | 类型 | 必填 | 默认值 | 状态归属 / 作用 |
-| --- | --- | --- | --- | --- |
-| `checked` | `Boolean` | 是 | 无 | 调用方持有的当前开关状态。 |
-| `onCheckedChange` | `(Boolean) -> Unit` | 是 | 无 | 点击时回传 `!checked`；调用方应据此更新状态。 |
-| `modifier` | `Modifier` | 否 | `Modifier` | 调整外层布局。 |
-| `enabled` | `Boolean` | 否 | `true` | 调用方控制可用态；为 `false` 时不回调。 |
-| `checkedTrackColor` | `Color` | 否 | `Color.Unspecified` | 选中轨道色；未指定时使用 `HyperColors.accent`。 |
-| `uncheckedTrackColor` | `Color` | 否 | `Color.Unspecified` | 未选中轨道色；未指定时使用不透明 `HyperColors.elevatedContainer`。 |
-| `checkedThumbColor` | `Color` | 否 | `rgba(255, 255, 255, 1f)` | 选中滑块色。 |
-| `uncheckedThumbColor` | `Color` | 否 | `rgba(255, 255, 255, 1f)` | 未选中滑块色。 |
-
-## 状态归属
-
-- 组件不会在内部保存业务开关值。
-- 调用方必须把 `onCheckedChange` 返回的新值写回自己的状态。
-- 组件内部只处理滑块位置、颜色和禁用实色状态；切换时即时更新，不执行动画。
 
 ## 最小用法
 
@@ -72,29 +31,8 @@ HyperSwitch(
 )
 ```
 
-## 约束与行为
+## 使用约束
 
-- 这是无涟漪点击的受控组件，语义角色为 `Role.Switch`。
-- `enabled = false` 时既不切换，也不调用 `onCheckedChange`。
-- 轨道、滑块尺寸、描边和阴影来自 `HyperSwitchDefaults`，当前公开签名没有单独的尺寸参数。
-- 默认描边来自 `HyperColors.fieldBorder`；未选中轨道为白色或近白色时仍保留清晰轮廓。
-- 滑块默认读取 `HyperSwitchDefaults.ThumbElevation` 产生轻微阴影，并带 1dp 细描边。
-- 项目颜色规范禁止十六进制硬编码；自定义颜色使用项目允许的 RGBA 写法。
-
-## 常见误用
-
-```kotlin
-// 错误：忽略回调值，checked 将永远不变。
-HyperSwitch(
-    checked = enabled,
-    onCheckedChange = { }
-)
-```
-
-## 相关 API
-
-- `HyperSwitchDefaults`
-- `HyperThemeConfig`
-- `HyperColors.accent`
-
-## 交互预览
+- 使用 `HyperThemeConfig` 提供主题；需要采样背景时，将可视内容置于 `HyperBackdrop` 中。
+- 组件不持有业务数据、导航或网络请求；`visible`、`value`、`selected` 等由调用方控制。
+- Android 原生窗口和系统工具仅在 Android 目标可用；Preview 使用跨平台示例。

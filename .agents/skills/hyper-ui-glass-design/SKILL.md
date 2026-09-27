@@ -39,4 +39,4 @@ Use the accepted `HyperIconButton` implementation as the material anchor, then a
 3. Remove obsolete hard-border APIs and update all repository call sites when a clean breaking refactor is warranted.
 4. Provide interactive Preview coverage for normal, active/focused, custom-color, error, disabled, and relevant size/layout variants.
 5. Synchronize `README.md`, `vitepress/docs/component-index.md`, the component page, and Preview demo metadata.
-6. Perform static consistency checks. Do not automatically run or build this repository.
+6. Perform static consistency checks and run the relevant preview or build to verify visual and API changes when the task calls for it.

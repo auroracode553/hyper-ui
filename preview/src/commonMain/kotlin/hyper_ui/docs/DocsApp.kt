@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.Color
 import hyper_ui.docs.theme.DefaultDocsThemeColor
 import hyper_ui.docs.theme.HyperDocsTheme
@@ -33,7 +34,8 @@ fun rememberThemeColorController(initial: Color = DefaultDocsThemeColor): ThemeC
 @Composable
 fun HyperDocsRoot(initialSelectedId: String? = null, embeddedPreview: Boolean = false) {
     val themeColorController = rememberThemeColorController()
-    HyperDocsTheme(themeColor = themeColorController.color) {
+    HyperDocsTheme(themeColor = themeColorController.color,
+        darkTheme = if (embeddedPreview) false else isSystemInDarkTheme()) {
         HyperDocsApp(
             themeColorController = themeColorController,
             initialSelectedId = initialSelectedId,

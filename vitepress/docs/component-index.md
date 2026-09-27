@@ -1,6 +1,6 @@
 # 组件索引
 
-所有组件的公开包名均为 `hyper_ui`。状态归属只描述业务状态；滚动等内部 UI 状态不需要调用方管理。所有组件状态均即时渲染，不执行动画。组件外壳尺寸和外部间距统一通过 `modifier` 控制，具体内部节点使用组件签名中明确提供的 `contentModifier`、`drawerModifier`、`inputModifier` 等修饰符。
+所有组件的公开包名均为 `hyper_ui`。状态归属只描述业务状态；滚动等内部 UI 状态不需要调用方管理。状态由调用方控制；组件的按压、展开与悬浮反馈可执行短动画。组件外壳尺寸和外部间距统一通过 `modifier` 控制，具体内部节点使用组件签名中明确提供的 `contentModifier`、`drawerModifier`、`inputModifier` 等修饰符。
 
 各组件页记录公开属性、默认值和使用约束；页面内的交互预览只显示组件示例。开发时执行 `npm run dev:watch` 可在预览区域看到依赖准备、Wasm 编译、资源加载和组件渲染阶段。
 
@@ -8,24 +8,25 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperButton](components/basic/hyper-button.md) | 复用公共控件描边与单层阴影的不透明实色 Slot-first 按钮 | 调用方处理点击 |
-| [HyperIconButton](components/basic/hyper-icon-button.md) | Slot-first 无描边磨砂玻璃图标按钮，浅色模式使用增强公共单层阴影 | 调用方处理点击 |
+| [HyperButton](components/basic/hyper-button.md) | 支持填充、柔色、描边、幽灵和危险样式的 Slot 按钮 | 调用方处理点击 |
+| [HyperIconButton](components/basic/hyper-icon-button.md) | 36dp 圆形磨砂玻璃图标按钮 | 调用方处理点击 |
 
 ## 表单组件
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperTextField](components/form/hyper-text-field.md) | 澎湃 OS 风格白色单色表面，复用公共控件描边与阴影 | 调用方提供 `value` |
+| [HyperTextField](components/form/hyper-text-field.md) | 与 Flutter 参考一致的玻璃输入表面 | 调用方提供 `value` |
 | [HyperSwitch](components/form/hyper-switch.md) | 开关，轨道和滑块默认有轮廓层次 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 使用 Lucide `check` 的多选项 | 调用方提供 `checked` |
 | [HyperRadio](components/form/hyper-radio.md) | 单选项 | 调用方提供 `selected` |
-| [HyperSegmented](components/form/hyper-segmented.md) | 默认总高 36dp 的紧凑玻璃等宽分段控制器 | 调用方提供 `selectedItem` |
+| [HyperSegmented](components/form/hyper-segmented.md) | 默认总高 40dp，支持等宽或内容宽度的玻璃分段控制器 | 调用方提供 `selectedItem` |
 | [HyperSlider](components/form/hyper-slider.md) | 支持连续/分段轨道、指定标记、只读态与三层圆点的受控滑块 | 调用方提供 `value` |
 
 ## 容器组件
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
+| [HyperBackdrop](components/container/hyper-backdrop.md) | 为玻璃表面采样背景并提供环境色 | 调用方提供背景及可选采样状态 |
 | [HyperPanel](components/container/hyper-panel.md) | 圆角内容面板，默认带轻描边和 16dp 内容留白 | 无业务状态 |
 | [HyperColorPicker](components/container/hyper-color-picker.md) | 响应式颜色选择板，色块默认带细描边 | 调用方提供 `selectedId` |
 
@@ -33,9 +34,10 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperNavBar](components/navigation/hyper-nav-bar.md) | 固定透明导航操作层，首屏避让、滚动后内容进入导航栏与状态栏后方 | 调用方持有滚动状态并消费组件返回的内容 Padding |
-| [HyperDrawer](components/navigation/hyper-drawer.md) | 带公共结构描边和低抬升阴影的四方向不透明玻璃抽屉 | 调用方提供 `open`、默认 Padding 策略、附加间距、选中态与嵌套列表滚动策略 |
-| [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 直接复用 `HyperButton` 的横向同级菜单 | 调用方提供 `selectedItem` |
+| [HyperNavBar](components/navigation/hyper-nav-bar.md) | 玻璃导航操作层，首屏避让、滚动后内容进入导航栏与状态栏后方 | 调用方持有滚动状态并消费组件返回的内容 Padding |
+| [HyperDrawer](components/navigation/hyper-drawer.md) | 带公共结构描边和低抬升阴影的四方向玻璃抽屉 | 调用方提供 `open`、默认 Padding 策略、附加间距、选中态与嵌套列表滚动策略 |
+| [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表侧滑操作，逻辑方向及速度吸附 | 调用方提供 `reveal`、操作项与回调 |
+| [HyperFilterBar](components/navigation/hyper-filter-bar.md) | 横向分类按钮条 | 调用方提供 `selectedItem` |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | `type` 切换贴底（0.5dp 顶部发丝线、总高 60dp）与悬浮玻璃胶囊（按标签格居中的选中托盘、按压反馈）两种样式 | 调用方处理内容、选择与导航 |
 
 ## 列表组件
@@ -45,7 +47,7 @@
 | [HyperList](components/list/hyper-list.md) | 固定使用 LazyColumn、支持可滚动 contentPadding 的页面级 Slot 懒列表 | 调用方提供 LazyListScope 项目与可选滚动状态 |
 | [HyperSectionedList](components/list/hyper-sectioned-list.md) | 日期、历史等动态数据的分段懒列表 | 调用方提供分组数据、稳定 key 与行内容 |
 | [HyperMenuList](components/list/hyper-menu-list.md) | 仅用于少量菜单、设置项和操作入口的圆角菜单容器 | 调用方提供菜单 Slot；不用于数据列表 |
-| [HyperListItem](components/list/hyper-list-item.md) | 单行 44dp、带说明 54dp 的自适应实色列表项 | 调用方处理点击和尾部状态 |
+| [HyperListItem](components/list/hyper-list-item.md) | 单行 44dp、带说明 58dp 的自适应玻璃列表项 | 调用方处理点击和尾部状态 |
 
 ## 反馈组件
 
@@ -53,8 +55,8 @@
 | --- | --- | --- |
 | [HyperEmptyState](components/feedback/hyper-empty-state.md) | 直接复用 `HyperPanel` 的页面级空数据状态 | 调用方提供文案、图标与可选操作 |
 | [HyperDropdown](components/feedback/hyper-dropdown.md) | 内容自适应并复用公共浮层描边和阴影的柔雾 Popup 菜单 | 调用方提供 `expanded` |
-| [hyperToast](components/feedback/hyper-toast.md) | Android 原生 Toast 的线程安全封装 | 调用即显示，无持久业务状态 |
-| [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 无动画、不透明实色的线性/圆形进度指示器 | 调用方提供 `progress` |
+| [HyperToast / hyperToast](components/feedback/hyper-toast.md) | 受控玻璃提示与 Android 原生线程安全工具 | 调用方提供 `visible` 与关闭回调 |
+| [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 确定或不确定进度的线性/圆形指示器 | 调用方提供 `progress` |
 | [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | 柔性玻璃竖向比例反馈，支持图标插槽 | 调用方提供 `progress`、文案、图标与显示时机 |
 | [HyperPlaybackSpeedPanel](components/feedback/hyper-playback-speed-panel.md) | 使用 Lucide 默认图标、约 468dp × 157dp 的紧凑播放速度面板 | 调用方提供显示状态、当前速度与操作回调 |
 | [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 使用 Lucide `fast-forward`、约 310dp × 59dp 的紧凑倍速刻度 | 调用方提供当前速度，并处理长按与横向手势 |

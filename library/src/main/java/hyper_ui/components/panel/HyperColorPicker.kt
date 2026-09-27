@@ -20,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -81,6 +83,7 @@ fun HyperColorPicker(
     selectedId: String,
     onSelected: (HyperColorOption) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     options: List<HyperColorOption> = HyperColorPickerDefaults.presetOptions,
     colorSize: Dp = HyperColorPickerDefaults.colorSize,
     horizontalSpacing: Dp = HyperColorPickerDefaults.horizontalSpacing,
@@ -96,6 +99,7 @@ fun HyperColorPicker(
             ColorPickItem(
                 option = option,
                 selected = option.id == selectedId,
+                enabled = enabled,
                 onClick = { onSelected(option) },
                 colorSize = colorSize,
                 labelTopSpacing = labelTopSpacing,
@@ -109,13 +113,14 @@ fun HyperColorPicker(
 private fun ColorPickItem(
     option: HyperColorOption,
     selected: Boolean,
+    enabled: Boolean,
     onClick: () -> Unit,
     colorSize: Dp,
     labelTopSpacing: Dp,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.semantics { this.selected = selected },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // 选中时用 accent 色环形描边：外层固定尺寸 + accent 背景，内层色块小一圈形成"环"
@@ -132,7 +137,7 @@ private fun ColorPickItem(
                         Modifier
                     }
                 )
-                .hyperNoRippleClickable(onClick = onClick),
+                .hyperNoRippleClickable(enabled = enabled, onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
             Box(

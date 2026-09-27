@@ -2,6 +2,7 @@
 package hyper_ui.docs.data
 
 import androidx.compose.runtime.Composable
+import hyper_ui.docs.ui.FlutterReferencePreview
 
 data class DemoVariant(
     val label: String,
@@ -21,11 +22,14 @@ data class ComponentDemo(
 )
 
 /** 聚合稳定 Preview ID；导航栏选中托盘、组件尺寸及交互状态以分组描述与 Showcase 为准。 */
-fun componentDemos(): List<ComponentDemo> = buildList {
+fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos())
     addAll(formComponentDemos())
     addAll(containerComponentDemos())
     addAll(navigationComponentDemos())
     addAll(listComponentDemos())
     addAll(feedbackComponentDemos())
+}
+.map { demo ->
+    demo.copy(content = { FlutterReferencePreview { demo.content() } })
 }

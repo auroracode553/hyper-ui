@@ -54,8 +54,8 @@ fun HyperTextField(
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
     textStyle: TextStyle = HyperTheme.typography.bodyMedium.copy(
-        fontSize = 16.sp,
-        lineHeight = 22.sp
+        fontSize = 14.sp,
+        lineHeight = 19.sp
     ),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions(),
@@ -103,7 +103,7 @@ fun HyperTextField(
         if (labelContent != null) {
             CompositionLocalProvider(LocalHyperContentColor provides visuals.labelColor) {
                 Column(
-                    modifier = Modifier.padding(start = 18.dp, bottom = 6.dp),
+                    modifier = Modifier.padding(start = 0.dp, bottom = 6.dp),
                     content = labelContent
                 )
             }
@@ -176,7 +176,7 @@ fun HyperTextField(
         if (supportingContent != null) {
             CompositionLocalProvider(LocalHyperContentColor provides visuals.supportingColor) {
                 Column(
-                    modifier = Modifier.padding(start = 18.dp, top = 6.dp),
+                    modifier = Modifier.padding(start = 0.dp, top = 6.dp),
                     content = supportingContent
                 )
             }
@@ -186,9 +186,9 @@ fun HyperTextField(
 
 object HyperTextFieldDefaults {
     /** 当前默认 slot（含 28dp 扫码图标）可在同一紧凑行高内稳定居中。 */
-    val MinHeight = 40.dp
-    val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.MediumCornerRadius)
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 6.dp)
+    val MinHeight = 42.dp
+    val Shape: Shape = RoundedCornerShape(16.dp)
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 14.dp, vertical = 11.dp)
     val SlotSpacing = 8.dp
 
     @Composable
@@ -207,18 +207,8 @@ object HyperTextFieldDefaults {
         val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
         val resolvedPlaceholderColor = resolveHyperContainerColor(placeholderColor, HyperColors.secondaryText)
         val resolvedErrorColor = resolveHyperContainerColor(errorColor, HyperColors.danger)
-        val defaultContainerColor = androidx.compose.ui.graphics.Color(
-            1f,
-            1f,
-            1f,
-            if (HyperColors.isLight) 1f else 0.18f
-        )
-        val defaultDisabledContainerColor = androidx.compose.ui.graphics.Color(
-            1f,
-            1f,
-            1f,
-            if (HyperColors.isLight) 0.72f else 0.10f
-        )
+        val defaultContainerColor = hyperGlass.surfaceSubtle
+        val defaultDisabledContainerColor = hyperGlass.controlTrack
 
         return HyperTextFieldColors(
             containerColor = resolveHyperContainerColor(containerColor, defaultContainerColor),

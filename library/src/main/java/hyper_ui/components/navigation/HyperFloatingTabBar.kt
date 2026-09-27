@@ -441,9 +441,7 @@ private fun HyperFloatingTabBarSurface(
                         colors.containerColor.copy(alpha = colors.containerColor.alpha * 0.6f)
                     },
                     elevation = if (enabled) HyperFloatingTabBarDefaults.Elevation else 0.dp,
-                    topLightAlpha = if (!enabled) 0f else if (HyperColors.isLight) 0.10f else 0.06f,
-                    bottomShadeAlpha = if (!enabled) 0f else if (HyperColors.isLight) 0.02f else 0.04f,
-                    shadowAlpha = if (!enabled) 0f else if (HyperColors.isLight) 0.12f else 0.22f
+
                 )
             )
     ) {
@@ -456,7 +454,7 @@ object HyperFloatingTabBarDefaults {
     val Height = 56.dp
 
     /** 胶囊与页面边缘的悬浮留白。 */
-    val Margin = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 12.dp)
+    val Margin = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 0.dp)
 
     /** 胶囊内边距；指示胶囊与内容均在此范围内居中。 */
     val InnerPadding = 4.dp
@@ -519,12 +517,12 @@ object HyperFloatingTabBarDefaults {
             ),
             indicatorColor = resolveHyperContainerColor(
                 indicatorColor,
-                if (isLight) Color(220f / 255f, 226f / 255f, 233f / 255f, 0.82f)
-                else Color(1f, 1f, 1f, 0.14f)
+                if (isLight) Color(0f, 0f, 0f, 32 / 255f)
+                else Color(1f, 1f, 1f, 51 / 255f)
             ),
             selectedContentColor = resolveHyperContainerColor(
                 selectedContentColor,
-                HyperColors.accent
+                rgba(7, 157, 98, 1f)
             ),
             unselectedContentColor = resolvedUnselected,
             disabledContentColor = resolveHyperContainerColor(
@@ -538,7 +536,7 @@ object HyperFloatingTabBarDefaults {
 /** 两种主题都以白色半透明底形成中性磨砂材质。 */
 @Composable
 private fun defaultHyperFloatingContainerColor(): Color = if (HyperColors.isLight) {
-    Color(1f, 1f, 1f, 0.78f)
+    rgba(255, 255, 255, 230 / 255f)
 } else {
-    Color(1f, 1f, 1f, 0.30f)
+    rgba(41, 42, 44, 230 / 255f)
 }

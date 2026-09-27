@@ -43,7 +43,7 @@ fun HyperPanel(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .hyperSurface(
+                        .hyperFrostedSurface(
                 containerColor = colors.containerColor,
                 shape = shape,
                 elevation = elevation,
@@ -61,7 +61,7 @@ fun HyperPanel(
 
 object HyperPanelDefaults {
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
-    val Elevation = 0.dp
+    val Elevation = 12.dp
     // 16dp 足以避开圆角边界，也避免调用方组合 40dp 控件时形成过高卡片。
     val ContentPadding = PaddingValues(16.dp)
     val ContentSpacing = 12.dp
@@ -70,10 +70,10 @@ object HyperPanelDefaults {
     fun colors(containerColor: Color = Color.Unspecified): HyperPanelColors = HyperPanelColors(
         containerColor = resolveHyperContainerColor(
             containerColor = containerColor,
-            fallbackColor = HyperColors.elevatedContainer
+            fallbackColor = hyperGlass.surface
         )
     )
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperPanelBorder(color)
+    fun border(color: Color = Color.Unspecified): BorderStroke = BorderStroke(1.dp, resolveHyperContainerColor(color, hyperGlass.border))
 }

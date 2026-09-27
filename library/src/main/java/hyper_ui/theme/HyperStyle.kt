@@ -57,21 +57,21 @@ data class HyperTypography(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.sp
     ),
     val bodyMedium: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.25.sp
+        letterSpacing = 0.sp
     ),
     val bodySmall: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.4.sp
+        letterSpacing = 0.sp
     ),
     val titleLarge: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
@@ -85,49 +85,50 @@ data class HyperTypography(
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.15.sp
+        letterSpacing = 0.sp
     ),
     val titleSmall: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.1.sp
+        letterSpacing = 0.sp
     ),
     val labelMedium: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.sp
     ),
     val labelLarge: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.1.sp,
+        letterSpacing = 0.sp,
     ),
     val labelSmall: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.sp
     )
 )
 
 /** 形状体系：替代 系统 Shapes 的对应槽位。 */
 @Immutable
 data class HyperShapes(
-    val extraSmall: Shape = RoundedCornerShape(4.dp),
-    val small: Shape = RoundedCornerShape(8.dp),
-    val medium: Shape = RoundedCornerShape(12.dp),
-    val large: Shape = RoundedCornerShape(16.dp)
+    val extraSmall: Shape = RoundedCornerShape(7.dp),
+    val small: Shape = RoundedCornerShape(16.dp),
+    val medium: Shape = RoundedCornerShape(24.dp),
+    val large: Shape = RoundedCornerShape(28.dp)
 )
 
 private val LocalHyperTypography = staticCompositionLocalOf { HyperTypography() }
 private val LocalHyperShapes = staticCompositionLocalOf { HyperShapes() }
+private val LocalHyperGlass = staticCompositionLocalOf { HyperGlassTokens.light() }
 
 /** 全局内容色：替代 系统内容色。 */
 val LocalHyperContentColor = staticCompositionLocalOf { HyperStyleDefaults.LightPrimaryText }
@@ -140,6 +141,9 @@ fun HyperThemeConfig(
     themeColor: Color = HyperStyleDefaults.DefaultThemeColor,
     successColor: Color = HyperStyleDefaults.SuccessColor,
     darkTheme: Boolean = isSystemInDarkTheme(),
+    typography: HyperTypography = HyperStyleDefaults.Typography,
+    shapes: HyperShapes = HyperStyleDefaults.Shapes,
+    glass: HyperGlassTokens = if (darkTheme) HyperGlassTokens.dark() else HyperGlassTokens.light(),
     content: @Composable () -> Unit
 ) {
     val defaultContentColor = if (darkTheme) {
@@ -153,15 +157,20 @@ fun HyperThemeConfig(
             successColor = successColor
         ),
         LocalHyperIsDark provides darkTheme,
-        LocalHyperTypography provides HyperStyleDefaults.Typography,
-        LocalHyperShapes provides HyperStyleDefaults.Shapes,
+        LocalHyperTypography provides typography,
+        LocalHyperShapes provides shapes,
+        LocalHyperGlass provides glass,
         LocalHyperContentColor provides defaultContentColor,
-        LocalHyperTextStyle provides HyperStyleDefaults.Typography.bodyLarge,
+        LocalHyperTextStyle provides typography.bodyLarge,
         content = content
     )
 }
 
 object HyperTheme {
+    val glass: HyperGlassTokens
+        @Composable @ReadOnlyComposable
+        get() = LocalHyperGlass.current
+
     val colors: HyperThemeColors
         @Composable @ReadOnlyComposable
         get() = LocalHyperThemeColors.current
@@ -180,21 +189,21 @@ object HyperTheme {
 }
 
 object HyperStyleDefaults {
-    val DefaultThemeColor = rgba(255, 103, 0, 1f)
-    val SuccessColor = rgba(52, 199, 89, 1f)
-    val InfoColor = rgba(144, 147, 153, 1f)
-    val WarningColor = rgba(230, 162, 60, 1f)
-    val DangerColor = rgba(255, 59, 48, 1f)
+    val DefaultThemeColor = rgba(71, 111, 232, 1f)
+    val SuccessColor = rgba(34, 197, 94, 1f)
+    val InfoColor = rgba(59, 130, 246, 1f)
+    val WarningColor = rgba(245, 158, 11, 1f)
+    val DangerColor = rgba(239, 68, 68, 1f)
     const val DisabledAlpha = 0.38f
-    val SmallCornerRadius = 12.dp
-    val MediumCornerRadius = 16.dp
+    val SmallCornerRadius = 16.dp
+    val MediumCornerRadius = 24.dp
     val LargeCornerRadius = 24.dp
     val ExtraLargeCornerRadius = 28.dp
 
-    val CardElevation = 4.dp
+    val CardElevation = 12.dp
 
-    val LightPrimaryText = rgba(28, 28, 30, 1f)
-    val DarkPrimaryText = rgba(245, 245, 247, 1f)
+    val LightPrimaryText = rgba(26, 29, 38, 1f)
+    val DarkPrimaryText = rgba(243, 244, 246, 1f)
 
     val Typography = HyperTypography()
     val Shapes = HyperShapes()
@@ -211,15 +220,15 @@ object HyperColors {
 
     val info: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) HyperStyleDefaults.InfoColor else rgba(142, 142, 147, 1f)
+        get() = HyperStyleDefaults.InfoColor
 
     val warning: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) HyperStyleDefaults.WarningColor else rgba(255, 159, 10, 1f)
+        get() = HyperStyleDefaults.WarningColor
 
     val danger: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) HyperStyleDefaults.DangerColor else rgba(255, 69, 58, 1f)
+        get() = HyperStyleDefaults.DangerColor
 
     val isLight: Boolean
         @Composable @ReadOnlyComposable
@@ -227,19 +236,19 @@ object HyperColors {
 
     val pageBackground: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(247, 248, 250, 1f) else rgba(17, 17, 19, 1f)
+        get() = if (isLight) rgba(241, 243, 247, 1f) else rgba(17, 19, 24, 1f)
 
     val cardContainer: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(255, 255, 255, 1f) else rgba(44, 44, 46, 1f)
+        get() = if (isLight) rgba(255, 255, 255, 1f) else rgba(27, 31, 39, 1f)
 
     val softContainer: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(242, 242, 247, 1f) else rgba(58, 58, 60, 1f)
+        get() = if (isLight) rgba(241, 243, 245, 1f) else rgba(39, 44, 53, 1f)
 
     val fieldContainer: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(236, 237, 243, 1f) else rgba(64, 64, 68, 1f)
+        get() = hyperGlass.surfaceSubtle
 
     val elevatedContainer: Color
         @Composable @ReadOnlyComposable
@@ -247,7 +256,7 @@ object HyperColors {
 
     val disabledContainer: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(232, 233, 238, 1f) else rgba(52, 52, 55, 1f)
+        get() = hyperGlass.controlTrack
 
     val primaryText: Color
         @Composable @ReadOnlyComposable
@@ -255,19 +264,19 @@ object HyperColors {
 
     val secondaryText: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(142, 142, 147, 1f) else rgba(174, 174, 178, 1f)
+        get() = if (isLight) rgba(107, 114, 128, 1f) else rgba(184, 192, 204, 1f)
 
     val disabledText: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(154, 154, 160, 1f) else rgba(124, 124, 130, 1f)
+        get() = secondaryText.copy(alpha = 150 / 255f)
 
     val divider: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(224, 225, 230, 1f) else rgba(72, 72, 76, 1f)
+        get() = if (isLight) rgba(17, 18, 22, 24 / 255f) else rgba(52, 59, 71, 1f)
 
     val fieldBorder: Color
         @Composable @ReadOnlyComposable
-        get() = if (isLight) rgba(199, 200, 206, 1f) else rgba(94, 94, 100, 1f)
+        get() = if (isLight) rgba(229, 231, 235, 1f) else rgba(52, 59, 71, 1f)
 
     val accentContainer: Color
         @Composable @ReadOnlyComposable

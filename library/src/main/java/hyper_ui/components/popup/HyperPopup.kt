@@ -56,14 +56,11 @@ fun HyperPopup(
     border: BorderStroke? = HyperPopupDefaults.border(),
     content: @Composable ColumnScope.() -> Unit
 ) {
-    if (!visible) return
+    val transitionProgress = hyperOverlayProgress(visible)
+    if (!visible && transitionProgress == 0f) return
 
     val layoutDirection = LocalLayoutDirection.current
-    val containerColor = resolveHyperOpaqueColor(
-        color = colors.containerColor,
-        fallbackColor = HyperColors.cardContainer,
-        backgroundColor = HyperColors.pageBackground
-    )
+    val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surfaceStrong)
     val showPositionedContent = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -105,6 +102,7 @@ fun HyperPopup(
                     .widthIn(max = availableWidth)
                     .heightIn(max = availableHeight)
                     .then(modifier)
+                    .hyperOverlayMotion(transitionProgress)
                     .width(resolvedWidth)
                     .heightIn(max = resolvedMaxHeight),
                 shape = shape,
@@ -150,16 +148,9 @@ object HyperPopupDefaults {
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperPopupColors = HyperPopupColors(
-        containerColor = resolveHyperOpaqueColor(
-            color = containerColor,
-            fallbackColor = HyperColors.cardContainer,
-            backgroundColor = HyperColors.pageBackground
-        )
+        containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surfaceStrong)
     )
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
-        color = color,
-        backgroundColor = HyperColors.cardContainer
-    )
+    fun border(color: Color = Color.Unspecified): BorderStroke = BorderStroke(1.dp, resolveHyperContainerColor(color, hyperGlass.border))
 }

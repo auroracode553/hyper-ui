@@ -1,7 +1,9 @@
 /** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/button/HyperIconButton 可复用界面组件及交互封装。 */
 package hyper_ui
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import hyper_ui.core.interaction.hyperNoRippleClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
@@ -18,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 
@@ -54,30 +55,15 @@ fun HyperIconButton(
         pressed -> colors.pressedContentColor
         else -> colors.contentColor
     }
-    val glassVisuals = HyperIconButtonDefaults.glassVisuals(
-        enabled = enabled,
-        pressed = pressed
-    )
-    val pressedScale = if (enabled && pressed) PRESSED_SCALE else 1f
     Box(
         modifier = modifier
             .size(HyperIconButtonDefaults.Size)
-            .graphicsLayer {
-                scaleX = pressedScale
-                scaleY = pressedScale
-            }
-            .hyperSurfaceShadow(
-                shape = shape,
-                visuals = glassVisuals.depth
-            )
             .clip(shape)
-            .hyperIconButtonGlass(
-                containerColor = targetContainerColor,
-                visuals = glassVisuals
-            )
-            .clickable(
+            .hyperBackdropEffect(14.dp)
+            .background(targetContainerColor)
+            .border(1.dp, if (enabled) hyperGlass.edgeHighlight else HyperColors.divider.copy(alpha = 110 / 255f), shape)
+            .hyperNoRippleClickable(
                 interactionSource = interactionSource,
-                indication = null,
                 enabled = enabled,
                 role = Role.Button,
                 onClick = onClick
@@ -91,7 +77,7 @@ fun HyperIconButton(
 }
 
 object HyperIconButtonDefaults {
-    val Size = 38.dp
+    val Size = 36.dp
     val IconSize = 18.dp
     val Shape: Shape = CircleShape
 
@@ -104,19 +90,9 @@ object HyperIconButtonDefaults {
         disabledContainerColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
     ): HyperIconButtonColors {
-        val defaultContainerColor = rgba(
-            red = 255,
-            green = 255,
-            blue = 255,
-            alpha = if (HyperColors.isLight) 0.72f else 0.34f
-        )
+        val defaultContainerColor = hyperGlass.surface
         val defaultContentColor = HyperColors.primaryText
-        val defaultPressedContainerColor = rgba(
-            red = 255,
-            green = 255,
-            blue = 255,
-            alpha = if (HyperColors.isLight) 0.62f else 0.28f
-        )
+        val defaultPressedContainerColor = defaultContainerColor
         val resolvedContainerColor = resolveHyperContainerColor(
             containerColor = containerColor,
             fallbackColor = defaultContainerColor
@@ -131,18 +107,9 @@ object HyperIconButtonDefaults {
         )
         val resolvedPressedContentColor = resolveHyperContainerColor(
             containerColor = pressedContentColor,
-            fallbackColor = resolvedContentColor.copy(alpha = resolvedContentColor.alpha * 0.8f)
+            fallbackColor = resolvedContentColor
         )
-        val resolvedDisabledContainerColor = if (disabledContainerColor == Color.Unspecified) {
-            rgba(
-                red = 255,
-                green = 255,
-                blue = 255,
-                alpha = if (HyperColors.isLight) 0.38f else 0.16f
-            )
-        } else {
-            disabledContainerColor
-        }
+        val resolvedDisabledContainerColor = resolveHyperContainerColor(disabledContainerColor, hyperGlass.controlTrack)
         val resolvedDisabledContentColor = if (disabledContentColor == Color.Unspecified) {
             HyperColors.disabledText
         } else {
@@ -158,44 +125,4 @@ object HyperIconButtonDefaults {
         )
     }
 
-    @Composable
-    internal fun glassVisuals(
-        enabled: Boolean,
-        pressed: Boolean
-    ): HyperIconButtonGlassVisuals {
-        val isLight = HyperColors.isLight
-        return when {
-            !enabled -> HyperIconButtonGlassVisuals(
-                topLightColor = rgba(255, 255, 255, if (isLight) 0.06f else 0.08f),
-                edgeLightColor = rgba(255, 255, 255, if (isLight) 0.06f else 0.10f),
-                bottomShadeColor = rgba(0, 0, 0, if (isLight) 0.01f else 0.035f),
-                depth = hyperSurfaceDepthVisuals(
-                    role = HyperSurfaceDepthRole.CompactControl,
-                    elevation = 0.dp,
-                    state = HyperSurfaceDepthState.Disabled
-                )
-            )
-            pressed -> HyperIconButtonGlassVisuals(
-                topLightColor = rgba(255, 255, 255, if (isLight) 0.08f else 0.12f),
-                edgeLightColor = rgba(255, 255, 255, if (isLight) 0.08f else 0.16f),
-                bottomShadeColor = rgba(0, 0, 0, if (isLight) 0.025f else 0.08f),
-                depth = hyperSurfaceDepthVisuals(
-                    role = HyperSurfaceDepthRole.CompactControl,
-                    elevation = 1.75.dp,
-                    state = HyperSurfaceDepthState.Pressed
-                )
-            )
-            else -> HyperIconButtonGlassVisuals(
-                topLightColor = rgba(255, 255, 255, if (isLight) 0.12f else 0.18f),
-                edgeLightColor = rgba(255, 255, 255, if (isLight) 0.10f else 0.22f),
-                bottomShadeColor = rgba(0, 0, 0, if (isLight) 0.018f else 0.07f),
-                depth = hyperSurfaceDepthVisuals(
-                    role = HyperSurfaceDepthRole.CompactControl,
-                    elevation = if (isLight) 8.dp else 6.dp
-                )
-            )
-        }
-    }
 }
-
-private const val PRESSED_SCALE = 0.97f

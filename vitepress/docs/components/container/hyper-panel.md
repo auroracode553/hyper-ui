@@ -1,21 +1,12 @@
 # HyperPanel
 
-- 包名：`hyper_ui`
-- 源码：`library/src/main/java/hyper_ui/components/panel/HyperPanel.kt`
-- 预览：`panel`
-
-`HyperPanel` 是通用 slot 容器，只负责面板视觉与内容排列，不内置点击、标题、图标或业务状态。
-默认容器带 1dp 轻描边，白色背景下也能保持面板边界。
+`HyperPanel` 的公开 API 位于 `hyper_ui` 包。组件状态由调用方持有，通过参数和回调传入。外部间距使用 `modifier`；尺寸、颜色和插槽按下列源码签名配置。
 
 <WasmPreview demo="panel" title="HyperPanel 交互预览" />
 
-## 公开签名
+## 公开签名与默认值
 
 ```kotlin
-data class HyperPanelColors(
-    val containerColor: Color
-)
-
 @Composable
 fun HyperPanel(
     modifier: Modifier = Modifier,
@@ -28,23 +19,6 @@ fun HyperPanel(
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.() -> Unit
 )
-```
-
-## 关键公开类型
-
-```kotlin
-object HyperPanelDefaults {
-    val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
-    val Elevation = 0.dp
-    val ContentPadding = PaddingValues(16.dp)
-    val ContentSpacing = 12.dp
-
-    @Composable
-    fun colors(containerColor: Color = Color.Unspecified): HyperPanelColors
-
-    @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke
-}
 ```
 
 ## 最小用法
@@ -60,13 +34,8 @@ HyperPanel(
 }
 ```
 
-## 约束
+## 使用约束
 
-- 点击语义放在调用方外层或内部具体控件，不由 `HyperPanel` 提供。
-- 自定义背景色通过 `HyperPanelDefaults.colors(containerColor = ...)` 传入。
-- `modifier` 控制面板外壳尺寸与外部间距；`contentModifier` 控制内部内容区，默认值提供 16dp 内容间距。
-- 调用方不应在默认内容区的直接子节点再次添加整块 padding；需要全宽内容时显式传入 `contentModifier = Modifier`，并由内部区块管理边界。
-- 默认描边来自 `HyperPanelDefaults.border()`，内部使用 `HyperColors.panelBorder`。
-- 内容始终按 `shape` 裁剪，不再暴露无调用方使用价值的 `clipContent` 开关。
-- 自定义内容间距时使用 `contentModifier = Modifier.padding(...)`，不提供重复的 `contentPadding` 参数。
-- 需要完全无边框面板时显式传入 `border = null`；需要阴影时使用 `elevation`。
+- 使用 `HyperThemeConfig` 提供主题；需要采样背景时，将可视内容置于 `HyperBackdrop` 中。
+- 组件不持有业务数据、导航或网络请求；`visible`、`value`、`selected` 等由调用方控制。
+- Android 原生窗口和系统工具仅在 Android 目标可用；Preview 使用跨平台示例。

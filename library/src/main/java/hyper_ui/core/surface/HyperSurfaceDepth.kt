@@ -1,4 +1,4 @@
-/** 文件职责：统一绘制 HyperUI 表面的主题描边与单层空间阴影。 */
+/** 文件职责：统一绘制 HyperUI 表面的主题描边与双层空间阴影。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -6,7 +6,9 @@ import androidx.compose.foundation.border
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
@@ -34,7 +36,7 @@ internal enum class HyperSurfaceDepthState {
 }
 
 /**
- * 在组件材质之前建立统一空间层级：最多一层阴影，并在内容绘制后叠加主题描边。
+ * 在组件材质之前建立统一空间层级：两层阴影，并在内容绘制后叠加主题描边。
  * 具体强度由调用组件按紧凑控件、浮层面板或结构表面的角色决定；覆盖描边会替换主题描边。
  */
 internal fun Modifier.hyperSurfaceDepth(
@@ -74,16 +76,15 @@ internal fun Modifier.hyperSurfaceShadow(
     visuals: HyperSurfaceDepthVisuals
 ): Modifier = then(
     if (visuals.elevation > 0.dp) {
-        Modifier.shadow(
-            elevation = visuals.elevation,
-            shape = shape,
-            clip = false,
-            ambientColor = visuals.ambientShadowColor,
-            spotColor = visuals.spotShadowColor
-        )
-    } else {
-        Modifier
-    }
+        // 与 HyUiEffects.surfaceShadows 对齐：两层投影只用于玻璃容器。
+        Modifier.dropShadow(shape, Shadow(
+            radius = 28.dp, spread = (-6).dp, offset = DpOffset(0.dp, 12.dp),
+            color = visuals.spotShadowColor
+        )).dropShadow(shape, Shadow(
+            radius = 8.dp, spread = (-3).dp, offset = DpOffset(0.dp, 3.dp),
+            color = visuals.ambientShadowColor
+        ))
+    } else Modifier
 )
 
 internal fun hyperSurfaceDepthVisuals(
@@ -107,37 +108,11 @@ internal fun hyperSurfaceDepthVisuals(
     elevation: Dp,
     state: HyperSurfaceDepthState = HyperSurfaceDepthState.Resting
 ): HyperSurfaceDepthVisuals {
-    val isLight = HyperColors.isLight
-    val strokeAlpha = when {
-        state == HyperSurfaceDepthState.Disabled -> if (isLight) 0.035f else 0.07f
-        state == HyperSurfaceDepthState.Pressed -> if (isLight) 0.055f else 0.11f
-        role == HyperSurfaceDepthRole.CompactControl -> if (isLight) 0.075f else 0.14f
-        role == HyperSurfaceDepthRole.FloatingPanel -> if (isLight) 0.065f else 0.14f
-        else -> if (isLight) 0.055f else 0.11f
-    }
-    val ambientShadowAlpha = when {
-        state == HyperSurfaceDepthState.Disabled -> 0f
-        state == HyperSurfaceDepthState.Pressed -> if (isLight) 0.025f else 0.06f
-        role == HyperSurfaceDepthRole.CompactControl -> 0.10f
-        role == HyperSurfaceDepthRole.FloatingPanel -> if (isLight) 0.075f else 0.14f
-        else -> if (isLight) 0.115f else 0.23f
-    }
-    val spotShadowAlpha = when {
-        state == HyperSurfaceDepthState.Disabled -> 0f
-        state == HyperSurfaceDepthState.Pressed -> if (isLight) 0.055f else 0.12f
-        role == HyperSurfaceDepthRole.CompactControl -> if (isLight) 0.24f else 0.20f
-        role == HyperSurfaceDepthRole.FloatingPanel -> if (isLight) 0.15f else 0.24f
-        else -> if (isLight) 0.16f else 0.32f
-    }
-
+    val enabled = state != HyperSurfaceDepthState.Disabled
     return hyperSurfaceDepthVisuals(
-        strokeColor = if (isLight) {
-            Color(0f, 0f, 0f, strokeAlpha)
-        } else {
-            Color(1f, 1f, 1f, strokeAlpha)
-        },
-        elevation = if (state == HyperSurfaceDepthState.Disabled) 0.dp else elevation,
-        ambientShadowColor = Color(0f, 0f, 0f, ambientShadowAlpha),
-        spotShadowColor = Color(0f, 0f, 0f, spotShadowAlpha)
+        strokeColor = if (enabled) hyperGlass.border else HyperColors.divider.copy(alpha = 110 / 255f),
+        elevation = if (enabled) elevation else 0.dp,
+        ambientShadowColor = Color(0f, 0f, 0f, if (HyperColors.isLight) 8 / 255f else 35 / 255f),
+        spotShadowColor = Color(0f, 0f, 0f, if (HyperColors.isLight) 20 / 255f else 82 / 255f)
     )
 }

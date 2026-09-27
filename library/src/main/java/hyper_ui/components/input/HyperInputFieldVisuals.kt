@@ -4,6 +4,7 @@ package hyper_ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 @Immutable
 data class HyperTextFieldColors(
@@ -45,13 +46,11 @@ internal fun hyperInputFieldVisuals(
         else -> colors.containerColor
     }
     val indicatorColor = when {
-        isError -> colors.errorColor.copy(
-            alpha = colors.errorColor.alpha * if (isLight) 0.46f else 0.62f
-        )
-        showsFocus -> colors.cursorColor.copy(
-            alpha = colors.cursorColor.alpha * if (isLight) 0.38f else 0.58f
-        )
-        else -> Color.Transparent
+        isError && showsFocus -> colors.errorColor
+        isError -> colors.errorColor.copy(alpha = 180 / 255f)
+        showsFocus -> colors.cursorColor.copy(alpha = 190 / 255f)
+        !enabled -> HyperColors.fieldBorder.copy(alpha = 110 / 255f)
+        else -> HyperColors.fieldBorder
     }
     val elevation = when {
         !enabled -> HyperTextFieldSurfaceVisuals.DisabledElevation
@@ -69,7 +68,7 @@ internal fun hyperInputFieldVisuals(
         state = depthState
     )
     val depth = if (indicatorColor.alpha > 0f) {
-        defaultDepth.copy(strokeColor = indicatorColor)
+        defaultDepth.copy(strokeColor = indicatorColor, strokeWidth = if (showsFocus) 1.5.dp else 1.dp)
     } else {
         defaultDepth
     }

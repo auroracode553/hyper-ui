@@ -44,7 +44,11 @@ fun HyperText(
         style.color != Color.Unspecified -> style.color
         else -> LocalHyperContentColor.current
     }
-    val mergedStyle = style.merge(
+    // 显式组件字号样式仍继承主题字体，Wasm 等无系统中文字库的平台也能正确显示。
+    val baseStyle = if (style.fontFamily == null) {
+        style.copy(fontFamily = HyperTheme.typography.bodyLarge.fontFamily)
+    } else style
+    val mergedStyle = baseStyle.merge(
         TextStyle(
             color = resolvedColor,
             fontSize = fontSize,
