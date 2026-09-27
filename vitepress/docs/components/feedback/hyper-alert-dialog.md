@@ -31,7 +31,7 @@ HyperAlertDialog(
         HyperButton(onClick = onDismiss) { Text("取消") }
         HyperButton(
             onClick = onDelete,
-            variant = HyperButtonVariant.Danger
+            type = "danger"
         ) { Text("删除") }
     }
 )

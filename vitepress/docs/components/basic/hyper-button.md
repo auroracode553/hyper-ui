@@ -15,7 +15,7 @@ fun HyperButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     loading: Boolean = false,
-    variant: HyperButtonVariant = HyperButtonVariant.Filled,
+    type: String = "filled",
     height: Dp = HyperButtonDefaults.MinHeight,
     colors: HyperButtonColors = HyperButtonDefaults.colors(variant),
     border: BorderStroke? = HyperButtonDefaults.border(variant, enabled),
@@ -31,7 +31,7 @@ fun HyperButton(
 ## 最小用法
 
 ```kotlin
-HyperButton(onClick = onSave, variant = HyperButtonVariant.Filled) { HyperText("保存") }
+HyperButton(onClick = onSave, type = "filled") { HyperText("保存") }
 ```
 
 ## 使用约束

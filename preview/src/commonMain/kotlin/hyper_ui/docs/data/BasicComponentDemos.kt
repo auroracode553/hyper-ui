@@ -22,16 +22,16 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
 
             HyperButton(
                 onClick = onDelete,
-                variant = HyperButtonVariant.Danger
+                type = "danger"
             ) {
                 HyperText("删除")
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认按钮", "variant = Filled", "品牌渐变与品牌色投影"),
+            DemoVariant("默认按钮", "type = Filled", "品牌渐变与品牌色投影"),
             DemoVariant("处理中", "loading = true", "加载期间不可重复点击"),
-            DemoVariant("次级操作", "variant = Outline / Tonal", "轻量玻璃与柔色底面"),
-            DemoVariant("危险操作", "variant = Danger", "危险语义色"),
+            DemoVariant("次级操作", "type = Outline / Tonal", "轻量玻璃与柔色底面"),
+            DemoVariant("危险操作", "type = Danger", "危险语义色"),
             DemoVariant("按压与取消", "pointer down / cancel", "按下立即开始 85ms 缩放和透明度过渡；释放或拖出后 180ms 恢复"),
             DemoVariant("禁用", "enabled = false", "弱公共描边、移除阴影的禁用实色状态"),
             DemoVariant("紧凑", "height = 32.dp", "小尺寸 slot"),

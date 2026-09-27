@@ -84,7 +84,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 placeholderContent = { Text("写一点说明") },
                 supportingContent = { Text("${'$'}{value.length}/80") },
                 type = HyperTextFieldType.Textarea,
-                rows = 5
+                rows = 3
             )
 
             HyperTextField(
@@ -109,7 +109,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("type 驱动", "type = Text / Textarea / Password", "同一组件切换单行、多行和密码形态"),
             DemoVariant("聚焦", "interactionSource focused", "主题色替换公共中性描边，阴影提高到 5dp"),
             DemoVariant("默认光标", "selection = TextRange(value.length)", "首次聚焦位于现有文本末尾"),
-            DemoVariant("多行/错误", "type = Textarea, rows = 5, isError", "错误色替换公共中性描边"),
+            DemoVariant("多行/错误", "type = Textarea, rows = 3, isError", "错误色替换公共中性描边"),
             DemoVariant("禁用/只读", "enabled / readOnly", "禁用态保留弱描边并关闭阴影，只读态抑制聚焦强调"),
             DemoVariant("左右插槽", "startContent / endContent", "搜索图标与清除操作"),
             DemoVariant("清空与密码", "endContent / visualTransformation", "清空按钮与密码显隐由调用方状态控制")

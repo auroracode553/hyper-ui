@@ -10,12 +10,12 @@
 
 ## Flutter 参考设计与 Compose API
 
-默认视觉令牌以 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 为参考：蓝色主题色 `#476FE8`、浅深色玻璃表面、38dp 按钮、16dp 基础圆角和即时按压反馈。按钮按下立即开始 85ms 的整体缩放与透明度过渡，释放或拖出取消后用 180ms 恢复；图标按钮的外径由 `size` 控制。`HyperThemeConfig` 可注入 `themeColor`、`typography`、`shapes` 与 `glass`；需要真实背景模糊时用 `HyperBackdrop` 包裹背景和组件。`HyperSlideMenu` 是受控列表侧滑操作，旧的横向分类按钮更名为 `HyperFilterBar`。按钮改用 `HyperButtonVariant`，语义色由 `colors` 注入，加载态由 `loading` 控制。组件公开 API 仍统一在 `hyper_ui` 包。
+默认视觉令牌以 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 为参考：蓝色主题色 `#476FE8`、浅深色玻璃表面、38dp 按钮、16dp 基础圆角和即时按压反馈。按钮按下立即开始 85ms 的整体缩放与透明度过渡，释放或拖出取消后用 180ms 恢复；图标按钮的外径由 `size` 控制。`HyperThemeConfig` 可注入 `themeColor`、`typography`、`shapes` 与 `glass`；需要真实背景模糊时用 `HyperBackdrop` 包裹背景和组件。`HyperSlideMenu` 是受控列表侧滑操作，旧的横向分类按钮更名为 `HyperFilterBar`。按钮改用 `String`，语义色由 `colors` 注入，加载态由 `loading` 控制。组件公开 API 仍统一在 `hyper_ui` 包。
 
 ```kotlin
 HyperThemeConfig {
     HyperBackdrop() {
-        HyperButton(onClick = onSave, variant = HyperButtonVariant.Filled) {
+        HyperButton(onClick = onSave, type = "filled") {
             HyperText("保存")
         }
     }

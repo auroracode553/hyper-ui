@@ -48,7 +48,7 @@ HyperTextField(
     value = value,
     onValueChange = { value = it },
     type = HyperTextFieldType.Textarea,
-    rows = 5,
+    rows = 3,
     labelContent = { Text("备注") },
     placeholderContent = { Text("写一点说明") },
     maxlength = 80,

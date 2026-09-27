@@ -18,11 +18,11 @@ import androidx.compose.ui.unit.dp
 internal fun Modifier.hyperButtonSurface(
     containerColor: Color,
     shape: Shape,
-    variant: HyperButtonVariant,
+    type: String,
     enabled: Boolean,
     border: BorderStroke?
 ): Modifier {
-    val filled = enabled && (variant == HyperButtonVariant.Filled || variant == HyperButtonVariant.Danger)
+    val filled = enabled && (type == "filled" || type == "danger")
     return then(if (filled) Modifier.dropShadow(shape, Shadow(
         radius = 16.dp, spread = (-5).dp, offset = DpOffset(0.dp, 7.dp),
         color = containerColor.copy(alpha = 50 / 255f)

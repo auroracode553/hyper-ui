@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperIconButtonDefaults
 
@@ -55,7 +54,7 @@ fun ButtonDemo() {
             HyperButton(
                 onClick = {},
                 loading = true,
-                variant = HyperButtonVariant.Outline
+                type = "outline"
             ) {
                 HyperText(text = "处理中")
             }
@@ -63,17 +62,17 @@ fun ButtonDemo() {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
                 onClick = { clicks += 1 },
-                variant = HyperButtonVariant.Outline
+                type = "outline"
             ) {
                 HyperText(text = "导出")
             }
             HyperButton(
                 onClick = { clicks = 0 },
-                variant = HyperButtonVariant.Danger
+                type = "danger"
             ) {
                 HyperText(text = "删除")
             }
-            HyperButton(onClick = { clicks += 1 }, variant = HyperButtonVariant.Tonal) {
+            HyperButton(onClick = { clicks += 1 }, type = "tonal") {
                 HyperIcon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(18.dp))
                 HyperText(text = "带图标胶囊")
             }
@@ -90,7 +89,7 @@ fun ButtonDemo() {
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            HyperButton(onClick = {}, enabled = false, variant = HyperButtonVariant.Outline) {
+            HyperButton(onClick = {}, enabled = false, type = "outline") {
                 HyperText("禁用")
             }
             HyperButton(
@@ -102,7 +101,7 @@ fun ButtonDemo() {
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ loading = !loading }, variant = HyperButtonVariant.Ghost) { HyperText("切换加载") }
+            HyperButton({ loading = !loading }, type = "ghost") { HyperText("切换加载") }
             HyperButton({ clicks += 1 }, loading = loading) { HyperText("提交") }
         }
         HyperText(

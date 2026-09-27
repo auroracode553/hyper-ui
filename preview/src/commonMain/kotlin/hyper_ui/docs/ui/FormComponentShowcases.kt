@@ -92,7 +92,7 @@ fun SegmentedDemo() {
         modifier = Modifier.widthIn(max = 520.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        HyperButton({ equalWidth = !equalWidth }, variant = HyperButtonVariant.Ghost) {
+        HyperButton({ equalWidth = !equalWidth }, type = "ghost") {
             HyperText(if (equalWidth) "等宽分段" else "内容宽度分段")
         }
         HyperSegmented(
@@ -215,7 +215,7 @@ fun TextFieldDemo() {
             endContent = {
                 HyperButton(
                     onClick = { passwordVisible = !passwordVisible },
-                    variant = HyperButtonVariant.Ghost,
+                    type = "ghost",
                     height = 28.dp
                 ) { HyperText(if (passwordVisible) "隐藏" else "显示") }
             }
@@ -241,7 +241,7 @@ fun TextFieldDemo() {
             placeholderContent = { FieldPlaceholder("请输入多行内容") },
             supportingContent = { FieldSupporting("${note.length}/80") },
             type = HyperTextFieldType.Textarea,
-            rows = 5,
+            rows = 3,
             inputModifier = Modifier.heightIn(min = 92.dp),
             isError = isNoteError
         )

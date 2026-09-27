@@ -35,12 +35,12 @@ fun <T> HyperFilterBar(
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperFilterBarDefaults.ItemGap),
     itemEnabled: (T) -> Boolean = { true },
-    selectedVariant: HyperButtonVariant = HyperButtonVariant.Filled,
-    unselectedVariant: HyperButtonVariant = HyperButtonVariant.Tonal,
-    selectedColors: HyperButtonColors = HyperButtonDefaults.colors(selectedVariant),
-    unselectedColors: HyperButtonColors = HyperButtonDefaults.colors(unselectedVariant),
-    selectedBorder: BorderStroke? = HyperButtonDefaults.border(selectedVariant),
-    unselectedBorder: BorderStroke? = HyperButtonDefaults.border(unselectedVariant),
+    selectedType: String = "filled",
+    unselectedType: String = "tonal",
+    selectedColors: HyperButtonColors = HyperButtonDefaults.colors(selectedType),
+    unselectedColors: HyperButtonColors = HyperButtonDefaults.colors(unselectedType),
+    selectedBorder: BorderStroke? = HyperButtonDefaults.border(selectedType),
+    unselectedBorder: BorderStroke? = HyperButtonDefaults.border(unselectedType),
     itemShape: Shape = HyperButtonDefaults.Shape,
     itemContentPadding: PaddingValues = HyperButtonDefaults.ContentPadding,
     itemContent: @Composable HyperFilterBarItemScope.(item: T) -> Unit
@@ -56,7 +56,7 @@ fun <T> HyperFilterBar(
 
             HyperButton(
                 modifier = Modifier.semantics { this.selected = selected },
-                variant = if (selected) selectedVariant else unselectedVariant,
+                type = if (selected) selectedType else unselectedType,
                 colors = if (selected) selectedColors else unselectedColors,
                 border = if (selected) selectedBorder else unselectedBorder,
                 shape = itemShape,

@@ -87,7 +87,7 @@ fun <T> HyperSegmented(
                     .fillMaxHeight()
                     .semantics { this.selected = selected },
                 enabled = actualEnabled,
-                variant = HyperButtonVariant.Ghost,
+                type = "ghost",
                 height = 32.dp,
                 colors = HyperButtonColors(
                     containerColor = if (selected) {

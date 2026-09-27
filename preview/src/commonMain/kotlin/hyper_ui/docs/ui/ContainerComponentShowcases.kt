@@ -46,7 +46,7 @@ fun ColorPickerDemo() {
         modifier = Modifier.widthIn(max = 400.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HyperButton({ pickerEnabled = !pickerEnabled }, variant = HyperButtonVariant.Ghost) { HyperText(if (pickerEnabled) "禁用颜色选择" else "启用颜色选择") }
+        HyperButton({ pickerEnabled = !pickerEnabled }, type = "ghost") { HyperText(if (pickerEnabled) "禁用颜色选择" else "启用颜色选择") }
         HyperColorPicker(
             enabled = pickerEnabled,
             selectedId = selectedColorId,
@@ -115,7 +115,7 @@ fun PanelDemo() {
             }
             HyperButton(
                 onClick = { acknowledged = false },
-                variant = HyperButtonVariant.Outline
+                type = "outline"
             ) {
                 HyperText(text = "重置")
             }

@@ -112,9 +112,9 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("选中项", "selectedItem", "默认使用 HyperButtonVariant.Filled"),
-            DemoVariant("未选中项", "unselectedVariant", "默认使用 HyperButtonVariant.Tonal"),
-            DemoVariant("描边选中态", "selectedVariant = Outline", "直接使用 HyperButton 的 1dp 强调色描边"),
+            DemoVariant("选中项", "selectedItem", "默认使用 type = filled"),
+            DemoVariant("未选中项", "unselectedType", "默认使用 type = tonal"),
+            DemoVariant("描边选中态", "selectedType = Outline", "直接使用 HyperButton 的 1dp 强调色描边"),
             DemoVariant("自定义配色", "selectedColors", "直接接收 HyperButtonColors"),
             DemoVariant("禁用项", "itemEnabled = false", "复用 HyperButton 禁用态")
         ),

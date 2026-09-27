@@ -48,7 +48,6 @@ import hyper_ui.HyperTabBarType
 import hyper_ui.HyperFloatingTabBarDefaults
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonDefaults
-import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperDrawer
 import hyper_ui.HyperDrawerHeader
 import hyper_ui.HyperDrawerItem
@@ -145,10 +144,10 @@ fun DrawerDemo() {
                     verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     HyperText("当前页面：$selected")
                     DrawerPositionSelector(position, { position = it })
-                    HyperButton({ padding = !padding }, variant = HyperButtonVariant.Tonal) {
+                    HyperButton({ padding = !padding }, type = "tonal") {
                         HyperText(if (padding) "默认留白" else "自定义留白")
                     }
-                    HyperButton({ scroll = !scroll }, variant = HyperButtonVariant.Tonal) {
+                    HyperButton({ scroll = !scroll }, type = "tonal") {
                         HyperText(if (scroll) "允许滚动" else "关闭滚动")
                     }
                     HyperButton({ drawerOpen = true }) { HyperText("打开抽屉") }
@@ -166,19 +165,19 @@ fun SlideMenuDemo() {
     var selected by remember { mutableStateOf("全部") }
     var useOutlineSelection by remember { mutableStateOf(false) }
     var useCustomSelectionColors by remember { mutableStateOf(false) }
-    val selectedVariant = if (useOutlineSelection) {
-        HyperButtonVariant.Outline
+    val selectedType = if (useOutlineSelection) {
+        "outline"
     } else {
-        HyperButtonVariant.Filled
+        "filled"
     }
     val selectedColors = if (useCustomSelectionColors) {
         HyperButtonDefaults.colors(
-            variant = selectedVariant,
+            type = selectedType,
             containerColor = LocalDocsColorScheme.current.tertiaryContainer,
             contentColor = LocalDocsColorScheme.current.onTertiaryContainer
         )
     } else {
-        HyperButtonDefaults.colors(selectedVariant)
+        HyperButtonDefaults.colors(selectedType)
     }
 
     Column(
@@ -188,13 +187,13 @@ fun SlideMenuDemo() {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton(
                 onClick = { useOutlineSelection = !useOutlineSelection },
-                variant = if (useOutlineSelection) HyperButtonVariant.Tonal else HyperButtonVariant.Tonal
+                type = if (useOutlineSelection) "tonal" else "tonal"
             ) {
                 HyperText(if (useOutlineSelection) "选中项：描边" else "选中项：实色")
             }
             HyperButton(
                 onClick = { useCustomSelectionColors = !useCustomSelectionColors },
-                variant = if (useCustomSelectionColors) HyperButtonVariant.Tonal else HyperButtonVariant.Tonal
+                type = if (useCustomSelectionColors) "tonal" else "tonal"
             ) {
                 HyperText(if (useCustomSelectionColors) "自定义配色：开" else "自定义配色：关")
             }
@@ -206,7 +205,7 @@ fun SlideMenuDemo() {
             onSelected = { selected = it },
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             itemEnabled = { it != "打开应用" },
-            selectedVariant = selectedVariant,
+            selectedType = selectedType,
             selectedColors = selectedColors
         ) { item ->
             HyperText(text = item, fontSize = 13.sp)
@@ -309,11 +308,11 @@ fun TabBarDemo() {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton(
                 onClick = { barType = HyperTabBarType.Docked },
-                variant = if (!floating) HyperButtonVariant.Filled else HyperButtonVariant.Tonal
+                type = if (!floating) "filled" else "tonal"
             ) { HyperText("贴底样式") }
             HyperButton(
                 onClick = { barType = HyperTabBarType.Floating },
-                variant = if (floating) HyperButtonVariant.Filled else HyperButtonVariant.Tonal
+                type = if (floating) "filled" else "tonal"
             ) { HyperText("悬浮胶囊") }
         }
         if (floating) {
@@ -321,25 +320,25 @@ fun TabBarDemo() {
                 HyperButton(onClick = {
                     showFiveItems = !showFiveItems
                     if (!showFiveItems && selectedItemId == "search") selectedItemId = "home"
-                }, variant = HyperButtonVariant.Tonal) {
+                }, type = "tonal") {
                     HyperText(if (showFiveItems) "显示 4 项" else "显示 5 项")
                 }
-                HyperButton(onClick = { useAccent = !useAccent }, variant = HyperButtonVariant.Tonal) {
+                HyperButton(onClick = { useAccent = !useAccent }, type = "tonal") {
                     HyperText(if (useAccent) "默认配色" else "强调配色")
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                HyperButton(onClick = { disableNotice = !disableNotice }, variant = HyperButtonVariant.Tonal) {
+                HyperButton(onClick = { disableNotice = !disableNotice }, type = "tonal") {
                     HyperText(if (disableNotice) "启用消息" else "禁用消息")
                 }
-                HyperButton(onClick = { barEnabled = !barEnabled }, variant = HyperButtonVariant.Tonal) {
+                HyperButton(onClick = { barEnabled = !barEnabled }, type = "tonal") {
                     HyperText(if (barEnabled) "禁用整栏" else "启用整栏")
                 }
             }
         } else {
             HyperButton(
                 onClick = { showTopDivider = !showTopDivider },
-                variant = HyperButtonVariant.Tonal
+                type = "tonal"
             ) { HyperText(if (showTopDivider) "隐藏顶部发丝线" else "显示顶部发丝线") }
         }
     }
@@ -416,7 +415,7 @@ private fun DrawerPositionButton(
     HyperButton(
         onClick = onClick,
         modifier = Modifier.height(36.dp),
-        variant = if (selected) HyperButtonVariant.Filled else HyperButtonVariant.Outline
+        type = if (selected) "filled" else "outline"
     ) {
         HyperText(
             text = text,
@@ -440,9 +439,9 @@ fun SlideActionMenuDemo() {
     var result by remember { mutableStateOf("拖动列表行或用按钮展开") }
     Column(Modifier.widthIn(max = 440.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ reveal = HyperSlideMenuReveal.Start }, variant = HyperButtonVariant.Tonal) { HyperText("起始侧") }
-            HyperButton({ reveal = HyperSlideMenuReveal.End }, variant = HyperButtonVariant.Tonal) { HyperText("结束侧") }
-            HyperButton({ enabled = !enabled }, variant = HyperButtonVariant.Ghost) { HyperText(if (enabled) "禁用" else "启用") }
+            HyperButton({ reveal = HyperSlideMenuReveal.Start }, type = "tonal") { HyperText("起始侧") }
+            HyperButton({ reveal = HyperSlideMenuReveal.End }, type = "tonal") { HyperText("结束侧") }
+            HyperButton({ enabled = !enabled }, type = "ghost") { HyperText(if (enabled) "禁用" else "启用") }
         }
         HyperSlideMenu(reveal, { reveal = it }, enabled = enabled,
             startActions = listOf(HyperSlideAction("置顶", { result = "已置顶" })),

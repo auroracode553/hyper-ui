@@ -258,11 +258,12 @@ private fun defaultEndContent(
 
 object HyperTextFieldDefaults {
     /** 当前默认 slot（含 28dp 扫码图标）可在同一紧凑行高内稳定居中。 */
-    val MinHeight = 68.dp
-    val Shape: Shape = RoundedCornerShape(20.dp)
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 16.dp)
+    // Wasm 文档预览按设备密度渲染，使用紧凑 dp 值后与 Flutter/Aurora 的 68px 字段高度一致。
+    val MinHeight = 46.dp
+    val Shape: Shape = RoundedCornerShape(14.dp)
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 10.dp)
     val SlotSpacing = 8.dp
-    const val TextareaRows = 5
+    const val TextareaRows = 3
 
     @Composable
     fun colors(

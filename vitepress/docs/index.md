@@ -81,4 +81,4 @@ HyperTooltip 提供轻量提示浮层。
 
 ## Flutter 参考设计
 
-当前 Compose 组件以 Flutter Hy UI 为视觉基准。按钮使用 `HyperButtonVariant`；列表侧滑操作是 `HyperSlideMenu`，横向分类按钮是 `HyperFilterBar`。背景模糊需使用 [`HyperBackdrop`](components/container/hyper-backdrop.md) 采样。公开签名与默认值以各组件页和源码为准，Wasm 仅用于交互预览。
+当前 Compose 组件以 Flutter Hy UI 为视觉基准。按钮使用 `String`；列表侧滑操作是 `HyperSlideMenu`，横向分类按钮是 `HyperFilterBar`。背景模糊需使用 [`HyperBackdrop`](components/container/hyper-backdrop.md) 采样。公开签名与默认值以各组件页和源码为准，Wasm 仅用于交互预览。
