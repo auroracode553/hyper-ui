@@ -2,6 +2,8 @@
 
 `HyperIconButton` 的公开 API 位于 `hyper_ui` 包。组件状态由调用方持有，通过参数和回调传入。外部间距使用 `modifier`；尺寸、颜色和插槽按下列源码签名配置。
 
+按下时整个玻璃表面与图标一起缩至 0.975、透明度降至 0.92，释放或拖出取消后恢复。使用 `size` 调整外径，默认 36dp。
+
 <WasmPreview demo="icon_button" title="HyperIconButton 交互预览" />
 
 ## 公开签名与默认值
@@ -12,6 +14,7 @@ fun HyperIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    size: Dp = HyperIconButtonDefaults.Size,
     shape: Shape = HyperIconButtonDefaults.Shape,
     colors: HyperIconButtonColors = HyperIconButtonDefaults.colors(),
     contentAlignment: Alignment = Alignment.Center,
@@ -23,14 +26,14 @@ fun HyperIconButton(
 
 ```kotlin
 import androidx.compose.foundation.layout.size
-import hyper_ui.HyperIcon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import com.composables.icons.lucide.R as LucideR
+import hyper_ui.*
 
 HyperIconButton(onClick = onSearch) {
-    Icon(
-        painter = painterResource(LucideR.drawable.lucide_ic_search),
+    HyperIcon(
+        imageVector = Icons.Default.Search,
         contentDescription = "搜索",
         modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
     )

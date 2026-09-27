@@ -21,7 +21,7 @@ data class ComponentDemo(
     val content: @Composable () -> Unit
 )
 
-/** 聚合稳定 Preview ID；导航栏选中托盘、组件尺寸及交互状态以分组描述与 Showcase 为准。 */
+/** 聚合稳定 Preview ID；Toast 语义色与 Switch 关闭态由对应分组数据和 Showcase 呈现。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos())
     addAll(formComponentDemos())

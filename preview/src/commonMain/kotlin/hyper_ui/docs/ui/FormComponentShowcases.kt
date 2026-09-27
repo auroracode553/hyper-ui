@@ -201,7 +201,7 @@ fun TextFieldDemo() {
             labelContent = { FieldLabel("可清空") },
             placeholderContent = { FieldPlaceholder("请输入内容") },
             endContent = if (clearableValue.isNotEmpty()) {{
-                HyperIconButton(onClick = { clearableValue = "" }, modifier = Modifier.size(32.dp)) {
+                HyperIconButton(onClick = { clearableValue = "" }, size = 32.dp) {
                     HyperIcon(Icons.Default.Close, contentDescription = "清空内容", modifier = Modifier.size(18.dp))
                 }
             }} else null
@@ -229,7 +229,7 @@ fun TextFieldDemo() {
                 HyperIcon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(20.dp))
             },
             endContent = {
-                HyperIconButton(onClick = { keyword = "" }, modifier = Modifier.size(32.dp)) {
+                HyperIconButton(onClick = { keyword = "" }, size = 32.dp) {
                     HyperIcon(Icons.Default.Close, contentDescription = "清空搜索", modifier = Modifier.size(18.dp))
                 }
             }
@@ -285,6 +285,11 @@ fun SwitchDemo() {
                 verticalAlignment = Alignment.CenterVertically) {
                 HyperText("禁用 · 开启", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 14.sp)
                 HyperSwitch(checked = true, onCheckedChange = {}, enabled = false)
+            }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically) {
+                HyperText("禁用 · 关闭", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 14.sp)
+                HyperSwitch(checked = false, onCheckedChange = {}, enabled = false)
             }
         }
     }

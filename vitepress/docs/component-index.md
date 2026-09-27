@@ -1,6 +1,6 @@
 # 组件索引
 
-所有组件的公开包名均为 `hyper_ui`。状态归属只描述业务状态；滚动等内部 UI 状态不需要调用方管理。状态由调用方控制；组件的按压、展开与悬浮反馈可执行短动画。组件外壳尺寸和外部间距统一通过 `modifier` 控制，具体内部节点使用组件签名中明确提供的 `contentModifier`、`drawerModifier`、`inputModifier` 等修饰符。
+所有组件的公开包名均为 `hyper_ui`。状态归属只描述业务状态；滚动等内部 UI 状态不需要调用方管理。状态由调用方控制；按钮按下立即反馈，释放或拖出取消后恢复；展开与悬浮反馈可执行短动画。组件外壳尺寸和外部间距统一通过 `modifier` 控制，具体内部节点使用组件签名中明确提供的 `contentModifier`、`drawerModifier`、`inputModifier` 等修饰符。
 
 各组件页记录公开属性、默认值和使用约束；页面内的交互预览只显示组件示例。开发时执行 `npm run dev:watch` 可在预览区域看到依赖准备、Wasm 编译、资源加载和组件渲染阶段。
 
@@ -16,7 +16,7 @@
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
 | [HyperTextField](components/form/hyper-text-field.md) | 与 Flutter 参考一致的玻璃输入表面 | 调用方提供 `value` |
-| [HyperSwitch](components/form/hyper-switch.md) | 开关，轨道和滑块默认有轮廓层次 | 调用方提供 `checked` |
+| [HyperSwitch](components/form/hyper-switch.md) | 受控玻璃开关，关闭态有清晰中性轨道与细描边 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 使用 Lucide `check` 的多选项 | 调用方提供 `checked` |
 | [HyperRadio](components/form/hyper-radio.md) | 单选项 | 调用方提供 `selected` |
 | [HyperSegmented](components/form/hyper-segmented.md) | 默认总高 40dp，支持等宽或内容宽度的玻璃分段控制器 | 调用方提供 `selectedItem` |
@@ -55,7 +55,7 @@
 | --- | --- | --- |
 | [HyperEmptyState](components/feedback/hyper-empty-state.md) | 直接复用 `HyperPanel` 的页面级空数据状态 | 调用方提供文案、图标与可选操作 |
 | [HyperDropdown](components/feedback/hyper-dropdown.md) | 内容自适应并复用公共浮层描边和阴影的柔雾 Popup 菜单 | 调用方提供 `expanded` |
-| [HyperToast / hyperToast](components/feedback/hyper-toast.md) | 受控玻璃提示与 Android 原生线程安全工具 | 调用方提供 `visible` 与关闭回调 |
+| [HyperToast / hyperToast](components/feedback/hyper-toast.md) | 自适应宽度的语义色玻璃提示与 Android 原生线程安全工具 | 调用方提供 `visible` 与关闭回调 |
 | [HyperProgressIndicator](components/feedback/hyper-progress-indicator.md) | 确定或不确定进度的线性/圆形指示器 | 调用方提供 `progress` |
 | [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | 柔性玻璃竖向比例反馈，支持图标插槽 | 调用方提供 `progress`、文案、图标与显示时机 |
 | [HyperPlaybackSpeedPanel](components/feedback/hyper-playback-speed-panel.md) | 使用 Lucide 默认图标、约 468dp × 157dp 的紧凑播放速度面板 | 调用方提供显示状态、当前速度与操作回调 |

@@ -2,6 +2,8 @@
 
 `HyperButton` 的公开 API 位于 `hyper_ui` 包。组件状态由调用方持有，通过参数和回调传入。外部间距使用 `modifier`；尺寸、颜色和插槽按下列源码签名配置。 `variant` 只表示视觉层级；成功色等语义色通过 `colors` 注入。`loading` 阻止重复点击。
 
+按下时立即开始 85ms 过渡，按钮整体缩至 0.975、透明度降至 0.92；释放或拖出取消后从当前进度用 180ms 恢复。拖出取消不会调用 `onClick`，禁用和加载态不触发按压反馈。
+
 <WasmPreview demo="button" title="HyperButton 交互预览" />
 
 ## 公开签名与默认值

@@ -82,9 +82,9 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "toast",
         group = GROUP_FEEDBACK,
         title = "HyperToast / hyperToast",
-        description = "受控玻璃 Toast，真实自动关闭与操作区；Android 原生工具另附调用示例。",
+        description = "自适应宽度的语义色玻璃 Toast，支持自动关闭与操作区；Android 原生工具另附调用示例。",
         code = """
-            HyperToast(visible, "保存成功", onDismissRequest = { visible = false })
+            HyperToast(visible, "保存成功", onDismissRequest = { visible = false }, tone = HyperToastTone.Success)
 
             // Android-only 原生工具
             hyperToast(context, "保存成功")
@@ -95,8 +95,11 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("短提示", "HyperToastDuration.Short", "Android 原生短 Toast"),
-            DemoVariant("长提示", "HyperToastDuration.Long", "Android 原生长 Toast"),
+            DemoVariant("语义色", "tone", "成功、警告、错误、信息和默认样式"),
+            DemoVariant("自适应宽度", "180..420dp", "短文案收缩，长文案最多三行"),
+            DemoVariant("操作区", "actionContent", "可注入关闭或撤销按钮"),
+            DemoVariant("时长", "durationMillis", "组件到时请求调用方关闭"),
+            DemoVariant("原生时长", "HyperToastDuration", "Android 原生短/长 Toast"),
             DemoVariant("字符串资源", "messageResource", "由 Context 读取本地化文本"),
             DemoVariant("线程", "任意线程调用", "内部调度到 Android 主线程")
         ),

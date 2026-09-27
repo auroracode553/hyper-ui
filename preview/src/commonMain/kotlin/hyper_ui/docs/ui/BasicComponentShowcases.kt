@@ -106,7 +106,7 @@ fun ButtonDemo() {
             HyperButton({ clicks += 1 }, loading = loading) { HyperText("提交") }
         }
         HyperText(
-            text = "点击次数：$clicks · 按住查看缩放与透明度反馈",
+            text = "点击次数：$clicks · 按住观察缩放，拖出按钮再松开可取消点击",
             color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             lineHeight = 18.sp
@@ -188,7 +188,7 @@ fun IconButtonDemo() {
             IconButtonVariantLabel(label = "大尺寸主题") {
                 HyperIconButton(
                     onClick = { selectedAction = "媒体控制" },
-                    modifier = Modifier.size(56.dp),
+                    size = 56.dp,
                     colors = HyperIconButtonDefaults.colors(
                         containerColor = LocalDocsColorScheme.current.primary.copy(alpha = 0.64f),
                         pressedContainerColor = LocalDocsColorScheme.current.primaryContainer.copy(alpha = 0.76f),
@@ -206,7 +206,7 @@ fun IconButtonDemo() {
             IconButtonVariantLabel(label = "大尺寸中性") {
                 HyperIconButton(
                     onClick = { selectedAction = "中性操作" },
-                    modifier = Modifier.size(56.dp),
+                    size = 56.dp,
                     colors = HyperIconButtonDefaults.colors(
                         containerColor = LocalDocsColorScheme.current.surfaceVariant.copy(alpha = 0.58f),
                         pressedContainerColor = LocalDocsColorScheme.current.secondaryContainer.copy(alpha = 0.72f),
@@ -227,7 +227,7 @@ fun IconButtonDemo() {
             fontSize = 13.sp
         )
         HyperText(
-            text = "默认 36dp 玻璃圆面，按住缩放至 0.975，透明度降至 0.92。",
+            text = "按下立即收缩至 0.975、透明度降至 0.92；拖出取消后恢复且不触发操作。",
             color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center

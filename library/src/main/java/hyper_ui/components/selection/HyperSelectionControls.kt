@@ -2,6 +2,7 @@
 package hyper_ui
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,7 +23,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import hyper_ui.core.icon.HyperCheckIcon
@@ -39,17 +42,24 @@ fun HyperSwitch(
     uncheckedThumbColor: Color = Color.Unspecified
 ) {
     val progress by animateFloatAsState(if (checked) 1f else 0f, tween(160), label = "HyperSwitch")
-    val track = when {
-        !enabled -> hyperGlass.controlTrack
+    val targetTrack = when {
+        !enabled && checked -> HyperColors.accent.copy(alpha = 0.38f).compositeOver(HyperColors.softContainer)
+        !enabled -> HyperColors.softContainer.copy(alpha = 0.7f)
         checked -> resolveHyperContainerColor(checkedTrackColor, HyperColors.accent)
-        else -> resolveHyperContainerColor(uncheckedTrackColor, hyperGlass.controlTrack)
+        else -> resolveHyperContainerColor(uncheckedTrackColor, HyperColors.softContainer)
     }
-    val thumb = when {
-        !enabled -> HyperColors.softContainer
+    val track by animateColorAsState(targetTrack, tween(160), label = "HyperSwitchTrack")
+    val targetThumb = when {
+        !enabled -> HyperColors.cardContainer.copy(alpha = 0.75f)
         checked -> checkedThumbColor
         else -> resolveHyperContainerColor(uncheckedThumbColor, HyperColors.cardContainer)
     }
-    val thumbSize = (16 + progress * 8).dp
+    val thumb by animateColorAsState(targetThumb, tween(160), label = "HyperSwitchThumb")
+    val outline = when {
+        checked -> Color.Transparent
+        !enabled -> HyperColors.secondaryText.copy(alpha = 0.12f)
+        else -> HyperColors.secondaryText.copy(alpha = 0.26f)
+    }
     val source = remember { MutableInteractionSource() }
     Box(
         modifier.size(52.dp, 44.dp).toggleable(
@@ -58,12 +68,14 @@ fun HyperSwitch(
         ),
         contentAlignment = Alignment.Center
     ) {
-        Box(Modifier.width(52.dp).height(32.dp)
-            .background(track, CircleShape).border(2.dp, HyperColors.fieldBorder, CircleShape)) {
-            // offset 使用逻辑方向，RTL 中拇指自动镜像。
+        Box(Modifier.width(HyperSwitchDefaults.TrackWidth).height(HyperSwitchDefaults.TrackHeight)
+            .background(track, CircleShape).border(HyperSwitchDefaults.TrackBorderWidth, outline, CircleShape)) {
+            // 固定滑块尺寸与 4dp 内边距，让关闭态留出清晰的轨道边缘；逻辑方向自动适配 RTL。
             Box(Modifier.align(Alignment.CenterStart)
-                .offset(x = (8 + progress * 16).dp - (thumbSize - 16.dp) / 2)
-                .size(thumbSize).clip(CircleShape).background(thumb))
+                .offset(x = HyperSwitchDefaults.TrackPadding + 20.dp * progress)
+                .size(HyperSwitchDefaults.ThumbSize)
+                .shadow(if (enabled) 2.dp else 0.dp, CircleShape)
+                .clip(CircleShape).background(thumb))
         }
     }
 }
@@ -134,9 +146,9 @@ fun HyperRadio(
 object HyperSwitchDefaults {
     val TrackWidth = 52.dp
     val TrackHeight = 32.dp
-    val TrackPadding = 2.dp
+    val TrackPadding = 4.dp
     val TrackElevation = 0.dp
-    val TrackBorderWidth = 2.dp
+    val TrackBorderWidth = 1.dp
     val ThumbSize = 24.dp
     val ThumbElevation = 0.dp
     val ThumbBorderWidth = 0.dp

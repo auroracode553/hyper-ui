@@ -15,12 +15,15 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Immutable
@@ -38,13 +41,17 @@ fun HyperIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    size: Dp = HyperIconButtonDefaults.Size,
     shape: Shape = HyperIconButtonDefaults.Shape,
     colors: HyperIconButtonColors = HyperIconButtonDefaults.colors(),
     contentAlignment: Alignment = Alignment.Center,
     content: @Composable BoxScope.() -> Unit
 ) {
+    require(size > 0.dp) { "size 必须大于 0.dp" }
     val interactionSource = remember { MutableInteractionSource() }
-    val pressed by interactionSource.collectIsPressedAsState()
+    val interactionPressed by interactionSource.collectIsPressedAsState()
+    var immediatePressed by remember { mutableStateOf(false) }
+    val pressed = enabled && (immediatePressed || interactionPressed)
     val targetContainerColor = when {
         !enabled -> colors.disabledContainerColor
         pressed -> colors.pressedContainerColor
@@ -57,17 +64,18 @@ fun HyperIconButton(
     }
     Box(
         modifier = modifier
-            .size(HyperIconButtonDefaults.Size)
-            .clip(shape)
-            .hyperBackdropEffect(14.dp)
-            .background(targetContainerColor)
-            .border(1.dp, if (enabled) hyperGlass.edgeHighlight else HyperColors.divider.copy(alpha = 110 / 255f), shape)
+            .size(size)
             .hyperNoRippleClickable(
                 interactionSource = interactionSource,
                 enabled = enabled,
                 role = Role.Button,
+                onPressChanged = { immediatePressed = it },
                 onClick = onClick
-            ),
+            )
+            .clip(shape)
+            .hyperBackdropEffect(14.dp)
+            .background(targetContainerColor)
+            .border(1.dp, if (enabled) hyperGlass.edgeHighlight else HyperColors.divider.copy(alpha = 110 / 255f), shape),
         contentAlignment = contentAlignment
     ) {
         CompositionLocalProvider(LocalHyperContentColor provides targetContentColor) {

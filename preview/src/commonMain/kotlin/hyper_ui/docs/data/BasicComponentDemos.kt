@@ -32,7 +32,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("处理中", "loading = true", "加载期间不可重复点击"),
             DemoVariant("次级操作", "variant = Outline / Tonal", "轻量玻璃与柔色底面"),
             DemoVariant("危险操作", "variant = Danger", "危险语义色"),
-            DemoVariant("按压", "pointer down", "85ms 缩放和透明度反馈"),
+            DemoVariant("按压与取消", "pointer down / cancel", "按下立即开始 85ms 缩放和透明度过渡；释放或拖出后 180ms 恢复"),
             DemoVariant("禁用", "enabled = false", "弱公共描边、移除阴影的禁用实色状态"),
             DemoVariant("紧凑", "height = 32.dp", "小尺寸 slot"),
             DemoVariant("组合复用", "contentPadding / role", "供分段等组合组件复用布局与语义")
@@ -58,7 +58,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
 
             HyperIconButton(
                 onClick = onPlay,
-                modifier = Modifier.size(56.dp),
+                size = 56.dp,
                 colors = HyperIconButtonDefaults.colors(
                     containerColor = LocalDocsColorScheme.current.primary.copy(alpha = 0.64f),
                     pressedContainerColor = LocalDocsColorScheme.current.primaryContainer.copy(alpha = 0.76f),
@@ -72,10 +72,10 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("默认玻璃", "shape = CircleShape", "浅深色玻璃令牌，保持细边缘"),
             DemoVariant("主题玻璃", "colors = primaryContainer.copy(alpha = 0.52f)", "主题色玻璃与按压反馈"),
             DemoVariant("危险玻璃", "shape = RoundedCornerShape(12.dp)", "危险语义色玻璃"),
-            DemoVariant("按压状态", "pointer down", "按压缩放与透明度反馈"),
+            DemoVariant("按压状态", "pointer down / cancel", "整块玻璃表面立即缩放；拖出取消时恢复"),
             DemoVariant("禁用状态", "enabled = false", "无描边并移除投影"),
-            DemoVariant("大尺寸主题", "modifier = Modifier.size(56.dp)", "主题色媒体按钮"),
-            DemoVariant("大尺寸中性", "modifier = Modifier.size(56.dp)", "中性玻璃工具按钮")
+            DemoVariant("大尺寸主题", "size = 56.dp", "主题色媒体按钮"),
+            DemoVariant("大尺寸中性", "size = 56.dp", "中性玻璃工具按钮")
         ),
         apiDocumentPaths = listOf("basic/hyper-icon-button.md"),
         content = { IconButtonDemo() }

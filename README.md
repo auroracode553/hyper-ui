@@ -10,7 +10,7 @@
 
 ## Flutter 参考设计与 Compose API
 
-默认视觉令牌以 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 为参考：蓝色主题色 `#476FE8`、浅深色玻璃表面、38dp 按钮、16dp 基础圆角和即时按压反馈。`HyperThemeConfig` 可注入 `themeColor`、`typography`、`shapes` 与 `glass`；需要真实背景模糊时用 `HyperBackdrop` 包裹背景和组件。`HyperSlideMenu` 是受控列表侧滑操作，旧的横向分类按钮更名为 `HyperFilterBar`。按钮改用 `HyperButtonVariant`，语义色由 `colors` 注入，加载态由 `loading` 控制。组件公开 API 仍统一在 `hyper_ui` 包。
+默认视觉令牌以 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 为参考：蓝色主题色 `#476FE8`、浅深色玻璃表面、38dp 按钮、16dp 基础圆角和即时按压反馈。按钮按下立即开始 85ms 的整体缩放与透明度过渡，释放或拖出取消后用 180ms 恢复；图标按钮的外径由 `size` 控制。`HyperThemeConfig` 可注入 `themeColor`、`typography`、`shapes` 与 `glass`；需要真实背景模糊时用 `HyperBackdrop` 包裹背景和组件。`HyperSlideMenu` 是受控列表侧滑操作，旧的横向分类按钮更名为 `HyperFilterBar`。按钮改用 `HyperButtonVariant`，语义色由 `colors` 注入，加载态由 `loading` 控制。组件公开 API 仍统一在 `hyper_ui` 包。
 
 ```kotlin
 HyperThemeConfig {
@@ -198,10 +198,10 @@ HyperIconButton(onClick = onSearch) {
 ## 组件范围
 
 - 主题与材质：`HyperThemeConfig`、`HyperTheme`、`HyperColors`、`HyperGlassTokens`、`HyperBackdrop`、`HyperSoftBackground`。
-- 基础与表单：`HyperButton`、`HyperIconButton`、`HyperTextField`、`HyperSwitch`、`HyperCheckbox`、`HyperRadio`、`HyperSegmented`、`HyperSlider`。
+- 基础与表单：`HyperButton`、`HyperIconButton`、`HyperTextField`、`HyperSwitch`（清晰的关闭态中性轨道）、`HyperCheckbox`、`HyperRadio`、`HyperSegmented`、`HyperSlider`。
 - 容器与列表：`HyperPanel`、`HyperColorPicker`、`HyperList`、`HyperSectionedList`、`HyperMenuList`、`HyperListItem`。
 - 导航与操作：`HyperNavBar`、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperFilterBar`（横向分类）、`HyperTabBar`。
-- 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopup`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`、进度和播放速度组件。
+- 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopup`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
 - Android 系统工具：`hyperToast`、`HyperBatteryState`、`readHyperBatteryState`、`rememberHyperBatteryState`。它们不进入 Desktop/Wasm Preview 编译链。
 
 所有公开 API 位于 `hyper_ui` 包；`hyper_ui.core` 仅供库内部使用。详细签名和默认值以[组件索引](vitepress/docs/component-index.md)及各组件页为准。

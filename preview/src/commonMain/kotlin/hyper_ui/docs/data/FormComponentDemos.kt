@@ -98,7 +98,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 endContent = {
                     HyperIconButton(
                         onClick = { keyword = "" },
-                        modifier = Modifier.size(32.dp)
+                        size = 32.dp
                     ) {
                         Icon(Icons.Default.Close, contentDescription = "清空")
                     }
@@ -122,7 +122,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "switch",
         group = GROUP_FORM,
         title = "HyperSwitch",
-        description = "受控开关，展示通知设置与禁用状态；轨道和滑块采用 Flutter 参考尺寸。",
+        description = "受控玻璃开关；关闭态使用清晰的中性轨道和细描边，预览覆盖开启、关闭与禁用状态。",
         code = """
             HyperSwitch(
                 checked = enabled,
@@ -131,8 +131,8 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("开启", "checked = true", "主题实色轨道"),
-            DemoVariant("关闭", "checked = false", "中性实色轨道"),
-            DemoVariant("禁用", "enabled = false", "禁用实色轨道与滑块")
+            DemoVariant("关闭", "checked = false", "中性轨道、细描边与固定尺寸滑块"),
+            DemoVariant("禁用", "enabled = false", "分别展示禁用开启与禁用关闭")
         ),
         apiDocumentPaths = listOf("form/hyper-switch.md"),
         content = { SwitchDemo() }

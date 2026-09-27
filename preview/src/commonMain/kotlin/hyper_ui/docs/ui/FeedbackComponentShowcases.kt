@@ -207,20 +207,31 @@ fun DropdownMenuDemo() {
     }
 }
 
-/** Android-only hyperToast 的跨平台交互模拟。 */
+/** 受控 Toast 的语义色、长文案和操作区预览。 */
 @Composable
 fun ToastDemo() {
     var message by remember { mutableStateOf("保存成功") }
     var visible by remember { mutableStateOf(false) }
     var duration by remember { mutableStateOf(3000L) }
+    var tone by remember { mutableStateOf(HyperToastTone.Success) }
     Column(Modifier.widthIn(max = 420.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(onClick = { message = "保存成功"; duration = 3000L; visible = true }) { HyperText("短提示") }
-            HyperButton(onClick = { message = "操作已完成，这是一条较长提示"; duration = 6000L; visible = true },
+            HyperButton(onClick = { message = "保存成功"; tone = HyperToastTone.Success; duration = 3000L; visible = true }) {
+                HyperText("成功")
+            }
+            HyperButton(onClick = { message = "请检查输入内容"; tone = HyperToastTone.Warning; duration = 3000L; visible = true },
+                variant = HyperButtonVariant.Outline) { HyperText("警告") }
+            HyperButton(onClick = { message = "网络连接失败"; tone = HyperToastTone.Error; duration = 3000L; visible = true },
+                variant = HyperButtonVariant.Outline) { HyperText("错误") }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton(onClick = { message = "操作已完成，这是一条较长提示"; tone = HyperToastTone.Info; duration = 6000L; visible = true },
                 variant = HyperButtonVariant.Outline) { HyperText("长提示") }
+            HyperButton(onClick = { message = "已复制到剪贴板"; tone = HyperToastTone.Neutral; duration = 3000L; visible = true },
+                variant = HyperButtonVariant.Outline) { HyperText("默认") }
         }
         Box(Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.BottomCenter) {
-            HyperToast(visible, message, onDismissRequest = { visible = false }, durationMillis = duration,
+            HyperToast(visible, message, onDismissRequest = { visible = false }, durationMillis = duration, tone = tone,
                 actionContent = {
                     HyperButton(onClick = { visible = false }, variant = HyperButtonVariant.Ghost, height = 28.dp) {
                         HyperText("关闭")
