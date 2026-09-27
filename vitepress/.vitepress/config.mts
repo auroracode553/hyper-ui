@@ -58,65 +58,65 @@ export default defineConfig({
       {
         text: '基础组件',
         items: [
-          { text: 'HyperButton', link: '/components/basic/hyper-button' },
-          { text: 'HyperIconButton', link: '/components/basic/hyper-icon-button' }
+          { text: 'Button', link: '/components/basic/hyper-button' },
+          { text: 'IconButton', link: '/components/basic/hyper-icon-button' }
         ]
       },
       {
         text: '表单组件',
         items: [
-          { text: 'HyperTextField', link: '/components/form/hyper-text-field' },
-          { text: 'HyperSwitch', link: '/components/form/hyper-switch' },
-          { text: 'HyperCheckbox', link: '/components/form/hyper-checkbox' },
-          { text: 'HyperRadio', link: '/components/form/hyper-radio' },
-          { text: 'HyperSegmented', link: '/components/form/hyper-segmented' },
-          { text: 'HyperSlider', link: '/components/form/hyper-slider' }
+          { text: 'TextField', link: '/components/form/hyper-text-field' },
+          { text: 'Switch', link: '/components/form/hyper-switch' },
+          { text: 'Checkbox', link: '/components/form/hyper-checkbox' },
+          { text: 'Radio', link: '/components/form/hyper-radio' },
+          { text: 'Segmented', link: '/components/form/hyper-segmented' },
+          { text: 'Slider', link: '/components/form/hyper-slider' }
         ]
       },
       {
         text: '容器组件',
         items: [
-          { text: 'HyperBackdrop', link: '/components/container/hyper-backdrop' },
-          { text: 'HyperPanel', link: '/components/container/hyper-panel' },
-          { text: 'HyperColorPicker', link: '/components/container/hyper-color-picker' }
+          { text: 'Backdrop', link: '/components/container/hyper-backdrop' },
+          { text: 'Panel', link: '/components/container/hyper-panel' },
+          { text: 'ColorPicker', link: '/components/container/hyper-color-picker' }
         ]
       },
       {
         text: '导航组件',
         items: [
-          { text: 'HyperNavBar', link: '/components/navigation/hyper-nav-bar' },
-          { text: 'HyperImmersiveNavBar', link: '/components/navigation/hyper-immersive-nav-bar' },
-          { text: 'HyperDrawer', link: '/components/navigation/hyper-drawer' },
-          { text: 'HyperSlideMenu', link: '/components/navigation/hyper-slide-menu' },
-          { text: 'HyperFilterBar', link: '/components/navigation/hyper-filter-bar' },
-          { text: 'HyperTabBar', link: '/components/navigation/hyper-tab-bar' }
+          { text: 'NavBar', link: '/components/navigation/hyper-nav-bar' },
+          { text: 'ImmersiveNavBar', link: '/components/navigation/hyper-immersive-nav-bar' },
+          { text: 'Drawer', link: '/components/navigation/hyper-drawer' },
+          { text: 'SlideMenu', link: '/components/navigation/hyper-slide-menu' },
+          { text: 'FilterBar', link: '/components/navigation/hyper-filter-bar' },
+          { text: 'TabBar', link: '/components/navigation/hyper-tab-bar' }
         ]
       },
       {
         text: '列表组件',
         items: [
-          { text: 'HyperList', link: '/components/list/hyper-list' },
-          { text: 'HyperSectionedList', link: '/components/list/hyper-sectioned-list' },
-          { text: 'HyperMenuList', link: '/components/list/hyper-menu-list' },
-          { text: 'HyperListItem', link: '/components/list/hyper-list-item' }
+          { text: 'List', link: '/components/list/hyper-list' },
+          { text: 'SectionedList', link: '/components/list/hyper-sectioned-list' },
+          { text: 'MenuList', link: '/components/list/hyper-menu-list' },
+          { text: 'ListItem', link: '/components/list/hyper-list-item' }
         ]
       },
       {
         text: '反馈组件',
         items: [
-          { text: 'HyperEmptyState', link: '/components/feedback/hyper-empty-state' },
-          { text: 'HyperDropdown', link: '/components/feedback/hyper-dropdown' },
-          { text: 'hyperToast', link: '/components/feedback/hyper-toast' },
-          { text: 'HyperProgressIndicator', link: '/components/feedback/hyper-progress-indicator' },
-          { text: 'HyperLevelCapsule', link: '/components/feedback/hyper-level-capsule' },
-          { text: 'HyperPlaybackSpeedPanel', link: '/components/feedback/hyper-playback-speed-panel' },
-          { text: 'HyperPlaybackSpeedScale', link: '/components/feedback/hyper-playback-speed-scale' },
-          { text: 'HyperBatteryIndicator', link: '/components/feedback/hyper-battery-indicator' },
-          { text: 'HyperTooltip', link: '/components/feedback/hyper-tooltip' },
-          { text: 'HyperPopup', link: '/components/feedback/hyper-popup' },
-          { text: 'HyperDialog', link: '/components/feedback/hyper-dialog' },
-          { text: 'HyperAlertDialog', link: '/components/feedback/hyper-alert-dialog' },
-          { text: 'HyperUpdateDialog', link: '/components/feedback/hyper-update-dialog' }
+          { text: 'EmptyState', link: '/components/feedback/hyper-empty-state' },
+          { text: 'Dropdown', link: '/components/feedback/hyper-dropdown' },
+          { text: 'Toast', link: '/components/feedback/hyper-toast' },
+          { text: 'ProgressIndicator', link: '/components/feedback/hyper-progress-indicator' },
+          { text: 'LevelCapsule', link: '/components/feedback/hyper-level-capsule' },
+          { text: 'PlaybackSpeedPanel', link: '/components/feedback/hyper-playback-speed-panel' },
+          { text: 'PlaybackSpeedScale', link: '/components/feedback/hyper-playback-speed-scale' },
+          { text: 'BatteryIndicator', link: '/components/feedback/hyper-battery-indicator' },
+          { text: 'Tooltip', link: '/components/feedback/hyper-tooltip' },
+          { text: 'Popup', link: '/components/feedback/hyper-popup' },
+          { text: 'Dialog', link: '/components/feedback/hyper-dialog' },
+          { text: 'AlertDialog', link: '/components/feedback/hyper-alert-dialog' },
+          { text: 'UpdateDialog', link: '/components/feedback/hyper-update-dialog' }
         ]
       },
       {
