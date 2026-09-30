@@ -7,6 +7,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import hyper_ui.HyperGlassTokens
 import hyper_ui.HyperThemeConfig
 import hyper_ui.LocalHyperContentColor
 import hyper_ui.LocalHyperTextStyle
@@ -20,6 +21,30 @@ internal val DocsCodeText = rgba(229, 236, 247, 1f)
 internal val DocsPreviewBackground = rgba(241, 243, 247, 1f)
 
 internal val DefaultDocsThemeColor = rgba(71, 111, 232, 1f)
+
+/** Preview-only material presets aligned with the Flutter reference project. */
+enum class DocsMaterial {
+    Solid,
+    Soft,
+    Clear
+}
+
+internal fun docsGlassTokens(darkTheme: Boolean, material: DocsMaterial): HyperGlassTokens {
+    val base = if (darkTheme) HyperGlassTokens.dark() else HyperGlassTokens.light()
+    return when (material) {
+        DocsMaterial.Solid -> base.copy(
+            surface = base.surface.copy(alpha = 1f),
+            surfaceStrong = base.surfaceStrong.copy(alpha = 1f),
+            surfaceSubtle = base.surfaceSubtle.copy(alpha = 0.96f)
+        )
+        DocsMaterial.Soft -> base
+        DocsMaterial.Clear -> base.copy(
+            surface = base.surface.copy(alpha = 0.48f),
+            surfaceStrong = base.surfaceStrong.copy(alpha = 0.64f),
+            surfaceSubtle = base.surfaceSubtle.copy(alpha = 0.24f)
+        )
+    }
+}
 
 // 文档浅色主题的固定语义色，替代原 系统浅色语义色 的对应槽位。
 internal val DocsOnBackground = rgba(28, 28, 30, 1f)
@@ -116,6 +141,8 @@ internal fun Color.darken(ratio: Float): Color {
 fun HyperDocsTheme(
     themeColor: Color = DefaultDocsThemeColor,
     darkTheme: Boolean = isSystemInDarkTheme(),
+    material: DocsMaterial = DocsMaterial.Soft,
+    patternedBackground: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val isLightTheme = themeColor.luminance() < 0.7f
@@ -132,13 +159,29 @@ fun HyperDocsTheme(
     }
 
     val scheme = LocalDocsColorScheme.current.copy(
+        background = when {
+            darkTheme -> rgba(17, 19, 24, 1f)
+            patternedBackground -> rgba(232, 236, 246, 1f)
+            else -> DocsBackground
+        },
+        onBackground = if (darkTheme) rgba(243, 244, 246, 1f) else DocsOnBackground,
+        surface = if (darkTheme) rgba(27, 31, 39, 1f) else DocsSidebar,
+        onSurface = if (darkTheme) rgba(243, 244, 246, 1f) else DocsOnSurface,
+        surfaceVariant = if (darkTheme) rgba(39, 44, 53, 1f) else DocsPreviewBackground,
+        onSurfaceVariant = if (darkTheme) rgba(184, 192, 204, 1f) else DocsOnSurfaceVariant,
+        outlineVariant = if (darkTheme) rgba(52, 59, 71, 1f) else DocsBorder,
         primary = themeColor,
         onPrimary = onPrimaryColor,
         primaryContainer = primaryContainerColor,
         onPrimaryContainer = onPrimaryContainerColor,
     )
 
-    HyperThemeConfig(themeColor = themeColor, darkTheme = darkTheme, typography = docsTypography()) {
+    HyperThemeConfig(
+        themeColor = themeColor,
+        darkTheme = darkTheme,
+        typography = docsTypography(),
+        glass = docsGlassTokens(darkTheme, material)
+    ) {
         CompositionLocalProvider(
             LocalDocsColorScheme provides scheme,
             LocalHyperContentColor provides scheme.onSurface,

@@ -19,6 +19,10 @@ fun AppRoot() {
 
 `darkTheme` 默认跟随系统。需要完全自定义排版、形状或玻璃令牌时，传入 `typography`、`shapes` 或 `glass`；普通页面不需要覆盖这些内部令牌。
 
+## Preview 材质
+
+Preview 的主题设置提供三种材质对照：`实色`、`柔和`、`清透`。它们只改变 Preview 中的玻璃表面透明度，用来检查组件在不同材质下的层级；应用代码仍通过 `HyperThemeConfig(glass = ...)` 注入令牌。
+
 ## 颜色构造
 
 ```kotlin

@@ -1,7 +1,5 @@
 /** 文件职责：在 hyper_ui 中负责承载 preview/src/commonMain/kotlin/hyper_ui/docs/ui/DocsScaffold 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui.docs.ui
-import hyper_ui.*
-import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import hyper_ui.*
 import androidx.compose.foundation.background
@@ -18,17 +16,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -37,21 +31,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.docs.LocalThemeColor
 import hyper_ui.docs.ThemeColorController
 import hyper_ui.docs.data.ComponentDemo
 import hyper_ui.docs.data.componentDemos
-import hyper_ui.docs.theme.DocsBackground
-import hyper_ui.docs.theme.DocsBorder
 import hyper_ui.docs.theme.DocsCodeBackground
 import hyper_ui.docs.theme.DocsCodeText
-import hyper_ui.docs.theme.DocsPreviewBackground
-import hyper_ui.docs.theme.DocsSidebar
+import hyper_ui.docs.theme.LocalDocsColorScheme
 
 @Composable
 fun HyperDocsApp(
@@ -59,7 +50,14 @@ fun HyperDocsApp(
     initialSelectedId: String? = null,
     embeddedPreview: Boolean = false
 ) {
-    CompositionLocalProvider(LocalThemeColor provides themeColorController) {
+    CompositionLocalProvider(
+        LocalThemeColor provides themeColorController,
+        LocalLayoutDirection provides if (themeColorController.rtl) {
+            LayoutDirection.Rtl
+        } else {
+            LayoutDirection.Ltr
+        }
+    ) {
         val demos = remember { componentDemos() }
         var selectedId by remember(initialSelectedId) {
             mutableStateOf(
@@ -155,8 +153,8 @@ private fun DocsSidebar(
 
     Column(
         modifier = modifier
-            .background(DocsSidebar)
-            .border(width = 1.dp, color = DocsBorder)
+            .background(LocalDocsColorScheme.current.surface)
+            .border(width = 1.dp, color = LocalDocsColorScheme.current.outlineVariant)
             .verticalScroll(rememberScrollState())
             .padding(22.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
@@ -177,10 +175,7 @@ private fun DocsSidebar(
             )
         }
 
-        ThemeColorPicker(
-            currentColor = themeController.color,
-            onColorChange = { themeController.update(it) }
-        )
+        DocsThemeSettings(controller = themeController)
 
         groupedDemos.forEach { (group, items) ->
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -204,38 +199,6 @@ private fun DocsSidebar(
 }
 
 @Composable
-private fun ThemeColorPicker(
-    currentColor: Color,
-    onColorChange: (Color) -> Unit
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        HyperText(
-            text = "主题色",
-            color = LocalDocsColorScheme.current.onSurfaceVariant,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            lineHeight = 16.sp
-        )
-
-        HyperColorPicker(
-            selectedId = HyperColorPickerDefaults.presetOptions
-                .minByOrNull {
-                    val rDiff = it.color.red - currentColor.red
-                    val gDiff = it.color.green - currentColor.green
-                    val bDiff = it.color.blue - currentColor.blue
-                    rDiff * rDiff + gDiff * gDiff + bDiff * bDiff
-                }?.id ?: "",
-            onSelected = { option -> onColorChange(option.color) },
-            colorSize = 28.dp,
-            horizontalSpacing = 6.dp,
-            verticalSpacing = 8.dp,
-            labelTopSpacing = 3.dp
-        )
-
-    }
-}
-
-@Composable
 private fun MobilePreviewTopBar(
     demos: List<ComponentDemo>,
     selectedId: String,
@@ -243,18 +206,20 @@ private fun MobilePreviewTopBar(
     onSelect: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().background(DocsSidebar).border(1.dp, DocsBorder)
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(LocalDocsColorScheme.current.surface)
+            .border(1.dp, LocalDocsColorScheme.current.outlineVariant)
     ) {
         HyperNavBar(
             modifier = Modifier.fillMaxWidth(),
             safeArea = true,
             titleContent = { HyperText("HyperUI Preview", maxLines = 1) },
-            subtitleContent = { HyperText(selectedDemo.description, maxLines = 1) },
-            trailingContent = {
-                HyperIconButton(onClick = { }) {
-                    HyperIcon(Icons.Default.Settings, "预览设置", Modifier.size(HyperIconButtonDefaults.IconSize))
-                }
-            }
+            subtitleContent = { HyperText(selectedDemo.description, maxLines = 1) }
+        )
+        DocsThemeControls(
+            controller = LocalThemeColor.current,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
         Row(
             modifier = Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp),
@@ -274,7 +239,11 @@ private fun MobilePreviewContent(demo: ComponentDemo, modifier: Modifier = Modif
         Box(modifier = modifier.fillMaxSize()) { demo.content() }
     } else {
         Column(
-            modifier = modifier.fillMaxSize().background(DocsBackground).verticalScroll(rememberScrollState()).padding(16.dp),
+            modifier = modifier
+                .fillMaxSize()
+                .background(LocalDocsColorScheme.current.background)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) { demo.content() }
     }
@@ -349,7 +318,7 @@ private fun ComponentContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(DocsBackground)
+            .background(LocalDocsColorScheme.current.background)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 28.dp, vertical = 28.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -393,8 +362,12 @@ private fun PreviewCard(demo: ComponentDemo) {
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 220.dp)
-                .background(DocsPreviewBackground, RoundedCornerShape(8.dp))
-                .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(8.dp))
+                .background(LocalDocsColorScheme.current.surfaceVariant, RoundedCornerShape(8.dp))
+                .border(
+                    width = 1.dp,
+                    color = LocalDocsColorScheme.current.outlineVariant,
+                    shape = RoundedCornerShape(8.dp)
+                )
                 .padding(22.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -435,7 +408,11 @@ internal fun DocsCard(content: @Composable () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .background(LocalDocsColorScheme.current.surface, RoundedCornerShape(8.dp))
-            .border(width = 1.dp, color = DocsBorder, shape = RoundedCornerShape(8.dp))
+            .border(
+                width = 1.dp,
+                color = LocalDocsColorScheme.current.outlineVariant,
+                shape = RoundedCornerShape(8.dp)
+            )
             .padding(18.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {

@@ -6,35 +6,32 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import hyper_ui.*
+import hyper_ui.docs.LocalThemeColor
 import hyper_ui.docs.theme.LocalDocsColorScheme
+import hyper_ui.docs.theme.docsGlassTokens
 
 @Composable
 internal fun FlutterReferencePreview(content: @Composable () -> Unit) {
-    val embeddedDarkMode = LocalEmbeddedDarkMode.current
-    var localDark by remember { mutableStateOf(false) }
-    val dark = embeddedDarkMode?.value ?: localDark
-    var rtl by remember { mutableStateOf(false) }
-    var patterned by remember { mutableStateOf(false) }
-    var customColor by remember { mutableStateOf(false) }
-    val accent = if (customColor) rgba(154, 130, 215) else HyperStyleDefaults.DefaultThemeColor
-    HyperThemeConfig(themeColor = accent, darkTheme = dark, typography = HyperTheme.typography) {
+    val settings = LocalThemeColor.current
+    val dark = settings.darkTheme
+    val accent = settings.color
+    HyperThemeConfig(
+        themeColor = accent,
+        darkTheme = dark,
+        typography = HyperTheme.typography,
+        glass = docsGlassTokens(dark, settings.material)
+    ) {
         val scheme = LocalDocsColorScheme.current.copy(
             background = HyperColors.pageBackground,
             onBackground = HyperColors.primaryText,
@@ -48,13 +45,13 @@ internal fun FlutterReferencePreview(content: @Composable () -> Unit) {
         )
         CompositionLocalProvider(
             LocalDocsColorScheme provides scheme,
-            LocalLayoutDirection provides if (rtl) LayoutDirection.Rtl else LayoutDirection.Ltr
+            LocalLayoutDirection provides if (settings.rtl) LayoutDirection.Rtl else LayoutDirection.Ltr
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 HyperBackdrop(
                     modifier = Modifier.fillMaxWidth().heightIn(min = 120.dp),
                     background = {
-                        if (patterned) {
+                        if (settings.patternedBackground) {
                             HyperSoftBackground(Modifier.matchParentSize())
                             Canvas(Modifier.matchParentSize()) {
                                 repeat(12) { index ->
@@ -66,22 +63,6 @@ internal fun FlutterReferencePreview(content: @Composable () -> Unit) {
                     }
                 ) {
                     Column(Modifier.fillMaxWidth().padding(16.dp)) { content() }
-                }
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    HyperButton({
-                        if (embeddedDarkMode == null) localDark = !dark else embeddedDarkMode.value = !dark
-                    }, type = "tonal", size = "small") {
-                        HyperText(if (dark) "深色" else "浅色")
-                    }
-                    HyperButton({ rtl = !rtl }, type = "tonal", size = "small") {
-                        HyperText(if (rtl) "RTL" else "LTR")
-                    }
-                    HyperButton({ patterned = !patterned }, type = "tonal", size = "small") {
-                        HyperText(if (patterned) "纹理背景" else "柔色背景")
-                    }
-                    HyperButton({ customColor = !customColor }, type = "tonal", size = "small") {
-                        HyperText(if (customColor) "紫色" else "蓝色")
-                    }
                 }
             }
         }
