@@ -1,10 +1,8 @@
 # HyperBatteryState
 
-- 包名：`hyper_ui`
-- 源码：`library/src/main/java/hyper_ui/tools/system/HyperBatteryState.kt`
-- 预览：`battery_indicator`（Wasm 中使用可交互状态模拟，真实工具仅在 Android 可用）
+包名：`hyper_ui`。
 
-`HyperBatteryState` 工具统一读取 Android 的电量百分比和充电状态。非 Compose 场景可一次性读取；Compose 页面可直接订阅，工具会使用 Application Context 注册广播，并在离开 Composition 时自动注销。
+`HyperBatteryState` 读取 Android 电量百分比和充电状态。普通代码一次读取，Compose 页面使用订阅版本；Wasm 预览只模拟状态。
 
 <WasmPreview demo="battery_indicator" title="HyperBatteryState 状态模拟" />
 

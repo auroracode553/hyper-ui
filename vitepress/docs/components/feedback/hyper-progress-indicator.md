@@ -1,6 +1,6 @@
 # HyperProgressIndicator
 
-`HyperProgressIndicator` 的公开 API 位于 `hyper_ui` 包。组件状态由调用方持有，通过参数和回调传入。外部间距使用 `modifier`；尺寸、颜色和插槽按下列源码签名配置。
+包名：`hyper_ui`。
 
 <WasmPreview demo="progress" title="HyperProgressIndicator 交互预览" />
 
@@ -41,8 +41,6 @@ HyperCircularProgressIndicator(progress = null)
 
 `size` 支持 `small`、`default`、`large`，分别调整轨道厚度或圆形指示器直径；`progress = null` 表示不确定进度。
 
-## 使用约束
+## 约束
 
-- 使用 `HyperThemeConfig` 提供主题；需要采样背景时，将可视内容置于 `HyperBackdrop` 中。
-- 组件不持有业务数据、导航或网络请求；`visible`、`value`、`selected` 等由调用方控制。
-- 公开 API 仅支持 Android 手机端；Preview 只是文档交互工具。
+- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。

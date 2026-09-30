@@ -1,8 +1,6 @@
 # HyperIconButton
 
-`HyperIconButton` 的公开 API 位于 `hyper_ui` 包。组件状态由调用方持有，通过参数和回调传入。外部间距使用 `modifier`；尺寸、颜色和插槽按下列源码签名配置。
-
-按下时整个玻璃表面与图标一起缩至 0.975、透明度降至 0.92，释放或拖出取消后恢复。使用 `size` 调整外径，默认 36dp。
+包名：`hyper_ui`。
 
 `size` 支持 `small`、`default`、`large`，图标内容仍通过 Slot 注入。
 
@@ -42,8 +40,6 @@ HyperIconButton(onClick = onSearch) {
 }
 ```
 
-## 使用约束
+## 约束
 
-- 使用 `HyperThemeConfig` 提供主题；需要采样背景时，将可视内容置于 `HyperBackdrop` 中。
-- 组件不持有业务数据、导航或网络请求；`visible`、`value`、`selected` 等由调用方控制。
-- 公开 API 仅支持 Android 手机端；Preview 只是文档交互工具。
+- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。

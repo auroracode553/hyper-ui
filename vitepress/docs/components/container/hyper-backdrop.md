@@ -28,7 +28,7 @@ fun HyperSoftBackground(
 )
 ```
 
-`HyperGlassTokens` 包含 `surface`、`surfaceStrong`、`surfaceSubtle`、`edgeHighlight`、`edgeShade`、`shadow`、`controlTrack`、`selection`、`pressed`、`scrim`；`light()` 和 `dark()` 与 Flutter 参考令牌一致。默认背景模糊半径为 20dp，模态面板为 28dp。背景必须位于采样源中，避免面板对自身反复采样。
+`HyperGlassTokens` 提供玻璃表面、边缘、阴影和状态色；背景必须位于采样源中，避免面板采样自身。
 
 ## 最小用法
 
@@ -40,4 +40,6 @@ HyperThemeConfig {
 }
 ```
 
-调用方持有动态背景和主题配置；组件只处理绘制与布局。高对比度或减弱动态效果需要调用方选择相应玻璃令牌和背景。
+## 约束
+
+- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。

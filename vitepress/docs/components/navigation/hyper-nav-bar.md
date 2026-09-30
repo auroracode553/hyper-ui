@@ -1,6 +1,6 @@
 # HyperNavBar
 
-`HyperNavBar` 位于 `hyper_ui` 包，按 Flutter `HyNavBar` 的透明导航栏行为实现。
+包名：`hyper_ui`。
 
 <WasmPreview demo="nav-bar" title="HyperNavBar 交互预览" />
 
@@ -37,9 +37,9 @@ fun HyperNavBarPage(
 )
 ```
 
-导航栏默认尺寸为 `default`（44.dp），也支持 `small` 与 `large`，不含顶部安全区；默认左右内边距为 16.dp。它不绘制背景、模糊、描边或阴影。`child` 接管整行布局，不能和其他插槽同时使用。`trailingContent` 与 `actions` 二选一。
+默认尺寸为 `default`（44.dp），支持 `small`、`large`；默认左右内边距为 16.dp。`child` 与其他插槽互斥，`trailingContent` 与 `actions` 二选一。
 
-## 页面容器
+## 最小用法
 
 需要把首屏净空自动交给滚动内容时使用 `HyperNavBarPage`：
 
@@ -54,13 +54,6 @@ HyperNavBarPage(
 }
 ```
 
-## 全面屏滚动
+## 约束
 
-滚动页面由调用方使用 `Box` 或 `Scaffold` 管理：把顶部安全区与 44.dp 导航栏高度加入滚动内容的首屏 `contentPadding`，再将 `HyperNavBar` 作为顶部叠加层。这样首屏内容会避让导航栏，滚动后可以进入透明导航栏和状态栏后方。
-
-## 使用约束
-
-- 使用 `HyperThemeConfig` 提供主题；组件不持有导航、网络或业务状态。
-- 返回按钮由调用方通过 `navigationContent` 注入；组件不直接读取宿主导航栈，调用方负责返回行为。
-- 标题默认使用 16sp、半粗体；副标题默认使用 11sp。
-- Android 系统栏配置由宿主处理；Preview 只用于文档交互验收。
+- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。

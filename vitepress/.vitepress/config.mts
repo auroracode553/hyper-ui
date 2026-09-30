@@ -47,13 +47,10 @@ export default defineConfig({
       {
         text: '开始使用',
         items: [
-          { text: '文档首页', link: '/' },
           { text: '接入与最小配置', link: '/getting-started' },
           { text: 'Android 手机端规范', link: '/mobile-guidelines' },
           { text: '主题与颜色', link: '/theme' },
-          { text: '状态与架构边界', link: '/state-model' },
-          { text: '组件索引', link: '/component-index' },
-          { text: '交互预览', link: '/preview' }
+          { text: '组件索引', link: '/component-index' }
         ]
       },
       {
@@ -112,6 +109,7 @@ export default defineConfig({
           { text: 'PlaybackSpeedPanel', link: '/components/feedback/hyper-playback-speed-panel' },
           { text: 'PlaybackSpeedScale', link: '/components/feedback/hyper-playback-speed-scale' },
           { text: 'BatteryIndicator', link: '/components/feedback/hyper-battery-indicator' },
+          { text: 'BatteryState', link: '/components/tools/hyper-battery-state' },
           { text: 'Tooltip', link: '/components/feedback/hyper-tooltip' },
           { text: 'Popup', link: '/components/feedback/hyper-popup' },
           { text: 'Dialog', link: '/components/feedback/hyper-dialog' },
