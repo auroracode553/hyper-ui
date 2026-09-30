@@ -12,6 +12,9 @@
             height: 100%;
             margin: 0;
             padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
         }
 
         html,
@@ -22,6 +25,11 @@
 
         #hyper-ui-preview-root {
             position: relative;
+            cursor: grab;
+        }
+
+        #hyper-ui-preview-root:active {
+            cursor: grabbing;
         }
 
         #hyper-ui-preview-root > canvas {
