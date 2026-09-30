@@ -232,7 +232,7 @@ fun ToastDemo() {
         Box(Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.BottomCenter) {
             HyperToast(visible, message, onDismissRequest = { visible = false }, durationMillis = duration, tone = tone,
                 actionContent = {
-                    HyperButton(onClick = { visible = false }, type = "ghost", height = 28.dp) {
+                    HyperButton(onClick = { visible = false }, type = "ghost", size = "small") {
                         HyperText("关闭")
                     }
                 })
@@ -268,11 +268,12 @@ fun ProgressDemo() {
                 )
             }
             HyperLinearProgressIndicator(progress = progress)
+            HyperLinearProgressIndicator(progress = progress, size = "small")
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HyperCircularProgressIndicator(progress = progress)
+                HyperCircularProgressIndicator(progress = progress, size = "small")
                 HyperCircularProgressIndicator(progress = null)
                 HyperButton(
                     type = "outline",
@@ -754,7 +755,7 @@ private fun ColumnScope.popupContent(
                 color = LocalHyperContentColor.current
             )
         },
-        type = HyperTextFieldType.Textarea,
+        type = "textarea",
         rows = 3
     )
 }

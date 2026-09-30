@@ -83,7 +83,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 labelContent = { Text("备注") },
                 placeholderContent = { Text("写一点说明") },
                 supportingContent = { Text("${'$'}{value.length}/80") },
-                type = HyperTextFieldType.Textarea,
+                type = "textarea",
                 rows = 3
             )
 
@@ -97,7 +97,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 endContent = {
                     HyperIconButton(
                         onClick = { keyword = "" },
-                        size = 32.dp
+                        size = "small"
                     ) {
                         Icon(Icons.Default.Close, contentDescription = "清空")
                     }
@@ -106,7 +106,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("默认表面", "68.dp 圆角描边容器", "白色输入面、低对比度中性描边"),
-            DemoVariant("type 驱动", "type = Text / Textarea / Password", "同一组件切换单行、多行和密码形态"),
+            DemoVariant("type 驱动", "type = text / textarea / password", "同一组件切换单行、多行和密码形态"),
             DemoVariant("聚焦", "interactionSource focused", "主题色替换公共中性描边，阴影提高到 5dp"),
             DemoVariant("默认光标", "selection = TextRange(value.length)", "首次聚焦位于现有文本末尾"),
             DemoVariant("多行/错误", "type = Textarea, rows = 3, isError", "错误色替换公共中性描边"),

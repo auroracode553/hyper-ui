@@ -13,7 +13,8 @@ fun HyperTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     inputModifier: Modifier = Modifier,
-    type: HyperTextFieldType = HyperTextFieldType.Text,
+    type: String = "text",
+    size: String = "default",
     rows: Int = HyperTextFieldDefaults.TextareaRows,
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -47,7 +48,7 @@ fun HyperTextField(
 HyperTextField(
     value = value,
     onValueChange = { value = it },
-    type = HyperTextFieldType.Textarea,
+    type = "textarea",
     rows = 3,
     labelContent = { Text("备注") },
     placeholderContent = { Text("写一点说明") },
@@ -56,7 +57,7 @@ HyperTextField(
 )
 ```
 
-`type = Text` 为 68dp 单行输入，`type = Textarea` 使用 `rows` 控制多行高度，`type = Password` 自动使用密码变换并显示显隐操作。`clearable`、`maxlength` 和 `showWordLimit` 由组件统一处理；前后缀仍通过 `startContent` / `endContent` 注入。
+`type = "text"` 为单行输入，`type = "textarea"` 使用 `rows` 控制多行高度，`type = "password"` 自动使用密码变换并显示显隐操作。`size` 支持 `small`、`default`、`large`；`clearable`、`maxlength` 和 `showWordLimit` 由组件统一处理。
 
 ## 使用约束
 

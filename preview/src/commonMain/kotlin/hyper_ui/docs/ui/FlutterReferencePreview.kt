@@ -70,16 +70,16 @@ internal fun FlutterReferencePreview(content: @Composable () -> Unit) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     HyperButton({
                         if (embeddedDarkMode == null) localDark = !dark else embeddedDarkMode.value = !dark
-                    }, type = "tonal", height = 32.dp) {
+                    }, type = "tonal", size = "small") {
                         HyperText(if (dark) "深色" else "浅色")
                     }
-                    HyperButton({ rtl = !rtl }, type = "tonal", height = 32.dp) {
+                    HyperButton({ rtl = !rtl }, type = "tonal", size = "small") {
                         HyperText(if (rtl) "RTL" else "LTR")
                     }
-                    HyperButton({ patterned = !patterned }, type = "tonal", height = 32.dp) {
+                    HyperButton({ patterned = !patterned }, type = "tonal", size = "small") {
                         HyperText(if (patterned) "纹理背景" else "柔色背景")
                     }
-                    HyperButton({ customColor = !customColor }, type = "tonal", height = 32.dp) {
+                    HyperButton({ customColor = !customColor }, type = "tonal", size = "small") {
                         HyperText(if (customColor) "紫色" else "蓝色")
                     }
                 }

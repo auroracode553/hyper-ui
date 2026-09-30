@@ -36,13 +36,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/** HyperTextField 的显示与交互形态。 */
-enum class HyperTextFieldType {
-    Text,
-    Textarea,
-    Password
-}
-
 /**
  * 文本输入框组件。
  *
@@ -54,7 +47,8 @@ fun HyperTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     inputModifier: Modifier = Modifier,
-    type: HyperTextFieldType = HyperTextFieldType.Text,
+    type: String = "text",
+    size: String = "default",
     rows: Int = HyperTextFieldDefaults.TextareaRows,
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -81,6 +75,10 @@ fun HyperTextField(
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null
 ) {
     require(rows > 0) { "rows 必须大于 0" }
+    requireHyperComponentSize(size)
+    require(type in setOf("text", "textarea", "password")) {
+        "不支持的 HyperTextField type: $type"
+    }
     require(maxlength == null || maxlength > 0) { "maxlength 必须大于 0" }
     // String API 仍由调用方持有文本，组件仅保存 selection/composition。
     // 首次挂载时把光标放到末尾；后续输入继续沿用用户当前选区。
@@ -112,11 +110,11 @@ fun HyperTextField(
         colors = colors
     )
     var passwordVisible by remember { mutableStateOf(false) }
-    val singleLine = type != HyperTextFieldType.Textarea
+    val singleLine = type != "textarea"
     val minLines = if (singleLine) 1 else rows
     val maxLines = if (singleLine) 1 else rows
     val effectiveTransformation = when {
-        type == HyperTextFieldType.Password && !passwordVisible -> PasswordVisualTransformation()
+        type == "password" && !passwordVisible -> PasswordVisualTransformation()
         else -> visualTransformation
     }
     val verticalAlignment = if (singleLine) Alignment.CenterVertically else Alignment.Top
@@ -167,7 +165,7 @@ fun HyperTextField(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .defaultMinSize(minHeight = HyperTextFieldDefaults.MinHeight)
+                        .defaultMinSize(minHeight = hyperComponentSize(size, 40.dp, HyperTextFieldDefaults.MinHeight, 54.dp))
                         .hyperTextFieldSurface(
                             shape = shape,
                             visuals = visuals.surface
@@ -223,7 +221,7 @@ fun HyperTextField(
 }
 
 private fun defaultEndContent(
-    type: HyperTextFieldType,
+    type: String,
     value: String,
     enabled: Boolean,
     readOnly: Boolean,
@@ -234,10 +232,10 @@ private fun defaultEndContent(
     onTogglePassword: () -> Unit
 ): (@Composable RowScope.() -> Unit)? {
     val canInteract = enabled && !readOnly
-    if (type != HyperTextFieldType.Password && !(clearable && value.isNotEmpty())) return null
+    if (type != "password" && !(clearable && value.isNotEmpty())) return null
     return {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            if (type == HyperTextFieldType.Password && showPasswordToggle) {
+            if (type == "password" && showPasswordToggle) {
                 HyperText(
                     text = if (passwordVisible) "隐藏" else "显示",
                     modifier = Modifier.clickable(enabled = canInteract, onClick = onTogglePassword),

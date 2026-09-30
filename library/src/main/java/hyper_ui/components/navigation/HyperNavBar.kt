@@ -33,12 +33,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.platform.LocalDensity
 
-/** 透明顶部导航栏。默认高度 44.dp，安全区位于高度之外。 */
+/** 透明顶部导航栏。使用 small/default/large 统一尺寸词汇，安全区位于内容高度之外。 */
 @Composable
 fun HyperNavBar(
     titleContent: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier,
-    height: Dp = HyperNavBarDefaults.Height,
+    size: String = "default",
     padding: PaddingValues = HyperNavBarDefaults.ContentPadding,
     spacing: Dp = HyperNavBarDefaults.ContentGap,
     titleSpacing: Dp = HyperNavBarDefaults.TitleGap,
@@ -51,7 +51,7 @@ fun HyperNavBar(
     actions: List<@Composable () -> Unit> = emptyList(),
     child: (@Composable BoxScope.() -> Unit)? = null
 ) {
-    require(height > 0.dp) { "height 必须大于 0.dp" }
+    val resolvedHeight = hyperComponentSize(size, 40.dp, HyperNavBarDefaults.Height, 52.dp)
     require(spacing >= 0.dp && titleSpacing >= 0.dp && actionSpacing >= 0.dp) { "间距不能为负数" }
     require(child == null || (titleContent == null && subtitleContent == null && navigationContent == null && trailingContent == null && actions.isEmpty())) {
         "child 接管整行布局，不能同时设置其他内容插槽。"
@@ -60,7 +60,7 @@ fun HyperNavBar(
 
     val safeInsets = if (safeArea) WindowInsets.statusBars.only(WindowInsetsSides.Top) else WindowInsets(0, 0, 0, 0)
     Column(modifier = modifier.windowInsetsPadding(safeInsets).zIndex(HyperNavBarDefaults.ZIndex)) {
-        Box(modifier = Modifier.fillMaxWidth().height(height).padding(padding)) {
+        Box(modifier = Modifier.fillMaxWidth().height(resolvedHeight).padding(padding)) {
             if (child != null) {
                 child.invoke(this)
             } else {
@@ -85,7 +85,7 @@ fun HyperNavBarPage(
     navBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    navBarHeight: Dp = HyperNavBarDefaults.Height,
+    navBarSize: String = "default",
     safeArea: Boolean = true,
     bottomSafeArea: Boolean = true,
     content: @Composable BoxScope.(PaddingValues) -> Unit
@@ -97,7 +97,9 @@ fun HyperNavBarPage(
     val bottomInset = if (bottomSafeArea) with(density) {
         WindowInsets.safeDrawing.getBottom(this).toDp()
     } else 0.dp
-    val resolvedPadding = contentPadding.withAdditionalTop(topInset + navBarHeight)
+    val resolvedPadding = contentPadding.withAdditionalTop(
+        topInset + hyperComponentSize(navBarSize, 40.dp, HyperNavBarDefaults.Height, 52.dp)
+    )
         .withAdditionalBottom(bottomInset)
     Box(modifier.fillMaxSize()) {
         content(resolvedPadding)

@@ -45,7 +45,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("固定操作层", "navigation/title/trailing", "按钮不随正文滚动"),
             DemoVariant("透明表面", "containerColor = Transparent", "导航栏不绘制背景、模糊、描边或阴影"),
-            DemoVariant("默认尺寸", "height = 44.dp", "高度不包含顶部安全区"),
+            DemoVariant("默认尺寸", "size = default", "高度不包含顶部安全区"),
             DemoVariant("标题布局", "centerTitle = false/true", "支持起始侧与整栏居中"),
             DemoVariant("安全区", "safeArea = true/false", "顶部安全区独立于导航栏高度")
         ),
@@ -129,7 +129,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperTabBar(
                 items = bottomItems,
-                type = HyperTabBarType.Floating,
+                type = "floating",
                 itemSelected = { item -> item.id == selectedItemId },
                 onItemClick = { item -> selectedItemId = item.id }
             ) { item ->
@@ -140,7 +140,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("样式切换", "type = Docked/Floating", "同一个 items 入口切换贴底与悬浮胶囊"),
+            DemoVariant("样式切换", "type = docked/floating", "同一个 items 入口切换贴底与悬浮胶囊"),
             DemoVariant("玻璃胶囊容器", "Margin / Height / Elevation", "56dp 轻薄磨砂底座与单层柔和阴影"),
             DemoVariant("居中选中托盘", "SelectionSpring", "静止时按标签格中心显示紧凑托盘"),
             DemoVariant("液态按压", "LensInMillis / LensWidthGrowth", "按下展开半透明水珠并放大经过的标签"),

@@ -26,15 +26,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
-/** 标签栏样式。 */
-enum class HyperTabBarType {
-    /** 贴底样式：0.5dp 顶部发丝线、无阴影的贴底容器（默认）。 */
-    Docked,
-
-    /** 悬浮样式：玻璃胶囊容器、可拖动水珠托盘与释放速度吸附反馈。 */
-    Floating
-}
-
 enum class HyperTabBarItemLayout {
     Equal,
     Packed
@@ -61,7 +52,7 @@ class HyperTabBarItemScope internal constructor(
  * 组件内部已包含默认水平内容间距（16dp）和少量底部安全留白。
  * 外部间距请通过 modifier.padding(...) 控制。
  *
- * [type] 为 [HyperTabBarType.Floating] 时渲染悬浮玻璃胶囊容器：不使用 [topDivider]、
+ * [type] 为 `floating` 时渲染悬浮玻璃胶囊容器：不使用 [topDivider]、
  * [shape] 与贴底留白，选中指示胶囊由调用方在 slot 中自行绘制。
  */
 @Composable
@@ -73,11 +64,12 @@ fun HyperTabBar(
     shape: Shape = HyperTabBarDefaults.Shape,
     topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
-    type: HyperTabBarType = HyperTabBarType.Docked,
+    type: String = "docked",
     floatingColors: HyperFloatingTabBarColors = HyperFloatingTabBarDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 ) {
-    if (type == HyperTabBarType.Floating) {
+    require(type == "docked" || type == "floating") { "不支持的 HyperTabBar type: $type" }
+    if (type == "floating") {
         HyperFloatingTabBar(
             modifier = modifier,
             enabled = enabled,
@@ -126,7 +118,7 @@ fun HyperTabBar(
  * 组件内部已包含默认水平内容间距（16dp）和少量底部安全留白。
  * 外部间距请通过 modifier.padding(...) 控制。
  *
- * [type] 为 [HyperTabBarType.Floating] 时渲染悬浮玻璃胶囊：忽略 [itemLayout]、
+ * [type] 为 `floating` 时渲染悬浮玻璃胶囊：忽略 [itemLayout]、
  * [itemSlotAlignment]、[horizontalArrangement]、[shape]、[topDivider] 与 [colors]，
  * 使用 [floatingColors]；项目等分宽度，指示胶囊随选中与按压状态滑动、加深。
  */
@@ -143,12 +135,13 @@ fun <T> HyperTabBar(
     shape: Shape = HyperTabBarDefaults.Shape,
     topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
-    type: HyperTabBarType = HyperTabBarType.Docked,
+    type: String = "docked",
     floatingColors: HyperFloatingTabBarColors = HyperFloatingTabBarDefaults.colors(),
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
 ) {
-    if (type == HyperTabBarType.Floating) {
+    require(type == "docked" || type == "floating") { "不支持的 HyperTabBar type: $type" }
+    if (type == "floating") {
         HyperFloatingTabBar(
             items = items,
             onItemClick = onItemClick,

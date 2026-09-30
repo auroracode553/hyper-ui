@@ -112,7 +112,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperProgressIndicator",
         description = "线性与圆形轨道均使用参考令牌配色；progress 为 null 时表示不确定加载。",
         code = """
-            HyperLinearProgressIndicator(progress = progress)
+            HyperLinearProgressIndicator(progress = progress, size = "default")
             HyperLinearProgressIndicator(progress = null)
             HyperCircularProgressIndicator(progress = progress)
             HyperCircularProgressIndicator(progress = null)

@@ -11,7 +11,7 @@
 fun HyperNavBar(
     titleContent: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier,
-    height: Dp = 44.dp,
+    size: String = "default",
     padding: PaddingValues = PaddingValues(horizontal = 16.dp),
     spacing: Dp = 8.dp,
     titleSpacing: Dp = 2.dp,
@@ -26,7 +26,7 @@ fun HyperNavBar(
 )
 ```
 
-导航栏默认高度为 44.dp，不含顶部安全区；默认左右内边距为 16.dp。它不绘制背景、模糊、描边或阴影。`child` 接管整行布局，不能和其他插槽同时使用。`trailingContent` 与 `actions` 二选一。
+导航栏默认尺寸为 `default`（44.dp），也支持 `small` 与 `large`，不含顶部安全区；默认左右内边距为 16.dp。它不绘制背景、模糊、描边或阴影。`child` 接管整行布局，不能和其他插槽同时使用。`trailingContent` 与 `actions` 二选一。
 
 ## 页面容器
 
@@ -35,7 +35,7 @@ fun HyperNavBar(
 ```kotlin
 HyperNavBarPage(
     navBar = { HyperNavBar(titleContent = { Text("详情") }) },
-    navBarHeight = 44.dp,
+    navBarSize = "default",
     safeArea = true,
     bottomSafeArea = true
 ) { immersivePadding ->

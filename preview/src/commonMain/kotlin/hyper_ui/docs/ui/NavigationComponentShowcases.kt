@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperTabBar
 import hyper_ui.HyperTabBarDefaults
-import hyper_ui.HyperTabBarType
 import hyper_ui.HyperFloatingTabBarDefaults
 import hyper_ui.HyperButton
 import hyper_ui.HyperButtonDefaults
@@ -79,7 +78,7 @@ fun NavBarDemo() {
                 safeArea = false
             )
         },
-        navBarHeight = 44.dp,
+        navBarSize = "default",
         contentPadding = PaddingValues(top = 44.dp, bottom = 24.dp),
         safeArea = false,
         bottomSafeArea = false
@@ -223,7 +222,7 @@ fun SlideMenuDemo() {
 fun TabBarDemo() {
     var selectedItemId by remember { mutableStateOf("home") }
     var showTopDivider by remember { mutableStateOf(true) }
-    var barType by remember { mutableStateOf(HyperTabBarType.Floating) }
+    var barType by remember { mutableStateOf("floating") }
     var showFiveItems by remember { mutableStateOf(false) }
     var useAccent by remember { mutableStateOf(false) }
     var disableNotice by remember { mutableStateOf(false) }
@@ -237,7 +236,7 @@ fun TabBarDemo() {
     )
     val bottomItems = if (showFiveItems) allItems else allItems.dropLast(1)
     val selectedTitle = bottomItems.firstOrNull { it.id == selectedItemId }?.label ?: "首页"
-    val floating = barType == HyperTabBarType.Floating
+    val floating = barType == "floating"
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
     Column(
@@ -307,11 +306,11 @@ fun TabBarDemo() {
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton(
-                onClick = { barType = HyperTabBarType.Docked },
+                onClick = { barType = "docked" },
                 type = if (!floating) "filled" else "tonal"
             ) { HyperText("贴底样式") }
             HyperButton(
-                onClick = { barType = HyperTabBarType.Floating },
+                onClick = { barType = "floating" },
                 type = if (floating) "filled" else "tonal"
             ) { HyperText("悬浮胶囊") }
         }

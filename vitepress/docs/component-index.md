@@ -8,14 +8,14 @@
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperButton](components/basic/hyper-button.md) | 支持填充、柔色、描边、幽灵和危险样式的 Slot 按钮 | 调用方处理点击 |
+| [HyperButton](components/basic/hyper-button.md) | `type` 驱动视觉变体、`size` 驱动 small/default/large 尺寸的 Slot 按钮 | 调用方处理点击 |
 | [HyperIconButton](components/basic/hyper-icon-button.md) | 36dp 圆形磨砂玻璃图标按钮 | 调用方处理点击 |
 
 ## 表单组件
 
 | 组件 | 用途 | 状态归属 |
 | --- | --- | --- |
-| [HyperTextField](components/form/hyper-text-field.md) | `type` 驱动的单行、Textarea、密码输入框，支持清空、字数限制和插槽 | 调用方提供 `value` |
+| [HyperTextField](components/form/hyper-text-field.md) | `type` 驱动 text/textarea/password，`size` 驱动尺寸，支持清空、字数限制和插槽 | 调用方提供 `value` |
 | [HyperSwitch](components/form/hyper-switch.md) | 受控玻璃开关，关闭态有清晰中性轨道与细描边 | 调用方提供 `checked` |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 使用 Lucide `check` 的多选项 | 调用方提供 `checked` |
 | [HyperRadio](components/form/hyper-radio.md) | 单选项 | 调用方提供 `selected` |

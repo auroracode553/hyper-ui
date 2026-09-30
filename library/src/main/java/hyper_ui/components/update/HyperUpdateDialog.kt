@@ -108,7 +108,7 @@ private fun CheckingContent(
     ) {
         HyperCircularProgressIndicator(
             progress = null,
-            modifier = Modifier.size(32.dp),
+            size = "default",
             strokeWidth = 3.dp
         )
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {

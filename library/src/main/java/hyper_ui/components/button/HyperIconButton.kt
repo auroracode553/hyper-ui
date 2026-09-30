@@ -41,13 +41,13 @@ fun HyperIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    size: Dp = HyperIconButtonDefaults.Size,
+    size: String = "default",
     shape: Shape = HyperIconButtonDefaults.Shape,
     colors: HyperIconButtonColors = HyperIconButtonDefaults.colors(),
     contentAlignment: Alignment = Alignment.Center,
     content: @Composable BoxScope.() -> Unit
 ) {
-    require(size > 0.dp) { "size 必须大于 0.dp" }
+    val resolvedSize = hyperComponentSize(size, small = 32.dp, normal = HyperIconButtonDefaults.Size, large = 56.dp)
     val interactionSource = remember { MutableInteractionSource() }
     val interactionPressed by interactionSource.collectIsPressedAsState()
     var immediatePressed by remember { mutableStateOf(false) }
@@ -64,7 +64,7 @@ fun HyperIconButton(
     }
     Box(
         modifier = modifier
-            .size(size)
+            .size(resolvedSize)
             .hyperNoRippleClickable(
                 interactionSource = interactionSource,
                 enabled = enabled,

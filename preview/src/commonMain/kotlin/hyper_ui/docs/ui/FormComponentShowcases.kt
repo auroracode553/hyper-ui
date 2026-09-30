@@ -201,7 +201,7 @@ fun TextFieldDemo() {
             labelContent = { FieldLabel("可清空") },
             placeholderContent = { FieldPlaceholder("请输入内容") },
             endContent = if (clearableValue.isNotEmpty()) {{
-                HyperIconButton(onClick = { clearableValue = "" }, size = 32.dp) {
+                HyperIconButton(onClick = { clearableValue = "" }, size = "small") {
                     HyperIcon(Icons.Default.Close, contentDescription = "清空内容", modifier = Modifier.size(18.dp))
                 }
             }} else null
@@ -216,7 +216,7 @@ fun TextFieldDemo() {
                 HyperButton(
                     onClick = { passwordVisible = !passwordVisible },
                     type = "ghost",
-                    height = 28.dp
+                    size = "small"
                 ) { HyperText(if (passwordVisible) "隐藏" else "显示") }
             }
         )
@@ -229,7 +229,7 @@ fun TextFieldDemo() {
                 HyperIcon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(20.dp))
             },
             endContent = {
-                HyperIconButton(onClick = { keyword = "" }, size = 32.dp) {
+                HyperIconButton(onClick = { keyword = "" }, size = "small") {
                     HyperIcon(Icons.Default.Close, contentDescription = "清空搜索", modifier = Modifier.size(18.dp))
                 }
             }
@@ -240,7 +240,7 @@ fun TextFieldDemo() {
             labelContent = { FieldLabel("多行输入") },
             placeholderContent = { FieldPlaceholder("请输入多行内容") },
             supportingContent = { FieldSupporting("${note.length}/80") },
-            type = HyperTextFieldType.Textarea,
+            type = "textarea",
             rows = 3,
             inputModifier = Modifier.heightIn(min = 92.dp),
             isError = isNoteError

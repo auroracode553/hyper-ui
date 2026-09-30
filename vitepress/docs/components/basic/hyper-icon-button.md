@@ -4,6 +4,8 @@
 
 按下时整个玻璃表面与图标一起缩至 0.975、透明度降至 0.92，释放或拖出取消后恢复。使用 `size` 调整外径，默认 36dp。
 
+`size` 支持 `small`、`default`、`large`，图标内容仍通过 Slot 注入。
+
 <WasmPreview demo="icon_button" title="HyperIconButton 交互预览" />
 
 ## 公开签名与默认值
@@ -14,7 +16,7 @@ fun HyperIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    size: Dp = HyperIconButtonDefaults.Size,
+    size: String = "default",
     shape: Shape = HyperIconButtonDefaults.Shape,
     colors: HyperIconButtonColors = HyperIconButtonDefaults.colors(),
     contentAlignment: Alignment = Alignment.Center,

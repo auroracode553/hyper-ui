@@ -39,10 +39,12 @@ data class HyperProgressIndicatorColors(
 fun HyperLinearProgressIndicator(
     progress: Float? = null,
     modifier: Modifier = Modifier,
+    size: String = "default",
     shape: Shape = HyperProgressIndicatorDefaults.LinearShape,
     colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors(),
     trackBorder: BorderStroke? = null
 ) {
+    val resolvedHeight = hyperComponentSize(size, 3.dp, HyperProgressIndicatorDefaults.LinearHeight, 8.dp)
     val coercedProgress = progress?.coerceIn(0f, 1f)
     val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
@@ -54,7 +56,7 @@ fun HyperLinearProgressIndicator(
 
     BoxWithConstraints(
         modifier = modifier
-            .height(HyperProgressIndicatorDefaults.LinearHeight)
+            .height(resolvedHeight)
             .fillMaxWidth()
             .hyperSolidSurface(
                 containerColor = resolvedTrackColor,
@@ -89,9 +91,11 @@ fun HyperLinearProgressIndicator(
 fun HyperCircularProgressIndicator(
     progress: Float? = null,
     modifier: Modifier = Modifier,
+    size: String = "default",
     strokeWidth: Dp = HyperProgressIndicatorDefaults.CircularStrokeWidth,
     colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors()
 ) {
+    val resolvedSize = hyperComponentSize(size, 24.dp, HyperProgressIndicatorDefaults.CircularSize, 48.dp)
     val coercedProgress = progress?.coerceIn(0f, 1f)
     val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
@@ -106,7 +110,7 @@ fun HyperCircularProgressIndicator(
 
     Canvas(
         modifier = modifier
-            .size(HyperProgressIndicatorDefaults.CircularSize)
+            .size(resolvedSize)
             .semantics {
                 progressBarRangeInfo = semanticsInfo
             }

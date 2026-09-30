@@ -88,7 +88,7 @@ fun <T> HyperSegmented(
                     .semantics { this.selected = selected },
                 enabled = actualEnabled,
                 type = "ghost",
-                height = 32.dp,
+                size = "small",
                 colors = HyperButtonColors(
                     containerColor = if (selected) {
                         colors.selectedItemColor

@@ -44,17 +44,18 @@ fun HyperButton(
     enabled: Boolean = true,
     loading: Boolean = false,
     type: String = "filled",
-    height: Dp = HyperButtonDefaults.MinHeight,
+    size: String = "default",
     colors: HyperButtonColors = HyperButtonDefaults.colors(type),
     border: BorderStroke? = HyperButtonDefaults.border(type, enabled),
     shape: Shape = HyperButtonDefaults.Shape,
-    contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(height),
+    contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(size),
     role: Role = Role.Button,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     content: @Composable RowScope.() -> Unit
 ) {
-    require(height > 0.dp) { "height 必须大于 0.dp" }
+    requireHyperComponentSize(size)
+    val resolvedHeight = HyperButtonDefaults.height(size)
     require(type in setOf("filled", "tonal", "outline", "ghost", "danger")) {
         "不支持的 HyperButton type: $type"
     }
@@ -62,8 +63,8 @@ fun HyperButton(
     val foreground = if (enabled) colors.contentColor else colors.disabledContentColor
     Row(
         modifier = modifier
-            .defaultMinSize(minWidth = (68 + (height.value - 38) * 2.5f).coerceAtLeast(0f).dp)
-            .height(height)
+            .defaultMinSize(minWidth = (68 + (resolvedHeight.value - 38) * 2.5f).coerceAtLeast(0f).dp)
+            .height(resolvedHeight)
             .hyperNoRippleClickable(enabled = enabled && !loading, role = role, onClick = onClick)
             .hyperButtonSurface(container, shape, type, enabled, border)
             .semantics { if (loading) stateDescription = "正在处理" }
@@ -73,7 +74,7 @@ fun HyperButton(
     ) {
         CompositionLocalProvider(
             LocalHyperContentColor provides foreground,
-            LocalHyperTextStyle provides HyperButtonDefaults.textStyle(height)
+            LocalHyperTextStyle provides HyperButtonDefaults.textStyle(size)
         ) {
             if (loading) HyperCircularProgressIndicator(
                 modifier = Modifier.size(16.dp),
@@ -91,13 +92,19 @@ object HyperButtonDefaults {
     val ContentPadding = PaddingValues(horizontal = 14.dp)
     val Shape: Shape = RoundedCornerShape(16.dp)
 
-    fun contentPadding(height: Dp = MinHeight): PaddingValues =
-        PaddingValues(horizontal = (14 + (height.value - 38) * 2 / 3).coerceAtLeast(0f).dp)
+    fun height(size: String = "default"): Dp =
+        hyperComponentSize(size, small = 32.dp, normal = MinHeight, large = 48.dp)
+
+    fun contentPadding(size: String = "default"): PaddingValues {
+        val height = height(size)
+        return PaddingValues(horizontal = (14 + (height.value - 38) * 2 / 3).coerceAtLeast(0f).dp)
+    }
 
     @Composable
-    fun textStyle(height: Dp = MinHeight): TextStyle {
-        val size = (13 + (height.value - 38) / 6).coerceAtLeast(1f)
-        return HyperTheme.typography.labelLarge.copy(fontSize = size.sp, lineHeight = (size * 1.2f).sp,
+    fun textStyle(size: String = "default"): TextStyle {
+        val height = height(size)
+        val fontSize = (13 + (height.value - 38) / 6).coerceAtLeast(1f)
+        return HyperTheme.typography.labelLarge.copy(fontSize = fontSize.sp, lineHeight = (fontSize * 1.2f).sp,
             fontWeight = FontWeight.SemiBold, letterSpacing = 0.05.sp)
     }
 

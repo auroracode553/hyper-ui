@@ -44,7 +44,7 @@ fun ButtonDemo() {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
                 onClick = { clicks += 1 },
-                height = 32.dp
+                size = "small"
             ) {
                 HyperText(text = "小按钮")
             }
@@ -94,7 +94,7 @@ fun ButtonDemo() {
             }
             HyperButton(
                 onClick = { clicks += 1 },
-                height = 32.dp,
+                size = "small",
                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
             ) {
                 HyperText(text = "小尺寸 slot", fontSize = 13.sp)
@@ -187,7 +187,7 @@ fun IconButtonDemo() {
             IconButtonVariantLabel(label = "大尺寸主题") {
                 HyperIconButton(
                     onClick = { selectedAction = "媒体控制" },
-                    size = 56.dp,
+                    size = "large",
                     colors = HyperIconButtonDefaults.colors(
                         containerColor = LocalDocsColorScheme.current.primary.copy(alpha = 0.64f),
                         pressedContainerColor = LocalDocsColorScheme.current.primaryContainer.copy(alpha = 0.76f),
@@ -205,7 +205,7 @@ fun IconButtonDemo() {
             IconButtonVariantLabel(label = "大尺寸中性") {
                 HyperIconButton(
                     onClick = { selectedAction = "中性操作" },
-                    size = 56.dp,
+                    size = "large",
                     colors = HyperIconButtonDefaults.colors(
                         containerColor = LocalDocsColorScheme.current.surfaceVariant.copy(alpha = 0.58f),
                         pressedContainerColor = LocalDocsColorScheme.current.secondaryContainer.copy(alpha = 0.72f),

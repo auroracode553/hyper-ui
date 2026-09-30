@@ -16,7 +16,7 @@ fun HyperTabBar(
     shape: Shape = HyperTabBarDefaults.Shape,
     topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
-    type: HyperTabBarType = HyperTabBarType.Docked,
+    type: String = "docked",
     floatingColors: HyperFloatingTabBarColors = HyperFloatingTabBarDefaults.colors(),
     content: @Composable RowScope.() -> Unit
 )
@@ -34,7 +34,7 @@ fun <T> HyperTabBar(
     shape: Shape = HyperTabBarDefaults.Shape,
     topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
     colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
-    type: HyperTabBarType = HyperTabBarType.Docked,
+    type: String = "docked",
     floatingColors: HyperFloatingTabBarColors = HyperFloatingTabBarDefaults.colors(),
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
@@ -59,7 +59,7 @@ HyperTabBar(
 // 悬浮玻璃胶囊样式
 HyperTabBar(
     items = tabs,
-    type = HyperTabBarType.Floating,
+    type = "floating",
     itemSelected = { it.id == selectedTabId },
     onItemClick = { selectedTabId = it.id }
 ) { item ->

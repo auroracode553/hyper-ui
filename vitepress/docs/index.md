@@ -22,7 +22,7 @@ AI 生成代码时必须遵守：
 - 生成或更新依赖声明前，从 [JitPack](https://jitpack.io/#auroracode553/hyper-ui) 或 [GitHub Tags](https://github.com/auroracode553/hyper-ui/tags) 读取最新可用 tag；文档不提供固定版本号。
 - 公开 API 统一从 `hyper_ui` 包导入；不要导入 `hyper_ui.core.*`。
 - 只使用具体组件页“公开签名”中存在的参数，不根据其他 Compose 库猜测参数名。
-- 宽、高、最小尺寸和外部间距优先使用组件的首个 `modifier`；不要猜测 `size`、`width`、`height`、`minHeight`、`contentPadding` 等重复具名参数。作用于内部独立节点的修饰符以具体签名为准，例如 `contentModifier`、`HyperDrawer.drawerModifier`、`HyperTextField.inputModifier`。
+- 视觉尺寸优先使用组件统一的 `size = "small" | "default" | "large"`；外部宽度、高度和间距使用首个 `modifier`。作用于内部独立节点的修饰符以具体签名为准，例如 `contentModifier`、`HyperDrawer.drawerModifier`、`HyperTextField.inputModifier`。
 - `value`、`checked`、`selected`、`show`、`open`、`expanded`、进度和导航选择等业务状态均由调用方持有。
 - 单一连续卡片的页面级数据列表使用 `HyperList`；按日期或类别形成多个独立卡片分组的动态列表使用 `HyperSectionedList`；`HyperMenuList` 只能用于少量菜单、设置项和操作入口，不要用于历史、文件、媒体、日志或搜索结果列表。
 - 页面级空数据或筛选无结果使用 `HyperEmptyState`；图标和可选操作通过 Slot 注入，加载中与错误态仍由页面分别处理。

@@ -48,7 +48,7 @@ fun EditNoteAction() {
         HyperTextField(
             value = draft,
             onValueChange = { draft = it },
-            type = HyperTextFieldType.Textarea,
+            type = "textarea",
             rows = 3
         )
     }
