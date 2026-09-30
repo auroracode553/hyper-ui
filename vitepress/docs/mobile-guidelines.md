@@ -37,6 +37,6 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 ## 相关文档
 
 - [接入与最小配置](getting-started.md)
-- [主题与颜色](theme.md)
+- [主题配置](theme.md)
 - [组件索引](component-index.md)
 - [状态与架构边界](state-model.md)

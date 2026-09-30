@@ -1,6 +1,8 @@
-# 主题与颜色
+# 主题配置
 
 HyperUI 的颜色、排版、形状和玻璃材质由 `HyperThemeConfig` 统一提供。组件只读取主题令牌，不在组件内部保存全局主题状态。
+
+<WasmPreview demo="theme-material" title="主题材质交互预览" />
 
 ## 配置主题
 

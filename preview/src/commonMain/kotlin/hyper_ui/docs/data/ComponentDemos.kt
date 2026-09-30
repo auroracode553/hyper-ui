@@ -33,6 +33,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(navigationComponentDemos())
     addAll(listComponentDemos())
     addAll(feedbackComponentDemos())
+    addAll(themeComponentDemos())
 }
 .map { demo ->
     if (demo.useReferencePreview) {

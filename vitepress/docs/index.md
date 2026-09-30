@@ -53,6 +53,6 @@ HyperButton(
 
 - [接入与最小配置](getting-started.md)
 - [移动端规范](mobile-guidelines.md)
-- [主题与颜色](theme.md)
+- [主题配置](theme.md)
 - [状态与架构边界](state-model.md)
 - [交互预览](preview.md)

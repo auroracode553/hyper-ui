@@ -49,7 +49,7 @@ export default defineConfig({
         items: [
           { text: '接入与最小配置', link: '/getting-started' },
           { text: 'Android 手机端规范', link: '/mobile-guidelines' },
-          { text: '主题与颜色', link: '/theme' },
+          { text: '主题配置', link: '/theme' },
           { text: '组件索引', link: '/component-index' }
         ]
       },

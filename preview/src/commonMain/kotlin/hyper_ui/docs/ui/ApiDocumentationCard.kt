@@ -35,6 +35,8 @@ import hyper_ui.docs.theme.DocsCodeText
 
 @Composable
 internal fun ApiDocumentationCard(documentPaths: List<String>) {
+    if (documentPaths.isEmpty()) return
+
     var documents by remember(documentPaths) { mutableStateOf<Map<String, String>>(emptyMap()) }
     var loadError by remember(documentPaths) { mutableStateOf<String?>(null) }
 
