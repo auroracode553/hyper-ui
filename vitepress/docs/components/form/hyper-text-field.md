@@ -63,4 +63,4 @@ HyperTextField(
 
 - 使用 `HyperThemeConfig` 提供主题；需要采样背景时，将可视内容置于 `HyperBackdrop` 中。
 - 组件不持有业务数据、导航或网络请求；`visible`、`value`、`selected` 等由调用方控制。
-- Android 原生窗口和系统工具仅在 Android 目标可用；Preview 使用跨平台示例。
+- 公开 API 仅支持 Android 手机端；Preview 只是文档交互工具。

@@ -16,7 +16,7 @@ export default defineConfig({
   lang: 'zh-CN',
   title: 'HyperUI',
   titleTemplate: ':title | HyperUI',
-  description: 'HyperUI Compose UI 组件库文档与交互预览',
+  description: 'HyperUI Android 手机端 Compose UI 组件库文档与交互预览',
   lastUpdated: true,
   ...createAiDocsConfig({ siteUrl }),
   vite: {
@@ -38,7 +38,7 @@ export default defineConfig({
     ],
     // 页脚配置
     footer: {
-      message: '基于 Compose Multiplatform 构建的跨平台 UI 组件库',
+      message: '面向 Android 手机端的 Jetpack Compose UI 组件库',
       copyright: `Copyright © ${currentYear} HyperUI`
     },
     // top navigation removed because the sidebar already provides menu navigation
@@ -49,6 +49,7 @@ export default defineConfig({
         items: [
           { text: '文档首页', link: '/' },
           { text: '接入与最小配置', link: '/getting-started' },
+          { text: 'Android 手机端规范', link: '/mobile-guidelines' },
           { text: '主题与颜色', link: '/theme' },
           { text: '状态与架构边界', link: '/state-model' },
           { text: '组件索引', link: '/component-index' },
@@ -85,7 +86,6 @@ export default defineConfig({
         text: '导航组件',
         items: [
           { text: 'NavBar', link: '/components/navigation/hyper-nav-bar' },
-          { text: 'ImmersiveNavBar', link: '/components/navigation/hyper-immersive-nav-bar' },
           { text: 'Drawer', link: '/components/navigation/hyper-drawer' },
           { text: 'SlideMenu', link: '/components/navigation/hyper-slide-menu' },
           { text: 'FilterBar', link: '/components/navigation/hyper-filter-bar' },

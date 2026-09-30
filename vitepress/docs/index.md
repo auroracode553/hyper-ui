@@ -1,84 +1,59 @@
-# HyperUI 使用文档
+# HyperUI
 
-> 本目录是 HyperUI 面向开发者、AI 与代码生成工具的权威使用文档。Markdown 正文是事实来源；VitePress 只负责把这些文件渲染为网页，Wasm 只负责提供可交互预览。
->
-> **GitHub 仓库**: [auroracode553/hyper-ui](https://github.com/auroracode553/hyper-ui) · **在线文档**: [auroracode553.github.io/hyper-ui](https://auroracode553.github.io/hyper-ui)
+HyperUI 是面向 **Android 手机端** 的 Jetpack Compose UI 组件库，提供 HyperOS 风格的柔性玻璃表面、受控交互和基础页面组件。
 
-## 一句话说明
+组件库只负责 UI：不持有业务数据，不发起网络请求，不访问数据库，不申请权限，也不实现路由或 ViewModel。
 
-HyperUI 是 Android Jetpack Compose UI 组件库。它负责组件样式与交互回调，不负责网络、数据库、权限、路由、ViewModel 或其他业务规则。
+## 30 秒开始
 
-## AI 阅读顺序
+1. 阅读[接入与最小配置](getting-started.md)。
+2. 在应用根节点包裹 `HyperThemeConfig`。
+3. 查看[移动端规范](mobile-guidelines.md)，确认手机宽度、安全区和触控约束。
+4. 在[组件索引](component-index.md)选择组件，再打开对应组件页查看真实签名。
 
-1. [接入与最小配置](getting-started.md)
-2. [主题与颜色](theme.md)
-3. [状态与架构边界](state-model.md)
-4. [组件索引](component-index.md)
-5. 当前任务涉及的具体组件页
-6. 需要组合多个组件时，再查看 [常见页面组合](patterns/index.md)
+```kotlin
+import hyper_ui.*
 
-AI 生成代码时必须遵守：
+@Composable
+fun SaveAction(onSave: () -> Unit) {
+    HyperButton(
+        onClick = onSave,
+        type = "filled",
+        size = "default"
+    ) {
+        HyperText("保存")
+    }
+}
+```
 
-- 生成或更新依赖声明前，从 [JitPack](https://jitpack.io/#auroracode553/hyper-ui) 或 [GitHub Tags](https://github.com/auroracode553/hyper-ui/tags) 读取最新可用 tag；文档不提供固定版本号。
-- 公开 API 统一从 `hyper_ui` 包导入；不要导入 `hyper_ui.core.*`。
-- 只使用具体组件页“公开签名”中存在的参数，不根据其他 Compose 库猜测参数名。
-- 视觉尺寸优先使用组件统一的 `size = "small" | "default" | "large"`；外部宽度、高度和间距使用首个 `modifier`。作用于内部独立节点的修饰符以具体签名为准，例如 `contentModifier`、`HyperDrawer.drawerModifier`、`HyperTextField.inputModifier`。
-- `value`、`checked`、`selected`、`show`、`open`、`expanded`、进度和导航选择等业务状态均由调用方持有。
-- 单一连续卡片的页面级数据列表使用 `HyperList`；按日期或类别形成多个独立卡片分组的动态列表使用 `HyperSectionedList`；`HyperMenuList` 只能用于少量菜单、设置项和操作入口，不要用于历史、文件、媒体、日志或搜索结果列表。
-- 页面级空数据或筛选无结果使用 `HyperEmptyState`；图标和可选操作通过 Slot 注入，加载中与错误态仍由页面分别处理。
-- 不把网络请求、数据库访问、权限申请、路由实现或 ViewModel 写入 HyperUI 组件。
-- `hyperToast` 是 Android-only 工具；传入 `Context` 与文本或字符串资源 ID，内部只负责主线程调度和原生 Toast 显示。
-- `HyperDialog`、`HyperAlertDialog` 和 `HyperUpdateDialog` 使用 Compose Dialog，但设置 `usePlatformDefaultWidth = false`，在稳定的全尺寸根节点内居中面板，并屏蔽 Android 窗口过渡；返回键与外部点击行为以组件参数为准。需要描边与阴影的玻璃组件统一复用内部公共深度层，也可只复用其中的公共阴影能力。
-- `HyperIconButton` 只使用紧凑级阴影，`HyperDropdown` 使用内容自适应的浮层级深度，`HyperDrawer` 使用结构级深度；透明 `HyperNavBar` 不绘制描边和阴影。这些视觉参数不作为公开 border 或 outline API 暴露。
-- `HyperTextField` 使用同一玻璃语言的结构性变体：投影低于按钮，普通态无硬边框，聚焦和错误状态只使用一条渐变语义边缘。
-- `HyperPlaybackSpeedPanel`、`HyperPlaybackSpeedPanelOverlay` 与 `HyperPlaybackSpeedScale` 默认固定使用深色播放器视觉，不随外层 `HyperTheme` 的明暗模式变化；强调色仍读取 `HyperThemeConfig`。倍速面板约为 `468dp × 157dp`，倍速刻度约为 `310dp × 59dp`，都适合紧凑叠放在视频画面上。
-- HyperUI 内置语义图标统一使用 `com.composables:icons-lucide-android:2.2.1` VectorDrawable，不使用 Canvas 手绘图标；支持自定义的组件继续保留 slot。调用方直接引用 `LucideR.drawable` 时需显式声明依赖。
-- 除非调用方已有明确依赖，否则不要为少量图标引入 `material-icons-extended`；Release 构建应开启代码与资源裁剪。
-- 文档示例中的 Compose、图标和状态 API 仍需从各自标准包导入。
-- `preview/` 与 Wasm 预览是文档演示工程，不是调用方依赖。
+## API 约定
 
-## 文档与预览的职责
+| 约定 | 规则 |
+| --- | --- |
+| `type` | 同一组件内的视觉或结构形态，例如 `filled`、`outline`、`textarea` |
+| `size` | `small`、`default`、`large` 三档视觉尺寸 |
+| `modifier` | 外部宽度、间距、位置和页面布局 |
+| 状态参数 | `value`、`checked`、`selected`、`visible`、`progress` 等由调用方持有 |
+| Slot | 内容、图标、前后缀和操作区通过 `content` 或具名 Slot 注入 |
+| 颜色 | 使用 `HyperThemeConfig` 或组件的 `colors`，不在调用方复制内部材质逻辑 |
 
-| 层级 | 面向对象 | 职责 | 是否为 API 事实来源 |
-| --- | --- | --- | --- |
-| `vitepress/docs/` Markdown | AI、开发者 | 参数、默认值、状态、约束、示例 | 是 |
-| VitePress | 浏览器访问者 | 将 Markdown 渲染为可检索的语义化 HTML | 否 |
-| Desktop preview | 维护者 | 本地查看真实组件与交互 | 否 |
-| Wasm preview | 浏览器访问者 | 在文档页中操作跨平台预览 | 否 |
-| `hyper_ui` 源码 | 维护者 | 最终实现 | 文档冲突时以当前源码为准并修正文档 |
+公开 API 统一位于 `hyper_ui` 包。调用方使用 `import hyper_ui.*`，不要导入 `hyper_ui.core.*`。
 
-## 平台信息
+## 手机端范围
 
-- 使用平台：Android
-- UI 技术：Jetpack Compose Foundation 与 HyperUI
-- JitPack 坐标格式：`com.github.auroracode553:hyper-ui:<tag>`
-- `minSdk`：30
-- `compileSdk`：37
-- 公开包：`hyper_ui`
+当前产品目标是 320dp 至 430dp 的 Android 竖屏手机。组件不会为平板、桌面或横屏增加专用 API；更宽或更复杂的布局由页面通过 Compose `Modifier` 组合。
 
-## 组件分组
+Preview 的 Desktop/Wasm 目标只用于文档中的交互验收，不代表公开 API 支持这些消费平台。详见[移动端规范](mobile-guidelines.md)和[交互预览](preview.md)。
 
-- [基础组件](component-index.md#基础组件)
-- [表单组件](component-index.md#表单组件)
-- [容器组件](component-index.md#容器组件)
-- [导航组件](component-index.md#导航组件)
-- [列表组件](component-index.md#列表组件)
-- [反馈组件](component-index.md#反馈组件)
+## 按任务阅读
 
-## 维护入口
+- 接入项目：[接入与最小配置](getting-started.md)
+- 配置主题：[主题与颜色](theme.md)
+- 管理受控状态：[状态与架构边界](state-model.md)
+- 查找组件：[组件索引](component-index.md)
+- 组合页面：[常见页面组合](patterns/index.md)
+- 维护文档：[文档维护规则](maintenance.md)
 
-新增、删除、重命名或修改公开 API 时，按照 [文档维护规则](maintenance.md) 同步源码、Markdown、Desktop/Wasm preview 与 VitePress 导航。需要让文档 iframe 显示最新组件时，按 [组件更新后刷新预览](preview-update-workflow.md) 手动发布 Wasm 静态产物。
+## 事实来源
 
-部署 VitePress 后，AI 可以使用以下机器入口：
-
-- [`llms.txt`](https://auroracode553.github.io/hyper-ui/llms.txt)：完整 Markdown 文档索引。
-- [`llms-full.txt`](https://auroracode553.github.io/hyper-ui/llms-full.txt)：单次响应包含全部权威文档，适合不继续跟链的抓取器。
-- [`index.md`](https://auroracode553.github.io/hyper-ui/index.md)：本页的纯 Markdown 版本；其他页面也提供同路径 `.md` 版本。
-- [`sitemap.xml`](https://auroracode553.github.io/hyper-ui/sitemap.xml)：网页发现入口。
-
-这些纯文本文件由构建过程直接从本目录派生，不维护第二份组件正文。具体 API 仍以本目录 Markdown 为准。
-HyperTooltip 提供轻量提示浮层。
-
-## Flutter 参考设计
-
-当前 Compose 组件以 Flutter Hy UI 为视觉基准。按钮使用 `String`；列表侧滑操作是 `HyperSlideMenu`，横向分类按钮是 `HyperFilterBar`。背景模糊需使用 [`HyperBackdrop`](components/container/hyper-backdrop.md) 采样。公开签名与默认值以各组件页和源码为准，Wasm 仅用于交互预览。
+`library/src/main/java/hyper_ui/` 定义实现，`vitepress/docs/` Markdown 定义面向调用方的 API 说明，Preview 只展示真实交互。Markdown 必须包含包名、公开签名、默认值、状态归属、使用约束和最小调用方式。

@@ -12,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import hyper_ui.HyperText
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import hyper_ui.*
@@ -21,8 +20,9 @@ import hyper_ui.*
 fun SettingsScreen() {
     var pushEnabled by remember { mutableStateOf(true) }
 
-    HyperNavBar(
-        titleContent = { Text("设置") }
+    HyperNavBarPage(
+        navBar = { HyperNavBar(titleContent = { HyperText("设置") }) },
+        navBarSize = "default"
     ) { contentPadding ->
         Column(
             modifier = Modifier
@@ -33,8 +33,8 @@ fun SettingsScreen() {
         ) {
             HyperMenuList {
                 HyperListItem(
-                    headlineContent = { Text("推送通知") },
-                    supportingContent = { Text("接收重要消息提醒") },
+                    headlineContent = { HyperText("推送通知") },
+                    supportingContent = { HyperText("接收重要消息提醒") },
                     trailingContent = {
                         HyperSwitch(
                             checked = pushEnabled,

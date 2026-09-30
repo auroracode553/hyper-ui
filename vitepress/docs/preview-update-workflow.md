@@ -1,6 +1,6 @@
 # 组件更新后刷新预览
 
-本页用于记录维护者在更新组件、示例或 preview 主题后，如何让 VitePress 文档页中的 `<WasmPreview>` iframe 显示最新内容。
+本页只记录维护者在更新组件、示例或 preview 主题后，如何让 VitePress 文档页中的 `<WasmPreview>` iframe 显示最新内容。预览是文档工具，不扩大 HyperUI 的 Android 手机端支持范围。
 
 ## 一条命令更新文档和预览
 

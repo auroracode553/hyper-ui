@@ -2,7 +2,7 @@
 
 [![在线文档](https://img.shields.io/badge/%F0%9F%93%96-在线文档-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)](https://auroracode553.github.io/hyper-ui)
 
-> Android Jetpack Compose UI 组件库，专注提供 HyperOS 风格的基础界面组件，不承载业务逻辑。
+> 面向 Android 手机竖屏的 Jetpack Compose UI 组件库，专注提供 HyperOS 风格的基础界面组件，不承载业务逻辑。
 
 **源码仓库**: `git@gitee.com:my_new_way/hyper_ui.git`
 
@@ -10,7 +10,7 @@
 
 ## Flutter 参考设计与 Compose API
 
-默认视觉令牌以 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 为参考：蓝色主题色 `#476FE8`、浅深色玻璃表面、38dp 按钮、16dp 基础圆角和即时按压反馈。组件公开 API 采用统一字符串词汇：`type` 负责渲染类型，`size` 负责 `small`、`default`、`large` 尺寸。按钮按下立即开始 85ms 的整体缩放与透明度过渡，释放或拖出取消后用 180ms 恢复。`HyperThemeConfig` 可注入 `themeColor`、`typography`、`shapes` 与 `glass`；需要真实背景模糊时用 `HyperBackdrop` 包裹背景和组件。`HyperSlideMenu` 是受控列表侧滑操作，旧的横向分类按钮更名为 `HyperFilterBar`。语义色由 `colors` 注入，加载态由 `loading` 控制。组件公开 API 仍统一在 `hyper_ui` 包。
+默认视觉令牌以 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 为参考：蓝色主题色 `rgba(71, 111, 232)`、浅深色玻璃表面、38dp 按钮、16dp 基础圆角和即时按压反馈。组件公开 API 采用统一字符串词汇：`type` 负责渲染类型，`size` 负责 `small`、`default`、`large` 尺寸。按钮按下立即开始 85ms 的整体缩放与透明度过渡，释放或拖出取消后用 180ms 恢复。`HyperThemeConfig` 可注入 `themeColor`、`typography`、`shapes` 与 `glass`；需要真实背景模糊时用 `HyperBackdrop` 包裹背景和组件。`HyperSlideMenu` 是受控列表侧滑操作，旧的横向分类按钮更名为 `HyperFilterBar`。语义色由 `colors` 注入，加载态由 `loading` 控制。组件公开 API 仍统一在 `hyper_ui` 包。
 
 ```kotlin
 HyperThemeConfig {
@@ -31,7 +31,8 @@ HyperThemeConfig {
 - 当前库的 `minSdk` 为 `30`，调用方应用的 `minSdk` 不能低于 30。
 - HyperUI 内置语义图标统一使用 `com.composables:icons-lucide-android:2.2.1` VectorDrawable，不再用 Canvas 手绘图标；可替换图标继续保留 slot。
 - AI 或新调用者应优先阅读 [vitepress/docs/index.md](vitepress/docs/index.md)，再按 [组件索引](vitepress/docs/component-index.md) 打开具体组件页。
-- `vitepress/docs/` 是权威 Markdown 文档，`vitepress/` 负责网页渲染，`preview/` 负责 Desktop 与 Wasm 交互预览。
+- `vitepress/docs/` 是权威 Markdown 文档，`vitepress/` 负责网页渲染，`preview/` 只负责文档交互预览。当前公开支持范围是 Android 手机端。
+- 手机端布局与交互约束见 [移动端规范](vitepress/docs/mobile-guidelines.md)。
 
 ## AI 接入说明
 
@@ -202,7 +203,7 @@ HyperIconButton(onClick = onSearch) {
 - 容器与列表：`HyperPanel`、`HyperColorPicker`、`HyperList`、`HyperSectionedList`、`HyperMenuList`、`HyperListItem`。
 - 导航与操作：`HyperNavBar`、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperFilterBar`（横向分类）、`HyperTabBar`。
 - 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopup`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
-- Android 系统工具：`hyperToast`、`HyperBatteryState`、`readHyperBatteryState`、`rememberHyperBatteryState`。它们不进入 Desktop/Wasm Preview 编译链。
+- Android 系统工具：`hyperToast`、`HyperBatteryState`、`readHyperBatteryState`、`rememberHyperBatteryState`。它们不进入 Preview 的跨平台编译链，真实调用仅限 Android。
 
 所有公开 API 位于 `hyper_ui` 包；`hyper_ui.core` 仅供库内部使用。详细签名和默认值以[组件索引](vitepress/docs/component-index.md)及各组件页为准。
 
@@ -239,7 +240,7 @@ HyperTextField(
 
 - `vitepress/docs/`：Markdown 权威内容，记录真实公开签名、参数默认值、状态归属、约束与示例，供 AI 和调用方阅读。
 - `vitepress/`：将 `vitepress/docs/` 渲染为语义化静态网页，并通过 iframe 嵌入 Wasm 预览。
-- `preview/`：Compose Multiplatform Desktop/Wasm 组件演示，用来操作真实组件状态。
+- `preview/`：用于文档验收的交互示例，不能作为 Desktop/Wasm 产品支持声明。
 
 VitePress 的 `WasmPreview` iframe 使用 `embedded=1`，只绘制当前组件的交互示例；组件参数、变体说明和最小用法由 Markdown 组件页承载。独立打开 Preview 应用时仍可使用其目录导航。
 
@@ -255,12 +256,12 @@ preview/
 ├── settings.gradle.kts
 └── src/
     ├── commonMain/kotlin/hyper_ui/docs/
-    │   ├── DocsApp.kt       # Desktop/Wasm 共享文档根节点
+    │   ├── DocsApp.kt       # 文档预览共享根节点
     │   ├── data/            # 组件注册与示例代码片段
     │   ├── theme/           # 文档主题
     │   └── ui/              # 文档布局与交互示例
     ├── desktopMain/kotlin/hyper_ui/docs/Main.kt
-    │                       # Desktop Window 入口
+    │                       # 维护者预览入口
     └── wasmJsMain/
         ├── kotlin/hyper_ui/docs/Main.kt
         │                   # ComposeViewport 浏览器入口
@@ -270,7 +271,7 @@ preview/
 
 与正式库的关系：
 
-- `preview` 的 `commonMain` 直接引用 `library/src/main/java/hyper_ui/` 中的平台无关 Compose 源码，供 Desktop 与 Wasm 共用。
+- `preview` 的 `commonMain` 直接引用 `library/src/main/java/hyper_ui/` 中的平台无关 Compose 源码，供文档预览使用。
 - 公开组件源码按功能组放在 `library/src/main/java/hyper_ui/components/` 下，但包名统一声明为 `hyper_ui`，方便调用方 `import hyper_ui.*`。
 - UI 库内部公共工具放在 `library/src/main/java/hyper_ui/core/` 下，供组件实现复用，不作为调用方公开入口。
 - Android-only 工具不能进入 `commonMain` 编译链；Preview 页面只展示说明、可交互模拟和 Android 调用片段。
@@ -329,62 +330,18 @@ Wasm 静态产物不提交到仓库。使用者手动执行 `preview/` 中的 `p
 
 - [vitepress/docs/index.md](vitepress/docs/index.md)：调用方和 AI 的首读入口。
 - [vitepress/docs/component-index.md](vitepress/docs/component-index.md)：按分组进入每个组件的精确 API 文档。
-- [vitepress/docs/preview.md](vitepress/docs/preview.md)：VitePress 与 Wasm iframe 的职责和放置方式。
-- `preview/`：Desktop/Wasm 交互预览工程。
+- [vitepress/docs/mobile-guidelines.md](vitepress/docs/mobile-guidelines.md)：Android 手机端布局与交互约束。
+- [vitepress/docs/preview.md](vitepress/docs/preview.md)：文档交互预览的职责边界。
+- `preview/`：仅供文档验收的 Desktop/Wasm 交互预览工程。
 - `vitepress/`：语义化静态文档站配置。
 - [vitepress/docs/maintenance.md](vitepress/docs/maintenance.md)：本地开发运行与文档维护规则。
 
-## 手动运行 / 打包 / 发布参考
+## 本地文档预览
 
-以下命令仅作为手动执行说明，按需在终端中执行：
-
-Desktop preview：
+项目约束禁止在此仓库执行代码打包、部署或发布。只阅读或编辑 Markdown 时，进入 `vitepress/` 手动启动文档开发服务器即可：
 
 ```powershell
-cd preview
-.\gradlew.bat run
-.\gradlew.bat run --continuous
-.\gradlew.bat compileKotlinDesktop
+npm run dev
 ```
 
-Wasm preview（由使用者手动执行）：
-
-```powershell
-cd preview
-.\gradlew.bat kotlinWasmUpgradePackageLock
-.\gradlew.bat publishWasmToVitePress
-```
-
-产物位于 `preview/build/dist/wasmJs/productionExecutable/`，上述任务会复制完整内容到 VitePress 静态目录。只阅读文档时，无需执行 Gradle；在 `vitepress/` 目录按需手动执行：
-
-```powershell
-npm install
-npx vitepress dev .
-npx vitepress build .
-```
-
-VitePress 默认静态输出位于 `vitepress/.vitepress/dist/`。普通 `npm run dev` 不会执行 Gradle；`npm run dev:watch` 会按需构建和更新 Wasm 预览。
-
-如果静态站点部署在 `/hyper_ui/` 子路径，可由使用者在同一终端手动设置：
-
-```powershell
-$env:VITEPRESS_BASE = "/hyper_ui/"
-npx vitepress build .
-```
-
-部署时上传 `vitepress/.vitepress/dist/` 的全部内容，并确认静态服务可以返回 `.wasm` 文件。
-
-Android library：
-
-```powershell
-cd library
-.\gradlew.bat assembleRelease
-.\gradlew.bat publishToMavenLocal
-```
-
-发布信息：
-
-```text
-groupId:    com.hyperui
-artifactId: hyper-ui
-```
+组件交互预览的职责、平台边界和维护方式见[交互预览](vitepress/docs/preview.md)与[文档维护规则](vitepress/docs/maintenance.md)。

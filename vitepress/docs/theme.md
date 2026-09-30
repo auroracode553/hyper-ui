@@ -1,8 +1,25 @@
 # 主题与颜色
 
-## `rgba`
+HyperUI 的颜色、排版、形状和玻璃材质由 `HyperThemeConfig` 统一提供。组件只读取主题令牌，不在组件内部保存全局主题状态。
 
-使用整数 RGB 与 Float alpha 分量创建 Compose `Color`：
+## 配置主题
+
+```kotlin
+@Composable
+fun AppRoot() {
+    HyperThemeConfig(
+        themeColor = rgba(71, 111, 232),
+        successColor = rgba(34, 197, 94),
+        darkTheme = isSystemInDarkTheme()
+    ) {
+        AppContent()
+    }
+}
+```
+
+`darkTheme` 默认跟随系统。需要完全自定义排版、形状或玻璃令牌时，传入 `typography`、`shapes` 或 `glass`；普通页面不需要覆盖这些内部令牌。
+
+## 颜色构造
 
 ```kotlin
 fun rgba(
@@ -13,93 +30,47 @@ fun rgba(
 ): Color
 ```
 
-- `red`、`green`、`blue` 会限制在 `0..255`。
-- `alpha` 会限制在 `0f..1f`。
+颜色分量会被限制在 `0..255`，透明度会被限制在 `0f..1f`。组件源码和调用示例禁止使用 `Color(0xFFRRGGBB)`。
+
+## 主题语义色
 
 ```kotlin
-val brandColor = rgba(255, 103, 0)
+HyperColors.accent
+HyperColors.success
+HyperColors.info
+HyperColors.warning
+HyperColors.danger
+HyperColors.primaryText
+HyperColors.secondaryText
+HyperColors.disabledText
 ```
 
-组件根据角色选择实色或玻璃表面。内部 `HyperSurfaceDepth` 统一绘制低对比度主题描边与至多一层阴影，并提供只应用阴影的公共内部能力。`HyperDropdown` 与 `HyperDrawer` 直接复用完整深度层，`HyperIconButton` 只复用阴影，`HyperNavBar` 不绘制描边和阴影；通用 `HyperGlassSurface` 与 `HyperTextField` 也把阴影绘制委托给公共能力，输入框的焦点/错误语义边缘仍由专用逻辑覆盖。`HyperTabBar` 继续只使用专用 0.5dp 顶部发丝线。
+这些值依赖当前 Composition，只能在 Composable 上下文读取。不要把 `HyperColors` 的结果缓存到全局变量。
 
-播放器反馈是明确的固定深色例外：`HyperPlaybackSpeedPanel`、`HyperPlaybackSpeedPanelOverlay` 与 `HyperPlaybackSpeedScale` 的默认容器、文字和轨道不读取外层明暗模式，避免视频画面上因应用主题切换而失去对比度；强调色仍来自 `HyperThemeConfig`。调用方显式传入 `colors` 时可以覆盖这些默认值。
+## 组件颜色覆盖
 
-组件源码禁止使用 `Color(0xFFRRGGBB)` 十六进制硬编码。需要直接构造颜色时，使用四个 Float RGBA 分量；调用方也可优先使用 `rgba(...)`。
-
-## `HyperThemeConfig`
+优先使用组件的 `colors` 工厂覆盖语义色：
 
 ```kotlin
-@Composable
-fun HyperThemeConfig(
-    themeColor: Color = HyperStyleDefaults.DefaultThemeColor,
-    successColor: Color = HyperStyleDefaults.SuccessColor,
-    content: @Composable () -> Unit
-)
-```
-
-`HyperThemeConfig` 提供 HyperUI 的品牌色、排版和形状配置。
-
-## `HyperThemeColors`
-
-```kotlin
-data class HyperThemeColors(
-    val themeColor: Color = HyperStyleDefaults.DefaultThemeColor,
-    val successColor: Color = HyperStyleDefaults.SuccessColor
-)
-
-object HyperTheme {
-    val colors: HyperThemeColors
-        @Composable @ReadOnlyComposable get()
+HyperButton(
+    type = "tonal",
+    colors = HyperButtonDefaults.colors(
+        contentColor = HyperColors.accent
+    ),
+    onClick = onOpen
+) {
+    HyperText("打开")
 }
 ```
 
-在 Composable 中可通过 `HyperTheme.colors` 读取当前配置。通常调用方只需传入 `HyperThemeConfig`，不需要直接读取或修改内部对象。
+不要在调用方复制玻璃背景、描边和阴影。组件内部会根据 `type`、`enabled`、焦点和错误状态选择正确层级。
 
-## 公开默认值
+## 材质层级
 
-```kotlin
-object HyperStyleDefaults {
-    val DefaultThemeColor = rgba(255, 103, 0, 1f)
-    val SuccessColor = rgba(52, 199, 89, 1f)
-    val InfoColor = rgba(144, 147, 153, 1f)
-    val WarningColor = rgba(230, 162, 60, 1f)
-    val DangerColor = rgba(255, 59, 48, 1f)
-    const val DisabledAlpha = 0.38f
-    val SmallCornerRadius = 12.dp
-    val MediumCornerRadius = 16.dp
-    val LargeCornerRadius = 24.dp
-    val ExtraLargeCornerRadius = 28.dp
-
-    val CardElevation = 4.dp
-}
-```
-
-`HyperColors` 根据当前系统明暗模式提供以下只读值：
-
-| 属性 | 类型 | 用途 |
+| 层级 | 典型组件 | 规则 |
 | --- | --- | --- |
-| `accent` | `Color` | 当前主题强调色 |
-| `success` | `Color` | 当前成功色 |
-| `info` | `Color` | 信息语义色 |
-| `warning` | `Color` | 警告语义色 |
-| `danger` | `Color` | 危险语义色 |
-| `isLight` | `Boolean` | 当前背景是否为浅色 |
-| `pageBackground` | `Color` | 页面背景 |
-| `cardContainer` | `Color` | 卡片/面板背景 |
-| `softContainer` | `Color` | 柔和轨道或容器背景 |
-| `fieldContainer` | `Color` | 输入字段背景 |
-| `elevatedContainer` | `Color` | 浮起控件背景 |
-| `disabledContainer` | `Color` | 禁用容器背景 |
-| `accentContainer` | `Color` | 强调色与柔和容器混合后的不透明背景 |
-| `primaryText` | `Color` | 主文字 |
-| `secondaryText` | `Color` | 次文字 |
-| `disabledText` | `Color` | 禁用文字 |
-| `divider` | `Color` | 分割线 |
-| `fieldBorder` | `Color` | 输入框描边 |
-| `panelBorder` | `BorderStroke` | 面板描边 |
+| 内容层 | `HyperList`、`HyperListItem` | 低抬升，避免每一行重复铺设卡片 |
+| 浮动层 | `HyperIconButton`、`HyperTabBar`、`HyperDropdown` | 只使用一层上下文阴影 |
+| 模态层 | `HyperDialog`、`HyperDrawer` | 通过遮罩与页面内容分离 |
 
-不要把 `HyperColors` 的结果缓存到全局变量；这些值依赖当前 Composition，应在 Composable 上下文中读取。
-
-## Flutter 参考玻璃令牌
-
-`HyperGlassTokens.light()` 与 `dark()` 移植 Flutter `HyGlassTheme` 的十项 RGBA 令牌；`HyperThemeConfig(glass = tokens)` 注入自定义材质。默认主色为 `rgba(71, 111, 232)`。页面有动态背景时通过 `HyperBackdrop(background = { ... }) { ... }` 提供背景采样；静态环境色使用 `HyperSoftBackground(intensity = 1f)`。组件保留受控状态，主题只提供视觉参数。
+透明表面需要稳定背景。页面有动态背景时，再使用 `HyperBackdrop` 提供采样环境；普通页面不需要为每个组件单独创建背景层。

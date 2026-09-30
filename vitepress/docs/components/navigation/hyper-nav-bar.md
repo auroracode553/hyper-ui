@@ -24,6 +24,17 @@ fun HyperNavBar(
     actions: List<@Composable () -> Unit> = emptyList(),
     child: (@Composable BoxScope.() -> Unit)? = null
 )
+
+@Composable
+fun HyperNavBarPage(
+    navBar: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    navBarSize: String = "default",
+    safeArea: Boolean = true,
+    bottomSafeArea: Boolean = true,
+    content: @Composable BoxScope.(PaddingValues) -> Unit
+)
 ```
 
 导航栏默认尺寸为 `default`（44.dp），也支持 `small` 与 `large`，不含顶部安全区；默认左右内边距为 16.dp。它不绘制背景、模糊、描边或阴影。`child` 接管整行布局，不能和其他插槽同时使用。`trailingContent` 与 `actions` 二选一。
@@ -50,6 +61,6 @@ HyperNavBarPage(
 ## 使用约束
 
 - 使用 `HyperThemeConfig` 提供主题；组件不持有导航、网络或业务状态。
-- 返回按钮由调用方通过 `navigationContent` 注入；Compose Multiplatform 组件不直接读取宿主导航栈。
+- 返回按钮由调用方通过 `navigationContent` 注入；组件不直接读取宿主导航栈，调用方负责返回行为。
 - 标题默认使用 16sp、半粗体；副标题默认使用 11sp。
-- Android 原生系统栏配置由宿主处理，Preview 使用跨平台示例。
+- Android 系统栏配置由宿主处理；Preview 只用于文档交互验收。
