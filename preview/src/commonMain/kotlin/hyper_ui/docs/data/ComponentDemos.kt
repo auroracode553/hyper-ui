@@ -21,11 +21,13 @@ data class ComponentDemo(
     val content: @Composable () -> Unit,
     /** 组件是否直接占用嵌入预览的完整手机视口。 */
     val fullScreenPreview: Boolean = false,
-    /** 是否包裹通用主题、背景和方向控制条。 */
+    /** 贴底组件自行绘制手势条区域时，宿主不预留底部空白。 */
+    val fillsBottomSafeArea: Boolean = false,
+    /** 是否注入示例通用主题、语义色与布局方向。 */
     val useReferencePreview: Boolean = true
 )
 
-/** 聚合稳定 Preview ID；Toast 语义色与 Switch 关闭态由对应分组数据和 Showcase 呈现。 */
+/** 聚合稳定 Preview ID；Toast、Switch 等状态及 HyperTabBar 两种样式由对应分组示例呈现。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos())
     addAll(formComponentDemos())

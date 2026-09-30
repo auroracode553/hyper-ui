@@ -4,7 +4,8 @@ package hyper_ui.docs.data
 import hyper_ui.docs.ui.NavBarDemo
 import hyper_ui.docs.ui.DrawerDemo
 import hyper_ui.docs.ui.SlideMenuDemo
-import hyper_ui.docs.ui.TabBarDemo
+import hyper_ui.docs.ui.DockedTabBarDemo
+import hyper_ui.docs.ui.FloatingTabBarDemo
 
 private const val GROUP_NAVIGATION = "导航组件"
 
@@ -95,7 +96,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("无蒙层", "dismissOnClickOutside", "仅处理外部点击，不绘制背景或遮罩")
         ),
         apiDocumentPaths = listOf("navigation/hyper-drawer.md"),
-        content = { DrawerDemo() }
+        content = { DrawerDemo() },
+        fullScreenPreview = true
     ),
     ComponentDemo(
         id = "tabs",
@@ -122,16 +124,15 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         content = { SlideMenuDemo() }
     ),
     ComponentDemo(
-        id = "tab-bar",
+        id = "tab-bar-docked",
         group = GROUP_NAVIGATION,
-        title = "HyperTabBar",
-        description = "通过 type 参数切换贴底与悬浮样式：Floating 参考 Flutter HyTabBar，静止托盘按下展开水珠，拖动跟手并按速度弹簧吸附；可切换 4/5 项、配色与禁用态。",
+        title = "HyperTabBar · 贴底",
+        description = "贴底导航预览。点击标签可查看选中态，顶部发丝线与底部留白采用默认值。",
         code = """
             HyperTabBar(
-                items = bottomItems,
-                type = "floating",
-                itemSelected = { item -> item.id == selectedItemId },
-                onItemClick = { item -> selectedItemId = item.id }
+                items = tabs,
+                itemSelected = { it.id == selectedTabId },
+                onItemClick = { selectedTabId = it.id }
             ) { item ->
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(item.icon, contentDescription = item.label)
@@ -140,24 +141,41 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("样式切换", "type = docked/floating", "同一个 items 入口切换贴底与悬浮胶囊"),
-            DemoVariant("玻璃胶囊容器", "Margin / Height / Elevation", "56dp 轻薄磨砂底座与单层柔和阴影"),
-            DemoVariant("居中选中托盘", "SelectionSpring", "静止时按标签格中心显示紧凑托盘"),
-            DemoVariant("液态按压", "LensInMillis / LensWidthGrowth", "按下展开半透明水珠并放大经过的标签"),
-            DemoVariant("拖动跟手", "DragSlop / resistDrag", "拖动时 1:1 跟随，边缘使用渐进阻力"),
-            DemoVariant("速度吸附", "ProjectionSeconds", "松手投影释放速度后吸附到最近标签"),
-            DemoVariant("内容色渐变", "selectionStrength", "指示位置在选中色与未选中色间连续插值"),
-            DemoVariant("项目数量", "4/5 items", "切换项目数验证托盘始终对齐标签中心"),
-            DemoVariant("强调配色", "floatingColors", "切换选中托盘与内容色"),
-            DemoVariant("禁用态", "enabled / itemEnabled", "切换整栏与消息项禁用状态"),
-            DemoVariant("顶部发丝线", "topDivider = HyperTabBarDefaults.topDivider()", "0.5dp 低对比分隔，仅贴底样式生效，可交互关闭"),
-            DemoVariant("底部留白", "BottomPadding = 5.dp", "贴底样式与系统手势小白条保持少量距离"),
-            DemoVariant("操作区高度", "Height = 55.dp", "贴底样式搭配留白后总高度为 60dp"),
-            DemoVariant("完整 Slot", "content: RowScope", "调用方控制按钮布局；Floating 下不绘制指示胶囊"),
-            DemoVariant("泛型项目", "items + itemSelected", "统一点击、选中与禁用状态"),
-            DemoVariant("明暗背景", "colors.containerColor", "深色继承页面背景并隐藏分隔线，浅色保留轻量透明度")
+            DemoVariant("贴底容器", "type = docked", "55dp 操作区与 5dp 底部留白"),
+            DemoVariant("顶部发丝线", "topDivider", "默认显示 0.5dp 低对比分隔线"),
+            DemoVariant("选中态", "itemSelected", "点击标签切换当前页面和内容色")
         ),
         apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
-        content = { TabBarDemo() }
+        content = { DockedTabBarDemo() },
+        fullScreenPreview = true,
+        fillsBottomSafeArea = true
+    ),
+    ComponentDemo(
+        id = "tab-bar-floating",
+        group = GROUP_NAVIGATION,
+        title = "HyperTabBar · 悬浮胶囊",
+        description = "悬浮玻璃胶囊预览。点击或拖动标签，可查看托盘按压、跟手和弹簧吸附。",
+        code = """
+            HyperTabBar(
+                items = tabs,
+                type = "floating",
+                itemSelected = { it.id == selectedTabId },
+                onItemClick = { selectedTabId = it.id }
+            ) { item ->
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(item.icon, contentDescription = item.label)
+                    Text(item.label)
+                }
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("玻璃胶囊", "type = floating", "轻薄磨砂底座与单层柔和阴影"),
+            DemoVariant("液态按压", "press", "按下时指示托盘展开"),
+            DemoVariant("拖动吸附", "drag / release", "托盘跟手并吸附到最近标签"),
+            DemoVariant("选中态", "itemSelected", "点击标签切换当前页面和内容色")
+        ),
+        apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
+        content = { FloatingTabBarDemo() },
+        fullScreenPreview = true
     )
 )

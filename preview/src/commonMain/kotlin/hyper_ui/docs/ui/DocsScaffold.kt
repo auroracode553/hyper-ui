@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -235,17 +236,18 @@ private fun MobilePreviewTopBar(
 /** 手机模式只展示真实组件视口，代码和 API 详情留在桌面文档布局。 */
 @Composable
 private fun MobilePreviewContent(demo: ComponentDemo, modifier: Modifier = Modifier) {
-    if (demo.fullScreenPreview) {
-        Box(modifier = modifier.fillMaxSize()) { demo.content() }
-    } else {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(LocalDocsColorScheme.current.background)
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) { demo.content() }
+    PreviewSceneBackdrop(modifier = modifier.fillMaxSize()) {
+        if (demo.fullScreenPreview) {
+            Box(modifier = Modifier.fillMaxSize()) { demo.content() }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) { demo.content() }
+        }
     }
 }
 
@@ -358,20 +360,15 @@ private fun ComponentHeader(demo: ComponentDemo) {
 private fun PreviewCard(demo: ComponentDemo) {
     DocsCard {
         SectionLabel(title = "交互示例")
-        Box(
+        PreviewSceneBackdrop(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 220.dp)
-                .background(LocalDocsColorScheme.current.surfaceVariant, RoundedCornerShape(8.dp))
-                .border(
-                    width = 1.dp,
-                    color = LocalDocsColorScheme.current.outlineVariant,
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .padding(22.dp),
-            contentAlignment = Alignment.Center
+                .then(if (demo.fullScreenPreview) Modifier.height(600.dp) else Modifier.heightIn(min = 220.dp))
+                .padding(22.dp)
         ) {
-            demo.content()
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                demo.content()
+            }
         }
         SectionLabel(title = "预览属性与样式")
         DocumentationTable(

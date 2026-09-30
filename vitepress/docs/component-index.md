@@ -32,7 +32,7 @@
 | 组件 | 用途 |
 | --- | --- |
 | [HyperNavBar](components/navigation/hyper-nav-bar.md) | 手机页面顶部导航 |
-| [HyperTabBar](components/navigation/hyper-tab-bar.md) | 底部导航 |
+| [HyperTabBar](components/navigation/hyper-tab-bar.md) | 底部导航；贴底与悬浮胶囊各有独立交互预览 |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 任务抽屉 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表项侧滑操作 |
 | [HyperTabs](components/navigation/hyper-tabs.md) | 分类筛选 |

@@ -2,7 +2,16 @@
 
 包名：`hyper_ui`。
 
-<WasmPreview demo="tab-bar" title="HyperTabBar 交互预览" />
+## 贴底预览
+
+<WasmPreview demo="tab-bar-docked" title="HyperTabBar 贴底预览" />
+
+## 悬浮胶囊预览
+
+<WasmPreview demo="tab-bar-floating" title="HyperTabBar 悬浮胶囊预览" />
+
+两个预览均可点击标签切换选中项；悬浮胶囊还可按住并拖动标签，查看指示托盘的跟手与吸附效果。
+贴底预览的底栏背景延伸至手机底边，标签与手势条之间只保留少量间距；悬浮胶囊预览保持底部间距。示例不再绘制内层手机框。
 
 ## 公开签名与默认值
 

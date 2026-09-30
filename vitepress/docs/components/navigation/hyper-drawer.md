@@ -4,6 +4,8 @@
 
 <WasmPreview demo="drawer" title="HyperDrawer 交互预览" />
 
+抽屉直接占用预览手机的内容视口，打开后可查看完整面板与页面内容。
+
 ## 公开签名与默认值
 
 ```kotlin

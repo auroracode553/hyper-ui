@@ -4,7 +4,6 @@ import hyper_ui.*
 import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,6 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperTabBar
 import hyper_ui.HyperTabBarDefaults
-import hyper_ui.HyperFloatingTabBarDefaults
 import hyper_ui.HyperDrawer
 import hyper_ui.HyperDrawerHeader
 import hyper_ui.HyperDrawerItem
@@ -60,6 +57,9 @@ private data class DemoNavItem(
     val label: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector
 )
+
+/** 贴底预览只在标签下方留出与手机手势条之间的可见间距。 */
+private val DockedTabBarGestureClearance = 8.dp
 
 @Composable
 fun NavBarDemo() {
@@ -118,7 +118,7 @@ fun DrawerDemo() {
     var position by remember { mutableStateOf(HyperDrawerPosition.Left) }
     var padding by remember { mutableStateOf(true) }
     var scroll by remember { mutableStateOf(true) }
-    Box(Modifier.widthIn(max = 440.dp).height(420.dp).clip(RoundedCornerShape(28.dp))) {
+    Box(Modifier.fillMaxSize()) {
         HyperDrawer(
             open = drawerOpen,
             onDismissRequest = { drawerOpen = false },
@@ -215,128 +215,62 @@ fun SlideMenuDemo() {
 }
 
 @Composable
-fun TabBarDemo() {
+fun DockedTabBarDemo() {
+    TabBarDemo(type = "docked")
+}
+
+@Composable
+fun FloatingTabBarDemo() {
+    TabBarDemo(type = "floating")
+}
+
+@Composable
+private fun TabBarDemo(type: String) {
+    // 直接使用预览宿主的手机视口，避免在屏幕中再次绘制手机边框。
     var selectedItemId by remember { mutableStateOf("home") }
-    var showTopDivider by remember { mutableStateOf(true) }
-    var barType by remember { mutableStateOf("floating") }
-    var showFiveItems by remember { mutableStateOf(false) }
-    var useAccent by remember { mutableStateOf(false) }
-    var disableNotice by remember { mutableStateOf(false) }
-    var barEnabled by remember { mutableStateOf(true) }
-    val allItems = listOf(
+    val items = listOf(
         DemoNavItem("home", "首页", Icons.Default.Home),
         DemoNavItem("recent", "最近", Icons.Default.Info),
         DemoNavItem("notice", "消息", Icons.Default.Notifications),
         DemoNavItem("settings", "设置", Icons.Default.Settings),
-        DemoNavItem("search", "搜索", Icons.Default.Search)
     )
-    val bottomItems = if (showFiveItems) allItems else allItems.dropLast(1)
-    val selectedTitle = bottomItems.firstOrNull { it.id == selectedItemId }?.label ?: "首页"
-    val floating = barType == "floating"
+    val selectedTitle = items.firstOrNull { it.id == selectedItemId }?.label ?: "首页"
+    val floating = type == "floating"
 
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
-    Column(
-        modifier = Modifier
-            .widthIn(max = 360.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .height(460.dp)
-                .clip(RoundedCornerShape(44.dp))
-                .border(
-                    width = 2.dp,
-                    color = LocalDocsColorScheme.current.outlineVariant,
-                    shape = RoundedCornerShape(44.dp)
+    Column(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+            HyperText(
+                text = "当前页面：$selectedTitle",
+                modifier = Modifier.align(Alignment.Center),
+                color = LocalDocsColorScheme.current.onSurface,
+                fontSize = 14.sp
+            )
+        }
+        HyperTabBar(
+            items = items,
+            type = type,
+            modifier = if (floating) Modifier else Modifier.height(
+                HyperTabBarDefaults.Height + HyperTabBarDefaults.BottomPadding + DockedTabBarGestureClearance
+            ),
+            itemSelected = { item -> item.id == selectedItemId },
+            onItemClick = { item -> selectedItemId = item.id }
+        ) { item ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = if (floating) {
+                    Arrangement.spacedBy(2.dp)
+                } else {
+                    Arrangement.Center
+                }
+            ) {
+                HyperIcon(
+                    imageVector = item.icon,
+                    contentDescription = item.label,
+                    modifier = Modifier.size(if (floating) 20.dp else 24.dp)
                 )
-                .background(LocalDocsColorScheme.current.background)
-        ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                    HyperText(
-                        text = "当前页面：$selectedTitle",
-                        modifier = Modifier.align(Alignment.Center),
-                        color = LocalDocsColorScheme.current.onSurface,
-                        fontSize = 14.sp
-                    )
-                }
-                HyperTabBar(
-                    items = bottomItems,
-                    type = barType,
-                    enabled = barEnabled,
-                    itemSelected = { item -> item.id == selectedItemId },
-                    itemEnabled = { item -> !disableNotice || item.id != "notice" },
-                    onItemClick = { item -> selectedItemId = item.id },
-                    floatingColors = if (useAccent) {
-                        HyperFloatingTabBarDefaults.colors(
-                            indicatorColor = LocalDocsColorScheme.current.primaryContainer,
-                            selectedContentColor = LocalDocsColorScheme.current.onPrimaryContainer
-                        )
-                    } else {
-                        HyperFloatingTabBarDefaults.colors()
-                    },
-                    topDivider = if (showTopDivider && !floating) {
-                        HyperTabBarDefaults.topDivider()
-                    } else {
-                        null
-                    }
-                ) { item ->
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = if (floating) {
-                            Arrangement.spacedBy(2.dp)
-                        } else {
-                            Arrangement.Center
-                        }
-                    ) {
-                        HyperIcon(
-                            imageVector = item.icon,
-                            contentDescription = item.label,
-                            modifier = Modifier.size(if (floating) 20.dp else 24.dp)
-                        )
-                        HyperText(text = item.label, fontSize = 11.sp)
-                    }
-                }
+                HyperText(text = item.label, fontSize = 11.sp)
             }
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(
-                onClick = { barType = "docked" },
-                type = if (!floating) "filled" else "tonal"
-            ) { HyperText("贴底样式") }
-            HyperButton(
-                onClick = { barType = "floating" },
-                type = if (floating) "filled" else "tonal"
-            ) { HyperText("悬浮胶囊") }
-        }
-        if (floating) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                HyperButton(onClick = {
-                    showFiveItems = !showFiveItems
-                    if (!showFiveItems && selectedItemId == "search") selectedItemId = "home"
-                }, type = "tonal") {
-                    HyperText(if (showFiveItems) "显示 4 项" else "显示 5 项")
-                }
-                HyperButton(onClick = { useAccent = !useAccent }, type = "tonal") {
-                    HyperText(if (useAccent) "默认配色" else "强调配色")
-                }
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                HyperButton(onClick = { disableNotice = !disableNotice }, type = "tonal") {
-                    HyperText(if (disableNotice) "启用消息" else "禁用消息")
-                }
-                HyperButton(onClick = { barEnabled = !barEnabled }, type = "tonal") {
-                    HyperText(if (barEnabled) "禁用整栏" else "启用整栏")
-                }
-            }
-        } else {
-            HyperButton(
-                onClick = { showTopDivider = !showTopDivider },
-                type = "tonal"
-            ) { HyperText(if (showTopDivider) "隐藏顶部发丝线" else "显示顶部发丝线") }
-        }
-    }
     }
 }
 
