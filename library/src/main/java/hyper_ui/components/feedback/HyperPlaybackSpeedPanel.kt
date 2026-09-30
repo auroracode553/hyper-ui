@@ -250,16 +250,22 @@ private fun HyperPlaybackSpeedPanelHeader(
                 softWrap = false
             )
         }
-        HyperIconButton(
+        HyperButton(
             onClick = onDismissRequest,
+            type = "icon",
             size = "small",
             modifier = Modifier.semantics { contentDescription = texts.closeContentDescription },
-            colors = panelIconButtonColors(colors)
+            colors = panelButtonColors(colors)
         ) {
-            if (closeContent == null) {
-                HyperCloseIcon(Modifier.size(15.dp))
-            } else {
-                closeContent()
+            Box(
+                modifier = Modifier.size(18.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (closeContent == null) {
+                    HyperCloseIcon(Modifier.size(15.dp))
+                } else {
+                    closeContent()
+                }
             }
         }
     }
@@ -403,19 +409,25 @@ private fun HyperPlaybackSpeedPanelFooter(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        HyperIconButton(
+        HyperButton(
             onClick = onResetRequest,
             enabled = abs(currentSpeed - defaultSpeed) > 0.001f,
+            type = "icon",
             size = "small",
             modifier = Modifier
                 .padding(horizontal = 5.dp)
                 .semantics { contentDescription = texts.resetContentDescription },
-            colors = panelIconButtonColors(colors)
+            colors = panelButtonColors(colors)
         ) {
-            if (resetContent == null) {
-                HyperResetIcon(Modifier.size(17.dp))
-            } else {
-                resetContent()
+            Box(
+                modifier = Modifier.size(18.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (resetContent == null) {
+                    HyperResetIcon(Modifier.size(17.dp))
+                } else {
+                    resetContent()
+                }
             }
         }
         if (onCustomSpeedRequest != null) {
@@ -475,11 +487,11 @@ private fun HyperPlaybackSpeedCustomAction(
 }
 
 @Composable
-private fun panelIconButtonColors(
+private fun panelButtonColors(
     colors: HyperPlaybackSpeedPanelColors
-): HyperIconButtonColors = HyperIconButtonDefaults.colors(
+): HyperButtonColors = HyperButtonDefaults.colors(
+    type = "tonal",
     containerColor = colors.contentColor.copy(alpha = 0.10f),
-    pressedContainerColor = colors.contentColor.copy(alpha = 0.18f),
     contentColor = colors.contentColor,
     disabledContainerColor = colors.contentColor.copy(alpha = 0.05f),
     disabledContentColor = colors.contentColor.copy(alpha = 0.28f)

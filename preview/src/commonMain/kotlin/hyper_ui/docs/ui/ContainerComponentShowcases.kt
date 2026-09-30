@@ -76,9 +76,9 @@ fun ColorPickerDemo() {
 fun PanelDemo() {
     var acknowledged by remember { mutableStateOf(false) }
 
-    HyperPanel(
+    HyperCard(
         modifier = Modifier.widthIn(max = 520.dp),
-        colors = HyperPanelDefaults.colors(
+        colors = HyperCardDefaults.colors(
             containerColor = LocalDocsColorScheme.current.surface
         )
     ) {
@@ -166,7 +166,7 @@ fun GlassMaterialDemo() {
                 "Prominent · 浮层和模态表面" to glass.surfaceStrong,
                 "Solid · 不透明内容表面" to HyperColors.cardContainer
             ).forEach { (label, surface) ->
-                HyperPanel(colors = HyperPanelDefaults.colors(surface), elevation = 8.dp) {
+                HyperCard(colors = HyperCardDefaults.colors(surface), elevation = 8.dp) {
                     HyperText(label, fontSize = 13.sp)
                 }
             }

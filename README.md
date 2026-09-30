@@ -10,7 +10,7 @@
 
 ## Flutter 参考设计与 Compose API
 
-默认视觉令牌以 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 为参考：蓝色主题色 `rgba(71, 111, 232)`、浅深色玻璃表面、38dp 按钮、16dp 基础圆角和即时按压反馈。组件公开 API 采用统一字符串词汇：`type` 负责渲染类型，`size` 负责 `small`、`default`、`large` 尺寸。按钮按下立即开始 85ms 的整体缩放与透明度过渡，释放或拖出取消后用 180ms 恢复。`HyperThemeConfig` 可注入 `themeColor`、`typography`、`shapes` 与 `glass`；需要真实背景模糊时用 `HyperBackdrop` 包裹背景和组件。`HyperSlideMenu` 是受控列表侧滑操作，旧的横向分类按钮更名为 `HyperFilterBar`。语义色由 `colors` 注入，加载态由 `loading` 控制。组件公开 API 仍统一在 `hyper_ui` 包。
+默认视觉令牌以 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 为参考：蓝色主题色 `rgba(71, 111, 232)`、浅深色玻璃表面、38dp 按钮、16dp 基础圆角和即时按压反馈。组件公开 API 采用统一字符串词汇：`type` 负责渲染类型，`size` 负责 `small`、`default`、`large` 尺寸。按钮按下立即开始 85ms 的整体缩放与透明度过渡，释放或拖出取消后用 180ms 恢复。`HyperThemeConfig` 可注入 `themeColor`、`typography`、`shapes` 与 `glass`；需要真实背景模糊时用 `HyperBackdrop` 包裹背景和组件。`HyperSlideMenu` 是受控列表侧滑操作，`HyperTabs` 负责横向分类切换。语义色由 `colors` 注入，加载态由 `loading` 控制。组件公开 API 统一在 `hyper_ui` 包。
 
 ```kotlin
 HyperThemeConfig {
@@ -185,11 +185,11 @@ import androidx.compose.ui.res.painterResource
 import com.composables.icons.lucide.R as LucideR
 import hyper_ui.*
 
-HyperIconButton(onClick = onSearch) {
+HyperButton(type = "icon", onClick = onSearch) {
     HyperIcon(
         painter = painterResource(LucideR.drawable.lucide_ic_search),
         contentDescription = "搜索",
-        modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+        modifier = Modifier.size(HyperButtonDefaults.IconSize)
     )
 }
 ```
@@ -199,10 +199,10 @@ HyperIconButton(onClick = onSearch) {
 ## 组件范围
 
 - 主题与材质：`HyperThemeConfig`、`HyperTheme`、`HyperColors`、`HyperGlassTokens`、`HyperBackdrop`、`HyperSoftBackground`。
-- 基础与表单：`HyperButton`、`HyperIconButton`、`HyperTextField`、`HyperSwitch`（清晰的关闭态中性轨道）、`HyperCheckbox`、`HyperRadio`、`HyperSegmented`、`HyperSlider`。
-- 容器与列表：`HyperPanel`、`HyperColorPicker`、`HyperList`、`HyperSectionedList`、`HyperMenuList`、`HyperListItem`。
-- 导航与操作：`HyperNavBar`、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperFilterBar`（横向分类）、`HyperTabBar`。
-- 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopup`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
+- 基础与表单：`HyperButton`（含 `type = "icon"`）、`HyperTextField`、`HyperSwitch`（清晰的关闭态中性轨道）、`HyperCheckbox`、`HyperRadio`、`HyperSegmentedControl`、`HyperSlider`。
+- 容器与列表：`HyperCard`、`HyperColorPicker`、`HyperList`、`HyperSectionedList`、`HyperMenuGroup`、`HyperListTile`。
+- 导航与操作：`HyperNavBar`、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperTabs`（横向分类）、`HyperTabBar`。
+- 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopover`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
 - Android 系统工具：`hyperToast`、`HyperBatteryState`、`readHyperBatteryState`、`rememberHyperBatteryState`。它们不进入 Preview 的跨平台编译链，真实调用仅限 Android。
 
 所有公开 API 位于 `hyper_ui` 包；`hyper_ui.core` 仅供库内部使用。详细签名和默认值以[组件索引](vitepress/docs/component-index.md)及各组件页为准。
@@ -213,7 +213,7 @@ HyperIconButton(onClick = onSearch) {
 - `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
 - 外部尺寸和间距由 `modifier` 控制；按钮等组件提供与参考设计对应的语义化尺寸参数，内部独立布局节点提供具名修饰符。
-- `HyperPopup` 是窗口级轻量 Popup；`HyperDialog` 使用 Compose Dialog 宿主，并通过 `usePlatformDefaultWidth = false` 关闭平台默认宽度。该参数不是动画开关；它配合全尺寸根节点固定 Window 首帧测量，面板在根节点内居中并保持 280–360dp 宽度边界。外部点击由根节点命中层处理，返回键继续由 `dismissOnBackPress` 控制。`HyperAlertDialog` 基于 `HyperDialog` 提供 body/action 结构并固定使用标准实色描边。
+- `HyperPopover` 是窗口级轻量 Popup；`HyperDialog` 使用 Compose Dialog 宿主，并通过 `usePlatformDefaultWidth = false` 关闭平台默认宽度。该参数不是动画开关；它配合全尺寸根节点固定 Window 首帧测量，面板在根节点内居中并保持 280–360dp 宽度边界。外部点击由根节点命中层处理，返回键继续由 `dismissOnBackPress` 控制。`HyperAlertDialog` 基于 `HyperDialog` 提供 body/action 结构并固定使用标准实色描边。
 - 业务状态由调用方持有；组件可以在状态变化时执行按压、弹出、拖动吸附等视觉过渡。
 
 示例：

@@ -21,7 +21,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
 @Immutable
-data class HyperSegmentedColors(
+data class HyperSegmentedControlColors(
     val containerColor: Color,
     val selectedItemColor: Color,
     val unselectedItemColor: Color,
@@ -31,7 +31,7 @@ data class HyperSegmentedColors(
     val disabledContentColor: Color
 )
 
-class HyperSegmentedItemScope internal constructor(
+class HyperSegmentOptionScope internal constructor(
     val selected: Boolean,
     val enabled: Boolean
 )
@@ -42,7 +42,7 @@ class HyperSegmentedItemScope internal constructor(
  * 组件仅渲染分段、状态与点击边界；选中项及业务内容由调用方持有。
  */
 @Composable
-fun <T> HyperSegmented(
+fun <T> HyperSegmentedControl(
     items: List<T>,
     selectedItem: T,
     onSelected: (T) -> Unit,
@@ -50,22 +50,22 @@ fun <T> HyperSegmented(
     enabled: Boolean = true,
     itemEnabled: (T) -> Boolean = { true },
     equalWidth: Boolean = true,
-    shape: Shape = HyperSegmentedDefaults.Shape,
-    itemShape: Shape = HyperSegmentedDefaults.ItemShape,
-    colors: HyperSegmentedColors = HyperSegmentedDefaults.colors(),
-    containerPadding: PaddingValues = HyperSegmentedDefaults.ContainerPadding,
-    itemContentPadding: PaddingValues = HyperSegmentedDefaults.ItemContentPadding,
-    itemContent: @Composable HyperSegmentedItemScope.(item: T) -> Unit
+    shape: Shape = HyperSegmentedControlDefaults.Shape,
+    itemShape: Shape = HyperSegmentedControlDefaults.ItemShape,
+    colors: HyperSegmentedControlColors = HyperSegmentedControlDefaults.colors(),
+    containerPadding: PaddingValues = HyperSegmentedControlDefaults.ContainerPadding,
+    itemContentPadding: PaddingValues = HyperSegmentedControlDefaults.ItemContentPadding,
+    itemContent: @Composable HyperSegmentOptionScope.(item: T) -> Unit
 ) {
     Row(
         modifier = modifier
             .then(if (equalWidth) Modifier.fillMaxWidth() else Modifier)
-            .height(HyperSegmentedDefaults.Height)
+            .height(HyperSegmentedControlDefaults.Height)
             .hyperGlassSurface(
                 shape = shape,
                 visuals = hyperGlassSurfaceVisuals(
                     containerColor = colors.containerColor,
-                    elevation = HyperSegmentedDefaults.ContainerElevation,
+                    elevation = HyperSegmentedControlDefaults.ContainerElevation,
                     blur = 14.dp,
 
                 )
@@ -75,7 +75,7 @@ fun <T> HyperSegmented(
         items.forEach { item ->
             val selected = item == selectedItem
             val actualEnabled = enabled && itemEnabled(item)
-            val scope = HyperSegmentedItemScope(
+            val scope = HyperSegmentOptionScope(
                 selected = selected,
                 enabled = actualEnabled
             )
@@ -108,7 +108,7 @@ fun <T> HyperSegmented(
                 contentPadding = itemContentPadding,
                 role = Role.Tab,
                 horizontalArrangement = Arrangement.spacedBy(
-                    HyperSegmentedDefaults.ItemContentSpacing,
+                    HyperSegmentedControlDefaults.ItemContentSpacing,
                     Alignment.CenterHorizontally
                 )
             ) {
@@ -118,7 +118,7 @@ fun <T> HyperSegmented(
     }
 }
 
-object HyperSegmentedDefaults {
+object HyperSegmentedControlDefaults {
     val Height = 40.dp
     val ContainerElevation = 0.dp
     val ContainerPadding = PaddingValues(4.dp)
@@ -136,7 +136,7 @@ object HyperSegmentedDefaults {
         unselectedContentColor: Color = Color.Unspecified,
         disabledItemColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
-    ): HyperSegmentedColors {
+    ): HyperSegmentedControlColors {
         val resolvedContainerColor = resolveHyperContainerColor(
             containerColor,
             hyperGlass.surfaceSubtle
@@ -146,7 +146,7 @@ object HyperSegmentedDefaults {
             HyperColors.softContainer
         )
 
-        return HyperSegmentedColors(
+        return HyperSegmentedControlColors(
             containerColor = resolvedContainerColor,
             selectedItemColor = resolvedSelectedItemColor,
             unselectedItemColor = resolveHyperContainerColor(unselectedItemColor, Color.Transparent),

@@ -20,8 +20,8 @@ import hyper_ui.HyperButton
 import hyper_ui.HyperButtonDefaults
 import hyper_ui.HyperColorPicker
 import hyper_ui.HyperColorPickerDefaults
-import hyper_ui.HyperPanel
-import hyper_ui.HyperPanelDefaults
+import hyper_ui.HyperCard
+import hyper_ui.HyperCardDefaults
 import hyper_ui.HyperText
 import hyper_ui.HyperTheme
 import hyper_ui.HyperThemeConfig
@@ -122,13 +122,13 @@ private fun MaterialPreview(
         darkTheme = controller.darkTheme,
         glass = docsGlassTokens(controller.darkTheme, material)
     ) {
-        HyperPanel(
+        HyperCard(
             modifier = Modifier
                 .width(78.dp)
                 .height(46.dp)
                 .clickable { controller.updateMaterial(material) },
             contentModifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-            border = if (selected) HyperPanelDefaults.border(HyperTheme.colors.themeColor) else HyperPanelDefaults.border()
+            border = if (selected) HyperCardDefaults.border(HyperTheme.colors.themeColor) else HyperCardDefaults.border()
         ) {
             HyperText(label, fontSize = 12.sp, maxLines = 1)
         }

@@ -120,8 +120,8 @@ object HyperSectionedListDefaults {
     val FirstSectionTopSpacing = 0.dp
     val SectionSpacing = 16.dp
     val HeaderBottomSpacing = 8.dp
-    val DividerInset = HyperListItemDefaults.DividerInset
-    /** 分段列表默认提供左右 16.dp 内容留白，子项（HyperListItem 等）无需重复设置水平 padding。 */
+    val DividerInset = HyperListTileDefaults.DividerInset
+    /** 分段列表默认提供左右 16.dp 内容留白，子项（HyperListTile 等）无需重复设置水平 padding。 */
     val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
 
     val HeaderTextStyle: TextStyle
@@ -166,8 +166,8 @@ private fun HyperSectionedListItemContainer(
     ) {
         CompositionLocalProvider(
             // 分段容器统一绘制分割线，避免行组件重复绘制或越过组内圆角边界。
-            LocalHyperListItemDividerSuppressed provides true,
-            LocalHyperListItemContainerColor provides containerColor,
+            LocalHyperListTileDividerSuppressed provides true,
+            LocalHyperListTileContainerColor provides containerColor,
             content = content
         )
         if (!isLastItem) {

@@ -35,7 +35,7 @@ fun HyperSoftBackground(
 ```kotlin
 HyperThemeConfig {
     HyperBackdrop() {
-        HyperPanel { HyperText("玻璃卡片") }
+        HyperCard { HyperText("玻璃卡片") }
     }
 }
 ```

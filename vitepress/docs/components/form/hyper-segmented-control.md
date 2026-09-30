@@ -1,14 +1,14 @@
-# HyperSegmented
+# HyperSegmentedControl
 
 包名：`hyper_ui`。
 
-<WasmPreview demo="segmented" title="HyperSegmented 交互预览" />
+<WasmPreview demo="segmented" title="HyperSegmentedControl 交互预览" />
 
 ## 公开签名与默认值
 
 ```kotlin
 @Composable
-fun <T> HyperSegmented(
+fun <T> HyperSegmentedControl(
     items: List<T>,
     selectedItem: T,
     onSelected: (T) -> Unit,
@@ -16,12 +16,12 @@ fun <T> HyperSegmented(
     enabled: Boolean = true,
     itemEnabled: (T) -> Boolean = { true },
     equalWidth: Boolean = true,
-    shape: Shape = HyperSegmentedDefaults.Shape,
-    itemShape: Shape = HyperSegmentedDefaults.ItemShape,
-    colors: HyperSegmentedColors = HyperSegmentedDefaults.colors(),
-    containerPadding: PaddingValues = HyperSegmentedDefaults.ContainerPadding,
-    itemContentPadding: PaddingValues = HyperSegmentedDefaults.ItemContentPadding,
-    itemContent: @Composable HyperSegmentedItemScope.(item: T) -> Unit
+    shape: Shape = HyperSegmentedControlDefaults.Shape,
+    itemShape: Shape = HyperSegmentedControlDefaults.ItemShape,
+    colors: HyperSegmentedControlColors = HyperSegmentedControlDefaults.colors(),
+    containerPadding: PaddingValues = HyperSegmentedControlDefaults.ContainerPadding,
+    itemContentPadding: PaddingValues = HyperSegmentedControlDefaults.ItemContentPadding,
+    itemContent: @Composable HyperSegmentOptionScope.(item: T) -> Unit
 )
 ```
 
@@ -31,7 +31,7 @@ fun <T> HyperSegmented(
 val periods = listOf("Daily", "Weekly", "Monthly", "Yearly")
 var selectedPeriod by remember { mutableStateOf("Yearly") }
 
-HyperSegmented(
+HyperSegmentedControl(
     items = periods,
     selectedItem = selectedPeriod,
     onSelected = { selectedPeriod = it }

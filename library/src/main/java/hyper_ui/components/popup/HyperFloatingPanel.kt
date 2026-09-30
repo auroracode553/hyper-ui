@@ -1,4 +1,4 @@
-/** 文件职责：复用 HyperPopup 与 HyperDialog 的实色面板、滚动正文和操作区布局。 */
+/** 文件职责：复用 HyperPopover 与 HyperDialog 的实色面板、滚动正文和操作区布局。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke

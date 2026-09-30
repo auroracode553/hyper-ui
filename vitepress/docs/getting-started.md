@@ -65,7 +65,7 @@ fun AppHome() {
             size = "default",
             placeholderContent = { HyperText("搜索设置") }
         )
-        HyperListItem(
+        HyperListTile(
             headlineContent = { HyperText("接收通知") },
             trailingContent = {
                 HyperSwitch(

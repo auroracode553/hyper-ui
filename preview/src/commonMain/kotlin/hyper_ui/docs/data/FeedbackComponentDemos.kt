@@ -5,7 +5,7 @@ import hyper_ui.docs.ui.DialogDemo
 import hyper_ui.docs.ui.DropdownMenuDemo
 import hyper_ui.docs.ui.EmptyStateDemo
 import hyper_ui.docs.ui.HyperDialogDemo
-import hyper_ui.docs.ui.HyperPopupDemo
+import hyper_ui.docs.ui.HyperPopoverDemo
 import hyper_ui.docs.ui.HyperTooltipDemo
 import hyper_ui.docs.ui.LevelCapsuleDemo
 import hyper_ui.docs.ui.BatteryIndicatorDemo
@@ -22,7 +22,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "empty_state",
         group = GROUP_FEEDBACK,
         title = "HyperEmptyState",
-        description = "页面级空数据状态统一由 HyperPanel 承载，图标和操作通过 Slot 注入。",
+        description = "页面级空数据状态统一由 HyperCard 承载，图标和操作通过 Slot 注入。",
         code = """
             HyperEmptyState(
                 title = "暂无历史记录",
@@ -39,7 +39,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("纯标题", "description = null", "紧凑空状态文案"),
             DemoVariant("辅助说明", "description", "居中次级说明"),
             DemoVariant("图标", "iconContent", "由调用方注入图标资源"),
-            DemoVariant("统一面板", "HyperPanel", "直接复用通用面板的默认样式"),
+            DemoVariant("统一面板", "HyperCard", "直接复用通用面板的默认样式"),
             DemoVariant("操作", "actionContent", "由调用方持有交互和结果状态")
         ),
         apiDocumentPaths = listOf("feedback/hyper-empty-state.md"),
@@ -109,13 +109,13 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "progress",
         group = GROUP_FEEDBACK,
-        title = "HyperProgressIndicator",
+        title = "HyperProgress",
         description = "线性与圆形轨道均使用参考令牌配色；progress 为 null 时表示不确定加载。",
         code = """
-            HyperLinearProgressIndicator(progress = progress, size = "default")
-            HyperLinearProgressIndicator(progress = null)
-            HyperCircularProgressIndicator(progress = progress)
-            HyperCircularProgressIndicator(progress = null)
+            HyperProgress(type = "linear", progress = progress, size = "default")
+            HyperProgress(type = "linear", progress = null)
+            HyperProgress(type = "circular", progress = progress)
+            HyperProgress(type = "circular", progress = null)
         """.trimIndent(),
         variants = listOf(
             DemoVariant("线性确定", "progress: Float", "实色轨道、指示条与描边"),
@@ -123,7 +123,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("圆形确定", "progress: Float", "圆形 stroke"),
             DemoVariant("圆形不确定", "progress = null", "静态 stroke 弧段")
         ),
-        apiDocumentPaths = listOf("feedback/hyper-progress-indicator.md"),
+        apiDocumentPaths = listOf("feedback/hyper-progress.md"),
         content = { ProgressDemo() }
     ),
     ComponentDemo(
@@ -260,10 +260,10 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "custom_popup",
         group = GROUP_FEEDBACK,
-        title = "HyperPopup",
+        title = "HyperPopover",
         description = "窗口居中的基础浮层最大高度为窗口的 70%，长内容滚动且操作区固定。",
         code = """
-            HyperPopup(
+            HyperPopover(
                 visible = visible,
                 onDismissRequest = onDismiss,
                 title = "编辑备注",
@@ -286,8 +286,8 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("外部关闭", "dismissOnClickOutside", "仅点击处理，不绘制遮罩"),
             DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
         ),
-        apiDocumentPaths = listOf("feedback/hyper-popup.md"),
-        content = { HyperPopupDemo() }
+        apiDocumentPaths = listOf("feedback/hyper-popover.md"),
+        content = { HyperPopoverDemo() }
     ),
     ComponentDemo(
         id = "dialog",

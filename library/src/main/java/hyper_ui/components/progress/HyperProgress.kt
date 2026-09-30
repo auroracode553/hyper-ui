@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/progress/HyperProgressIndicators 模块实现，并集中维护其依赖协作与核心逻辑。 */
+/** 文件职责：在 hyper_ui 中负责承载 HyperProgress 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui
 
 import androidx.compose.animation.core.*
@@ -30,21 +30,56 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Immutable
-data class HyperProgressIndicatorColors(
+data class HyperProgressColors(
     val trackColor: Color,
     val indicatorColor: Color
 )
 
+/** 线性或圆形进度指示器；通过 type 选择渲染形态。 */
 @Composable
-fun HyperLinearProgressIndicator(
+fun HyperProgress(
+    progress: Float? = null,
+    modifier: Modifier = Modifier,
+    type: String = "linear",
+    size: String = "default",
+    shape: Shape = HyperProgressDefaults.LinearShape,
+    strokeWidth: Dp = HyperProgressDefaults.CircularStrokeWidth,
+    colors: HyperProgressColors = HyperProgressDefaults.colors(),
+    trackBorder: BorderStroke? = null
+) {
+    require(type == "linear" || type == "circular") {
+        "不支持的 HyperProgress type: $type"
+    }
+    if (type == "circular") {
+        HyperCircularProgress(
+            progress = progress,
+            modifier = modifier,
+            size = size,
+            strokeWidth = strokeWidth,
+            colors = colors
+        )
+    } else {
+        HyperLinearProgress(
+            progress = progress,
+            modifier = modifier,
+            size = size,
+            shape = shape,
+            colors = colors,
+            trackBorder = trackBorder
+        )
+    }
+}
+
+@Composable
+private fun HyperLinearProgress(
     progress: Float? = null,
     modifier: Modifier = Modifier,
     size: String = "default",
-    shape: Shape = HyperProgressIndicatorDefaults.LinearShape,
-    colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors(),
+    shape: Shape = HyperProgressDefaults.LinearShape,
+    colors: HyperProgressColors = HyperProgressDefaults.colors(),
     trackBorder: BorderStroke? = null
 ) {
-    val resolvedHeight = hyperComponentSize(size, 3.dp, HyperProgressIndicatorDefaults.LinearHeight, 8.dp)
+    val resolvedHeight = hyperComponentSize(size, 3.dp, HyperProgressDefaults.LinearHeight, 8.dp)
     val coercedProgress = progress?.coerceIn(0f, 1f)
     val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
@@ -70,7 +105,7 @@ fun HyperLinearProgressIndicator(
         if (coercedProgress == null) {
             IndeterminateLinearSegment(
                 indicatorColor = resolvedIndicatorColor,
-                segmentWidth = maxWidth * HyperProgressIndicatorDefaults.IndeterminateSegmentFraction,
+                segmentWidth = maxWidth * HyperProgressDefaults.IndeterminateSegmentFraction,
                 segmentShape = shape
             )
         } else {
@@ -88,20 +123,20 @@ fun HyperLinearProgressIndicator(
 }
 
 @Composable
-fun HyperCircularProgressIndicator(
+private fun HyperCircularProgress(
     progress: Float? = null,
     modifier: Modifier = Modifier,
     size: String = "default",
-    strokeWidth: Dp = HyperProgressIndicatorDefaults.CircularStrokeWidth,
-    colors: HyperProgressIndicatorColors = HyperProgressIndicatorDefaults.colors()
+    strokeWidth: Dp = HyperProgressDefaults.CircularStrokeWidth,
+    colors: HyperProgressColors = HyperProgressDefaults.colors()
 ) {
-    val resolvedSize = hyperComponentSize(size, 24.dp, HyperProgressIndicatorDefaults.CircularSize, 48.dp)
+    val resolvedSize = hyperComponentSize(size, 24.dp, HyperProgressDefaults.CircularSize, 48.dp)
     val coercedProgress = progress?.coerceIn(0f, 1f)
     val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
     val rotation = if (coercedProgress == null) hyperIndeterminatePhase() * 360f else 0f
     val displayedProgress = coercedProgress
-        ?: HyperProgressIndicatorDefaults.CircularIndeterminateSweepFraction
+        ?: HyperProgressDefaults.CircularIndeterminateSweepFraction
     val semanticsInfo = if (coercedProgress == null) {
         ProgressBarRangeInfo.Indeterminate
     } else {
@@ -165,7 +200,7 @@ private fun IndeterminateLinearSegment(
     }
 }
 
-object HyperProgressIndicatorDefaults {
+object HyperProgressDefaults {
     val LinearHeight = 4.dp
     val LinearShape: Shape = RoundedCornerShape(percent = 50)
     val CircularSize = 32.dp
@@ -177,9 +212,9 @@ object HyperProgressIndicatorDefaults {
     fun colors(
         trackColor: Color = Color.Unspecified,
         indicatorColor: Color = Color.Unspecified
-    ): HyperProgressIndicatorColors {
+    ): HyperProgressColors {
         val resolvedTrackColor = resolveHyperContainerColor(trackColor, hyperGlass.controlTrack)
-        return HyperProgressIndicatorColors(
+        return HyperProgressColors(
             trackColor = resolvedTrackColor,
             indicatorColor = resolveHyperContainerColor(indicatorColor, HyperColors.accent)
         )

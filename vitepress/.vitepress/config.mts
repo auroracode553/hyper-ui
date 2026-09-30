@@ -56,8 +56,7 @@ export default defineConfig({
       {
         text: '基础组件',
         items: [
-          { text: 'Button', link: '/components/basic/hyper-button' },
-          { text: 'IconButton', link: '/components/basic/hyper-icon-button' }
+          { text: 'Button', link: '/components/basic/hyper-button' }
         ]
       },
       {
@@ -67,7 +66,7 @@ export default defineConfig({
           { text: 'Switch', link: '/components/form/hyper-switch' },
           { text: 'Checkbox', link: '/components/form/hyper-checkbox' },
           { text: 'Radio', link: '/components/form/hyper-radio' },
-          { text: 'Segmented', link: '/components/form/hyper-segmented' },
+          { text: 'SegmentedControl', link: '/components/form/hyper-segmented-control' },
           { text: 'Slider', link: '/components/form/hyper-slider' }
         ]
       },
@@ -75,7 +74,7 @@ export default defineConfig({
         text: '容器组件',
         items: [
           { text: 'Backdrop', link: '/components/container/hyper-backdrop' },
-          { text: 'Panel', link: '/components/container/hyper-panel' },
+          { text: 'Card', link: '/components/container/hyper-card' },
           { text: 'ColorPicker', link: '/components/container/hyper-color-picker' }
         ]
       },
@@ -85,7 +84,7 @@ export default defineConfig({
           { text: 'NavBar', link: '/components/navigation/hyper-nav-bar' },
           { text: 'Drawer', link: '/components/navigation/hyper-drawer' },
           { text: 'SlideMenu', link: '/components/navigation/hyper-slide-menu' },
-          { text: 'FilterBar', link: '/components/navigation/hyper-filter-bar' },
+          { text: 'Tabs', link: '/components/navigation/hyper-tabs' },
           { text: 'TabBar', link: '/components/navigation/hyper-tab-bar' }
         ]
       },
@@ -94,8 +93,8 @@ export default defineConfig({
         items: [
           { text: 'List', link: '/components/list/hyper-list' },
           { text: 'SectionedList', link: '/components/list/hyper-sectioned-list' },
-          { text: 'MenuList', link: '/components/list/hyper-menu-list' },
-          { text: 'ListItem', link: '/components/list/hyper-list-item' }
+          { text: 'MenuGroup', link: '/components/list/hyper-menu-group' },
+          { text: 'ListTile', link: '/components/list/hyper-list-tile' }
         ]
       },
       {
@@ -104,14 +103,14 @@ export default defineConfig({
           { text: 'EmptyState', link: '/components/feedback/hyper-empty-state' },
           { text: 'Dropdown', link: '/components/feedback/hyper-dropdown' },
           { text: 'Toast', link: '/components/feedback/hyper-toast' },
-          { text: 'ProgressIndicator', link: '/components/feedback/hyper-progress-indicator' },
+          { text: 'Progress', link: '/components/feedback/hyper-progress' },
           { text: 'LevelCapsule', link: '/components/feedback/hyper-level-capsule' },
           { text: 'PlaybackSpeedPanel', link: '/components/feedback/hyper-playback-speed-panel' },
           { text: 'PlaybackSpeedScale', link: '/components/feedback/hyper-playback-speed-scale' },
           { text: 'BatteryIndicator', link: '/components/feedback/hyper-battery-indicator' },
           { text: 'BatteryState', link: '/components/tools/hyper-battery-state' },
           { text: 'Tooltip', link: '/components/feedback/hyper-tooltip' },
-          { text: 'Popup', link: '/components/feedback/hyper-popup' },
+          { text: 'Popover', link: '/components/feedback/hyper-popover' },
           { text: 'Dialog', link: '/components/feedback/hyper-dialog' },
           { text: 'AlertDialog', link: '/components/feedback/hyper-alert-dialog' },
           { text: 'UpdateDialog', link: '/components/feedback/hyper-update-dialog' }

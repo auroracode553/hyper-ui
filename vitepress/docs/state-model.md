@@ -43,5 +43,5 @@ fun NotificationSetting() {
 ## 弹层规则
 
 - `HyperDialog` 和 `HyperAlertDialog` 的显示状态由调用方控制。
-- `HyperDropdown`、`HyperPopup` 和 `HyperDrawer` 只渲染面板并触发关闭回调。
+- `HyperDropdown`、`HyperPopover` 和 `HyperDrawer` 只渲染面板并触发关闭回调。
 - 弹层内部可以组合表单和按钮，但网络、权限和导航仍放在调用方。

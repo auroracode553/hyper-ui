@@ -4,7 +4,7 @@
 
 <WasmPreview demo="button" title="HyperButton 交互预览" />
 
-`type` 支持 `filled`、`tonal`、`outline`、`ghost`、`danger`；`size` 支持 `small`、`default`、`large`。
+`type` 支持 `filled`、`tonal`、`outline`、`ghost`、`danger`、`icon`；`size` 控制尺寸。`type = "icon"` 用于方形图标按钮。
 
 ## 公开签名与默认值
 
@@ -32,6 +32,10 @@ fun HyperButton(
 
 ```kotlin
 HyperButton(onClick = onSave, type = "filled") { HyperText("保存") }
+
+HyperButton(onClick = onSearch, type = "icon") {
+    HyperIcon(Icons.Default.Search, contentDescription = "搜索")
+}
 ```
 
 ## 约束

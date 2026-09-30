@@ -33,10 +33,10 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "segmented",
         group = GROUP_FORM,
-        title = "HyperSegmented",
+        title = "HyperSegmentedControl",
         description = "默认总高 40dp 的等宽或内容宽度分段控制器；轨道负责布局，每个分段直接复用 HyperButton。",
         code = """
-            HyperSegmented(
+            HyperSegmentedControl(
                 items = periods,
                 selectedItem = selectedPeriod,
                 onSelected = { selectedPeriod = it }
@@ -47,9 +47,9 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("紧凑默认", "Height = 36.dp", "32dp 分段与 2dp 轨道留白"),
             DemoVariant("禁用项", "itemEnabled", "单独禁用指定分段"),
-            DemoVariant("自定义颜色", "HyperSegmentedDefaults.colors", "覆盖选中项和内容色")
+            DemoVariant("自定义颜色", "HyperSegmentedControlDefaults.colors", "覆盖选中项和内容色")
         ),
-        apiDocumentPaths = listOf("form/hyper-segmented.md"),
+        apiDocumentPaths = listOf("form/hyper-segmented-control.md"),
         content = { SegmentedDemo() }
     ),
     ComponentDemo(
@@ -95,7 +95,8 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                     Icon(Icons.Default.Search, contentDescription = null)
                 },
                 endContent = {
-                    HyperIconButton(
+                    HyperButton(
+                        type = "icon",
                         onClick = { keyword = "" },
                         size = "small"
                     ) {

@@ -1,19 +1,19 @@
-# HyperFilterBar
+# HyperTabs
 
 包名：`hyper_ui`。
 
-<WasmPreview demo="filter_bar" title="HyperFilterBar 交互预览" />
+<WasmPreview demo="tabs" title="HyperTabs 交互预览" />
 
 ## 公开签名与默认值
 
 ```kotlin
 @Composable
-fun <T> HyperFilterBar(
+fun <T> HyperTabs(
     items: List<T>,
     selectedItem: T,
     onSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperFilterBarDefaults.ItemGap),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperTabsDefaults.ItemGap),
     itemEnabled: (T) -> Boolean = { true },
     selectedType: String = "filled",
     unselectedType: String = "tonal",
@@ -23,14 +23,14 @@ fun <T> HyperFilterBar(
     unselectedBorder: BorderStroke? = HyperButtonDefaults.border(unselectedType),
     itemShape: Shape = HyperButtonDefaults.Shape,
     itemContentPadding: PaddingValues = HyperButtonDefaults.ContentPadding,
-    itemContent: @Composable HyperFilterBarItemScope.(item: T) -> Unit
+    itemContent: @Composable HyperTabsItemScope.(item: T) -> Unit
 )
 ```
 
 ## 最小用法
 
 ```kotlin
-HyperFilterBar(items, selectedItem, onSelected = { selectedItem = it }) { item -> HyperText(item.label) }
+HyperTabs(items, selectedItem, onSelected = { selectedItem = it }) { item -> HyperText(item.label) }
 ```
 
 ## 约束

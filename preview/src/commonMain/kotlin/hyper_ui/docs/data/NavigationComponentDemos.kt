@@ -18,7 +18,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
                 onRevealChange = { reveal = it },
                 endActions = listOf(HyperSlideAction("删除", onDelete))
             ) {
-                HyperListItem(headlineContent = { HyperText("向左滑动") })
+                HyperListTile(headlineContent = { HyperText("向左滑动") })
             }
         """.trimIndent(),
         variants = listOf(
@@ -98,12 +98,12 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         content = { DrawerDemo() }
     ),
     ComponentDemo(
-        id = "filter_bar",
+        id = "tabs",
         group = GROUP_NAVIGATION,
-        title = "HyperFilterBar",
+        title = "HyperTabs",
         description = "横向分组菜单。每个项目直接复用 HyperButton 的表面、描边、按压与禁用态，菜单文字、计数或图标由 item slot 渲染。",
         code = """
-            HyperFilterBar(
+            HyperTabs(
                 items = categories,
                 selectedItem = selected,
                 onSelected = { selected = it }
@@ -118,7 +118,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("自定义配色", "selectedColors", "直接接收 HyperButtonColors"),
             DemoVariant("禁用项", "itemEnabled = false", "复用 HyperButton 禁用态")
         ),
-        apiDocumentPaths = listOf("navigation/hyper-filter-bar.md"),
+        apiDocumentPaths = listOf("navigation/hyper-tabs.md"),
         content = { SlideMenuDemo() }
     ),
     ComponentDemo(

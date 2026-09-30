@@ -47,8 +47,8 @@ fun HyperList(
     val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surface)
 
     CompositionLocalProvider(
-        LocalHyperListItemDividerSuppressed provides false,
-        LocalHyperListItemContainerColor provides containerColor
+        LocalHyperListTileDividerSuppressed provides false,
+        LocalHyperListTileContainerColor provides containerColor
     ) {
         LazyColumn(
             modifier = modifier
@@ -65,7 +65,7 @@ fun HyperList(
 
 object HyperListDefaults {
     val Shape: Shape = RoundedCornerShape(18.dp)
-    /** 列表容器默认提供左右 16.dp 内容留白，子项（HyperListItem 等）无需重复设置水平 padding。 */
+    /** 列表容器默认提供左右 16.dp 内容留白，子项（HyperListTile 等）无需重复设置水平 padding。 */
     val ContentPadding: PaddingValues = PaddingValues(4.dp)
 
     @Composable

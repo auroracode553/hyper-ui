@@ -1,4 +1,4 @@
-/** 文件职责：提供可横向滚动的 HyperFilterBar 及其菜单项。 */
+/** 文件职责：提供可横向滚动的 HyperTabs 及其菜单项。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -15,7 +15,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
-class HyperFilterBarItemScope internal constructor(
+class HyperTabsItemScope internal constructor(
     val selected: Boolean,
     val enabled: Boolean
 )
@@ -28,12 +28,12 @@ class HyperFilterBarItemScope internal constructor(
  * 组件本身不添加任何内边距，请通过 modifier.padding(...) 控制外部间距。
  */
 @Composable
-fun <T> HyperFilterBar(
+fun <T> HyperTabs(
     items: List<T>,
     selectedItem: T,
     onSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperFilterBarDefaults.ItemGap),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(HyperTabsDefaults.ItemGap),
     itemEnabled: (T) -> Boolean = { true },
     selectedType: String = "filled",
     unselectedType: String = "tonal",
@@ -43,7 +43,7 @@ fun <T> HyperFilterBar(
     unselectedBorder: BorderStroke? = HyperButtonDefaults.border(unselectedType),
     itemShape: Shape = HyperButtonDefaults.Shape,
     itemContentPadding: PaddingValues = HyperButtonDefaults.ContentPadding,
-    itemContent: @Composable HyperFilterBarItemScope.(item: T) -> Unit
+    itemContent: @Composable HyperTabsItemScope.(item: T) -> Unit
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -52,7 +52,7 @@ fun <T> HyperFilterBar(
         items(items) { item ->
             val enabled = itemEnabled(item)
             val selected = item == selectedItem
-            val scope = HyperFilterBarItemScope(selected = selected, enabled = enabled)
+            val scope = HyperTabsItemScope(selected = selected, enabled = enabled)
 
             HyperButton(
                 modifier = Modifier.semantics { this.selected = selected },
@@ -71,6 +71,6 @@ fun <T> HyperFilterBar(
     }
 }
 
-object HyperFilterBarDefaults {
+object HyperTabsDefaults {
     val ItemGap = 8.dp
 }

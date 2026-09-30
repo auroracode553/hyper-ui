@@ -38,16 +38,16 @@ import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
 import hyper_ui.HyperList
 import hyper_ui.HyperListDefaults
-import hyper_ui.HyperListItem
-import hyper_ui.HyperListItemDefaults
-import hyper_ui.HyperMenuList
+import hyper_ui.HyperListTile
+import hyper_ui.HyperListTileDefaults
+import hyper_ui.HyperMenuGroup
 import hyper_ui.HyperRadio
 import hyper_ui.HyperSectionedList
 import hyper_ui.HyperSectionedListDefaults
 import hyper_ui.HyperSwitch
 
 @Composable
-fun HyperMenuListDemo() {
+fun HyperMenuGroupDemo() {
     val items = listOf("系统设置", "通知权限", "同步策略", "安全中心")
     var pushEnabled by remember { mutableStateOf(true) }
     var autoSync by remember { mutableStateOf(false) }
@@ -63,8 +63,8 @@ fun HyperMenuListDemo() {
             fontSize = 13.sp
         )
         Box(modifier = Modifier.height(220.dp)) {
-            HyperMenuList(items = items) { item ->
-                HyperListItem(
+            HyperMenuGroup(items = items) { item ->
+                HyperListTile(
                     leadingContent = { ListIcon(iconFor(item)) },
                     headlineContent = { ListTitle(item) },
                     supportingContent = { ListDescription("点击查看配置") },
@@ -74,8 +74,8 @@ fun HyperMenuListDemo() {
             }
         }
 
-        HyperMenuList {
-            HyperListItem(
+        HyperMenuGroup {
+            HyperListTile(
                 leadingContent = { ListIcon(Icons.Default.Notifications) },
                 headlineContent = { HyperText("推送通知") },
                 supportingContent = { HyperText("接收系统消息提醒") },
@@ -88,7 +88,7 @@ fun HyperMenuListDemo() {
                     )
                 }
             )
-            HyperListItem(
+            HyperListTile(
                 leadingContent = { ListIcon(Icons.Default.Check) },
                 headlineContent = { HyperText("自动同步") },
                 supportingContent = { HyperText("网络可用时自动刷新数据") },
@@ -101,7 +101,7 @@ fun HyperMenuListDemo() {
                     )
                 }
             )
-            HyperListItem(
+            HyperListTile(
                 leadingContent = { ListIcon(Icons.Default.Settings) },
                 headlineContent = { HyperText("性能模式") },
                 supportingContent = { HyperText("优先保证流畅度") },
@@ -203,11 +203,11 @@ fun HyperListDemo() {
                     key = { _, item -> item },
                     contentType = { _, _ -> "setting-item" }
                 ) { index, item ->
-                    HyperListItem(
+                    HyperListTile(
                         contentModifier = if (comfortableContent) {
                             Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                         } else {
-                            Modifier.padding(HyperListItemDefaults.ContentPadding)
+                            Modifier.padding(HyperListTileDefaults.ContentPadding)
                         },
                         leadingContent = { ListIcon(iconFor(item)) },
                         headlineContent = { ListTitle(item) },
@@ -280,7 +280,7 @@ fun HyperSectionedListDemo() {
                 },
                 headerContent = { group -> HyperText(group.title) }
             ) { _, entry ->
-                HyperListItem(
+                HyperListTile(
                     onClick = { selectedEntry = entry },
                     leadingContent = { ListIcon(iconFor(entry)) },
                     headlineContent = { ListTitle(entry) },

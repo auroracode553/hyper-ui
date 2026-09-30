@@ -1,6 +1,6 @@
 # 设置页
 
-设置行的业务状态由页面持有，`HyperListItem` 只负责布局，`HyperSwitch` 只报告切换事件。
+设置行的业务状态由页面持有，`HyperListTile` 只负责布局，`HyperSwitch` 只报告切换事件。
 
 ```kotlin
 import androidx.compose.foundation.layout.Arrangement
@@ -31,8 +31,8 @@ fun SettingsScreen() {
                 .padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            HyperMenuList {
-                HyperListItem(
+            HyperMenuGroup {
+                HyperListTile(
                     headlineContent = { HyperText("推送通知") },
                     supportingContent = { HyperText("接收重要消息提醒") },
                     trailingContent = {

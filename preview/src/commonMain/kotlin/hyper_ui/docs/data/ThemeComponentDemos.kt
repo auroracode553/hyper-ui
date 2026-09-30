@@ -13,7 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperButton
-import hyper_ui.HyperPanel
+import hyper_ui.HyperCard
 import hyper_ui.HyperText
 import hyper_ui.HyperTextField
 import hyper_ui.HyperTheme
@@ -65,7 +65,7 @@ private fun ThemeMaterialDemo() {
                     ) { HyperText(option.label()) }
                 }
             }
-            HyperPanel {
+            HyperCard {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     HyperText("主题材质：${material.label()}")
                     HyperText("卡片、输入框和按钮读取同一套材质令牌")

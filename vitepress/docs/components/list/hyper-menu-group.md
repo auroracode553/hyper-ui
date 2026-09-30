@@ -1,28 +1,28 @@
-# HyperMenuList
+# HyperMenuGroup
 
 包名：`hyper_ui`。
 
-<WasmPreview demo="hyper_menu_list" title="HyperMenuList 交互预览" />
+<WasmPreview demo="hyper_menu_list" title="HyperMenuGroup 交互预览" />
 
 ## 公开签名与默认值
 
 ```kotlin
 @Composable
-fun <T> HyperMenuList(
+fun <T> HyperMenuGroup(
     items: List<T>,
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperMenuListDefaults.ContentPadding),
+    contentModifier: Modifier = Modifier.padding(HyperMenuGroupDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
+    colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
 )
 
 @Composable
-fun HyperMenuList(
+fun HyperMenuGroup(
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperMenuListDefaults.ContentPadding),
+    contentModifier: Modifier = Modifier.padding(HyperMenuGroupDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
+    colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
     content: @Composable ColumnScope.() -> Unit
 )
 ```
@@ -32,8 +32,8 @@ fun HyperMenuList(
 ```kotlin
 @Composable
 fun MenuOptions(options: List<String>) {
-    HyperMenuList(items = options) { option ->
-        HyperListItem(
+    HyperMenuGroup(items = options) { option ->
+        HyperListTile(
             headlineContent = { Text(option) },
             dividerVisible = true,
             onClick = { /* 由调用方处理 */ }
@@ -43,8 +43,8 @@ fun MenuOptions(options: List<String>) {
 
 @Composable
 fun SettingsGroup(enabled: Boolean, onEnabledChange: (Boolean) -> Unit) {
-    HyperMenuList {
-        HyperListItem(
+    HyperMenuGroup {
+        HyperListTile(
             headlineContent = { Text("推送通知") },
             supportingContent = { Text("接收重要消息提醒") },
             trailingContent = {

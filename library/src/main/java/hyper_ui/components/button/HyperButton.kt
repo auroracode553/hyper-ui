@@ -56,19 +56,27 @@ fun HyperButton(
 ) {
     requireHyperComponentSize(size)
     val resolvedHeight = HyperButtonDefaults.height(size)
-    require(type in setOf("filled", "tonal", "outline", "ghost", "danger")) {
+    require(type in setOf("filled", "tonal", "outline", "ghost", "danger", "icon")) {
         "不支持的 HyperButton type: $type"
     }
+    val isIconType = type == "icon"
     val container = if (enabled) colors.containerColor else colors.disabledContainerColor
     val foreground = if (enabled) colors.contentColor else colors.disabledContentColor
     Row(
         modifier = modifier
-            .defaultMinSize(minWidth = (68 + (resolvedHeight.value - 38) * 2.5f).coerceAtLeast(0f).dp)
-            .height(resolvedHeight)
+            .then(
+                if (isIconType) {
+                    Modifier.size(resolvedHeight)
+                } else {
+                    Modifier
+                        .defaultMinSize(minWidth = (68 + (resolvedHeight.value - 38) * 2.5f).coerceAtLeast(0f).dp)
+                        .height(resolvedHeight)
+                }
+            )
             .hyperNoRippleClickable(enabled = enabled && !loading, role = role, onClick = onClick)
             .hyperButtonSurface(container, shape, type, enabled, border)
             .semantics { if (loading) stateDescription = "正在处理" }
-            .padding(contentPadding),
+            .then(if (isIconType) Modifier else Modifier.padding(contentPadding)),
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {
@@ -76,10 +84,11 @@ fun HyperButton(
             LocalHyperContentColor provides foreground,
             LocalHyperTextStyle provides HyperButtonDefaults.textStyle(size)
         ) {
-            if (loading) HyperCircularProgressIndicator(
+            if (loading) HyperProgress(
+                type = "circular",
                 modifier = Modifier.size(16.dp),
                 strokeWidth = 2.dp,
-                colors = HyperProgressIndicatorDefaults.colors(Color.Transparent, foreground)
+                colors = HyperProgressDefaults.colors(Color.Transparent, foreground)
             )
             content()
         }
@@ -88,6 +97,7 @@ fun HyperButton(
 
 object HyperButtonDefaults {
     val MinHeight = 38.dp
+    val IconSize = 18.dp
     val ContentSpacing = 8.dp
     val ContentPadding = PaddingValues(horizontal = 14.dp)
     val Shape: Shape = RoundedCornerShape(16.dp)
@@ -122,6 +132,7 @@ object HyperButtonDefaults {
             "tonal" -> hyperGlass.selection
             "outline" -> hyperGlass.surfaceSubtle
             "ghost" -> Color.Transparent
+            "icon" -> hyperGlass.surface
             else -> error("不支持的 HyperButton type: $type")
         }
         val foreground = if (type == "filled" || type == "danger")
@@ -130,7 +141,7 @@ object HyperButtonDefaults {
             resolveHyperContainerColor(containerColor, fill),
             resolveHyperContainerColor(contentColor, foreground),
             resolveHyperContainerColor(disabledContainerColor,
-                if (type == "ghost") Color.Transparent else hyperGlass.controlTrack),
+                if (type == "ghost" || type == "icon") Color.Transparent else hyperGlass.controlTrack),
             resolveHyperContainerColor(disabledContentColor, HyperColors.secondaryText.copy(alpha = 150 / 255f))
         )
     }
@@ -142,8 +153,9 @@ object HyperButtonDefaults {
         color: Color = Color.Unspecified
     ): BorderStroke? {
         val fallback = when {
-            type == "ghost" -> Color.Transparent
             !enabled -> HyperColors.divider.copy(alpha = 110 / 255f)
+            type == "ghost" -> Color.Transparent
+            type == "icon" -> hyperGlass.edgeHighlight
             type == "outline" -> HyperColors.divider
             type == "tonal" -> hyperGlass.edgeHighlight
             else -> Color(1f, 1f, 1f, 45 / 255f)

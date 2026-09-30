@@ -24,7 +24,7 @@ fun EditNoteAction() {
         Text("编辑备注")
     }
 
-    HyperPopup(
+    HyperPopover(
         visible = showPopup,
         onDismissRequest = { showPopup = false },
         title = "编辑备注",

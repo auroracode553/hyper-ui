@@ -61,12 +61,12 @@ src/main/java/hyper_ui/
 └── components/        # 公开组件（按功能分组）
     ├── button/
     ├── input/
-    ├── selection/        # HyperRadio / HyperSegmented 等选择控件
+    ├── selection/        # HyperRadio / HyperSegmentedControl 等选择控件
     ├── panel/
     ├── list/
     ├── menu/             # HyperDropdown / HyperSlideMenu
     ├── dialog/           # HyperAlertDialog 结构化弹窗
-    ├── popup/            # HyperPopup 基础浮层
+    ├── popup/            # HyperPopover 基础浮层
     ├── drawer/
     ├── navigation/       # HyperNavBar / HyperTabBar
     ├── feedback/         # Android-only hyperToast

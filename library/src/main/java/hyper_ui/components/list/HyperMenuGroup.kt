@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中负责承载菜单列表容器 HyperMenuList。 */
+/** 文件职责：在 hyper_ui 中负责承载菜单列表容器 HyperMenuGroup。 */
 package hyper_ui
 
 import androidx.compose.foundation.background
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 internal val MenuListCornerRadius = 18.dp
 
 @Immutable
-data class HyperMenuListColors(
+data class HyperMenuGroupColors(
     val containerColor: Color
 )
 
@@ -36,16 +36,16 @@ data class HyperMenuListColors(
  * 组件不提供边框参数；需要外层描边时由调用方通过 modifier 组合。
  */
 @Composable
-fun <T> HyperMenuList(
+fun <T> HyperMenuGroup(
     items: List<T>,
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperMenuListDefaults.ContentPadding),
+    contentModifier: Modifier = Modifier.padding(HyperMenuGroupDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
+    colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
     itemContent: @Composable (item: T) -> Unit
 ) {
     val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surface)
-    val shape = HyperMenuListDefaults.Shape
+    val shape = HyperMenuGroupDefaults.Shape
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -67,8 +67,8 @@ fun <T> HyperMenuList(
 
             ) {
                 CompositionLocalProvider(
-                    LocalHyperListItemDividerSuppressed provides isLast,
-                    LocalHyperListItemContainerColor provides containerColor
+                    LocalHyperListTileDividerSuppressed provides isLast,
+                    LocalHyperListTileContainerColor provides containerColor
                 ) {
                     itemContent(item)
                 }
@@ -85,24 +85,24 @@ fun <T> HyperMenuList(
  * 组件不提供边框参数；需要外层描边时由调用方通过 modifier 组合。
  */
 @Composable
-fun HyperMenuList(
+fun HyperMenuGroup(
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperMenuListDefaults.ContentPadding),
+    contentModifier: Modifier = Modifier.padding(HyperMenuGroupDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    colors: HyperMenuListColors = HyperMenuListDefaults.colors(),
+    colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
     content: @Composable ColumnScope.() -> Unit
 ) {
     val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surface)
     CompositionLocalProvider(
-        LocalHyperListItemDividerSuppressed provides false,
-        LocalHyperListItemContainerColor provides containerColor
+        LocalHyperListTileDividerSuppressed provides false,
+        LocalHyperListTileContainerColor provides containerColor
     ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
                 .hyperFrostedSurface(
                     containerColor = containerColor,
-                    shape = HyperMenuListDefaults.Shape
+                    shape = HyperMenuGroupDefaults.Shape
                 )
                 .then(contentModifier),
             verticalArrangement = verticalArrangement,
@@ -111,13 +111,13 @@ fun HyperMenuList(
     }
 }
 
-object HyperMenuListDefaults {
+object HyperMenuGroupDefaults {
     val Shape: Shape = RoundedCornerShape(MenuListCornerRadius)
-    /** 菜单容器统一提供左右 16.dp 内容留白，子项（HyperListItem 等）无需重复设置水平 padding；垂直 4.dp 保留首尾圆角安全区。 */
+    /** 菜单容器统一提供左右 16.dp 内容留白，子项（HyperListTile 等）无需重复设置水平 padding；垂直 4.dp 保留首尾圆角安全区。 */
     val ContentPadding = PaddingValues(4.dp)
 
     @Composable
-    fun colors(containerColor: Color = Color.Unspecified): HyperMenuListColors = HyperMenuListColors(
+    fun colors(containerColor: Color = Color.Unspecified): HyperMenuGroupColors = HyperMenuGroupColors(
         containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surface)
     )
 }

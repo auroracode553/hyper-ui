@@ -1,31 +1,31 @@
-# HyperPopup
+# HyperPopover
 
 包名：`hyper_ui`。
 
-<WasmPreview demo="custom_popup" title="HyperPopup 交互预览" />
+<WasmPreview demo="custom_popup" title="HyperPopover 交互预览" />
 
 ## 公开签名与默认值
 
 ```kotlin
 @Composable
-fun HyperPopup(
+fun HyperPopover(
     visible: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
-    shape: Shape = HyperPopupDefaults.Shape,
-    colors: HyperPopupColors = HyperPopupDefaults.colors(),
+    shape: Shape = HyperPopoverDefaults.Shape,
+    colors: HyperPopoverColors = HyperPopoverDefaults.colors(),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperPopupDefaults.ContentSpacing),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperPopoverDefaults.ContentSpacing),
     actionArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
-        HyperPopupDefaults.ActionSpacing,
+        HyperPopoverDefaults.ActionSpacing,
         Alignment.End
     ),
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true,
-    showScrollIndicator: Boolean = HyperPopupDefaults.ShowScrollIndicator,
+    showScrollIndicator: Boolean = HyperPopoverDefaults.ShowScrollIndicator,
     actionContent: (@Composable RowScope.() -> Unit)? = null,
-    border: BorderStroke? = HyperPopupDefaults.border(),
+    border: BorderStroke? = HyperPopoverDefaults.border(),
     content: @Composable ColumnScope.() -> Unit
 )
 ```
@@ -33,7 +33,7 @@ fun HyperPopup(
 ## 最小用法
 
 ```kotlin
-HyperPopup(
+HyperPopover(
     visible = visible,
     onDismissRequest = onDismiss,
     title = "编辑备注",

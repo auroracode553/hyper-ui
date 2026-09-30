@@ -18,6 +18,9 @@ import hyper_ui.HyperTheme
 import hyper_ui.HyperThemeConfig
 import hyper_ui.docs.theme.docsGlassTokens
 
+private val PhonePreviewTopInset = 48.dp
+private val PhonePreviewBottomInset = 32.dp
+
 @Composable
 internal fun EmbeddedComponentPreview(demo: ComponentDemo) {
     val settings = LocalThemeColor.current
@@ -37,14 +40,26 @@ internal fun EmbeddedComponentPreview(demo: ComponentDemo) {
                     .fillMaxSize()
                     .background(if (HyperColors.isLight) HyperColors.cardContainer else HyperColors.pageBackground),
                 contentAlignment = Alignment.TopCenter
-            ) { demo.content() }
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = PhonePreviewTopInset, bottom = PhonePreviewBottomInset),
+                    contentAlignment = Alignment.TopCenter
+                ) { demo.content() }
+            }
         } else {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(if (HyperColors.isLight) HyperColors.cardContainer else HyperColors.pageBackground)
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 20.dp),
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = PhonePreviewTopInset,
+                        bottom = PhonePreviewBottomInset
+                    ),
                 contentAlignment = Alignment.TopCenter
             ) { demo.content() }
         }

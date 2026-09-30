@@ -31,29 +31,29 @@ import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 
 @Immutable
-data class HyperPopupColors(
+data class HyperPopoverColors(
     val containerColor: Color
 )
 
 @Composable
-fun HyperPopup(
+fun HyperPopover(
     visible: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
-    shape: Shape = HyperPopupDefaults.Shape,
-    colors: HyperPopupColors = HyperPopupDefaults.colors(),
+    shape: Shape = HyperPopoverDefaults.Shape,
+    colors: HyperPopoverColors = HyperPopoverDefaults.colors(),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperPopupDefaults.ContentSpacing),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperPopoverDefaults.ContentSpacing),
     actionArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
-        HyperPopupDefaults.ActionSpacing,
+        HyperPopoverDefaults.ActionSpacing,
         Alignment.End
     ),
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true,
-    showScrollIndicator: Boolean = HyperPopupDefaults.ShowScrollIndicator,
+    showScrollIndicator: Boolean = HyperPopoverDefaults.ShowScrollIndicator,
     actionContent: (@Composable RowScope.() -> Unit)? = null,
-    border: BorderStroke? = HyperPopupDefaults.border(),
+    border: BorderStroke? = HyperPopoverDefaults.border(),
     content: @Composable ColumnScope.() -> Unit
 ) {
     val transitionProgress = hyperOverlayProgress(visible)
@@ -70,7 +70,7 @@ fun HyperPopup(
     }
 
     Popup(
-        popupPositionProvider = HyperPopupWindowCenterPositionProvider,
+        popupPositionProvider = HyperPopoverWindowCenterPositionProvider,
         onDismissRequest = onDismissRequest,
         properties = PopupProperties(
             focusable = true,
@@ -82,18 +82,18 @@ fun HyperPopup(
             modifier = Modifier.alpha(if (showPositionedContent.value) 1f else 0f)
         ) {
             val horizontalWindowPadding =
-                HyperPopupDefaults.WindowPadding.calculateLeftPadding(layoutDirection) +
-                    HyperPopupDefaults.WindowPadding.calculateRightPadding(layoutDirection)
+                HyperPopoverDefaults.WindowPadding.calculateLeftPadding(layoutDirection) +
+                    HyperPopoverDefaults.WindowPadding.calculateRightPadding(layoutDirection)
             val verticalWindowPadding =
-                HyperPopupDefaults.WindowPadding.calculateTopPadding() +
-                    HyperPopupDefaults.WindowPadding.calculateBottomPadding()
+                HyperPopoverDefaults.WindowPadding.calculateTopPadding() +
+                    HyperPopoverDefaults.WindowPadding.calculateBottomPadding()
             val availableWidth = (maxWidth - horizontalWindowPadding).coerceAtLeast(0.dp)
             val availableHeight = (maxHeight - verticalWindowPadding).coerceAtLeast(0.dp)
-            val resolvedMaxWidth = HyperPopupDefaults.MaxWidth.coerceAtMost(availableWidth)
-            val resolvedMinWidth = HyperPopupDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
-            val resolvedWidth = (availableWidth * HyperPopupDefaults.WidthFraction)
+            val resolvedMaxWidth = HyperPopoverDefaults.MaxWidth.coerceAtMost(availableWidth)
+            val resolvedMinWidth = HyperPopoverDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
+            val resolvedWidth = (availableWidth * HyperPopoverDefaults.WidthFraction)
                 .coerceIn(resolvedMinWidth, resolvedMaxWidth)
-            val resolvedMaxHeight = (maxHeight * HyperPopupDefaults.MaxHeightFraction)
+            val resolvedMaxHeight = (maxHeight * HyperPopoverDefaults.MaxHeightFraction)
                 .coerceAtMost(availableHeight)
 
             HyperFloatingPanel(
@@ -119,7 +119,7 @@ fun HyperPopup(
     }
 }
 
-private object HyperPopupWindowCenterPositionProvider : PopupPositionProvider {
+private object HyperPopoverWindowCenterPositionProvider : PopupPositionProvider {
     override fun calculatePosition(
         anchorBounds: IntRect,
         windowSize: IntSize,
@@ -131,7 +131,7 @@ private object HyperPopupWindowCenterPositionProvider : PopupPositionProvider {
     )
 }
 
-object HyperPopupDefaults {
+object HyperPopoverDefaults {
     val MinWidth = 280.dp
     val MaxWidth = 360.dp
     const val WidthFraction = 0.9f
@@ -147,7 +147,7 @@ object HyperPopupDefaults {
     val ScrollIndicatorMinHeight = HyperFloatingPanelDefaults.ScrollIndicatorMinHeight
 
     @Composable
-    fun colors(containerColor: Color = Color.Unspecified): HyperPopupColors = HyperPopupColors(
+    fun colors(containerColor: Color = Color.Unspecified): HyperPopoverColors = HyperPopoverColors(
         containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surfaceStrong)
     )
 

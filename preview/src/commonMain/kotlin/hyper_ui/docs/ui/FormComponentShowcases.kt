@@ -32,12 +32,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
-import hyper_ui.HyperButton
-import hyper_ui.HyperIconButton
-import hyper_ui.HyperIconButtonDefaults
 import hyper_ui.HyperRadio
-import hyper_ui.HyperSegmented
-import hyper_ui.HyperSegmentedDefaults
+import hyper_ui.HyperSegmentedControl
+import hyper_ui.HyperSegmentedControlDefaults
 import hyper_ui.HyperSlider
 import hyper_ui.HyperSliderDefaults
 import hyper_ui.HyperSwitch
@@ -95,7 +92,7 @@ fun SegmentedDemo() {
         HyperButton({ equalWidth = !equalWidth }, type = "ghost") {
             HyperText(if (equalWidth) "等宽分段" else "内容宽度分段")
         }
-        HyperSegmented(
+        HyperSegmentedControl(
             equalWidth = equalWidth,
             items = periods,
             selectedItem = selectedPeriod,
@@ -114,12 +111,12 @@ fun SegmentedDemo() {
             fontSize = 13.sp
         )
 
-        HyperSegmented(
+        HyperSegmentedControl(
             items = modes,
             selectedItem = selectedMode,
             onSelected = { selectedMode = it },
             itemEnabled = { it != "停用" },
-            colors = HyperSegmentedDefaults.colors(
+            colors = HyperSegmentedControlDefaults.colors(
                 selectedItemColor = Color(0.03f, 0.76f, 0.38f, 1f),
                 selectedContentColor = Color(1f, 1f, 1f, 1f)
             )
@@ -201,7 +198,7 @@ fun TextFieldDemo() {
             labelContent = { FieldLabel("可清空") },
             placeholderContent = { FieldPlaceholder("请输入内容") },
             endContent = if (clearableValue.isNotEmpty()) {{
-                HyperIconButton(onClick = { clearableValue = "" }, size = "small") {
+                HyperButton(type = "icon", onClick = { clearableValue = "" }, size = "small") {
                     HyperIcon(Icons.Default.Close, contentDescription = "清空内容", modifier = Modifier.size(18.dp))
                 }
             }} else null
@@ -229,7 +226,7 @@ fun TextFieldDemo() {
                 HyperIcon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(20.dp))
             },
             endContent = {
-                HyperIconButton(onClick = { keyword = "" }, size = "small") {
+                HyperButton(type = "icon", onClick = { keyword = "" }, size = "small") {
                     HyperIcon(Icons.Default.Close, contentDescription = "清空搜索", modifier = Modifier.size(18.dp))
                 }
             }

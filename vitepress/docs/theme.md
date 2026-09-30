@@ -75,8 +75,8 @@ HyperButton(
 
 | 层级 | 典型组件 | 规则 |
 | --- | --- | --- |
-| 内容层 | `HyperList`、`HyperListItem` | 低抬升，避免每一行重复铺设卡片 |
-| 浮动层 | `HyperIconButton`、`HyperTabBar`、`HyperDropdown` | 只使用一层上下文阴影 |
+| 内容层 | `HyperList`、`HyperListTile` | 低抬升，避免每一行重复铺设卡片 |
+| 浮动层 | `HyperButton(type = "icon")`、`HyperTabBar`、`HyperDropdown` | 只使用一层上下文阴影 |
 | 模态层 | `HyperDialog`、`HyperDrawer` | 通过遮罩与页面内容分离 |
 
 透明表面需要稳定背景。页面有动态背景时，再使用 `HyperBackdrop` 提供采样环境；普通页面不需要为每个组件单独创建背景层。

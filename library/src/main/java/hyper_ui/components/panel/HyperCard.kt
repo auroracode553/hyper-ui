@@ -1,4 +1,4 @@
-/** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/panel/HyperPanel 可复用界面组件及交互封装。 */
+/** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/panel/HyperCard 可复用界面组件及交互封装。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Immutable
-data class HyperPanelColors(
+data class HyperCardColors(
     val containerColor: Color
 )
 
@@ -29,14 +29,14 @@ data class HyperPanelColors(
  * modifier 控制面板外壳，contentModifier 控制内部内容区。
  */
 @Composable
-fun HyperPanel(
+fun HyperCard(
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperPanelDefaults.ContentPadding),
-    colors: HyperPanelColors = HyperPanelDefaults.colors(),
-    shape: Shape = HyperPanelDefaults.Shape,
-    elevation: Dp = HyperPanelDefaults.Elevation,
-    border: BorderStroke? = HyperPanelDefaults.border(),
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperPanelDefaults.ContentSpacing),
+    contentModifier: Modifier = Modifier.padding(HyperCardDefaults.ContentPadding),
+    colors: HyperCardColors = HyperCardDefaults.colors(),
+    shape: Shape = HyperCardDefaults.Shape,
+    elevation: Dp = HyperCardDefaults.Elevation,
+    border: BorderStroke? = HyperCardDefaults.border(),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperCardDefaults.ContentSpacing),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -59,7 +59,7 @@ fun HyperPanel(
     }
 }
 
-object HyperPanelDefaults {
+object HyperCardDefaults {
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
     val Elevation = 12.dp
     // 16dp 足以避开圆角边界，也避免调用方组合 40dp 控件时形成过高卡片。
@@ -67,7 +67,7 @@ object HyperPanelDefaults {
     val ContentSpacing = 12.dp
 
     @Composable
-    fun colors(containerColor: Color = Color.Unspecified): HyperPanelColors = HyperPanelColors(
+    fun colors(containerColor: Color = Color.Unspecified): HyperCardColors = HyperCardColors(
         containerColor = resolveHyperContainerColor(
             containerColor = containerColor,
             fallbackColor = hyperGlass.surface

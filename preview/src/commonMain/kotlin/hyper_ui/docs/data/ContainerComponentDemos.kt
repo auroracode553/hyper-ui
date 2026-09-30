@@ -15,7 +15,7 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperThemeConfig {
                 HyperBackdrop {
-                    HyperPanel { HyperText("玻璃容器") }
+                    HyperCard { HyperText("玻璃容器") }
                 }
             }
         """.trimIndent(),
@@ -48,11 +48,11 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "panel",
         group = GROUP_CONTAINER,
-        title = "HyperPanel",
+        title = "HyperCard",
         description = "通用 slot 容器，默认带轻描边、内容间距并始终按 shape 裁剪；外壳和内容区分别使用 modifier、contentModifier。",
         code = """
-            HyperPanel(
-                colors = HyperPanelDefaults.colors(
+            HyperCard(
+                colors = HyperCardDefaults.colors(
                     containerColor = LocalDocsColorScheme.current.surface
                 )
             ) {
@@ -69,7 +69,7 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("自定义内容", "content slot", "标题、状态与操作组合"),
             DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "独立控制面板内部内容区")
         ),
-        apiDocumentPaths = listOf("container/hyper-panel.md"),
+        apiDocumentPaths = listOf("container/hyper-card.md"),
         content = { PanelDemo() }
     )
 )

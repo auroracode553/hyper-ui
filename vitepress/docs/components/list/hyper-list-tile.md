@@ -1,21 +1,21 @@
-# HyperListItem
+# HyperListTile
 
 包名：`hyper_ui`。
 
-<WasmPreview demo="hyper_list" title="HyperListItem 交互预览" />
+<WasmPreview demo="hyper_list" title="HyperListTile 交互预览" />
 
 ## 公开签名与默认值
 
 ```kotlin
 @Composable
-fun HyperListItem(
+fun HyperListTile(
     headlineContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperListItemDefaults.ContentPadding),
-    dividerModifier: Modifier = Modifier.padding(start = HyperListItemDefaults.DividerInset),
+    contentModifier: Modifier = Modifier.padding(HyperListTileDefaults.ContentPadding),
+    dividerModifier: Modifier = Modifier.padding(start = HyperListTileDefaults.DividerInset),
     enabled: Boolean = true,
     dividerVisible: Boolean = false,
-    colors: HyperListItemColors = HyperListItemDefaults.colors(),
+    colors: HyperListTileColors = HyperListTileDefaults.colors(),
     onClick: (() -> Unit)? = null,
     leadingContent: (@Composable RowScope.() -> Unit)? = null,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
@@ -29,7 +29,7 @@ fun HyperListItem(
 import androidx.compose.ui.res.painterResource
 import com.composables.icons.lucide.R as LucideR
 
-HyperListItem(
+HyperListTile(
     leadingContent = {
         Icon(
             painter = painterResource(LucideR.drawable.lucide_ic_settings),

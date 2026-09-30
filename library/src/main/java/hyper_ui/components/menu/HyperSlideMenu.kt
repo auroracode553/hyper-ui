@@ -1,4 +1,4 @@
-/** 文件职责：移植 HySlideMenu 列表侧滑操作；分类按钮另见 HyperFilterBar。 */
+/** 文件职责：移植 HySlideMenu 列表侧滑操作；分类按钮另见 HyperTabs。 */
 package hyper_ui
 
 import androidx.compose.animation.core.Animatable

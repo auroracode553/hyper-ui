@@ -44,7 +44,7 @@ HyperSectionedList(
     contentPadding = PaddingValues(horizontal = 10.dp),
     headerContent = { group -> Text(group.title) }
 ) { _, history ->
-    HyperListItem(
+    HyperListTile(
         headlineContent = { Text(history.title) },
         supportingContent = { Text(history.url) },
         onClick = { openHistory(history) }

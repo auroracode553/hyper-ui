@@ -106,7 +106,8 @@ private fun CheckingContent(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        HyperCircularProgressIndicator(
+        HyperProgress(
+            type = "circular",
             progress = null,
             size = "default",
             strokeWidth = 3.dp

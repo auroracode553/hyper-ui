@@ -1,7 +1,7 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/data/ListComponentDemos 可复用界面组件及交互封装。 */
 package hyper_ui.docs.data
 
-import hyper_ui.docs.ui.HyperMenuListDemo
+import hyper_ui.docs.ui.HyperMenuGroupDemo
 import hyper_ui.docs.ui.HyperListDemo
 import hyper_ui.docs.ui.HyperSectionedListDemo
 
@@ -16,14 +16,14 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperList(state = listState) {
                 item(key = "overview", contentType = "header") {
-                    HyperListItem(headlineContent = { Text("概览") })
+                    HyperListTile(headlineContent = { Text("概览") })
                 }
                 items(
                     items = items,
                     key = { it.id },
                     contentType = { "account" }
                 ) { item ->
-                    HyperListItem(headlineContent = { Text(item.title) })
+                    HyperListTile(headlineContent = { Text(item.title) })
                 }
             }
         """.trimIndent(),
@@ -38,25 +38,25 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         ),
         apiDocumentPaths = listOf(
             "list/hyper-list.md",
-            "list/hyper-list-item.md"
+            "list/hyper-list-tile.md"
         ),
         content = { HyperListDemo() }
     ),
     ComponentDemo(
         id = "hyper_menu_list",
         group = GROUP_LIST,
-        title = "HyperMenuList",
+        title = "HyperMenuGroup",
         description = "只用于少量菜单、设置项和操作入口的不透明圆角菜单容器，不用于数据列表。",
         code = """
-            HyperMenuList(items = items) { item ->
-                HyperListItem(
+            HyperMenuGroup(items = items) { item ->
+                HyperListTile(
                     headlineContent = { Text(item.title) },
                     trailingContent = { Text(item.value) }
                 )
             }
 
-            HyperMenuList {
-                HyperListItem(
+            HyperMenuGroup {
+                HyperListTile(
                     headlineContent = { Text("推送通知") },
                     supportingContent = { Text("接收重要消息提醒") },
                     trailingContent = {
@@ -76,10 +76,10 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("列表条目", "trailingContent", "值、开关、复选与单选尾部内容")
         ),
         apiDocumentPaths = listOf(
-            "list/hyper-menu-list.md",
-            "list/hyper-list-item.md"
+            "list/hyper-menu-group.md",
+            "list/hyper-list-tile.md"
         ),
-        content = { HyperMenuListDemo() }
+        content = { HyperMenuGroupDemo() }
     ),
     ComponentDemo(
         id = "hyper_sectioned_list",
@@ -94,7 +94,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
                 itemKey = { _, entry -> "entry-${'$'}{entry.id}" },
                 headerContent = { group -> Text(group.title) }
             ) { _, entry ->
-                HyperListItem(
+                HyperListTile(
                     headlineContent = { Text(entry.title) },
                     supportingContent = { Text(entry.subtitle) }
                 )
@@ -109,7 +109,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         ),
         apiDocumentPaths = listOf(
             "list/hyper-sectioned-list.md",
-            "list/hyper-list-item.md"
+            "list/hyper-list-tile.md"
         ),
         content = { HyperSectionedListDemo() }
     )

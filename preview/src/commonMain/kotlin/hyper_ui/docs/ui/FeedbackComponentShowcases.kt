@@ -40,14 +40,11 @@ import hyper_ui.HyperDropdown
 import hyper_ui.HyperDropdownDefaults
 import hyper_ui.HyperDropdownItemTone
 import hyper_ui.HyperEmptyState
-import hyper_ui.HyperPopup
-import hyper_ui.HyperLinearProgressIndicator
-import hyper_ui.HyperCircularProgressIndicator
+import hyper_ui.HyperPopover
 import hyper_ui.HyperLevelCapsule
 import hyper_ui.HyperLevelCapsuleDefaults
 import hyper_ui.HyperBatteryIndicator
-import hyper_ui.HyperProgressIndicatorDefaults
-import hyper_ui.HyperProgressIndicatorDefaults.colors
+import hyper_ui.HyperProgressDefaults
 import hyper_ui.HyperTextField
 import hyper_ui.HyperAppRelease
 import hyper_ui.HyperUpdateDialog
@@ -267,14 +264,14 @@ fun ProgressDemo() {
                     fontSize = 13.sp
                 )
             }
-            HyperLinearProgressIndicator(progress = progress)
-            HyperLinearProgressIndicator(progress = progress, size = "small")
+            HyperProgress(type = "linear", progress = progress)
+            HyperProgress(type = "linear", progress = progress, size = "small")
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HyperCircularProgressIndicator(progress = progress, size = "small")
-                HyperCircularProgressIndicator(progress = null)
+                HyperProgress(type = "circular", progress = progress, size = "small")
+                HyperProgress(type = "circular", progress = null)
                 HyperButton(
                     type = "outline",
                     onClick = { progress = (progress - 0.1f).coerceAtLeast(0f) }
@@ -296,24 +293,27 @@ fun ProgressDemo() {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
-            HyperLinearProgressIndicator(
+            HyperProgress(
+                type = "linear",
                 progress = 0.7f,
-                colors = colors(
+                colors = HyperProgressDefaults.colors(
                     indicatorColor = Color(0.12f, 0.50f, 1f, 1f)
                 )
             )
-            HyperLinearProgressIndicator(
+            HyperProgress(
+                type = "linear",
                 progress = null,
                 modifier = Modifier.height(8.dp),
-                colors = colors(
+                colors = HyperProgressDefaults.colors(
                     indicatorColor = Color(0.03f, 0.76f, 0.38f, 1f)
                 )
             )
-            HyperCircularProgressIndicator(
+            HyperProgress(
+                type = "circular",
                 progress = null,
                 modifier = Modifier.size(44.dp),
                 strokeWidth = 4.dp,
-                colors = HyperProgressIndicatorDefaults.colors(
+                colors = HyperProgressDefaults.colors(
                     indicatorColor = LocalDocsColorScheme.current.primary
                 )
             )
@@ -432,8 +432,8 @@ fun LoadingProgressDemo() {
         modifier = Modifier.widthIn(max = 560.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        HyperLinearProgressIndicator(progress = null)
-        HyperCircularProgressIndicator(progress = null)
+        HyperProgress(type = "linear", progress = null)
+        HyperProgress(type = "circular", progress = null)
     }
 }
 
@@ -572,7 +572,7 @@ fun DialogDemo() {
 }
 
 @Composable
-fun HyperPopupDemo() {
+fun HyperPopoverDemo() {
     var showPopup by remember { mutableStateOf(false) }
     var savedNote by remember { mutableStateOf("默认备注") }
     var draftNote by remember { mutableStateOf(savedNote) }
@@ -618,7 +618,7 @@ fun HyperPopupDemo() {
         )
     }
 
-    HyperPopup(
+    HyperPopover(
         visible = showPopup,
         onDismissRequest = { showPopup = false },
         title = "编辑备注",

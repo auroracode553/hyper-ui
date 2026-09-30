@@ -31,7 +31,7 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 ## 页面组合
 
 - 顶部页面操作使用 `HyperNavBar`，底部主导航使用 `HyperTabBar`。
-- 设置和少量操作使用 `HyperMenuList`；连续数据使用 `HyperList` 或 `HyperSectionedList`。
+- 设置和少量操作使用 `HyperMenuGroup`；连续数据使用 `HyperList` 或 `HyperSectionedList`。
 - 对话框、抽屉和 Popup 只承载当前任务，网络请求、权限申请和路由仍由调用方处理。
 
 ## 相关文档

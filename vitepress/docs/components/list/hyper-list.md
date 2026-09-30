@@ -36,7 +36,7 @@ fun AccountList(accounts: List<Account>) {
             key = { account -> account.id },
             contentType = { "account" }
         ) { account ->
-            HyperListItem(
+            HyperListTile(
                 headlineContent = { Text(account.name) },
                 dividerVisible = account != accounts.lastOrNull()
             )

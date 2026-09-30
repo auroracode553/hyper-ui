@@ -45,17 +45,13 @@ import androidx.compose.ui.unit.sp
 import hyper_ui.HyperTabBar
 import hyper_ui.HyperTabBarDefaults
 import hyper_ui.HyperFloatingTabBarDefaults
-import hyper_ui.HyperButton
-import hyper_ui.HyperButtonDefaults
 import hyper_ui.HyperDrawer
 import hyper_ui.HyperDrawerHeader
 import hyper_ui.HyperDrawerItem
 import hyper_ui.HyperDrawerPosition
-import hyper_ui.HyperFilterBar
-import hyper_ui.HyperIconButton
-import hyper_ui.HyperIconButtonDefaults
-import hyper_ui.HyperPanel
-import hyper_ui.HyperPanelDefaults
+import hyper_ui.HyperTabs
+import hyper_ui.HyperCard
+import hyper_ui.HyperCardDefaults
 import hyper_ui.HyperNavBar
 import hyper_ui.docs.theme.DocsBorder
 
@@ -101,9 +97,9 @@ fun NavBarDemo() {
                 }
             }
             items(items = sections, key = { it }) { section ->
-                HyperPanel(
+                HyperCard(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    colors = HyperPanelDefaults.colors(containerColor = LocalDocsColorScheme.current.surface)
+                    colors = HyperCardDefaults.colors(containerColor = LocalDocsColorScheme.current.surface)
                 ) {
                     Column(Modifier.padding(4.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         HyperText("灵感 ${sections.indexOf(section) + 1}", fontSize = 12.sp, color = LocalDocsColorScheme.current.onSurfaceVariant)
@@ -198,7 +194,7 @@ fun SlideMenuDemo() {
             }
         }
         // 示例只把分类文本交给 slot；组件本身不拥有分类、计数或业务筛选规则。
-        HyperFilterBar(
+        HyperTabs(
             items = categories,
             selectedItem = selected,
             onSelected = { selected = it },
@@ -350,11 +346,11 @@ private fun TopBarIconButton(
     contentDescription: String,
     onClick: () -> Unit
 ) {
-    HyperIconButton(onClick = onClick) {
+    HyperButton(type = "icon", onClick = onClick) {
         HyperIcon(
             imageVector = imageVector,
             contentDescription = contentDescription,
-            modifier = Modifier.size(HyperIconButtonDefaults.IconSize)
+            modifier = Modifier.size(HyperButtonDefaults.IconSize)
         )
     }
 }
@@ -445,7 +441,7 @@ fun SlideActionMenuDemo() {
         HyperSlideMenu(reveal, { reveal = it }, enabled = enabled,
             startActions = listOf(HyperSlideAction("置顶", { result = "已置顶" })),
             endActions = listOf(HyperSlideAction("删除", { result = "已删除" }))) {
-            HyperListItem(headlineContent = { HyperText("侧滑查看操作") },
+            HyperListTile(headlineContent = { HyperText("侧滑查看操作") },
                 supportingContent = { HyperText("释放时按位置与速度吸附") })
         }
         HyperText("$reveal · $result", fontSize = 13.sp)
