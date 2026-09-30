@@ -14,7 +14,8 @@ import hyper_ui.HyperColors
 import hyper_ui.HyperSoftBackground
 import hyper_ui.docs.LocalThemeColor
 
-/** 预览手机的手势条安全区；贴底组件可让自身表面延伸到该区域。 */
+/** 预览手机的状态栏与手势条安全区。 */
+internal val PreviewTopSafeArea = 48.dp
 internal val PreviewBottomSafeArea = 32.dp
 
 @Composable

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -64,18 +63,29 @@ private val DockedTabBarGestureClearance = 8.dp
 @Composable
 fun NavBarDemo() {
     val sections = listOf("留一点空白", "光影与秩序", "日常里的灵感", "透明导航栏下的连续滚动")
+    var actionMessage by remember { mutableStateOf("向上滚动，观察内容经过透明导航标题与状态栏。") }
     HyperNavBarPage(
         modifier = Modifier.fillMaxSize(),
         navBar = {
             HyperNavBar(
-                // Wasm 手机外壳没有真实系统 WindowInsets；这里模拟 Flutter MediaQuery 的顶部安全区。
-                modifier = Modifier.padding(top = 44.dp),
+                // 滚动内容占满屏幕，导航操作行独立避让模拟状态栏。
+                modifier = Modifier.padding(top = PreviewTopSafeArea),
                 titleContent = { HyperText("今日灵感", maxLines = 1) },
+                navigationContent = {
+                    TopBarIconButton(Icons.AutoMirrored.Filled.ArrowBack, "返回") {
+                        actionMessage = "已点击返回"
+                    }
+                },
+                trailingContent = {
+                    TopBarIconButton(Icons.Default.MoreVert, "更多") {
+                        actionMessage = "已点击更多"
+                    }
+                },
                 safeArea = false
             )
         },
         navBarSize = "default",
-        contentPadding = PaddingValues(top = 44.dp, bottom = 24.dp),
+        contentPadding = PaddingValues(top = PreviewTopSafeArea, bottom = 24.dp),
         safeArea = false,
         bottomSafeArea = false
     ) { immersivePadding ->
@@ -93,7 +103,7 @@ fun NavBarDemo() {
                 ) {
                     HyperIcon(Icons.Default.Home, "灵感", Modifier.size(28.dp))
                     HyperText("让内容延伸到\n屏幕的每一寸", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                    HyperText("向上滚动，观察内容经过透明导航标题与状态栏。", fontSize = 14.sp)
+                    HyperText(actionMessage, fontSize = 14.sp)
                 }
             }
             items(items = sections, key = { it }) { section ->

@@ -21,6 +21,8 @@ data class ComponentDemo(
     val content: @Composable () -> Unit,
     /** 组件是否直接占用嵌入预览的完整手机视口。 */
     val fullScreenPreview: Boolean = false,
+    /** 沉浸式页面自行避让状态栏时，宿主允许内容绘制到屏幕顶端。 */
+    val fillsTopSafeArea: Boolean = false,
     /** 贴底组件自行绘制手势条区域时，宿主不预留底部空白。 */
     val fillsBottomSafeArea: Boolean = false,
     /** 是否注入示例通用主题、语义色与布局方向。 */

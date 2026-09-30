@@ -35,7 +35,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "nav-bar",
         group = GROUP_NAVIGATION,
         title = "HyperNavBar",
-        description = "固定透明导航操作层，首屏内容从状态栏与导航栏下方开始；上滚后内容进入导航栏与状态栏后方。",
+        description = "固定透明导航操作层。预览手机的状态栏由外壳绘制，导航行避让顶部安全区；上滚后内容进入导航栏与状态栏后方。",
         code = """
             HyperNavBar(
                 navigationContent = { BackButton(onClick = onBack) },
@@ -45,6 +45,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("固定操作层", "navigation/title/trailing", "按钮不随正文滚动"),
+            DemoVariant("操作反馈", "navigationContent / trailingContent", "返回与更多按钮可点击，正文显示反馈"),
             DemoVariant("透明表面", "containerColor = Transparent", "导航栏不绘制背景、模糊、描边或阴影"),
             DemoVariant("默认尺寸", "size = default", "高度不包含顶部安全区"),
             DemoVariant("标题布局", "centerTitle = false/true", "支持起始侧与整栏居中"),
@@ -53,6 +54,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         apiDocumentPaths = listOf("navigation/hyper-nav-bar.md"),
         content = { NavBarDemo() },
         fullScreenPreview = true,
+        fillsTopSafeArea = true,
         useReferencePreview = false
     ),
     ComponentDemo(

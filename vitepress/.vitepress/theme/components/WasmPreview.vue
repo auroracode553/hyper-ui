@@ -251,6 +251,18 @@ onBeforeUnmount(() => {
 
     <div class="wasm-preview__stage">
       <div class="wasm-preview__device">
+        <div class="wasm-preview__status-bar" aria-hidden="true">
+          <span class="wasm-preview__time">9:41</span>
+          <span class="wasm-preview__status-icons">
+            <svg viewBox="0 0 16 14" fill="currentColor"><path d="M1 11h2v2H1zm4-3h2v5H5zm4-3h2v8H9zm4-3h2v11h-2z" /></svg>
+            <svg viewBox="0 0 16 14" fill="currentColor"><path d="M1 5.5a11 11 0 0 1 14 0l-1.9 2a8.3 8.3 0 0 0-10.2 0zm3.5 3.6a5.7 5.7 0 0 1 7 0L8 12.7z" /></svg>
+            <svg viewBox="0 0 25 14" fill="none">
+              <rect x="1" y="1.5" width="20" height="11" rx="2.5" stroke="currentColor" />
+              <rect x="3.5" y="4" width="15" height="6" rx="1" fill="currentColor" />
+              <path d="M23 5v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </span>
+        </div>
         <div class="wasm-preview__notch" aria-hidden="true">
           <span class="wasm-preview__camera" />
         </div>
