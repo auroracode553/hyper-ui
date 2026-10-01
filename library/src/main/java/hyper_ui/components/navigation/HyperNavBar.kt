@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalDensity
 /** 透明顶部导航栏。固定避让顶部状态栏，安全区位于内容高度之外，不绘制背景。 */
 @Composable
 fun HyperNavBar(
+    type: String = HyperNavBarDefaults.TypeCustom,
     titleContent: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier,
     size: String = "default",
@@ -46,14 +47,29 @@ fun HyperNavBar(
     titleSpacing: Dp = HyperNavBarDefaults.TitleGap,
     actionSpacing: Dp = HyperNavBarDefaults.ActionGap,
     centerTitle: Boolean = false,
+    onBackClick: () -> Unit = {},
+    onMoreClick: () -> Unit = {},
+    onSaveClick: () -> Unit = {},
     subtitleContent: (@Composable () -> Unit)? = null,
     navigationContent: (@Composable RowScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null,
     actions: List<@Composable () -> Unit> = emptyList(),
     child: (@Composable BoxScope.() -> Unit)? = null
 ) {
+    require(type in HyperNavBarDefaults.Types) { "不支持的 HyperNavBar type: $type" }
     val resolvedHeight = hyperComponentSize(size, 40.dp, HyperNavBarDefaults.Height, 52.dp)
     require(spacing >= 0.dp && titleSpacing >= 0.dp && actionSpacing >= 0.dp) { "间距不能为负数" }
+    require(type == HyperNavBarDefaults.TypeCustom ||
+        (child == null && navigationContent == null && trailingContent == null && actions.isEmpty() && !centerTitle)) {
+        "固定类型 HyperNavBar 只接受标题内容与对应回调；需要完整插槽时使用 type = custom。"
+    }
+    require(type != HyperNavBarDefaults.TypeBackOnly || (titleContent == null && subtitleContent == null)) {
+        "backOnly 类型不接受标题内容。"
+    }
+    require(type == HyperNavBarDefaults.TypeCustom ||
+        type == HyperNavBarDefaults.TypeBackOnly || titleContent != null) {
+        "此 HyperNavBar 固定类型必须提供标题内容。"
+    }
     require(child == null || (titleContent == null && subtitleContent == null && navigationContent == null && trailingContent == null && actions.isEmpty())) {
         "child 接管整行布局，不能同时设置其他内容插槽。"
     }
@@ -64,7 +80,7 @@ fun HyperNavBar(
         Box(modifier = Modifier.fillMaxWidth().height(resolvedHeight).padding(padding)) {
             if (child != null) {
                 child.invoke(this)
-            } else {
+            } else if (type == HyperNavBarDefaults.TypeCustom) {
                 HyperNavBarSlots(
                     titleContent = titleContent,
                     subtitleContent = subtitleContent,
@@ -73,6 +89,40 @@ fun HyperNavBar(
                     spacing = spacing,
                     titleSpacing = titleSpacing,
                     centerTitle = centerTitle
+                )
+            } else {
+                HyperNavBarSlots(
+                    titleContent = when (type) {
+                        HyperNavBarDefaults.TypeTitleOnly,
+                        HyperNavBarDefaults.TypeBackWithTitle,
+                        HyperNavBarDefaults.TypeMore,
+                        HyperNavBarDefaults.TypeEdit -> titleContent
+                        else -> null
+                    },
+                    subtitleContent = when (type) {
+                        HyperNavBarDefaults.TypeTitleOnly,
+                        HyperNavBarDefaults.TypeBackWithTitle,
+                        HyperNavBarDefaults.TypeMore,
+                        HyperNavBarDefaults.TypeEdit -> subtitleContent
+                        else -> null
+                    },
+                    navigationContent = if (type == HyperNavBarDefaults.TypeTitleOnly) null else {
+                        { HyperNavBarBackButton(onClick = onBackClick) }
+                    },
+                    trailingContent = when (type) {
+                        HyperNavBarDefaults.TypeMore -> { { HyperNavBarMoreButton(onClick = onMoreClick) } }
+                        HyperNavBarDefaults.TypeEdit -> {
+                            {
+                                HyperButton(onClick = onSaveClick, type = "ghost", size = "small") {
+                                    HyperText("保存")
+                                }
+                            }
+                        }
+                        else -> null
+                    },
+                    spacing = spacing,
+                    titleSpacing = titleSpacing,
+                    centerTitle = false
                 )
             }
         }
@@ -203,6 +253,13 @@ private fun PaddingValues.withAdditionalBottom(additionalBottom: Dp): PaddingVal
 }
 
 object HyperNavBarDefaults {
+    const val TypeCustom = "custom"
+    const val TypeBackOnly = "backOnly"
+    const val TypeTitleOnly = "titleOnly"
+    const val TypeBackWithTitle = "backWithTitle"
+    const val TypeMore = "more"
+    const val TypeEdit = "edit"
+    val Types = setOf(TypeCustom, TypeBackOnly, TypeTitleOnly, TypeBackWithTitle, TypeMore, TypeEdit)
     val Height = 44.dp
     val ContentGap = 8.dp
     val TitleGap = 2.dp

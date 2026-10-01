@@ -31,7 +31,7 @@
 
 | 组件 | 用途 |
 | --- | --- |
-| [HyperNavBar](components/navigation/hyper-nav-bar.md) | 默认透明，固定顶部状态栏避让；HyperNavBarBackButton 提供 `<` 返回图标；Preview 展示仅返回、仅标题和带操作按钮的布局 |
+| [HyperNavBar](components/navigation/hyper-nav-bar.md) | 默认透明，固定顶部状态栏避让；通过 type 选择 backOnly、titleOnly、backWithTitle、more、edit 或 custom 布局 |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | 底部导航；贴底与悬浮胶囊各有独立交互预览 |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 任务抽屉 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表项侧滑操作 |

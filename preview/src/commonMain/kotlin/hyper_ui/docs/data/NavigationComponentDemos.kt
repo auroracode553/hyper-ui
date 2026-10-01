@@ -35,12 +35,14 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "nav-bar",
         group = GROUP_NAVIGATION,
         title = "HyperNavBar",
-        description = "固定透明导航操作层。可切换仅返回、仅标题、返回与标题，以及带更多或保存操作的布局。",
+        description = "固定透明导航操作层。type 覆盖仅返回、仅标题、返回与标题、更多操作和编辑返回，并提供 custom 插槽示例。",
         code = """
             HyperNavBarPage(
                 navBar = {
                     HyperNavBar(
-                        navigationContent = { HyperNavBarBackButton(onClick = onBack) }
+                        type = HyperNavBarDefaults.TypeBackWithTitle,
+                        titleContent = { HyperText("详情") },
+                        onBackClick = onBack
                     )
                 }
             ) { contentPadding ->
@@ -48,13 +50,13 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("尖括号返回", "HyperNavBarBackButton", "返回由调用方处理，可切换禁用态"),
-            DemoVariant("基础返回", "navigationContent", "只显示返回按钮"),
-            DemoVariant("仅标题", "titleContent", "不显示返回按钮"),
-            DemoVariant("返回与标题", "navigationContent / titleContent", "返回图标与页面标题相邻显示"),
-            DemoVariant("更多操作", "trailingContent", "右侧显示更多按钮"),
-            DemoVariant("编辑返回", "trailingContent", "标题右侧显示保存操作"),
-            DemoVariant("操作反馈", "onClick", "返回、更多与保存均可点击，正文显示反馈"),
+            DemoVariant("基础返回", "type = backOnly", "只显示返回按钮"),
+            DemoVariant("仅标题", "type = titleOnly", "不显示返回按钮"),
+            DemoVariant("返回与标题", "type = backWithTitle", "返回图标与页面标题相邻显示"),
+            DemoVariant("更多操作", "type = more", "右侧显示更多按钮"),
+            DemoVariant("编辑返回", "type = edit", "标题右侧显示保存操作"),
+            DemoVariant("自定义", "type = custom", "使用 navigationContent / trailingContent 等插槽"),
+            DemoVariant("操作反馈", "onBackClick / onMoreClick / onSaveClick", "返回、更多与保存均可点击，正文显示反馈"),
             DemoVariant("透明表面", "默认样式", "导航栏不绘制背景、模糊、描边或阴影"),
             DemoVariant("默认尺寸", "size = default", "高度不包含顶部安全区"),
             DemoVariant("固定安全区", "库内自动处理", "始终避让顶部状态栏，不提供关闭开关"),
