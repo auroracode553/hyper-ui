@@ -1,6 +1,6 @@
 # 组件索引
 
-所有组件从 `hyper_ui` 包导入。点击组件名查看交互预览、公开签名和最小用法。
+所有组件从 `hyper_ui` 包导入。点击组件名查看交互预览、公开签名、逐项 Props 表格和最小用法。
 
 ## 基础
 
@@ -31,7 +31,7 @@
 
 | 组件 | 用途 |
 | --- | --- |
-| [HyperNavBar](components/navigation/hyper-nav-bar.md) | 手机页面顶部导航；预览展示状态栏安全区与沉浸滚动 |
+| [HyperNavBar](components/navigation/hyper-nav-bar.md) | 默认透明，固定顶部状态栏避让；配套 HyperNavBarPage 支持正文在后方滚动 |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | 底部导航；贴底与悬浮胶囊各有独立交互预览 |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 任务抽屉 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表项侧滑操作 |

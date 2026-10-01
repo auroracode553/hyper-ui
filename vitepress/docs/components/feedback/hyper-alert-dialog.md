@@ -19,6 +19,18 @@ fun HyperAlertDialog(
 )
 ```
 
+## Props（参数）
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| visible | Boolean | 是 | — | 是否显示组件，由调用方持有。 |
+| onDismissRequest | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| title | String? | 否 | null | 对话框或弹出层标题。 |
+| dismissOnClickOutside | Boolean | 否 | true | 点击外部时是否请求关闭。 |
+| bodyContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 对话框主体内容。 |
+| actionContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 操作按钮或操作区内容，由调用方提供。 |
+
 ## 最小用法
 
 ```kotlin

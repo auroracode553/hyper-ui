@@ -20,6 +20,19 @@ fun HyperSwitch(
 )
 ```
 
+## Props（参数）
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| checked | Boolean | 是 | — | 由调用方持有的勾选状态。 |
+| onCheckedChange | (Boolean) -&gt; Unit | 是 | — | 勾选状态变化时通知调用方。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| checkedTrackColor | Color | 否 | Color.Unspecified | 开启时轨道颜色。 |
+| uncheckedTrackColor | Color | 否 | Color.Unspecified | 关闭时轨道颜色。 |
+| checkedThumbColor | Color | 否 | Color(1f, 1f, 1f, 1f) | 开启时滑块颜色。 |
+| uncheckedThumbColor | Color | 否 | Color.Unspecified | 关闭时滑块颜色。 |
+
 ## 最小用法
 
 ```kotlin

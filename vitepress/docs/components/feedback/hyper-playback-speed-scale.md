@@ -18,6 +18,17 @@ fun HyperPlaybackSpeedScale(
 )
 ```
 
+## Props（参数）
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| selectedSpeed | Float | 是 | — | 当前选中的播放速度。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| speedOptions | List&lt;Float&gt; | 否 | HyperPlaybackSpeedScaleDefaults.SpeedOptions | 可选播放速度列表。 |
+| shape | Shape | 否 | HyperPlaybackSpeedScaleDefaults.Shape | 组件容器的形状。 |
+| colors | HyperPlaybackSpeedScaleColors | 否 | HyperPlaybackSpeedScaleDefaults.colors() | 组件各状态的颜色配置。 |
+| leadingContent | (@Composable () -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
+
 ## 最小用法
 
 ```kotlin

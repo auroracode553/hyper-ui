@@ -28,6 +28,25 @@ fun <S, T> HyperSectionedList(
 )
 ```
 
+## Props（参数）
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| sections | List&lt;S&gt; | 是 | — | 分组数据。 |
+| items | (S) -&gt; List&lt;T&gt; | 是 | — | 由调用方提供的选项或列表数据。 |
+| sectionKey | (S) -&gt; Any | 是 | — | 为分组生成稳定键。 |
+| itemKey | (S, T) -&gt; Any | 是 | — | 为列表项生成稳定键。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| state | LazyListState | 否 | rememberLazyListState() | 组件使用的状态对象，由调用方提供或记忆。 |
+| contentPadding | PaddingValues | 否 | HyperSectionedListDefaults.ContentPadding | 主体内容的内部留白。 |
+| firstSectionTopSpacing | Dp | 否 | HyperSectionedListDefaults.FirstSectionTopSpacing | 第一分组顶部的间距。 |
+| sectionSpacing | Dp | 否 | HyperSectionedListDefaults.SectionSpacing | 相邻分组之间的间距。 |
+| headerBottomSpacing | Dp | 否 | HyperSectionedListDefaults.HeaderBottomSpacing | 分组标题下方间距。 |
+| dividerModifier | Modifier | 否 | Modifier.padding( start = HyperSectionedListDefaults.DividerInset ) | 分隔线的布局修饰符。 |
+| colors | HyperSectionedListColors | 否 | HyperSectionedListDefaults.colors() | 组件各状态的颜色配置。 |
+| headerContent | @Composable (section: S) -&gt; Unit | 是 | — | 每个分组的标题内容。 |
+| itemContent | @Composable (section: S, item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |
+
 ## 最小用法
 
 ```kotlin

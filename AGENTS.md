@@ -40,6 +40,7 @@
 
 - 新增或修改组件、配置、枚举、工具方法后，必须同步更新 `README.md`、`vitepress/docs/component-index.md` 和 `vitepress/docs/components/` 下对应组件页。
 - `vitepress/docs/index.md` 是 AI 与调用方的首读入口；具体组件页必须包含包名、真实公开签名、参数默认值、状态归属、使用约束和最小调用方式。
+- 每个 VitePress 组件页必须保留完整的 API/Props 参数表格，列出参数、类型、是否必填、默认值和作用；不得在重构或精简文档时删除表格。修改公开 API 时同步更新表格并核对源码；表格单元格允许长内容换行，内容不用反引号包裹。
 - VitePress 负责渲染 `vitepress/docs/` 中的 Markdown；不得维护第二份组件正文。
 - Wasm 只负责交互预览，不能作为 AI 推断 API 的事实来源。新增组件页时应通过 `WasmPreview` 引用对应 Preview ID。
 - HyperUI 公开 API 统一声明在 `hyper_ui` 包，示例可使用 `import hyper_ui.*`；`hyper_ui.core` 仅为 UI 库内部公共工具目录，调用方示例不要直接导入。

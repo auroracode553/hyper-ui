@@ -28,7 +28,30 @@ fun HyperSoftBackground(
 )
 ```
 
-`HyperGlassTokens` 提供玻璃表面、边缘、阴影和状态色；背景必须位于采样源中，避免面板采样自身。
+## Props（参数）
+
+### HyperBackdrop
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| state | HyperBackdropState | 否 | rememberHyperBackdropState() | 组件使用的状态对象，由调用方提供或记忆。 |
+| background | @Composable BoxScope.() -&gt; Unit | 否 | { HyperSoftBackground(Modifier.matchParentSize()) } | 供玻璃表面采样的背景内容。 |
+| content | @Composable BoxScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |
+
+### hyperBackdropSource
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| state | HyperBackdropState | 是 | — | 组件使用的状态对象，由调用方提供或记忆。 |
+
+### HyperSoftBackground
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| intensity | Float | 否 | 1f | 柔和背景效果的强度。 |
+| content | @Composable BoxScope.() -&gt; Unit | 否 | {} | 组件主体内容，由调用方提供。 |
 
 ## 最小用法
 

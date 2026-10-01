@@ -19,6 +19,18 @@ fun HyperUpdateDialog(
 )
 ```
 
+## Props（参数）
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| state | HyperUpdateDialogState | 是 | — | 组件使用的状态对象，由调用方提供或记忆。 |
+| onDismissRequest | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
+| onRetry | () -&gt; Unit | 是 | — | 用户触发重试时的回调。 |
+| onDownload | () -&gt; Unit | 是 | — | 用户触发下载时的回调。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| texts | HyperUpdateDialogTexts | 否 | HyperUpdateDialogTexts() | 组件内置文案的配置。 |
+| dismissOnClickOutside | Boolean | 否 | true | 点击外部时是否请求关闭。 |
+
 ## 最小用法
 
 ```kotlin

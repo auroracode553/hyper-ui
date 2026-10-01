@@ -29,7 +29,7 @@ data class ComponentDemo(
     val useReferencePreview: Boolean = true
 )
 
-/** 聚合稳定 Preview ID；Toast、Switch 等状态及 HyperTabBar 两种样式由对应分组示例呈现。 */
+/** 聚合稳定 Preview ID；导航栏固定顶部避让与透明叠加滚动由导航分组示例呈现。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos())
     addAll(formComponentDemos())

@@ -80,13 +80,11 @@ fun NavBarDemo() {
                     TopBarIconButton(Icons.Default.MoreVert, "更多") {
                         actionMessage = "已点击更多"
                     }
-                },
-                safeArea = false
+                }
             )
         },
         navBarSize = "default",
         contentPadding = PaddingValues(top = PreviewTopSafeArea, bottom = 24.dp),
-        safeArea = false,
         bottomSafeArea = false
     ) { immersivePadding ->
         LazyColumn(

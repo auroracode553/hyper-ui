@@ -214,7 +214,6 @@ private fun MobilePreviewTopBar(
     ) {
         HyperNavBar(
             modifier = Modifier.fillMaxWidth(),
-            safeArea = true,
             titleContent = { HyperText("HyperUI Preview", maxLines = 1) },
             subtitleContent = { HyperText(selectedDemo.description, maxLines = 1) }
         )

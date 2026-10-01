@@ -26,6 +26,24 @@ fun readHyperBatteryState(context: Context): HyperBatteryState
 fun rememberHyperBatteryState(): State<HyperBatteryState>
 ```
 
+## Props（参数）
+
+### HyperBatteryState 返回字段
+
+| 字段 | 类型 | 作用 |
+| --- | --- | --- |
+| percentage | Int | 电量百分比，范围为 0 至 100。 |
+| isCharging | Boolean | 是否正在充电或已充满且连接电源。 |
+| isAvailable | Boolean | 系统是否提供有效电量数据。 |
+| Unavailable | HyperBatteryState | 无法读取电量时使用的状态。 |
+
+### readHyperBatteryState
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| context | Context | 是 | — | 用于读取系统电量状态的 Android Context。 |
+
+
 ## Compose 最小用法
 
 ```kotlin

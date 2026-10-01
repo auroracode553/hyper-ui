@@ -20,6 +20,19 @@ fun HyperRadio(
 )
 ```
 
+## Props（参数）
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| selected | Boolean | 是 | — | 由调用方持有的选中状态。 |
+| onClick | (() -&gt; Unit)? | 是 | — | 用户点击时执行的回调。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| selectedColor | Color | 否 | Color.Unspecified | 选中时的控件颜色。 |
+| unselectedColor | Color | 否 | Color.Unspecified | 未选中时的控件颜色。 |
+| unselectedBorderColor | Color | 否 | Color.Unspecified | 未选中时边框颜色。 |
+| innerDotColor | Color | 否 | Color.Unspecified | 单选圆点的颜色。 |
+
 ## 最小用法
 
 ```kotlin

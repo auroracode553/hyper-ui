@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,12 +23,12 @@ fun SettingsScreen() {
     var pushEnabled by remember { mutableStateOf(true) }
 
     HyperNavBarPage(
-        navBar = { HyperNavBar(titleContent = { HyperText("设置") }) },
-        navBarSize = "default"
+        navBar = { HyperNavBar(titleContent = { HyperText("设置") }) }
     ) { contentPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(contentPadding)
                 .padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -47,3 +49,5 @@ fun SettingsScreen() {
     }
 }
 ```
+
+导航栏保持库内默认透明样式与固定顶部避让；正文的 `padding(contentPadding)` 位于 `verticalScroll` 之后，滚动时内容可经过导航栏后方。

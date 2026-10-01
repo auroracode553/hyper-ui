@@ -345,3 +345,10 @@
     height: 640px;
   }
 }
+
+/* 参数表保留五列；长签名和默认值在单元格内换行。 */
+.vp-doc table th,
+.vp-doc table td {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}

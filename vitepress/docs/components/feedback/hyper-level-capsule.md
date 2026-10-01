@@ -18,6 +18,17 @@ fun HyperLevelCapsule(
 )
 ```
 
+## Props（参数）
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| progress | Float | 是 | — | 由调用方提供的进度值。 |
+| label | String | 是 | — | 数值旁显示的标签文字。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| shape | Shape | 否 | HyperLevelCapsuleDefaults.Shape | 组件容器的形状。 |
+| colors | HyperLevelCapsuleColors | 否 | HyperLevelCapsuleDefaults.colors() | 组件各状态的颜色配置。 |
+| iconContent | (@Composable () -&gt; Unit)? | 否 | null | 图标区域的自定义内容。 |
+
 ## 最小用法
 
 ```kotlin

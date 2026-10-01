@@ -25,6 +25,7 @@ vitepress/.vitepress/           导航、主题和文档站配置
 
 - 包名和支持平台。
 - 与源码一致的完整公开签名。
+- 逐项 Props 表格，列明参数、类型、必填或默认值、作用；工具页列出返回状态字段。
 - 适用的 `type`、`size`、状态参数和默认值。
 - 最小可用示例。
 - 状态归属、使用约束和常见错误。
@@ -32,10 +33,10 @@ vitepress/.vitepress/           导航、主题和文档站配置
 
 ## 文档写作规则
 
-- 组件页只保留一句用途或关键约束，再给签名和最小用法。
+- 组件页先说明用途或关键约束，再给签名、Props 表格和最小用法。
 - 使用 `type` 描述渲染形态，使用 `size` 描述 `small/default/large` 尺寸。
 - 不把 Preview 的设备框、工具栏和加载状态写成组件 API。
-- 不在组件页维护与源码无关的第二份参数表。
+- Props 表格使用“参数、类型、必填、默认值、作用”五列；长内容在单元格中换行，表格内容不加反引号。表格必须与公开签名及源码同步，不写旧 API 或 Preview 专属属性。
 - 示例只展示最小调用；业务网络、数据库、权限、导航和 ViewModel 放在调用方。
 - 颜色示例使用 `rgba(...)` 或主题令牌，不写十六进制 `Color(0xFF...)`。
 
@@ -45,7 +46,7 @@ Wasm/Desktop 预览只用于浏览器或维护者操作真实组件。它们不�
 
 ## 文档检查
 
-只改 Markdown 时，检查链接、代码块、签名和目录导航即可。修改组件或 Preview 时，至少执行：
+只改 Markdown 时，检查链接、代码块、签名、Props 表格和目录导航。更新签名后运行 `python tools/sync-component-api-tables.py`；仅检查时运行 `python tools/sync-component-api-tables.py --check`。修改组件或 Preview 时，至少执行：
 
 ```powershell
 git diff --check

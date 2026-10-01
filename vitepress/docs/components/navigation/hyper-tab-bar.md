@@ -50,6 +50,44 @@ fun <T> HyperTabBar(
 )
 ```
 
+## Props（参数）
+
+### HyperTabBar（内容 Slot 形式）
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| horizontalArrangement | Arrangement.Horizontal | 否 | Arrangement.SpaceBetween | 子项的水平排列方式。 |
+| verticalAlignment | Alignment.Vertical | 否 | Alignment.CenterVertically | 子项的垂直对齐方式。 |
+| shape | Shape | 否 | HyperTabBarDefaults.Shape | 组件容器的形状。 |
+| topDivider | BorderStroke? | 否 | HyperTabBarDefaults.topDivider() | 是否显示顶部边界线。 |
+| colors | HyperTabBarColors | 否 | HyperTabBarDefaults.colors() | 组件各状态的颜色配置。 |
+| type | String | 否 | &quot;docked&quot; | 组件的视觉或布局形态。 |
+| floatingColors | HyperFloatingTabBarColors | 否 | HyperFloatingTabBarDefaults.colors() | 悬浮样式的颜色配置。 |
+| content | @Composable RowScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |
+
+### HyperTabBar（数据项形式）
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| items | List&lt;T&gt; | 是 | — | 由调用方提供的选项或列表数据。 |
+| onItemClick | (T) -&gt; Unit | 是 | — | 标签栏单项点击时的回调。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| itemLayout | HyperTabBarItemLayout | 否 | HyperTabBarItemLayout.Equal | 标签栏单项的布局配置。 |
+| itemSelected | (T) -&gt; Boolean | 否 | { false } | 判断标签栏单项是否选中。 |
+| itemSlotAlignment | Alignment | 否 | Alignment.Center | 标签栏内容 Slot 的对齐方式。 |
+| horizontalArrangement | Arrangement.Horizontal | 否 | Arrangement.SpaceBetween | 子项的水平排列方式。 |
+| shape | Shape | 否 | HyperTabBarDefaults.Shape | 组件容器的形状。 |
+| topDivider | BorderStroke? | 否 | HyperTabBarDefaults.topDivider() | 是否显示顶部边界线。 |
+| colors | HyperTabBarColors | 否 | HyperTabBarDefaults.colors() | 组件各状态的颜色配置。 |
+| type | String | 否 | &quot;docked&quot; | 组件的视觉或布局形态。 |
+| floatingColors | HyperFloatingTabBarColors | 否 | HyperFloatingTabBarDefaults.colors() | 悬浮样式的颜色配置。 |
+| itemEnabled | (T) -&gt; Boolean | 否 | { true } | 判断单个选项是否可操作。 |
+| itemContent | @Composable HyperTabBarItemScope.(item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |
+
+
 ## 最小用法
 
 ```kotlin

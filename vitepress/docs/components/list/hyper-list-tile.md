@@ -23,6 +23,22 @@ fun HyperListTile(
 )
 ```
 
+## Props（参数）
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| headlineContent | @Composable ColumnScope.() -&gt; Unit | 是 | — | 列表行主标题内容。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| contentModifier | Modifier | 否 | Modifier.padding(HyperListTileDefaults.ContentPadding) | 内部内容区域的布局修饰符。 |
+| dividerModifier | Modifier | 否 | Modifier.padding(start = HyperListTileDefaults.DividerInset) | 分隔线的布局修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| dividerVisible | Boolean | 否 | false | 是否显示行分隔线。 |
+| colors | HyperListTileColors | 否 | HyperListTileDefaults.colors() | 组件各状态的颜色配置。 |
+| onClick | (() -&gt; Unit)? | 否 | null | 用户点击时执行的回调。 |
+| leadingContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
+| supportingContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 标题或输入框下方的辅助内容。 |
+| trailingContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 内容末端的自定义区域。 |
+
 ## 最小用法
 
 ```kotlin

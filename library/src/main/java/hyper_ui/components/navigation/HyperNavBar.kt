@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -33,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.platform.LocalDensity
 
-/** 透明顶部导航栏。使用 small/default/large 统一尺寸词汇，安全区位于内容高度之外。 */
+/** 透明顶部导航栏。固定避让顶部状态栏，安全区位于内容高度之外，不绘制背景。 */
 @Composable
 fun HyperNavBar(
     titleContent: (@Composable () -> Unit)? = null,
@@ -43,7 +45,6 @@ fun HyperNavBar(
     spacing: Dp = HyperNavBarDefaults.ContentGap,
     titleSpacing: Dp = HyperNavBarDefaults.TitleGap,
     actionSpacing: Dp = HyperNavBarDefaults.ActionGap,
-    safeArea: Boolean = true,
     centerTitle: Boolean = false,
     subtitleContent: (@Composable () -> Unit)? = null,
     navigationContent: (@Composable RowScope.() -> Unit)? = null,
@@ -58,7 +59,7 @@ fun HyperNavBar(
     }
     require(trailingContent == null || actions.isEmpty()) { "trailingContent 与 actions 二选一" }
 
-    val safeInsets = if (safeArea) WindowInsets.statusBars.only(WindowInsetsSides.Top) else WindowInsets(0, 0, 0, 0)
+    val safeInsets = WindowInsets.statusBars.only(WindowInsetsSides.Top)
     Column(modifier = modifier.windowInsetsPadding(safeInsets).zIndex(HyperNavBarDefaults.ZIndex)) {
         Box(modifier = Modifier.fillMaxWidth().height(resolvedHeight).padding(padding)) {
             if (child != null) {
@@ -79,23 +80,23 @@ fun HyperNavBar(
 }
 
 
-/** 透明导航栏的全面屏页面容器；顶部净空会随滚动内容一起滚出。 */
+/** 透明导航栏的全面屏页面容器；固定计入顶部状态栏，净空随滚动内容一起滚出。 */
 @Composable
 fun HyperNavBarPage(
     navBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     navBarSize: String = "default",
-    safeArea: Boolean = true,
     bottomSafeArea: Boolean = true,
     content: @Composable BoxScope.(PaddingValues) -> Unit
 ) {
     val density = LocalDensity.current
-    val topInset = if (safeArea) with(density) {
+    val topInset = with(density) {
         WindowInsets.statusBars.getTop(this).toDp()
-    } else 0.dp
+    }
     val bottomInset = if (bottomSafeArea) with(density) {
-        WindowInsets.safeDrawing.getBottom(this).toDp()
+        // 键盘避让由页面宿主处理，避免与 imePadding 重复累加。
+        WindowInsets.safeDrawing.exclude(WindowInsets.ime).getBottom(this).toDp()
     } else 0.dp
     val resolvedPadding = contentPadding.withAdditionalTop(
         topInset + hyperComponentSize(navBarSize, 40.dp, HyperNavBarDefaults.Height, 52.dp)
