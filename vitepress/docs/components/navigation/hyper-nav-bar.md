@@ -2,11 +2,11 @@
 
 包名：`hyper_ui`。
 
-<WasmPreview demo="nav-bar" title="HyperNavBar 交互预览" />
+<WasmPreview demo="nav-bar" title="HyperNavBar 返回布局交互预览" />
 
 导航栏默认完全透明，不绘制背景、模糊、描边或阴影；顶部状态栏避让始终开启，不再提供 `safeArea` 参数。要让滚动正文出现在导航栏后方，使用 `HyperNavBarPage` 叠加页面，而不是把导航栏和正文上下排列。
 
-预览手机的时间、信号和电量由文档外壳绘制；Wasm 没有 Android 系统状态栏，Preview 仅额外模拟顶部间距。示例的滚动视口覆盖整块屏幕，正文首屏使用 `HyperNavBarPage` 提供的内边距开始布局。上滚时正文可经过透明导航栏并进入状态栏背后。
+预览手机的时间、信号和电量由文档外壳绘制；Wasm 没有 Android 系统状态栏，Preview 仅额外模拟顶部间距。预览中可切换仅返回、仅标题、返回与标题，以及带更多或保存操作的布局。仅标题布局不显示返回按钮；只有更多与编辑布局显示右侧按钮。返回按钮可切换禁用态，点击顶部操作会在正文显示反馈。示例的滚动视口覆盖整块屏幕，正文首屏使用 `HyperNavBarPage` 提供的内边距开始布局。上滚时正文可经过透明导航栏并进入状态栏背后。
 
 ## 公开签名与默认值
 
@@ -36,6 +36,14 @@ fun HyperNavBarPage(
     navBarSize: String = "default",
     bottomSafeArea: Boolean = true,
     content: @Composable BoxScope.(PaddingValues) -> Unit
+)
+
+@Composable
+fun HyperNavBarBackButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    contentDescription: String = "返回"
 )
 ```
 
@@ -70,6 +78,15 @@ fun HyperNavBarPage(
 | bottomSafeArea | Boolean | 否 | true | 是否为底部系统安全区留白。 |
 | content | @Composable BoxScope.(PaddingValues) -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |
 
+### HyperNavBarBackButton
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| onClick | () -&gt; Unit | 是 | — | 请求返回，由页面调用方处理导航。 |
+| modifier | Modifier | 否 | Modifier | 返回按钮的外部修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许点击；禁用时显示对应按钮状态。 |
+| contentDescription | String | 否 | &quot;返回&quot; | 无障碍操作名称。 |
+
 
 默认尺寸为 `default`（44.dp），支持 `small`、`large`；默认左右内边距为 16.dp。`child` 与其他插槽互斥，`trailingContent` 与 `actions` 二选一。
 
@@ -79,10 +96,53 @@ fun HyperNavBarPage(
 
 ```kotlin
 HyperNavBarPage(
-    navBar = { HyperNavBar(titleContent = { HyperText("详情") }) }
+    navBar = {
+        HyperNavBar(
+            navigationContent = { HyperNavBarBackButton(onClick = onBack) }
+        )
+    }
 ) { immersivePadding ->
     LazyColumn(contentPadding = immersivePadding) { /* 内容 */ }
 }
+```
+
+## 常见返回布局
+
+`HyperNavBarBackButton` 使用 `<` 形矢量图标，自动适应 RTL 方向。调用方通过 `onClick` 接入页面导航；按钮本身不保存导航状态。
+
+```kotlin
+// 仅标题：不传 navigationContent。
+HyperNavBar(
+    titleContent = { HyperText("今日灵感") }
+)
+
+// 返回与标题：不传 trailingContent。
+HyperNavBar(
+    titleContent = { HyperText("今日灵感") },
+    navigationContent = { HyperNavBarBackButton(onClick = onBack) }
+)
+
+// 更多操作：只有需要右侧动作时才传 trailingContent。
+HyperNavBar(
+    titleContent = { HyperText("消息") },
+    navigationContent = { HyperNavBarBackButton(onClick = onBack) },
+    trailingContent = {
+        HyperButton(onClick = onMore, type = "icon") {
+            HyperIcon(Icons.Default.MoreVert, "更多", Modifier.size(HyperButtonDefaults.IconSize))
+        }
+    }
+)
+
+// 编辑页：保存动作由调用方处理。
+HyperNavBar(
+    titleContent = { HyperText("编辑资料") },
+    navigationContent = { HyperNavBarBackButton(onClick = onBack, enabled = canGoBack) },
+    trailingContent = {
+        HyperButton(onClick = onSave, type = "ghost", size = "small") {
+            HyperText("保存")
+        }
+    }
+)
 ```
 
 ## 约束

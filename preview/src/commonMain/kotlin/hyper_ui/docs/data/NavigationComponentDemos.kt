@@ -35,20 +35,28 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "nav-bar",
         group = GROUP_NAVIGATION,
         title = "HyperNavBar",
-        description = "固定透明导航操作层，始终避让顶部状态栏。正文通过 HyperNavBarPage 占满屏幕，上滚后进入导航栏与状态栏后方。",
+        description = "固定透明导航操作层。可切换仅返回、仅标题、返回与标题，以及带更多或保存操作的布局。",
         code = """
             HyperNavBarPage(
-                navBar = { HyperNavBar(titleContent = { HyperText("详情") }) }
+                navBar = {
+                    HyperNavBar(
+                        navigationContent = { HyperNavBarBackButton(onClick = onBack) }
+                    )
+                }
             ) { contentPadding ->
                 LazyColumn(contentPadding = contentPadding) { /* 正文 */ }
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("固定操作层", "navigation/title/trailing", "按钮不随正文滚动"),
-            DemoVariant("操作反馈", "navigationContent / trailingContent", "返回与更多按钮可点击，正文显示反馈"),
+            DemoVariant("尖括号返回", "HyperNavBarBackButton", "返回由调用方处理，可切换禁用态"),
+            DemoVariant("基础返回", "navigationContent", "只显示返回按钮"),
+            DemoVariant("仅标题", "titleContent", "不显示返回按钮"),
+            DemoVariant("返回与标题", "navigationContent / titleContent", "返回图标与页面标题相邻显示"),
+            DemoVariant("更多操作", "trailingContent", "右侧显示更多按钮"),
+            DemoVariant("编辑返回", "trailingContent", "标题右侧显示保存操作"),
+            DemoVariant("操作反馈", "onClick", "返回、更多与保存均可点击，正文显示反馈"),
             DemoVariant("透明表面", "默认样式", "导航栏不绘制背景、模糊、描边或阴影"),
             DemoVariant("默认尺寸", "size = default", "高度不包含顶部安全区"),
-            DemoVariant("标题布局", "centerTitle = false/true", "支持起始侧与整栏居中"),
             DemoVariant("固定安全区", "库内自动处理", "始终避让顶部状态栏，不提供关闭开关"),
             DemoVariant("叠加页面", "HyperNavBarPage", "首屏净空属于滚动内容，正文可经过透明操作层")
         ),

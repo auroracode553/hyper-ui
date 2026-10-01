@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,16 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
@@ -46,9 +41,6 @@ import hyper_ui.HyperDrawerHeader
 import hyper_ui.HyperDrawerItem
 import hyper_ui.HyperDrawerPosition
 import hyper_ui.HyperTabs
-import hyper_ui.HyperCard
-import hyper_ui.HyperCardDefaults
-import hyper_ui.HyperNavBar
 import hyper_ui.docs.theme.DocsBorder
 
 private data class DemoNavItem(
@@ -60,65 +52,6 @@ private data class DemoNavItem(
 /** 贴底预览只在标签下方留出与手机手势条之间的可见间距。 */
 private val DockedTabBarGestureClearance = 8.dp
 
-@Composable
-fun NavBarDemo() {
-    val sections = listOf("留一点空白", "光影与秩序", "日常里的灵感", "透明导航栏下的连续滚动")
-    var actionMessage by remember { mutableStateOf("向上滚动，观察内容经过透明导航标题与状态栏。") }
-    HyperNavBarPage(
-        modifier = Modifier.fillMaxSize(),
-        navBar = {
-            HyperNavBar(
-                // 滚动内容占满屏幕，导航操作行独立避让模拟状态栏。
-                modifier = Modifier.padding(top = PreviewTopSafeArea),
-                titleContent = { HyperText("今日灵感", maxLines = 1) },
-                navigationContent = {
-                    TopBarIconButton(Icons.AutoMirrored.Filled.ArrowBack, "返回") {
-                        actionMessage = "已点击返回"
-                    }
-                },
-                trailingContent = {
-                    TopBarIconButton(Icons.Default.MoreVert, "更多") {
-                        actionMessage = "已点击更多"
-                    }
-                }
-            )
-        },
-        navBarSize = "default",
-        contentPadding = PaddingValues(top = PreviewTopSafeArea, bottom = 24.dp),
-        bottomSafeArea = false
-    ) { immersivePadding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().background(LocalDocsColorScheme.current.background),
-            contentPadding = immersivePadding,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            item(key = "hero") {
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 12.dp)
-                        .background(LocalDocsColorScheme.current.primaryContainer, RoundedCornerShape(20.dp))
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    HyperIcon(Icons.Default.Home, "灵感", Modifier.size(28.dp))
-                    HyperText("让内容延伸到\n屏幕的每一寸", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                    HyperText(actionMessage, fontSize = 14.sp)
-                }
-            }
-            items(items = sections, key = { it }) { section ->
-                HyperCard(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    colors = HyperCardDefaults.colors(containerColor = LocalDocsColorScheme.current.surface)
-                ) {
-                    Column(Modifier.padding(4.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        HyperText("灵感 ${sections.indexOf(section) + 1}", fontSize = 12.sp, color = LocalDocsColorScheme.current.onSurfaceVariant)
-                        HyperText(section, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                        HyperText("导航栏保持透明，内容沿同一个滚动视口连续向上移动。", fontSize = 13.sp)
-                    }
-                }
-            }
-        }
-    }
-}
 @Composable
 fun DrawerDemo() {
     var drawerOpen by remember { mutableStateOf(false) }
@@ -279,21 +212,6 @@ private fun TabBarDemo(type: String) {
                 HyperText(text = item.label, fontSize = 11.sp)
             }
         }
-    }
-}
-
-@Composable
-private fun TopBarIconButton(
-    imageVector: androidx.compose.ui.graphics.vector.ImageVector,
-    contentDescription: String,
-    onClick: () -> Unit
-) {
-    HyperButton(type = "icon", onClick = onClick) {
-        HyperIcon(
-            imageVector = imageVector,
-            contentDescription = contentDescription,
-            modifier = Modifier.size(HyperButtonDefaults.IconSize)
-        )
     }
 }
 
