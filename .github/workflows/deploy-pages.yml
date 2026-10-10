@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '25'
           # 启用 Gradle 缓存：自动缓存 Gradle 分发包和依赖，后续构建无需重复下载
           cache: gradle
 

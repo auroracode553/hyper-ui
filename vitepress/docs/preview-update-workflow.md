@@ -135,5 +135,5 @@ preview/src/commonMain/composeResources/files/font-licenses/NotoSansSC-OFL.txt
 
 ## 前置依赖
 
-- JDK 17+
+- JDK 25（本地 Gradle Wrapper 统一为 9.8.0）
 - 本地 Node.js，并确保 `node` 在 `PATH` 中

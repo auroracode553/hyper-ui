@@ -115,6 +115,6 @@ cd library
 
 | 问题 | 解决 |
 |------|------|
-| JDK 版本不匹配 | `jitpack.yml` 已指定 `openjdk17` |
+| JDK 版本不匹配 | `jitpack.yml` 已指定 `openjdk25` |
 | `buildToolsVersion` 缺失 | 已移除硬编码，AGP 自动选择可用版本 |
 | 依赖下载失败 | JitPack CI 可能网络受限，重试或检查日志 |
