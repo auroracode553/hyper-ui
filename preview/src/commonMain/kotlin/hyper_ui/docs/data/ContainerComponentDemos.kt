@@ -35,7 +35,7 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperColorPicker(
                 selectedId = selectedColorId,
-                onSelected = { option -> selectedColorId = option.id }
+                onChanged = { option -> selectedColorId = option.id }
             )
         """.trimIndent(),
         variants = listOf(
@@ -58,7 +58,7 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
             ) {
                 HyperText("系统状态")
                 HyperText("运行正常")
-                HyperButton(onClick = onOpen) {
+                HyperButton(onPressed = onOpen) {
                     HyperText("查看详情")
                 }
             }

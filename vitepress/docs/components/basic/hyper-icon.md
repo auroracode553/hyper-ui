@@ -20,7 +20,7 @@ description: 统一图标大小和着色，在按钮、列表与导航插槽内�
 ```kotlin
 import hyper_ui.*
 
-HyperIcon(imageVector = icon, contentDescription = "搜索")
+HyperIcon(icon = icon, contentDescription = "搜索")
 ```
 
 </details>
@@ -47,10 +47,10 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 ```kotlin
 @Composable
 fun HyperIcon(
-    painter: Painter,
+    icon: Painter,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    tint: Color = LocalHyperContentColor.current,
+    color: Color = LocalHyperContentColor.current,
     size: String = "default"
 )
 ```
@@ -59,11 +59,11 @@ fun HyperIcon(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| painter | Painter | 是 | — | 调用方提供的图标画笔。 |
-| contentDescription | String? | 是 | — | 无障碍说明；装饰图标传 null。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| tint | Color | 否 | LocalHyperContentColor.current | 图标着色；Color.Unspecified 保留原始颜色。 |
-| size | String | 否 | "default" | small/default/large 尺寸档位。 |
+| icon | Painter | 是 | — | 图标或图标区域。 |
+| contentDescription | String? | 是 | — | 无障碍内容描述。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| color | Color | 否 | LocalHyperContentColor.current | 自定义颜色，覆盖默认配色。 |
+| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 
 ### HyperIcon · 重载 2
 
@@ -73,10 +73,10 @@ fun HyperIcon(
 ```kotlin
 @Composable
 fun HyperIcon(
-    imageVector: ImageVector,
+    icon: ImageVector,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    tint: Color = LocalHyperContentColor.current,
+    color: Color = LocalHyperContentColor.current,
     size: String = "default"
 )
 ```
@@ -85,8 +85,8 @@ fun HyperIcon(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| imageVector | ImageVector | 是 | — | 调用方提供的矢量图标。 |
-| contentDescription | String? | 是 | — | 无障碍说明；装饰图标传 null。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| tint | Color | 否 | LocalHyperContentColor.current | 图标着色；Color.Unspecified 保留原始颜色。 |
-| size | String | 否 | "default" | small/default/large 尺寸档位。 |
+| icon | ImageVector | 是 | — | 图标或图标区域。 |
+| contentDescription | String? | 是 | — | 无障碍内容描述。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| color | Color | 否 | LocalHyperContentColor.current | 自定义颜色，覆盖默认配色。 |
+| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |

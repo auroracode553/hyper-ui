@@ -23,8 +23,6 @@ data class ComponentDemo(
     val fullScreenPreview: Boolean = false,
     /** 沉浸式页面自行避让状态栏时，宿主允许内容绘制到屏幕顶端。 */
     val fillsTopSafeArea: Boolean = false,
-    /** 贴底组件自行绘制手势条区域时，宿主不预留底部空白。 */
-    val fillsBottomSafeArea: Boolean = false,
     /** 是否注入示例通用主题、语义色与布局方向。 */
     val useReferencePreview: Boolean = true
 )
@@ -35,7 +33,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(formComponentDemos())
     addAll(containerComponentDemos())
     addAll(navigationComponentDemos())
-    addAll(listComponentDemos())
+    addAll(listComponentDemos()) // sectioned_list 固定 8dp 紧凑间距，保留条目选择交互。
     addAll(feedbackComponentDemos()) // update_dialog 统一小图标、版本直接排版、简洁错误反馈与描边次操作。
     addAll(themeComponentDemos())
 }

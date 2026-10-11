@@ -31,7 +31,7 @@ internal val LocalHyperListTileContainerColor = staticCompositionLocalOf { Color
 
 @Composable
 fun HyperListTile(
-    headlineContent: @Composable ColumnScope.() -> Unit,
+    title: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperListTileDefaults.ContentPadding),
     dividerModifier: Modifier = Modifier.padding(horizontal = 14.dp),
@@ -41,13 +41,13 @@ fun HyperListTile(
     showChevron: Boolean = true,
     dividerVisible: Boolean = false,
     colors: HyperListTileColors = HyperListTileDefaults.colors(),
-    onClick: (() -> Unit)? = null,
+    onPressed: (() -> Unit)? = null,
     leadingIcon: ImageVector? = null,
     leadingColor: Color = HyperColors.accent,
-    leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
-    metaContent: (@Composable ColumnScope.() -> Unit)? = null,
-    trailingContent: (@Composable RowScope.() -> Unit)? = null
+    leading: (@Composable RowScope.() -> Unit)? = null,
+    subtitle: (@Composable ColumnScope.() -> Unit)? = null,
+    meta: (@Composable ColumnScope.() -> Unit)? = null,
+    trailing: (@Composable RowScope.() -> Unit)? = null
 ) {
     require(type in setOf("auto", "plain", "glass")) { "type 必须为 auto、plain 或 glass" }
     val plain = type == "plain" || (type == "auto" &&
@@ -57,11 +57,11 @@ fun HyperListTile(
         if (selected) hyperGlass.selection else Color.Transparent,
         androidx.compose.animation.core.tween(HyperMotionSpec.MenuDuration, easing = HyperMotionSpec.EaseOutCubic),
         label = "HyperListTileSelection")
-    val hasLeading = leadingContent != null || leadingIcon != null
-    val hasTrailing = trailingContent != null || (showChevron && onClick != null)
+    val hasLeading = leading != null || leadingIcon != null
+    val hasTrailing = trailing != null || (showChevron && onPressed != null)
     val surface = if (plain) Modifier else Modifier
-        .then(if (onClick != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
-            onClick = onClick) else Modifier)
+        .then(if (onPressed != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
+            onClick = onPressed) else Modifier)
         .hyperFrostedSurface(
         if (selected) hyperGlass.surfaceStrong else hyperGlass.surface,
         RoundedCornerShape(18.dp),
@@ -69,39 +69,39 @@ fun HyperListTile(
     ).padding(3.dp)
     Column(modifier.fillMaxWidth().then(surface)) {
         Row(Modifier.fillMaxWidth().defaultMinSize(minHeight = 46.dp)
-            .then(if (plain && onClick != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
-                pressedScale = 0.992f, onClick = onClick) else Modifier)
+            .then(if (plain && onPressed != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
+                pressedScale = 0.992f, onClick = onPressed) else Modifier)
             .background(selectedBackground, rowShape)
             .then(contentModifier), verticalAlignment = Alignment.CenterVertically) {
             if (hasLeading) {
                 CompositionLocalProvider(LocalHyperContentColor provides if (enabled) colors.contentColor else colors.disabledContentColor,
                     LocalHyperIconSize provides 18.dp) {
-                    if (leadingContent != null) leadingContent() else Box(
+                    if (leading != null) leading() else Box(
                         Modifier.size(34.dp).hyperSolidSurface(leadingColor.copy(alpha = 28 / 255f),
                             RoundedCornerShape(11.dp), border = BorderStroke(1.dp, hyperGlass.border)),
                         contentAlignment = Alignment.Center
-                    ) { HyperIcon(leadingIcon!!, null, tint = leadingColor) }
+                    ) { HyperIcon(leadingIcon!!, null, color = leadingColor) }
                 }
             }
             Column(Modifier.weight(1f).padding(start = if (hasLeading) 12.dp else 0.dp,
                 end = if (hasTrailing) 12.dp else 0.dp)) {
                 CompositionLocalProvider(LocalHyperContentColor provides if (enabled) colors.contentColor else colors.disabledContentColor,
-                    LocalHyperTextStyle provides HyperListTileDefaults.HeadlineTextStyle) { headlineContent() }
-                if (supportingContent != null) {
+                    LocalHyperTextStyle provides HyperListTileDefaults.HeadlineTextStyle) { title() }
+                if (subtitle != null) {
                     Spacer(Modifier.height(3.dp))
                     CompositionLocalProvider(LocalHyperContentColor provides colors.supportingColor,
-                        LocalHyperTextStyle provides HyperListTileDefaults.SupportingTextStyle) { supportingContent() }
+                        LocalHyperTextStyle provides HyperListTileDefaults.SupportingTextStyle) { subtitle() }
                 }
-                if (metaContent != null) {
+                if (meta != null) {
                     Spacer(Modifier.height(4.dp))
                     CompositionLocalProvider(LocalHyperContentColor provides colors.supportingColor,
-                        LocalHyperTextStyle provides HyperTheme.typography.bodySmall.copy(fontSize = 11.sp, lineHeight = 15.4.sp)) { metaContent() }
+                        LocalHyperTextStyle provides HyperTheme.typography.bodySmall.copy(fontSize = 11.sp, lineHeight = 15.4.sp)) { meta() }
                 }
             }
             if (hasTrailing) {
                 CompositionLocalProvider(LocalHyperContentColor provides colors.supportingColor,
                     LocalHyperTextStyle provides HyperListTileDefaults.TrailingTextStyle) {
-                    if (trailingContent != null) trailingContent() else HyperIcon(HyperReferenceIcons.ChevronRight,
+                    if (trailing != null) trailing() else HyperIcon(HyperReferenceIcons.ChevronRight,
                         null, Modifier.size(18.dp))
                 }
             }

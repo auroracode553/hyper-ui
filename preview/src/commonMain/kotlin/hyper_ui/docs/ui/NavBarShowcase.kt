@@ -64,22 +64,22 @@ fun NavBarDemo() {
                 // 正文占满屏幕，导航操作行独立避让预览模拟的状态栏。
                 modifier = Modifier.padding(top = PreviewTopSafeArea),
                 type = example.type,
-                titleContent = if (pageTitle == null) null else {
+                title = if (pageTitle == null) null else {
                     { HyperText(pageTitle, maxLines = 1) }
                 },
-                onBackClick = { actionMessage = "已请求返回上一页" },
-                onMoreClick = { actionMessage = "已点击更多" },
-                onSaveClick = { actionMessage = "已点击保存" },
-                navigationContent = if (example == NavBarExample.Custom) {
+                onBackPressed = { actionMessage = "已请求返回上一页" },
+                onMorePressed = { actionMessage = "已点击更多" },
+                onSavePressed = { actionMessage = "已点击保存" },
+                leading = if (example == NavBarExample.Custom) {
                     {
                         HyperNavBarBackButton(
-                            onClick = { actionMessage = "已请求返回上一页" }
+                            onPressed = { actionMessage = "已请求返回上一页" }
                         )
                     }
                 } else null,
-                trailingContent = if (example == NavBarExample.Custom) {
+                trailing = if (example == NavBarExample.Custom) {
                     {
-                        HyperButton(onClick = { actionMessage = "已点击分享" }, size = "small") {
+                        HyperButton(onPressed = { actionMessage = "已点击分享" }, size = "small") {
                             HyperText("分享")
                         }
                     }
@@ -135,7 +135,7 @@ private fun NavBarExampleChoices(selected: NavBarExample, onSelect: (NavBarExamp
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             rowExamples.forEach { example ->
                 HyperButton(
-                    onClick = { onSelect(example) },
+                    onPressed = { onSelect(example) },
                     modifier = Modifier.weight(1f),
                     type = if (example == selected) null else null,
                     size = "small"

@@ -250,7 +250,7 @@ private fun HyperPlaybackSpeedPanelHeader(
             )
         }
         HyperButton(
-            onClick = onDismissRequest,
+            onPressed = onDismissRequest,
             type = "icon",
             size = "small",
             modifier = Modifier.semantics { contentDescription = texts.closeContentDescription },
@@ -283,12 +283,12 @@ private fun HyperPlaybackSpeedSlider(
     HyperSlider(
         showValue = false,
         value = currentSpeed,
-        onValueChange = onSpeedChange,
+        onChanged = onSpeedChange,
         modifier = Modifier.semantics {
             contentDescription = texts.sliderContentDescription
         },
-        valueRange = valueRange,
-        steps = steps,
+        min = valueRange.start, max = valueRange.endInclusive,
+        divisions = if (steps > 0) steps + 1 else null,
         showSegmentMarkers = true,
         segmentValues = speedOptions,
         minimumTouchHeight = HyperPlaybackSpeedPanelDefaults.SliderTouchHeight,
@@ -408,7 +408,7 @@ private fun HyperPlaybackSpeedPanelFooter(
             overflow = TextOverflow.Ellipsis
         )
         HyperButton(
-            onClick = onResetRequest,
+            onPressed = onResetRequest,
             enabled = abs(currentSpeed - defaultSpeed) > 0.001f,
             type = "icon",
             size = "small",

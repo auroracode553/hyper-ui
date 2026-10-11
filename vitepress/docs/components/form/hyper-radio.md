@@ -20,7 +20,7 @@ description: 用于互斥单选，选中项由调用方统一管理。
 ```kotlin
 import hyper_ui.*
 
-HyperRadio(selected = selected, onClick = { selected = true })
+HyperRadio(value = "option", groupValue = selectedValue, onChanged = { selectedValue = it })
 ```
 
 </details>
@@ -33,7 +33,7 @@ HyperRadio(selected = selected, onClick = { selected = true })
 
 **状态归属**
 
-选中值由调用方持有；onClick 为 null 时只展示。
+选中值由调用方持有；onChanged 为 null 时只展示。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -46,15 +46,17 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 
 ```kotlin
 @Composable
-fun HyperRadio(
-    selected: Boolean,
-    onClick: (() -> Unit)?,
+fun <T> HyperRadio(
+    value: T,
+    groupValue: T?,
+    onChanged: ((T) -> Unit)? = null,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     selectedColor: Color = Color.Unspecified,
     unselectedColor: Color = Color.Unspecified,
     unselectedBorderColor: Color = Color.Unspecified,
-    innerDotColor: Color = Color.Unspecified
+    innerDotColor: Color = Color.Unspecified,
+    label: String? = null
 )
 ```
 
@@ -62,11 +64,13 @@ fun HyperRadio(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| selected | Boolean | 是 | — | 调用方持有的选中状态。 |
-| onClick | (() -&gt; Unit)? | 是 | — | 用户点击回调。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
+| value | T | 是 | — | 由调用方持有的当前值。 |
+| groupValue | T? | 是 | — | 当前单选组的选中值。 |
+| onChanged | ((T) -&gt; Unit)? | 否 | null | 用户修改值或选择项时通知调用方。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
 | selectedColor | Color | 否 | Color.Unspecified | 选中时的控件颜色。 |
 | unselectedColor | Color | 否 | Color.Unspecified | 未选中时的控件颜色。 |
 | unselectedBorderColor | Color | 否 | Color.Unspecified | 未选中时边框颜色。 |
 | innerDotColor | Color | 否 | Color.Unspecified | 单选圆点的颜色。 |
+| label | String? | 否 | null | 数值旁显示的标签文字。 |

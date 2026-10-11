@@ -21,7 +21,7 @@ internal fun HyperInputAffix(
     HyperTooltip(description, enabled = enabled) {
         Box(modifier.size(30.dp).hyperNoRippleClickable(enabled = enabled, onClick = onClick),
             contentAlignment = Alignment.Center) {
-            HyperIcon(icon, description, Modifier.size(18.dp), tint = HyperColors.secondaryText)
+            HyperIcon(icon, description, Modifier.size(18.dp), color = HyperColors.secondaryText)
         }
     }
 }

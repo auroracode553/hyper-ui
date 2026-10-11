@@ -72,13 +72,13 @@ fun HyperText(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| text | String | 是 | — | 显示的文本内容。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| size | String | 否 | "default" | small/default/large 尺寸档位。 |
-| color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
+| text | String | 是 | — | 提示文字。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
+| color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
 | fontSize | TextUnit | 否 | TextUnit.Unspecified | 显式字号；未指定时继承组件或插槽排版。 |
 | fontStyle | FontStyle? | 否 | null | 文字样式，例如斜体。 |
-| fontWeight | FontWeight? | 否 | null | 字重；未指定时继承排版。 |
+| fontWeight | FontWeight? | 否 | null | 文字字重。 |
 | fontFamily | FontFamily? | 否 | null | 字体族；null 使用当前排版字体。 |
 | letterSpacing | TextUnit | 否 | TextUnit.Unspecified | 字符间距；未指定时继承排版。 |
 | textDecoration | TextDecoration? | 否 | null | 下划线、删除线等文字装饰。 |

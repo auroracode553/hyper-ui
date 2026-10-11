@@ -20,8 +20,8 @@ description: 用于确认、删除等需要明确结果的操作，提供标题�
 ```kotlin
 import hyper_ui.*
 
-HyperAlertDialog(visible, { visible = false }, title = "确认删除", bodyContent = { HyperText("删除后无法恢复") },
-    actionContent = { HyperButton(onDelete, colorStyle = "danger", type = "filled") { HyperText("删除") } })
+HyperAlertDialog(visible, { visible = false }, title = "确认删除", content = { HyperText("删除后无法恢复") },
+    actions = { HyperButton(onDelete, colorStyle = "danger", type = "filled") { HyperText("删除") } })
 ```
 
 </details>
@@ -36,7 +36,7 @@ HyperAlertDialog(visible, { visible = false }, title = "确认删除", bodyConte
 
 **状态归属**
 
-调用方持有 visible，确认业务通过 actionContent 回调处理。
+调用方持有 visible，确认业务通过 actions 回调处理。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -51,12 +51,12 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 @Composable
 fun HyperAlertDialog(
     visible: Boolean,
-    onDismissRequest: () -> Unit,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
     dismissOnClickOutside: Boolean = true,
-    bodyContent: (@Composable ColumnScope.() -> Unit)? = null,
-    actionContent: (@Composable RowScope.() -> Unit)? = null
+    content: (@Composable ColumnScope.() -> Unit)? = null,
+    actions: (@Composable RowScope.() -> Unit)? = null
 )
 ```
 
@@ -64,10 +64,10 @@ fun HyperAlertDialog(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| visible | Boolean | 是 | — | 调用方持有的可见状态。 |
-| onDismissRequest | () -&gt; Unit | 是 | — | 请求关闭，由调用方修改状态。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| title | String? | 否 | null | 标题；null 时省略。 |
+| visible | Boolean | 是 | — | 是否显示组件，由调用方持有。 |
+| onClose | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| title | String? | 否 | null | 组件标题文字或内容。 |
 | dismissOnClickOutside | Boolean | 否 | true | 点击外部时是否请求关闭。 |
-| bodyContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 对话框主体内容。 |
-| actionContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 操作区插槽。 |
+| content | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 组件主体内容，由调用方提供。 |
+| actions | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 导航栏操作项内容。 |

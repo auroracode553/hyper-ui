@@ -33,18 +33,19 @@ fun MainBottomBar(onDestinationSelected: (String) -> Unit) {
 
     HyperTabBar(
         items = items,
-        itemSelected = { it.id == selectedId },
-        onItemClick = { item ->
+        selectedIndex = items.indexOfFirst { it.id == selectedId },
+        onChanged = { index ->
+            val item = items[index]
             selectedId = item.id
             onDestinationSelected(item.id)
         }
     ) { item ->
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                painter = painterResource(item.iconRes),
+            HyperIcon(
+                icon = painterResource(item.iconRes),
                 contentDescription = item.label
             )
-            Text(item.label)
+            HyperText(item.label)
         }
     }
 }

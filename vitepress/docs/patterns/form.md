@@ -27,11 +27,11 @@ fun ProfileForm(onSave: (String) -> Unit) {
     ) {
         HyperTextField(
             value = name,
-            onValueChange = { name = it },
-            labelContent = { Text("昵称") },
-            placeholderContent = { Text("请输入昵称") }
+            onChanged = { name = it },
+            label = { Text("昵称") },
+            placeholder = { Text("请输入昵称") }
         )
-        HyperButton(onClick = { onSave(name) }) {
+        HyperButton(onPressed = { onSave(name) }) {
             Text("保存")
         }
     }

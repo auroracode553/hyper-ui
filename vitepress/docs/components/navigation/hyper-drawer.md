@@ -20,8 +20,8 @@ description: 从屏幕边缘展开辅助内容，支持标题、可滚动正文�
 ```kotlin
 import hyper_ui.*
 
-HyperDrawer(open, { open = false }, title = "导航", drawerContent = {
-    HyperDrawerItem(headlineContent = { HyperText("首页") }, onClick = onHome)
+HyperDrawer(open, { open = false }, title = "导航", child = {
+    HyperDrawerItem(title = { HyperText("首页") }, onPressed = onHome)
 }) { pageContent() }
 ```
 
@@ -31,11 +31,11 @@ HyperDrawer(open, { open = false }, title = "导航", drawerContent = {
 
 **样式约定**
 
-默认 Right 浮动抽屉，常规左右宽 320dp、外侧间距 12dp、radius 30dp、strong 材质、scrim 蒙层。280ms easeOutCubic 淡入与 12% 位移。标题 18sp，正文 padding 16dp，页脚固定。
+默认 end 浮动抽屉，常规左右宽 320dp、外侧间距 12dp、radius 30dp、strong 材质、scrim 蒙层。280ms easeOutCubic 淡入与 12% 位移。标题 18sp，正文 padding 16dp，页脚固定。
 
 **状态归属**
 
-调用方持有 open。懒列表关闭 drawerContentScrollEnabled，避免嵌套滚动；Left/Right 为逻辑方向，随 RTL 映射。
+调用方持有 open。懒列表关闭 scrollable，避免嵌套滚动；start/end 为逻辑方向，随 RTL 映射。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -50,18 +50,18 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 @Composable
 fun HyperDrawer(
     open: Boolean,
-    onDismissRequest: () -> Unit,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
     drawerModifier: Modifier = Modifier,
-    position: HyperDrawerPosition = HyperDrawerPosition.Right,
+    placement: HyperDrawerPlacement = HyperDrawerPlacement.end,
     defaultSetPadding: Boolean = true,
     drawerContentModifier: Modifier = Modifier,
-    drawerContentScrollEnabled: Boolean = true,
+    scrollable: Boolean = true,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = true,
     title: String? = null,
-    footerContent: (@Composable ColumnScope.() -> Unit)? = null,
-    drawerContent: @Composable ColumnScope.() -> Unit,
+    footer: (@Composable ColumnScope.() -> Unit)? = null,
+    child: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 )
 ```
@@ -71,19 +71,19 @@ fun HyperDrawer(
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | open | Boolean | 是 | — | 抽屉是否打开，由调用方持有。 |
-| onDismissRequest | () -&gt; Unit | 是 | — | 请求关闭，由调用方修改状态。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
+| onClose | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | drawerModifier | Modifier | 否 | Modifier | 抽屉面板的布局修饰符。 |
-| position | HyperDrawerPosition | 否 | HyperDrawerPosition.Right | 抽屉从哪一侧进入。 |
+| placement | HyperDrawerPlacement | 否 | HyperDrawerPlacement.end | 从逻辑起始侧或结束侧打开抽屉。 |
 | defaultSetPadding | Boolean | 否 | true | 是否使用抽屉默认留白。 |
 | drawerContentModifier | Modifier | 否 | Modifier | 抽屉内容区域的布局修饰符。 |
-| drawerContentScrollEnabled | Boolean | 否 | true | 抽屉内容是否允许滚动。 |
-| colors | HyperDrawerColors | 否 | HyperDrawerDefaults.colors() | 各状态配色配置。 |
+| scrollable | Boolean | 否 | true | 是否允许内容滚动。 |
+| colors | HyperDrawerColors | 否 | HyperDrawerDefaults.colors() | 组件各状态的颜色配置。 |
 | dismissOnClickOutside | Boolean | 否 | true | 点击外部时是否请求关闭。 |
-| title | String? | 否 | null | 标题；null 时省略。 |
-| footerContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 固定页脚插槽。 |
-| drawerContent | @Composable ColumnScope.() -&gt; Unit | 是 | — | 抽屉中的内容。 |
-| content | @Composable BoxScope.() -&gt; Unit | 是 | — | 主体内容插槽。 |
+| title | String? | 否 | null | 组件标题文字或内容。 |
+| footer | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 底部内容。 |
+| child | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件主体或触发器内容。 |
+| content | @Composable BoxScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |
 
 ### HyperDrawerHeader
 
@@ -93,11 +93,11 @@ fun HyperDrawer(
 ```kotlin
 @Composable
 fun HyperDrawerHeader(
-    headlineContent: @Composable ColumnScope.() -> Unit,
+    title: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.HeaderPadding),
-    leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    supportingContent: (@Composable ColumnScope.() -> Unit)? = null
+    leading: (@Composable RowScope.() -> Unit)? = null,
+    subtitle: (@Composable ColumnScope.() -> Unit)? = null
 )
 ```
 
@@ -105,11 +105,11 @@ fun HyperDrawerHeader(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| headlineContent | @Composable ColumnScope.() -&gt; Unit | 是 | — | 主标题插槽。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| contentModifier | Modifier | 否 | Modifier.padding(HyperDrawerDefaults.HeaderPadding) | 内容区修饰符；显式传入时覆盖默认内容留白。 |
-| leadingContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 前导插槽。 |
-| supportingContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 辅助说明插槽。 |
+| title | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件标题文字或内容。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| contentModifier | Modifier | 否 | Modifier.padding(HyperDrawerDefaults.HeaderPadding) | 内部内容区域的布局修饰符。 |
+| leading | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
+| subtitle | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 副标题或辅助说明。 |
 
 ### HyperDrawerItem
 
@@ -119,17 +119,17 @@ fun HyperDrawerHeader(
 ```kotlin
 @Composable
 fun HyperDrawerItem(
-    headlineContent: @Composable ColumnScope.() -> Unit,
+    title: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.ItemPadding),
     selected: Boolean = false,
     enabled: Boolean = true,
     dividerVisible: Boolean = false,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
-    onClick: (() -> Unit)? = null,
-    leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
-    trailingContent: (@Composable RowScope.() -> Unit)? = null
+    onPressed: (() -> Unit)? = null,
+    leading: (@Composable RowScope.() -> Unit)? = null,
+    subtitle: (@Composable ColumnScope.() -> Unit)? = null,
+    trailing: (@Composable RowScope.() -> Unit)? = null
 )
 ```
 
@@ -137,17 +137,17 @@ fun HyperDrawerItem(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| headlineContent | @Composable ColumnScope.() -&gt; Unit | 是 | — | 主标题插槽。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| contentModifier | Modifier | 否 | Modifier.padding(HyperDrawerDefaults.ItemPadding) | 内容区修饰符；显式传入时覆盖默认内容留白。 |
-| selected | Boolean | 否 | false | 调用方持有的选中状态。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
+| title | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件标题文字或内容。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| contentModifier | Modifier | 否 | Modifier.padding(HyperDrawerDefaults.ItemPadding) | 内部内容区域的布局修饰符。 |
+| selected | Boolean | 否 | false | 由调用方持有的选中状态。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
 | dividerVisible | Boolean | 否 | false | 是否显示行分隔线。 |
-| colors | HyperDrawerColors | 否 | HyperDrawerDefaults.colors() | 各状态配色配置。 |
-| onClick | (() -&gt; Unit)? | 否 | null | 用户点击回调。 |
-| leadingContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 前导插槽。 |
-| supportingContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 辅助说明插槽。 |
-| trailingContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 尾部插槽。 |
+| colors | HyperDrawerColors | 否 | HyperDrawerDefaults.colors() | 组件各状态的颜色配置。 |
+| onPressed | (() -&gt; Unit)? | 否 | null | 点击操作回调；为 null 时不能触发操作。 |
+| leading | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
+| subtitle | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 副标题或辅助说明。 |
+| trailing | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 内容末端的自定义区域。 |
 
 <details class="component-doc__details component-doc__advanced">
 <summary>默认配置与数据类型</summary>
@@ -155,12 +155,12 @@ fun HyperDrawerItem(
 **HyperDrawerDefaults.contentPadding**
 
 ```kotlin
-fun contentPadding(position: HyperDrawerPosition): PaddingValues
+fun contentPadding(placement: HyperDrawerPlacement): PaddingValues
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| position | HyperDrawerPosition | 是 | — | 抽屉从哪一侧进入。 |
+| placement | HyperDrawerPlacement | 是 | — | 从逻辑起始侧或结束侧打开抽屉。 |
 
 **HyperDrawerDefaults.colors**
 

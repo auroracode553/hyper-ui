@@ -24,8 +24,8 @@ data class HyperOption<T>(val value: T, val label: String, val enabled: Boolean 
 @Composable
 fun <T> HyperDropdown(
     options: List<HyperOption<T>>,
-    value: T?,
-    onValueChange: (T) -> Unit,
+    value: T? = null,
+    onChanged: ((T) -> Unit)? = null,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     label: String? = null,
@@ -35,19 +35,20 @@ fun <T> HyperDropdown(
 ) {
     require(menuMaxHeight > 0.dp) { "menuMaxHeight 必须大于 0.dp" }
     require(width == null || width > 0.dp) { "width 必须大于 0.dp" }
+    val active = enabled && onChanged != null
     var expanded by remember { mutableStateOf(false) }
     var anchor by remember { mutableStateOf<Rect?>(null) }
     val rotation by androidx.compose.animation.core.animateFloatAsState(if (expanded) 180f else 0f,
         androidx.compose.animation.core.tween(HyperMotionSpec.MenuDuration, easing = HyperMotionSpec.OverlayCurve), label = "HyperDropdownChevron")
     val selected = options.firstOrNull { it.value == value }
-    LaunchedEffect(enabled) { if (!enabled) expanded = false }
+    LaunchedEffect(active) { if (!active) expanded = false }
     Column(modifier.then(if (width != null) Modifier.width(width) else Modifier)) {
         if (label != null) HyperText(label, Modifier.padding(bottom = 8.dp), fontSize = 13.sp, lineHeight = 16.9.sp, fontWeight = FontWeight.SemiBold)
         BoxWithConstraints {
             val triggerWidth = width ?: if (constraints.hasBoundedWidth) maxWidth else 240.dp
             Row(Modifier.width(triggerWidth).onGloballyPositioned { anchor = it.boundsInWindow() }
                 .defaultMinSize(minHeight = 48.dp)
-                .hyperNoRippleClickable(enabled = enabled, onClick = { expanded = !expanded })
+                .hyperNoRippleClickable(enabled = active, onClick = { expanded = !expanded })
                 .hyperFrostedSurface(hyperGlass.surfaceSubtle, RoundedCornerShape(16.dp), elevation = 0.dp,
                     border = BorderStroke(1.dp, HyperColors.fieldBorder))
                 .padding(horizontal = 14.dp, vertical = 11.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -62,14 +63,14 @@ fun <T> HyperDropdown(
                 if (options.isEmpty()) HyperText("暂无选项", Modifier.fillMaxWidth().padding(16.dp),
                     color = HyperColors.secondaryText, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
                 options.forEach { option ->
-                    HyperListTile(type = "plain", selected = option.value == value, enabled = option.enabled,
-                        showChevron = false, headlineContent = { HyperText(option.label, maxLines = 2) },
-                        trailingContent = if (option.value == value) {
+                    HyperListTile(type = "plain", selected = option.value == value, enabled = active && option.enabled,
+                        showChevron = false, title = { HyperText(option.label, maxLines = 2) },
+                        trailing = if (option.value == value) {
                             { CompositionLocalProvider(LocalHyperContentColor provides HyperColors.accent) {
                                 HyperCheckIcon(Modifier.size(18.dp))
                             } }
                         } else null,
-                        onClick = { onValueChange(option.value); expanded = false })
+                        onPressed = { onChanged?.invoke(option.value); expanded = false })
                 }
             }
         }

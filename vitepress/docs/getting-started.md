@@ -55,22 +55,22 @@ fun AppHome() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HyperNavBar(
-            titleContent = { HyperText("设置") },
+            title = { HyperText("设置") },
             size = "default"
         )
         HyperTextField(
             value = query,
-            onValueChange = { query = it },
+            onChanged = { query = it },
             type = "text",
             size = "default",
-            placeholderContent = { HyperText("搜索设置") }
+            placeholder = { HyperText("搜索设置") }
         )
         HyperListTile(
-            headlineContent = { HyperText("接收通知") },
-            trailingContent = {
+            title = { HyperText("接收通知") },
+            trailing = {
                 HyperSwitch(
-                    checked = notificationsEnabled,
-                    onCheckedChange = { notificationsEnabled = it }
+                    value = notificationsEnabled,
+                    onChanged = { notificationsEnabled = it }
                 )
             }
         )

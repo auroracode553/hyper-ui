@@ -30,11 +30,11 @@ class HyperTabBarItemScope internal constructor(val selected: Boolean, val enabl
 @Composable
 fun <T> HyperTabBar(
     items: List<T>,
-    onItemClick: (T) -> Unit,
+    onChanged: (Int) -> Unit,
+    selectedIndex: Int,
     modifier: Modifier = Modifier,
     type: String = "multiple",
     enabled: Boolean = true,
-    itemSelected: (T) -> Boolean = { false },
     itemEnabled: (T) -> Boolean = { true },
     itemLabel: (T) -> String = { "" },
     badgeCount: Int = 0,
@@ -45,6 +45,7 @@ fun <T> HyperTabBar(
 ) {
     require(type in setOf("multiple", "single")) { "type 必须为 multiple 或 single" }
     require(if (type == "single") items.size == 1 else items.size >= 2) { "single 需要 1 项，multiple 至少需要 2 项" }
+    require(selectedIndex in items.indices) { "selectedIndex 超出 items 范围" }
     val density = androidx.compose.ui.platform.LocalDensity.current
     val textMeasurer = rememberTextMeasurer()
     val labelStyle = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold,
@@ -55,12 +56,12 @@ fun <T> HyperTabBar(
     val height = maxOf(56.dp, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     var dragIndex by remember(items.size) { mutableStateOf<Int?>(null) }
-    val logicalSelected = items.indexOfFirst(itemSelected).coerceAtLeast(0)
-    val selectedIndex = dragIndex ?: if (rtl) items.lastIndex - logicalSelected else logicalSelected
-    val position by animateFloatAsState(selectedIndex.toFloat(), tween(HyperMotionSpec.StateDuration,
+    val logicalSelected = selectedIndex
+    val visualSelectedIndex = dragIndex ?: if (rtl) items.lastIndex - logicalSelected else logicalSelected
+    val position by animateFloatAsState(visualSelectedIndex.toFloat(), tween(HyperMotionSpec.StateDuration,
         easing = HyperMotionSpec.EaseOutCubic), label = "HyperTabBarSelection")
     val latestLogicalSelected by rememberUpdatedState(logicalSelected)
-    val latestOnClick by rememberUpdatedState(onItemClick)
+    val latestOnClick by rememberUpdatedState(onChanged)
     val latestItemEnabled by rememberUpdatedState(itemEnabled)
     Box(modifier.then(if (safeArea) Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)) else Modifier)
         .padding(margin)) {
@@ -68,7 +69,7 @@ fun <T> HyperTabBar(
             val item = items.single()
             Box(Modifier.size(56.dp)
                 .hyperFrostedSurface(hyperGlass.surface, RoundedCornerShape(28.dp))
-                .hyperNoRippleClickable(enabled = enabled && itemEnabled(item), onClick = { onItemClick(item) }),
+                .hyperNoRippleClickable(enabled = enabled && itemEnabled(item), onClick = { onChanged(items.indexOf(item)) }),
                 contentAlignment = Alignment.Center) {
                 CompositionLocalProvider(LocalHyperContentColor provides color, LocalHyperIconSize provides 22.dp) {
                     HyperTabBarItemScope(true, enabled && itemEnabled(item)).itemContent(item)
@@ -95,7 +96,7 @@ fun <T> HyperTabBar(
                         onDragEnd = {
                             dragIndex?.let { visual ->
                                 val logical = if (rtl) items.lastIndex - visual else visual
-                                if (latestItemEnabled(items[logical]) && logical != latestLogicalSelected) latestOnClick(items[logical])
+                                if (latestItemEnabled(items[logical]) && logical != latestLogicalSelected) latestOnClick(logical)
                             }
                             dragIndex = null
                         }
@@ -107,11 +108,11 @@ fun <T> HyperTabBar(
                     .background(hyperGlass.selection, RoundedCornerShape(height / 2)))
                 Row(Modifier.fillMaxSize().padding(horizontal = 4.dp)) {
                     items.forEachIndexed { index, item ->
-                        val selected = index == if (rtl) items.lastIndex - selectedIndex else selectedIndex
+                        val selected = index == selectedIndex
                         val active = enabled && itemEnabled(item)
                         Box(Modifier.weight(1f).fillMaxHeight()
                             .hyperNoRippleClickable(enabled = active, role = Role.Tab, pressedScale = 1f,
-                                onClick = { if (!itemSelected(item)) onItemClick(item) })
+                                onClick = { if (index != selectedIndex) onChanged(index) })
                             .semantics { this.selected = selected }, contentAlignment = Alignment.Center) {
                             CompositionLocalProvider(
                                 LocalHyperContentColor provides when { !active -> HyperColors.secondaryText; selected -> color; else -> HyperColors.primaryText },

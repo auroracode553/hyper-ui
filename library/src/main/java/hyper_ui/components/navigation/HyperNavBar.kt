@@ -39,7 +39,7 @@ import androidx.compose.ui.platform.LocalDensity
 @Composable
 fun HyperNavBar(
     type: String = HyperNavBarDefaults.TypeCustom,
-    titleContent: (@Composable () -> Unit)? = null,
+    title: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier,
     size: String = "default",
     padding: PaddingValues = HyperNavBarDefaults.ContentPadding,
@@ -47,12 +47,12 @@ fun HyperNavBar(
     titleSpacing: Dp = HyperNavBarDefaults.TitleGap,
     actionSpacing: Dp = HyperNavBarDefaults.ActionGap,
     centerTitle: Boolean = false,
-    onBackClick: () -> Unit = {},
-    onMoreClick: () -> Unit = {},
-    onSaveClick: () -> Unit = {},
-    subtitleContent: (@Composable () -> Unit)? = null,
-    navigationContent: (@Composable RowScope.() -> Unit)? = null,
-    trailingContent: (@Composable RowScope.() -> Unit)? = null,
+    onBackPressed: (() -> Unit)? = null,
+    onMorePressed: (() -> Unit)? = null,
+    onSavePressed: (() -> Unit)? = null,
+    subtitle: (@Composable () -> Unit)? = null,
+    leading: (@Composable RowScope.() -> Unit)? = null,
+    trailing: (@Composable RowScope.() -> Unit)? = null,
     actions: List<@Composable () -> Unit> = emptyList(),
     child: (@Composable BoxScope.() -> Unit)? = null
 ) {
@@ -60,20 +60,20 @@ fun HyperNavBar(
     val resolvedHeight = hyperComponentSize(size, 40.dp, HyperNavBarDefaults.Height, 52.dp)
     require(spacing >= 0.dp && titleSpacing >= 0.dp && actionSpacing >= 0.dp) { "间距不能为负数" }
     require(type == HyperNavBarDefaults.TypeCustom ||
-        (child == null && navigationContent == null && trailingContent == null && actions.isEmpty() && !centerTitle)) {
+        (child == null && leading == null && trailing == null && actions.isEmpty() && !centerTitle)) {
         "固定类型 HyperNavBar 只接受标题内容与对应回调；需要完整插槽时使用 type = custom。"
     }
-    require(type != HyperNavBarDefaults.TypeBackOnly || (titleContent == null && subtitleContent == null)) {
+    require(type != HyperNavBarDefaults.TypeBackOnly || (title == null && subtitle == null)) {
         "backOnly 类型不接受标题内容。"
     }
     require(type == HyperNavBarDefaults.TypeCustom ||
-        type == HyperNavBarDefaults.TypeBackOnly || titleContent != null) {
+        type == HyperNavBarDefaults.TypeBackOnly || title != null) {
         "此 HyperNavBar 固定类型必须提供标题内容。"
     }
-    require(child == null || (titleContent == null && subtitleContent == null && navigationContent == null && trailingContent == null && actions.isEmpty())) {
+    require(child == null || (title == null && subtitle == null && leading == null && trailing == null && actions.isEmpty())) {
         "child 接管整行布局，不能同时设置其他内容插槽。"
     }
-    require(trailingContent == null || actions.isEmpty()) { "trailingContent 与 actions 二选一" }
+    require(trailing == null || actions.isEmpty()) { "trailing 与 actions 二选一" }
 
     val safeInsets = WindowInsets.statusBars.only(WindowInsetsSides.Top)
     Column(modifier = modifier.windowInsetsPadding(safeInsets).zIndex(HyperNavBarDefaults.ZIndex)) {
@@ -82,38 +82,38 @@ fun HyperNavBar(
                 child.invoke(this)
             } else if (type == HyperNavBarDefaults.TypeCustom) {
                 HyperNavBarSlots(
-                    titleContent = titleContent,
-                    subtitleContent = subtitleContent,
-                    navigationContent = navigationContent,
-                    trailingContent = trailingContent ?: actionsSlot(actions, actionSpacing),
+                    title = title,
+                    subtitle = subtitle,
+                    leading = leading,
+                    trailing = trailing ?: actionsSlot(actions, actionSpacing),
                     spacing = spacing,
                     titleSpacing = titleSpacing,
                     centerTitle = centerTitle
                 )
             } else {
                 HyperNavBarSlots(
-                    titleContent = when (type) {
+                    title = when (type) {
                         HyperNavBarDefaults.TypeTitleOnly,
                         HyperNavBarDefaults.TypeBackWithTitle,
                         HyperNavBarDefaults.TypeMore,
-                        HyperNavBarDefaults.TypeEdit -> titleContent
+                        HyperNavBarDefaults.TypeEdit -> title
                         else -> null
                     },
-                    subtitleContent = when (type) {
+                    subtitle = when (type) {
                         HyperNavBarDefaults.TypeTitleOnly,
                         HyperNavBarDefaults.TypeBackWithTitle,
                         HyperNavBarDefaults.TypeMore,
-                        HyperNavBarDefaults.TypeEdit -> subtitleContent
+                        HyperNavBarDefaults.TypeEdit -> subtitle
                         else -> null
                     },
-                    navigationContent = if (type == HyperNavBarDefaults.TypeTitleOnly) null else {
-                        { HyperNavBarBackButton(onClick = onBackClick) }
+                    leading = if (type == HyperNavBarDefaults.TypeTitleOnly) null else {
+                        { HyperNavBarBackButton(onPressed = onBackPressed) }
                     },
-                    trailingContent = when (type) {
-                        HyperNavBarDefaults.TypeMore -> { { HyperNavBarMoreButton(onClick = onMoreClick) } }
+                    trailing = when (type) {
+                        HyperNavBarDefaults.TypeMore -> { { HyperNavBarMoreButton(onClick = onMorePressed) } }
                         HyperNavBarDefaults.TypeEdit -> {
                             {
-                                HyperButton(onClick = onSaveClick, size = "small") {
+                                HyperButton(onPressed = onSavePressed, size = "small") {
                                     HyperText("保存")
                                 }
                             }
@@ -160,42 +160,42 @@ fun HyperNavBarPage(
 
 @Composable
 private fun HyperNavBarSlots(
-    titleContent: (@Composable () -> Unit)?,
-    subtitleContent: (@Composable () -> Unit)?,
-    navigationContent: (@Composable RowScope.() -> Unit)?,
-    trailingContent: (@Composable RowScope.() -> Unit)?,
+    title: (@Composable () -> Unit)?,
+    subtitle: (@Composable () -> Unit)?,
+    leading: (@Composable RowScope.() -> Unit)?,
+    trailing: (@Composable RowScope.() -> Unit)?,
     spacing: Dp,
     titleSpacing: Dp,
     centerTitle: Boolean
 ) {
-    val hasTitle = titleContent != null || subtitleContent != null
+    val hasTitle = title != null || subtitle != null
     CompositionLocalProvider(LocalHyperContentColor provides HyperColors.primaryText) {
         if (centerTitle) {
             Box(Modifier.fillMaxSize()) {
                 Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
-                    navigationContent?.invoke(this)
+                    leading?.invoke(this)
                     Box(Modifier.weight(1f))
-                    trailingContent?.invoke(this)
+                    trailing?.invoke(this)
                 }
                 if (hasTitle) {
                     Box(Modifier.align(Alignment.Center)) {
-                        HyperNavBarTitle(titleContent, subtitleContent, titleSpacing, true)
+                        HyperNavBarTitle(title, subtitle, titleSpacing, true)
                     }
                 }
             }
         } else {
             Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
-                navigationContent?.invoke(this)
-                if (navigationContent != null && hasTitle) Box(Modifier.width(spacing))
+                leading?.invoke(this)
+                if (leading != null && hasTitle) Box(Modifier.width(spacing))
                 if (hasTitle) {
                     Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
-                        HyperNavBarTitle(titleContent, subtitleContent, titleSpacing, false)
+                        HyperNavBarTitle(title, subtitle, titleSpacing, false)
                     }
                 } else {
                     Box(Modifier.weight(1f))
                 }
-                if (trailingContent != null && hasTitle) Box(Modifier.width(spacing))
-                trailingContent?.invoke(this)
+                if (trailing != null && hasTitle) Box(Modifier.width(spacing))
+                trailing?.invoke(this)
             }
         }
     }
@@ -203,8 +203,8 @@ private fun HyperNavBarSlots(
 
 @Composable
 private fun HyperNavBarTitle(
-    titleContent: (@Composable () -> Unit)?,
-    subtitleContent: (@Composable () -> Unit)?,
+    title: (@Composable () -> Unit)?,
+    subtitle: (@Composable () -> Unit)?,
     titleSpacing: Dp,
     centered: Boolean
 ) {
@@ -212,12 +212,12 @@ private fun HyperNavBarTitle(
         verticalArrangement = Arrangement.spacedBy(titleSpacing),
         horizontalAlignment = if (centered) Alignment.CenterHorizontally else Alignment.Start
     ) {
-        titleContent?.let {
+        title?.let {
             CompositionLocalProvider(LocalHyperTextStyle provides HyperNavBarDefaults.TitleTextStyle) {
                 Box(Modifier.semantics { heading() }) { it() }
             }
         }
-        subtitleContent?.let {
+        subtitle?.let {
             CompositionLocalProvider(LocalHyperTextStyle provides HyperNavBarDefaults.SubtitleTextStyle) { it() }
         }
     }

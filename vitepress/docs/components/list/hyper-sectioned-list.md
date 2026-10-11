@@ -4,7 +4,7 @@ description: 按日期或分类组织页面数据，标题与数据行独立懒�
 
 # HyperSectionedList
 
-按日期或分类组织页面数据，标题与数据行独立懒加载，自动管理组内圆角与分隔线。
+按日期或分类组织页面数据，标题与数据行独立懒加载，自动管理组内圆角与分隔线。分组之间固定使用 8dp 紧凑间距，不提供间距切换或 sectionSpacing 参数。
 
 <p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
 
@@ -30,7 +30,7 @@ HyperSectionedList(
     itemKey = { group, entry -> "entry-${group.id}-${entry.id}" },
     headerContent = { HyperText(it.title) }
 ) { _, entry ->
-    HyperListTile(headlineContent = { HyperText(entry.title) })
+    HyperListTile(title = { HyperText(entry.title) })
 }
 ```
 
@@ -66,7 +66,6 @@ fun <S, T> HyperSectionedList(
     state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = HyperSectionedListDefaults.ContentPadding,
     firstSectionTopSpacing: Dp = HyperSectionedListDefaults.FirstSectionTopSpacing,
-    sectionSpacing: Dp = HyperSectionedListDefaults.SectionSpacing,
     headerBottomSpacing: Dp = HyperSectionedListDefaults.HeaderBottomSpacing,
     dividerModifier: Modifier = Modifier.padding(
         start = HyperSectionedListDefaults.DividerInset
@@ -89,7 +88,6 @@ fun <S, T> HyperSectionedList(
 | state | LazyListState | 否 | rememberLazyListState() | 组件使用的状态对象，由调用方提供或记忆。 |
 | contentPadding | PaddingValues | 否 | HyperSectionedListDefaults.ContentPadding | 主体内容的内部留白。 |
 | firstSectionTopSpacing | Dp | 否 | HyperSectionedListDefaults.FirstSectionTopSpacing | 第一分组顶部的间距。 |
-| sectionSpacing | Dp | 否 | HyperSectionedListDefaults.SectionSpacing | 相邻分组之间的间距。 |
 | headerBottomSpacing | Dp | 否 | HyperSectionedListDefaults.HeaderBottomSpacing | 分组标题下方间距。 |
 | dividerModifier | Modifier | 否 | Modifier.padding( start = HyperSectionedListDefaults.DividerInset ) | 分隔线的布局修饰符。 |
 | colors | HyperSectionedListColors | 否 | HyperSectionedListDefaults.colors() | 组件各状态的颜色配置。 |

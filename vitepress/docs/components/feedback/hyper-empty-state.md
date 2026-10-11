@@ -1,5 +1,5 @@
 ---
-description: 用于空列表、搜索无结果等场景，可组合恢复操作。
+message: 用于空列表、搜索无结果等场景，可组合恢复操作。
 ---
 
 # HyperEmptyState
@@ -20,7 +20,7 @@ description: 用于空列表、搜索无结果等场景，可组合恢复操作�
 ```kotlin
 import hyper_ui.*
 
-HyperEmptyState(title = "暂无内容", description = "数据会显示在这里", actionContent = {
+HyperEmptyState(title = "暂无内容", message = "数据会显示在这里", action = {
     HyperButton(onRefresh) { HyperText("刷新") }
 })
 ```
@@ -51,11 +51,11 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 fun HyperEmptyState(
     title: String,
     modifier: Modifier = Modifier,
-    description: String? = null,
+    message: String? = null,
     contentModifier: Modifier = Modifier,
     colors: HyperEmptyStateColors = HyperEmptyStateDefaults.colors(),
-    iconContent: (@Composable () -> Unit)? = null,
-    actionContent: (@Composable RowScope.() -> Unit)? = null
+    icon: (@Composable () -> Unit)? = null,
+    action: (@Composable RowScope.() -> Unit)? = null
 )
 ```
 
@@ -63,13 +63,13 @@ fun HyperEmptyState(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| title | String | 是 | — | 标题；null 时省略。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| description | String? | 否 | null | 空状态的说明文字。 |
-| contentModifier | Modifier | 否 | Modifier | 内容区修饰符；显式传入时覆盖默认内容留白。 |
-| colors | HyperEmptyStateColors | 否 | HyperEmptyStateDefaults.colors() | 各状态配色配置。 |
-| iconContent | (@Composable () -&gt; Unit)? | 否 | null | 图标区域的自定义内容。 |
-| actionContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 操作区插槽。 |
+| title | String | 是 | — | 组件标题文字或内容。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| message | String? | 否 | null | 提示消息文本。 |
+| contentModifier | Modifier | 否 | Modifier | 内部内容区域的布局修饰符。 |
+| colors | HyperEmptyStateColors | 否 | HyperEmptyStateDefaults.colors() | 组件各状态的颜色配置。 |
+| icon | (@Composable () -&gt; Unit)? | 否 | null | 图标或图标区域。 |
+| action | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 空状态操作内容。 |
 
 <details class="component-doc__details component-doc__advanced">
 <summary>默认配置与数据类型</summary>

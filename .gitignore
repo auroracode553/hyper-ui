@@ -39,3 +39,7 @@ Thumbs.db
 # Wasm 预览是外部构建产物，只允许提交目录说明。
 vitepress/public/wasm-preview/*
 !vitepress/public/wasm-preview/README.md
+
+# 本地脚本缓存
+__pycache__/
+*.pyc

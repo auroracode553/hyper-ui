@@ -26,12 +26,12 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperEmptyState(
                 title = "暂无历史记录",
-                description = "浏览过的页面会显示在这里",
-                iconContent = {
+                message = "浏览过的页面会显示在这里",
+                icon = {
                     HyperIcon(searchIcon, contentDescription = null)
                 },
-                actionContent = {
-                    HyperButton(onClick = onRefresh) { HyperText("重新加载") }
+                action = {
+                    HyperButton(onPressed = onRefresh) { HyperText("重新加载") }
                 }
             )
         """.trimIndent(),
@@ -39,8 +39,8 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("纯标题", "description = null", "紧凑空状态文案"),
             DemoVariant("辅助说明", "description", "居中次级说明"),
             DemoVariant("图标", "iconContent", "由调用方注入图标资源"),
-            DemoVariant("布局", "iconContent / actionContent", "56dp 图标块、20dp 内容留白"),
-            DemoVariant("操作", "actionContent", "由调用方持有交互和结果状态")
+            DemoVariant("布局", "icon / action", "56dp 图标块、20dp 内容留白"),
+            DemoVariant("操作", "actions", "由调用方持有交互和结果状态")
         ),
         apiDocumentPaths = listOf("feedback/hyper-empty-state.md"),
         content = { EmptyStateDemo() }
@@ -52,10 +52,10 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         description = "选择字段与匹配触发器宽度的锚定选项浮层，支持禁用、空选项和当前值。",
         code = """
             HyperDropdown(options = listOf(HyperOption("all", "全部"), HyperOption("favorite", "收藏")),
-                value = selected, onValueChange = { selected = it }, label = "范围")
+                value = selected, onChanged = { selected = it }, label = "范围")
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("受控值", "value / onValueChange", "选项选择后收起"),
+            DemoVariant("受控值", "value / onChanged", "选项选择后收起"),
             DemoVariant("禁用", "enabled / HyperOption.enabled", "关闭交互"),
             DemoVariant("浮层", "menuMaxHeight", "默认最大 320dp"),
             DemoVariant("空列表", "options = emptyList()", "保留字段与占位文本")
@@ -69,7 +69,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperToast / hyperToast",
         description = "自适应宽度的语义色玻璃 Toast，支持自动关闭与操作区；Android 原生工具另附调用示例。",
         code = """
-            HyperToast(visible, "保存成功", onDismissRequest = { visible = false }, tone = HyperToastTone.Success)
+            HyperToast(visible, "保存成功", onClose = { visible = false }, type = "success")
 
             // Android-only 原生工具
             hyperToast(context, "保存成功")
@@ -80,10 +80,10 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("语义色", "tone", "成功、警告、错误、信息和默认样式"),
+            DemoVariant("语义色", "type", "成功、警告、错误、信息和默认样式"),
             DemoVariant("自适应宽度", "180..420dp", "短文案收缩，长文案最多三行"),
-            DemoVariant("操作区", "actionContent", "可注入关闭或撤销按钮"),
-            DemoVariant("时长", "durationMillis", "组件到时请求调用方关闭"),
+            DemoVariant("操作区", "actionLabel / onAction / action", "可注入关闭或撤销按钮"),
+            DemoVariant("时长", "duration", "组件到时请求调用方关闭"),
             DemoVariant("原生时长", "HyperToastDuration", "Android 原生短/长 Toast"),
             DemoVariant("字符串资源", "messageResource", "由 Context 读取本地化文本"),
             DemoVariant("线程", "任意线程调用", "内部调度到 Android 主线程")
@@ -97,8 +97,8 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperProgress",
         description = "参考线性与圆形进度的三档尺寸，标签、归一化进度及不确定动画。",
         code = """
-            HyperProgress(progress = progress, showLabel = true)
-            HyperProgress(progress = null, type = "circular", size = "small", showLabel = false)
+            HyperProgress(value = progress, showLabel = true)
+            HyperProgress(value = null, type = "circular", size = "small", showLabel = false)
         """.trimIndent(),
         variants = listOf(
             DemoVariant("线性尺寸", "size", "4 / 6 / 12dp"),
@@ -218,15 +218,15 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperDialog(
                 visible = visible,
-                onDismissRequest = onDismiss,
+                onClose = onDismiss,
                 title = "编辑备注",
-                actionContent = {
-                    HyperButton(onClick = onSave) { HyperText("保存") }
+                actions = {
+                    HyperButton(onPressed = onSave) { HyperText("保存") }
                 }
             ) {
                 HyperTextField(
                     value = value,
-                    onValueChange = onValueChange
+                    onChanged = onValueChange
                 )
             }
         """.trimIndent(),
@@ -235,7 +235,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("稳定根节点", "fillMaxSize", "面板始终在固定窗口内居中"),
             DemoVariant("稳定输入", "HyperTextField", "输入重组只更新面板内容"),
             DemoVariant("外部关闭", "dismissOnClickOutside", "由背景命中层控制"),
-            DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
+            DemoVariant("操作区", "actions", "固定底部按钮 slot")
         ),
         apiDocumentPaths = listOf("feedback/hyper-dialog.md"),
         content = { HyperDialogDemo() }
@@ -246,7 +246,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperPopover",
         description = "贴着触发点定位的内容浮层，默认最大宽 280dp、高度不超过窗口 40%，空间不足自动翻转。",
         code = """
-            HyperPopover(visible = visible, onDismissRequest = { visible = false }, anchorContent = {
+            HyperPopover(visible = visible, onClose = { visible = false }, child = {
                 HyperButton({ visible = !visible }) { HyperText("编辑备注") }
             }) { HyperTextField(note, { note = it }) }
         """.trimIndent(),
@@ -266,14 +266,14 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperAlertDialog(
                 visible = visible,
-                onDismissRequest = onDismiss,
+                onClose = onDismiss,
                 title = "确认删除",
                 dismissOnClickOutside = dismissOnClickOutside,
-                bodyContent = { HyperText("删除后无法恢复，是否继续？") },
-                actionContent = {
-                    HyperButton(onClick = onDismiss) { HyperText("取消") }
+                content = { HyperText("删除后无法恢复，是否继续？") },
+                actions = {
+                    HyperButton(onPressed = onDismiss) { HyperText("取消") }
                     HyperButton(
-                        onClick = onDelete,
+                        onPressed = onDelete,
                         colorStyle = "danger"
                     , type = "filled") { HyperText("删除") }
                 }
@@ -282,8 +282,8 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("结构化标题", "title", "固定标题区"),
             DemoVariant("平台约束", "Dialog constraints", "不按内容反向计算窗口尺寸"),
-            DemoVariant("长正文", "bodyContent", "超出高度后可滚动"),
-            DemoVariant("操作", "actionContent", "普通与危险操作按钮")
+            DemoVariant("长正文", "content", "超出高度后可滚动"),
+            DemoVariant("操作", "actions", "普通与危险操作按钮")
         ),
         apiDocumentPaths = listOf("feedback/hyper-alert-dialog.md"),
         content = { DialogDemo() }
@@ -294,13 +294,13 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperTooltip",
         description = "12dp 圆角轻提示；悬停与长按延迟 500ms、焦点即时显示，支持禁用和长文本宽度。",
         code = """
-            HyperTooltip(text = "提示文本") {
+            HyperTooltip(message = "提示文本") {
                 HyperText("悬停查看")
             }
         """.trimIndent(),
         variants = listOf(
             DemoVariant("触发", "hover / long press / focus", "悬停和长按 500ms，焦点即时"),
-            DemoVariant("禁用与延迟", "enabled / hoverDelayMillis", "可切换状态与悬停等待时间"),
+            DemoVariant("禁用与延迟", "enabled / hoverDelay", "可切换状态与悬停等待时间"),
             DemoVariant("宽度", "maxWidth", "长文本在 240dp 内换行")
         ),
         apiDocumentPaths = listOf("feedback/hyper-tooltip.md"),
@@ -312,12 +312,13 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperUpdateDialog",
         description = "28dp 圆角更新弹窗，版本、摘要、下载、安装与完成状态可操作模拟；错误仅展示原因、重试与关闭。",
         code = """
-            HyperUpdateDialog(state = state, onDismissRequest = onClose, onRetry = onRetry,
+            HyperUpdateDialog(status = status, currentVersion = currentVersion, release = release,
+                onClose = onClose, onRetry = onRetry,
                 onDownload = onDownload, onInstall = onInstall, mandatory = false)
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("状态", "HyperUpdateDialogState", "检查/更新/下载/安装/完成/错误"),
-            DemoVariant("错误反馈", "Error.message", "仅展示原因、重试与关闭，不展示图标、标题和版本框"),
+            DemoVariant("状态", "HyperUpdateStatus", "检查/更新/下载/安装/完成/错误"),
+            DemoVariant("错误反馈", "status = error / message", "仅展示原因、重试与关闭，不展示图标、标题和版本框"),
             DemoVariant("操作样式", "HyperButton.type", "主操作 type = filled / colorStyle = primary，关闭、取消和稍后再说省略 type，使用默认描边"),
             DemoVariant("标识与版本", "受控状态布局", "40dp 标识块、20dp 图标；检查中无版本，其他版本信息不嵌套卡片"),
             DemoVariant("必要更新", "mandatory", "安装与必要更新阶段锁定关闭"),

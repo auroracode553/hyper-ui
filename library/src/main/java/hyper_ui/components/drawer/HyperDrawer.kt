@@ -45,12 +45,7 @@ import hyper_ui.core.icon.HyperCloseIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
-enum class HyperDrawerPosition {
-    Left,
-    Right,
-    Top,
-    Bottom
-}
+enum class HyperDrawerPlacement { start, end }
 
 @Immutable
 data class HyperDrawerColors(
@@ -72,18 +67,18 @@ data class HyperDrawerColors(
 @Composable
 fun HyperDrawer(
     open: Boolean,
-    onDismissRequest: () -> Unit,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
     drawerModifier: Modifier = Modifier,
-    position: HyperDrawerPosition = HyperDrawerPosition.Right,
+    placement: HyperDrawerPlacement = HyperDrawerPlacement.end,
     defaultSetPadding: Boolean = true,
     drawerContentModifier: Modifier = Modifier,
-    drawerContentScrollEnabled: Boolean = true,
+    scrollable: Boolean = true,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = true,
     title: String? = null,
-    footerContent: (@Composable ColumnScope.() -> Unit)? = null,
-    drawerContent: @Composable ColumnScope.() -> Unit,
+    footer: (@Composable ColumnScope.() -> Unit)? = null,
+    child: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
     val transitionProgress = hyperOverlayProgress(open, durationMillis = HyperMotionSpec.OverlayDuration)
@@ -100,11 +95,9 @@ fun HyperDrawer(
             end = if (direction == androidx.compose.ui.unit.LayoutDirection.Rtl) left else right,
             top = maxOf(12.dp, safe.getTop(this).toDp()), bottom = maxOf(12.dp, safe.getBottom(this).toDp()))
     } else PaddingValues(12.dp)
-    val drawerAlignment = when (position) {
-        HyperDrawerPosition.Left -> Alignment.CenterStart
-        HyperDrawerPosition.Right -> Alignment.CenterEnd
-        HyperDrawerPosition.Top -> Alignment.TopCenter
-        HyperDrawerPosition.Bottom -> Alignment.BottomCenter
+    val drawerAlignment = when (placement) {
+        HyperDrawerPlacement.start -> Alignment.CenterStart
+        HyperDrawerPlacement.end -> Alignment.CenterEnd
     }
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -122,26 +115,13 @@ fun HyperDrawer(
                         .fillMaxSize()
                         .background(hyperGlass.scrim.copy(alpha = hyperGlass.scrim.alpha * transitionProgress))
                         .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null,
-                            onClick = { if (dismissOnClickOutside) onDismissRequest() })
+                            onClick = { if (dismissOnClickOutside) onClose() })
                 )
             }
 
             val maxDrawerWidth = maxWidth
-            val maxDrawerHeight = (maxHeight - 24.dp).coerceAtLeast(0.dp)
-            val drawerSizeModifier = when (position) {
-                HyperDrawerPosition.Left,
-                HyperDrawerPosition.Right -> Modifier
-                    .widthIn(max = maxDrawerWidth)
-                    .then(drawerModifier)
-                    .fillMaxHeight()
-                    .width(HyperDrawerDefaults.Width + 24.dp)
-
-                HyperDrawerPosition.Top,
-                HyperDrawerPosition.Bottom -> Modifier
-                    .heightIn(max = maxDrawerHeight)
-                    .then(drawerModifier)
-                    .fillMaxWidth()
-            }
+            val drawerSizeModifier = Modifier.widthIn(max = maxDrawerWidth)
+                .then(drawerModifier).fillMaxHeight().width(HyperDrawerDefaults.Width + 24.dp)
 
             if (isPresent) {
                 Column(
@@ -150,15 +130,13 @@ fun HyperDrawer(
                         .padding(outerPadding)
                         .graphicsLayer {
                             alpha = transitionProgress
-                            when (position) {
-                                HyperDrawerPosition.Left -> translationX = constraints.maxWidth * (if (direction == androidx.compose.ui.unit.LayoutDirection.Rtl) 0.12f else -0.12f) * (1f - transitionProgress)
-                                HyperDrawerPosition.Right -> translationX = constraints.maxWidth * (if (direction == androidx.compose.ui.unit.LayoutDirection.Rtl) -0.12f else 0.12f) * (1f - transitionProgress)
-                                HyperDrawerPosition.Top -> translationY = -size.height * 0.12f * (1f - transitionProgress)
-                                HyperDrawerPosition.Bottom -> translationY = size.height * 0.12f * (1f - transitionProgress)
+                            when (placement) {
+                                HyperDrawerPlacement.start -> translationX = constraints.maxWidth * (if (direction == androidx.compose.ui.unit.LayoutDirection.Rtl) 0.12f else -0.12f) * (1f - transitionProgress)
+                                HyperDrawerPlacement.end -> translationX = constraints.maxWidth * (if (direction == androidx.compose.ui.unit.LayoutDirection.Rtl) -0.12f else 0.12f) * (1f - transitionProgress)
                             }
                         }
                         .hyperGlassSurface(
-                            shape = drawerShape(position),
+                            shape = drawerShape(placement),
                             visuals = hyperGlassSurfaceVisuals(
                                 containerColor = resolvedColors.containerColor,
                                 elevation = HyperDrawerDefaults.Elevation,
@@ -181,15 +159,15 @@ fun HyperDrawer(
                             if (title != null) HyperText(title, Modifier.weight(1f), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                             else androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
                             HyperTooltip("关闭") {
-                                HyperButton(onDismissRequest, type = "icon") { HyperCloseIcon(Modifier.size(20.dp)) }
+                                HyperButton(onClose, type = "icon") { HyperCloseIcon(Modifier.size(20.dp)) }
                             }
                         }
-                        Column(Modifier.weight(1f, fill = position == HyperDrawerPosition.Left || position == HyperDrawerPosition.Right)
-                            .then(if (drawerContentScrollEnabled) Modifier.verticalScroll(drawerContentScrollState) else Modifier)
-                            .then(if (defaultSetPadding) Modifier.padding(16.dp) else Modifier), content = drawerContent)
-                        if (footerContent != null) {
+                        Column(Modifier.weight(1f)
+                            .then(if (scrollable) Modifier.verticalScroll(drawerContentScrollState) else Modifier)
+                            .then(if (defaultSetPadding) Modifier.padding(16.dp) else Modifier), content = child)
+                        if (footer != null) {
                             HyperDivider()
-                            Column(Modifier.padding(16.dp), content = footerContent)
+                            Column(Modifier.padding(16.dp), content = footer)
                         }
                     }
                 }
@@ -200,11 +178,11 @@ fun HyperDrawer(
 
 @Composable
 fun HyperDrawerHeader(
-    headlineContent: @Composable ColumnScope.() -> Unit,
+    title: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.HeaderPadding),
-    leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    supportingContent: (@Composable ColumnScope.() -> Unit)? = null
+    leading: (@Composable RowScope.() -> Unit)? = null,
+    subtitle: (@Composable ColumnScope.() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -212,48 +190,48 @@ fun HyperDrawerHeader(
             .then(contentModifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        leadingContent?.invoke(this)
+        leading?.invoke(this)
 
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = if (leadingContent == null) 0.dp else 12.dp),
+                .padding(start = if (leading == null) 0.dp else 12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            headlineContent()
-            supportingContent?.invoke(this)
+            title()
+            subtitle?.invoke(this)
         }
     }
 }
 
 @Composable
 fun HyperDrawerItem(
-    headlineContent: @Composable ColumnScope.() -> Unit,
+    title: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperDrawerDefaults.ItemPadding),
     selected: Boolean = false,
     enabled: Boolean = true,
     dividerVisible: Boolean = false,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
-    onClick: (() -> Unit)? = null,
-    leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
-    trailingContent: (@Composable RowScope.() -> Unit)? = null
+    onPressed: (() -> Unit)? = null,
+    leading: (@Composable RowScope.() -> Unit)? = null,
+    subtitle: (@Composable ColumnScope.() -> Unit)? = null,
+    trailing: (@Composable RowScope.() -> Unit)? = null
 ) {
     val resolved = resolveHyperDrawerColors(colors)
     val foreground = if (selected) resolved.selectedContentColor else resolved.contentColor
     HyperListTile(
-        headlineContent = headlineContent,
+        title = title,
         modifier = modifier.background(if (selected) resolved.selectedContainerColor else Color.Transparent, RoundedCornerShape(12.dp)),
         contentModifier = contentModifier,
         type = "plain", enabled = enabled, showChevron = false,
-        dividerVisible = dividerVisible, onClick = onClick,
+        dividerVisible = dividerVisible, onPressed = onPressed,
         colors = HyperListTileColors(foreground, resolved.supportingColor, resolved.disabledContentColor, resolved.dividerColor),
-        leadingContent = leadingContent, supportingContent = supportingContent, trailingContent = trailingContent
+        leading = leading, subtitle = subtitle, trailing = trailing
     )
 }
 
-private fun drawerShape(position: HyperDrawerPosition): RoundedCornerShape {
+private fun drawerShape(placement: HyperDrawerPlacement): RoundedCornerShape {
     return RoundedCornerShape(30.dp)
 }
 
@@ -269,12 +247,7 @@ object HyperDrawerDefaults {
     const val DrawerZIndex = 9f
 
     /** 默认 Padding 开启时使用的方向化内容留白。 */
-    fun contentPadding(position: HyperDrawerPosition): PaddingValues = when (position) {
-        HyperDrawerPosition.Top,
-        HyperDrawerPosition.Bottom -> PaddingValues(horizontal = 20.dp, vertical = 16.dp)
-        HyperDrawerPosition.Left,
-        HyperDrawerPosition.Right -> PaddingValues(vertical = 16.dp)
-    }
+    fun contentPadding(placement: HyperDrawerPlacement): PaddingValues = PaddingValues(vertical = 16.dp)
 
     @Composable
     fun colors(

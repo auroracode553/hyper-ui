@@ -20,7 +20,7 @@ description: 透明页面导航栏，组织返回入口、标题、副标题和�
 ```kotlin
 import hyper_ui.*
 
-HyperNavBar(type = "backWithTitle", titleContent = { HyperText("详情") }, onBackClick = onBack)
+HyperNavBar(type = "backWithTitle", title = { HyperText("详情") }, onBackPressed = onBack)
 ```
 
 </details>
@@ -48,7 +48,7 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 @Composable
 fun HyperNavBar(
     type: String = HyperNavBarDefaults.TypeCustom,
-    titleContent: (@Composable () -> Unit)? = null,
+    title: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier,
     size: String = "default",
     padding: PaddingValues = HyperNavBarDefaults.ContentPadding,
@@ -56,12 +56,12 @@ fun HyperNavBar(
     titleSpacing: Dp = HyperNavBarDefaults.TitleGap,
     actionSpacing: Dp = HyperNavBarDefaults.ActionGap,
     centerTitle: Boolean = false,
-    onBackClick: () -> Unit = {},
-    onMoreClick: () -> Unit = {},
-    onSaveClick: () -> Unit = {},
-    subtitleContent: (@Composable () -> Unit)? = null,
-    navigationContent: (@Composable RowScope.() -> Unit)? = null,
-    trailingContent: (@Composable RowScope.() -> Unit)? = null,
+    onBackPressed: (() -> Unit)? = null,
+    onMorePressed: (() -> Unit)? = null,
+    onSavePressed: (() -> Unit)? = null,
+    subtitle: (@Composable () -> Unit)? = null,
+    leading: (@Composable RowScope.() -> Unit)? = null,
+    trailing: (@Composable RowScope.() -> Unit)? = null,
     actions: List<@Composable () -> Unit> = emptyList(),
     child: (@Composable BoxScope.() -> Unit)? = null
 )
@@ -71,23 +71,23 @@ fun HyperNavBar(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| type | String | 否 | HyperNavBarDefaults.TypeCustom | 渲染形态；合法值见本页样式约定。 |
-| titleContent | (@Composable () -&gt; Unit)? | 否 | null | 标题插槽，继承组件标题样式。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| size | String | 否 | "default" | small/default/large 尺寸档位。 |
+| type | String | 否 | HyperNavBarDefaults.TypeCustom | 组件的视觉或布局形态。 |
+| title | (@Composable () -&gt; Unit)? | 否 | null | 组件标题文字或内容。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 | padding | PaddingValues | 否 | HyperNavBarDefaults.ContentPadding | 导航栏内部留白。 |
 | spacing | Dp | 否 | HyperNavBarDefaults.ContentGap | 导航栏各区域之间的间距。 |
 | titleSpacing | Dp | 否 | HyperNavBarDefaults.TitleGap | 标题与其他区域的间距。 |
 | actionSpacing | Dp | 否 | HyperNavBarDefaults.ActionGap | 导航操作项之间的间距。 |
-| centerTitle | Boolean | 否 | false | custom 类型是否将标题在导航栏中居中。 |
-| onBackClick | () -&gt; Unit | 否 | {} | 固定返回类型的点击回调。 |
-| onMoreClick | () -&gt; Unit | 否 | {} | more 类型右侧更多操作的点击回调。 |
-| onSaveClick | () -&gt; Unit | 否 | {} | edit 类型右侧保存操作的点击回调。 |
-| subtitleContent | (@Composable () -&gt; Unit)? | 否 | null | 副标题插槽。 |
-| navigationContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 导航栏左侧导航内容。 |
-| trailingContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 尾部插槽。 |
+| centerTitle | Boolean | 否 | false | 是否将标题在导航栏中居中。 |
+| onBackPressed | (() -&gt; Unit)? | 否 | null | 点击返回操作时通知调用方。 |
+| onMorePressed | (() -&gt; Unit)? | 否 | null | 点击更多操作时通知调用方。 |
+| onSavePressed | (() -&gt; Unit)? | 否 | null | 点击保存操作时通知调用方。 |
+| subtitle | (@Composable () -&gt; Unit)? | 否 | null | 副标题或辅助说明。 |
+| leading | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
+| trailing | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 内容末端的自定义区域。 |
 | actions | List&lt;@Composable () -&gt; Unit&gt; | 否 | emptyList() | 导航栏操作项内容。 |
-| child | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 导航栏附加子内容。 |
+| child | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 组件主体或触发器内容。 |
 
 ### HyperNavBarPage
 
@@ -111,11 +111,11 @@ fun HyperNavBarPage(
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | navBar | @Composable () -&gt; Unit | 是 | — | 页面顶部导航栏内容。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | contentPadding | PaddingValues | 否 | PaddingValues() | 主体内容的内部留白。 |
-| navBarSize | String | 否 | "default" | 页面导航栏的尺寸档位。 |
+| navBarSize | String | 否 | &quot;default&quot; | 页面导航栏的尺寸档位。 |
 | bottomSafeArea | Boolean | 否 | true | 是否为底部系统安全区留白。 |
-| content | @Composable BoxScope.(PaddingValues) -&gt; Unit | 是 | — | 主体内容插槽。 |
+| content | @Composable BoxScope.(PaddingValues) -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |
 
 ### HyperNavBarBackButton
 
@@ -125,7 +125,7 @@ fun HyperNavBarPage(
 ```kotlin
 @Composable
 fun HyperNavBarBackButton(
-    onClick: () -> Unit,
+    onPressed: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     contentDescription: String = "返回"
 )
@@ -135,6 +135,6 @@ fun HyperNavBarBackButton(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| onClick | () -&gt; Unit | 是 | — | 用户点击回调。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| contentDescription | String | 否 | "返回" | 无障碍操作名称。 |
+| onPressed | (() -&gt; Unit)? | 否 | null | 点击操作回调；为 null 时不能触发操作。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| contentDescription | String | 否 | &quot;返回&quot; | 无障碍内容描述。 |

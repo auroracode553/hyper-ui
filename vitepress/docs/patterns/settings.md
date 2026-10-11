@@ -23,7 +23,7 @@ fun SettingsScreen() {
     var pushEnabled by remember { mutableStateOf(true) }
 
     HyperNavBarPage(
-        navBar = { HyperNavBar(titleContent = { HyperText("设置") }) }
+        navBar = { HyperNavBar(title = { HyperText("设置") }) }
     ) { contentPadding ->
         Column(
             modifier = Modifier
@@ -35,12 +35,12 @@ fun SettingsScreen() {
         ) {
             HyperMenuGroup {
                 HyperListTile(
-                    headlineContent = { HyperText("推送通知") },
-                    supportingContent = { HyperText("接收重要消息提醒") },
-                    trailingContent = {
+                    title = { HyperText("推送通知") },
+                    subtitle = { HyperText("接收重要消息提醒") },
+                    trailing = {
                         HyperSwitch(
-                            checked = pushEnabled,
-                            onCheckedChange = { pushEnabled = it }
+                            value = pushEnabled,
+                            onChanged = { pushEnabled = it }
                         )
                     }
                 )

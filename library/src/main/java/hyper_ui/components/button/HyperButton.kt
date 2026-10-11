@@ -40,7 +40,7 @@ data class HyperButtonColors(
 /** 受控动作按钮。loading 由调用方持有，加载期间阻止重复触发。 */
 @Composable
 fun HyperButton(
-    onClick: () -> Unit,
+    onPressed: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     loading: Boolean = false,
@@ -49,7 +49,7 @@ fun HyperButton(
     colorStyle: String? = null,
     size: String = "default",
     colors: HyperButtonColors = HyperButtonDefaults.colors(type, color = color, colorStyle = colorStyle),
-    border: BorderStroke? = HyperButtonDefaults.border(type, enabled, color = color, colorStyle = colorStyle),
+    border: BorderStroke? = HyperButtonDefaults.border(type, enabled && onPressed != null, color = color, colorStyle = colorStyle),
     shape: Shape = HyperButtonDefaults.shape(size),
     contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(size),
     role: Role = Role.Button,
@@ -66,8 +66,9 @@ fun HyperButton(
         "不支持的 HyperButton colorStyle: $colorStyle"
     }
     val isIconType = type == "icon"
-    val container = if (enabled) colors.containerColor else colors.disabledContainerColor
-    val foreground = if (enabled) colors.contentColor else colors.disabledContentColor
+    val isEnabled = enabled && onPressed != null
+    val container = if (isEnabled) colors.containerColor else colors.disabledContainerColor
+    val foreground = if (isEnabled) colors.contentColor else colors.disabledContentColor
     Row(
         modifier = modifier
             .then(
@@ -79,8 +80,8 @@ fun HyperButton(
                         .height(resolvedHeight)
                 }
             )
-            .hyperNoRippleClickable(enabled = enabled && !loading, role = role, onClick = onClick)
-            .hyperButtonSurface(container, shape, type, enabled, border)
+            .hyperNoRippleClickable(enabled = isEnabled && !loading, role = role, onClick = { onPressed?.invoke() })
+            .hyperButtonSurface(container, shape, type, isEnabled, border)
             .semantics { if (loading) stateDescription = "正在处理" }
             .then(if (isIconType) Modifier else Modifier.padding(contentPadding).padding(1.dp)),
         horizontalArrangement = horizontalArrangement,

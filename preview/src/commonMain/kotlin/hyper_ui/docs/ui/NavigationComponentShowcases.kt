@@ -29,7 +29,7 @@ import hyper_ui.HyperTabBar
 import hyper_ui.HyperDrawer
 import hyper_ui.HyperDrawerHeader
 import hyper_ui.HyperDrawerItem
-import hyper_ui.HyperDrawerPosition
+import hyper_ui.HyperDrawerPlacement
 import hyper_ui.HyperTabs
 
 private data class DemoNavItem(
@@ -45,25 +45,25 @@ private val DockedTabBarGestureClearance = 8.dp
 fun DrawerDemo() {
     var drawerOpen by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf("首页") }
-    var position by remember { mutableStateOf(HyperDrawerPosition.Right) }
+    var position by remember { mutableStateOf(HyperDrawerPlacement.end) }
     var padding by remember { mutableStateOf(true) }
     var scroll by remember { mutableStateOf(true) }
     Box(Modifier.fillMaxSize()) {
         HyperDrawer(
             open = drawerOpen,
-            onDismissRequest = { drawerOpen = false },
-            position = position,
+            onClose = { drawerOpen = false },
+            placement = position,
             title = "导航",
-            footerContent = { HyperText("固定页脚", size = "small") },
+            footer = { HyperText("固定页脚", size = "small") },
             defaultSetPadding = padding,
-            drawerContentScrollEnabled = scroll,
-            drawerContent = {
-                HyperDrawerHeader(headlineContent = { HyperText("HyperUI") },
-                    supportingContent = { HyperText("选择页面") })
+            scrollable = scroll,
+            child = {
+                HyperDrawerHeader(title = { HyperText("HyperUI") },
+                    subtitle = { HyperText("选择页面") })
                 listOf("首页", "通知", "设置", "关于").forEach { page ->
                     HyperDrawerItem(selected = page == selected,
-                        onClick = { selected = page; drawerOpen = false },
-                        headlineContent = { HyperText(page) })
+                        onPressed = { selected = page; drawerOpen = false },
+                        title = { HyperText(page) })
                 }
             },
             content = {
@@ -71,10 +71,10 @@ fun DrawerDemo() {
                     verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     HyperText("当前页面：$selected")
                     DrawerPositionSelector(position, { position = it })
-                    HyperButton(type = "tonal", onClick = { padding = !padding }) {
+                    HyperButton(type = "tonal", onPressed = { padding = !padding }) {
                         HyperText(if (padding) "默认留白" else "自定义留白")
                     }
-                    HyperButton(type = "tonal", onClick = { scroll = !scroll }) {
+                    HyperButton(type = "tonal", onPressed = { scroll = !scroll }) {
                         HyperText(if (scroll) "允许滚动" else "关闭滚动")
                     }
                     HyperButton({ drawerOpen = true }, colorStyle = "primary", type = "filled") { HyperText("打开抽屉") }
@@ -93,7 +93,7 @@ fun SlideMenuDemo() {
         HyperButton({ scrollable = !scrollable }) {
             HyperText(if (scrollable) "切换等宽" else "切换滚动")
         }
-        HyperTabs(categories, selected, { selected = it }, scrollable = scrollable,
+        HyperTabs(categories, categories.indexOf(selected), { selected = categories[it] }, scrollable = scrollable,
             itemEnabled = { it != "打开应用" }) { HyperText(it, maxLines = 1) }
         HyperText("当前选中：$selected", size = "small")
     }
@@ -126,10 +126,10 @@ private fun TabBarDemo(single: Boolean) {
         }
         HyperTabBar(
             items = if (single) listOf(items.first()) else items,
-            onItemClick = { selectedId = it.id; if (single) count++ },
+            onChanged = { selectedId = items[it].id; if (single) count++ },
             type = if (single) "single" else "multiple",
             enabled = enabled,
-            itemSelected = { it.id == selectedId },
+            selectedIndex = if (single) 0 else items.indexOfFirst { it.id == selectedId },
             itemLabel = { it.label },
             badgeCount = count
         ) { item ->
@@ -156,34 +156,23 @@ private fun DrawerBadge(content: @Composable () -> Unit) {
 
 @Composable
 private fun DrawerPositionSelector(
-    selected: HyperDrawerPosition,
-    onSelect: (HyperDrawerPosition) -> Unit
+    selected: HyperDrawerPlacement,
+    onSelect: (HyperDrawerPlacement) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             DrawerPositionButton(
-                text = "左侧",
-                selected = selected == HyperDrawerPosition.Left,
-                onClick = { onSelect(HyperDrawerPosition.Left) }
+                text = "起始侧",
+                selected = selected == HyperDrawerPlacement.start,
+                onClick = { onSelect(HyperDrawerPlacement.start) }
             )
             DrawerPositionButton(
-                text = "右侧",
-                selected = selected == HyperDrawerPosition.Right,
-                onClick = { onSelect(HyperDrawerPosition.Right) }
+                text = "结束侧",
+                selected = selected == HyperDrawerPlacement.end,
+                onClick = { onSelect(HyperDrawerPlacement.end) }
             )
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            DrawerPositionButton(
-                text = "顶部",
-                selected = selected == HyperDrawerPosition.Top,
-                onClick = { onSelect(HyperDrawerPosition.Top) }
-            )
-            DrawerPositionButton(
-                text = "底部",
-                selected = selected == HyperDrawerPosition.Bottom,
-                onClick = { onSelect(HyperDrawerPosition.Bottom) }
-            )
-        }
+
     }
 }
 
@@ -194,7 +183,7 @@ private fun DrawerPositionButton(
     onClick: () -> Unit
 ) {
     HyperButton(
-        onClick = onClick,
+        onPressed = onClick,
         modifier = Modifier.height(36.dp),
         colorStyle = if (selected) "primary" else null
     , type = "filled") {
@@ -205,11 +194,9 @@ private fun DrawerPositionButton(
     }
 }
 
-private fun HyperDrawerPosition.label(): String = when (this) {
-    HyperDrawerPosition.Left -> "左侧"
-    HyperDrawerPosition.Right -> "右侧"
-    HyperDrawerPosition.Top -> "顶部"
-    HyperDrawerPosition.Bottom -> "底部"
+private fun HyperDrawerPlacement.label(): String = when (this) {
+    HyperDrawerPlacement.start -> "左侧"
+    HyperDrawerPlacement.end -> "右侧"
 }
 
 /** 侧滑操作与分类按钮分开演示，保留受控展开和禁用状态。 */
@@ -220,15 +207,15 @@ fun SlideActionMenuDemo() {
     var result by remember { mutableStateOf("拖动列表行或用按钮展开") }
     Column(Modifier.widthIn(max = 440.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(type = "tonal", onClick = { reveal = HyperSlideMenuReveal.Start }) { HyperText("起始侧") }
-            HyperButton(type = "tonal", onClick = { reveal = HyperSlideMenuReveal.End }) { HyperText("结束侧") }
+            HyperButton(type = "tonal", onPressed = { reveal = HyperSlideMenuReveal.Start }) { HyperText("起始侧") }
+            HyperButton(type = "tonal", onPressed = { reveal = HyperSlideMenuReveal.End }) { HyperText("结束侧") }
             HyperButton({ enabled = !enabled }) { HyperText(if (enabled) "禁用" else "启用") }
         }
         HyperSlideMenu(reveal, { reveal = it }, enabled = enabled,
             startActions = listOf(HyperSlideAction("置顶", { result = "已置顶" })),
             endActions = listOf(HyperSlideAction("删除", { result = "已删除" }))) {
-            HyperListTile(headlineContent = { HyperText("侧滑查看操作") },
-                supportingContent = { HyperText("释放时按位置与速度吸附") })
+            HyperListTile(title = { HyperText("侧滑查看操作") },
+                subtitle = { HyperText("释放时按位置与速度吸附") })
         }
         HyperText("$reveal · $result", fontSize = 13.sp)
     }

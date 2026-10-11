@@ -32,7 +32,7 @@ features:
 import hyper_ui.*
 
 HyperButton(
-    onClick = onSave,
+    onPressed = onSave,
     colorStyle = "primary", type = "filled",
     size = "default"
 ) { HyperText("保存") }
@@ -47,7 +47,7 @@ HyperButton(
 | `type` | 组件形态或视觉层级 |
 | `size` | `small`、`default`、`large` |
 | `modifier` | 页面中的尺寸、间距和位置 |
-| 状态参数 | `value`、`checked`、`selected`、`visible`、`progress` 由调用方持有 |
+| 状态参数 | `value`、`groupValue`、`selectedIndex`、`visible`、`value` 由调用方持有 |
 
 颜色通过 `HyperThemeConfig` 或组件 `colors` 配置；调用方使用 `import hyper_ui.*`。
 
@@ -58,3 +58,5 @@ HyperButton(
 - [主题配置](theme.md)
 - [状态与架构边界](state-model.md)
 - [交互预览](preview.md)
+
+两端对应组件统一使用 onPressed、onChanged、onClose。按钮 type 控制形态，colorStyle 选择预设配色，color 覆盖预设；页签使用 selectedIndex。当前参数与默认值见完整组件 API 表格。

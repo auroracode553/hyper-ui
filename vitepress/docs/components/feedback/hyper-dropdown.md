@@ -48,8 +48,8 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 @Composable
 fun <T> HyperDropdown(
     options: List<HyperOption<T>>,
-    value: T?,
-    onValueChange: (T) -> Unit,
+    value: T? = null,
+    onChanged: ((T) -> Unit)? = null,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     label: String? = null,
@@ -63,15 +63,15 @@ fun <T> HyperDropdown(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| options | List&lt;HyperOption&lt;T&gt;&gt; | 是 | — | 值、标签、可用状态组成的选项列表。 |
-| value | T? | 是 | — | 调用方持有的当前值。 |
-| onValueChange | (T) -&gt; Unit | 是 | — | 用户修改值时通知调用方。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
-| label | String? | 否 | null | 显示的标签文字。 |
-| placeholder | String | 否 | "请选择" | 未选择选项时显示的占位文字。 |
-| menuMaxHeight | Dp | 否 | 320.dp | 选项菜单最大高度；同时受可用安全空间限制。 |
-| width | Dp? | 否 | null | 字段宽度；null 时使用父约束。 |
+| options | List&lt;HyperOption&lt;T&gt;&gt; | 是 | — | 可选颜色配置。 |
+| value | T? | 否 | null | 由调用方持有的当前值。 |
+| onChanged | ((T) -&gt; Unit)? | 否 | null | 用户修改值或选择项时通知调用方。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| label | String? | 否 | null | 数值旁显示的标签文字。 |
+| placeholder | String | 否 | &quot;请选择&quot; | 未输入或未选择时的提示内容。 |
+| menuMaxHeight | Dp | 否 | 320.dp | 下拉菜单最大高度。 |
+| width | Dp? | 否 | null | 可选的固定宽度。 |
 
 <details class="component-doc__details component-doc__advanced">
 <summary>默认配置与数据类型</summary>

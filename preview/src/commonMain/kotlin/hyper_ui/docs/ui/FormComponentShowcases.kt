@@ -44,8 +44,8 @@ fun RadioDemo() {
             onClick = { mode = "balanced" }
         ) {
             HyperRadio(
-                selected = mode == "balanced",
-                onClick = { mode = "balanced" }
+                value = "balanced", groupValue = mode,
+                onChanged = { mode = "balanced" }
             )
         }
         FormControlOption(
@@ -53,8 +53,8 @@ fun RadioDemo() {
             onClick = { mode = "performance" }
         ) {
             HyperRadio(
-                selected = mode == "performance",
-                onClick = { mode = "performance" }
+                value = "performance", groupValue = mode,
+                onChanged = { mode = "performance" }
             )
         }
         FormControlOption(
@@ -62,8 +62,8 @@ fun RadioDemo() {
             enabled = false
         ) {
             HyperRadio(
-                selected = false,
-                onClick = null,
+                value = "disabled", groupValue = mode,
+                onChanged = null,
                 enabled = false
             )
         }
@@ -87,9 +87,9 @@ fun SegmentedDemo() {
         }
         HyperSegmentedControl(
             equalWidth = equalWidth,
-            items = periods,
-            selectedItem = selectedPeriod,
-            onSelected = { selectedPeriod = it }
+            options = periods,
+            selectedValue = selectedPeriod,
+            onChanged = { selectedPeriod = it }
         ) { period ->
             HyperText(
                 text = period,
@@ -105,9 +105,9 @@ fun SegmentedDemo() {
         )
 
         HyperSegmentedControl(
-            items = modes,
-            selectedItem = selectedMode,
-            onSelected = { selectedMode = it },
+            options = modes,
+            selectedValue = selectedMode,
+            onChanged = { selectedMode = it },
             itemEnabled = { it != "停用" },
             colors = HyperSegmentedControlDefaults.colors(
                 selectedItemColor = Color(0.03f, 0.76f, 0.38f, 1f),
@@ -136,8 +136,8 @@ fun CheckboxDemo() {
             onClick = { checkedA = !checkedA }
         ) {
             HyperCheckbox(
-                checked = checkedA,
-                onCheckedChange = { checkedA = it == true }
+                value = checkedA,
+                onChanged = { checkedA = it == true }
             )
         }
         FormControlOption(
@@ -145,8 +145,8 @@ fun CheckboxDemo() {
             onClick = { checkedB = !checkedB }
         ) {
             HyperCheckbox(
-                checked = checkedB,
-                onCheckedChange = { checkedB = it == true }
+                value = checkedB,
+                onChanged = { checkedB = it == true }
             )
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -158,8 +158,8 @@ fun CheckboxDemo() {
             enabled = false
         ) {
             HyperCheckbox(
-                checked = true,
-                onCheckedChange = {},
+                value = true,
+                onChanged = {},
                 enabled = false
             )
         }
@@ -185,16 +185,16 @@ fun TextFieldDemo() {
         PreviewSectionLabel("基础输入与清空")
         HyperTextField(value, { value = it }, size = size, clearable = true, enabled = enabled, isError = error, readOnly = readOnly,
             inputModifier = Modifier.focusRequester(focusRequester),
-            placeholderContent = { HyperText("请输入内容") })
+            placeholder = { HyperText("请输入内容") })
         PreviewSectionLabel("密码显隐")
         HyperTextField(password, { password = it }, type = "password", size = size, showPasswordToggle = true,
-            placeholderContent = { HyperText("请输入密码") })
+            placeholder = { HyperText("请输入密码") })
         PreviewSectionLabel("前后缀插槽")
         HyperTextField(amount, { amount = it }, type = "number", size = size, clearable = true,
-            labelContent = { HyperText("金额") }, startContent = { HyperText("¥") }, endContent = { HyperText("元") })
+            label = { HyperText("金额") }, prefix = { HyperText("¥") }, suffix = { HyperText("元") })
         PreviewSectionLabel("多行与字数限制")
-        HyperTextField(note, { note = it }, type = "textarea", size = size, rows = 3, maxlength = 80, showWordLimit = true,
-            labelContent = { HyperText("多行输入") }, placeholderContent = { HyperText("请输入多行内容") })
+        HyperTextField(note, { note = it }, type = "textarea", size = size, rows = 3, maxLength = 80, showWordLimit = true,
+            label = { HyperText("多行输入") }, placeholder = { HyperText("请输入多行内容") })
         HyperButton({ focusRequester.requestFocus() }, size = "small", colorStyle = "primary", type = "filled") { HyperText("查看聚焦") }
     }
 }
@@ -208,7 +208,7 @@ fun SwitchDemo() {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
                 HyperText("接收消息通知", fontSize = 14.sp)
-                HyperSwitch(checked = notifications, onCheckedChange = { notifications = it })
+                HyperSwitch(value = notifications, onChanged = { notifications = it })
             }
         }
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -216,12 +216,12 @@ fun SwitchDemo() {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
                 HyperText("禁用 · 开启", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 14.sp)
-                HyperSwitch(checked = true, onCheckedChange = {}, enabled = false)
+                HyperSwitch(value = true, onChanged = {}, enabled = false)
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
                 HyperText("禁用 · 关闭", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 14.sp)
-                HyperSwitch(checked = false, onCheckedChange = {}, enabled = false)
+                HyperSwitch(value = false, onChanged = {}, enabled = false)
             }
         }
     }
@@ -240,7 +240,7 @@ fun SliderDemo() {
         HyperText(text = "紧凑连续进度 ${continuousValue.toInt()}%")
         HyperSlider(
             value = continuousValue,
-            onValueChange = { continuousValue = it },
+            onChanged = { continuousValue = it },
             modifier = Modifier.fillMaxWidth(),
             showSegmentMarkers = false,
             showValue = true
@@ -252,15 +252,15 @@ fun SliderDemo() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             HyperText(text = "分段进度 ${steppedValue.toInt()}/5")
-            HyperButton(onClick = { showSegmentMarkers = !showSegmentMarkers }, colorStyle = "primary", type = "filled") {
+            HyperButton(onPressed = { showSegmentMarkers = !showSegmentMarkers }, colorStyle = "primary", type = "filled") {
                 HyperText(if (showSegmentMarkers) "隐藏分段点" else "显示分段点")
             }
         }
         HyperSlider(
             value = steppedValue,
-            onValueChange = { steppedValue = it },
-            valueRange = 0f..5f,
-            steps = 4,
+            onChanged = { steppedValue = it },
+            min = 0f, max = 5f,
+            divisions = 5,
             showSegmentMarkers = showSegmentMarkers,
             modifier = Modifier.fillMaxWidth(),
             colors = HyperSliderDefaults.colors(
@@ -271,9 +271,9 @@ fun SliderDemo() {
         HyperText(text = "只读分段 · 指定主刻度")
         HyperSlider(
             value = 3f,
-            onValueChange = {},
+            onChanged = {},
             readOnly = true,
-            valueRange = 0f..5f,
+            min = 0f, max = 5f,
             showSegmentMarkers = true,
             segmentValues = listOf(0f, 1f, 3f, 5f),
             modifier = Modifier.fillMaxWidth()
@@ -282,7 +282,7 @@ fun SliderDemo() {
         HyperText(text = "禁用状态")
         HyperSlider(
             value = 65f,
-            onValueChange = {},
+            onChanged = {},
             enabled = false,
             modifier = Modifier.fillMaxWidth()
         )

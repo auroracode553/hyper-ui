@@ -43,14 +43,16 @@ data class HyperProgressColors(
 /** 线性或圆形进度指示器；通过 type 选择渲染形态。 */
 @Composable
 fun HyperProgress(
-    progress: Float? = null,
+    value: Float? = null,
     modifier: Modifier = Modifier,
     type: String = "linear",
     size: String = "default",
     showLabel: Boolean = true,
     shape: Shape = HyperProgressDefaults.LinearShape,
     strokeWidth: Dp = HyperProgressDefaults.strokeWidth(size),
-    colors: HyperProgressColors = HyperProgressDefaults.colors(),
+    color: Color = Color.Unspecified,
+    backgroundColor: Color = Color.Unspecified,
+    colors: HyperProgressColors = HyperProgressDefaults.colors(trackColor = backgroundColor, indicatorColor = color),
     trackBorder: BorderStroke? = null
 ) {
     require(type == "linear" || type == "circular") {
@@ -59,27 +61,27 @@ fun HyperProgress(
     if (type == "circular") {
         Box(modifier = modifier.size(hyperComponentSize(size, 48.dp, 64.dp, 80.dp)), contentAlignment = Alignment.Center) {
         HyperCircularProgress(
-            progress = progress,
+            progress = value,
             modifier = Modifier.matchParentSize(),
             size = size,
             strokeWidth = strokeWidth,
             colors = colors
         )
-        if (showLabel && progress != null && progress.isFinite()) HyperText(
-            "${kotlin.math.round(progress.coerceIn(0f, 1f) * 100).toInt()}%", fontSize = 12.sp)
+        if (showLabel && value != null && value.isFinite()) HyperText(
+            "${hyperProgressPercentage(value)}%", fontSize = 12.sp)
         }
     } else {
         Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         HyperLinearProgress(
-            progress = progress,
+            progress = value,
             modifier = Modifier.weight(1f),
             size = size,
             shape = shape,
             colors = colors,
             trackBorder = trackBorder
         )
-        if (showLabel && progress != null && progress.isFinite()) HyperText(
-            "${kotlin.math.round(progress.coerceIn(0f, 1f) * 100).toInt()}%", Modifier.padding(start = 12.dp))
+        if (showLabel && value != null && value.isFinite()) HyperText(
+            "${hyperProgressPercentage(value)}%", Modifier.padding(start = 12.dp))
         }
     }
 }

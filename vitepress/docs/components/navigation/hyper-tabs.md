@@ -20,7 +20,7 @@ description: 在同层内容之间切换，支持等宽排列与横向滚动。
 ```kotlin
 import hyper_ui.*
 
-HyperTabs(items, selected, { selected = it }) { HyperText(it) }
+HyperTabs(tabs, selected, { selected = it }) { HyperText(it) }
 ```
 
 </details>
@@ -49,9 +49,9 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 ```kotlin
 @Composable
 fun <T> HyperTabs(
-    items: List<T>,
-    selectedItem: T,
-    onSelected: (T) -> Unit,
+    tabs: List<T>,
+    selectedIndex: Int,
+    onChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
     scrollable: Boolean = false,
     itemEnabled: (T) -> Boolean = { true },
@@ -63,10 +63,10 @@ fun <T> HyperTabs(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| items | List&lt;T&gt; | 是 | — | 待呈现条目。 |
-| selectedItem | T | 是 | — | 调用方持有的当前选项。 |
-| onSelected | (T) -&gt; Unit | 是 | — | 选中条目时通知调用方。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| scrollable | Boolean | 否 | false | 允许横向滚动；false 使用等宽条目。 |
-| itemEnabled | (T) -&gt; Boolean | 否 | { true } | 按项提供可用状态。 |
-| itemContent | @Composable HyperTabsItemScope.(item: T) -&gt; Unit | 是 | — | 条目内容插槽。 |
+| tabs | List&lt;T&gt; | 是 | — | 页签数据。 |
+| selectedIndex | Int | 是 | — | 当前选中项的索引，从 0 开始。 |
+| onChanged | (Int) -&gt; Unit | 是 | — | 用户修改值或选择项时通知调用方。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| scrollable | Boolean | 否 | false | 是否允许内容滚动。 |
+| itemEnabled | (T) -&gt; Boolean | 否 | { true } | 判断单个选项是否可操作。 |
+| itemContent | @Composable HyperTabsItemScope.(item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |

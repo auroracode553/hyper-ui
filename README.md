@@ -8,16 +8,36 @@
 
 **在线文档**: [auroracode553.github.io/hyper-ui](https://auroracode553.github.io/hyper-ui)
 
+## 两端统一 API
+
+Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义。两端共同维护：
+
+| 用途 | 统一 API |
+| --- | --- |
+| 点击操作 | onPressed |
+| 表单与选择 | value / onChanged；单选为 value / groupValue / onChanged |
+| 页签与底部导航 | selectedIndex / onChanged，索引从 0 开始 |
+| 分段选择 | options / selectedValue / onChanged |
+| 滑块 | min = 0、max = 100、divisions = null；onChangeStart / onChangeEnd 回传数值 |
+| 文本输入 | placeholder、prefix、suffix、maxLength、enabled、readOnly |
+| 标题与插槽 | title、subtitle、leading、trailing、actions、footer、child |
+| 按钮外观 | type 控制形态，colorStyle 控制预设配色，color 覆盖预设 |
+| 更新弹窗 | status、currentVersion、release、downloadProgress、progress、message 与 onCheck / onDownload / onInstall / onRetry / onCancel / onLater / onClose |
+
+业务参数和回调保持同名。框架布局与宿主参数使用原生类型：Compose 的 Modifier、Composable、Dp、Float，与 Flutter 的 key、Widget、double、Duration；Flutter 的 controller 和 Navigator 弹层宿主、Compose 的受控 visible/open 与内容 DSL 按框架保留。组件特有参数以源码签名和完整参数表为准。
+
+旧名称直接删除，调用点、预览和文档同步迁移，不增加旧 API 别名。默认按钮省略 type 和 colorStyle，显示白色描边；显式 type 仅 filled、tonal、icon，colorStyle 为 primary、success、info、warning、danger。
+
 ## Flutter 参考设计与 Compose API
 
 默认视觉以 `D:/my_project/flutter_project/doc_ui_kit/ui` 的同名组件源码为准。默认材质为 `HyperMaterial.Solid`，同时提供 `Soft`、`Clear`；颜色、字号、行高、圆角、间距、图标和动效均按参考参数重构。按钮高度 32/38/44dp，输入框圆角 20dp，分段控件 40dp，Tabs 54dp，TabBar 56dp。完整对应值和验收边界见 [样式对照](vitepress/docs/style-reference.md)。
 
-此次 API 调整：`HyperDropdown` 使用 options/value/onValueChange，`HyperPopover` 提供 anchorContent，`HyperTabBar.type` 使用 single/multiple，`HyperCheckbox.checked` 为可空三态值。滑块的旧中心点/光晕颜色和更新弹窗旧布局的无效文案参数已删除。项目内调用与 Preview 已同步；接入方按各组件页迁移。
+此次 API 调整：`HyperDropdown` 使用 options/value/onChanged，`HyperPopover` 提供 child，`HyperTabBar.type` 使用 single/multiple，`HyperCheckbox.value` 为可空三态值。滑块的旧中心点/光晕颜色和更新弹窗旧布局的无效文案参数已删除。项目内调用与 Preview 已同步；接入方按各组件页迁移。
 
 ```kotlin
 HyperThemeConfig {
     HyperBackdrop() {
-        HyperButton(onClick = onSave, colorStyle = "primary", type = "filled") {
+        HyperButton(onPressed = onSave, colorStyle = "primary", type = "filled") {
             HyperText("保存")
         }
     }
@@ -27,6 +47,7 @@ HyperThemeConfig {
 完整签名、逐项 Props 表格、状态归属和交互预览见 [组件索引](vitepress/docs/component-index.md)。
 
 组件文档统一按用途、交互示例、最小调用、使用约定与公开 API 组织；长签名和辅助配置可展开查看，完整五列 Props 表始终保留。手机 Preview 提供 320/350/390/430dp 宽度与重置。页面级列表占满剩余视口并自行滚动，普通组件由宿主滚动；布局规则见 [交互预览](vitepress/docs/preview.md)。
+手机 Preview 的底部手势条悬浮覆盖在内容上，宿主不预留底部安全区，与 Flutter 参考预览一致。
 
 ## 先看结论
 
@@ -164,7 +185,7 @@ import hyper_ui.*
 @Composable
 fun App() {
     HyperThemeConfig(themeColor = rgba(255, 103, 0)) {
-        HyperButton(onClick = { /* 调用方处理业务逻辑 */ }) {
+        HyperButton(onPressed = { /* 调用方处理业务逻辑 */ }) {
             HyperText("保存")
         }
     }
@@ -189,9 +210,9 @@ import androidx.compose.ui.res.painterResource
 import com.composables.icons.lucide.R as LucideR
 import hyper_ui.*
 
-HyperButton(type = "icon", onClick = onSearch) {
+HyperButton(type = "icon", onPressed = onSearch) {
     HyperIcon(
-        painter = painterResource(LucideR.drawable.lucide_ic_search),
+        icon = painterResource(LucideR.drawable.lucide_ic_search),
         contentDescription = "搜索",
         modifier = Modifier.size(HyperButtonDefaults.IconSize)
     )
@@ -208,6 +229,8 @@ HyperButton(type = "icon", onClick = onSearch) {
 - 导航与操作：`HyperNavBar`（默认透明、固定顶部状态栏避让；通过 `type = custom/backOnly/titleOnly/backWithTitle/more/edit` 选择固定布局，`custom` 提供完整插槽；搭配 `HyperNavBarPage` 让正文滚到导航栏后方）、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperTabs`（横向分类）、`HyperTabBar`（文档页分别提供单动作与多标签交互预览）。
 - 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopover`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
 
+`HyperSectionedList` 固定使用 8dp 紧凑分段间距，不再暴露 `sectionSpacing` 参数或间距切换控件；选择状态仍由调用方管理。
+
 `HyperUpdateDialog` 的错误状态采用简洁布局，只保留错误原因、重试与关闭，不展示状态图标、大标题、当前版本框和操作区分隔线；文案配置已移除不再使用的 `errorTitle`。
 更新弹窗的关闭、取消和稍后再说省略 `type`，使用 `HyperButton` 默认描边样式；主操作显式使用 `type = "filled"` 和 `colorStyle = "primary"`。
 更新弹窗各状态标识块统一为 40dp、图标 20dp、环形进度 30dp；检查中隐藏当前版本，其他状态的版本信息直接排版，不嵌套版本卡片。
@@ -221,8 +244,8 @@ Preview 使用合并 Roboto 与 Noto Sans SC 的独立字体，避免 Wasm 中�
 ## 状态管理原则
 
 - 组件不持有业务状态。
-- `value`、`checked`、`selected`、`visible`、`open`、等业务状态由调用方管理；Dropdown 内部维护临时展开状态。
-- 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
+- `value`、`groupValue`、`selectedIndex`、`visible`、`open` 等业务状态由调用方管理；Dropdown 内部维护临时展开状态。
+- 组件通过 `onChanged`、`onPressed`、`onClose` 等回调通知调用方。
 - 外部尺寸和间距由 `modifier` 控制；按钮等组件提供与参考设计对应的语义化尺寸参数，内部独立布局节点提供具名修饰符。
 - `HyperPopover` 为锚定触发点的内容浮层。`HyperDialog` 使用 Compose Dialog 的全尺寸根节点，面板最大宽 420dp、窗口间距 24dp；滚动正文与固定操作区分开，关闭由调用方维护 visible。
 - 业务状态由调用方持有；组件可以在状态变化时执行按压、弹出、拖动吸附等视觉过渡。
@@ -234,11 +257,11 @@ var keyword by remember { mutableStateOf("") }
 
 HyperTextField(
     value = keyword,
-    onValueChange = { keyword = it },
-    placeholderContent = { HyperText("搜索") },
-    startContent = {
+    onChanged = { keyword = it },
+    placeholder = { HyperText("搜索") },
+    prefix = {
     HyperIcon(
-            painter = painterResource(LucideR.drawable.lucide_ic_search),
+            icon = painterResource(LucideR.drawable.lucide_ic_search),
             contentDescription = null
         )
     }

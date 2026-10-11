@@ -43,14 +43,14 @@ data class HyperEmptyStateColors(
 fun HyperEmptyState(
     title: String,
     modifier: Modifier = Modifier,
-    description: String? = null,
+    message: String? = null,
     contentModifier: Modifier = Modifier,
     colors: HyperEmptyStateColors = HyperEmptyStateDefaults.colors(),
-    iconContent: (@Composable () -> Unit)? = null,
-    actionContent: (@Composable RowScope.() -> Unit)? = null
+    icon: (@Composable () -> Unit)? = null,
+    action: (@Composable RowScope.() -> Unit)? = null
 ) {
     val resolvedColors = resolveHyperEmptyStateColors(colors)
-    val supportingText = description?.trim()?.takeIf(String::isNotEmpty)
+    val supportingText = message?.trim()?.takeIf(String::isNotEmpty)
 
     Box(
         modifier = modifier
@@ -64,7 +64,7 @@ fun HyperEmptyState(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
-            iconContent?.let { icon ->
+            icon?.let { icon ->
                 CompositionLocalProvider(
                     LocalHyperContentColor provides resolvedColors.iconContentColor,
                     LocalHyperIconSize provides 24.dp
@@ -97,7 +97,7 @@ fun HyperEmptyState(
                 )
             }
 
-            actionContent?.let { actions ->
+            action?.let { actions ->
                 Spacer(Modifier.height(12.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),

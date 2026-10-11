@@ -17,36 +17,36 @@ fun EditNoteAction() {
     var draft by remember { mutableStateOf(note) }
     var showPopup by remember { mutableStateOf(false) }
 
-    HyperButton(onClick = {
+    HyperButton(onPressed = {
         draft = note
         showPopup = true
     }) {
-        Text("编辑备注")
+        HyperText("编辑备注")
     }
 
-    HyperPopover(
+    HyperDialog(
         visible = showPopup,
-        onDismissRequest = { showPopup = false },
+        onClose = { showPopup = false },
         title = "编辑备注",
-        actionContent = {
+        actions = {
             HyperButton(
-                onClick = { showPopup = false }
+                onPressed = { showPopup = false }
             ) {
-                Text("取消")
+                HyperText("取消")
             }
             HyperButton(
-                onClick = {
+                onPressed = {
                     note = draft
                     showPopup = false
                 }
             ) {
-                Text("保存")
+                HyperText("保存")
             }
         }
     ) {
         HyperTextField(
             value = draft,
-            onValueChange = { draft = it },
+            onChanged = { draft = it },
             type = "textarea",
             rows = 3
         )

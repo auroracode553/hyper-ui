@@ -26,8 +26,8 @@ import hyper_ui.*
 HyperList(modifier = Modifier.fillMaxSize()) {
     items(accounts, key = { it.id }) { account ->
         HyperListTile(
-            headlineContent = { HyperText(account.name) },
-            onClick = { onOpen(account) }
+            title = { HyperText(account.name) },
+            onPressed = { onOpen(account) }
         )
     }
 }

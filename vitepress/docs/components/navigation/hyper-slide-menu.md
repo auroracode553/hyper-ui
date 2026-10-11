@@ -21,7 +21,7 @@ description: 通过左右拖动列表行展开快捷操作，支持速度投影�
 import hyper_ui.*
 
 HyperSlideMenu(reveal, { reveal = it }, endActions = listOf(HyperSlideAction("删除", onDelete))) {
-    HyperListTile(headlineContent = { HyperText("项目") })
+    HyperListTile(title = { HyperText("项目") })
 }
 ```
 
@@ -57,7 +57,7 @@ fun HyperSlideMenu(
     enabled: Boolean = true,
     actionExtent: Dp = 64.dp,
     shape: Shape = RoundedCornerShape(18.dp),
-    content: @Composable () -> Unit
+    child: @Composable () -> Unit
 )
 ```
 
@@ -67,25 +67,37 @@ fun HyperSlideMenu(
 | --- | --- | --- | --- | --- |
 | reveal | HyperSlideMenuReveal | 是 | — | 侧滑展开状态，由调用方持有。 |
 | onRevealChange | (HyperSlideMenuReveal) -&gt; Unit | 是 | — | 侧滑展开状态变化时通知调用方。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | startActions | List&lt;HyperSlideAction&gt; | 否 | emptyList() | 向右侧滑时露出的操作项。 |
 | endActions | List&lt;HyperSlideAction&gt; | 否 | emptyList() | 向左侧滑时露出的操作项。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
 | actionExtent | Dp | 否 | 64.dp | 侧滑操作区的展开宽度。 |
-| shape | Shape | 否 | RoundedCornerShape(18.dp) | 表面形状。 |
-| content | @Composable () -&gt; Unit | 是 | — | 主体内容插槽。 |
+| shape | Shape | 否 | RoundedCornerShape(18.dp) | 组件容器的形状。 |
+| child | @Composable () -&gt; Unit | 是 | — | 组件主体或触发器内容。 |
 
 <details class="component-doc__details component-doc__advanced">
 <summary>默认配置与数据类型</summary>
 
 **HyperSlideAction 配置**
 
+```kotlin
+data class HyperSlideAction(
+    val label: String,
+    val onPressed: () -> Unit,
+    val color: Color = Color.Unspecified,
+    val foregroundColor: Color = Color.Unspecified,
+    val icon: (@Composable () -> Unit)? = null,
+    val type: String = "default"
+)
+```
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| label | String | 是 | — | 显示的标签文字。 |
-| onClick | () -&gt; Unit | 是 | — | 用户点击回调。 |
-| containerColor | Color | 否 | Color.Unspecified | 表面背景色；Color.Unspecified 使用组件的主题默认值。 |
-| contentColor | Color | 否 | Color(1f, 1f, 1f, 1f) | 主要文字与图标颜色。 |
-| iconContent | (@Composable () -&gt; Unit)? | 否 | null | 自定义动作图标插槽。 |
+| label | String | 是 | — | 数值旁显示的标签文字。 |
+| onPressed | () -&gt; Unit | 是 | — | 点击操作回调；为 null 时不能触发操作。 |
+| color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
+| foregroundColor | Color | 否 | Color.Unspecified | 动作文字和图标颜色。 |
+| icon | (@Composable () -&gt; Unit)? | 否 | null | 图标或图标区域。 |
+| type | String | 否 | &quot;default&quot; | 组件的视觉或布局形态。 |
 
 </details>

@@ -20,7 +20,7 @@ description: 在少量互斥选项之间切换，支持等宽、图标和禁用�
 ```kotlin
 import hyper_ui.*
 
-HyperSegmentedControl(items, selected, { selected = it }) { HyperText(it) }
+HyperSegmentedControl(options, selected, { selected = it }) { HyperText(it) }
 ```
 
 </details>
@@ -35,7 +35,7 @@ HyperSegmentedControl(items, selected, { selected = it }) { HyperText(it) }
 
 **状态归属**
 
-调用方持有 selectedItem；equalWidth=false 按内容收缩。
+调用方持有 selectedValue；equalWidth=false 按内容收缩。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -49,9 +49,9 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 ```kotlin
 @Composable
 fun <T> HyperSegmentedControl(
-    items: List<T>,
-    selectedItem: T,
-    onSelected: (T) -> Unit,
+    options: List<T>,
+    selectedValue: T,
+    onChanged: (T) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     itemEnabled: (T) -> Boolean = { true },
@@ -69,19 +69,19 @@ fun <T> HyperSegmentedControl(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| items | List&lt;T&gt; | 是 | — | 待呈现条目。 |
-| selectedItem | T | 是 | — | 调用方持有的当前选项。 |
-| onSelected | (T) -&gt; Unit | 是 | — | 选中条目时通知调用方。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
-| itemEnabled | (T) -&gt; Boolean | 否 | { true } | 按项提供可用状态。 |
+| options | List&lt;T&gt; | 是 | — | 可选颜色配置。 |
+| selectedValue | T | 是 | — | 当前选中项的值。 |
+| onChanged | (T) -&gt; Unit | 是 | — | 用户修改值或选择项时通知调用方。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| itemEnabled | (T) -&gt; Boolean | 否 | { true } | 判断单个选项是否可操作。 |
 | equalWidth | Boolean | 否 | true | 各分段是否等宽。 |
-| shape | Shape | 否 | HyperSegmentedControlDefaults.Shape | 表面形状。 |
+| shape | Shape | 否 | HyperSegmentedControlDefaults.Shape | 组件容器的形状。 |
 | itemShape | Shape | 否 | HyperSegmentedControlDefaults.ItemShape | 单个选项的形状。 |
-| colors | HyperSegmentedControlColors | 否 | HyperSegmentedControlDefaults.colors() | 各状态配色配置。 |
+| colors | HyperSegmentedControlColors | 否 | HyperSegmentedControlDefaults.colors() | 组件各状态的颜色配置。 |
 | containerPadding | PaddingValues | 否 | HyperSegmentedControlDefaults.ContainerPadding | 容器内部留白。 |
 | itemContentPadding | PaddingValues | 否 | HyperSegmentedControlDefaults.ItemContentPadding | 单个选项的内部留白。 |
-| itemContent | @Composable HyperSegmentOptionScope.(item: T) -&gt; Unit | 是 | — | 条目内容插槽。 |
+| itemContent | @Composable HyperSegmentOptionScope.(item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |
 
 <details class="component-doc__details component-doc__advanced">
 <summary>默认配置与数据类型</summary>

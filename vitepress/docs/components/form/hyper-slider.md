@@ -33,7 +33,7 @@ HyperSlider(value, { value = it })
 
 **状态归属**
 
-值由调用方持有。steps 仅控制等距吸附，segmentValues 控制标记；0..1 使用场景必须显式传 valueRange=0f..1f。
+值由调用方持有。divisions 控制等分区间数量，null 为连续，1 只选两端；segmentValues 控制标记。0..1 使用场景传 min = 0f、max = 1f。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -48,17 +48,18 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 @Composable
 fun HyperSlider(
     value: Float,
-    onValueChange: (Float) -> Unit,
+    onChanged: ((Float) -> Unit)? = null,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    valueRange: ClosedFloatingPointRange<Float> = 0f..100f,
+    min: Float = 0f,
+    max: Float = 100f,
     showValue: Boolean = true,
-    steps: Int = 0,
+    divisions: Int? = null,
     showSegmentMarkers: Boolean = false,
     segmentValues: List<Float> = emptyList(),
-    onValueChangeStarted: (() -> Unit)? = null,
-    onValueChangeFinished: (() -> Unit)? = null,
+    onChangeStart: ((Float) -> Unit)? = null,
+    onChangeEnd: ((Float) -> Unit)? = null,
     minimumTouchHeight: Dp = HyperSliderDefaults.MinTouchHeight,
     trackHeight: Dp = HyperSliderDefaults.TrackHeight,
     thumbSize: Dp = HyperSliderDefaults.ThumbSize,
@@ -75,25 +76,26 @@ fun HyperSlider(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| value | Float | 是 | — | 调用方持有的当前值。 |
-| onValueChange | (Float) -&gt; Unit | 是 | — | 用户修改值时通知调用方。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
-| readOnly | Boolean | 否 | false | 只读；保持正常外观并停止修改值。 |
-| valueRange | ClosedFloatingPointRange&lt;Float&gt; | 否 | 0f..100f | 可操作数值范围。 |
+| value | Float | 是 | — | 由调用方持有的当前值。 |
+| onChanged | ((Float) -&gt; Unit)? | 否 | null | 用户修改值或选择项时通知调用方。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| readOnly | Boolean | 否 | false | 是否只展示当前值而禁止修改。 |
+| min | Float | 否 | 0f | 数值范围的下限。 |
+| max | Float | 否 | 100f | 数值范围的上限。 |
 | showValue | Boolean | 否 | true | 是否显示滑块当前数值。 |
-| steps | Int | 否 | 0 | 数值范围内的离散步数。 |
+| divisions | Int? | 否 | null | 等分区间数量；null 表示连续，1 表示只选两端。 |
 | showSegmentMarkers | Boolean | 否 | false | 是否显示分段刻度标记。 |
 | segmentValues | List&lt;Float&gt; | 否 | emptyList() | 需要标出的分段数值。 |
-| onValueChangeStarted | (() -&gt; Unit)? | 否 | null | 用户开始滑动时的回调。 |
-| onValueChangeFinished | (() -&gt; Unit)? | 否 | null | 用户结束滑动时的回调。 |
+| onChangeStart | ((Float) -&gt; Unit)? | 否 | null | 开始拖动时回传当前值。 |
+| onChangeEnd | ((Float) -&gt; Unit)? | 否 | null | 结束拖动时回传最终值。 |
 | minimumTouchHeight | Dp | 否 | HyperSliderDefaults.MinTouchHeight | 滑块可触摸区域的最小高度。 |
 | trackHeight | Dp | 否 | HyperSliderDefaults.TrackHeight | 滑块轨道高度。 |
 | thumbSize | Dp | 否 | HyperSliderDefaults.ThumbSize | 滑块手柄的尺寸。 |
 | segmentMarkerSize | Dp | 否 | HyperSliderDefaults.SegmentMarkerSize | 分段刻度标记的尺寸。 |
 | trackShape | Shape | 否 | HyperSliderDefaults.TrackShape | 滑块轨道形状。 |
 | thumbShape | Shape | 否 | HyperSliderDefaults.ThumbShape | 滑块手柄的形状。 |
-| colors | HyperSliderColors | 否 | HyperSliderDefaults.colors() | 各状态配色配置。 |
+| colors | HyperSliderColors | 否 | HyperSliderDefaults.colors() | 组件各状态的颜色配置。 |
 | trackBorder | BorderStroke? | 否 | null | 进度轨道的边框配置。 |
 | thumbBorder | BorderStroke? | 否 | HyperSliderDefaults.thumbBorder() | 滑块手柄的边框配置。 |
 
@@ -136,7 +138,7 @@ fun HyperSlider(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
+| color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
 
 **HyperSliderDefaults.thumbBorder**
 
@@ -147,7 +149,7 @@ fun HyperSlider(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
+| color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
 
 **HyperSliderColors 配置**
 

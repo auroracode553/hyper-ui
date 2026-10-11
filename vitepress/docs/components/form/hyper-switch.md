@@ -20,7 +20,7 @@ description: 即时切换二元设置，当前值与变化回调由调用方提�
 ```kotlin
 import hyper_ui.*
 
-HyperSwitch(checked, { checked = it })
+HyperSwitch(value, { value = it })
 ```
 
 </details>
@@ -33,7 +33,7 @@ HyperSwitch(checked, { checked = it })
 
 **状态归属**
 
-checked 由调用方持有；禁用时不派发回调。
+value 由调用方持有；禁用时不派发回调。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -47,14 +47,15 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 ```kotlin
 @Composable
 fun HyperSwitch(
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
+    value: Boolean,
+    onChanged: ((Boolean) -> Unit)? = null,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     checkedTrackColor: Color = Color.Unspecified,
     uncheckedTrackColor: Color = Color.Unspecified,
     checkedThumbColor: Color = Color(1f, 1f, 1f, 1f),
-    uncheckedThumbColor: Color = Color.Unspecified
+    uncheckedThumbColor: Color = Color.Unspecified,
+    label: String? = null
 )
 ```
 
@@ -62,11 +63,12 @@ fun HyperSwitch(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| checked | Boolean | 是 | — | 调用方持有的选择值。 |
-| onCheckedChange | (Boolean) -&gt; Unit | 是 | — | 用户改变选中值时通知调用方。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
+| value | Boolean | 是 | — | 由调用方持有的当前值。 |
+| onChanged | ((Boolean) -&gt; Unit)? | 否 | null | 用户修改值或选择项时通知调用方。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
 | checkedTrackColor | Color | 否 | Color.Unspecified | 开启时轨道颜色。 |
 | uncheckedTrackColor | Color | 否 | Color.Unspecified | 关闭时轨道颜色。 |
 | checkedThumbColor | Color | 否 | Color(1f, 1f, 1f, 1f) | 开启时滑块颜色。 |
 | uncheckedThumbColor | Color | 否 | Color.Unspecified | 关闭时滑块颜色。 |
+| label | String? | 否 | null | 数值旁显示的标签文字。 |

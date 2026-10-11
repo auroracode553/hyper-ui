@@ -51,7 +51,7 @@ fun HyperDivider(
     color: Color = HyperColors.divider,
     thickness: Dp = 1.dp,
     type: String = "solid",
-    orientation: String = "horizontal",
+    axis: String = "horizontal",
     indent: Dp = 0.dp,
     endIndent: Dp = 0.dp,
     length: Dp? = null
@@ -62,11 +62,11 @@ fun HyperDivider(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| color | Color | 否 | HyperColors.divider | 颜色覆盖。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| color | Color | 否 | HyperColors.divider | 自定义颜色，覆盖默认配色。 |
 | thickness | Dp | 否 | 1.dp | 分隔线厚度。 |
-| type | String | 否 | "solid" | 渲染形态；合法值见本页样式约定。 |
-| orientation | String | 否 | "horizontal" | horizontal 或 vertical。 |
+| type | String | 否 | &quot;solid&quot; | 组件的视觉或布局形态。 |
+| axis | String | 否 | &quot;horizontal&quot; | 分隔线的方向。 |
 | indent | Dp | 否 | 0.dp | 起始侧缩进。 |
 | endIndent | Dp | 否 | 0.dp | 结束侧缩进。 |
 | length | Dp? | 否 | null | 分隔线长度；水平默认填满、竖向默认 24dp。 |

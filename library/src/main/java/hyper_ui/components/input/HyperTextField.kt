@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun HyperTextField(
     value: String,
-    onValueChange: (String) -> Unit,
+    onChanged: ((String) -> Unit)? = null,
     modifier: Modifier = Modifier,
     inputModifier: Modifier = Modifier,
     type: String = "text",
@@ -58,7 +58,7 @@ fun HyperTextField(
     isError: Boolean = false,
     clearable: Boolean = false,
     showPasswordToggle: Boolean = false,
-    maxlength: Int? = null,
+    maxLength: Int? = null,
     showWordLimit: Boolean = false,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
@@ -68,18 +68,19 @@ fun HyperTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     slotSpacing: Dp = HyperTextFieldDefaults.SlotSpacing,
-    labelContent: (@Composable ColumnScope.() -> Unit)? = null,
-    placeholderContent: (@Composable () -> Unit)? = null,
-    startContent: (@Composable RowScope.() -> Unit)? = null,
-    endContent: (@Composable RowScope.() -> Unit)? = null,
-    supportingContent: (@Composable ColumnScope.() -> Unit)? = null
+    label: (@Composable ColumnScope.() -> Unit)? = null,
+    placeholder: (@Composable () -> Unit)? = null,
+    prefix: (@Composable RowScope.() -> Unit)? = null,
+    suffix: (@Composable RowScope.() -> Unit)? = null,
+    supporting: (@Composable ColumnScope.() -> Unit)? = null
 ) {
+    val effectiveReadOnly = readOnly || onChanged == null
     require(rows > 0) { "rows 必须大于 0" }
     requireHyperComponentSize(size)
     require(type in setOf("text", "search", "password", "textarea", "email", "url", "number", "tel")) {
         "不支持的 HyperTextField type: $type"
     }
-    require(maxlength == null || maxlength > 0) { "maxlength 必须大于 0" }
+    require(maxLength == null || maxLength > 0) { "maxLength 必须大于 0" }
     // String API 仍由调用方持有文本，组件仅保存 selection/composition。
     // 首次挂载时把光标放到末尾；后续输入继续沿用用户当前选区。
     var textFieldValueState by remember {
@@ -104,7 +105,7 @@ fun HyperTextField(
 
     val visuals = hyperInputFieldVisuals(
         enabled = enabled,
-        readOnly = readOnly,
+        readOnly = effectiveReadOnly,
         isError = isError,
         isFocused = focused,
         colors = colors
@@ -122,21 +123,21 @@ fun HyperTextField(
         type = type,
         value = value,
         enabled = enabled,
-        readOnly = readOnly,
+        readOnly = effectiveReadOnly,
         clearable = clearable,
         showPasswordToggle = showPasswordToggle,
         passwordVisible = passwordVisible,
-        onClear = { onValueChange("") },
+        onClear = { onChanged?.invoke("") },
         onTogglePassword = { passwordVisible = !passwordVisible }
     )
 
     Column(modifier = modifier) {
-        if (labelContent != null) {
+        if (label != null) {
             CompositionLocalProvider(LocalHyperContentColor provides visuals.labelColor,
                 LocalHyperTextStyle provides HyperTheme.typography.bodySmall.copy(fontSize = 13.sp, lineHeight = 16.9.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)) {
                 Column(
                     modifier = Modifier.padding(start = 0.dp, bottom = 8.dp),
-                    content = labelContent
+                    content = label
                 )
             }
         }
@@ -145,14 +146,14 @@ fun HyperTextField(
             value = textFieldValue,
             onValueChange = { updatedValue ->
                 textFieldValueState = updatedValue
-                val limitedText = if (maxlength == null) updatedValue.text else updatedValue.text.take(maxlength)
+                val limitedText = if (maxLength == null) updatedValue.text else updatedValue.text.take(maxLength)
                 if (limitedText != value) {
-                    onValueChange(limitedText)
+                    onChanged?.invoke(limitedText)
                 }
             },
             modifier = inputModifier.fillMaxWidth(),
             enabled = enabled,
-            readOnly = readOnly,
+            readOnly = effectiveReadOnly,
             singleLine = singleLine,
             minLines = minLines,
             maxLines = maxLines,
@@ -173,10 +174,10 @@ fun HyperTextField(
                         .padding(HyperTextFieldDefaults.contentPadding(size, !singleLine)),
                     verticalAlignment = verticalAlignment
                 ) {
-                    if (startContent != null) {
+                    if (prefix != null) {
                         CompositionLocalProvider(LocalHyperContentColor provides visuals.placeholderColor,
                             LocalHyperIconSize provides (textStyle.fontSize.value + 2).dp) {
-                            startContent()
+                            prefix()
                         }
                     }
 
@@ -184,37 +185,37 @@ fun HyperTextField(
                         modifier = Modifier
                             .weight(1f)
                             .padding(
-                                start = if (startContent == null) 0.dp else slotSpacing,
-                                end = if (endContent == null) 0.dp else slotSpacing
+                                start = if (prefix == null) 0.dp else slotSpacing,
+                                end = if (suffix == null) 0.dp else slotSpacing
                             ),
                         contentAlignment = if (singleLine) Alignment.CenterStart else Alignment.TopStart
                     ) {
-                        if (value.isEmpty() && placeholderContent != null) {
+                        if (value.isEmpty() && placeholder != null) {
                             CompositionLocalProvider(LocalHyperContentColor provides visuals.placeholderColor,
                                 LocalHyperTextStyle provides textStyle) {
-                                placeholderContent()
+                                placeholder()
                             }
                         }
                         innerTextField()
                     }
 
-                    if (endContent != null) {
-                        CompositionLocalProvider(LocalHyperContentColor provides visuals.contentColor) { endContent() }
+                    if (suffix != null) {
+                        CompositionLocalProvider(LocalHyperContentColor provides visuals.contentColor) { suffix() }
                     }
                     builtInEndContent?.invoke(this)
                 }
             }
         )
 
-        if (supportingContent != null || (showWordLimit && maxlength != null)) {
+        if (supporting != null || (showWordLimit && maxLength != null)) {
             CompositionLocalProvider(LocalHyperContentColor provides visuals.supportingColor) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    if (supportingContent != null) Column(Modifier.padding(start = 4.dp, top = 6.dp), content = supportingContent)
-                    if (showWordLimit && maxlength != null) {
+                    if (supporting != null) Column(Modifier.padding(start = 4.dp, top = 6.dp), content = supporting)
+                    if (showWordLimit && maxLength != null) {
                         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-                            HyperText(text = "${value.length}/$maxlength", fontSize = 12.sp)
+                            HyperText(text = "${value.length}/$maxLength", fontSize = 12.sp)
                         }
                     }
                 }

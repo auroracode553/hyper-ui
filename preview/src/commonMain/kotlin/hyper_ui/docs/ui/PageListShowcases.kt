@@ -47,10 +47,10 @@ fun HyperListDemo() {
                         "安全中心", "隐私权限" -> HyperReferenceIcons.Lock
                         else -> HyperReferenceIcons.Settings
                     },
-                    headlineContent = { HyperText(item) },
-                    supportingContent = { HyperText(if (selected == item) "当前选中" else "点击查看配置") },
+                    title = { HyperText(item) },
+                    subtitle = { HyperText(if (selected == item) "当前选中" else "点击查看配置") },
                     dividerVisible = index < items.lastIndex,
-                    onClick = { selected = item }
+                    onPressed = { selected = item }
                 )
             }
         }
@@ -68,28 +68,23 @@ fun HyperSectionedListDemo() {
             PreviewFileSection("earlier", "更早", listOf("迭代计划.docx", "预算表.xlsx", "操作指南.pdf", "归档说明.md"))
         )
     }
-    var compact by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf<String?>(null) }
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-            PreviewToggle(if (compact) "紧凑分段间距" else "标准分段间距", compact) { compact = it }
-        }
         HyperSectionedList(
             modifier = Modifier.weight(1f),
             sections = groups,
             items = { it.entries },
             sectionKey = { "section-${it.id}" },
             itemKey = { group, entry -> "file-${group.id}-$entry" },
-            sectionSpacing = if (compact) 8.dp else HyperSectionedListDefaults.SectionSpacing,
             headerContent = { HyperText(it.title) }
         ) { _, entry ->
             HyperListTile(
                 selected = selected == entry,
                 leadingIcon = HyperReferenceIcons.Lock,
-                headlineContent = { HyperText(entry) },
-                supportingContent = { HyperText(if (selected == entry) "已选中" else "点击切换选中状态") },
-                onClick = { selected = if (selected == entry) null else entry },
-                trailingContent = {
+                title = { HyperText(entry) },
+                subtitle = { HyperText(if (selected == entry) "已选中" else "点击切换选中状态") },
+                onPressed = { selected = if (selected == entry) null else entry },
+                trailing = {
                     HyperCheckbox(selected == entry, { selected = if (it == true) entry else null })
                 }
             )

@@ -55,3 +55,10 @@
 - VitePress 负责渲染 `vitepress/docs/` 中的 Markdown；不得维护第二份组件正文。
 - Wasm 只负责交互预览，不能作为 AI 推断 API 的事实来源。新增组件页时应通过 `WasmPreview` 引用对应 Preview ID。
 - HyperUI 公开 API 统一声明在 `hyper_ui` 包，示例可使用 `import hyper_ui.*`；`hyper_ui.core` 仅为 UI 库内部公共工具目录，调用方示例不要直接导入。
+
+## 两端 API 一致性
+
+- 对应组件的业务参数、状态枚举、回调名称和默认语义必须保持一致；仅保留框架布局、宿主及原生类型差异。
+- 点击统一 onPressed，值变化统一 onChanged，关闭统一 onClose；页签采用 selectedIndex，单选采用 value/groupValue，插槽使用 title/subtitle/leading/trailing/actions/footer/child。
+- type 表示形态；按钮预设颜色使用 colorStyle，自定义颜色使用 color，禁止恢复 ghost、outline 或把颜色写回按钮 type。
+- API 重构直接删除旧名称并迁移调用方，同时同步两端实现、预览、README 和完整参数表，不增加兼容别名。

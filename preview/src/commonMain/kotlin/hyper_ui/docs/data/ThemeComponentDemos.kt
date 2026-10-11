@@ -60,7 +60,7 @@ private fun ThemeMaterialDemo() {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 HyperMaterial.values().forEach { option ->
                     HyperButton(
-                        onClick = { material = option },
+                        onPressed = { material = option },
                         colorStyle = if (option == material) "primary" else null, type = "filled",
                         size = "small"
                     ) { HyperText(option.label()) }
@@ -72,11 +72,11 @@ private fun ThemeMaterialDemo() {
                     HyperText("卡片、输入框和按钮读取同一套材质令牌")
                     HyperTextField(
                         value = "",
-                        onValueChange = {},
+                        onChanged = {},
                         modifier = Modifier.fillMaxWidth(),
-                        placeholderContent = { HyperText("输入内容") }
+                        placeholder = { HyperText("输入内容") }
                     )
-                    HyperButton(onClick = {}, colorStyle = "primary", type = "filled") { HyperText("主要操作") }
+                    HyperButton(onPressed = {}, colorStyle = "primary", type = "filled") { HyperText("主要操作") }
                 }
             }
         }

@@ -21,35 +21,35 @@ internal val LocalHyperIconSize = staticCompositionLocalOf { 24.dp }
  */
 @Composable
 fun HyperIcon(
-    painter: Painter,
+    icon: Painter,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    tint: Color = LocalHyperContentColor.current,
+    color: Color = LocalHyperContentColor.current,
     size: String = "default"
 ) {
     requireHyperComponentSize(size)
     Image(
-        painter = painter,
+        painter = icon,
         contentDescription = contentDescription,
         modifier = modifier.size(if (size == "default") LocalHyperIconSize.current else hyperComponentSize(size, 18.dp, 24.dp, 32.dp)),
-        colorFilter = if (tint != Color.Unspecified) ColorFilter.tint(tint) else null
+        colorFilter = if (color != Color.Unspecified) ColorFilter.tint(color) else null
     )
 }
 
 /** ImageVector 重载：内部转换为 vector painter 后走 [HyperIcon]。 */
 @Composable
 fun HyperIcon(
-    imageVector: ImageVector,
+    icon: ImageVector,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    tint: Color = LocalHyperContentColor.current,
+    color: Color = LocalHyperContentColor.current,
     size: String = "default"
 ) {
     HyperIcon(
-        painter = rememberVectorPainter(imageVector),
+        icon = rememberVectorPainter(icon),
         contentDescription = contentDescription,
         modifier = modifier,
-        tint = tint,
+        color = color,
         size = size
     )
 }

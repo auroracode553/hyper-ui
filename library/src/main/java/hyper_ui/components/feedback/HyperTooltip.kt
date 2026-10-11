@@ -40,22 +40,22 @@ import androidx.compose.ui.window.PopupProperties
  */
 @Composable
 fun HyperTooltip(
-    text: String,
+    message: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    hoverDelayMillis: Long = 500L,
+    hoverDelay: Long = 500L,
     maxWidth: Dp = 240.dp,
-    content: @Composable () -> Unit,
+    child: @Composable () -> Unit,
 ) {
     var visible by remember { mutableStateOf(false) }
     var pointerPressed by remember { mutableStateOf(false) }
     var hovered by remember { mutableStateOf(false) }
     var focused by remember { mutableStateOf(false) }
-    require(hoverDelayMillis >= 0 && maxWidth > 0.dp) { "延迟不能为负，maxWidth 必须大于 0.dp" }
+    require(hoverDelay >= 0 && maxWidth > 0.dp) { "延迟不能为负，maxWidth 必须大于 0.dp" }
     LaunchedEffect(pointerPressed, hovered, focused, enabled) {
         visible = false
         if (enabled && (pointerPressed || hovered || focused)) {
-            if (!focused) delay(if (pointerPressed) 500L else hoverDelayMillis)
+            if (!focused) delay(if (pointerPressed) 500L else hoverDelay)
             visible = true
         }
     }
@@ -82,19 +82,19 @@ fun HyperTooltip(
                 }
             },
     ) {
-        content()
+        child()
     }
 
     val progress = if (focused && visible) 1f else hyperOverlayProgress(visible, durationMillis = HyperMotionSpec.TooltipDuration)
     val bounds = anchorBounds
-    if (enabled && (visible || progress > 0f) && text.isNotBlank() && bounds != null) {
+    if (enabled && (visible || progress > 0f) && message.isNotBlank() && bounds != null) {
         Popup(
             popupPositionProvider = HyperTooltipPositionProvider(bounds, with(density) { 8.dp.roundToPx() }),
             onDismissRequest = { visible = false },
             properties = PopupProperties(focusable = false),
         ) {
             HyperText(
-                text = text,
+                text = message,
                 modifier = Modifier
                     .hyperOverlayMotion(progress, beginScale = 0.97f)
                     .widthIn(max = maxWidth)

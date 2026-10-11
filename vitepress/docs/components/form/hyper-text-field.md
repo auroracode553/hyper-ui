@@ -20,7 +20,7 @@ description: 受控文本输入，支持清空、密码、多行、计数、错�
 ```kotlin
 import hyper_ui.*
 
-HyperTextField(value, { value = it }, clearable = true, placeholderContent = { HyperText("请输入") })
+HyperTextField(value, { value = it }, clearable = true, placeholder = { HyperText("请输入") })
 ```
 
 </details>
@@ -31,11 +31,11 @@ HyperTextField(value, { value = it }, clearable = true, placeholderContent = { H
 
 输入框圆角 20dp。small/default/large 字号 14/16/18sp、行高 1.3，横向 padding 14/18/20dp，纵向 7/9/11dp。textarea 上下各多 3dp。支持 text/search/password/textarea/email/url/number/tel。聚焦轮廓 1.5dp，普通 1dp。
 
-Preview 使用参考项目的外部标签分组；已经有外部标题时无需重复传入 labelContent。金额示例保留标签插槽，并同时展示前后缀与内置清空操作。
+Preview 使用参考项目的外部标签分组；已经有外部标题时无需重复传入 label。金额示例保留标签插槽，并同时展示前后缀与内置清空操作。
 
 **状态归属**
 
-文本由调用方持有，selection/composition 和密码临时显隐由组件维护。错误优先于聚焦。showPasswordToggle 默认 false。endContent 与内置密码/清空操作同时显示；清空按钮在空值时保持占位，计数在下方右侧。
+文本由调用方持有，selection/composition 和密码临时显隐由组件维护。错误优先于聚焦。showPasswordToggle 默认 false。suffix 与内置密码/清空操作同时显示；清空按钮在空值时保持占位，计数在下方右侧。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -50,7 +50,7 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 @Composable
 fun HyperTextField(
     value: String,
-    onValueChange: (String) -> Unit,
+    onChanged: ((String) -> Unit)? = null,
     modifier: Modifier = Modifier,
     inputModifier: Modifier = Modifier,
     type: String = "text",
@@ -61,7 +61,7 @@ fun HyperTextField(
     isError: Boolean = false,
     clearable: Boolean = false,
     showPasswordToggle: Boolean = false,
-    maxlength: Int? = null,
+    maxLength: Int? = null,
     showWordLimit: Boolean = false,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
@@ -71,11 +71,11 @@ fun HyperTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     slotSpacing: Dp = HyperTextFieldDefaults.SlotSpacing,
-    labelContent: (@Composable ColumnScope.() -> Unit)? = null,
-    placeholderContent: (@Composable () -> Unit)? = null,
-    startContent: (@Composable RowScope.() -> Unit)? = null,
-    endContent: (@Composable RowScope.() -> Unit)? = null,
-    supportingContent: (@Composable ColumnScope.() -> Unit)? = null
+    label: (@Composable ColumnScope.() -> Unit)? = null,
+    placeholder: (@Composable () -> Unit)? = null,
+    prefix: (@Composable RowScope.() -> Unit)? = null,
+    suffix: (@Composable RowScope.() -> Unit)? = null,
+    supporting: (@Composable ColumnScope.() -> Unit)? = null
 )
 ```
 
@@ -83,33 +83,33 @@ fun HyperTextField(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| value | String | 是 | — | 调用方持有的当前值。 |
-| onValueChange | (String) -&gt; Unit | 是 | — | 用户修改值时通知调用方。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| inputModifier | Modifier | 否 | Modifier | 输入节点修饰符，供焦点与额外布局使用。 |
-| type | String | 否 | "text" | 渲染形态；合法值见本页样式约定。 |
-| size | String | 否 | "default" | small/default/large 尺寸档位。 |
-| rows | Int | 否 | HyperTextFieldDefaults.TextareaRows | 多行输入可见行数。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
-| readOnly | Boolean | 否 | false | 只读；保持正常外观并停止修改值。 |
+| value | String | 是 | — | 由调用方持有的当前值。 |
+| onChanged | ((String) -&gt; Unit)? | 否 | null | 用户修改值或选择项时通知调用方。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| inputModifier | Modifier | 否 | Modifier | 输入控件自身的布局和交互修饰符。 |
+| type | String | 否 | &quot;text&quot; | 组件的视觉或布局形态。 |
+| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
+| rows | Int | 否 | HyperTextFieldDefaults.TextareaRows | 多行输入的显示行数。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| readOnly | Boolean | 否 | false | 是否只展示当前值而禁止修改。 |
 | isError | Boolean | 否 | false | 是否显示错误状态。 |
-| clearable | Boolean | 否 | false | 启用 30dp 清空控件；空文本保留占位。 |
-| showPasswordToggle | Boolean | 否 | false | password 类型的 30dp 显隐控件。 |
-| maxlength | Int? | 否 | null | 文本最大长度；null 不限制。 |
-| showWordLimit | Boolean | 否 | false | 显示已用字符数与最大长度。 |
-| shape | Shape | 否 | HyperTextFieldDefaults.Shape | 表面形状。 |
-| colors | HyperTextFieldColors | 否 | HyperTextFieldDefaults.colors() | 各状态配色配置。 |
+| clearable | Boolean | 否 | false | 是否在有内容时显示清空操作。 |
+| showPasswordToggle | Boolean | 否 | false | 密码类型是否显示显隐操作。 |
+| maxLength | Int? | 否 | null | 允许输入的最大字符数。 |
+| showWordLimit | Boolean | 否 | false | 是否显示字符数和上限。 |
+| shape | Shape | 否 | HyperTextFieldDefaults.Shape | 组件容器的形状。 |
+| colors | HyperTextFieldColors | 否 | HyperTextFieldDefaults.colors() | 组件各状态的颜色配置。 |
 | textStyle | TextStyle | 否 | HyperTextFieldDefaults.textStyle(size) | 输入文字的排版样式。 |
 | keyboardOptions | KeyboardOptions | 否 | HyperTextFieldDefaults.keyboardOptions(type) | 软键盘类型与输入配置。 |
 | keyboardActions | KeyboardActions | 否 | KeyboardActions() | 软键盘动作回调。 |
 | visualTransformation | VisualTransformation | 否 | VisualTransformation.None | 输入文字的视觉变换方式。 |
 | interactionSource | MutableInteractionSource | 否 | remember { MutableInteractionSource() } | 输入控件的交互状态来源。 |
 | slotSpacing | Dp | 否 | HyperTextFieldDefaults.SlotSpacing | 输入框各内容 Slot 之间的间距。 |
-| labelContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 输入框标签内容。 |
-| placeholderContent | (@Composable () -&gt; Unit)? | 否 | null | 输入框占位内容。 |
-| startContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 输入框起始端的自定义内容。 |
-| endContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 输入框末端的自定义内容。 |
-| supportingContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 辅助说明插槽。 |
+| label | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 数值旁显示的标签文字。 |
+| placeholder | (@Composable () -&gt; Unit)? | 否 | null | 未输入或未选择时的提示内容。 |
+| prefix | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 输入框起始端内容。 |
+| suffix | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 输入框末端内容。 |
+| supporting | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 输入框辅助内容。 |
 
 <details class="component-doc__details component-doc__advanced">
 <summary>默认配置与数据类型</summary>
@@ -122,7 +122,7 @@ fun contentPadding(size: String = "default", multiline: Boolean = false): androi
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | "default" | small/default/large 尺寸档位。 |
+| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 | multiline | Boolean | 否 | false | 是否按多行输入增加纵向留白。 |
 
 **HyperTextFieldDefaults.textStyle**
@@ -134,7 +134,7 @@ fun contentPadding(size: String = "default", multiline: Boolean = false): androi
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | "default" | small/default/large 尺寸档位。 |
+| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 
 **HyperTextFieldDefaults.keyboardOptions**
 
@@ -144,7 +144,7 @@ fun keyboardOptions(type: String = "text"): KeyboardOptions
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| type | String | 否 | "text" | 渲染形态；合法值见本页样式约定。 |
+| type | String | 否 | &quot;text&quot; | 组件的视觉或布局形态。 |
 
 **HyperTextFieldDefaults.colors**
 
@@ -175,7 +175,7 @@ fun keyboardOptions(type: String = "text"): KeyboardOptions
 | errorColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 错误轮廓与说明颜色。 |
 | cursorColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 光标与聚焦轮廓颜色。 |
 | disabledContainerColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 禁用时的表面背景色。 |
-| disabledContentColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 禁用时的正文颜色；默认沿用正常文字色。 |
+| disabledContentColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 禁用时的文字与图标颜色。 |
 
 **HyperTextFieldColors 配置**
 
@@ -193,3 +193,5 @@ fun keyboardOptions(type: String = "text"): KeyboardOptions
 | disabledContentColor | Color | 是 | — | 禁用时的正文颜色；默认沿用正常文字色。 |
 
 </details>
+
+onChanged 为 null 时只读。业务从外部修改 value 后组件同步文本，保持可用的光标与组合区间。Flutter 对应受控用法使用同名的 value/onChanged，controller 属于 Flutter 的原生编辑入口。

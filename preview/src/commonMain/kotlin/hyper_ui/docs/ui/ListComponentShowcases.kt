@@ -30,30 +30,30 @@ fun HyperMenuGroupDemo() {
         HyperMenuGroup(items = listOf("账户与安全", "外观与显示", "关于")) { item ->
             HyperListTile(
                 leadingIcon = iconFor(item),
-                headlineContent = { HyperText(item) },
-                supportingContent = when (item) {
+                title = { HyperText(item) },
+                subtitle = when (item) {
                     "账户与安全" -> ({ HyperText("密码、设备与登录记录") })
                     "外观与显示" -> ({ HyperText("主题、字号与动态效果") })
                     else -> null
                 },
-                trailingContent = if (item == "关于") ({ HyperText("v1.0.0") }) else null,
-                onClick = { feedback = "已选择：$item" }
+                trailing = if (item == "关于") ({ HyperText("v1.0.0") }) else null,
+                onPressed = { feedback = "已选择：$item" }
             )
         }
         PreviewSectionLabel("通知与同步")
         HyperMenuGroup {
             HyperListTile(
                 leadingIcon = HyperReferenceIcons.Notifications,
-                headlineContent = { HyperText("推送通知") },
-                supportingContent = { HyperText("接收重要消息提醒") },
+                title = { HyperText("推送通知") },
+                subtitle = { HyperText("接收重要消息提醒") },
                 dividerVisible = true,
-                trailingContent = { HyperSwitch(notifications, { notifications = it }) }
+                trailing = { HyperSwitch(notifications, { notifications = it }) }
             )
             HyperListTile(
                 leadingIcon = HyperReferenceIcons.Refresh,
-                headlineContent = { HyperText("自动同步") },
-                supportingContent = { HyperText("网络可用时刷新数据") },
-                trailingContent = { HyperCheckbox(sync, { sync = it == true }) }
+                title = { HyperText("自动同步") },
+                subtitle = { HyperText("网络可用时刷新数据") },
+                trailing = { HyperCheckbox(sync, { sync = it == true }) }
             )
         }
         HyperText(feedback, size = "small", color = HyperColors.secondaryText)
@@ -80,14 +80,14 @@ fun ListTileDemo() {
         PreviewToggle("允许操作", enabled) { enabled = it }
         PreviewSectionLabel("基础 · 图标、标题、说明与元信息")
         HyperListTile(type = type, selected = selected, enabled = enabled, leadingIcon = HyperReferenceIcons.Settings,
-            headlineContent = { HyperText("系统设置") }, supportingContent = { HyperText("查看配置与同步状态") },
-            metaContent = { HyperText("刚刚更新") }, onClick = { feedback = "已点击：$type" })
+            title = { HyperText("系统设置") }, subtitle = { HyperText("查看配置与同步状态") },
+            meta = { HyperText("刚刚更新") }, onPressed = { feedback = "已点击：$type" })
         PreviewSectionLabel("禁用状态")
-        HyperListTile(headlineContent = { HyperText("不可用项目") }, enabled = false, onClick = {})
+        HyperListTile(title = { HyperText("不可用项目") }, enabled = false, onPressed = {})
         PreviewSectionLabel("组合 · 继承已有表面")
-        HyperCard(titleContent = { HyperText("项目成员") }) {
-            HyperListTile(headlineContent = { HyperText("管理员") }, leadingIcon = HyperReferenceIcons.Check,
-                selected = selected, onClick = { feedback = "已点击卡片内条目" })
+        HyperCard(title = { HyperText("项目成员") }) {
+            HyperListTile(title = { HyperText("管理员") }, leadingIcon = HyperReferenceIcons.Check,
+                selected = selected, onPressed = { feedback = "已点击卡片内条目" })
         }
         HyperText(feedback, size = "small")
     }

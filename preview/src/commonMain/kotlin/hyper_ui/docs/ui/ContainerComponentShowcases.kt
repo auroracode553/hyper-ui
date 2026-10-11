@@ -44,7 +44,7 @@ fun ColorPickerDemo() {
         HyperColorPicker(
             enabled = pickerEnabled,
             selectedId = selectedColorId,
-            onSelected = { option -> selectedColorId = option.id }
+            onChanged = { option -> selectedColorId = option.id }
         )
         Spacer(modifier = Modifier.height(16.dp))
         Row(
@@ -73,18 +73,18 @@ fun PanelDemo() {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         PreviewSectionLabel("完整结构 · 标题、说明、操作、正文与页脚")
         HyperCard(
-            titleContent = { HyperText("本周专注") },
-            subtitleContent = { HyperText("保持轻量、清晰的内容层级") },
-            leadingContent = { HyperIcon(HyperReferenceIcons.Sparkles, null) },
-            actionContent = { HyperButton({ feedback = "已打开更多操作" }, type = "icon", size = "small") { HyperIcon(HyperReferenceIcons.More, "更多") } },
-            footerContent = { HyperText(feedback, size = "small") }
+            title = { HyperText("本周专注") },
+            subtitle = { HyperText("保持轻量、清晰的内容层级") },
+            leading = { HyperIcon(HyperReferenceIcons.Sparkles, null) },
+            actions = { HyperButton({ feedback = "已打开更多操作" }, type = "icon", size = "small") { HyperIcon(HyperReferenceIcons.More, "更多") } },
+            footer = { HyperText(feedback, size = "small") }
         ) {
             HyperText("卡片组织内容与操作，业务状态由调用方持有。")
         }
         PreviewSectionLabel("选中状态")
         PreviewToggle("选中方案", selected) { selected = it }
-        HyperCard(selected = selected, onClick = { selected = !selected },
-            titleContent = { HyperText("已选择的方案") }, subtitleContent = { HyperText("点击卡片切换选择状态") }) {
+        HyperCard(selected = selected, onPressed = { selected = !selected },
+            title = { HyperText("已选择的方案") }, subtitle = { HyperText("点击卡片切换选择状态") }) {
             HyperText("选中时以品牌色强调当前方案。")
         }
         PreviewSectionLabel("纯内容容器")
@@ -106,9 +106,9 @@ private fun ContainerIconBadge(
         contentAlignment = Alignment.Center
     ) {
         HyperIcon(
-            imageVector = imageVector,
+            icon = imageVector,
             contentDescription = null,
-            tint = tint,
+            color = tint,
             modifier = Modifier.size(22.dp)
         )
     }
@@ -140,7 +140,7 @@ fun GlassMaterialDemo() {
                     HyperText(label, fontSize = 13.sp)
                 }
             }
-            HyperSlider(opacity, { opacity = it }, valueRange = 0.1f..1f)
+            HyperSlider(opacity, { opacity = it }, min = 0.1f, max = 1f)
         }
     }
 }

@@ -33,7 +33,7 @@ data class HyperSectionedListColors(
  * 页面级分段懒列表。
  *
  * 日期等分段标题与数据行保持独立懒加载；组件负责每组卡片背景、首尾圆角和分割线，
- * 调用方只负责分组数据、稳定 key、标题和单行内容。
+ * 分组之间固定使用 8dp 紧凑间距，调用方只负责分组数据、稳定 key、标题和单行内容。
  */
 @Composable
 fun <S, T> HyperSectionedList(
@@ -45,7 +45,6 @@ fun <S, T> HyperSectionedList(
     state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = HyperSectionedListDefaults.ContentPadding,
     firstSectionTopSpacing: Dp = HyperSectionedListDefaults.FirstSectionTopSpacing,
-    sectionSpacing: Dp = HyperSectionedListDefaults.SectionSpacing,
     headerBottomSpacing: Dp = HyperSectionedListDefaults.HeaderBottomSpacing,
     dividerModifier: Modifier = Modifier.padding(
         start = HyperSectionedListDefaults.DividerInset
@@ -82,7 +81,7 @@ fun <S, T> HyperSectionedList(
                             top = if (currentSectionIndex == 0) {
                                 firstSectionTopSpacing
                             } else {
-                                sectionSpacing
+                                HyperSectionSpacing
                             },
                             bottom = headerBottomSpacing
                         )
@@ -118,7 +117,6 @@ fun <S, T> HyperSectionedList(
 
 object HyperSectionedListDefaults {
     val FirstSectionTopSpacing = 0.dp
-    val SectionSpacing = 16.dp
     val HeaderBottomSpacing = 8.dp
     val DividerInset = HyperListTileDefaults.DividerInset
     /** 分段列表默认提供左右 16.dp 内容留白，子项（HyperListTile 等）无需重复设置水平 padding。 */
@@ -198,6 +196,8 @@ private fun sectionItemShape(itemIndex: Int, lastItemIndex: Int): Shape {
         else -> RoundedCornerShape(0.dp)
     }
 }
+
+private val HyperSectionSpacing = 8.dp
 
 private object HyperSectionHeaderContentType
 private object HyperSectionItemContentType

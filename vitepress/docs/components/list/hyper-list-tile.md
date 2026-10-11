@@ -20,7 +20,7 @@ description: 组织图标、标题、说明、元信息和尾部操作，可独�
 ```kotlin
 import hyper_ui.*
 
-HyperListTile(headlineContent = { HyperText("系统设置") }, supportingContent = { HyperText("查看配置") }, onClick = onSettings)
+HyperListTile(title = { HyperText("系统设置") }, subtitle = { HyperText("查看配置") }, onPressed = onSettings)
 ```
 
 </details>
@@ -47,7 +47,7 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 ```kotlin
 @Composable
 fun HyperListTile(
-    headlineContent: @Composable ColumnScope.() -> Unit,
+    title: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperListTileDefaults.ContentPadding),
     dividerModifier: Modifier = Modifier.padding(horizontal = 14.dp),
@@ -57,13 +57,13 @@ fun HyperListTile(
     showChevron: Boolean = true,
     dividerVisible: Boolean = false,
     colors: HyperListTileColors = HyperListTileDefaults.colors(),
-    onClick: (() -> Unit)? = null,
+    onPressed: (() -> Unit)? = null,
     leadingIcon: ImageVector? = null,
     leadingColor: Color = HyperColors.accent,
-    leadingContent: (@Composable RowScope.() -> Unit)? = null,
-    supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
-    metaContent: (@Composable ColumnScope.() -> Unit)? = null,
-    trailingContent: (@Composable RowScope.() -> Unit)? = null
+    leading: (@Composable RowScope.() -> Unit)? = null,
+    subtitle: (@Composable ColumnScope.() -> Unit)? = null,
+    meta: (@Composable ColumnScope.() -> Unit)? = null,
+    trailing: (@Composable RowScope.() -> Unit)? = null
 )
 ```
 
@@ -71,23 +71,23 @@ fun HyperListTile(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| headlineContent | @Composable ColumnScope.() -&gt; Unit | 是 | — | 主标题插槽。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| contentModifier | Modifier | 否 | Modifier.padding(HyperListTileDefaults.ContentPadding) | 内容区修饰符；显式传入时覆盖默认内容留白。 |
+| title | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件标题文字或内容。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| contentModifier | Modifier | 否 | Modifier.padding(HyperListTileDefaults.ContentPadding) | 内部内容区域的布局修饰符。 |
 | dividerModifier | Modifier | 否 | Modifier.padding(horizontal = 14.dp) | 分隔线的布局修饰符。 |
-| type | String | 否 | "auto" | 渲染形态；合法值见本页样式约定。 |
-| selected | Boolean | 否 | false | 调用方持有的选中状态。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
+| type | String | 否 | &quot;auto&quot; | 组件的视觉或布局形态。 |
+| selected | Boolean | 否 | false | 由调用方持有的选中状态。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
 | showChevron | Boolean | 否 | true | 存在点击回调且没有自定义尾部时，是否显示右箭头。 |
 | dividerVisible | Boolean | 否 | false | 是否显示行分隔线。 |
-| colors | HyperListTileColors | 否 | HyperListTileDefaults.colors() | 各状态配色配置。 |
-| onClick | (() -&gt; Unit)? | 否 | null | 用户点击回调。 |
-| leadingIcon | ImageVector? | 否 | null | 内置图标块使用的矢量图标；自定义 leadingContent 优先。 |
+| colors | HyperListTileColors | 否 | HyperListTileDefaults.colors() | 组件各状态的颜色配置。 |
+| onPressed | (() -&gt; Unit)? | 否 | null | 点击操作回调；为 null 时不能触发操作。 |
+| leadingIcon | ImageVector? | 否 | null | 内置图标块使用的矢量图标；自定义 leading 优先。 |
 | leadingColor | Color | 否 | HyperColors.accent | 内置图标及其背景的强调颜色。 |
-| leadingContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 前导插槽。 |
-| supportingContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 辅助说明插槽。 |
-| metaContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 说明下方的辅助元信息插槽。 |
-| trailingContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 尾部插槽。 |
+| leading | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
+| subtitle | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 副标题或辅助说明。 |
+| meta | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 附加信息。 |
+| trailing | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 内容末端的自定义区域。 |
 
 <details class="component-doc__details component-doc__advanced">
 <summary>默认配置与数据类型</summary>

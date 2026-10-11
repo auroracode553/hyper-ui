@@ -30,34 +30,37 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.font.FontWeight
 import kotlinx.coroutines.delay
 
-enum class HyperToastTone { Neutral, Primary, Success, Info, Warning, Error }
 
 /** 放置在页面 Box 的底部；显隐由调用方持有，计时结束仅请求关闭。 */
 @Composable
 fun HyperToast(
     visible: Boolean,
     message: String,
-    onDismissRequest: () -> Unit,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
-    durationMillis: Long = 2000L,
-    tone: HyperToastTone = HyperToastTone.Neutral,
-    leadingContent: (@Composable () -> Unit)? = null,
-    actionContent: (@Composable RowScope.() -> Unit)? = null
+    duration: Long = 2000L,
+    type: String = "neutral",
+    color: Color = Color.Unspecified,
+    actionLabel: String? = null,
+    onAction: (() -> Unit)? = null,
+    leading: (@Composable () -> Unit)? = null,
+    action: (@Composable RowScope.() -> Unit)? = null
 ) {
-    require(durationMillis >= 0L) { "durationMillis 不能小于 0" }
-    val dismiss by rememberUpdatedState(onDismissRequest)
-    LaunchedEffect(visible, message, durationMillis) {
-        if (visible && durationMillis > 0) { delay(durationMillis); dismiss() }
+    require(duration >= 0L) { "duration 不能小于 0" }
+    val dismiss by rememberUpdatedState(onClose)
+    LaunchedEffect(visible, message, duration) {
+        if (visible && duration > 0) { delay(duration); dismiss() }
     }
     if (!visible) return
-    val toneColor = when (tone) {
-        HyperToastTone.Neutral -> HyperColors.secondaryText
-        HyperToastTone.Primary -> HyperColors.accent
-        HyperToastTone.Success -> HyperColors.success
-        HyperToastTone.Info -> HyperColors.info
-        HyperToastTone.Warning -> HyperColors.warning
-        HyperToastTone.Error -> HyperColors.danger
-    }
+    val toneColor = resolveHyperContainerColor(color, when (type) {
+        "neutral" -> HyperColors.secondaryText
+        "primary" -> HyperColors.accent
+        "success" -> HyperColors.success
+        "info" -> HyperColors.info
+        "warning" -> HyperColors.warning
+        "error" -> HyperColors.danger
+        else -> error("不支持的 HyperToast type: $type")
+    })
     val surfaceColor = toneColor.copy(alpha = 10 / 255f).compositeOver(hyperGlass.surfaceStrong)
     Row(
         modifier.widthIn(min = 180.dp, max = 420.dp)
@@ -71,27 +74,29 @@ fun HyperToast(
         verticalAlignment = Alignment.CenterVertically
     ) {
         CompositionLocalProvider(LocalHyperContentColor provides HyperColors.primaryText) {
-            if (leadingContent != null) leadingContent() else HyperToastLeading(tone, toneColor)
+            if (leading != null) leading() else HyperToastLeading(type, toneColor)
             HyperText(message, Modifier.weight(1f, fill = false),
                 style = HyperTheme.typography.bodyMedium.copy(fontSize = 14.sp, lineHeight = 18.9.sp, fontWeight = FontWeight.Medium),
                 maxLines = 3, overflow = TextOverflow.Ellipsis)
-            actionContent?.invoke(this)
+            if (action != null) action.invoke(this)
+            else if (actionLabel != null) HyperButton(onPressed = onAction) { HyperText(actionLabel) }
         }
     }
 }
 
 @Composable
-private fun HyperToastLeading(tone: HyperToastTone, color: Color) {
+private fun HyperToastLeading(type: String, color: Color) {
     Box(Modifier.size(30.dp).background(color.copy(alpha = 24 / 255f), CircleShape),
         contentAlignment = Alignment.Center) {
         CompositionLocalProvider(LocalHyperContentColor provides color) {
-            HyperIcon(when (tone) {
-                HyperToastTone.Success -> HyperReferenceIcons.Check
-                HyperToastTone.Error -> HyperReferenceIcons.Close
-                HyperToastTone.Neutral -> HyperReferenceIcons.Notifications
-                HyperToastTone.Primary -> HyperReferenceIcons.Sparkles
-                HyperToastTone.Info -> HyperReferenceIcons.Info
-                HyperToastTone.Warning -> HyperReferenceIcons.CircleAlert
+            HyperIcon(when (type) {
+                "success" -> HyperReferenceIcons.Check
+                "error" -> HyperReferenceIcons.Close
+                "neutral" -> HyperReferenceIcons.Notifications
+                "primary" -> HyperReferenceIcons.Sparkles
+                "info" -> HyperReferenceIcons.Info
+                "warning" -> HyperReferenceIcons.CircleAlert
+                else -> HyperReferenceIcons.Notifications
             }, null, Modifier.size(17.dp))
         }
     }

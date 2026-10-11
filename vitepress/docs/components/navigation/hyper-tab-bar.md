@@ -20,7 +20,7 @@ description: 悬浮底部入口，提供单动作与多项导航两种形态。
 ```kotlin
 import hyper_ui.*
 
-HyperTabBar(items, onItemClick = { selected = it }, itemSelected = { it == selected }, itemLabel = { it.label }) { item ->
+HyperTabBar(items, selectedIndex = selectedIndex, onChanged = { selectedIndex = it }, itemLabel = { it.label }) { item ->
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(1.dp)) {
         HyperIcon(item.icon, null)
         HyperText(item.label)
@@ -55,11 +55,11 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 @Composable
 fun <T> HyperTabBar(
     items: List<T>,
-    onItemClick: (T) -> Unit,
+    onChanged: (Int) -> Unit,
+    selectedIndex: Int,
     modifier: Modifier = Modifier,
     type: String = "multiple",
     enabled: Boolean = true,
-    itemSelected: (T) -> Boolean = { false },
     itemEnabled: (T) -> Boolean = { true },
     itemLabel: (T) -> String = { "" },
     badgeCount: Int = 0,
@@ -74,16 +74,16 @@ fun <T> HyperTabBar(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| items | List&lt;T&gt; | 是 | — | 待呈现条目。 |
-| onItemClick | (T) -&gt; Unit | 是 | — | 标签栏单项点击时的回调。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| type | String | 否 | "multiple" | 渲染形态；合法值见本页样式约定。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
-| itemSelected | (T) -&gt; Boolean | 否 | { false } | 按项提供选中状态。 |
-| itemEnabled | (T) -&gt; Boolean | 否 | { true } | 按项提供可用状态。 |
-| itemLabel | (T) -&gt; String | 否 | { "" } | 用于测量导航单元格的标签；应与实际显示文案一致。 |
+| items | List&lt;T&gt; | 是 | — | 由调用方提供的选项或列表数据。 |
+| onChanged | (Int) -&gt; Unit | 是 | — | 用户修改值或选择项时通知调用方。 |
+| selectedIndex | Int | 是 | — | 当前选中项的索引，从 0 开始。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| type | String | 否 | &quot;multiple&quot; | 组件的视觉或布局形态。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| itemEnabled | (T) -&gt; Boolean | 否 | { true } | 判断单个选项是否可操作。 |
+| itemLabel | (T) -&gt; String | 否 | { &quot;&quot; } | 每个导航项的文字。 |
 | badgeCount | Int | 否 | 0 | 单动作角标数量，0 隐藏，超过 99 显示 99+。 |
-| safeArea | Boolean | 否 | true | 避让底部系统安全区。 |
-| margin | PaddingValues | 否 | if (type == "single") PaddingValues(0.dp) else PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp) | 导航容器外部间距。 |
-| color | Color | 否 | HyperColors.accent | 颜色覆盖。 |
-| itemContent | @Composable HyperTabBarItemScope.(item: T) -&gt; Unit | 是 | — | 条目内容插槽。 |
+| safeArea | Boolean | 否 | true | 是否避开顶部系统安全区。 |
+| margin | PaddingValues | 否 | if (type == &quot;single&quot;) PaddingValues(0.dp) else PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp) | 导航容器外部间距。 |
+| color | Color | 否 | HyperColors.accent | 自定义颜色，覆盖默认配色。 |
+| itemContent | @Composable HyperTabBarItemScope.(item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |

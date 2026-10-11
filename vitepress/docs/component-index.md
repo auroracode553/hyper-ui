@@ -3,6 +3,7 @@
 所有组件从 `hyper_ui` 包导入。组件页按用途、交互示例、最小调用、使用约定和公开 API 组织。长签名与辅助配置可以展开查看，五列 Props 表完整保留；手机预览支持切换 320/350/390/430dp 宽度和重置。
 
 HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列表独自滚动；HyperMenuGroup 和 HyperListTile 按内容测量，由预览宿主负责整页滚动。
+手机预览的底部手势条悬浮覆盖在内容上，宿主不预留底部安全区，与 Flutter 参考预览一致。
 
 ## 基础
 
@@ -47,7 +48,7 @@ HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列�
 | 组件 | 用途 |
 | --- | --- |
 | [HyperList](components/list/hyper-list.md) | 连续数据列表 |
-| [HyperSectionedList](components/list/hyper-sectioned-list.md) | 分组数据列表 |
+| [HyperSectionedList](components/list/hyper-sectioned-list.md) | 分组数据列表，固定 8dp 紧凑分段间距 |
 | [HyperMenuGroup](components/list/hyper-menu-group.md) | 菜单和设置入口 |
 | [HyperListTile](components/list/hyper-list-tile.md) | 设置行和列表行 |
 
@@ -71,3 +72,5 @@ HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列�
 | [HyperBatteryState](components/tools/hyper-battery-state.md) | Android 电量状态读取 |
 
 统一材质、尺寸和 API 迁移见 [样式对照](style-reference.md)。
+
+对应组件的参数命名、回调和默认语义遵循 两端统一 API。点击使用 onPressed，值变更使用 onChanged，关闭使用 onClose；平台布局与宿主差异见组件签名。

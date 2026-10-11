@@ -21,7 +21,7 @@ description: 设置页式分组菜单，适合少量入口、开关和选择项�
 import hyper_ui.*
 
 HyperMenuGroup(items = settings) { item ->
-    HyperListTile(headlineContent = { HyperText(item.label) }, onClick = { onOpen(item) })
+    HyperListTile(title = { HyperText(item.label) }, onPressed = { onOpen(item) })
 }
 ```
 
@@ -56,6 +56,8 @@ fun <T> HyperMenuGroup(
     contentModifier: Modifier = Modifier.padding(HyperMenuGroupDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
+    title: String? = null,
+    subtitle: String? = null,
     itemContent: @Composable (item: T) -> Unit
 )
 ```
@@ -64,12 +66,14 @@ fun <T> HyperMenuGroup(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| items | List&lt;T&gt; | 是 | — | 待呈现条目。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| contentModifier | Modifier | 否 | Modifier.padding(HyperMenuGroupDefaults.ContentPadding) | 内容区修饰符；显式传入时覆盖默认内容留白。 |
+| items | List&lt;T&gt; | 是 | — | 由调用方提供的选项或列表数据。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| contentModifier | Modifier | 否 | Modifier.padding(HyperMenuGroupDefaults.ContentPadding) | 内部内容区域的布局修饰符。 |
 | verticalArrangement | Arrangement.Vertical | 否 | Arrangement.spacedBy(0.dp) | 子项的垂直排列方式。 |
-| colors | HyperMenuGroupColors | 否 | HyperMenuGroupDefaults.colors() | 各状态配色配置。 |
-| itemContent | @Composable (item: T) -&gt; Unit | 是 | — | 条目内容插槽。 |
+| colors | HyperMenuGroupColors | 否 | HyperMenuGroupDefaults.colors() | 组件各状态的颜色配置。 |
+| title | String? | 否 | null | 组件标题文字或内容。 |
+| subtitle | String? | 否 | null | 副标题或辅助说明。 |
+| itemContent | @Composable (item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |
 
 ### HyperMenuGroup · 重载 2
 
@@ -83,6 +87,8 @@ fun HyperMenuGroup(
     contentModifier: Modifier = Modifier.padding(HyperMenuGroupDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
+    title: String? = null,
+    subtitle: String? = null,
     content: @Composable ColumnScope.() -> Unit
 )
 ```
@@ -91,11 +97,13 @@ fun HyperMenuGroup(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| contentModifier | Modifier | 否 | Modifier.padding(HyperMenuGroupDefaults.ContentPadding) | 内容区修饰符；显式传入时覆盖默认内容留白。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| contentModifier | Modifier | 否 | Modifier.padding(HyperMenuGroupDefaults.ContentPadding) | 内部内容区域的布局修饰符。 |
 | verticalArrangement | Arrangement.Vertical | 否 | Arrangement.spacedBy(0.dp) | 子项的垂直排列方式。 |
-| colors | HyperMenuGroupColors | 否 | HyperMenuGroupDefaults.colors() | 各状态配色配置。 |
-| content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 主体内容插槽。 |
+| colors | HyperMenuGroupColors | 否 | HyperMenuGroupDefaults.colors() | 组件各状态的颜色配置。 |
+| title | String? | 否 | null | 组件标题文字或内容。 |
+| subtitle | String? | 否 | null | 副标题或辅助说明。 |
+| content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |
 
 <details class="component-doc__details component-doc__advanced">
 <summary>默认配置与数据类型</summary>

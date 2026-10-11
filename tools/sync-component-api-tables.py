@@ -15,7 +15,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "vitepress/docs/components"
 SOURCE = ROOT / "library/src/main/java/hyper_ui"
-SIGNATURE_BLOCK = re.compile(r"## 公开签名[^\n]*\n\n```kotlin\n(.*?)\n```", re.S)
+SIGNATURE_BLOCK = re.compile(r"```kotlin\n(.*?)\n```", re.S)
+MODEL = re.compile(r"\bdata class\s+(HyperUpdateRelease|HyperUpdateDownloadProgress|HyperSlideAction)\s*\(")
 FUNCTION = re.compile(r"\bfun\s+(?:<[^>]+>\s+)?(?:\w+\.)?(\w+)\s*\(")
 
 DESCRIPTIONS = dict(
@@ -201,6 +202,75 @@ visualTransformation|输入文字的视觉变换方式。
 )
 
 
+DESCRIPTIONS.update({
+    "iconOnly": "是否只显示图标。",
+    "itemLabel": "每个导航项的文字。",
+    "onPressed": "点击操作回调；为 null 时不能触发操作。",
+    "onChanged": "用户修改值或选择项时通知调用方。",
+    "onClose": "请求关闭时通知调用方更新可见状态。",
+    "onBackPressed": "点击返回操作时通知调用方。",
+    "onMorePressed": "点击更多操作时通知调用方。",
+    "onSavePressed": "点击保存操作时通知调用方。",
+    "onChangeStart": "开始拖动时回传当前值。",
+    "onChangeEnd": "结束拖动时回传最终值。",
+    "selectedIndex": "当前选中项的索引，从 0 开始。",
+    "selectedValue": "当前选中项的值。",
+    "groupValue": "当前单选组的选中值。",
+    "tabs": "页签数据。",
+    "min": "数值范围的下限。",
+    "max": "数值范围的上限。",
+    "divisions": "等分区间数量；null 表示连续，1 表示只选两端。",
+    "maxLength": "允许输入的最大字符数。",
+    "placement": "从逻辑起始侧或结束侧打开抽屉。",
+    "scrollable": "是否允许内容滚动。",
+    "axis": "分隔线的方向。",
+    "hoverDelay": "显示悬浮提示前的等待时间，单位毫秒。",
+    "title": "组件标题文字或内容。",
+    "subtitle": "副标题或辅助说明。",
+    "meta": "附加信息。",
+    "leading": "内容前方的自定义区域。",
+    "trailing": "内容末端的自定义区域。",
+    "footer": "底部内容。",
+    "icon": "图标或图标区域。",
+    "action": "空状态操作内容。",
+    "child": "组件主体或触发器内容。",
+    "prefix": "输入框起始端内容。",
+    "suffix": "输入框末端内容。",
+    "supporting": "输入框辅助内容。",
+    "placeholder": "未输入或未选择时的提示内容。",
+    "downloadedBytes": "已下载字节数；负数按 0 展示。",
+    "totalBytes": "总字节数；null、0 或负值表示未知。",
+    "bytesPerSecond": "每秒下载字节数；非正数或非有限值表示未知。",
+    "version": "非空版本号。",
+    "releaseDate": "版本发布日期文案。",
+    "sizeLabel": "版本包大小文案。",
+    "highlights": "逐条展示的更新摘要。",
+    "foregroundColor": "动作文字和图标颜色。",
+    "backgroundColor": "背景轨道颜色。",
+    "actionLabel": "操作按钮文案。",
+    "onAction": "点击提示操作时执行的回调。",
+    "duration": "自动关闭等待时长，单位毫秒；0 不自动关闭。",
+    "color": "自定义颜色，覆盖默认配色。",
+    "colorStyle": "预设语义配色；自定义 color 优先。",
+    "fontWeight": "文字字重。",
+    "maxWidth": "弹层或提示的最大宽度。",
+    "width": "可选的固定宽度。",
+    "menuMaxHeight": "下拉菜单最大高度。",
+    "status": "由业务层提供的更新展示状态。",
+    "currentVersion": "可选的当前版本号。",
+    "release": "可选的新版本展示信息。",
+    "downloadProgress": "业务层提供的字节下载快照。",
+    "progressText": "自定义进度说明。",
+    "mandatory": "必要更新；未完成时限制关闭。",
+    "primaryLabel": "覆盖当前状态的主操作文案。",
+    "secondaryLabel": "覆盖当前状态的次操作文案。",
+    "onCheck": "通知业务层检查更新。",
+    "onInstall": "通知业务层启动安装。",
+    "onCancel": "通知业务层取消检查或下载。",
+    "onLater": "通知业务层稍后处理。",
+})
+
+
 def matching_parenthesis(source: str, open_at: int) -> int:
     depth = 1
     for index in range(open_at + 1, len(source)):
@@ -274,74 +344,72 @@ def make_table(name: str, parameters: list[tuple[str, str, str | None]]) -> str:
 
 
 def main(check: bool) -> int:
-    source_signatures: dict[str, list[list[tuple[str, str, str | None]]]] = {}
+    # Keep each source file attached to its signature so overloaded defaults stay scoped.
+    signatures = {}
     for path in SOURCE.rglob("*.kt"):
-        for name, parameters in functions(path.read_text(encoding="utf-8")):
-            source_signatures.setdefault(name, []).append(parameters)
+        source = path.read_text(encoding="utf-8")
+        for match in sorted([*FUNCTION.finditer(source), *MODEL.finditer(source)], key=lambda item: item.start()):
+            line = source[source.rfind("\n", 0, match.start()) + 1:match.start()]
+            if re.search(r"\b(private|internal)\b", line):
+                continue
+            end = matching_parenthesis(source, match.end() - 1) + 1
+            header = source[match.start():end]
+            name, parameters = functions(re.sub(r"^data class\s+(\w+)(?:<[^>]+>)?", r"fun \1", header, count=1))[0]
+            signatures.setdefault(name, []).append((header, parameters, path))
 
     changed = []
     for path in sorted(DOCS.rglob("*.md")):
-        original = path.read_bytes().decode("utf-8")
-        newline = "\r\n" if "\r\n" in original else "\n"
-        content = original.replace("\r\n", "\n")
-        match = SIGNATURE_BLOCK.search(content)
-        if match is None:
-            raise ValueError(f"Missing public signature block: {path}")
-        documented = functions(match.group(1))
-        for name, parameters in documented:
-            signature = tuple(parameter[0] for parameter in parameters)
-            candidates = [
-                source_parameters
-                for source_parameters in source_signatures.get(name, [])
-                if tuple(parameter[0] for parameter in source_parameters) == signature
-            ]
-            if not candidates:
-                raise ValueError(f"Documented signature differs from source: {path}: {name}{signature}")
-            if parameters not in candidates:
-                raise ValueError(f"Documented types or defaults differ from source: {path}: {name}")
-        tables = []
-        for index, (name, parameters) in enumerate(documented):
-            if not parameters:
-                continue
-            if len(documented) > 1:
-                label = name
-                if sum(candidate == name for candidate, _ in documented) > 1:
-                    label += "（数据项形式）" if parameters[0][0] == "items" else "（内容 Slot 形式）"
-                tables.append(f"### {label}\n\n{make_table(name, parameters)}")
-            else:
-                tables.append(make_table(name, parameters))
-        if path.stem == "hyper-battery-state":
-            tables.insert(0, "### HyperBatteryState 返回字段\n\n"
-                "| 字段 | 类型 | 作用 |\n| --- | --- | --- |\n"
-                "| percentage | Int | 电量百分比，范围为 0 至 100。 |\n"
-                "| isCharging | Boolean | 是否正在充电或已充满且连接电源。 |\n"
-                "| isAvailable | Boolean | 系统是否提供有效电量数据。 |\n"
-                "| Unavailable | HyperBatteryState | 无法读取电量时使用的状态。 |")
-        if not tables:
-            raise ValueError(f"No API table produced: {path}")
-        table_section = "\n## Props（参数）\n\n" + "\n\n".join(tables)
-        table_start = content.find("\n## Props（参数）\n")
-        if table_start >= 0:
-            next_heading = content.find("\n## ", table_start + 1)
-            section_end = len(content) if next_heading < 0 else next_heading
-            existing_section = content[table_start:section_end]
-            table_rows = list(re.finditer(r"(?m)^\|.*\|$", existing_section))
-            if not table_rows:
-                raise ValueError(f"Props section has no table rows: {path}")
-            old_end = table_start + table_rows[-1].end()
-            updated = content[:table_start] + table_section + content[old_end:]
-        else:
-            updated = content[:match.end()] + "\n" + table_section + "\n" + content[match.end():]
-        if updated != content:
+        original = path.read_text(encoding="utf-8")
+        for row in re.finditer(r"(?m)^\| (\w+) \|.*\| ([^|]+) \|$", original):
+            DESCRIPTIONS.setdefault(row.group(1), row.group(2).strip())
+        updates = []
+        blocks = list(SIGNATURE_BLOCK.finditer(original))
+        for block_index, block in enumerate(blocks):
+            block_text = block.group(1)
+            documented = sorted([*FUNCTION.finditer(block_text), *MODEL.finditer(block_text)], key=lambda item: item.start())
+            tables = []
+            header_updates = []
+            for match in documented:
+                end = matching_parenthesis(block_text, match.end() - 1) + 1
+                name, parameters = functions(re.sub(r"^data class\s+(\w+)(?:<[^>]+>)?", r"fun \1", block_text[match.start():end], count=1))[0]
+                candidates = signatures.get(name, [])
+                if not candidates:
+                    continue
+                old_names = {p[0] for p in parameters}
+                def score(candidate):
+                    _, actual, source_path = candidate
+                    names = {p[0] for p in actual}
+                    return (len(old_names & names) - len(old_names ^ names),
+                            sum(p in actual for p in parameters),
+                            path.stem.replace("-", "").lower() == source_path.stem.lower())
+                header, actual, _ = max(candidates, key=score)
+                header_updates.append((match.start(), end, header))
+                if actual:
+                    tables.append(make_table(name, actual))
+            for begin, end, replacement in reversed(header_updates):
+                block_text = block_text[:begin] + replacement + block_text[end:]
+            if header_updates:
+                updates.append((block.start(1), block.end(1), block_text))
+                section_end = blocks[block_index + 1].start() if block_index + 1 < len(blocks) else len(original)
+                section = original[block.end():section_end]
+                existing = list(re.finditer(r"(?m)^\| 参数 \|[^\n]*\n(?:\|[^\n]*\n?)+", section))
+                if len(existing) < len(tables):
+                    raise ValueError(f"Missing API parameter table: {path}")
+                for table, table_match in zip(tables, existing):
+                    updates.append((block.end() + table_match.start(), block.end() + table_match.end(), table + "\n"))
+        updated = original
+        for begin, end, replacement in sorted(updates, reverse=True):
+            updated = updated[:begin] + replacement + updated[end:]
+        if updated != original:
             changed.append(path.relative_to(ROOT))
             if not check:
-                path.write_bytes(updated.replace("\n", newline).encode("utf-8"))
+                path.write_text(updated, encoding="utf-8", newline="")
     if changed:
-        print(("Out of date" if check else "Updated") + f" {len(changed)} component pages:")
+        print(("Out of date" if check else "Updated") + f" {len(changed)} component pages.")
         for path in changed:
             print(f"  {path}")
     else:
-        print("All component API tables are current.")
+        print("All component API signatures and tables are current.")
     return 1 if check and changed else 0
 
 

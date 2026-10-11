@@ -17,14 +17,14 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperList(state = listState) {
                 item(key = "overview", contentType = "header") {
-                    HyperListTile(headlineContent = { HyperText("概览") })
+                    HyperListTile(title = { HyperText("概览") })
                 }
                 items(
                     items = items,
                     key = { it.id },
                     contentType = { "account" }
                 ) { item ->
-                    HyperListTile(headlineContent = { HyperText(item.title) })
+                    HyperListTile(title = { HyperText(item.title) })
                 }
             }
         """.trimIndent(),
@@ -52,19 +52,19 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperMenuGroup(items = items) { item ->
                 HyperListTile(
-                    headlineContent = { HyperText(item.title) },
-                    trailingContent = { HyperText(item.value) }
+                    title = { HyperText(item.title) },
+                    trailing = { HyperText(item.value) }
                 )
             }
 
             HyperMenuGroup {
                 HyperListTile(
-                    headlineContent = { HyperText("推送通知") },
-                    supportingContent = { HyperText("接收重要消息提醒") },
-                    trailingContent = {
+                    title = { HyperText("推送通知") },
+                    subtitle = { HyperText("接收重要消息提醒") },
+                    trailing = {
                         HyperSwitch(
-                            checked = enabled,
-                            onCheckedChange = { enabled = it }
+                            value = enabled,
+                            onChanged = { enabled = it }
                         )
                     }
                 )
@@ -87,7 +87,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_sectioned_list",
         group = GROUP_LIST,
         title = "HyperSectionedList",
-        description = "日期、历史等动态数据使用的分段懒列表，自动处理组内圆角与分割线。",
+        description = "日期、历史等动态数据使用的分段懒列表，固定 8dp 紧凑分段间距，自动处理组内圆角与分割线。",
         code = """
             HyperSectionedList(
                 sections = groups,
@@ -97,8 +97,8 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
                 headerContent = { group -> HyperText(group.title) }
             ) { _, entry ->
                 HyperListTile(
-                    headlineContent = { HyperText(entry.title) },
-                    supportingContent = { HyperText(entry.subtitle) }
+                    title = { HyperText(entry.title) },
+                    subtitle = { HyperText(entry.subtitle) }
                 )
             }
         """.trimIndent(),
@@ -107,8 +107,8 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("自动圆角", "首项 / 中间项 / 尾项", "每组形成独立的 18dp 圆角卡片"),
             DemoVariant("自动分割线", "dividerModifier", "组内非末项绘制，末项自动隐藏"),
             DemoVariant("稳定复用", "sectionKey + itemKey", "分段标题和数据行使用独立稳定 key"),
-            DemoVariant("可调间距", "sectionSpacing", "支持紧凑和标准分段节奏"),
-            DemoVariant("整屏滚动", "fullScreenPreview + Modifier.weight(1f)", "列表占满控件下方视口，滚动到最后一组")
+            DemoVariant("紧凑间距", "固定 8dp", "分段间距由组件统一管理，无需设置"),
+            DemoVariant("整屏滚动", "fullScreenPreview + Modifier.weight(1f)", "列表占满视口，滚动到最后一组")
         ),
         apiDocumentPaths = listOf(
             "list/hyper-sectioned-list.md",
@@ -119,7 +119,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
     ),
     ComponentDemo(id = "list-tile", group = GROUP_LIST, title = "HyperListTile",
         description = "参考 46dp 条目、34dp 图标块，auto/plain/glass、选中与禁用可操作。",
-        code = """HyperListTile(headlineContent = { HyperText("系统设置") }, onClick = onOpen)""",
+        code = """HyperListTile(title = { HyperText("系统设置") }, onPressed = onOpen)""",
         variants = listOf(DemoVariant("表面", "type / selected", "独立玻璃与继承表面"),
             DemoVariant("文字", "supportingContent / metaContent", "14sp 主标题、12sp 描述、11sp 元信息")),
         apiDocumentPaths = listOf("list/hyper-list-tile.md"), content = { ListTileDemo() })

@@ -59,23 +59,24 @@ data class HyperSliderColors(
 /**
  * 可点击、可拖动的 HyperUI 受控滑块。
  *
- * `steps` 只负责等距吸附；`showSegmentMarkers` 与 `segmentValues` 只负责分段点视觉，
+ * `divisions` 只负责等距吸附；`showSegmentMarkers` 与 `segmentValues` 只负责分段点视觉，
  * 两者可以独立使用。`readOnly` 保留正常配色和进度语义，但不响应用户输入。
  */
 @Composable
 fun HyperSlider(
     value: Float,
-    onValueChange: (Float) -> Unit,
+    onChanged: ((Float) -> Unit)? = null,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    valueRange: ClosedFloatingPointRange<Float> = 0f..100f,
+    min: Float = 0f,
+    max: Float = 100f,
     showValue: Boolean = true,
-    steps: Int = 0,
+    divisions: Int? = null,
     showSegmentMarkers: Boolean = false,
     segmentValues: List<Float> = emptyList(),
-    onValueChangeStarted: (() -> Unit)? = null,
-    onValueChangeFinished: (() -> Unit)? = null,
+    onChangeStart: ((Float) -> Unit)? = null,
+    onChangeEnd: ((Float) -> Unit)? = null,
     minimumTouchHeight: Dp = HyperSliderDefaults.MinTouchHeight,
     trackHeight: Dp = HyperSliderDefaults.TrackHeight,
     thumbSize: Dp = HyperSliderDefaults.ThumbSize,
@@ -86,38 +87,43 @@ fun HyperSlider(
     trackBorder: BorderStroke? = null,
     thumbBorder: BorderStroke? = HyperSliderDefaults.thumbBorder()
 ) {
+    val valueRange = min..max
+    val divisionCount = divisions ?: 0
+    require(divisions == null || divisions > 0) { "divisions 必须大于 0" }
     require(valueRange.start.isFinite() && valueRange.endInclusive.isFinite()) {
-        "valueRange 的起止值必须是有限数值"
+        "min 与 max 必须是有限数值"
     }
     require(valueRange.endInclusive > valueRange.start) {
-        "valueRange 的结束值必须大于起始值"
+        "max 必须大于 min"
     }
-    require(steps >= 0) { "steps 不能小于 0" }
     require(minimumTouchHeight >= 0.dp) { "minimumTouchHeight 不能小于 0.dp" }
     require(trackHeight >= 0.dp) { "trackHeight 不能小于 0.dp" }
     require(thumbSize > 0.dp) { "thumbSize 必须大于 0.dp" }
     require(segmentMarkerSize >= 0.dp) { "segmentMarkerSize 不能小于 0.dp" }
 
-    val currentOnValueChange by rememberUpdatedState(onValueChange)
-    val currentOnValueChangeStarted by rememberUpdatedState(onValueChangeStarted)
-    val currentOnValueChangeFinished by rememberUpdatedState(onValueChangeFinished)
+    val currentOnValueChange by rememberUpdatedState(onChanged)
+    val currentOnValueChangeStarted by rememberUpdatedState(onChangeStart)
+    val currentOnValueChangeFinished by rememberUpdatedState(onChangeEnd)
     var isDragging by remember { mutableStateOf(false) }
+    var interactionValue by remember { mutableStateOf(value) }
+    fun dispatchValue(next: Float) { interactionValue = next; currentOnValueChange?.invoke(next) }
 
     val coercedValue = if (value.isFinite()) {
         value.coerceIn(valueRange.start, valueRange.endInclusive)
     } else {
         valueRange.start
     }
+    androidx.compose.runtime.SideEffect { if (!isDragging) interactionValue = coercedValue }
     val valueFraction = valueToFraction(coercedValue, valueRange)
-    val markerValues = remember(showSegmentMarkers, segmentValues, valueRange, steps) {
+    val markerValues = remember(showSegmentMarkers, segmentValues, valueRange, divisionCount) {
         resolveSegmentMarkerValues(
             showSegmentMarkers = showSegmentMarkers,
             segmentValues = segmentValues,
             valueRange = valueRange,
-            steps = steps
+            divisionCount = divisionCount
         )
     }
-    val interactionEnabled = enabled && !readOnly
+    val interactionEnabled = enabled && !readOnly && onChanged != null
     val resolvedTrackColor = if (enabled) colors.trackColor else colors.disabledTrackColor
     val resolvedActiveTrackColor = if (enabled) {
         colors.activeTrackColor
@@ -135,38 +141,38 @@ fun HyperSlider(
             interactionEnabled,
             valueRange.start,
             valueRange.endInclusive,
-            steps
+            divisionCount
         ) {
             if (!interactionEnabled) return@pointerInput
 
             detectDragGestures(
                 onDragStart = { offset ->
                     isDragging = true
-                    currentOnValueChangeStarted?.invoke()
-                    currentOnValueChange(
+                    currentOnValueChangeStarted?.invoke(interactionValue)
+                    dispatchValue(
                         pointerPositionToValue(
                             pointerX = offset.x,
                             widthPx = size.width.toFloat(),
                             valueRange = valueRange,
-                            steps = steps
+                            divisionCount = divisionCount
                         )
                     )
                 },
                 onDragEnd = {
                     isDragging = false
-                    currentOnValueChangeFinished?.invoke()
+                    currentOnValueChangeFinished?.invoke(interactionValue)
                 },
                 onDragCancel = {
                     isDragging = false
-                    currentOnValueChangeFinished?.invoke()
+                    currentOnValueChangeFinished?.invoke(interactionValue)
                 },
                 onDrag = { change, _ ->
-                    currentOnValueChange(
+                    dispatchValue(
                         pointerPositionToValue(
                             pointerX = change.position.x,
                             widthPx = size.width.toFloat(),
                             valueRange = valueRange,
-                            steps = steps
+                            divisionCount = divisionCount
                         )
                     )
                     change.consume()
@@ -177,22 +183,22 @@ fun HyperSlider(
             interactionEnabled,
             valueRange.start,
             valueRange.endInclusive,
-            steps
+            divisionCount
         ) {
             if (!interactionEnabled) return@pointerInput
 
             detectTapGestures { offset ->
                 if (!isDragging) {
-                    currentOnValueChangeStarted?.invoke()
-                    currentOnValueChange(
+                    currentOnValueChangeStarted?.invoke(interactionValue)
+                    dispatchValue(
                         pointerPositionToValue(
                             pointerX = offset.x,
                             widthPx = size.width.toFloat(),
                             valueRange = valueRange,
-                            steps = steps
+                            divisionCount = divisionCount
                         )
                     )
-                    currentOnValueChangeFinished?.invoke()
+                    currentOnValueChangeFinished?.invoke(interactionValue)
                 }
             }
         }
@@ -206,11 +212,11 @@ fun HyperSlider(
                     .then(interactionModifier)
                     .semantics {
                         if (!enabled) disabled()
-                        progressBarRangeInfo = ProgressBarRangeInfo(coercedValue, valueRange, steps)
+                        progressBarRangeInfo = ProgressBarRangeInfo(coercedValue, valueRange, (divisionCount - 1).coerceAtLeast(0))
                         if (interactionEnabled) setProgress { targetValue ->
-                            currentOnValueChangeStarted?.invoke()
-                            currentOnValueChange(snapValueToSteps(targetValue, valueRange, steps))
-                            currentOnValueChangeFinished?.invoke()
+                            currentOnValueChangeStarted?.invoke(interactionValue)
+                            dispatchValue(snapValueToSteps(targetValue, valueRange, divisionCount))
+                            currentOnValueChangeFinished?.invoke(interactionValue)
                             true
                         }
                     },
@@ -305,13 +311,13 @@ private fun pointerPositionToValue(
     pointerX: Float,
     widthPx: Float,
     valueRange: ClosedFloatingPointRange<Float>,
-    steps: Int
+    divisionCount: Int
 ): Float {
     val availableTrackWidth = widthPx.coerceAtLeast(1f)
     val fraction = (pointerX / availableTrackWidth)
         .coerceIn(0f, 1f)
     val rawValue = valueRange.start + fraction * (valueRange.endInclusive - valueRange.start)
-    return snapValueToSteps(rawValue, valueRange, steps)
+    return snapValueToSteps(rawValue, valueRange, divisionCount)
 }
 
 private fun valueToFraction(
@@ -323,12 +329,12 @@ private fun valueToFraction(
 private fun snapValueToSteps(
     value: Float,
     valueRange: ClosedFloatingPointRange<Float>,
-    steps: Int
+    divisionCount: Int
 ): Float {
     val coercedValue = value.coerceIn(valueRange.start, valueRange.endInclusive)
-    if (steps == 0) return coercedValue
+    if (divisionCount == 0) return coercedValue
 
-    val intervals = steps + 1
+    val intervals = divisionCount
     val fraction = valueToFraction(coercedValue, valueRange)
     val snappedFraction = (fraction * intervals).roundToInt() / intervals.toFloat()
     return valueRange.start + snappedFraction * (valueRange.endInclusive - valueRange.start)
@@ -338,14 +344,14 @@ private fun resolveSegmentMarkerValues(
     showSegmentMarkers: Boolean,
     segmentValues: List<Float>,
     valueRange: ClosedFloatingPointRange<Float>,
-    steps: Int
+    divisionCount: Int
 ): List<Float> {
     if (!showSegmentMarkers) return emptyList()
 
     val values = if (segmentValues.isNotEmpty()) {
         segmentValues
-    } else if (steps > 0) {
-        val intervals = steps + 1
+    } else if (divisionCount > 0) {
+        val intervals = divisionCount
         List(intervals + 1) { index ->
             valueRange.start +
                 (valueRange.endInclusive - valueRange.start) * index / intervals.toFloat()

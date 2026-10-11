@@ -32,8 +32,9 @@ data class HyperDialogColors(
 @Composable
 fun HyperDialog(
     visible: Boolean,
-    onDismissRequest: () -> Unit,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
+    maxWidth: androidx.compose.ui.unit.Dp = HyperDialogDefaults.MaxWidth,
     title: String? = null,
     shape: Shape = HyperDialogDefaults.Shape,
     colors: HyperDialogColors = HyperDialogDefaults.colors(),
@@ -46,19 +47,21 @@ fun HyperDialog(
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true,
     showScrollIndicator: Boolean = HyperDialogDefaults.ShowScrollIndicator,
-    actionContent: (@Composable RowScope.() -> Unit)? = null,
+    actions: (@Composable RowScope.() -> Unit)? = null,
     border: BorderStroke? = HyperDialogDefaults.border(),
     contentPadding: androidx.compose.foundation.layout.PaddingValues = HyperDialogDefaults.ContentPadding,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val dialogMaxWidth = maxWidth
+    require(dialogMaxWidth > 0.dp && dialogMaxWidth.value.isFinite())
     val transitionProgress = hyperOverlayProgress(visible)
     if (!visible && transitionProgress == 0f) return
 
-    val currentOnDismissRequest by rememberUpdatedState(onDismissRequest)
+    val currentOnDismissRequest by rememberUpdatedState(onClose)
     val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surfaceStrong)
 
     HyperDialogHost(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = onClose,
         dismissOnBackPress = dismissOnBackPress
     ) {
         BoxWithConstraints(
@@ -80,7 +83,7 @@ fun HyperDialog(
                 .coerceAtLeast(0.dp)
             val availableHeight = (maxHeight - HyperDialogWindowPadding * 2)
                 .coerceAtLeast(0.dp)
-            val resolvedMaxWidth = HyperDialogDefaults.MaxWidth.coerceAtMost(availableWidth)
+            val resolvedMaxWidth = dialogMaxWidth.coerceAtMost(availableWidth)
             val resolvedMinWidth = HyperDialogDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
 
             HyperFloatingPanel(
@@ -106,7 +109,7 @@ fun HyperDialog(
                 verticalArrangement = verticalArrangement,
                 actionArrangement = actionArrangement,
                 showScrollIndicator = showScrollIndicator,
-                actionContent = actionContent,
+                actions = actions,
                 content = content
             )
         }

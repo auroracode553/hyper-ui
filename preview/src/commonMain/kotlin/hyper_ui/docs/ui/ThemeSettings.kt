@@ -99,7 +99,7 @@ private fun PreviewToggle(
     onClick: () -> Unit
 ) {
     HyperButton(type = "tonal",
-        onClick = onClick,
+        onPressed = onClick,
         size = "small",
         contentPadding = HyperButtonDefaults.contentPadding("small")
     ) { HyperText(label, maxLines = 1) }
@@ -156,7 +156,7 @@ private fun ThemeColorPicker(
                     val bDiff = it.color.blue - currentColor.blue
                     rDiff * rDiff + gDiff * gDiff + bDiff * bDiff
                 }?.id ?: "",
-            onSelected = { option -> onColorChange(option.color) },
+            onChanged = { option -> onColorChange(option.color) },
             colorSize = 28.dp,
             horizontalSpacing = 6.dp,
             verticalSpacing = 8.dp,

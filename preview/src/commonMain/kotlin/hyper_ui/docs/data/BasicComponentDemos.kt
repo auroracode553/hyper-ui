@@ -12,20 +12,20 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperButton",
         description = "对齐 Flutter ButtonsExample 的按钮排列、文案、图标与状态；type 控制形态，color / colorStyle 控制配色。",
         code = """
-            HyperButton(onClick = onSave) {
+            HyperButton(onPressed = onSave) {
                 HyperIcon(searchIcon, contentDescription = null)
                 HyperText("搜索")
             }
 
             HyperButton(
-                onClick = onDelete,
+                onPressed = onDelete,
                 type = "filled",
                 colorStyle = "danger"
             ) {
                 HyperText("删除")
             }
 
-            HyperButton(onClick = onSearch, type = "icon") {
+            HyperButton(onPressed = onSearch, type = "icon") {
                 HyperIcon(searchIcon, contentDescription = "搜索")
             }
         """.trimIndent(),
@@ -50,7 +50,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         """HyperText("正文", size = "default")""", listOf(DemoVariant("字号", "size", "small/default/large")),
         listOf("basic/hyper-text.md"), { TextDemo() }),
     ComponentDemo("icon", GROUP_BASIC, "HyperIcon", "参考版本 Lucide 字体轮廓与 18 / 24 / 32dp 图标尺寸。",
-        """HyperIcon(imageVector = icon, contentDescription = "图标")""", listOf(DemoVariant("大小与颜色", "size / tint", "插槽继承与显式覆盖")),
+        """HyperIcon(icon = icon, contentDescription = "图标")""", listOf(DemoVariant("大小与颜色", "size / color", "插槽继承与显式覆盖")),
         listOf("basic/hyper-icon.md"), { IconDemo() }),
     ComponentDemo("divider", GROUP_BASIC, "HyperDivider", "1dp 实线或 4dp / 4dp 虚线，支持横竖方向与缩进。",
         """HyperDivider(type = "dashed", indent = 14.dp)""", listOf(DemoVariant("方向", "orientation", "horizontal/vertical")),

@@ -10,18 +10,18 @@ import androidx.compose.ui.semantics.semantics
 /** 返回动作由调用方处理；按钮沿用 HyperButton 的交互与材质。 */
 @Composable
 fun HyperNavBarBackButton(
-    onClick: () -> Unit,
+    onPressed: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     contentDescription: String = "返回"
 ) {
     HyperButton(
-        onClick = onClick,
+        onPressed = onPressed,
         modifier = modifier.semantics { this.contentDescription = contentDescription },
         type = "icon",
         colors = HyperButtonDefaults.colors(null, containerColor = hyperGlass.surfaceStrong)
     ) {
         HyperIcon(
-            imageVector = HyperReferenceIcons.ChevronLeft,
+            icon = HyperReferenceIcons.ChevronLeft,
             contentDescription = null,
             modifier = Modifier.size(HyperButtonDefaults.IconSize)
         )
@@ -31,18 +31,18 @@ fun HyperNavBarBackButton(
 /** 固定类型 HyperNavBar 使用的更多操作按钮。 */
 @Composable
 internal fun HyperNavBarMoreButton(
-    onClick: () -> Unit,
+    onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     contentDescription: String = "更多"
 ) {
     HyperButton(
-        onClick = onClick,
+        onPressed = onClick,
         modifier = modifier.semantics { this.contentDescription = contentDescription },
         type = "icon",
         colors = HyperButtonDefaults.colors(null, containerColor = hyperGlass.surfaceStrong)
     ) {
         HyperIcon(
-            imageVector = HyperReferenceIcons.More,
+            icon = HyperReferenceIcons.More,
             contentDescription = null,
             modifier = Modifier.size(HyperButtonDefaults.IconSize)
         )

@@ -42,11 +42,11 @@ HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 
 | 组件 | 当前明确入口 |
 | --- | --- |
 | HyperThemeConfig | material = HyperMaterial.Solid / Soft / Clear；glass 可显式覆盖 |
-| HyperDropdown | options: List&lt;HyperOption&lt;T&gt;&gt;，value，onValueChange；临时 expanded 在组件内部 |
-| HyperPopover | visible、onDismissRequest、anchorContent、content；内容贴触发点定位 |
-| HyperTabs | items、selectedItem、onSelected、scrollable；共享表面 |
-| HyperTabBar | type=single/multiple、itemLabel、itemSelected、onItemClick；单动作角标 badgeCount |
-| HyperCheckbox | checked: Boolean?、onCheckedChange: (Boolean?)-&gt;Unit、tristate |
+| HyperDropdown | options: List&lt;HyperOption&lt;T&gt;&gt;，value，onChanged；临时 expanded 在组件内部 |
+| HyperPopover | visible、onClose、child、content；内容贴触发点定位 |
+| HyperTabs | tabs、selectedIndex、onChanged、scrollable；共享表面 |
+| HyperTabBar | type=single/multiple、itemLabel、selectedIndex、onChanged；单动作角标 badgeCount |
+| HyperCheckbox | value: Boolean?、onChanged: (Boolean?)-&gt;Unit、tristate |
 | HyperText | size=small/default/large；局部插槽样式优先 |
 | HyperIcon | size=small/default/large；default 继承插槽尺寸 |
 | HyperSlider | 默认 0..100、showValue=true；删除旧中心点/光晕颜色配置 |

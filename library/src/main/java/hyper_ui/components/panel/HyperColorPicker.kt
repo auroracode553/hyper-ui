@@ -81,7 +81,7 @@ object HyperColorPickerDefaults {
 @Composable
 fun HyperColorPicker(
     selectedId: String,
-    onSelected: (HyperColorOption) -> Unit,
+    onChanged: (HyperColorOption) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     options: List<HyperColorOption> = HyperColorPickerDefaults.presetOptions,
@@ -100,7 +100,7 @@ fun HyperColorPicker(
                 option = option,
                 selected = option.id == selectedId,
                 enabled = enabled,
-                onClick = { onSelected(option) },
+                onClick = { onChanged(option) },
                 colorSize = colorSize,
                 labelTopSpacing = labelTopSpacing,
                 modifier = Modifier.widthIn(min = colorSize + 12.dp)

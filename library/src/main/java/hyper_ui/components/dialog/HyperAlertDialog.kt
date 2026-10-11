@@ -10,24 +10,24 @@ import androidx.compose.ui.Modifier
 @Composable
 fun HyperAlertDialog(
     visible: Boolean,
-    onDismissRequest: () -> Unit,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
     dismissOnClickOutside: Boolean = true,
-    bodyContent: (@Composable ColumnScope.() -> Unit)? = null,
-    actionContent: (@Composable RowScope.() -> Unit)? = null
+    content: (@Composable ColumnScope.() -> Unit)? = null,
+    actions: (@Composable RowScope.() -> Unit)? = null
 ) {
     HyperDialog(
         visible = visible,
-        onDismissRequest = onDismissRequest,
+        onClose = onClose,
         title = title,
         modifier = modifier,
         dismissOnClickOutside = dismissOnClickOutside,
-        actionContent = actionContent
+        actions = actions
     ) {
         val dialogColumnScope = this
 
-        bodyContent?.let { body ->
+        content?.let { body ->
             CompositionLocalProvider(LocalHyperContentColor provides HyperColors.primaryText) {
                 body.invoke(dialogColumnScope)
             }

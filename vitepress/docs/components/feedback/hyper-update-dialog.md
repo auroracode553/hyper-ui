@@ -20,7 +20,14 @@ description: 展示版本信息、下载进度和安装阶段；更新任务由�
 ```kotlin
 import hyper_ui.*
 
-HyperUpdateDialog(state, onDismissRequest = onClose, onRetry = onRetry, onDownload = onDownload, onInstall = onInstall)
+HyperUpdateDialog(
+    status = HyperUpdateStatus.available,
+    currentVersion = "1.0.1",
+    release = HyperUpdateRelease(version = "1.0.2", highlights = listOf("优化设置页")),
+    onDownload = onDownload,
+    onLater = onClose,
+    onClose = onClose
+)
 ```
 
 </details>
@@ -37,7 +44,7 @@ Error 使用简洁布局：保留“软件更新”页头、具体错误说明�
 
 **状态归属**
 
-Idle 不显示。检查/下载/安装使用受控状态；Installing 或 mandatory 未完成时禁止外部点击与返回关闭。UI 只通知调用方，不检查网络、下载或安装。
+idle 不显示。检查/下载/安装使用受控状态；installing 或 mandatory 未完成时禁止外部点击与返回关闭。UI 只通知调用方，不检查网络、下载或安装。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -51,17 +58,26 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 ```kotlin
 @Composable
 fun HyperUpdateDialog(
-    state: HyperUpdateDialogState,
-    onDismissRequest: () -> Unit,
-    onRetry: () -> Unit,
-    onDownload: () -> Unit,
-    modifier: Modifier = Modifier,
-    texts: HyperUpdateDialogTexts = HyperUpdateDialogTexts(),
-    dismissOnClickOutside: Boolean = true,
+    status: HyperUpdateStatus = HyperUpdateStatus.idle,
+    currentVersion: String? = null,
+    release: HyperUpdateRelease? = null,
+    progress: Float? = null,
+    downloadProgress: HyperUpdateDownloadProgress? = null,
+    progressText: String? = null,
+    title: String? = null,
+    message: String? = null,
     mandatory: Boolean = false,
-    onInstall: () -> Unit = {},
-    onCheck: () -> Unit = onRetry,
-    onCancel: () -> Unit = onDismissRequest
+    primaryLabel: String? = null,
+    secondaryLabel: String? = null,
+    onCheck: (() -> Unit)? = null,
+    onDownload: (() -> Unit)? = null,
+    onInstall: (() -> Unit)? = null,
+    onRetry: (() -> Unit)? = null,
+    onCancel: (() -> Unit)? = null,
+    onLater: (() -> Unit)? = null,
+    onClose: (() -> Unit)? = null,
+    maxWidth: Dp = 420.dp,
+    modifier: Modifier = Modifier
 )
 ```
 
@@ -69,71 +85,85 @@ fun HyperUpdateDialog(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| state | HyperUpdateDialogState | 是 | — | 调用方持有的更新状态。 |
-| onDismissRequest | () -&gt; Unit | 是 | — | 请求关闭，由调用方修改状态。 |
-| onRetry | () -&gt; Unit | 是 | — | 通知业务重试。 |
-| onDownload | () -&gt; Unit | 是 | — | 通知业务执行下载；UI 不执行下载。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| texts | HyperUpdateDialogTexts | 否 | HyperUpdateDialogTexts() | 可替换的更新文案。 |
-| dismissOnClickOutside | Boolean | 否 | true | 点击外部时是否请求关闭。 |
-| mandatory | Boolean | 否 | false | 必要更新；未完成时禁止关闭。 |
-| onInstall | () -&gt; Unit | 否 | {} | 通知业务执行安装；UI 不执行安装。 |
-| onCheck | () -&gt; Unit | 否 | onRetry | 通知业务检查更新。 |
-| onCancel | () -&gt; Unit | 否 | onDismissRequest | 通知业务取消。 |
+| status | HyperUpdateStatus | 否 | HyperUpdateStatus.idle | 由业务层提供的更新展示状态。 |
+| currentVersion | String? | 否 | null | 可选的当前版本号。 |
+| release | HyperUpdateRelease? | 否 | null | 可选的新版本展示信息。 |
+| progress | Float? | 否 | null | 由调用方提供的进度值。 |
+| downloadProgress | HyperUpdateDownloadProgress? | 否 | null | 业务层提供的字节下载快照。 |
+| progressText | String? | 否 | null | 自定义进度说明。 |
+| title | String? | 否 | null | 组件标题文字或内容。 |
+| message | String? | 否 | null | 提示消息文本。 |
+| mandatory | Boolean | 否 | false | 必要更新；未完成时限制关闭。 |
+| primaryLabel | String? | 否 | null | 覆盖当前状态的主操作文案。 |
+| secondaryLabel | String? | 否 | null | 覆盖当前状态的次操作文案。 |
+| onCheck | (() -&gt; Unit)? | 否 | null | 通知业务层检查更新。 |
+| onDownload | (() -&gt; Unit)? | 否 | null | 用户触发下载时的回调。 |
+| onInstall | (() -&gt; Unit)? | 否 | null | 通知业务层启动安装。 |
+| onRetry | (() -&gt; Unit)? | 否 | null | 用户触发重试时的回调。 |
+| onCancel | (() -&gt; Unit)? | 否 | null | 通知业务层取消检查或下载。 |
+| onLater | (() -&gt; Unit)? | 否 | null | 通知业务层稍后处理。 |
+| onClose | (() -&gt; Unit)? | 否 | null | 请求关闭时通知调用方更新可见状态。 |
+| maxWidth | Dp | 否 | 420.dp | 弹层或提示的最大宽度。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 
-<details class="component-doc__details component-doc__advanced">
-<summary>默认配置与数据类型</summary>
+### HyperUpdateRelease
 
-**HyperAppRelease 配置**
+```kotlin
+data class HyperUpdateRelease(
+    val version: String,
+    val releaseDate: String? = null,
+    val sizeLabel: String? = null,
+    val highlights: List<String> = emptyList()
+)
+```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| versionName | String | 是 | — | 版本号，版本区域与更新状态显示使用。 |
-| displayName | String | 是 | — | Release 的应用显示名，由业务层提供。 |
-| releaseNotes | String | 是 | — | 更新说明；无 highlights 时作为摘要来源。 |
-| packageFileName | String | 是 | — | 更新包文件名，供调用方下载流程使用。 |
-| packageDownloadUrl | String | 是 | — | 更新包地址，UI 不读取或下载。 |
-| isPrerelease | Boolean | 否 | false | 预发布标记，业务层决定是否接受。 |
+| version | String | 是 | — | 非空版本号。 |
+| releaseDate | String? | 否 | null | 版本发布日期文案。 |
+| sizeLabel | String? | 否 | null | 版本包大小文案。 |
 | highlights | List&lt;String&gt; | 否 | emptyList() | 逐条展示的更新摘要。 |
-| releaseDate | String? | 否 | null | 版本区域的可选日期文案。 |
-| sizeLabel | String? | 否 | null | 版本区域的可选包大小文案。 |
 
-**HyperUpdateRequest 配置**
+### HyperUpdateDownloadProgress
+
+```kotlin
+data class HyperUpdateDownloadProgress(
+    val downloadedBytes: Long,
+    val totalBytes: Long? = null,
+    val bytesPerSecond: Double? = null
+)
+```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| currentVersionName | String | 是 | — | 调用方提供的当前版本号。 |
-| releaseUrl | String | 是 | — | 版本检查地址，由调用方的 ReleaseLoader 使用。 |
+| downloadedBytes | Long | 是 | — | 已下载字节数；负数按 0 展示。 |
+| totalBytes | Long? | 否 | null | 总字节数；null、0 或负值表示未知。 |
+| bytesPerSecond | Double? | 否 | null | 每秒下载字节数；非正数或非有限值表示未知。 |
 
-**HyperUpdateDialogTexts 配置**
-
-| 参数 | 类型 | 必填 | 默认值 | 作用 |
-| --- | --- | --- | --- | --- |
-| checkTitle | String | 否 | "正在检查更新" | 检查中标题。 |
-| updateAvailableTitle | String | 否 | "发现新版本" | 发现更新标题。 |
-| downloadQueuedTitle | String | 否 | "已开始下载" | 系统排队状态标题。 |
-| checkingMessage | String | 否 | "正在获取版本信息，请稍候。" | 检查中说明。 |
-| upToDateMessage | String | 否 | "所有新功能与体验优化，都已为你准备好。" | 已是最新的说明。 |
-| downloadQueuedMessage | String | 否 | "更新包已交给系统下载管理器。" | 系统排队说明。 |
-| downloadNotificationHint | String | 否 | "下载进度和完成结果可在系统通知或“下载”中查看。" | 系统排队时的进度详情文案。 |
-| cancelAction | String | 否 | "取消" | 取消按钮文字。 |
-| downloadAction | String | 否 | "立即更新" | 立即更新按钮文字。 |
-| closeAction | String | 否 | "关闭" | 关闭按钮文字。 |
-| retryAction | String | 否 | "重试" | 重试按钮文字。 |
-
-**状态类型**
-
-| 状态 | 必需数据 | 作用 |
+| 只读字段 | 类型 | 作用 |
 | --- | --- | --- |
-| Idle | 无 | 隐藏弹窗 |
-| Checking | currentVersionName | 检查中的不确定加载 |
-| UpToDate | currentVersionName | 已是最新，可再次检查 |
-| UpdateAvailable | currentVersionName, release | 更新摘要与立即更新 |
-| DownloadQueued | currentVersionName, release, downloadId | 系统下载排队，不确定进度 |
-| Downloading | currentVersionName, release；progress=null，progressText=null | 下载阶段，进度 0..1 |
-| ReadyToInstall | currentVersionName, release | 等待安装 |
-| Installing | currentVersionName, release；progress=null，progressText=null | 安装阶段，锁定关闭 |
-| Completed | currentVersionName；release=null | 完成后允许关闭 |
-| Error | currentVersionName, message | 错误说明与重试 |
+| fraction | Float? | 0..1 下载比例；总量未知时为 null。 |
+| sizeLabel | String | 已下载量和可用的总量，使用十进制字节单位。 |
+| speedLabel | String? | 可用的速度文案。 |
+| remainingLabel | String? | 总量与速度有效时的预计剩余时间。 |
 
-</details>
+### HyperUpdateStatus
+
+| 状态 | 展示 | 操作 |
+| --- | --- | --- |
+| idle | 隐藏弹窗 | 外部入口开始检查 |
+| checking | 检查中，隐藏版本信息 | onCancel / onClose |
+| available | 新版本信息与更新摘要 | onDownload / onLater |
+| upToDate | 已是最新版本 | onCheck / onClose |
+| downloadQueued | 系统下载排队、不定进度 | onCancel / onClose |
+| downloading | 下载比例、字节数、速度及剩余时间 | onCancel / onClose |
+| readyToInstall | 更新已准备就绪 | onInstall / onLater |
+| installing | 安装进度，禁止关闭 | 业务完成后切换状态 |
+| completed | 更新完成 | onClose |
+| error | 仅错误原因、重试与关闭 | onRetry / onClose |
+
+回调为 null 时不显示对应次操作，主操作不可点击。关闭视图与取消任务由不同回调负责，组件不会替业务层取消下载。
+
+downloadProgress 在 downloadQueued / downloading 阶段优先于 progress；安装阶段只使用 progress。progressText 覆盖进度说明，总大小未知时不显示百分比或预计剩余时间。
+
+旧的状态封装、业务更新检查器和文案配置对象已删除。业务使用统一 status、数据模型、文案覆盖和回调 API。

@@ -22,7 +22,7 @@ var selectedId by remember { mutableStateOf("ocean_blue") }
 
 HyperColorPicker(
     selectedId = selectedId,
-    onSelected = { option -> selectedId = option.id }
+    onChanged = { option -> selectedId = option.id }
 )
 ```
 
@@ -48,7 +48,7 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 @Composable
 fun HyperColorPicker(
     selectedId: String,
-    onSelected: (HyperColorOption) -> Unit,
+    onChanged: (HyperColorOption) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     options: List<HyperColorOption> = HyperColorPickerDefaults.presetOptions,
@@ -64,7 +64,7 @@ fun HyperColorPicker(
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | selectedId | String | 是 | — | 当前颜色选项 ID，由调用方持有。 |
-| onSelected | (HyperColorOption) -&gt; Unit | 是 | — | 选中项变化时通知调用方。 |
+| onChanged | (HyperColorOption) -&gt; Unit | 是 | — | 用户修改值或选择项时通知调用方。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | enabled | Boolean | 否 | true | 是否允许用户交互。 |
 | options | List&lt;HyperColorOption&gt; | 否 | HyperColorPickerDefaults.presetOptions | 可选颜色配置。 |

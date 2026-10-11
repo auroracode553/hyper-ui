@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 internal val MenuListCornerRadius = 18.dp
 
@@ -39,8 +40,12 @@ fun <T> HyperMenuGroup(
     contentModifier: Modifier = Modifier.padding(HyperMenuGroupDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
+    title: String? = null,
+    subtitle: String? = null,
     itemContent: @Composable (item: T) -> Unit
 ) {
+    HyperMenuGroupHeading(title, subtitle) {
+
     val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surface)
     val shape = HyperMenuGroupDefaults.Shape
     Column(
@@ -72,6 +77,7 @@ fun <T> HyperMenuGroup(
             }
         }
     }
+    }
 }
 
 /**
@@ -87,8 +93,12 @@ fun HyperMenuGroup(
     contentModifier: Modifier = Modifier.padding(HyperMenuGroupDefaults.ContentPadding),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     colors: HyperMenuGroupColors = HyperMenuGroupDefaults.colors(),
+    title: String? = null,
+    subtitle: String? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    HyperMenuGroupHeading(title, subtitle) {
+
     val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surface)
     CompositionLocalProvider(
         LocalHyperListTileDividerSuppressed provides false,
@@ -105,6 +115,7 @@ fun HyperMenuGroup(
             verticalArrangement = verticalArrangement,
             content = content
         )
+    }
     }
 }
 
@@ -128,3 +139,15 @@ internal fun menuListItemShape(
     bottomEnd = if (isLast) MenuListCornerRadius else 0.dp,
     bottomStart = if (isLast) MenuListCornerRadius else 0.dp
 )
+
+@Composable
+private fun HyperMenuGroupHeading(title: String?, subtitle: String?, child: @Composable () -> Unit) {
+    if (title == null && subtitle == null) { child(); return }
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (title != null) HyperText(title, Modifier.padding(start = 8.dp),
+            fontSize = 14.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+        child()
+        if (subtitle != null) HyperText(subtitle, Modifier.padding(horizontal = 8.dp),
+            color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 16.2.sp)
+    }
+}

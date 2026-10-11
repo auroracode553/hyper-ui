@@ -14,9 +14,8 @@ import hyper_ui.HyperBackdrop
 import hyper_ui.HyperSoftBackground
 import hyper_ui.docs.LocalThemeColor
 
-/** 预览手机的状态栏与手势条安全区。 */
+/** 预览手机的顶部状态栏安全区。 */
 internal val PreviewTopSafeArea = 52.dp
-internal val PreviewBottomSafeArea = 24.dp
 
 @Composable
 internal fun PreviewSceneBackdrop(

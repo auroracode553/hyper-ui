@@ -214,8 +214,8 @@ private fun MobilePreviewTopBar(
     ) {
         HyperNavBar(
             modifier = Modifier.fillMaxWidth(),
-            titleContent = { HyperText("HyperUI Preview", maxLines = 1) },
-            subtitleContent = { HyperText(selectedDemo.description, maxLines = 1) }
+            title = { HyperText("HyperUI Preview", maxLines = 1) },
+            subtitle = { HyperText(selectedDemo.description, maxLines = 1) }
         )
         DocsThemeControls(
             controller = LocalThemeColor.current,

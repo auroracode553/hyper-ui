@@ -45,7 +45,7 @@ internal fun HyperFloatingPanel(
     verticalArrangement: Arrangement.Vertical,
     actionArrangement: Arrangement.Horizontal,
     showScrollIndicator: Boolean,
-    actionContent: (@Composable RowScope.() -> Unit)?,
+    actions: (@Composable RowScope.() -> Unit)?,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val resolvedTitle = title?.trim()?.takeIf(String::isNotEmpty)
@@ -98,13 +98,13 @@ internal fun HyperFloatingPanel(
                 }
             }
 
-            if (actionContent != null) {
+            if (actions != null) {
                 Box(Modifier.height(18.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = actionArrangement,
                     verticalAlignment = Alignment.CenterVertically,
-                    content = actionContent
+                    content = actions
                 )
             }
         }

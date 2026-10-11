@@ -92,7 +92,7 @@ fun IconDemo() {
         PreviewSectionLabel("常用语义图标")
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             listOf(HyperReferenceIcons.Home, HyperReferenceIcons.Search, HyperReferenceIcons.Settings, HyperReferenceIcons.Check).forEach {
-                HyperIcon(it, "图标示例", size = size, tint = if (colored) HyperColors.accent else HyperColors.primaryText)
+                HyperIcon(it, "图标示例", size = size, color = if (colored) HyperColors.accent else HyperColors.primaryText)
             }
         }
         PreviewSectionLabel("尺寸对照")
@@ -116,14 +116,14 @@ fun DividerDemo() {
         PreviewSectionLabel("纵向分隔")
         Row(Modifier.height(58.dp), verticalAlignment = Alignment.CenterVertically) {
             HyperText("左侧", modifier = Modifier.weight(1f))
-            HyperDivider(orientation = "vertical")
+            HyperDivider(axis = "vertical")
             HyperText("右侧", modifier = Modifier.weight(1f).padding(start = 14.dp))
         }
         PreviewSectionLabel("可操作变体")
         PreviewToggle("虚线", dashed) { dashed = it }
         PreviewToggle("纵向", vertical) { vertical = it }
         PreviewToggle("缩进 14dp", inset) { inset = it }
-        HyperDivider(type = if (dashed) "dashed" else "solid", orientation = if (vertical) "vertical" else "horizontal",
+        HyperDivider(type = if (dashed) "dashed" else "solid", axis = if (vertical) "vertical" else "horizontal",
             indent = if (inset) 14.dp else 0.dp, endIndent = if (inset) 14.dp else 0.dp,
             length = if (vertical) 80.dp else null)
     }

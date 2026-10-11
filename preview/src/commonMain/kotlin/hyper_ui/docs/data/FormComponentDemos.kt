@@ -17,14 +17,12 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperRadio",
         description = "单选按钮组件，选中状态由调用方维护。",
         code = """
-            HyperRadio(
-                selected = selected,
-                onClick = onSelect
-            )
+            HyperRadio(value = "balanced", groupValue = selectedMode,
+                onChanged = { selectedMode = it })
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("选中", "selected = true", "21dp 圆环，选中环宽 6dp、内部 subtle 表面"),
-            DemoVariant("未选中", "selected = false", "21dp 圆环，普通轮廓 1.5dp"),
+            DemoVariant("选中", "value == groupValue", "21dp 圆环，选中环宽 6dp、内部 subtle 表面"),
+            DemoVariant("未选中", "value != groupValue", "21dp 圆环，普通轮廓 1.5dp"),
             DemoVariant("禁用", "enabled = false", "禁用实色状态")
         ),
         apiDocumentPaths = listOf("form/hyper-radio.md"),
@@ -37,9 +35,9 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         description = "默认总高 40dp 的等宽或内容宽度分段控制器；共用轨道、选中底板与受控标签插槽。",
         code = """
             HyperSegmentedControl(
-                items = periods,
-                selectedItem = selectedPeriod,
-                onSelected = { selectedPeriod = it }
+                options = periods,
+                selectedValue = selectedPeriod,
+                onChanged = { selectedPeriod = it }
             ) { period ->
                 HyperText(period.label)
             }
@@ -59,8 +57,8 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         description = "使用 Lucide check 默认图标的复选框，支持选中、未选中和禁用状态。",
         code = """
             HyperCheckbox(
-                checked = checked,
-                onCheckedChange = { checked = it }
+                value = checked,
+                onChanged = { value = it }
             )
         """.trimIndent(),
         variants = listOf(
@@ -78,7 +76,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         description = "分组呈现基础清空、密码显隐、金额前后缀和多行计数；尺寸、禁用、只读与错误状态可操作。",
         code = """
             HyperTextField(value, { value = it }, clearable = true, size = "default",
-                placeholderContent = { HyperText("请输入内容") })
+                placeholder = { HyperText("请输入内容") })
             HyperTextField(password, { password = it }, type = "password", showPasswordToggle = true)
         """.trimIndent(),
         variants = listOf(
@@ -86,7 +84,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("聚焦", "inputModifier / interactionSource", "即时 1.5dp 主题描边，无额外阴影"),
             DemoVariant("状态", "enabled / readOnly / isError", "禁用、只读与错误可切换"),
             DemoVariant("内置操作", "clearable / showPasswordToggle", "30dp 控件、18dp Lucide 图标"),
-            DemoVariant("多行计数", "type / rows / maxlength / showWordLimit", "3 行输入与字符限制")
+            DemoVariant("多行计数", "type / rows / maxLength / showWordLimit", "3 行输入与字符限制")
         ),
         apiDocumentPaths = listOf("form/hyper-text-field.md"),
         content = { TextFieldDemo() }
@@ -98,8 +96,8 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         description = "受控玻璃开关；关闭态使用清晰的中性轨道和细描边，预览覆盖开启、关闭与禁用状态。",
         code = """
             HyperSwitch(
-                checked = enabled,
-                onCheckedChange = { enabled = it }
+                value = enabled,
+                onChanged = { enabled = it }
             )
         """.trimIndent(),
         variants = listOf(
@@ -118,19 +116,19 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperSlider(
                 value = speed,
-                onValueChange = { speed = it },
-                valueRange = 0f..5f,
-                steps = 4,
+                onChanged = { speed = it },
+                min = 0f, max = 5f,
+                divisions = 5,
                 showSegmentMarkers = true
             )
         """.trimIndent(),
         variants = listOf(
             DemoVariant(
                 "默认连续",
-                "valueRange = 0f..100f, showValue = true",
+                "min = 0f, max = 100f, showValue = true",
                 "44dp 触摸高度、6dp 轨道、20dp 手柄、2dp 描边"
             ),
-            DemoVariant("分段", "steps = 4, showSegmentMarkers = true", "吸附并显示全部分段点"),
+            DemoVariant("分段", "divisions = 5, showSegmentMarkers = true", "吸附并显示全部分段点"),
             DemoVariant("指定标记", "segmentValues", "只展示业务主刻度"),
             DemoVariant("只读", "readOnly = true", "保留正常配色但关闭交互"),
             DemoVariant("禁用", "enabled = false", "保留品牌轨道，手柄使用 muted 底色")

@@ -47,12 +47,12 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 ```kotlin
 @Composable
 fun HyperTooltip(
-    text: String,
+    message: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    hoverDelayMillis: Long = 500L,
+    hoverDelay: Long = 500L,
     maxWidth: Dp = 240.dp,
-    content: @Composable () -> Unit,
+    child: @Composable () -> Unit,
 )
 ```
 
@@ -60,9 +60,9 @@ fun HyperTooltip(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| text | String | 是 | — | 提示文字。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| enabled | Boolean | 否 | true | 是否允许用户操作。 |
-| hoverDelayMillis | Long | 否 | 500L | 悬停等待时长；手机长按固定 500ms。 |
-| maxWidth | Dp | 否 | 240.dp | 浮层最大宽度。 |
-| content | @Composable () -&gt; Unit | 是 | — | 主体内容插槽。 |
+| message | String | 是 | — | 提示消息文本。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| enabled | Boolean | 否 | true | 是否允许用户交互。 |
+| hoverDelay | Long | 否 | 500L | 显示悬浮提示前的等待时间，单位毫秒。 |
+| maxWidth | Dp | 否 | 240.dp | 弹层或提示的最大宽度。 |
+| child | @Composable () -&gt; Unit | 是 | — | 组件主体或触发器内容。 |

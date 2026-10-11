@@ -56,20 +56,20 @@ fun PlaybackSpeedScaleDemo() {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
                 enabled = selectedIndex > 0,
-                onClick = { selectedSpeed = speedOptions[selectedIndex - 1] }
+                onPressed = { selectedSpeed = speedOptions[selectedIndex - 1] }
             ) {
                 HyperText("向左调速")
             }
             HyperButton(
                 enabled = selectedIndex < speedOptions.lastIndex,
-                onClick = { selectedSpeed = speedOptions[selectedIndex + 1] },
+                onPressed = { selectedSpeed = speedOptions[selectedIndex + 1] },
                 colorStyle = "primary", type = "filled",
             ) {
                 HyperText("向右调速")
             }
         }
         HyperButton(
-            onClick = { useCustomColors = !useCustomColors }
+            onPressed = { useCustomColors = !useCustomColors }
         ) {
             HyperText(if (useCustomColors) "恢复默认配色" else "查看自定义配色")
         }
@@ -108,11 +108,11 @@ fun PlaybackSpeedPanelDemo() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                HyperButton(onClick = { panelVisible = true }, colorStyle = "primary", type = "filled") {
+                HyperButton(onPressed = { panelVisible = true }, colorStyle = "primary", type = "filled") {
                     HyperText("打开速度面板")
                 }
                 HyperButton(
-                    onClick = { useCustomColors = !useCustomColors }
+                    onPressed = { useCustomColors = !useCustomColors }
                 ) {
                     HyperText(if (useCustomColors) "恢复默认配色" else "查看自定义配色")
                 }

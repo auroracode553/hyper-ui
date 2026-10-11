@@ -48,11 +48,15 @@ enum class HyperSlideMenuReveal { Closed, Start, End }
 
 data class HyperSlideAction(
     val label: String,
-    val onClick: () -> Unit,
-    val containerColor: Color = Color.Unspecified,
-    val contentColor: Color = Color(1f, 1f, 1f, 1f),
-    val iconContent: (@Composable () -> Unit)? = null
-)
+    val onPressed: () -> Unit,
+    val color: Color = Color.Unspecified,
+    val foregroundColor: Color = Color.Unspecified,
+    val icon: (@Composable () -> Unit)? = null,
+    val type: String = "default"
+) {
+    init { require(type == "default" || type == "danger") { "不支持的 HyperSlideAction type: $type" } }
+    val isDanger: Boolean get() = type == "danger"
+}
 
 /** reveal 为受控展开方向，拖动中的瞬时位移由组件持有；操作执行后请求关闭。 */
 @Composable
@@ -65,7 +69,7 @@ fun HyperSlideMenu(
     enabled: Boolean = true,
     actionExtent: Dp = 64.dp,
     shape: Shape = RoundedCornerShape(18.dp),
-    content: @Composable () -> Unit
+    child: @Composable () -> Unit
 ) {
     require(actionExtent > 0.dp) { "actionExtent 必须大于 0.dp" }
     require(startActions.isNotEmpty() || endActions.isNotEmpty()) { "至少提供一个侧滑操作" }
@@ -131,7 +135,7 @@ fun HyperSlideMenu(
                 }
             )
             .hyperFrostedSurface(hyperGlass.surface, shape)) {
-            CompositionLocalProvider(LocalHyperSurfacePresent provides true) { content() }
+            CompositionLocalProvider(LocalHyperSurfacePresent provides true) { child() }
             if (!dragging && kotlin.math.abs(offset) > 1f) Box(Modifier.matchParentSize()
                 .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
                     onRevealChange(HyperSlideMenuReveal.Closed)
@@ -154,13 +158,13 @@ private fun HyperSlideActionStrip(
         Row(Modifier.fillMaxHeight()) {
             actions.forEach { action ->
                 Column(Modifier.width(extent).fillMaxHeight()
-                    .background(resolveHyperContainerColor(action.containerColor, fallback))
+                    .background(resolveHyperContainerColor(action.color, if (action.isDanger) HyperColors.danger else fallback))
                     .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, enabled = enabled,
-                        onClick = { onClose(); action.onClick() }).padding(horizontal = 6.dp),
+                        onClick = { onClose(); action.onPressed() }).padding(horizontal = 6.dp),
                     horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                    CompositionLocalProvider(LocalHyperContentColor provides action.contentColor) {
-                        if (action.iconContent != null) {
-                            CompositionLocalProvider(LocalHyperIconSize provides 18.dp) { action.iconContent.invoke() }
+                    CompositionLocalProvider(LocalHyperContentColor provides resolveHyperContainerColor(action.foregroundColor, Color(1f, 1f, 1f, 1f))) {
+                        if (action.icon != null) {
+                            CompositionLocalProvider(LocalHyperIconSize provides 18.dp) { action.icon.invoke() }
                             Box(Modifier.height(4.dp))
                         }
                         HyperText(action.label, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)

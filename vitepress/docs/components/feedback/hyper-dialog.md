@@ -33,7 +33,7 @@ HyperDialog(visible, { visible = false }, title = "确认") { HyperText("正文"
 
 **状态归属**
 
-visible 由调用方持有，滚动正文与固定 actionContent 分开。系统返回和外部点击按配置请求关闭。
+visible 由调用方持有，滚动正文与固定 actions 分开。系统返回和外部点击按配置请求关闭。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -48,8 +48,9 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 @Composable
 fun HyperDialog(
     visible: Boolean,
-    onDismissRequest: () -> Unit,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
+    maxWidth: androidx.compose.ui.unit.Dp = HyperDialogDefaults.MaxWidth,
     title: String? = null,
     shape: Shape = HyperDialogDefaults.Shape,
     colors: HyperDialogColors = HyperDialogDefaults.colors(),
@@ -62,7 +63,7 @@ fun HyperDialog(
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true,
     showScrollIndicator: Boolean = HyperDialogDefaults.ShowScrollIndicator,
-    actionContent: (@Composable RowScope.() -> Unit)? = null,
+    actions: (@Composable RowScope.() -> Unit)? = null,
     border: BorderStroke? = HyperDialogDefaults.border(),
     contentPadding: androidx.compose.foundation.layout.PaddingValues = HyperDialogDefaults.ContentPadding,
     content: @Composable ColumnScope.() -> Unit
@@ -73,22 +74,23 @@ fun HyperDialog(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| visible | Boolean | 是 | — | 调用方持有的可见状态。 |
-| onDismissRequest | () -&gt; Unit | 是 | — | 请求关闭，由调用方修改状态。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| title | String? | 否 | null | 标题；null 时省略。 |
-| shape | Shape | 否 | HyperDialogDefaults.Shape | 表面形状。 |
-| colors | HyperDialogColors | 否 | HyperDialogDefaults.colors() | 各状态配色配置。 |
+| visible | Boolean | 是 | — | 是否显示组件，由调用方持有。 |
+| onClose | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| maxWidth | androidx.compose.ui.unit.Dp | 否 | HyperDialogDefaults.MaxWidth | 弹层或提示的最大宽度。 |
+| title | String? | 否 | null | 组件标题文字或内容。 |
+| shape | Shape | 否 | HyperDialogDefaults.Shape | 组件容器的形状。 |
+| colors | HyperDialogColors | 否 | HyperDialogDefaults.colors() | 组件各状态的颜色配置。 |
 | horizontalAlignment | Alignment.Horizontal | 否 | Alignment.Start | 容器内内容的水平对齐方式。 |
 | verticalArrangement | Arrangement.Vertical | 否 | Arrangement.spacedBy(HyperDialogDefaults.ContentSpacing) | 子项的垂直排列方式。 |
 | actionArrangement | Arrangement.Horizontal | 否 | Arrangement.spacedBy( HyperDialogDefaults.ActionSpacing, Alignment.End ) | 操作区的排列方式。 |
 | dismissOnBackPress | Boolean | 否 | true | 按返回键时是否请求关闭。 |
 | dismissOnClickOutside | Boolean | 否 | true | 点击外部时是否请求关闭。 |
 | showScrollIndicator | Boolean | 否 | HyperDialogDefaults.ShowScrollIndicator | 内容滚动时是否显示滚动提示。 |
-| actionContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 操作区插槽。 |
-| border | BorderStroke? | 否 | HyperDialogDefaults.border() | 轮廓覆盖。 |
-| contentPadding | androidx.compose.foundation.layout.PaddingValues | 否 | HyperDialogDefaults.ContentPadding | 内容区的内部留白。 |
-| content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 主体内容插槽。 |
+| actions | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 导航栏操作项内容。 |
+| border | BorderStroke? | 否 | HyperDialogDefaults.border() | 容器边框配置。 |
+| contentPadding | androidx.compose.foundation.layout.PaddingValues | 否 | HyperDialogDefaults.ContentPadding | 主体内容的内部留白。 |
+| content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |
 
 <details class="component-doc__details component-doc__advanced">
 <summary>默认配置与数据类型</summary>
@@ -113,7 +115,7 @@ fun HyperDialog(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
+| color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
 
 **HyperDialogColors 配置**
 

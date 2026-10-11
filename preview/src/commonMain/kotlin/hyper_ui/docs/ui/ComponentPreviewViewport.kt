@@ -23,8 +23,8 @@ internal fun ComponentPreviewViewport(
     key(demo.id) {
         PreviewSceneBackdrop(modifier.fillMaxSize()) {
             val top = if (deviceSafeAreas && !demo.fillsTopSafeArea) PreviewTopSafeArea else 0.dp
-            val bottom = if (deviceSafeAreas && demo.fullScreenPreview && !demo.fillsBottomSafeArea) PreviewBottomSafeArea else 0.dp
-            Box(Modifier.fillMaxSize().padding(top = top, bottom = bottom)) {
+            // 与 Flutter 预览一致：手势条覆盖在整屏内容上，宿主不预留底部安全区。
+            Box(Modifier.fillMaxSize().padding(top = top)) {
                 if (demo.fullScreenPreview) {
                     // 页面示例获得有限的整屏约束；列表或正文自己管理滚动。
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) { demo.content() }

@@ -42,25 +42,25 @@ fun HyperCard(
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperCardDefaults.ContentPadding),
     selected: Boolean = false,
-    onClick: (() -> Unit)? = null,
+    onPressed: (() -> Unit)? = null,
     colors: HyperCardColors = HyperCardDefaults.colors(selected = selected),
     shape: Shape = HyperCardDefaults.Shape,
     elevation: Dp = HyperCardDefaults.Elevation,
     border: BorderStroke? = HyperCardDefaults.border(selected = selected),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperCardDefaults.ContentSpacing),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    titleContent: (@Composable () -> Unit)? = null,
-    subtitleContent: (@Composable () -> Unit)? = null,
-    leadingContent: (@Composable () -> Unit)? = null,
-    actionContent: (@Composable RowScope.() -> Unit)? = null,
-    footerContent: (@Composable ColumnScope.() -> Unit)? = null,
-    content: @Composable ColumnScope.() -> Unit
+    title: (@Composable () -> Unit)? = null,
+    subtitle: (@Composable () -> Unit)? = null,
+    leading: (@Composable () -> Unit)? = null,
+    actions: (@Composable RowScope.() -> Unit)? = null,
+    footer: (@Composable ColumnScope.() -> Unit)? = null,
+    child: (@Composable ColumnScope.() -> Unit)? = null
 ) {
     CompositionLocalProvider(LocalHyperSurfacePresent provides true) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .then(if (onClick != null) Modifier.hyperNoRippleClickable(onClick = onClick) else Modifier)
+            .then(if (onPressed != null) Modifier.hyperNoRippleClickable(onClick = onPressed) else Modifier)
             .hyperFrostedSurface(
                 containerColor = colors.containerColor,
                 shape = shape,
@@ -73,31 +73,31 @@ fun HyperCard(
             horizontalAlignment = horizontalAlignment,
             verticalArrangement = verticalArrangement,
         ) {
-            if (titleContent != null || subtitleContent != null || leadingContent != null || actionContent != null) {
+            if (title != null || subtitle != null || leading != null || actions != null) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
-                    if (leadingContent != null) { leadingContent(); Spacer(Modifier.width(12.dp)) }
+                    if (leading != null) { leading(); Spacer(Modifier.width(12.dp)) }
                     Column(Modifier.weight(1f)) {
-                        if (titleContent != null) CompositionLocalProvider(
+                        if (title != null) CompositionLocalProvider(
                             LocalHyperTextStyle provides HyperTheme.typography.bodyMedium.copy(
                                 fontSize = 14.sp, lineHeight = 17.5.sp, fontWeight = FontWeight.SemiBold)
-                        ) { titleContent() }
-                        if (subtitleContent != null) {
+                        ) { title() }
+                        if (subtitle != null) {
                             Spacer(Modifier.height(2.dp))
                             CompositionLocalProvider(LocalHyperContentColor provides HyperColors.secondaryText,
                                 LocalHyperTextStyle provides HyperTheme.typography.bodyMedium.copy(fontSize = 13.sp, lineHeight = 16.9.sp)
-                            ) { subtitleContent() }
+                            ) { subtitle() }
                         }
                     }
-                    if (actionContent != null) {
+                    if (actions != null) {
                         Spacer(Modifier.width(8.dp))
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), content = actionContent)
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), content = actions)
                     }
                 }
             }
-            content()
-            if (footerContent != null) {
+            child?.invoke(this)
+            if (footer != null) {
                 HyperDivider()
-                footerContent()
+                footer()
             }
         }
     }

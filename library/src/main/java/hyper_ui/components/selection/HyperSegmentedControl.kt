@@ -55,9 +55,9 @@ class HyperSegmentOptionScope internal constructor(
  */
 @Composable
 fun <T> HyperSegmentedControl(
-    items: List<T>,
-    selectedItem: T,
-    onSelected: (T) -> Unit,
+    options: List<T>,
+    selectedValue: T,
+    onChanged: (T) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     itemEnabled: (T) -> Boolean = { true },
@@ -70,9 +70,9 @@ fun <T> HyperSegmentedControl(
     itemContent: @Composable HyperSegmentOptionScope.(item: T) -> Unit
 ) {
     val curve = HyperMotionSpec.SelectionCurve
-    val selectedIndex = items.indexOf(selectedItem)
+    val selectedIndex = options.indexOf(selectedValue)
     val visualIndex = if (LocalLayoutDirection.current == LayoutDirection.Rtl)
-        items.lastIndex - selectedIndex else selectedIndex
+        options.lastIndex - selectedIndex else selectedIndex
     val selectionPosition by animateFloatAsState(visualIndex.toFloat(), tween(HyperMotionSpec.SelectionDuration, easing = curve),
         label = "HyperSegmentedPosition")
     BoxWithConstraints(
@@ -83,20 +83,20 @@ fun <T> HyperSegmentedControl(
                 HyperSegmentedControlDefaults.ContainerElevation, blur = hyperGlass.blur))
             .padding(containerPadding)
     ) {
-        if (equalWidth && items.isNotEmpty() && selectedIndex >= 0) {
-            val cellWidth = maxWidth / items.size
+        if (equalWidth && options.isNotEmpty() && selectedIndex >= 0) {
+            val cellWidth = maxWidth / options.size
             Box(Modifier.absoluteOffset(x = cellWidth * selectionPosition)
                 .width(cellWidth).fillMaxHeight().background(colors.selectedItemColor, itemShape))
         }
         Row(Modifier.fillMaxHeight().then(if (equalWidth) Modifier.fillMaxWidth() else Modifier)) {
-            items.forEach { item ->
-                val selected = item == selectedItem
+            options.forEach { item ->
+                val selected = item == selectedValue
                 val actualEnabled = enabled && itemEnabled(item)
                 val itemBackground by animateColorAsState(
                     if (!equalWidth && selected) colors.selectedItemColor else colors.unselectedItemColor,
                     tween(HyperMotionSpec.StateDuration, easing = curve), label = "HyperSegmentedItemBackground")
                 Box(Modifier.then(if (equalWidth) Modifier.weight(1f) else Modifier).fillMaxHeight()
-                    .hyperNoRippleClickable(enabled = actualEnabled, role = Role.Tab, onClick = { onSelected(item) })
+                    .hyperNoRippleClickable(enabled = actualEnabled, role = Role.Tab, onClick = { onChanged(item) })
                     .semantics { this.selected = selected }
                     .background(itemBackground, itemShape).padding(itemContentPadding),
                     contentAlignment = Alignment.Center

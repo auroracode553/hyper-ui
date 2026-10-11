@@ -19,15 +19,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.roundToInt
 
 @Composable
-internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, mandatory: Boolean, onClose: () -> Unit) {
-    val isError = view.state is HyperUpdateDialogState.Error
+internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, mandatory: Boolean, onClose: (() -> Unit)?) {
+    val isError = view.status == HyperUpdateStatus.error
     Column(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             HyperText("软件更新", Modifier.weight(1f), color = HyperColors.secondaryText, fontSize = 12.sp, fontWeight = FontWeight.Medium)
-            if (!locked) HyperButton(onClose, type = "icon", size = "small") {
+            if (!locked && onClose != null) HyperButton(onClose, type = "icon", size = "small") {
                 HyperIcon(HyperReferenceIcons.Close, "关闭")
             }
         }
@@ -41,7 +40,7 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
                     view.color.copy(alpha = 10 / 255f).compositeOver(hyperGlass.surface))), shape)
                 .hyperSolidSurface(Color.Transparent, shape, border = BorderStroke(1.dp, view.color.copy(alpha = 35 / 255f))),
                 contentAlignment = Alignment.Center) {
-                HyperIcon(view.icon, null, Modifier.size(20.dp), tint = view.color)
+                HyperIcon(view.icon, null, Modifier.size(20.dp), color = view.color)
                 if (view.busy) HyperProgress(modifier = Modifier.size(30.dp), type = "circular", showLabel = false,
                     strokeWidth = 1.5.dp, colors = HyperProgressColors(view.color.copy(alpha = 12 / 255f), view.color))
             }
@@ -49,23 +48,21 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
             HyperText(view.title, fontSize = 24.sp, lineHeight = 28.8.sp, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(8.dp))
         }
-        HyperText(if (mandatory && view.state is HyperUpdateDialogState.UpdateAvailable) "此版本为必要更新，请更新后继续使用。" else view.message,
+        HyperText(view.message,
             color = if (isError) view.color else HyperColors.secondaryText,
             fontSize = 14.sp, lineHeight = 21.7.sp)
-        if (!isError && view.state !is HyperUpdateDialogState.Checking) {
+        if (!isError && view.status != HyperUpdateStatus.checking && (view.version != null || view.release != null)) {
             Spacer(Modifier.height(20.dp))
             HyperUpdateVersion(view, mandatory && locked)
         }
-        if (view.state is HyperUpdateDialogState.UpdateAvailable) {
-            val highlights = view.release?.highlights.orEmpty().ifEmpty {
-                view.release?.releaseNotes?.takeIf { it.isNotBlank() }?.lines()?.filter { it.isNotBlank() }.orEmpty()
-            }
+        if (view.status == HyperUpdateStatus.available) {
+            val highlights = view.release?.highlights.orEmpty()
             if (highlights.isNotEmpty()) {
                 Spacer(Modifier.height(20.dp))
                 HyperText("本次更新", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                 highlights.forEach { text ->
                     Row(Modifier.padding(top = 12.dp)) {
-                        HyperIcon(HyperReferenceIcons.Check, null, Modifier.padding(top = 3.dp).size(14.dp), tint = HyperColors.accent)
+                        HyperIcon(HyperReferenceIcons.Check, null, Modifier.padding(top = 3.dp).size(14.dp), color = HyperColors.accent)
                         Spacer(Modifier.width(8.dp))
                         HyperText(text, Modifier.weight(1f), color = HyperColors.secondaryText, fontSize = 13.sp, lineHeight = 19.5.sp)
                     }
@@ -74,35 +71,42 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
         }
         if (view.hasProgress) {
             Spacer(Modifier.height(20.dp))
-            val installing = view.state is HyperUpdateDialogState.Installing
+            val installing = view.status == HyperUpdateStatus.installing
             HyperUpdateProgressBadges(installing)
             Spacer(Modifier.height(16.dp))
-            HyperText(view.progress?.let { "${(it * 100).roundToInt()}%" } ?: if (installing) "正在安装…" else "正在下载…",
+            HyperText(view.progress?.let { "${hyperProgressPercentage(it)}%" } ?: if (installing) "正在安装…" else "正在下载…",
                 fontSize = 28.sp, lineHeight = 33.6.sp, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(12.dp))
             HyperProgress(view.progress, showLabel = false)
             Spacer(Modifier.height(8.dp))
-            HyperText(view.detail ?: if (installing) "正在应用更新，请稍候" else "正在下载更新文件",
+            view.downloadProgress?.let { snapshot ->
+                HyperText(snapshot.sizeLabel, color = HyperColors.secondaryText, fontSize = 12.sp)
+                val transferDetail = listOfNotNull(snapshot.speedLabel, snapshot.remainingLabel).joinToString(" · ")
+                if (transferDetail.isNotEmpty()) HyperText(transferDetail, Modifier.padding(top = 4.dp),
+                    color = HyperColors.secondaryText, fontSize = 12.sp)
+            }
+            if (view.detail != null || view.downloadProgress == null) HyperText(
+                view.detail ?: if (installing) "正在应用更新，请稍候" else "正在下载更新文件",
                 color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 18.sp)
         }
         if (mandatory && locked) HyperText("完成本次更新后即可继续使用", Modifier.padding(top = 16.dp),
             color = HyperColors.secondaryText, fontSize = 12.sp)
         // 常规 Dialog 的操作间距为 18dp；更新弹窗正文底部留白为 24dp。
-        if (hyperUpdateHasActions(view, locked)) Spacer(Modifier.height(6.dp))
+        if (hyperUpdateHasActions(view)) Spacer(Modifier.height(6.dp))
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun HyperUpdateVersion(view: HyperUpdatePresentation, mandatory: Boolean) {
-    val completed = view.state is HyperUpdateDialogState.Completed
+    val completed = view.status == HyperUpdateStatus.completed
     Column(Modifier.fillMaxWidth()) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
             itemVerticalAlignment = Alignment.CenterVertically) {
-            if (!completed || view.release == null) HyperText("当前 ${view.version}", color = HyperColors.secondaryText, fontSize = 12.sp)
+            if (!completed && view.version != null) HyperText("当前 ${view.version}", color = HyperColors.secondaryText, fontSize = 12.sp)
             if (view.release != null) {
-                if (!completed) HyperIcon(HyperReferenceIcons.ArrowForward, null, Modifier.size(14.dp), tint = HyperColors.secondaryText)
-                HyperUpdateBadge("${if (completed) "已更新至" else "新版本"} ${view.release.versionName}", view.color)
+                if (!completed) HyperIcon(HyperReferenceIcons.ArrowForward, null, Modifier.size(14.dp), color = HyperColors.secondaryText)
+                HyperUpdateBadge("${if (completed) "已更新至" else "新版本"} ${view.release.version}", view.color)
             }
             if (mandatory) HyperUpdateBadge("必要更新", HyperColors.warning)
         }
@@ -127,38 +131,29 @@ private fun HyperUpdateBadge(label: String, color: Color, icon: ImageVector? = n
     Row(Modifier.background(color.copy(alpha = 31 / 255f).compositeOver(hyperGlass.surfaceSubtle),
         RoundedCornerShape(50)).padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        if (icon != null) HyperIcon(icon, null, Modifier.size(13.dp), tint = color)
+        if (icon != null) HyperIcon(icon, null, Modifier.size(13.dp), color = color)
         HyperText(label, color = color, fontSize = 12.sp, lineHeight = 14.4.sp, fontWeight = FontWeight.SemiBold)
     }
 }
 
-internal fun hyperUpdateHasActions(view: HyperUpdatePresentation, locked: Boolean): Boolean = !view.busy || !locked
+internal fun hyperUpdateHasActions(view: HyperUpdatePresentation): Boolean = view.primary != null || view.secondary != null
 
 @Composable
-internal fun HyperUpdateActions(view: HyperUpdatePresentation, texts: HyperUpdateDialogTexts, locked: Boolean,
-    onClose: () -> Unit, onRetry: () -> Unit, onDownload: () -> Unit, onInstall: () -> Unit, onCheck: () -> Unit, onCancel: () -> Unit) {
+internal fun HyperUpdateActions(view: HyperUpdatePresentation) {
     Column(Modifier.fillMaxWidth()) {
-        if (view.state !is HyperUpdateDialogState.Error) {
+        if (view.status != HyperUpdateStatus.error) {
             HyperDivider()
             Spacer(Modifier.height(20.dp))
         }
-        if (!view.busy) {
-            val (label, action, icon) = when (view.state) {
-                is HyperUpdateDialogState.UpdateAvailable -> Triple(texts.downloadAction, onDownload, HyperReferenceIcons.Download)
-                is HyperUpdateDialogState.ReadyToInstall -> Triple("立即安装", onInstall, HyperReferenceIcons.PackageCheck)
-                is HyperUpdateDialogState.Error -> Triple(texts.retryAction, onRetry, HyperReferenceIcons.Refresh)
-                is HyperUpdateDialogState.Completed -> Triple("开始使用", onClose, HyperReferenceIcons.Check)
-                else -> Triple("再次检查", onCheck, HyperReferenceIcons.Refresh)
+        view.primary?.let { action ->
+            HyperButton(action.onPressed, Modifier.fillMaxWidth(), colorStyle = "primary", type = "filled") {
+                HyperIcon(action.icon, null)
+                HyperText(action.label)
             }
-            HyperButton(action, Modifier.fillMaxWidth(), colorStyle = "primary", type = "filled") { HyperIcon(icon, null); HyperText(label) }
         }
-        val secondary = !locked && (view.busy || view.state is HyperUpdateDialogState.UpdateAvailable ||
-            view.state is HyperUpdateDialogState.ReadyToInstall || view.state is HyperUpdateDialogState.Error)
-        if (secondary) {
-            if (!view.busy) Spacer(Modifier.height(8.dp))
-            HyperButton(if (view.busy) onCancel else onClose, Modifier.fillMaxWidth()) {
-                HyperText(if (view.busy) texts.cancelAction else if (view.state is HyperUpdateDialogState.Error) texts.closeAction else "稍后再说")
-            }
+        view.secondary?.let { (label, callback) ->
+            if (view.primary != null) Spacer(Modifier.height(8.dp))
+            HyperButton(callback, Modifier.fillMaxWidth()) { HyperText(label) }
         }
     }
 }

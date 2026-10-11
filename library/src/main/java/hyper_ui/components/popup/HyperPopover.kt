@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HyperPopover(
     visible: Boolean,
-    onDismissRequest: () -> Unit,
-    anchorContent: @Composable () -> Unit,
+    onClose: () -> Unit,
+    child: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     maxWidth: Dp = 280.dp,
     content: @Composable ColumnScope.() -> Unit
@@ -23,8 +23,8 @@ fun HyperPopover(
     require(maxWidth > 0.dp) { "maxWidth 必须大于 0.dp" }
     var anchor by remember { mutableStateOf<Rect?>(null) }
     Box(modifier.onGloballyPositioned { anchor = it.boundsInWindow() }) {
-        anchorContent()
-        HyperAnchoredSurface(onDismissRequest, maxWidth, Dp.Infinity, PaddingValues(14.dp),
+        child()
+        HyperAnchoredSurface(onClose, maxWidth, Dp.Infinity, PaddingValues(14.dp),
             anchorBounds = anchor, heightFraction = 0.4f, visible = visible, content = content)
     }
 }

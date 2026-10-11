@@ -20,7 +20,7 @@ description: 在触发点附近展示补充内容，自动处理边界和上下�
 ```kotlin
 import hyper_ui.*
 
-HyperPopover(visible, { visible = false }, anchorContent = {
+HyperPopover(visible, { visible = false }, child = {
     HyperButton({ visible = !visible }) { HyperText("编辑") }
 }) { HyperTextField(value, { value = it }) }
 ```
@@ -50,8 +50,8 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 @Composable
 fun HyperPopover(
     visible: Boolean,
-    onDismissRequest: () -> Unit,
-    anchorContent: @Composable () -> Unit,
+    onClose: () -> Unit,
+    child: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     maxWidth: Dp = 280.dp,
     content: @Composable ColumnScope.() -> Unit
@@ -62,9 +62,9 @@ fun HyperPopover(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| visible | Boolean | 是 | — | 调用方持有的可见状态。 |
-| onDismissRequest | () -&gt; Unit | 是 | — | 请求关闭，由调用方修改状态。 |
-| anchorContent | @Composable () -&gt; Unit | 是 | — | 触发器插槽；用于定位浮层。 |
-| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
-| maxWidth | Dp | 否 | 280.dp | 浮层最大宽度。 |
-| content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 主体内容插槽。 |
+| visible | Boolean | 是 | — | 是否显示组件，由调用方持有。 |
+| onClose | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
+| child | @Composable () -&gt; Unit | 是 | — | 组件主体或触发器内容。 |
+| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| maxWidth | Dp | 否 | 280.dp | 弹层或提示的最大宽度。 |
+| content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |

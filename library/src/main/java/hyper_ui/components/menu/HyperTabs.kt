@@ -23,21 +23,22 @@ class HyperTabsItemScope internal constructor(val selected: Boolean, val enabled
 
 @Composable
 fun <T> HyperTabs(
-    items: List<T>,
-    selectedItem: T,
-    onSelected: (T) -> Unit,
+    tabs: List<T>,
+    selectedIndex: Int,
+    onChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
     scrollable: Boolean = false,
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperTabsItemScope.(item: T) -> Unit
 ) {
+    require(selectedIndex in tabs.indices) { "selectedIndex 超出 tabs 范围" }
     val shape = RoundedCornerShape(27.dp)
     Row(modifier.fillMaxWidth().height(HyperTabsDefaults.Height)
         .hyperFrostedSurface(hyperGlass.surfaceSubtle, shape, elevation = 0.dp)
         .padding(3.dp)
         .then(if (scrollable) Modifier.horizontalScroll(rememberScrollState()) else Modifier)) {
-        items.forEach { item ->
-            val selected = item == selectedItem
+        tabs.forEachIndexed { index, item ->
+            val selected = index == selectedIndex
             val enabled = itemEnabled(item)
             val background by androidx.compose.animation.animateColorAsState(
                 if (selected) hyperGlass.selection else Color.Transparent,
@@ -47,7 +48,7 @@ fun <T> HyperTabs(
             Box(Modifier.then(if (scrollable) Modifier.widthIn(min = 76.dp) else Modifier.weight(1f))
                 .fillMaxHeight()
                 .hyperNoRippleClickable(enabled = enabled, role = Role.Tab, pressedScale = 0.985f,
-                    onClick = { onSelected(item) })
+                    onClick = { onChanged(index) })
                 .padding(2.dp).background(background, RoundedCornerShape(24.dp))
                 .semantics { this.selected = selected }
                 .padding(horizontal = if (scrollable) 16.dp else 4.dp), contentAlignment = Alignment.Center) {

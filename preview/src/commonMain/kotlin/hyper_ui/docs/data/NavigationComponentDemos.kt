@@ -19,7 +19,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
                 onRevealChange = { reveal = it },
                 endActions = listOf(HyperSlideAction("删除", onDelete))
             ) {
-                HyperListTile(headlineContent = { HyperText("向左滑动") })
+                HyperListTile(title = { HyperText("向左滑动") })
             }
         """.trimIndent(),
         variants = listOf(
@@ -41,8 +41,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
                 navBar = {
                     HyperNavBar(
                         type = HyperNavBarDefaults.TypeBackWithTitle,
-                        titleContent = { HyperText("详情") },
-                        onBackClick = onBack
+                        title = { HyperText("详情") },
+                        onBackPressed = onBack
                     )
                 }
             ) { contentPadding ->
@@ -74,10 +74,10 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperDrawer",
         description = "参考 30dp 圆角浮动抽屉；两侧默认宽 320dp、外间距 12dp、280ms 淡入和平移。",
         code = """
-            HyperDrawer(open = open, onDismissRequest = { open = false }, title = "导航",
-                footerContent = { HyperButton(onClose) { HyperText("关闭") } },
-                drawerContent = {
-                    HyperDrawerItem(headlineContent = { HyperText("首页") }, selected = homeSelected, onClick = onHome)
+            HyperDrawer(open = open, onClose = { open = false }, title = "导航",
+                footer = { HyperButton(onClose) { HyperText("关闭") } },
+                child = {
+                    HyperDrawerItem(title = { HyperText("首页") }, selected = homeSelected, onPressed = onHome)
                 }) { pageContent() }
         """.trimIndent(),
         variants = listOf(
@@ -96,14 +96,14 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperTabs",
         description = "共享的 54dp 分类胶囊，选中底面使用材质 selection；支持等宽与横向滚动。",
         code = """
-            HyperTabs(items = categories, selectedItem = selected, onSelected = { selected = it }, scrollable = false) {
+            HyperTabs(tabs = categories, selectedIndex = categories.indexOf(selected), onChanged = { selected = categories[it] }, scrollable = false) {
                 HyperText(it)
             }
         """.trimIndent(),
         variants = listOf(
             DemoVariant("等宽", "scrollable = false", "统一共享表面"),
             DemoVariant("滚动", "scrollable = true", "每项最小 76dp"),
-            DemoVariant("选中", "selectedItem", "44dp 指示底面"),
+            DemoVariant("选中", "selectedIndex", "44dp 指示底面"),
             DemoVariant("禁用项", "itemEnabled", "阻止选中回调")
         ),
         apiDocumentPaths = listOf("navigation/hyper-tabs.md"),
@@ -115,7 +115,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperTabBar · 单动作",
         description = "56dp 单动作玻璃按钮，可操作角标与禁用状态。",
         code = """
-            HyperTabBar(items = listOf(action), type = "single", onItemClick = onAction, badgeCount = 3) {
+            HyperTabBar(items = listOf(action), type = "single", selectedIndex = 0, onChanged = { onAction() }, badgeCount = 3) {
                 HyperIcon(it.icon, it.label)
             }
         """.trimIndent(),
@@ -126,8 +126,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         ),
         apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
         content = { SingleTabBarDemo() },
-        fullScreenPreview = true,
-        fillsBottomSafeArea = true
+        fullScreenPreview = true
     ),
     ComponentDemo(
         id = "tab-bar-multiple",
@@ -135,8 +134,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperTabBar · 多标签",
         description = "56dp 内容收缩玻璃导航，点击或拖动标签切换 160ms 平移指示器。",
         code = """
-            HyperTabBar(items = tabs, itemLabel = { it.label }, itemSelected = { it.id == selectedId },
-                onItemClick = { selectedId = it.id }) { item ->
+            HyperTabBar(items = tabs, itemLabel = { it.label }, selectedIndex = tabs.indexOfFirst { it.id == selectedId },
+                onChanged = { selectedId = tabs[it].id }) { item ->
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(1.dp)) {
                     HyperIcon(item.icon, null)
                     HyperText(item.label)
@@ -145,8 +144,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("多标签", "type = multiple", "单元格最小 76dp，外侧 20dp 间距"),
-            DemoVariant("选中", "itemSelected", "160ms easeOutCubic"),
-            DemoVariant("拖动", "onItemClick", "松手后通知调用方"),
+            DemoVariant("选中", "selectedIndex", "160ms easeOutCubic"),
+            DemoVariant("拖动", "onChanged", "松手后通知调用方"),
             DemoVariant("底部安全区", "safeArea", "避让系统手势区域")
         ),
         apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),

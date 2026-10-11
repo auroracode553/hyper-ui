@@ -6,12 +6,12 @@ HyperUI 采用受控组件模型：调用方保存状态，组件根据参数渲
 
 | 状态 | 组件参数 | 调用方职责 |
 | --- | --- | --- |
-| 文本 | `value` / `onValueChange` | 保存、校验和提交文本 |
-| 选择 | `checked`、`selected` / 回调 | 保存当前选项 |
+| 文本 | `value` / `onChanged` | 保存、校验和提交文本 |
+| 选择 | `value`、`groupValue` / `onChanged` | 保存当前选项 |
 | 显示 | `visible`、`open`、`expanded` | 决定显示和关闭时机 |
-| 进度 | `progress` | 传入 `0f..1f`，或传入 `null` 表示不确定 |
-| 拖动 | `value` / `onValueChange` | 持有当前值并处理提交 |
-| 导航 | `itemSelected` / `onItemClick` | 更新选中项并执行页面导航 |
+| 进度 | `value` | 传入 `0f..1f`，或传入 `null` 表示不确定 |
+| 拖动 | `value` / `onChanged` | 持有当前值并处理提交 |
+| 导航 | `selectedIndex` / `onChanged` | 更新选中项并执行页面导航 |
 
 组件可以保存焦点、滚动位置和按压动画等纯 UI 状态，但不能保存业务结果。
 
@@ -34,8 +34,8 @@ fun NotificationSetting() {
     var enabled by remember { mutableStateOf(true) }
 
     HyperSwitch(
-        checked = enabled,
-        onCheckedChange = { enabled = it }
+        value = enabled,
+        onChanged = { enabled = it }
     )
 }
 ```
