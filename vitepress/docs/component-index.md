@@ -57,17 +57,17 @@ HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列�
 | 组件 | 用途 |
 | --- | --- |
 | [HyperEmptyState](components/feedback/hyper-empty-state.md) | 空数据或无结果 |
-| [HyperDropdown](components/feedback/hyper-dropdown.md) | 48dp 选择字段与锚定选项 |
+| [HyperDropdown](components/feedback/hyper-dropdown.md) | 48dp 选择字段，默认文案宽度 160–240dp，选项菜单跟随字段 |
 | [HyperToast](components/feedback/hyper-toast.md) | 短暂反馈 |
 | [HyperProgress](components/feedback/hyper-progress.md) | 线性和圆形进度 |
-| [HyperDialog](components/feedback/hyper-dialog.md) | 模态任务面板 |
+| [HyperDialog](components/feedback/hyper-dialog.md) | 按实际窗口保留两侧各 24dp、最大宽 420dp 的模态任务面板 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 确认和危险操作 |
 | [HyperTooltip](components/feedback/hyper-tooltip.md) | 补充提示 |
 | [HyperBatteryIndicator](components/feedback/hyper-battery-indicator.md) | 电量显示 |
 | [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | 等级或数值胶囊 |
 | [HyperPlaybackSpeedPanel](components/feedback/hyper-playback-speed-panel.md) | 播放速度面板 |
 | [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 播放速度刻度 |
-| [HyperPopover](components/feedback/hyper-popover.md) | 触发点附近的补充内容浮层 |
+| [HyperPopover](components/feedback/hyper-popover.md) | 默认宽 180dp 的锚点浮层，width 可显式指定、maxWidth 限制上限 |
 | [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 与 Flutter 共用视觉规则：420dp 最大宽、20dp 弹层外间距、28dp 圆角、24dp 内容边距；统一更新流程与状态预览 |
 | [HyperBatteryState](components/tools/hyper-battery-state.md) | Android 电量状态读取 |
 

@@ -79,9 +79,10 @@ fun HyperDialog(
                 )
             }
 
-            val availableWidth = (maxWidth - HyperDialogWindowPadding * 2)
+            // 必须读取宿主宽度；同名公开参数 maxWidth 只是面板上限，不能充当窗口尺寸。
+            val availableWidth = (this.maxWidth - HyperDialogWindowPadding * 2)
                 .coerceAtLeast(0.dp)
-            val availableHeight = (maxHeight - HyperDialogWindowPadding * 2)
+            val availableHeight = (this.maxHeight - HyperDialogWindowPadding * 2)
                 .coerceAtLeast(0.dp)
             val resolvedMaxWidth = dialogMaxWidth.coerceAtMost(availableWidth)
             val resolvedMinWidth = HyperDialogDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)

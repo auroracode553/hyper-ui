@@ -31,6 +31,8 @@ HyperDialog(visible, { visible = false }, title = "确认") { HyperText("正文"
 
 最大宽 420dp、窗口外间距 24dp、radius 26dp、strong 材质。默认 padding 18dp，标题 20sp/600，正文间隔 10dp，操作区距离 18dp、按钮间隔 8dp；250ms 淡入与 0.96 → 1 缩放。
 
+面板最大可用宽度使用真实窗口测量：min(maxWidth, 实际窗口宽度 − 48dp)。例如窗口宽 350dp 时面板不超过 302dp，320dp 时不超过 272dp；maxWidth 调整内容上限，两侧窗口留白仍保留。正文的 fillMaxWidth 只填充面板内部空间。
+
 **状态归属**
 
 visible 由调用方持有，滚动正文与固定 actions 分开。系统返回和外部点击按配置请求关闭。
@@ -77,7 +79,7 @@ fun HyperDialog(
 | visible | Boolean | 是 | — | 是否显示组件，由调用方持有。 |
 | onClose | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| maxWidth | androidx.compose.ui.unit.Dp | 否 | HyperDialogDefaults.MaxWidth | 弹层或提示的最大宽度。 |
+| maxWidth | androidx.compose.ui.unit.Dp | 否 | HyperDialogDefaults.MaxWidth | 面板宽度上限；实际宽度还受窗口宽度减去两侧各 24dp 约束。 |
 | title | String? | 否 | null | 组件标题文字或内容。 |
 | shape | Shape | 否 | HyperDialogDefaults.Shape | 组件容器的形状。 |
 | colors | HyperDialogColors | 否 | HyperDialogDefaults.colors() | 组件各状态的颜色配置。 |

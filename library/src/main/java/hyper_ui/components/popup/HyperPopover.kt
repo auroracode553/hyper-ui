@@ -18,13 +18,17 @@ fun HyperPopover(
     child: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     maxWidth: Dp = 280.dp,
+    width: Dp? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    require(maxWidth > 0.dp) { "maxWidth 必须大于 0.dp" }
+    require(maxWidth > 0.dp && maxWidth.value.isFinite()) { "maxWidth 必须为有限正数" }
+    require(width == null || (width > 0.dp && width.value.isFinite())) { "width 必须为有限正数" }
+    // 180dp 是默认内容宽度；maxWidth 只限制上限，不再把每个短菜单拉到 280dp。
+    val preferredWidth = (width ?: 180.dp).coerceAtMost(maxWidth)
     var anchor by remember { mutableStateOf<Rect?>(null) }
     Box(modifier.onGloballyPositioned { anchor = it.boundsInWindow() }) {
         child()
-        HyperAnchoredSurface(onClose, maxWidth, Dp.Infinity, PaddingValues(14.dp),
+        HyperAnchoredSurface(onClose, preferredWidth, Dp.Infinity, PaddingValues(14.dp),
             anchorBounds = anchor, heightFraction = 0.4f, visible = visible, content = content)
     }
 }

@@ -49,7 +49,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dropdown",
         group = GROUP_FEEDBACK,
         title = "HyperDropdown",
-        description = "选择字段与匹配触发器宽度的锚定选项浮层，支持禁用、空选项和当前值。",
+        description = "默认按文案收敛到 160–240dp，菜单跟随字段实际宽度；支持显式宽度、长文案、禁用与空选项。",
         code = """
             HyperDropdown(options = listOf(HyperOption("all", "全部"), HyperOption("favorite", "收藏")),
                 value = selected, onChanged = { selected = it }, label = "范围")
@@ -58,6 +58,8 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("受控值", "value / onChanged", "选项选择后收起"),
             DemoVariant("禁用", "enabled / HyperOption.enabled", "关闭交互"),
             DemoVariant("浮层", "menuMaxHeight", "默认最大 320dp"),
+            DemoVariant("自动宽度", "width = null", "最长文案加 68dp 控件占位，收敛到 160–240dp；选择值变化不跳宽"),
+            DemoVariant("显式宽度", "width = 220.dp", "字段与菜单保持一致，窄屏服从父级可用空间"),
             DemoVariant("空列表", "options = emptyList()", "保留字段与占位文本")
         ),
         apiDocumentPaths = listOf("feedback/hyper-dropdown.md"),
@@ -214,7 +216,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "禁用平台默认宽度，在稳定的全尺寸 Dialog 根节点内居中面板。",
+        description = "面板使用实际窗口宽度减去两侧各 24dp，最大宽 420dp，保持居中并固定底部操作。",
         code = """
             HyperDialog(
                 visible = visible,
@@ -233,6 +235,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("Dialog 宿主", "Compose Dialog", "usePlatformDefaultWidth = false"),
             DemoVariant("稳定根节点", "fillMaxSize", "面板始终在固定窗口内居中"),
+            DemoVariant("手机宽度", "maxWidth", "窗口 350dp 时面板不超过 302dp；显式上限仍服从窗口留白"),
             DemoVariant("稳定输入", "HyperTextField", "输入重组只更新面板内容"),
             DemoVariant("外部关闭", "dismissOnClickOutside", "由背景命中层控制"),
             DemoVariant("操作区", "actions", "固定底部按钮 slot")
@@ -244,7 +247,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_popup",
         group = GROUP_FEEDBACK,
         title = "HyperPopover",
-        description = "贴着触发点定位的内容浮层，默认最大宽 280dp、高度不超过窗口 40%，空间不足自动翻转。",
+        description = "内容浮层默认宽 180dp，复杂内容可通过 width 指定宽度；最大宽 280dp、高不超过窗口 40%。",
         code = """
             HyperPopover(visible = visible, onClose = { visible = false }, child = {
                 HyperButton({ visible = !visible }) { HyperText("编辑备注") }
@@ -253,6 +256,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("锚定", "anchorContent", "6dp 间距与 12dp 安全边距"),
             DemoVariant("长内容", "content", "达到高度上限后滚动"),
+            DemoVariant("宽度", "width / maxWidth", "默认 180dp、显式示例 240dp；maxWidth 只作为上限"),
             DemoVariant("受控显隐", "visible", "外部点击请求关闭")
         ),
         apiDocumentPaths = listOf("feedback/hyper-popover.md"),

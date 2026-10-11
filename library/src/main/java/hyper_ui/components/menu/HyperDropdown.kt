@@ -11,7 +11,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,8 +35,10 @@ fun <T> HyperDropdown(
     menuMaxHeight: Dp = 320.dp,
     width: Dp? = null
 ) {
-    require(menuMaxHeight > 0.dp) { "menuMaxHeight 必须大于 0.dp" }
-    require(width == null || width > 0.dp) { "width 必须大于 0.dp" }
+    require(menuMaxHeight > 0.dp && menuMaxHeight.value.isFinite()) { "menuMaxHeight 必须为有限正数" }
+    require(width == null || (width > 0.dp && width.value.isFinite())) { "width 必须为有限正数" }
+    val preferredWidth = width ?: hyperMenuPreferredWidth(options.map { it.label } + placeholder)
+    val density = LocalDensity.current
     val active = enabled && onChanged != null
     var expanded by remember { mutableStateOf(false) }
     var anchor by remember { mutableStateOf<Rect?>(null) }
@@ -42,35 +46,41 @@ fun <T> HyperDropdown(
         androidx.compose.animation.core.tween(HyperMotionSpec.MenuDuration, easing = HyperMotionSpec.OverlayCurve), label = "HyperDropdownChevron")
     val selected = options.firstOrNull { it.value == value }
     LaunchedEffect(active) { if (!active) expanded = false }
-    Column(modifier.then(if (width != null) Modifier.width(width) else Modifier)) {
-        if (label != null) HyperText(label, Modifier.padding(bottom = 8.dp), fontSize = 13.sp, lineHeight = 16.9.sp, fontWeight = FontWeight.SemiBold)
-        BoxWithConstraints {
-            val triggerWidth = width ?: if (constraints.hasBoundedWidth) maxWidth else 240.dp
-            Row(Modifier.width(triggerWidth).onGloballyPositioned { anchor = it.boundsInWindow() }
-                .defaultMinSize(minHeight = 48.dp)
-                .hyperNoRippleClickable(enabled = active, onClick = { expanded = !expanded })
-                .hyperFrostedSurface(hyperGlass.surfaceSubtle, RoundedCornerShape(16.dp), elevation = 0.dp,
-                    border = BorderStroke(1.dp, HyperColors.fieldBorder))
-                .padding(horizontal = 14.dp, vertical = 11.dp), verticalAlignment = Alignment.CenterVertically) {
-                HyperText(selected?.label ?: placeholder, Modifier.weight(1f),
-                    color = if (selected == null) HyperColors.secondaryText else HyperColors.primaryText,
-                    fontSize = 14.sp, lineHeight = 18.2.sp, fontWeight = FontWeight.Medium, maxLines = 1)
-                Spacer(Modifier.width(10.dp))
-                HyperIcon(HyperReferenceIcons.ChevronDown,
-                    null, Modifier.size(18.dp).graphicsLayer { rotationZ = rotation }, HyperColors.secondaryText)
-            }
-            HyperAnchoredSurface({ expanded = false }, triggerWidth, menuMaxHeight, PaddingValues(5.dp), anchorBounds = anchor, visible = expanded) {
-                if (options.isEmpty()) HyperText("暂无选项", Modifier.fillMaxWidth().padding(16.dp),
-                    color = HyperColors.secondaryText, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-                options.forEach { option ->
-                    HyperListTile(type = "plain", selected = option.value == value, enabled = active && option.enabled,
-                        showChevron = false, title = { HyperText(option.label, maxLines = 2) },
-                        trailing = if (option.value == value) {
-                            { CompositionLocalProvider(LocalHyperContentColor provides HyperColors.accent) {
-                                HyperCheckIcon(Modifier.size(18.dp))
-                            } }
-                        } else null,
-                        onPressed = { onChanged?.invoke(option.value); expanded = false })
+    // 父容器的可用宽度只作为上限；普通竖向表单不再自动拉满字段。
+    BoxWithConstraints(modifier, contentAlignment = Alignment.TopStart) {
+        val triggerWidth = preferredWidth.coerceAtMost(this.maxWidth)
+        Column(Modifier.width(triggerWidth)) {
+            if (label != null) HyperText(label, Modifier.padding(bottom = 8.dp), fontSize = 13.sp, lineHeight = 16.9.sp, fontWeight = FontWeight.SemiBold)
+            Box {
+                Row(Modifier.fillMaxWidth().onGloballyPositioned { anchor = it.boundsInWindow() }
+                    .defaultMinSize(minHeight = 48.dp)
+                    .hyperNoRippleClickable(enabled = active, onClick = { expanded = !expanded })
+                    .hyperFrostedSurface(hyperGlass.surfaceSubtle, RoundedCornerShape(16.dp), elevation = 0.dp,
+                        border = BorderStroke(1.dp, HyperColors.fieldBorder))
+                    .padding(horizontal = 14.dp, vertical = 11.dp), verticalAlignment = Alignment.CenterVertically) {
+                    HyperText(selected?.label ?: placeholder, Modifier.weight(1f),
+                        color = if (selected == null) HyperColors.secondaryText else HyperColors.primaryText,
+                        fontSize = 14.sp, lineHeight = 18.2.sp, fontWeight = FontWeight.Medium,
+                        maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Spacer(Modifier.width(10.dp))
+                    HyperIcon(HyperReferenceIcons.ChevronDown,
+                        null, Modifier.size(18.dp).graphicsLayer { rotationZ = rotation }, HyperColors.secondaryText)
+                }
+                // 菜单以字段最终测量宽度为准，显式父级约束与窄屏缩小时仍保持对齐。
+                val measuredWidth = anchor?.let { with(density) { it.width.toDp() } } ?: triggerWidth
+                HyperAnchoredSurface({ expanded = false }, measuredWidth, menuMaxHeight, PaddingValues(5.dp), anchorBounds = anchor, visible = expanded) {
+                    if (options.isEmpty()) HyperText("暂无选项", Modifier.fillMaxWidth().padding(16.dp),
+                        color = HyperColors.secondaryText, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                    options.forEach { option ->
+                        HyperListTile(type = "plain", selected = option.value == value, enabled = active && option.enabled,
+                            showChevron = false, title = { HyperText(option.label, maxLines = 2, overflow = TextOverflow.Ellipsis) },
+                            trailing = if (option.value == value) {
+                                { CompositionLocalProvider(LocalHyperContentColor provides HyperColors.accent) {
+                                    HyperCheckIcon(Modifier.size(18.dp))
+                                } }
+                            } else null,
+                            onPressed = { onChanged?.invoke(option.value); expanded = false })
+                    }
                 }
             }
         }

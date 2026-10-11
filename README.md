@@ -32,7 +32,7 @@ Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义
 
 默认视觉以 `D:/my_project/flutter_project/doc_ui_kit/ui` 的同名组件源码为准。默认材质为 `HyperMaterial.Solid`，同时提供 `Soft`、`Clear`；颜色、字号、行高、圆角、间距、图标和动效均按参考参数重构。按钮高度 32/38/44dp，输入框圆角 20dp，分段控件 40dp，Tabs 54dp，TabBar 56dp。完整对应值和验收边界见 [样式对照](vitepress/docs/style-reference.md)。
 
-`HyperDropdown` 使用 options/value/onChanged 管理选择；`HyperPopover` 的 child 提供触发器；`HyperTabBar.type` 为 single/multiple；`HyperCheckbox.value` 为可空三态值。更新弹窗通过 status、展示数据与操作回调接入业务服务。
+`HyperDropdown` 使用 options/value/onChanged 管理选择；width 省略时按文案自动取 160–240dp，菜单匹配字段宽度。`HyperPopover` 的 child 提供触发器，默认宽 180dp，width 可显式指定，maxWidth 只限制上限。`HyperTabBar.type` 为 single/multiple；`HyperCheckbox.value` 为可空三态值。更新弹窗通过 status、展示数据与操作回调接入业务服务。
 
 ```kotlin
 HyperThemeConfig {
@@ -248,7 +248,8 @@ Preview 使用合并 Roboto 与 Noto Sans SC 的独立字体，避免 Wasm 中�
 - `value`、`groupValue`、`selectedIndex`、`visible`、`open` 等业务状态由调用方管理；Dropdown 内部维护临时展开状态。
 - 组件通过 `onChanged`、`onPressed`、`onClose` 等回调通知调用方。
 - 外部尺寸和间距由 `modifier` 控制；按钮等组件提供与参考设计对应的语义化尺寸参数，内部独立布局节点提供具名修饰符。
-- `HyperPopover` 为锚定触发点的内容浮层。`HyperDialog` 使用 Compose Dialog 的全尺寸根节点，面板最大宽 420dp、窗口间距 24dp；滚动正文与固定操作区分开，关闭由调用方维护 visible。
+- `HyperPopover` 为锚定触发点的内容浮层，默认宽 180dp，maxWidth = 280dp 仅限制上限；`width = 240.dp` 可为复杂内容保留更多空间。`HyperDropdown` 以最长选项或占位文字加 68dp 控件占位，默认限制在 160–240dp；宽表单用 width 显式设置，两端预览统一覆盖默认、220dp、长文案、禁用与空选项。
+- `HyperDialog` 使用 Compose Dialog 的全尺寸根节点，面板宽度上限为 min(maxWidth, 实际窗口宽度 − 48dp)，两侧各保留 24dp；滚动正文与固定操作区分开，关闭由调用方维护 visible。
 - 业务状态由调用方持有；组件可以在状态变化时执行按压、弹出、拖动吸附等视觉过渡。
 
 示例：

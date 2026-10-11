@@ -31,7 +31,9 @@ HyperPopover(visible, { visible = false }, child = {
 
 **样式约定**
 
-触发器附近的内容浮层。默认最大宽 280dp、高不超过窗口 40%，strong 材质 radius 18dp、padding 14dp；锚点间距 6dp、安全边距 12dp。
+触发器附近的内容浮层。默认内容宽 180dp，maxWidth = 280.dp 只限制上限，短操作菜单不会默认撑到 280dp。复杂内容可传 width = 240.dp 等显式宽度；最终宽度为 min(width ?: 180dp, maxWidth, 窗口安全区可用宽度)。高不超过窗口 40%，strong 材质 radius 18dp、padding 14dp；锚点间距 6dp、安全边距 12dp。
+
+Compose 与 Flutter 共用补充说明、文件夹操作和 240dp 较宽内容预览；文件夹操作展示“删除文件夹 / 详情 / 重命名”，选择后收起并显示结果。
 
 **状态归属**
 
@@ -54,6 +56,7 @@ fun HyperPopover(
     child: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     maxWidth: Dp = 280.dp,
+    width: Dp? = null,
     content: @Composable ColumnScope.() -> Unit
 )
 ```
@@ -66,5 +69,6 @@ fun HyperPopover(
 | onClose | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
 | child | @Composable () -&gt; Unit | 是 | — | 组件主体或触发器内容。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| maxWidth | Dp | 否 | 280.dp | 弹层或提示的最大宽度。 |
+| maxWidth | Dp | 否 | 280.dp | 浮层宽度上限，不决定默认内容宽度。 |
+| width | Dp? | 否 | null | 期望内容宽度；省略时采用 180dp，显式值仍受 maxWidth 和窗口安全区约束。 |
 | content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |

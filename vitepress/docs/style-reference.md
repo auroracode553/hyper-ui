@@ -22,10 +22,10 @@
 | HyperListTile | plain 最小 46，padding 14×8；外层 glass padding 3 | auto/plain/glass，标题 14/600、说明 12、meta 11，图标块 34 |
 | HyperMenuGroup | radius 18，padding 4，分隔缩进 14 | items 入口自动分隔；自由内容入口显式组合分隔 |
 | HyperCard | radius 24，padding 12，头/正文/页脚间距 12 | 标题 14/600，副标题 13，selected strong 与强调轮廓 |
-| HyperDropdown | 字段 minHeight 48，radius 16，padding 14×11 | 受控选项选择，菜单 radius 18、padding 5、默认最大高 320 |
-| HyperPopover | 宽 min(屏幕-32,280)，高窗口 40%，padding 14 | 真实锚点、6dp 间距、12dp 安全边距、自动翻转 |
+| HyperDropdown | 字段 minHeight 48，radius 16，padding 14×11；自动宽度 clamp(最长文案 + 68,160,240) | width 可显式指定，菜单匹配字段实际宽度；radius 18、padding 5、默认最大高 320 |
+| HyperPopover | 默认宽 180，width 可显式指定，maxWidth 280 仅作上限；高窗口 40%，padding 14 | 真实锚点、6dp 间距、12dp 安全边距、自动翻转 |
 | HyperTooltip | radius 12，padding 10×7，12sp/1.3 | 500ms 悬停/长按；焦点即时；125ms 0.97→1 缩放淡入 |
-| HyperDialog | maxWidth 420，窗口间距 24，radius 26，padding 18 | 标题 20/600、正文 10、操作区 18、操作间距 8 |
+| HyperDialog | min(maxWidth,实际窗口宽度-48)，maxWidth 420，窗口间距 24，radius 26，padding 18 | 标题 20/600、正文 10、操作区 18、操作间距 8 |
 | HyperDrawer | 两侧宽 320，外侧最小安全间距 12，radius 30 | strong 材质，280ms、窗口 12% 位移；正文 padding 16 |
 | HyperSlideMenu | 每动作 64，边界阻力 0.32，释放阈值 35% | 0.09s 速度投影、stiffness 470/damping 42 |
 | HyperProgress | linear 4/6/12；circle 48/64/80、stroke 4/6/8 | showLabel=true；线性动画 1400ms、圆环 1100ms |
@@ -62,7 +62,7 @@ HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 
 - core/interaction/HyperMotionSpec.kt 统一按压、选择和浮层的曲线与时长。
 - core/icon/HyperReferenceIcons.kt 共享参考版本 Lucide 字体轮廓，HyperIcon.kt 继承插槽尺寸。
 - core/surface/ 提供玻璃、背景采样与阴影；边框和内容间距分开管理。
-- components/popup/HyperAnchoredSurface.kt 共用于 Dropdown、Popover，处理安全区、键盘和上下翻转。
+- components/menu/HyperMenuSizing.kt 计算默认紧凑文字宽度；components/popup/HyperAnchoredSurface.kt 共用于 Dropdown、Popover，处理实际字段宽度、安全区、键盘和上下翻转。
 - components/update/HyperUpdatePresentation.kt 只映射显示数据，HyperUpdateContent.kt 组合正文与操作区，HyperUpdateLayout.kt 共用内嵌面板与模态宿主布局，HyperUpdateDialog.kt 承担受控入口。
 - preview/ui/UpdateDialogShowcase.kt 对齐 Flutter 更新流程与状态预览；UpdateDemoController.kt 只持有页面的模拟任务，关闭弹层不会取消下载。
 - preview 的 ComponentDemos 聚合各分组元数据，*ComponentShowcases 提供可操作的大小、禁用、选中与进度状态。

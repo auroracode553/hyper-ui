@@ -4,11 +4,14 @@ import hyper_ui.*
 import hyper_ui.LocalHyperContentColor
 import hyper_ui.docs.theme.LocalDocsColorScheme
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -64,24 +67,23 @@ fun EmptyStateDemo() {
 
 @Composable
 fun DropdownMenuDemo() {
-    var selected by remember { mutableStateOf<String?>(null) }
-    var enabled by remember { mutableStateOf(true) }
-    var empty by remember { mutableStateOf(false) }
-    var lastEnabled by remember { mutableStateOf(false) }
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ enabled = !enabled }) { HyperText(if (enabled) "禁用字段" else "启用字段") }
-            HyperButton({ empty = !empty }) { HyperText(if (empty) "恢复选项" else "空列表") }
-        }
-        HyperButton(type = "tonal", onPressed = { lastEnabled = !lastEnabled }, size = "small") { HyperText("切换末项禁用态") }
-        HyperDropdown(
-            options = if (empty) emptyList() else listOf(
-                HyperOption("compact", "紧凑布局"), HyperOption("standard", "标准布局"),
-                HyperOption("comfortable", "舒适布局", enabled = lastEnabled)
-            ),
-            value = selected, onChanged = { selected = it }, enabled = enabled, label = "布局选择"
-        )
-        HyperText("当前值：${selected ?: "尚未选择"}", size = "small")
+    var sort by remember { mutableStateOf<String?>("recent") }
+    var owner by remember { mutableStateOf<String?>(null) }
+    var pageSize by remember { mutableStateOf<Int?>(20) }
+    var longValue by remember { mutableStateOf<String?>(null) }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(24.dp)) {
+        HyperDropdown(label = "排序方式 · 展开与收起动画", value = sort, onChanged = { sort = it }, options = listOf(
+            HyperOption("recent", "最近更新"), HyperOption("name", "按名称"), HyperOption("created", "创建时间")))
+        HyperDropdown(label = "负责人", placeholder = "选择负责人", value = owner, onChanged = { owner = it }, options = listOf(
+            HyperOption("ada", "Ada"), HyperOption("bob", "Bob"), HyperOption("eve", "Eve（已停用）", enabled = false)))
+        HyperDropdown(label = "每页数量", width = 220.dp, value = pageSize, menuMaxHeight = 160.dp,
+            onChanged = { pageSize = it }, options = listOf(
+                HyperOption(10, "每页 10 条"), HyperOption(20, "每页 20 条"),
+                HyperOption(50, "每页 50 条"), HyperOption(100, "每页 100 条")))
+        HyperDropdown(label = "长选项", value = longValue, onChanged = { longValue = it }, options = listOf(
+            HyperOption("lastPlayed", "按最近播放时间排序并保留原始文件名称"), HyperOption("name", "按名称")))
+        HyperDropdown<String>(label = "空选项", options = emptyList(), onChanged = {})
+        HyperDropdown(label = "禁用", enabled = false, value = "recent", options = listOf(HyperOption("recent", "最近更新")))
     }
 }
 
@@ -327,7 +329,7 @@ fun HyperDialogDemo() {
             HyperText("显示 Dialog")
         }
         HyperText(
-            text = "禁用平台默认宽度；面板在稳定的全尺寸 Dialog 根节点内居中。",
+            text = "面板按实际窗口宽度减去两侧各 24dp，保持居中；最大宽度 420dp。",
             color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center
@@ -444,29 +446,35 @@ fun DialogDemo() {
 
 @Composable
 fun HyperPopoverDemo() {
-    var visible by remember { mutableStateOf(false) }
-    var savedNote by remember { mutableStateOf("默认备注") }
-    var draft by remember { mutableStateOf(savedNote) }
-    var longContent by remember { mutableStateOf(false) }
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperButton({ longContent = !longContent }) { HyperText("切换长内容") }
-        HyperPopover(
-            visible = visible, onClose = { visible = false },
-            child = {
-                HyperButton({ draft = savedNote; visible = !visible }, colorStyle = "primary", type = "filled") { HyperText("编辑备注") }
-            }
-        ) {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                HyperText("编辑备注", fontWeight = FontWeight.SemiBold)
-                HyperTextField(draft, { draft = it }, placeholder = { HyperText("填写备注") })
-                if (longContent) repeat(12) { HyperText("补充说明 ${it + 1}", size = "small") }
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    HyperButton({ visible = false }, size = "small") { HyperText("取消") }
-                    HyperButton({ savedNote = draft; visible = false }, size = "small", colorStyle = "primary", type = "filled") { HyperText("保存") }
-                }
+    var hintOpen by remember { mutableStateOf(false) }
+    var menuOpen by remember { mutableStateOf(false) }
+    var wideOpen by remember { mutableStateOf(false) }
+    var selected by remember { mutableStateOf("尚未选择") }
+    Column(Modifier.fillMaxWidth()) {
+        HyperPopover(visible = hintOpen, onClose = { hintOpen = false }, child = {
+            HyperText("点击查看说明", Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() }, indication = null
+            ) { hintOpen = !hintOpen })
+        }) { HyperText("Popover 保持页面上下文，适合展示简短补充说明。") }
+        Spacer(Modifier.height(24.dp))
+        HyperPopover(visible = menuOpen, onClose = { menuOpen = false }, child = {
+            HyperText("文件夹操作", Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() }, indication = null
+            ) { menuOpen = !menuOpen })
+        }) {
+            listOf("删除文件夹", "详情", "重命名").forEach { label ->
+                HyperListTile(type = "plain", showChevron = false,
+                    title = { HyperText(label) }, onPressed = { selected = label; menuOpen = false })
             }
         }
-        HyperText("当前备注：$savedNote", size = "small")
+        Spacer(Modifier.height(12.dp))
+        HyperText("选择结果：$selected")
+        Spacer(Modifier.height(24.dp))
+        HyperPopover(visible = wideOpen, onClose = { wideOpen = false }, width = 240.dp, child = {
+            HyperText("查看较宽内容", Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() }, indication = null
+            ) { wideOpen = !wideOpen })
+        }) { HyperText("通过 width 为输入、说明等复杂内容保留更多空间。") }
     }
 }
 
