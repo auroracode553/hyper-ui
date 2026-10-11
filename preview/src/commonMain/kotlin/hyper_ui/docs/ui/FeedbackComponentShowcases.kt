@@ -75,8 +75,8 @@ fun DropdownMenuDemo() {
     var lastEnabled by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ enabled = !enabled }, type = "outline") { HyperText(if (enabled) "禁用字段" else "启用字段") }
-            HyperButton({ empty = !empty }, type = "outline") { HyperText(if (empty) "恢复选项" else "空列表") }
+            HyperButton({ enabled = !enabled }) { HyperText(if (enabled) "禁用字段" else "启用字段") }
+            HyperButton({ empty = !empty }) { HyperText(if (empty) "恢复选项" else "空列表") }
         }
         HyperButton({ lastEnabled = !lastEnabled }, type = "tonal", size = "small") { HyperText("切换末项禁用态") }
         HyperDropdown(
@@ -99,24 +99,20 @@ fun ToastDemo() {
     var tone by remember { mutableStateOf(HyperToastTone.Success) }
     Column(Modifier.widthIn(max = 420.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(onClick = { message = "保存成功"; tone = HyperToastTone.Success; duration = 3000L; visible = true }) {
+            HyperButton(onClick = { message = "保存成功"; tone = HyperToastTone.Success; duration = 3000L; visible = true }, type = "filled") {
                 HyperText("成功")
             }
-            HyperButton(onClick = { message = "请检查输入内容"; tone = HyperToastTone.Warning; duration = 3000L; visible = true },
-                type = "outline") { HyperText("警告") }
-            HyperButton(onClick = { message = "网络连接失败"; tone = HyperToastTone.Error; duration = 3000L; visible = true },
-                type = "outline") { HyperText("错误") }
+            HyperButton(onClick = { message = "请检查输入内容"; tone = HyperToastTone.Warning; duration = 3000L; visible = true }) { HyperText("警告") }
+            HyperButton(onClick = { message = "网络连接失败"; tone = HyperToastTone.Error; duration = 3000L; visible = true }) { HyperText("错误") }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(onClick = { message = "操作已完成，这是一条较长提示"; tone = HyperToastTone.Info; duration = 6000L; visible = true },
-                type = "outline") { HyperText("长提示") }
-            HyperButton(onClick = { message = "已复制到剪贴板"; tone = HyperToastTone.Neutral; duration = 3000L; visible = true },
-                type = "outline") { HyperText("默认") }
+            HyperButton(onClick = { message = "操作已完成，这是一条较长提示"; tone = HyperToastTone.Info; duration = 6000L; visible = true }) { HyperText("长提示") }
+            HyperButton(onClick = { message = "已复制到剪贴板"; tone = HyperToastTone.Neutral; duration = 3000L; visible = true }) { HyperText("默认") }
         }
         Box(Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.BottomCenter) {
             HyperToast(visible, message, onDismissRequest = { visible = false }, durationMillis = duration, tone = tone,
                 actionContent = {
-                    HyperButton(onClick = { visible = false }, type = "outline", size = "small") {
+                    HyperButton(onClick = { visible = false }, size = "small") {
                         HyperText("关闭")
                     }
                 })
@@ -160,13 +156,13 @@ fun ProgressDemo() {
                 HyperProgress(type = "circular", progress = progress, size = "small")
                 HyperProgress(type = "circular", progress = null)
                 HyperButton(
-                    type = "outline",
                     onClick = { progress = (progress - 0.1f).coerceAtLeast(0f) }
                 ) {
                     HyperText(text = "减少")
                 }
                 HyperButton(
-                    onClick = { progress = (progress + 0.1f).coerceAtMost(1f) }
+                    onClick = { progress = (progress + 0.1f).coerceAtMost(1f) },
+                    type = "filled",
                 ) {
                     HyperText(text = "增加")
                 }
@@ -243,18 +239,17 @@ fun LevelCapsuleDemo() {
         )
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
-                type = "outline",
                 onClick = { progress = (progress - 0.1f).coerceAtLeast(0f) }
             ) {
                 HyperText("降低")
             }
             HyperButton(
-                onClick = { progress = (progress + 0.1f).coerceAtMost(1f) }
+                onClick = { progress = (progress + 0.1f).coerceAtMost(1f) },
+                type = "filled",
             ) {
                 HyperText("提高")
             }
             HyperButton(
-                type = "outline",
                 onClick = { showIcon = !showIcon }
             ) {
                 HyperText(if (showIcon) "隐藏图标" else "显示图标")
@@ -287,18 +282,17 @@ fun BatteryIndicatorDemo() {
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
-                type = "outline",
                 onClick = { percentage = (percentage - 10).coerceAtLeast(0) }
             ) {
                 HyperText("减少电量")
             }
             HyperButton(
-                onClick = { percentage = (percentage + 10).coerceAtMost(100) }
+                onClick = { percentage = (percentage + 10).coerceAtMost(100) },
+                type = "filled",
             ) {
                 HyperText("增加电量")
             }
             HyperButton(
-                type = "outline",
                 onClick = { charging = !charging }
             ) {
                 HyperText(if (charging) "停止充电" else "开始充电")
@@ -334,7 +328,7 @@ fun HyperDialogDemo() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        HyperButton(onClick = { visible = true }) {
+        HyperButton(onClick = { visible = true }, type = "filled") {
             HyperText("显示 Dialog")
         }
         HyperText(
@@ -350,7 +344,7 @@ fun HyperDialogDemo() {
         onDismissRequest = { visible = false },
         title = "稳定输入",
         actionContent = {
-            HyperButton(onClick = { visible = false }) {
+            HyperButton(onClick = { visible = false }, type = "filled") {
                 HyperText("确定")
             }
         }
@@ -385,7 +379,6 @@ fun DialogDemo() {
             HyperText(text = "删除数据")
         }
         HyperButton(
-            type = "outline",
             onClick = {
                 showLongContent = true
                 showDialog = true
@@ -394,7 +387,6 @@ fun DialogDemo() {
             HyperText(text = "查看长内容")
         }
         HyperButton(
-            type = "outline",
             onClick = { dismissOnClickOutside = !dismissOnClickOutside }
         ) {
             HyperText(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
@@ -435,7 +427,6 @@ fun DialogDemo() {
         },
         actionContent = {
             HyperButton(
-                type = "outline",
                 onClick = {
                     resultText = "已取消"
                     showDialog = false
@@ -463,11 +454,11 @@ fun HyperPopoverDemo() {
     var draft by remember { mutableStateOf(savedNote) }
     var longContent by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperButton({ longContent = !longContent }, type = "outline") { HyperText("切换长内容") }
+        HyperButton({ longContent = !longContent }) { HyperText("切换长内容") }
         HyperPopover(
             visible = visible, onDismissRequest = { visible = false },
             anchorContent = {
-                HyperButton({ draft = savedNote; visible = !visible }) { HyperText("编辑备注") }
+                HyperButton({ draft = savedNote; visible = !visible }, type = "filled") { HyperText("编辑备注") }
             }
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -475,8 +466,8 @@ fun HyperPopoverDemo() {
                 HyperTextField(draft, { draft = it }, placeholderContent = { HyperText("填写备注") })
                 if (longContent) repeat(12) { HyperText("补充说明 ${it + 1}", size = "small") }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    HyperButton({ visible = false }, type = "outline", size = "small") { HyperText("取消") }
-                    HyperButton({ savedNote = draft; visible = false }, size = "small") { HyperText("保存") }
+                    HyperButton({ visible = false }, size = "small") { HyperText("取消") }
+                    HyperButton({ savedNote = draft; visible = false }, size = "small", type = "filled") { HyperText("保存") }
                 }
             }
         }
@@ -494,7 +485,7 @@ fun UpdateDialogDemo() {
     var progress by remember { mutableStateOf(0.42f) }
     val stages = listOf("发现更新", "检查中", "系统排队", "下载中", "准备安装", "安装中", "完成", "最新", "错误提示")
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperButton({ mandatory = !mandatory }, type = "outline") { HyperText(if (mandatory) "必要更新：开启" else "必要更新：关闭") }
+        HyperButton({ mandatory = !mandatory }) { HyperText(if (mandatory) "必要更新：开启" else "必要更新：关闭") }
         HyperSlider(progress, { progress = it }, valueRange = 0f..1f, showValue = false)
         HyperText("模拟进度 ${(progress * 100).toInt()}%，检查/下载/安装状态 2.5 秒后模拟完成。", size = "small")
         HyperText("错误提示仅保留原因、重试与关闭；关闭、取消和稍后再说使用标准描边按钮。", size = "small")
@@ -512,7 +503,7 @@ fun UpdateDialogDemo() {
                     "最新" -> HyperUpdateDialogState.UpToDate("1.2.0")
                     else -> HyperUpdateDialogState.Error("1.0.0", "无法连接更新服务，请稍后重试")
                 }
-            }, type = "outline", size = "small") { HyperText(stage) } }
+            }, size = "small") { HyperText(stage) } }
         }
     }
     androidx.compose.runtime.LaunchedEffect(state) {
@@ -533,7 +524,7 @@ fun UpdateDialogDemo() {
         onInstall = { state = HyperUpdateDialogState.Installing("1.0.0", release, progress) })
     // 模拟安装完成由宿主控制，不由 UI 组件执行安装。
     if (state is HyperUpdateDialogState.Installing) {
-        HyperButton({ state = HyperUpdateDialogState.Completed("1.2.0", release) }, type = "outline") { HyperText("宿主模拟完成更新") }
+        HyperButton({ state = HyperUpdateDialogState.Completed("1.2.0", release) }) { HyperText("宿主模拟完成更新") }
     }
 }
 

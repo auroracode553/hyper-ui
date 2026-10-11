@@ -209,9 +209,9 @@ HyperButton(type = "icon", onClick = onSearch) {
 - 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopover`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
 
 `HyperUpdateDialog` 的错误状态采用简洁布局，只保留错误原因、重试与关闭，不展示状态图标、大标题、当前版本框和操作区分隔线；文案配置已移除不再使用的 `errorTitle`。
-更新弹窗的关闭、取消和稍后再说统一使用 `HyperButton(type = "outline")` 默认描边样式。
+更新弹窗的关闭、取消和稍后再说省略 `type`，使用 `HyperButton` 默认描边样式；主操作显式使用 `filled`。
 更新弹窗各状态标识块统一为 40dp、图标 20dp、环形进度 30dp；检查中隐藏当前版本，其他状态的版本信息直接排版，不嵌套版本卡片。
-`HyperButton` 仅支持 `filled`、`tonal`、`outline`、`danger`、`icon`；次操作使用 `outline`，图标入口使用 `icon`。库内组件和 Preview 均使用这些标准类型。
+`HyperButton` 默认描边，`type` 默认为 null；显式类型仅支持 `filled`、`tonal`、`danger`、`icon`，图标入口使用 `icon`。库内组件和 Preview 均使用这些标准类型，并与 `D:/my_project/flutter_project/doc_ui_kit` 同步维护。
 - Android 系统工具：`hyperToast`、`HyperBatteryState`、`readHyperBatteryState`、`rememberHyperBatteryState`。它们不进入 Preview 的跨平台编译链，真实调用仅限 Android。
 
 所有公开 API 位于 `hyper_ui` 包；`hyper_ui.core` 仅供库内部使用。详细签名和默认值以[组件索引](vitepress/docs/component-index.md)及各组件页为准。

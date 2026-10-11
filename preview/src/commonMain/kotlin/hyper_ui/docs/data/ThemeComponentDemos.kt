@@ -76,7 +76,7 @@ private fun ThemeMaterialDemo() {
                         modifier = Modifier.fillMaxWidth(),
                         placeholderContent = { HyperText("输入内容") }
                     )
-                    HyperButton(onClick = {}) { HyperText("主要操作") }
+                    HyperButton(onClick = {}, type = "filled") { HyperText("主要操作") }
                 }
             }
         }

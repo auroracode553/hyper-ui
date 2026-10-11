@@ -43,7 +43,8 @@ fun HyperButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     loading: Boolean = false,
-    type: String = "filled",
+    type: String? = null,
+    circle: Boolean = false,
     size: String = "default",
     colors: HyperButtonColors = HyperButtonDefaults.colors(type),
     border: BorderStroke? = HyperButtonDefaults.border(type, enabled),
@@ -56,10 +57,11 @@ fun HyperButton(
 ) {
     requireHyperComponentSize(size)
     val resolvedHeight = HyperButtonDefaults.height(size)
-    require(type in setOf("filled", "tonal", "outline", "danger", "icon")) {
+    require(type == null || type in setOf("primary", "success", "info", "warning", "danger")) {
         "不支持的 HyperButton type: $type"
     }
-    val isIconType = type == "icon"
+    // 语义颜色与圆形布局独立，图标按钮也可以使用任意语义类型。
+    val isIconType = circle
     val container = if (enabled) colors.containerColor else colors.disabledContainerColor
     val foreground = if (enabled) colors.contentColor else colors.disabledContentColor
     Row(
@@ -130,21 +132,22 @@ object HyperButtonDefaults {
 
     @Composable
     fun colors(
-        type: String = "filled",
+        type: String? = null,
         containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified,
         disabledContainerColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified
     ): HyperButtonColors {
         val fill = when (type) {
-            "filled" -> HyperColors.accent
+            "primary" -> HyperColors.accent
+            "success" -> HyperColors.success
+            "info" -> HyperColors.info
+            "warning" -> HyperColors.warning
             "danger" -> HyperColors.danger
-            "tonal" -> hyperGlass.selection
-            "outline" -> hyperGlass.surfaceSubtle
-            "icon" -> hyperGlass.surface
+            null -> hyperGlass.surfaceSubtle
             else -> error("不支持的 HyperButton type: $type")
         }
-        val foreground = if (type == "filled" || type == "danger")
+        val foreground = if (type != null)
             Color(1f, 1f, 1f, 1f) else HyperColors.primaryText
         return HyperButtonColors(
             resolveHyperContainerColor(containerColor, fill),
@@ -156,15 +159,13 @@ object HyperButtonDefaults {
 
     @Composable
     fun border(
-        type: String = "filled",
+        type: String? = null,
         enabled: Boolean = true,
         color: Color = Color.Unspecified
     ): BorderStroke? {
         val fallback = when {
             !enabled -> HyperColors.divider.copy(alpha = 110 / 255f)
-            type == "icon" -> hyperGlass.edgeHighlight
-            type == "outline" -> HyperColors.divider
-            type == "tonal" -> hyperGlass.edgeHighlight
+            type == null -> HyperColors.divider
             else -> Color(1f, 1f, 1f, 45 / 255f)
         }
         val resolved = resolveHyperContainerColor(color, fallback)

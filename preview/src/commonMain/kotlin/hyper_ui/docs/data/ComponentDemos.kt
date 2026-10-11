@@ -31,7 +31,7 @@ data class ComponentDemo(
 
 /** 聚合稳定 Preview ID；分组示例同步参考展示结构，页面示例自行滚动，普通示例由统一视口滚动。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
-    addAll(basicComponentDemos()) // button 仅呈现 filled、tonal、outline、danger、icon 五种类型。
+    addAll(basicComponentDemos()) // button 默认描边；显式类型为 filled、tonal、danger、icon。
     addAll(formComponentDemos())
     addAll(containerComponentDemos())
     addAll(navigationComponentDemos())

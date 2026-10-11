@@ -10,7 +10,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         id = "button",
         group = GROUP_BASIC,
         title = "HyperButton",
-        description = "38dp 动作按钮，仅支持 filled/tonal/outline/danger/icon 五种类型，加载态与随高度联动的排版。",
+        description = "38dp 动作按钮，默认描边无需 type；主操作、柔色、危险和图标按钮显式选择类型。",
         code = """
             HyperButton(onClick = onSave) {
                 HyperIcon(searchIcon, contentDescription = null)
@@ -29,9 +29,10 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认按钮", "type = filled", "品牌色胶囊表面"),
+            DemoVariant("默认按钮", "省略 type", "标准描边胶囊表面"),
+            DemoVariant("主操作", "type = filled", "品牌色胶囊表面"),
             DemoVariant("处理中", "loading = true", "加载期间不可重复点击"),
-            DemoVariant("次级操作", "type = outline / tonal", "轻量玻璃与柔色底面"),
+            DemoVariant("次级操作", "省略 type / type = tonal", "默认描边或柔色底面"),
             DemoVariant("危险操作", "type = danger", "危险语义色"),
             DemoVariant("按压与取消", "pointer down / cancel", "按下立即开始 85ms 缩放和透明度过渡；释放或拖出后 180ms 恢复"),
             DemoVariant("禁用", "enabled = false", "禁用后不可点击，使用禁用颜色"),

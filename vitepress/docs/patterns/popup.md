@@ -30,7 +30,6 @@ fun EditNoteAction() {
         title = "编辑备注",
         actionContent = {
             HyperButton(
-                type = "outline",
                 onClick = { showPopup = false }
             ) {
                 Text("取消")

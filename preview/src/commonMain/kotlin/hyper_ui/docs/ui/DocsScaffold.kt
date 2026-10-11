@@ -351,7 +351,7 @@ private fun PreviewCard(demo: ComponentDemo) {
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
             ComponentPreviewViewport(demo, Modifier.widthIn(max = 390.dp).fillMaxWidth().height(680.dp))
         }
-        HyperButton({ showVariants = !showVariants }, type = "outline") {
+        HyperButton({ showVariants = !showVariants }) {
             HyperText(if (showVariants) "收起预览说明" else "查看预览说明")
         }
         if (showVariants) {
@@ -368,7 +368,7 @@ private fun PreviewCard(demo: ComponentDemo) {
 private fun CodeCard(code: String) {
     var expanded by remember(code) { mutableStateOf(false) }
     DocsCard {
-        HyperButton({ expanded = !expanded }, type = "outline") {
+        HyperButton({ expanded = !expanded }) {
             HyperText(if (expanded) "收起示例代码" else "查看示例代码")
         }
         if (expanded) HyperText(

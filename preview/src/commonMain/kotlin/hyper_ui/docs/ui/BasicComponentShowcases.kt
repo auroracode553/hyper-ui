@@ -30,14 +30,15 @@ fun ButtonDemo() {
             HyperButton({ clicks += 1 }, size = "small") { HyperText("小按钮") }
             HyperButton({ clicks += 1 }) { HyperText("默认按钮") }
             HyperButton({ clicks += 1 }, size = "large") { HyperText("大按钮") }
-            HyperButton({}, type = "outline", loading = true) { HyperText("处理中") }
+            HyperButton({}, loading = true) { HyperText("处理中") }
         }
         PreviewSectionLabel("视觉变体与图标")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ clicks += 1 }, type = "outline") { HyperIcon(HyperReferenceIcons.Search, null); HyperText("查找") }
+            HyperButton({ clicks += 1 }, type = "filled") { HyperText("主操作") }
+            HyperButton({ clicks += 1 }) { HyperIcon(HyperReferenceIcons.Search, null); HyperText("查找") }
             HyperButton({ clicks = 0 }, type = "danger") { HyperIcon(HyperReferenceIcons.Delete, null); HyperText("删除") }
             HyperButton({ clicks += 1 }, type = "tonal") { HyperIcon(HyperReferenceIcons.Settings, null); HyperText("设置") }
-            HyperButton({ clicks += 1 }, type = "outline") { HyperText("稍后处理") }
+            HyperButton({ clicks += 1 }) { HyperText("稍后处理") }
         }
         PreviewSectionLabel("独立图标入口")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -48,8 +49,8 @@ fun ButtonDemo() {
         }
         PreviewSectionLabel("通栏与交互状态")
         PreviewToggle("加载中", loading) { loading = it }
-        HyperButton({ clicks += 1 }, modifier = Modifier.fillMaxWidth(), loading = loading) { HyperText("通栏按钮") }
-        HyperButton({}, enabled = false, type = "outline") { HyperText("禁用操作") }
+        HyperButton({ clicks += 1 }, modifier = Modifier.fillMaxWidth(), loading = loading, type = "filled") { HyperText("通栏按钮") }
+        HyperButton({}, enabled = false) { HyperText("禁用操作") }
         HyperText("点击次数：$clicks", size = "small", color = HyperColors.secondaryText)
     }
 }

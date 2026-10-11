@@ -29,7 +29,7 @@ HyperButton(onClick = onSave) { HyperText("保存") }
 
 **样式约定**
 
-按钮 small/default/large 高度 32/38/44dp，圆角为高度一半；仅支持 filled/tonal/outline/danger/icon 五种类型。次操作使用 outline，独立图标入口使用 icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
+按钮 small/default/large 高度 32/38/44dp，圆角为高度一半。省略 type 时使用默认描边；显式类型仅支持 filled/tonal/danger/icon。主操作使用 filled，独立图标入口使用 icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
 
 **状态归属**
 
@@ -51,7 +51,7 @@ fun HyperButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     loading: Boolean = false,
-    type: String = "filled",
+    type: String? = null,
     size: String = "default",
     colors: HyperButtonColors = HyperButtonDefaults.colors(type),
     border: BorderStroke? = HyperButtonDefaults.border(type, enabled),
@@ -72,7 +72,7 @@ fun HyperButton(
 | modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
 | enabled | Boolean | 否 | true | 是否允许用户操作。 |
 | loading | Boolean | 否 | false | 是否处于加载态；加载时阻止重复点击。 |
-| type | String | 否 | "filled" | 渲染形态：filled、tonal、outline、danger、icon；其他值抛出参数错误。 |
+| type | String? | 否 | null | 省略时默认描边；显式类型为 filled、tonal、danger、icon，其他值抛出参数错误。 |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
 | colors | HyperButtonColors | 否 | HyperButtonDefaults.colors(type) | 各状态配色配置。 |
 | border | BorderStroke? | 否 | HyperButtonDefaults.border(type, enabled) | 轮廓覆盖。 |
@@ -143,7 +143,7 @@ fun contentPadding(size: String = "default"): PaddingValues
 ```kotlin
 @Composable
     fun colors(
-        type: String = "filled",
+        type: String? = null,
         containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified,
         disabledContainerColor: Color = Color.Unspecified,
@@ -153,7 +153,7 @@ fun contentPadding(size: String = "default"): PaddingValues
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| type | String | 否 | "filled" | 渲染形态；合法值见本页样式约定。 |
+| type | String? | 否 | null | 省略时默认描边；显式类型为 filled、tonal、danger、icon。 |
 | containerColor | Color | 否 | Color.Unspecified | 表面背景色；Color.Unspecified 使用组件的主题默认值。 |
 | contentColor | Color | 否 | Color.Unspecified | 主要文字与图标颜色。 |
 | disabledContainerColor | Color | 否 | Color.Unspecified | 禁用时的表面背景色。 |
@@ -164,7 +164,7 @@ fun contentPadding(size: String = "default"): PaddingValues
 ```kotlin
 @Composable
     fun border(
-        type: String = "filled",
+        type: String? = null,
         enabled: Boolean = true,
         color: Color = Color.Unspecified
     ): BorderStroke?
@@ -172,7 +172,7 @@ fun contentPadding(size: String = "default"): PaddingValues
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| type | String | 否 | "filled" | 渲染形态；合法值见本页样式约定。 |
+| type | String? | 否 | null | 省略时默认描边；显式类型为 filled、tonal、danger、icon。 |
 | enabled | Boolean | 否 | true | 是否允许用户操作。 |
 | color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
 

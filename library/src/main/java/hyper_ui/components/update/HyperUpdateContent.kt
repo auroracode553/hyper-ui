@@ -150,13 +150,13 @@ internal fun HyperUpdateActions(view: HyperUpdatePresentation, texts: HyperUpdat
                 is HyperUpdateDialogState.Completed -> Triple("开始使用", onClose, HyperReferenceIcons.Check)
                 else -> Triple("再次检查", onCheck, HyperReferenceIcons.Refresh)
             }
-            HyperButton(action, Modifier.fillMaxWidth()) { HyperIcon(icon, null); HyperText(label) }
+            HyperButton(action, Modifier.fillMaxWidth(), type = "filled") { HyperIcon(icon, null); HyperText(label) }
         }
         val secondary = !locked && (view.busy || view.state is HyperUpdateDialogState.UpdateAvailable ||
             view.state is HyperUpdateDialogState.ReadyToInstall || view.state is HyperUpdateDialogState.Error)
         if (secondary) {
             if (!view.busy) Spacer(Modifier.height(8.dp))
-            HyperButton(if (view.busy) onCancel else onClose, Modifier.fillMaxWidth(), type = "outline") {
+            HyperButton(if (view.busy) onCancel else onClose, Modifier.fillMaxWidth()) {
                 HyperText(if (view.busy) texts.cancelAction else if (view.state is HyperUpdateDialogState.Error) texts.closeAction else "稍后再说")
             }
         }

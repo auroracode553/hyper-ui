@@ -113,7 +113,7 @@ fun HyperNavBar(
                         HyperNavBarDefaults.TypeMore -> { { HyperNavBarMoreButton(onClick = onMoreClick) } }
                         HyperNavBarDefaults.TypeEdit -> {
                             {
-                                HyperButton(onClick = onSaveClick, type = "outline", size = "small") {
+                                HyperButton(onClick = onSaveClick, size = "small") {
                                     HyperText("保存")
                                 }
                             }

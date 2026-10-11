@@ -40,7 +40,7 @@ fun ColorPickerDemo() {
         modifier = Modifier.widthIn(max = 400.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HyperButton({ pickerEnabled = !pickerEnabled }, type = "outline") { HyperText(if (pickerEnabled) "禁用颜色选择" else "启用颜色选择") }
+        HyperButton({ pickerEnabled = !pickerEnabled }) { HyperText(if (pickerEnabled) "禁用颜色选择" else "启用颜色选择") }
         HyperColorPicker(
             enabled = pickerEnabled,
             selectedId = selectedColorId,

@@ -29,6 +29,8 @@
 
 ## 组件与 Preview 规范
 
+- 本项目与 `D:/my_project/flutter_project/doc_ui_kit` 的对应组件保持默认 UI 一致。修改默认布局、尺寸、按钮类型或状态展示规则时，同时更新另一端的实现、文档与预览示例；框架 API 差异不能导致默认视觉规则分叉。
+
 - UI 库中所有配置、组件、工具方法和可见功能，都必须在 `preview/` 中呈现。
 - 新增或修改组件时，必须同步更新 `preview/src/commonMain/kotlin/hyper_ui/docs/data/ComponentDemos.kt` 聚合入口和对应分组的 `*ComponentDemos.kt`。
 - 新增或修改交互效果时，必须同步更新 `preview/src/commonMain/kotlin/hyper_ui/docs/ui/` 下对应分组的 `*ComponentShowcases.kt` 可交互示例。
