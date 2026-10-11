@@ -84,11 +84,6 @@ fun ListTileDemo() {
             meta = { HyperText("刚刚更新") }, onPressed = { feedback = "已点击：$type" })
         PreviewSectionLabel("禁用状态")
         HyperListTile(title = { HyperText("不可用项目") }, enabled = false, onPressed = {})
-        PreviewSectionLabel("组合 · 继承已有表面")
-        HyperCard(title = { HyperText("项目成员") }) {
-            HyperListTile(title = { HyperText("管理员") }, leadingIcon = HyperReferenceIcons.Check,
-                selected = selected, onPressed = { feedback = "已点击卡片内条目" })
-        }
         HyperText(feedback, size = "small")
     }
 }

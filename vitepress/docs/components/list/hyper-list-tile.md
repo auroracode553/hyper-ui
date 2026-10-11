@@ -35,6 +35,8 @@ type auto/plain/glass。plain 行最小 46dp，padding 14×8dp、radius 12dp；�
 
 auto 在 Card/MenuGroup/List 等表面内部使用 plain。selected/ enabled 与业务结果由调用方持有。
 
+预览直接展示列表项及其状态，不额外套 HyperCard。弹窗中的只读详情用 HyperText 配合普通布局展示标签和值；不为每个属性添加卡片或列表项容器。
+
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
 ## 公开 API

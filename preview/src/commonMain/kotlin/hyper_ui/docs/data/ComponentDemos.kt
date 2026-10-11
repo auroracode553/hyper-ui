@@ -33,7 +33,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(formComponentDemos())
     addAll(containerComponentDemos())
     addAll(navigationComponentDemos())
-    addAll(listComponentDemos()) // sectioned_list 固定 8dp 紧凑间距，保留条目选择交互。
+    addAll(listComponentDemos()) // list-tile 直接展示条目；sectioned_list 固定 8dp 紧凑间距。
     addAll(feedbackComponentDemos()) // dropdown/popover 共用紧凑宽度规则；update_dialog 对齐 Flutter 更新流程。
     addAll(themeComponentDemos())
 }
