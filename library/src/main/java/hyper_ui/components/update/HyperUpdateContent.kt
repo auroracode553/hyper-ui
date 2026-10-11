@@ -23,33 +23,39 @@ import kotlin.math.roundToInt
 
 @Composable
 internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, mandatory: Boolean, onClose: () -> Unit) {
+    val isError = view.state is HyperUpdateDialogState.Error
     Column(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             HyperText("软件更新", Modifier.weight(1f), color = HyperColors.secondaryText, fontSize = 12.sp, fontWeight = FontWeight.Medium)
-            if (!locked) HyperButton(onClose, type = "icon", size = "small", colors = HyperButtonDefaults.colors(type = "ghost"), border = null) {
+            if (!locked) HyperButton(onClose, type = "icon", size = "small") {
                 HyperIcon(HyperReferenceIcons.Close, "关闭")
             }
         }
         Spacer(Modifier.height(20.dp))
-        val shape = RoundedCornerShape(24.dp)
-        Box(Modifier.size(64.dp)
-            .dropShadow(shape, Shadow(radius = 24.dp, color = view.color.copy(alpha = 18 / 255f), offset = DpOffset(0.dp, 8.dp)))
-            .background(Brush.linearGradient(listOf(view.color.copy(alpha = 28 / 255f).compositeOver(hyperGlass.surface),
-                view.color.copy(alpha = 10 / 255f).compositeOver(hyperGlass.surface))), shape)
-            .hyperSolidSurface(Color.Transparent, shape, border = BorderStroke(1.dp, view.color.copy(alpha = 35 / 255f))),
-            contentAlignment = Alignment.Center) {
-            HyperIcon(view.icon, null, Modifier.size(26.dp), tint = view.color)
-            if (view.busy) HyperProgress(modifier = Modifier.size(48.dp), type = "circular", showLabel = false,
-                strokeWidth = 1.5.dp, colors = HyperProgressColors(view.color.copy(alpha = 12 / 255f), view.color))
+        // 错误状态仅保留具体原因和操作，不重复展示状态标题与当前版本。
+        if (!isError) {
+            val shape = RoundedCornerShape(16.dp)
+            Box(Modifier.size(40.dp)
+                .dropShadow(shape, Shadow(radius = 16.dp, color = view.color.copy(alpha = 18 / 255f), offset = DpOffset(0.dp, 6.dp)))
+                .background(Brush.linearGradient(listOf(view.color.copy(alpha = 28 / 255f).compositeOver(hyperGlass.surface),
+                    view.color.copy(alpha = 10 / 255f).compositeOver(hyperGlass.surface))), shape)
+                .hyperSolidSurface(Color.Transparent, shape, border = BorderStroke(1.dp, view.color.copy(alpha = 35 / 255f))),
+                contentAlignment = Alignment.Center) {
+                HyperIcon(view.icon, null, Modifier.size(20.dp), tint = view.color)
+                if (view.busy) HyperProgress(modifier = Modifier.size(30.dp), type = "circular", showLabel = false,
+                    strokeWidth = 1.5.dp, colors = HyperProgressColors(view.color.copy(alpha = 12 / 255f), view.color))
+            }
+            Spacer(Modifier.height(20.dp))
+            HyperText(view.title, fontSize = 24.sp, lineHeight = 28.8.sp, fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(8.dp))
         }
-        Spacer(Modifier.height(20.dp))
-        HyperText(view.title, fontSize = 24.sp, lineHeight = 28.8.sp, fontWeight = FontWeight.SemiBold)
-        Spacer(Modifier.height(8.dp))
         HyperText(if (mandatory && view.state is HyperUpdateDialogState.UpdateAvailable) "此版本为必要更新，请更新后继续使用。" else view.message,
-            color = if (view.state is HyperUpdateDialogState.Error) view.color else HyperColors.secondaryText,
+            color = if (isError) view.color else HyperColors.secondaryText,
             fontSize = 14.sp, lineHeight = 21.7.sp)
-        Spacer(Modifier.height(20.dp))
-        HyperUpdateVersion(view, mandatory && locked)
+        if (!isError && view.state !is HyperUpdateDialogState.Checking) {
+            Spacer(Modifier.height(20.dp))
+            HyperUpdateVersion(view, mandatory && locked)
+        }
         if (view.state is HyperUpdateDialogState.UpdateAvailable) {
             val highlights = view.release?.highlights.orEmpty().ifEmpty {
                 view.release?.releaseNotes?.takeIf { it.isNotBlank() }?.lines()?.filter { it.isNotBlank() }.orEmpty()
@@ -90,8 +96,7 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
 @Composable
 private fun HyperUpdateVersion(view: HyperUpdatePresentation, mandatory: Boolean) {
     val completed = view.state is HyperUpdateDialogState.Completed
-    Column(Modifier.fillMaxWidth().hyperSolidSurface(hyperGlass.surfaceSubtle, RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, HyperColors.divider)).padding(13.dp)) {
+    Column(Modifier.fillMaxWidth()) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
             itemVerticalAlignment = Alignment.CenterVertically) {
             if (!completed || view.release == null) HyperText("当前 ${view.version}", color = HyperColors.secondaryText, fontSize = 12.sp)
@@ -133,8 +138,10 @@ internal fun hyperUpdateHasActions(view: HyperUpdatePresentation, locked: Boolea
 internal fun HyperUpdateActions(view: HyperUpdatePresentation, texts: HyperUpdateDialogTexts, locked: Boolean,
     onClose: () -> Unit, onRetry: () -> Unit, onDownload: () -> Unit, onInstall: () -> Unit, onCheck: () -> Unit, onCancel: () -> Unit) {
     Column(Modifier.fillMaxWidth()) {
-        HyperDivider()
-        Spacer(Modifier.height(20.dp))
+        if (view.state !is HyperUpdateDialogState.Error) {
+            HyperDivider()
+            Spacer(Modifier.height(20.dp))
+        }
         if (!view.busy) {
             val (label, action, icon) = when (view.state) {
                 is HyperUpdateDialogState.UpdateAvailable -> Triple(texts.downloadAction, onDownload, HyperReferenceIcons.Download)
@@ -149,7 +156,7 @@ internal fun HyperUpdateActions(view: HyperUpdatePresentation, texts: HyperUpdat
             view.state is HyperUpdateDialogState.ReadyToInstall || view.state is HyperUpdateDialogState.Error)
         if (secondary) {
             if (!view.busy) Spacer(Modifier.height(8.dp))
-            HyperButton(if (view.busy) onCancel else onClose, Modifier.fillMaxWidth(), type = "ghost") {
+            HyperButton(if (view.busy) onCancel else onClose, Modifier.fillMaxWidth(), type = "outline") {
                 HyperText(if (view.busy) texts.cancelAction else if (view.state is HyperUpdateDialogState.Error) texts.closeAction else "稍后再说")
             }
         }

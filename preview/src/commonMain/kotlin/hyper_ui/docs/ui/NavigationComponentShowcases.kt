@@ -90,7 +90,7 @@ fun SlideMenuDemo() {
     var selected by remember { mutableStateOf("全部") }
     var scrollable by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperButton({ scrollable = !scrollable }, type = "ghost") {
+        HyperButton({ scrollable = !scrollable }, type = "outline") {
             HyperText(if (scrollable) "切换等宽" else "切换滚动")
         }
         HyperTabs(categories, selected, { selected = it }, scrollable = scrollable,
@@ -118,8 +118,8 @@ private fun TabBarDemo(single: Boolean) {
     )
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ enabled = !enabled }, type = "ghost") { HyperText(if (enabled) "禁用" else "启用") }
-            if (single) HyperButton({ count = if (count == 0) 3 else 0 }, type = "ghost") { HyperText("切换角标") }
+            HyperButton({ enabled = !enabled }, type = "outline") { HyperText(if (enabled) "禁用" else "启用") }
+            if (single) HyperButton({ count = if (count == 0) 3 else 0 }, type = "outline") { HyperText("切换角标") }
         }
         Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
             HyperText("当前页面：${items.first { it.id == selectedId }.label}")
@@ -222,7 +222,7 @@ fun SlideActionMenuDemo() {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton({ reveal = HyperSlideMenuReveal.Start }, type = "tonal") { HyperText("起始侧") }
             HyperButton({ reveal = HyperSlideMenuReveal.End }, type = "tonal") { HyperText("结束侧") }
-            HyperButton({ enabled = !enabled }, type = "ghost") { HyperText(if (enabled) "禁用" else "启用") }
+            HyperButton({ enabled = !enabled }, type = "outline") { HyperText(if (enabled) "禁用" else "启用") }
         }
         HyperSlideMenu(reveal, { reveal = it }, enabled = enabled,
             startActions = listOf(HyperSlideAction("置顶", { result = "已置顶" })),

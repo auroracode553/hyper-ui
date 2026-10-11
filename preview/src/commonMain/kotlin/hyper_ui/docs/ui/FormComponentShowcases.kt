@@ -82,7 +82,7 @@ fun SegmentedDemo() {
         modifier = Modifier.widthIn(max = 520.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        HyperButton({ equalWidth = !equalWidth }, type = "ghost") {
+        HyperButton({ equalWidth = !equalWidth }, type = "outline") {
             HyperText(if (equalWidth) "等宽分段" else "内容宽度分段")
         }
         HyperSegmentedControl(

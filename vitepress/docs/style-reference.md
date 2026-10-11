@@ -31,7 +31,7 @@
 | HyperProgress | linear 4/6/12；circle 48/64/80、stroke 4/6/8 | showLabel=true；线性动画 1400ms、圆环 1100ms |
 | HyperEmptyState | 图标块 56、radius 24、图标 24、padding 20 | 标题 16/600、说明 13/1.45、间距 12/8/12 |
 | HyperToast | minWidth 180/maxWidth 420，radius 18，padding 12/10/8/10 | 30dp 图标块、17dp 图标、14sp/500/1.35、默认 2000ms |
-| HyperUpdateDialog | maxWidth 420，radius 28，padding 24，标识 64 | 标题 24、进度 28、版本信息与摘要、固定操作区 |
+| HyperUpdateDialog | maxWidth 420，radius 28，padding 24，非错误状态标识块 40、图标 20、环形进度 30 | 检查中隐藏版本，其他状态版本直接排版；标题 24、进度 28；错误仅保留原因、重试与关闭 |
 
 HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 控件按各自固定尺寸和隐式边框内边距处理。普通按压为 0.975 缩放、0.92 透明度，85ms 进入、180ms 恢复，曲线 Cubic(0.23,1,0.32,1)。模态弹窗为 250ms、0.96→1 缩放；锚定浮层为 180ms。主题令牌详见 [主题配置](theme.md)。
 

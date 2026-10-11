@@ -29,7 +29,7 @@ HyperButton(onClick = onSave) { HyperText("保存") }
 
 **样式约定**
 
-按钮 small/default/large 高度 32/38/44dp，圆角为高度一半；支持 filled/tonal/outline/ghost/danger/icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
+按钮 small/default/large 高度 32/38/44dp，圆角为高度一半；仅支持 filled/tonal/outline/danger/icon 五种类型。次操作使用 outline，独立图标入口使用 icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
 
 **状态归属**
 
@@ -72,7 +72,7 @@ fun HyperButton(
 | modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
 | enabled | Boolean | 否 | true | 是否允许用户操作。 |
 | loading | Boolean | 否 | false | 是否处于加载态；加载时阻止重复点击。 |
-| type | String | 否 | "filled" | 渲染形态；合法值见本页样式约定。 |
+| type | String | 否 | "filled" | 渲染形态：filled、tonal、outline、danger、icon；其他值抛出参数错误。 |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
 | colors | HyperButtonColors | 否 | HyperButtonDefaults.colors(type) | 各状态配色配置。 |
 | border | BorderStroke? | 否 | HyperButtonDefaults.border(type, enabled) | 轮廓覆盖。 |

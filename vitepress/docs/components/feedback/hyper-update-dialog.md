@@ -29,7 +29,11 @@ HyperUpdateDialog(state, onDismissRequest = onClose, onRetry = onRetry, onDownlo
 
 **样式约定**
 
-strong 材质、radius 28dp、最大宽 420dp、padding 24dp。标识 64dp、标题 24sp、进度 28sp；版本徽章和本次更新摘要遵循参考布局，操作区固定。
+strong 材质、radius 28dp、最大宽 420dp、padding 24dp。各状态标识块统一为 40dp、图标 20dp、环形进度 30dp；标题 24sp、进度 28sp，操作区固定。检查中不展示当前版本，其他状态的版本信息直接排版，不嵌套卡片。
+
+Error 使用简洁布局：保留“软件更新”页头、具体错误说明、重试与关闭；不展示状态图标、大标题、当前版本框或操作区分隔线。错误说明由调用方传入。
+
+主操作使用标准 filled 按钮；关闭、取消和稍后再说统一使用标准 outline 按钮，颜色、轮廓和圆角均采用 `HyperButton` 默认值。
 
 **状态归属**
 
@@ -108,7 +112,6 @@ fun HyperUpdateDialog(
 | checkTitle | String | 否 | "正在检查更新" | 检查中标题。 |
 | updateAvailableTitle | String | 否 | "发现新版本" | 发现更新标题。 |
 | downloadQueuedTitle | String | 否 | "已开始下载" | 系统排队状态标题。 |
-| errorTitle | String | 否 | "更新遇到了一点问题" | 错误状态标题。 |
 | checkingMessage | String | 否 | "正在获取版本信息，请稍候。" | 检查中说明。 |
 | upToDateMessage | String | 否 | "所有新功能与体验优化，都已为你准备好。" | 已是最新的说明。 |
 | downloadQueuedMessage | String | 否 | "更新包已交给系统下载管理器。" | 系统排队说明。 |

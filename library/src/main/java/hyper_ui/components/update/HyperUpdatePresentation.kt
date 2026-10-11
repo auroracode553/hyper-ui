@@ -43,7 +43,7 @@ internal fun hyperUpdatePresentation(state: HyperUpdateDialogState, texts: Hyper
             progress = state.progress?.takeIf { it.isFinite() }?.coerceIn(0f, 1f), detail = state.progressText)
         is HyperUpdateDialogState.Completed -> HyperUpdatePresentation(state, "更新完成", "新版本已就绪，继续探索更好的体验。",
             state.currentVersionName, state.release, HyperReferenceIcons.Check, HyperColors.success)
-        is HyperUpdateDialogState.Error -> HyperUpdatePresentation(state, texts.errorTitle, state.message,
+        is HyperUpdateDialogState.Error -> HyperUpdatePresentation(state, "", state.message,
             state.currentVersionName, null, HyperReferenceIcons.CircleAlert, HyperColors.danger)
     }
 }

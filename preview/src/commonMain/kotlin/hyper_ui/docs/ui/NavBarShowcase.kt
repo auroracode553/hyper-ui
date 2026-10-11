@@ -79,7 +79,7 @@ fun NavBarDemo() {
                 } else null,
                 trailingContent = if (example == NavBarExample.Custom) {
                     {
-                        HyperButton(onClick = { actionMessage = "已点击分享" }, type = "ghost", size = "small") {
+                        HyperButton(onClick = { actionMessage = "已点击分享" }, type = "outline", size = "small") {
                             HyperText("分享")
                         }
                     }
@@ -137,7 +137,7 @@ private fun NavBarExampleChoices(selected: NavBarExample, onSelect: (NavBarExamp
                 HyperButton(
                     onClick = { onSelect(example) },
                     modifier = Modifier.weight(1f),
-                    type = if (example == selected) "tonal" else "ghost",
+                    type = if (example == selected) "tonal" else "outline",
                     size = "small"
                 ) { HyperText(example.label, maxLines = 1) }
             }

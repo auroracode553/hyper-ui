@@ -11,7 +11,7 @@ HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列�
 | [HyperText](components/basic/hyper-text.md) | 12 / 14 / 18sp 文字 |
 | [HyperIcon](components/basic/hyper-icon.md) | 18 / 24 / 32dp 图标与插槽继承 |
 | [HyperDivider](components/basic/hyper-divider.md) | 实线、虚线和方向缩进 |
-| [HyperButton](components/basic/hyper-button.md) | 主要、次要和危险操作 |
+| [HyperButton](components/basic/hyper-button.md) | filled、tonal、outline、danger、icon 五种按钮 |
 
 ## 表单
 
@@ -67,7 +67,7 @@ HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列�
 | [HyperPlaybackSpeedPanel](components/feedback/hyper-playback-speed-panel.md) | 播放速度面板 |
 | [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 播放速度刻度 |
 | [HyperPopover](components/feedback/hyper-popover.md) | 触发点附近的补充内容浮层 |
-| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 更新提示 |
+| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 更新提示；统一小图标、版本直接排版、简洁错误反馈和描边次操作 |
 | [HyperBatteryState](components/tools/hyper-battery-state.md) | Android 电量状态读取 |
 
 统一材质、尺寸和 API 迁移见 [样式对照](style-reference.md)。

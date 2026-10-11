@@ -37,7 +37,7 @@ fun ButtonDemo() {
             HyperButton({ clicks += 1 }, type = "outline") { HyperIcon(HyperReferenceIcons.Search, null); HyperText("查找") }
             HyperButton({ clicks = 0 }, type = "danger") { HyperIcon(HyperReferenceIcons.Delete, null); HyperText("删除") }
             HyperButton({ clicks += 1 }, type = "tonal") { HyperIcon(HyperReferenceIcons.Settings, null); HyperText("设置") }
-            HyperButton({ clicks += 1 }, type = "ghost") { HyperText("稍后处理") }
+            HyperButton({ clicks += 1 }, type = "outline") { HyperText("稍后处理") }
         }
         PreviewSectionLabel("独立图标入口")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {

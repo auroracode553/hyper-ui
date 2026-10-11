@@ -56,7 +56,7 @@ fun HyperButton(
 ) {
     requireHyperComponentSize(size)
     val resolvedHeight = HyperButtonDefaults.height(size)
-    require(type in setOf("filled", "tonal", "outline", "ghost", "danger", "icon")) {
+    require(type in setOf("filled", "tonal", "outline", "danger", "icon")) {
         "不支持的 HyperButton type: $type"
     }
     val isIconType = type == "icon"
@@ -141,7 +141,6 @@ object HyperButtonDefaults {
             "danger" -> HyperColors.danger
             "tonal" -> hyperGlass.selection
             "outline" -> hyperGlass.surfaceSubtle
-            "ghost" -> Color.Transparent
             "icon" -> hyperGlass.surface
             else -> error("不支持的 HyperButton type: $type")
         }
@@ -150,8 +149,7 @@ object HyperButtonDefaults {
         return HyperButtonColors(
             resolveHyperContainerColor(containerColor, fill),
             resolveHyperContainerColor(contentColor, foreground),
-            resolveHyperContainerColor(disabledContainerColor,
-                if (type == "ghost") Color.Transparent else hyperGlass.controlTrack),
+            resolveHyperContainerColor(disabledContainerColor, hyperGlass.controlTrack),
             resolveHyperContainerColor(disabledContentColor, HyperColors.secondaryText.copy(alpha = 150 / 255f))
         )
     }
@@ -163,7 +161,6 @@ object HyperButtonDefaults {
         color: Color = Color.Unspecified
     ): BorderStroke? {
         val fallback = when {
-            type == "ghost" -> Color.Transparent
             !enabled -> HyperColors.divider.copy(alpha = 110 / 255f)
             type == "icon" -> hyperGlass.edgeHighlight
             type == "outline" -> HyperColors.divider

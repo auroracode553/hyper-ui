@@ -93,7 +93,6 @@ data class HyperUpdateDialogTexts(
     val checkTitle: String = "正在检查更新",
     val updateAvailableTitle: String = "发现新版本",
     val downloadQueuedTitle: String = "已开始下载",
-    val errorTitle: String = "更新遇到了一点问题",
     val checkingMessage: String = "正在获取版本信息，请稍候。",
     val upToDateMessage: String = "所有新功能与体验优化，都已为你准备好。",
     val downloadQueuedMessage: String = "更新包已交给系统下载管理器。",

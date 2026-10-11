@@ -31,12 +31,12 @@ data class ComponentDemo(
 
 /** 聚合稳定 Preview ID；分组示例同步参考展示结构，页面示例自行滚动，普通示例由统一视口滚动。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
-    addAll(basicComponentDemos())
+    addAll(basicComponentDemos()) // button 仅呈现 filled、tonal、outline、danger、icon 五种类型。
     addAll(formComponentDemos())
     addAll(containerComponentDemos())
     addAll(navigationComponentDemos())
     addAll(listComponentDemos())
-    addAll(feedbackComponentDemos())
+    addAll(feedbackComponentDemos()) // update_dialog 统一小图标、版本直接排版、简洁错误反馈与描边次操作。
     addAll(themeComponentDemos())
 }
 .map { demo ->

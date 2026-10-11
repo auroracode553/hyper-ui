@@ -310,13 +310,16 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "update_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperUpdateDialog",
-        description = "参考 28dp 圆角更新弹窗，版本、摘要、下载、安装、必要更新与完成状态可操作模拟。",
+        description = "28dp 圆角更新弹窗，版本、摘要、下载、安装与完成状态可操作模拟；错误仅展示原因、重试与关闭。",
         code = """
             HyperUpdateDialog(state = state, onDismissRequest = onClose, onRetry = onRetry,
                 onDownload = onDownload, onInstall = onInstall, mandatory = false)
         """.trimIndent(),
         variants = listOf(
             DemoVariant("状态", "HyperUpdateDialogState", "检查/更新/下载/安装/完成/错误"),
+            DemoVariant("错误反馈", "Error.message", "仅展示原因、重试与关闭，不展示图标、标题和版本框"),
+            DemoVariant("操作样式", "HyperButton.type", "主操作 filled，关闭、取消和稍后再说 outline"),
+            DemoVariant("标识与版本", "受控状态布局", "40dp 标识块、20dp 图标；检查中无版本，其他版本信息不嵌套卡片"),
             DemoVariant("必要更新", "mandatory", "安装与必要更新阶段锁定关闭"),
             DemoVariant("业务回调", "onDownload / onInstall", "仅派发动作，调用方维护状态"),
             DemoVariant("模拟", "Preview", "不访问网络或实际安装")

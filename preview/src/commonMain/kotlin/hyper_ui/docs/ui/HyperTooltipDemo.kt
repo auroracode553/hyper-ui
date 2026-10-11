@@ -14,9 +14,9 @@ internal fun HyperTooltipDemo() {
     var delayMillis by remember { mutableStateOf(500L) }
     var clicks by remember { mutableStateOf(0) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperButton({ enabled = !enabled }, type = "ghost") { HyperText(if (enabled) "禁用提示" else "启用提示") }
-        HyperButton({ longText = !longText }, type = "ghost") { HyperText("切换长文本") }
-        HyperButton({ delayMillis = if (delayMillis == 500L) 0L else 500L }, type = "ghost") {
+        HyperButton({ enabled = !enabled }, type = "outline") { HyperText(if (enabled) "禁用提示" else "启用提示") }
+        HyperButton({ longText = !longText }, type = "outline") { HyperText("切换长文本") }
+        HyperButton({ delayMillis = if (delayMillis == 500L) 0L else 500L }, type = "outline") {
             HyperText("悬停延迟 ${delayMillis}ms")
         }
         HyperTooltip(if (longText) "这是较长的补充提示，最大宽度为 240dp，内容会自动换行。" else "这是一个提示",

@@ -132,7 +132,7 @@ private fun MarkdownContent(blocks: List<MarkdownBlock>) {
 private fun MarkdownDisclosure(block: MarkdownBlock.Disclosure) {
     var expanded by remember(block) { mutableStateOf(false) }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        HyperButton(onClick = { expanded = !expanded }, type = "ghost", modifier = Modifier.fillMaxWidth()) {
+        HyperButton(onClick = { expanded = !expanded }, type = "outline", modifier = Modifier.fillMaxWidth()) {
             HyperText(if (expanded) "收起：${block.title}" else block.title)
         }
         if (expanded) MarkdownContent(block.blocks)
