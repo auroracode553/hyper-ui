@@ -31,7 +31,7 @@
 | HyperProgress | linear 4/6/12；circle 48/64/80、stroke 4/6/8 | showLabel=true；线性动画 1400ms、圆环 1100ms |
 | HyperEmptyState | 图标块 56、radius 24、图标 24、padding 20 | 标题 16/600、说明 13/1.45、间距 12/8/12 |
 | HyperToast | minWidth 180/maxWidth 420，radius 18，padding 12/10/8/10 | 30dp 图标块、17dp 图标、14sp/500/1.35、默认 2000ms |
-| HyperUpdateDialog | maxWidth 420，radius 28，padding 24，非错误状态标识块 40、图标 20、环形进度 30 | 检查中隐藏版本，其他状态版本直接排版；标题 24、进度 28；错误仅保留原因、重试与关闭 |
+| HyperUpdateDialog | maxWidth 420，模态安全区外间距 20，radius 28，padding 24，非错误状态标识块 40、图标 20、环形进度 30 | 标题 24/1.2、说明 14/1.55、进度 28/1.2；其余文字按主题 1.4 行高随字号换算。检查中隐藏版本；错误仅保留原因、重试与关闭 |
 
 HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 控件按各自固定尺寸和隐式边框内边距处理。普通按压为 0.975 缩放、0.92 透明度，85ms 进入、180ms 恢复，曲线 Cubic(0.23,1,0.32,1)。模态弹窗为 250ms、0.96→1 缩放；锚定浮层为 180ms。主题令牌详见 [主题配置](theme.md)。
 
@@ -63,7 +63,8 @@ HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 
 - core/icon/HyperReferenceIcons.kt 共享参考版本 Lucide 字体轮廓，HyperIcon.kt 继承插槽尺寸。
 - core/surface/ 提供玻璃、背景采样与阴影；边框和内容间距分开管理。
 - components/popup/HyperAnchoredSurface.kt 共用于 Dropdown、Popover，处理安全区、键盘和上下翻转。
-- components/update/HyperUpdatePresentation.kt 只映射显示数据，HyperUpdateContent.kt 组合内容与操作区，HyperUpdateDialog.kt 承担受控入口。
+- components/update/HyperUpdatePresentation.kt 只映射显示数据，HyperUpdateContent.kt 组合正文与操作区，HyperUpdateLayout.kt 共用内嵌面板与模态宿主布局，HyperUpdateDialog.kt 承担受控入口。
+- preview/ui/UpdateDialogShowcase.kt 对齐 Flutter 更新流程与状态预览；UpdateDemoController.kt 只持有页面的模拟任务，关闭弹层不会取消下载。
 - preview 的 ComponentDemos 聚合各分组元数据，*ComponentShowcases 提供可操作的大小、禁用、选中与进度状态。
 - ComponentPreviewViewport 统一有限视口与滚动归属；PageListShowcases 为页面级列表提供剩余高度，PreviewSectionLabel 统一示例分组与操作行。
 - component-doc.css 负责文档层级、折叠源码与参数表排版；MarkdownDocument 让桌面 Preview 读取相同 Markdown 并呈现折叠内容。

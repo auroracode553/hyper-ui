@@ -68,7 +68,7 @@ HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列�
 | [HyperPlaybackSpeedPanel](components/feedback/hyper-playback-speed-panel.md) | 播放速度面板 |
 | [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 播放速度刻度 |
 | [HyperPopover](components/feedback/hyper-popover.md) | 触发点附近的补充内容浮层 |
-| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 更新提示；统一小图标、版本直接排版、简洁错误反馈和描边次操作 |
+| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 与 Flutter 共用视觉规则：420dp 最大宽、20dp 弹层外间距、28dp 圆角、24dp 内容边距；统一更新流程与状态预览 |
 | [HyperBatteryState](components/tools/hyper-battery-state.md) | Android 电量状态读取 |
 
 统一材质、尺寸和 API 约定见 [样式对照](style-reference.md)。

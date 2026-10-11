@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,7 +26,8 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
     val isError = view.status == HyperUpdateStatus.error
     Column(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            HyperText("软件更新", Modifier.weight(1f), color = HyperColors.secondaryText, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+            HyperText("软件更新", Modifier.weight(1f), color = HyperColors.secondaryText,
+                fontSize = 12.sp, lineHeight = 16.8.sp, fontWeight = FontWeight.Medium)
             if (!locked && onClose != null) HyperButton(onClose, type = "icon", size = "small") {
                 HyperIcon(HyperReferenceIcons.Close, "关闭")
             }
@@ -59,7 +61,7 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
             val highlights = view.release?.highlights.orEmpty()
             if (highlights.isNotEmpty()) {
                 Spacer(Modifier.height(20.dp))
-                HyperText("本次更新", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                HyperText("本次更新", fontSize = 13.sp, lineHeight = 18.2.sp, fontWeight = FontWeight.SemiBold)
                 highlights.forEach { text ->
                     Row(Modifier.padding(top = 12.dp)) {
                         HyperIcon(HyperReferenceIcons.Check, null, Modifier.padding(top = 3.dp).size(14.dp), color = HyperColors.accent)
@@ -80,19 +82,15 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
             HyperProgress(view.progress, showLabel = false)
             Spacer(Modifier.height(8.dp))
             view.downloadProgress?.let { snapshot ->
-                HyperText(snapshot.sizeLabel, color = HyperColors.secondaryText, fontSize = 12.sp)
-                val transferDetail = listOfNotNull(snapshot.speedLabel, snapshot.remainingLabel).joinToString(" · ")
-                if (transferDetail.isNotEmpty()) HyperText(transferDetail, Modifier.padding(top = 4.dp),
-                    color = HyperColors.secondaryText, fontSize = 12.sp)
+                HyperText(snapshot.sizeLabel, color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 16.8.sp)
+                HyperUpdateTransferDetails(snapshot)
             }
             if (view.detail != null || view.downloadProgress == null) HyperText(
                 view.detail ?: if (installing) "正在应用更新，请稍候" else "正在下载更新文件",
                 color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 18.sp)
         }
         if (mandatory && locked) HyperText("完成本次更新后即可继续使用", Modifier.padding(top = 16.dp),
-            color = HyperColors.secondaryText, fontSize = 12.sp)
-        // 常规 Dialog 的操作间距为 18dp；更新弹窗正文底部留白为 24dp。
-        if (hyperUpdateHasActions(view)) Spacer(Modifier.height(6.dp))
+            color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 16.8.sp)
     }
 }
 
@@ -103,15 +101,30 @@ private fun HyperUpdateVersion(view: HyperUpdatePresentation, mandatory: Boolean
     Column(Modifier.fillMaxWidth()) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
             itemVerticalAlignment = Alignment.CenterVertically) {
-            if (!completed && view.version != null) HyperText("当前 ${view.version}", color = HyperColors.secondaryText, fontSize = 12.sp)
+            if (!completed && view.version != null) HyperText("当前 ${view.version}",
+                color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 16.8.sp)
             if (view.release != null) {
-                if (!completed) HyperIcon(HyperReferenceIcons.ArrowForward, null, Modifier.size(14.dp), color = HyperColors.secondaryText)
+                if (!completed && view.version != null) HyperIcon(HyperReferenceIcons.ArrowForward, null,
+                    Modifier.size(14.dp), color = HyperColors.secondaryText)
                 HyperUpdateBadge("${if (completed) "已更新至" else "新版本"} ${view.release.version}", view.color)
             }
+            if (completed && view.release == null && view.version != null) HyperText("当前 ${view.version}")
             if (mandatory) HyperUpdateBadge("必要更新", HyperColors.warning)
         }
         val detail = listOfNotNull(view.release?.releaseDate, view.release?.sizeLabel).joinToString(" · ")
-        if (detail.isNotBlank()) HyperText(detail, Modifier.padding(top = 8.dp), color = HyperColors.secondaryText, fontSize = 12.sp)
+        if (detail.isNotBlank()) HyperText(detail, Modifier.padding(top = 8.dp),
+            color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 16.8.sp)
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun HyperUpdateTransferDetails(snapshot: HyperUpdateDownloadProgress) {
+    val details = listOfNotNull(snapshot.speedLabel, snapshot.remainingLabel)
+    if (details.isEmpty()) return
+    FlowRow(Modifier.padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        details.forEach { HyperText(it, color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 16.8.sp) }
     }
 }
 
@@ -132,7 +145,8 @@ private fun HyperUpdateBadge(label: String, color: Color, icon: ImageVector? = n
         RoundedCornerShape(50)).padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         if (icon != null) HyperIcon(icon, null, Modifier.size(13.dp), color = color)
-        HyperText(label, color = color, fontSize = 12.sp, lineHeight = 14.4.sp, fontWeight = FontWeight.SemiBold)
+        HyperText(label, color = color, fontSize = 12.sp, lineHeight = 14.4.sp,
+            fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }
 
@@ -148,12 +162,12 @@ internal fun HyperUpdateActions(view: HyperUpdatePresentation) {
         view.primary?.let { action ->
             HyperButton(action.onPressed, Modifier.fillMaxWidth(), colorStyle = "primary", type = "filled") {
                 HyperIcon(action.icon, null)
-                HyperText(action.label)
+                HyperText(action.label, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }
         view.secondary?.let { (label, callback) ->
             if (view.primary != null) Spacer(Modifier.height(8.dp))
-            HyperButton(callback, Modifier.fillMaxWidth()) { HyperText(label) }
+            HyperButton(callback, Modifier.fillMaxWidth()) { HyperText(label, maxLines = 1, overflow = TextOverflow.Ellipsis) }
         }
     }
 }

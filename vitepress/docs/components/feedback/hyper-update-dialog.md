@@ -10,7 +10,9 @@ description: 展示版本信息、下载进度和安装阶段；更新任务由�
 
 ## 交互示例
 
-<WasmPreview demo="update_dialog" title="HyperUpdateDialog 交互预览" />
+<WasmPreview demo="update_dialog" title="HyperUpdateDialog 更新流程" />
+
+预览与 Flutter UpdateDialogComponentExample 使用相同的“更新流程 / 状态预览”分组、十种状态标签、强制更新与总大小未知开关。默认内嵌展示 2.7.3 → 2.8.0、2026.10.10、48.6 MB 和相同的三条更新日志；点击“检查更新”打开模态弹层。状态标签用于静止观察，流程按钮执行页面持有的模拟任务，关闭弹层后下载继续。
 
 ## 使用方式
 
@@ -22,8 +24,8 @@ import hyper_ui.*
 
 HyperUpdateDialog(
     status = HyperUpdateStatus.available,
-    currentVersion = "1.0.1",
-    release = HyperUpdateRelease(version = "1.0.2", highlights = listOf("优化设置页")),
+    currentVersion = "2.7.3",
+    release = HyperUpdateRelease(version = "2.8.0", highlights = listOf("修复已知问题，提升使用稳定性。")),
     onDownload = onDownload,
     onLater = onClose,
     onClose = onClose
@@ -36,7 +38,11 @@ HyperUpdateDialog(
 
 **样式约定**
 
-strong 材质、radius 28dp、最大宽 420dp、padding 24dp。各状态标识块统一为 40dp、图标 20dp、环形进度 30dp；标题 24sp、进度 28sp，操作区固定。检查中不展示当前版本，其他状态的版本信息直接排版，不嵌套卡片。
+strong 材质、radius 28dp、最大宽 420dp、内容边距 24dp。模态宿主在系统安全区内保留四边 20dp 外间距；窄屏面板宽度为 min(420dp, 安全区宽度 − 40dp)，350dp 安全区内为 310dp。正文滚动、底部操作区固定，正文与分隔线之间保留 24dp，分隔线与按钮间距 20dp，两个按钮间距 8dp。
+
+各状态标识块统一为 40dp、图标 20dp、环形进度 30dp。标题 24sp / 1.2、说明 14sp / 1.55、更新日志 13sp / 1.5、进度 28sp / 1.2；版本标签 12sp / 1.2，其余文字按 Flutter 主题的 1.4 行高随字号换算，12sp 对应 16.8sp、13sp 对应 18.2sp。主按钮高 38dp，关闭按钮 32dp、图标 18dp。检查中不展示当前版本；版本箭头只在当前版本与新版本同时存在时显示，完成态缺少 release 时仍显示 currentVersion。下载量下方的速度与剩余时间以 12dp 间距排版，可分别换行。
+
+内嵌状态预览与模态弹层共用组件面板和状态映射；内嵌面板跟随示例父级宽度，宿主页面边距 16dp，弹层使用上述 20dp 外间距。
 
 Error 使用简洁布局：保留“软件更新”页头、具体错误说明、重试与关闭；不展示状态图标、大标题、当前版本框或操作区分隔线。错误说明由调用方传入。
 
@@ -103,7 +109,7 @@ fun HyperUpdateDialog(
 | onCancel | (() -&gt; Unit)? | 否 | null | 通知业务层取消检查或下载。 |
 | onLater | (() -&gt; Unit)? | 否 | null | 通知业务层稍后处理。 |
 | onClose | (() -&gt; Unit)? | 否 | null | 请求关闭时通知调用方更新可见状态。 |
-| maxWidth | Dp | 否 | 420.dp | 弹层或提示的最大宽度。 |
+| maxWidth | Dp | 否 | 420.dp | 面板最大宽度；模态弹层还受安全区宽度减去两侧 20dp 的约束。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 
 ### HyperUpdateRelease

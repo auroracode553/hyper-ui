@@ -310,20 +310,21 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "update_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperUpdateDialog",
-        description = "28dp 圆角更新弹窗，版本、摘要、下载、安装与完成状态可操作模拟；错误仅展示原因、重试与关闭。",
+        description = "与 Flutter 相同的更新流程、状态预览和 2.7.3 → 2.8.0 示例；共用 28dp 圆角面板与固定操作区。",
         code = """
-            HyperUpdateDialog(status = status, currentVersion = currentVersion, release = release,
-                onClose = onClose, onRetry = onRetry,
-                onDownload = onDownload, onInstall = onInstall, mandatory = false)
+            HyperUpdateDialog(status = status, currentVersion = "2.7.3", release = release,
+                onClose = onClose, onLater = onClose, onRetry = onRetry,
+                onDownload = onDownload, onInstall = onInstall)
         """.trimIndent(),
         variants = listOf(
             DemoVariant("状态", "HyperUpdateStatus", "检查/更新/下载/安装/完成/错误"),
             DemoVariant("错误反馈", "status = error / message", "仅展示原因、重试与关闭，不展示图标、标题和版本框"),
             DemoVariant("操作样式", "HyperButton.type", "主操作 type = filled / colorStyle = primary，关闭、取消和稍后再说省略 type，使用默认描边"),
             DemoVariant("标识与版本", "受控状态布局", "40dp 标识块、20dp 图标；检查中无版本，其他版本信息不嵌套卡片"),
+            DemoVariant("尺寸与排版", "maxWidth = 420.dp", "弹层安全区外间距 20dp，内容 24dp，圆角 28dp；正文滚动、底部操作固定"),
             DemoVariant("必要更新", "mandatory", "安装与必要更新阶段锁定关闭"),
             DemoVariant("业务回调", "onDownload / onInstall", "仅派发动作，调用方维护状态"),
-            DemoVariant("模拟", "Preview", "不访问网络或实际安装")
+            DemoVariant("模拟", "Preview", "与 Flutter 相同分组、标签、强制更新和未知总量开关；关闭弹层后下载继续")
         ),
         apiDocumentPaths = listOf("feedback/hyper-update-dialog.md"),
         content = { UpdateDialogDemo() }

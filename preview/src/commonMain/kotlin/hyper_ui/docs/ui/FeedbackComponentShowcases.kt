@@ -4,8 +4,6 @@ import hyper_ui.*
 import hyper_ui.LocalHyperContentColor
 import hyper_ui.docs.theme.LocalDocsColorScheme
 
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,10 +38,6 @@ import hyper_ui.HyperLevelCapsuleDefaults
 import hyper_ui.HyperBatteryIndicator
 import hyper_ui.HyperProgressDefaults
 import hyper_ui.HyperTextField
-import hyper_ui.HyperUpdateRelease
-import hyper_ui.HyperUpdateDownloadProgress
-import hyper_ui.HyperUpdateDialog
-import hyper_ui.HyperUpdateStatus
 
 @Composable
 fun EmptyStateDemo() {
@@ -473,59 +467,6 @@ fun HyperPopoverDemo() {
             }
         }
         HyperText("当前备注：$savedNote", size = "small")
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun UpdateDialogDemo() {
-    val release = remember { HyperUpdateRelease("1.2.0", releaseDate = "2026-10-11", sizeLabel = "32 MB",
-        highlights = listOf("优化大文档加载速度", "修复部分表格预览问题")) }
-    var status by remember { mutableStateOf(HyperUpdateStatus.idle) }
-    var mandatory by remember { mutableStateOf(false) }
-    var progress by remember { mutableStateOf(0.42f) }
-    val stages = listOf("发现更新" to HyperUpdateStatus.available, "检查中" to HyperUpdateStatus.checking,
-        "系统排队" to HyperUpdateStatus.downloadQueued, "下载中" to HyperUpdateStatus.downloading,
-        "准备安装" to HyperUpdateStatus.readyToInstall, "安装中" to HyperUpdateStatus.installing,
-        "完成" to HyperUpdateStatus.completed, "最新" to HyperUpdateStatus.upToDate, "错误提示" to HyperUpdateStatus.error)
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperButton({ mandatory = !mandatory }) { HyperText(if (mandatory) "必要更新：开启" else "必要更新：关闭") }
-        HyperSlider(progress, { progress = it }, min = 0f, max = 1f, showValue = false)
-        HyperText("模拟进度 ${(progress * 100).toInt()}%，检查/下载/安装状态 2.5 秒后模拟完成。", size = "small")
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            stages.forEach { (label, value) -> HyperButton({ status = value }, size = "small") { HyperText(label) } }
-        }
-    }
-    androidx.compose.runtime.LaunchedEffect(status) {
-        val shown = status
-        if (shown in setOf(HyperUpdateStatus.checking, HyperUpdateStatus.downloading, HyperUpdateStatus.installing)) {
-            kotlinx.coroutines.delay(2500)
-            status = when (shown) {
-                HyperUpdateStatus.checking -> HyperUpdateStatus.available
-                HyperUpdateStatus.downloading -> HyperUpdateStatus.readyToInstall
-                else -> HyperUpdateStatus.completed
-            }
-        }
-    }
-    HyperUpdateDialog(
-        status = status,
-        currentVersion = if (status in setOf(HyperUpdateStatus.completed, HyperUpdateStatus.upToDate)) "1.2.0" else "1.0.0",
-        release = release,
-        progress = progress.takeIf { status != HyperUpdateStatus.downloadQueued },
-        downloadProgress = if (status == HyperUpdateStatus.downloading) HyperUpdateDownloadProgress(
-            (32_000_000 * progress).toLong(), 32_000_000, 2_000_000.0) else null,
-        message = "无法连接更新服务，请稍后重试".takeIf { status == HyperUpdateStatus.error },
-        mandatory = mandatory,
-        onClose = { status = HyperUpdateStatus.idle },
-        onCancel = { status = HyperUpdateStatus.idle },
-        onLater = { status = HyperUpdateStatus.idle },
-        onCheck = { status = HyperUpdateStatus.checking },
-        onRetry = { status = HyperUpdateStatus.checking },
-        onDownload = { status = HyperUpdateStatus.downloading },
-        onInstall = { status = HyperUpdateStatus.installing }
-    )
-    if (status == HyperUpdateStatus.installing) {
-        HyperButton({ status = HyperUpdateStatus.completed }) { HyperText("宿主模拟完成更新") }
     }
 }
 

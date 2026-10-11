@@ -1,7 +1,5 @@
 package hyper_ui
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -38,16 +36,5 @@ fun HyperUpdateDialog(
     val view = hyperUpdatePresentation(status, currentVersion, release, progress, downloadProgress, progressText,
         title, message, mandatory, locked, primaryLabel, secondaryLabel,
         onCheck, onDownload, onInstall, onRetry, onCancel, onLater, onClose)
-    HyperDialog(
-        visible = true,
-        onClose = if (locked) ({}) else ({ onClose?.invoke() }),
-        modifier = modifier,
-        maxWidth = maxWidth,
-        shape = RoundedCornerShape(28.dp),
-        dismissOnBackPress = !locked,
-        dismissOnClickOutside = false,
-        contentPadding = PaddingValues(24.dp),
-        verticalArrangement = Arrangement.spacedBy(0.dp),
-        actions = if (hyperUpdateHasActions(view)) ({ HyperUpdateActions(view) }) else null
-    ) { HyperUpdateBody(view, locked, mandatory, onClose) }
+    HyperUpdateLayout(view, locked, mandatory, onClose, maxWidth, modifier)
 }

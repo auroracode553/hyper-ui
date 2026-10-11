@@ -34,7 +34,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(containerComponentDemos())
     addAll(navigationComponentDemos())
     addAll(listComponentDemos()) // sectioned_list 固定 8dp 紧凑间距，保留条目选择交互。
-    addAll(feedbackComponentDemos()) // update_dialog 统一小图标、版本直接排版、简洁错误反馈与描边次操作。
+    addAll(feedbackComponentDemos()) // update_dialog 对齐 Flutter 更新流程、静止状态切片与共用面板。
     addAll(themeComponentDemos())
 }
 .map { demo ->

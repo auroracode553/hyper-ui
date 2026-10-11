@@ -234,6 +234,7 @@ HyperButton(type = "icon", onPressed = onSearch) {
 `HyperUpdateDialog` 的错误状态采用简洁布局，展示错误原因、重试与关闭。
 更新弹窗的关闭、取消和稍后再说省略 `type`，使用 `HyperButton` 默认描边样式；主操作显式使用 `type = "filled"` 和 `colorStyle = "primary"`。
 更新弹窗各状态标识块统一为 40dp、图标 20dp、环形进度 30dp；检查中隐藏当前版本，其他状态的版本信息直接排版，不嵌套版本卡片。
+更新面板以 Flutter `HyperUpdateDialog` 源码为基准：最大宽 420dp、弹层安全区外间距 20dp、圆角 28dp、内容边距 24dp，正文滚动且底部按钮固定。文档与 Preview 共用组件面板，默认展示相同的“更新流程 / 状态预览”、2.7.3 → 2.8.0、2026.10.10、48.6 MB 和三条更新日志；状态标签与强制更新、总大小未知开关一致，关闭弹层后模拟下载继续。
 按钮配色与显示形态独立：`type` 仅支持 `filled`、`tonal`、`icon`，省略时默认白色描边；`colorStyle` 支持 `primary`、`success`、`info`、`warning`、`danger`，自定义 `color` 优先于预设配色。按钮预览以 Flutter ButtonsExample 为基准，分组、文案、图标和 8/16dp 间距一致，保留单个禁用文字示例；手机外框、白色背景和 52dp 顶部留白同步，不添加额外状态栏、分组标题、开关或点击计数。库内组件和 Preview 均使用这些标准类型，并与 `D:/my_project/flutter_project/doc_ui_kit` 同步维护。
 
 Preview 使用合并 Roboto 与 Noto Sans SC 的独立字体，避免 Wasm 中文回退失效并保持 Flutter 的拉丁字符宽度。生成工具位于 `preview/tools/generate-preview-font.py`，仅重新生成字体时需要 fontTools；正常构建直接使用已保存的字体，不需要 Python 或新依赖。Android 与 Preview 的按钮阴影分别由 `HyperButtonShadowRadius.kt` 与 `PreviewButtonShadowRadius.kt` 换算后端单位，公开按钮 API 不变。
