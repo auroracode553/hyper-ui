@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -54,16 +57,13 @@ fun HyperTextField(
     readOnly: Boolean = false,
     isError: Boolean = false,
     clearable: Boolean = false,
-    showPasswordToggle: Boolean = true,
+    showPasswordToggle: Boolean = false,
     maxlength: Int? = null,
     showWordLimit: Boolean = false,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
-    textStyle: TextStyle = HyperTheme.typography.bodyMedium.copy(
-        fontSize = 14.sp,
-        lineHeight = 19.sp
-    ),
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    textStyle: TextStyle = HyperTextFieldDefaults.textStyle(size),
+    keyboardOptions: KeyboardOptions = HyperTextFieldDefaults.keyboardOptions(type),
     keyboardActions: KeyboardActions = KeyboardActions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -76,7 +76,7 @@ fun HyperTextField(
 ) {
     require(rows > 0) { "rows 必须大于 0" }
     requireHyperComponentSize(size)
-    require(type in setOf("text", "textarea", "password")) {
+    require(type in setOf("text", "search", "password", "textarea", "email", "url", "number", "tel")) {
         "不支持的 HyperTextField type: $type"
     }
     require(maxlength == null || maxlength > 0) { "maxlength 必须大于 0" }
@@ -118,7 +118,7 @@ fun HyperTextField(
         else -> visualTransformation
     }
     val verticalAlignment = if (singleLine) Alignment.CenterVertically else Alignment.Top
-    val effectiveEndContent = endContent ?: defaultEndContent(
+    val builtInEndContent = defaultEndContent(
         type = type,
         value = value,
         enabled = enabled,
@@ -132,9 +132,10 @@ fun HyperTextField(
 
     Column(modifier = modifier) {
         if (labelContent != null) {
-            CompositionLocalProvider(LocalHyperContentColor provides visuals.labelColor) {
+            CompositionLocalProvider(LocalHyperContentColor provides visuals.labelColor,
+                LocalHyperTextStyle provides HyperTheme.typography.bodySmall.copy(fontSize = 13.sp, lineHeight = 16.9.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)) {
                 Column(
-                    modifier = Modifier.padding(start = 0.dp, bottom = 6.dp),
+                    modifier = Modifier.padding(start = 0.dp, bottom = 8.dp),
                     content = labelContent
                 )
             }
@@ -165,16 +166,16 @@ fun HyperTextField(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .defaultMinSize(minHeight = hyperComponentSize(size, 40.dp, HyperTextFieldDefaults.MinHeight, 54.dp))
                         .hyperTextFieldSurface(
                             shape = shape,
                             visuals = visuals.surface
                         )
-                        .padding(HyperTextFieldDefaults.ContentPadding),
+                        .padding(HyperTextFieldDefaults.contentPadding(size, !singleLine)),
                     verticalAlignment = verticalAlignment
                 ) {
                     if (startContent != null) {
-                        CompositionLocalProvider(LocalHyperContentColor provides visuals.contentColor) {
+                        CompositionLocalProvider(LocalHyperContentColor provides visuals.placeholderColor,
+                            LocalHyperIconSize provides (textStyle.fontSize.value + 2).dp) {
                             startContent()
                         }
                     }
@@ -189,18 +190,18 @@ fun HyperTextField(
                         contentAlignment = if (singleLine) Alignment.CenterStart else Alignment.TopStart
                     ) {
                         if (value.isEmpty() && placeholderContent != null) {
-                            CompositionLocalProvider(LocalHyperContentColor provides visuals.placeholderColor) {
+                            CompositionLocalProvider(LocalHyperContentColor provides visuals.placeholderColor,
+                                LocalHyperTextStyle provides textStyle) {
                                 placeholderContent()
                             }
                         }
                         innerTextField()
                     }
 
-                    if (effectiveEndContent != null) {
-                        CompositionLocalProvider(LocalHyperContentColor provides visuals.contentColor) {
-                            effectiveEndContent()
-                        }
+                    if (endContent != null) {
+                        CompositionLocalProvider(LocalHyperContentColor provides visuals.contentColor) { endContent() }
                     }
+                    builtInEndContent?.invoke(this)
                 }
             }
         )
@@ -208,11 +209,13 @@ fun HyperTextField(
         if (supportingContent != null || (showWordLimit && maxlength != null)) {
             CompositionLocalProvider(LocalHyperContentColor provides visuals.supportingColor) {
                 Column(
-                    modifier = Modifier.padding(start = 0.dp, top = 6.dp),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
-                    supportingContent?.invoke(this)
+                    if (supportingContent != null) Column(Modifier.padding(start = 4.dp, top = 6.dp), content = supportingContent)
                     if (showWordLimit && maxlength != null) {
-                        HyperText(text = "${value.length}/$maxlength", fontSize = 12.sp)
+                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                            HyperText(text = "${value.length}/$maxlength", fontSize = 12.sp)
+                        }
                     }
                 }
             }
@@ -232,34 +235,54 @@ private fun defaultEndContent(
     onTogglePassword: () -> Unit
 ): (@Composable RowScope.() -> Unit)? {
     val canInteract = enabled && !readOnly
-    if (type != "password" && !(clearable && value.isNotEmpty())) return null
+    if (!(type == "password" && showPasswordToggle) && !clearable) return null
     return {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (type == "password" && showPasswordToggle) {
-                HyperText(
-                    text = if (passwordVisible) "隐藏" else "显示",
-                    modifier = Modifier.clickable(enabled = canInteract, onClick = onTogglePassword),
-                    fontSize = 13.sp
-                )
+                HyperInputAffix(if (passwordVisible) HyperReferenceIcons.EyeOff else HyperReferenceIcons.Eye,
+                    if (passwordVisible) "隐藏密码" else "显示密码", canInteract, onTogglePassword)
             }
-            if (clearable && value.isNotEmpty()) {
-                HyperText(
-                    text = "×",
-                    modifier = Modifier.padding(start = 10.dp).clickable(enabled = canInteract, onClick = onClear),
-                    fontSize = 24.sp,
-                    lineHeight = 24.sp
-                )
+            if (clearable) {
+                HyperInputAffix(HyperReferenceIcons.Close, "清空", canInteract && value.isNotEmpty(), onClear,
+                    Modifier.alpha(if (canInteract && value.isNotEmpty()) 1f else 0f))
             }
         }
     }
 }
 
 object HyperTextFieldDefaults {
-    /** 当前默认 slot（含 28dp 扫码图标）可在同一紧凑行高内稳定居中。 */
-    // Wasm 文档预览按设备密度渲染，使用紧凑 dp 值后与 Flutter/Aurora 的 68px 字段高度一致。
-    val MinHeight = 46.dp
-    val Shape: Shape = RoundedCornerShape(14.dp)
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 10.dp)
+    /** 无附加插槽时的默认字号行高与内边距总和；实际高度由内容测量。 */
+    // 参考字体行高 20.8dp + 上下各 9dp；轮廓不增加布局尺寸。
+    val MinHeight = 38.8.dp
+    val Shape: Shape = RoundedCornerShape(20.dp)
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 18.dp, vertical = 9.dp)
+    fun contentPadding(size: String = "default", multiline: Boolean = false): androidx.compose.foundation.layout.PaddingValues =
+        androidx.compose.foundation.layout.PaddingValues(
+            horizontal = hyperComponentSize(size, 14.dp, 18.dp, 20.dp),
+            vertical = hyperComponentSize(size, 7.dp, 9.dp, 11.dp) + if (multiline) 3.dp else 0.dp
+        )
+
+    @Composable
+    fun textStyle(size: String = "default"): TextStyle {
+        val fontSize = hyperComponentSize(size, 14.dp, 16.dp, 18.dp).value
+        return HyperTheme.typography.bodyMedium.copy(fontSize = fontSize.sp, lineHeight = (fontSize * 1.3f).sp)
+    }
+
+    fun keyboardOptions(type: String = "text"): KeyboardOptions = KeyboardOptions(
+        keyboardType = when (type) {
+            "password" -> KeyboardType.Password
+            "email" -> KeyboardType.Email
+            "url" -> KeyboardType.Uri
+            "number" -> KeyboardType.Number
+            "tel" -> KeyboardType.Phone
+            else -> KeyboardType.Text
+        },
+        imeAction = when (type) {
+            "textarea" -> ImeAction.Default
+            "search" -> ImeAction.Search
+            else -> ImeAction.Done
+        }
+    )
     val SlotSpacing = 8.dp
     const val TextareaRows = 3
 
@@ -290,7 +313,7 @@ object HyperTextFieldDefaults {
             ),
             contentColor = resolvedContentColor,
             placeholderColor = resolvedPlaceholderColor,
-            labelColor = resolveHyperContainerColor(labelColor, HyperColors.secondaryText),
+            labelColor = resolveHyperContainerColor(labelColor, HyperColors.primaryText),
             supportingColor = resolveHyperContainerColor(supportingColor, HyperColors.secondaryText),
             errorColor = resolvedErrorColor,
             cursorColor = resolveHyperContainerColor(cursorColor, HyperColors.accent),
@@ -300,7 +323,7 @@ object HyperTextFieldDefaults {
             ),
             disabledContentColor = resolveHyperContainerColor(
                 disabledContentColor,
-                HyperColors.disabledText
+                resolvedContentColor
             )
         )
     }

@@ -1,327 +1,130 @@
-/** 文件职责：提供 HyperTabBar 容器、项目布局与主题颜色。 */
+/** 文件职责：移植参考 HyperTabBar 的内容收缩悬浮导航与单动作模式。 */
 package hyper_ui
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
-enum class HyperTabBarItemLayout {
-    Equal,
-    Packed
-}
+class HyperTabBarItemScope internal constructor(val selected: Boolean, val enabled: Boolean)
 
-@Immutable
-data class HyperTabBarColors(
-    val containerColor: Color,
-    val selectedContentColor: Color,
-    val unselectedContentColor: Color,
-    val disabledContentColor: Color
-)
-
-class HyperTabBarItemScope internal constructor(
-    val selected: Boolean,
-    val enabled: Boolean,
-    /** 0f~1f 的选中强度；贴底样式恒为 0f/1f，悬浮样式随指示胶囊位置连续变化。 */
-    val selectionStrength: Float
-)
-
-/**
- * 底部导航栏组件（Slot 模式）。
- *
- * 组件内部已包含默认水平内容间距（16dp）和少量底部安全留白。
- * 外部间距请通过 modifier.padding(...) 控制。
- *
- * [type] 为 `floating` 时渲染悬浮玻璃胶囊容器：不使用 [topDivider]、
- * [shape] 与贴底留白，选中指示胶囊由调用方在 slot 中自行绘制。
- */
-@Composable
-fun HyperTabBar(
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    shape: Shape = HyperTabBarDefaults.Shape,
-    topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
-    colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
-    type: String = "docked",
-    floatingColors: HyperFloatingTabBarColors = HyperFloatingTabBarDefaults.colors(),
-    content: @Composable RowScope.() -> Unit
-) {
-    require(type == "docked" || type == "floating") { "不支持的 HyperTabBar type: $type" }
-    if (type == "floating") {
-        HyperFloatingTabBar(
-            modifier = modifier,
-            enabled = enabled,
-            horizontalArrangement = horizontalArrangement,
-            verticalAlignment = verticalAlignment,
-            colors = floatingColors,
-            content = content
-        )
-        return
-    }
-    val resolvedColors = colors
-    val contentColor = if (enabled) {
-        resolvedColors.unselectedContentColor
-    } else {
-        resolvedColors.disabledContentColor
-    }
-
-    HyperTabBarSurface(
-        modifier = modifier,
-        shape = shape,
-        topDivider = topDivider,
-        colors = resolvedColors
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(HyperTabBarDefaults.Height)
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = horizontalArrangement,
-            verticalAlignment = verticalAlignment
-        ) {
-            // Slot 模式只提供底栏外壳和默认内容色；具体点击、选中与禁用逻辑由调用方组合。
-            CompositionLocalProvider(
-                LocalHyperContentColor provides contentColor,
-                LocalHyperTextStyle provides HyperTabBarDefaults.ItemTextStyle
-            ) {
-                content()
-            }
-        }
-    }
-}
-
-/**
- * 底部导航栏组件（简单 items 模式）。
- *
- * 组件内部已包含默认水平内容间距（16dp）和少量底部安全留白。
- * 外部间距请通过 modifier.padding(...) 控制。
- *
- * [type] 为 `floating` 时渲染悬浮玻璃胶囊：忽略 [itemLayout]、
- * [itemSlotAlignment]、[horizontalArrangement]、[shape]、[topDivider] 与 [colors]，
- * 使用 [floatingColors]；项目等分宽度，指示胶囊随选中与按压状态滑动、加深。
- */
+/** 选择值由调用方持有；itemLabel 用于与参考实现相同的内容宽度测量。 */
 @Composable
 fun <T> HyperTabBar(
     items: List<T>,
     onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
+    type: String = "multiple",
     enabled: Boolean = true,
-    itemLayout: HyperTabBarItemLayout = HyperTabBarItemLayout.Equal,
     itemSelected: (T) -> Boolean = { false },
-    itemSlotAlignment: Alignment = Alignment.Center,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
-    shape: Shape = HyperTabBarDefaults.Shape,
-    topDivider: BorderStroke? = HyperTabBarDefaults.topDivider(),
-    colors: HyperTabBarColors = HyperTabBarDefaults.colors(),
-    type: String = "docked",
-    floatingColors: HyperFloatingTabBarColors = HyperFloatingTabBarDefaults.colors(),
     itemEnabled: (T) -> Boolean = { true },
+    itemLabel: (T) -> String = { "" },
+    badgeCount: Int = 0,
+    safeArea: Boolean = true,
+    margin: PaddingValues = if (type == "single") PaddingValues(0.dp) else PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp),
+    color: Color = HyperColors.accent,
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
 ) {
-    require(type == "docked" || type == "floating") { "不支持的 HyperTabBar type: $type" }
-    if (type == "floating") {
-        HyperFloatingTabBar(
-            items = items,
-            onItemClick = onItemClick,
-            modifier = modifier,
-            enabled = enabled,
-            itemSelected = itemSelected,
-            itemEnabled = itemEnabled,
-            colors = floatingColors,
-            itemContent = itemContent
-        )
-        return
-    }
-    val resolvedColors = colors
-    HyperTabBar(
-        modifier = modifier,
-        enabled = enabled,
-        horizontalArrangement = if (itemLayout == HyperTabBarItemLayout.Equal) {
-            Arrangement.Start
-        } else {
-            horizontalArrangement
-        },
-        shape = shape,
-        topDivider = topDivider,
-        colors = resolvedColors
-    ) {
-        items.forEach { item ->
-            val selected = itemSelected(item)
-            val actualEnabled = enabled && itemEnabled(item)
-            val scope = HyperTabBarItemScope(
-                selected = selected,
-                enabled = actualEnabled,
-                selectionStrength = if (selected) 1f else 0f
-            )
-            val contentColor = when {
-                !actualEnabled -> resolvedColors.disabledContentColor
-                selected -> resolvedColors.selectedContentColor
-                else -> resolvedColors.unselectedContentColor
-            }
-
-            if (itemLayout == HyperTabBarItemLayout.Equal) {
-                HyperTabBarItemContainer(
-                    onClick = { onItemClick(item) },
-                    enabled = actualEnabled,
-                    contentColor = contentColor,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    contentAlignment = itemSlotAlignment
-                ) {
-                    scope.itemContent(item)
-                }
-            } else {
-                HyperTabBarItemContainer(
-                    onClick = { onItemClick(item) },
-                    enabled = actualEnabled,
-                    contentColor = contentColor,
-                    modifier = Modifier
-                        .widthIn(min = HyperTabBarDefaults.ItemWidth)
-                        .fillMaxHeight(),
-                    contentAlignment = itemSlotAlignment
-                ) {
-                    scope.itemContent(item)
+    require(type in setOf("multiple", "single")) { "type 必须为 multiple 或 single" }
+    require(if (type == "single") items.size == 1 else items.size >= 2) { "single 需要 1 项，multiple 至少需要 2 项" }
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    val textMeasurer = rememberTextMeasurer()
+    val labelStyle = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold,
+        fontFamily = HyperTheme.typography.bodyMedium.fontFamily)
+    val itemWidth = items.maxOf { item ->
+        with(density) { textMeasurer.measure(itemLabel(item), labelStyle).size.width.toDp() } + 32.dp
+    }.coerceAtLeast(76.dp)
+    val height = maxOf(56.dp, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
+    val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    var dragIndex by remember(items.size) { mutableStateOf<Int?>(null) }
+    val logicalSelected = items.indexOfFirst(itemSelected).coerceAtLeast(0)
+    val selectedIndex = dragIndex ?: if (rtl) items.lastIndex - logicalSelected else logicalSelected
+    val position by animateFloatAsState(selectedIndex.toFloat(), tween(HyperMotionSpec.StateDuration,
+        easing = HyperMotionSpec.EaseOutCubic), label = "HyperTabBarSelection")
+    val latestLogicalSelected by rememberUpdatedState(logicalSelected)
+    val latestOnClick by rememberUpdatedState(onItemClick)
+    val latestItemEnabled by rememberUpdatedState(itemEnabled)
+    Box(modifier.then(if (safeArea) Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)) else Modifier)
+        .padding(margin)) {
+        if (type == "single") {
+            val item = items.single()
+            Box(Modifier.size(56.dp)
+                .hyperFrostedSurface(hyperGlass.surface, RoundedCornerShape(28.dp))
+                .hyperNoRippleClickable(enabled = enabled && itemEnabled(item), onClick = { onItemClick(item) }),
+                contentAlignment = Alignment.Center) {
+                CompositionLocalProvider(LocalHyperContentColor provides color, LocalHyperIconSize provides 22.dp) {
+                    HyperTabBarItemScope(true, enabled && itemEnabled(item)).itemContent(item)
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun HyperTabBarSurface(
-    modifier: Modifier,
-    shape: Shape,
-    topDivider: BorderStroke?,
-    colors: HyperTabBarColors,
-    content: @Composable BoxScope.() -> Unit
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .hyperFrostedSurface(
-                containerColor = colors.containerColor,
-                shape = shape
-            )
-            .padding(bottom = HyperTabBarDefaults.BottomPadding)
-    ) {
-        content()
-        if (topDivider != null) {
-            // 贴底栏只需要与上方内容分层；整框描边会形成不必要的卡片感。
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth()
-                    .height(topDivider.width)
-                    .background(brush = topDivider.brush)
-            )
-        }
-    }
-}
-
-@Composable
-private fun RowScope.HyperTabBarItemContainer(
-    onClick: () -> Unit,
-    enabled: Boolean,
-    contentColor: Color,
-    modifier: Modifier,
-    contentAlignment: Alignment,
-    content: @Composable BoxScope.() -> Unit
-) {
-    Box(
-        modifier = modifier.hyperNoRippleClickable(
-            enabled = enabled,
-            role = Role.Button,
-            onClick = onClick
-        ),
-        contentAlignment = contentAlignment
-    ) {
-        CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
-            content()
-        }
-    }
-}
-
-object HyperTabBarDefaults {
-    /** 标签操作区高度。 */
-    val Height = 55.dp
-
-    /** 轻量底部留白，用于让标签内容与系统手势条保持少量距离。 */
-    val BottomPadding = 5.dp
-
-    /** 顶部分隔线使用半 dp 发丝线，避免在高密度屏幕上形成厚重边框。 */
-    val TopDividerThickness = 0.5.dp
-    val ItemWidth = 60.dp
-    val Shape: Shape = RoundedCornerShape(0.dp)
-
-    val ItemTextStyle: TextStyle
-        @Composable get() = HyperTheme.typography.labelSmall
-
-    @Composable
-    fun colors(
-        containerColor: Color = Color.Unspecified,
-        selectedContentColor: Color = Color.Unspecified,
-        unselectedContentColor: Color = Color.Unspecified,
-        disabledContentColor: Color = Color.Unspecified
-    ): HyperTabBarColors {
-        val defaultUnselectedColor = if (HyperColors.isLight) {
-            HyperColors.secondaryText
-        } else {
-            HyperColors.secondaryText
-        }
-        val resolvedSelectedColor = resolveHyperContainerColor(selectedContentColor, HyperColors.accent)
-        val resolvedUnselectedColor = resolveHyperContainerColor(unselectedContentColor, defaultUnselectedColor)
-
-        return HyperTabBarColors(
-            containerColor = resolveHyperContainerColor(
-                containerColor,
-                defaultHyperTabBarContainerColor()
-            ),
-            selectedContentColor = resolvedSelectedColor,
-            unselectedContentColor = resolvedUnselectedColor,
-            disabledContentColor = resolveHyperContainerColor(
-                disabledContentColor,
-                resolvedUnselectedColor.copy(alpha = HyperStyleDefaults.DisabledAlpha)
-            )
-        )
-    }
-
-    @Composable
-    fun topDivider(color: Color = Color.Unspecified): BorderStroke = BorderStroke(
-        width = TopDividerThickness,
-        color = resolveHyperContainerColor(
-            color,
-            if (HyperColors.isLight) {
-                rgba(0, 0, 0, 0.055f)
-            } else {
-                HyperColors.pageBackground
+            if (badgeCount > 0) Box(Modifier.align(Alignment.TopEnd).offset(x = 5.dp, y = (-5).dp)
+                .defaultMinSize(minWidth = 16.dp).height(16.dp)
+                .hyperSolidSurface(HyperColors.danger, RoundedCornerShape(50), border = androidx.compose.foundation.BorderStroke(1.dp, HyperColors.pageBackground))
+                .padding(horizontal = 5.dp), contentAlignment = Alignment.Center) {
+                HyperText(if (badgeCount > 99) "99+" else "$badgeCount", color = Color(1f, 1f, 1f, 1f),
+                    fontSize = 10.sp, lineHeight = 10.sp, fontWeight = FontWeight.SemiBold)
             }
-        )
-    )
+        } else {
+            BoxWithConstraints(Modifier.width(itemWidth * items.size + 8.dp).height(height)
+                .hyperFrostedSurface(hyperGlass.surfaceStrong, RoundedCornerShape(height / 2), blur = hyperGlass.blurStrong)
+                .pointerInput(items, enabled, rtl) {
+                    if (!enabled) return@pointerInput
+                    fun visualIndex(x: Float): Int = ((x - 4.dp.toPx()) / (size.width - 8.dp.toPx()) * items.size)
+                        .toInt().coerceIn(0, items.lastIndex)
+                    detectHorizontalDragGestures(
+                        onDragStart = { dragIndex = visualIndex(it.x) },
+                        onHorizontalDrag = { change, _ -> dragIndex = visualIndex(change.position.x); change.consume() },
+                        onDragCancel = { dragIndex = null },
+                        onDragEnd = {
+                            dragIndex?.let { visual ->
+                                val logical = if (rtl) items.lastIndex - visual else visual
+                                if (latestItemEnabled(items[logical]) && logical != latestLogicalSelected) latestOnClick(items[logical])
+                            }
+                            dragIndex = null
+                        }
+                    )
+                }) {
+                val cellWidth = (maxWidth - 8.dp) / items.size
+                Box(Modifier.absoluteOffset(x = 5.dp + cellWidth * position, y = 4.dp)
+                    .width((cellWidth - 2.dp).coerceAtLeast(0.dp)).height(height - 8.dp)
+                    .background(hyperGlass.selection, RoundedCornerShape(height / 2)))
+                Row(Modifier.fillMaxSize().padding(horizontal = 4.dp)) {
+                    items.forEachIndexed { index, item ->
+                        val selected = index == if (rtl) items.lastIndex - selectedIndex else selectedIndex
+                        val active = enabled && itemEnabled(item)
+                        Box(Modifier.weight(1f).fillMaxHeight()
+                            .hyperNoRippleClickable(enabled = active, role = Role.Tab, pressedScale = 1f,
+                                onClick = { if (!itemSelected(item)) onItemClick(item) })
+                            .semantics { this.selected = selected }, contentAlignment = Alignment.Center) {
+                            CompositionLocalProvider(
+                                LocalHyperContentColor provides when { !active -> HyperColors.secondaryText; selected -> color; else -> HyperColors.primaryText },
+                                LocalHyperTextStyle provides labelStyle.copy(lineHeight = 12.96.sp,
+                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium),
+                                LocalHyperIconSize provides 23.dp
+                            ) { HyperTabBarItemScope(selected, active).itemContent(item) }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
-/** 浅色保留轻量透明度；深色与页面背景完全一致。 */
-@Composable
-private fun defaultHyperTabBarContainerColor(): Color = hyperGlass.surfaceStrong
+object HyperTabBarDefaults { val Height = 56.dp }

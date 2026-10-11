@@ -24,7 +24,7 @@ import hyper_ui.*
 
 ## 应用根节点
 
-`HyperThemeConfig` 提供主题色、成功色、排版、形状和玻璃令牌。颜色使用 `rgba`，不要写十六进制 `Color(0xFF...)`。
+`HyperThemeConfig` 提供主题色、成功色、排版、形状、material 材质档位和玻璃令牌；默认 material = HyperMaterial.Solid。颜色使用 `rgba`，不要写十六进制 `Color(0xFF...)`。
 
 ```kotlin
 @Composable
@@ -88,7 +88,7 @@ fun AppHome() {
 
 ## 图标
 
-库内语义图标使用 Lucide VectorDrawable。调用方直接引用 Lucide 资源时，需要在自己的模块显式声明对应依赖；少量图标不要引入 `material-icons-extended`。
+库内语义图标使用 Lucide 字体原始轮廓生成的共享 ImageVector。调用方直接引用 Lucide 资源时，需要在自己的模块显式声明对应依赖；少量图标不要引入 `material-icons-extended`。
 
 ## 不应依赖的目录
 

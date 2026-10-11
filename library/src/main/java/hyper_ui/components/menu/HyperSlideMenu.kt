@@ -5,6 +5,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -39,7 +41,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import hyper_ui.core.interaction.hyperNoRippleClickable
+import androidx.compose.ui.text.font.FontWeight
 import kotlin.math.roundToInt
 
 enum class HyperSlideMenuReveal { Closed, Start, End }
@@ -103,7 +105,7 @@ fun HyperSlideMenu(
             onClose = { onRevealChange(HyperSlideMenuReveal.Closed) }
         )
         if (offset < -1f && endActions.isNotEmpty()) HyperSlideActionStrip(
-            endActions, actionExtent, HyperColors.danger, enabled,
+            endActions, actionExtent, HyperColors.accent, enabled,
             Modifier.matchParentSize(), if (rtl) Alignment.CenterStart else Alignment.CenterEnd,
             onClose = { onRevealChange(HyperSlideMenuReveal.Closed) }
         )
@@ -112,25 +114,28 @@ fun HyperSlideMenu(
                 state = rememberDraggableState { delta ->
                     val proposed = offset + delta
                     val bounded = proposed.coerceIn(-endExtent, startExtent)
-                    offset = bounded + (proposed - bounded) * 0.22f
+                    val overshoot = proposed - bounded
+                    offset = bounded + overshoot * extentPx * 0.32f / (extentPx + 0.32f * kotlin.math.abs(overshoot))
                 },
                 orientation = Orientation.Horizontal, enabled = enabled, reverseDirection = rtl,
                 onDragStarted = { dragging = true },
                 onDragStopped = { velocity ->
                     val projected = offset + velocity * 0.09f
                     val target = when {
-                        startExtent > 0f && projected > startExtent * 0.5f -> HyperSlideMenuReveal.Start
-                        endExtent > 0f && projected < -endExtent * 0.5f -> HyperSlideMenuReveal.End
+                        startExtent > 0f && projected > startExtent * 0.35f -> HyperSlideMenuReveal.Start
+                        endExtent > 0f && projected < -endExtent * 0.35f -> HyperSlideMenuReveal.End
                         else -> HyperSlideMenuReveal.Closed
                     }
                     onRevealChange(target)
                     dragging = false
                 }
             )
-            .hyperFrostedSurface(hyperGlass.surface, shape, elevation = 0.dp, blur = 18.dp)) {
-            content()
+            .hyperFrostedSurface(hyperGlass.surface, shape)) {
+            CompositionLocalProvider(LocalHyperSurfacePresent provides true) { content() }
             if (!dragging && kotlin.math.abs(offset) > 1f) Box(Modifier.matchParentSize()
-                .clickable { onRevealChange(HyperSlideMenuReveal.Closed) })
+                .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
+                    onRevealChange(HyperSlideMenuReveal.Closed)
+                })
         }
     }
 }
@@ -150,11 +155,15 @@ private fun HyperSlideActionStrip(
             actions.forEach { action ->
                 Column(Modifier.width(extent).fillMaxHeight()
                     .background(resolveHyperContainerColor(action.containerColor, fallback))
-                    .hyperNoRippleClickable(enabled = enabled, onClick = { action.onClick(); onClose() }),
+                    .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, enabled = enabled,
+                        onClick = { onClose(); action.onClick() }).padding(horizontal = 6.dp),
                     horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                     CompositionLocalProvider(LocalHyperContentColor provides action.contentColor) {
-                        action.iconContent?.invoke()
-                        HyperText(action.label, fontSize = 12.sp)
+                        if (action.iconContent != null) {
+                            CompositionLocalProvider(LocalHyperIconSize provides 18.dp) { action.iconContent.invoke() }
+                            Box(Modifier.height(4.dp))
+                        }
+                        HyperText(action.label, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
                     }
                 }
             }

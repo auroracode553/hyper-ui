@@ -1,9 +1,12 @@
 /** 文件职责：提供轻量提示浮层。 */
 package hyper_ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.focusable
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.unit.Dp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,12 +43,21 @@ fun HyperTooltip(
     text: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    hoverDelayMillis: Long = 500L,
+    maxWidth: Dp = 240.dp,
     content: @Composable () -> Unit,
 ) {
     var visible by remember { mutableStateOf(false) }
     var pointerPressed by remember { mutableStateOf(false) }
-    LaunchedEffect(pointerPressed, enabled) {
-        if (pointerPressed && enabled) { delay(500); visible = true }
+    var hovered by remember { mutableStateOf(false) }
+    var focused by remember { mutableStateOf(false) }
+    require(hoverDelayMillis >= 0 && maxWidth > 0.dp) { "延迟不能为负，maxWidth 必须大于 0.dp" }
+    LaunchedEffect(pointerPressed, hovered, focused, enabled) {
+        visible = false
+        if (enabled && (pointerPressed || hovered || focused)) {
+            if (!focused) delay(if (pointerPressed) 500L else hoverDelayMillis)
+            visible = true
+        }
     }
     var anchorBounds by remember { mutableStateOf<Rect?>(null) }
     val density = LocalDensity.current
@@ -53,6 +65,8 @@ fun HyperTooltip(
     Box(
         modifier = modifier
             .onGloballyPositioned { anchorBounds = it.boundsInWindow() }
+            .onFocusChanged { focused = it.hasFocus }
+            .focusable(enabled)
             .pointerInput(enabled) {
                 if (!enabled) return@pointerInput
                 awaitPointerEventScope {
@@ -60,9 +74,8 @@ fun HyperTooltip(
                         val event = awaitPointerEvent(PointerEventPass.Initial)
                         pointerPressed = event.changes.any { it.pressed }
                         when (event.type) {
-                            PointerEventType.Enter -> visible = true
-                            PointerEventType.Exit -> { visible = false; pointerPressed = false }
-                            PointerEventType.Release -> visible = false
+                            PointerEventType.Enter -> hovered = true
+                            PointerEventType.Exit -> { hovered = false; pointerPressed = false }
                             else -> Unit
                         }
                     }
@@ -72,8 +85,9 @@ fun HyperTooltip(
         content()
     }
 
+    val progress = if (focused && visible) 1f else hyperOverlayProgress(visible, durationMillis = HyperMotionSpec.TooltipDuration)
     val bounds = anchorBounds
-    if (enabled && visible && text.isNotBlank() && bounds != null) {
+    if (enabled && (visible || progress > 0f) && text.isNotBlank() && bounds != null) {
         Popup(
             popupPositionProvider = HyperTooltipPositionProvider(bounds, with(density) { 8.dp.roundToPx() }),
             onDismissRequest = { visible = false },
@@ -82,7 +96,9 @@ fun HyperTooltip(
             HyperText(
                 text = text,
                 modifier = Modifier
-                    .hyperFrostedSurface(hyperGlass.surfaceStrong, RoundedCornerShape(12.dp), blur = 18.dp)
+                    .hyperOverlayMotion(progress, beginScale = 0.97f)
+                    .widthIn(max = maxWidth)
+                    .hyperFrostedSurface(hyperGlass.surfaceStrong, RoundedCornerShape(12.dp), blur = hyperGlass.blurStrong)
                     .padding(horizontal = 10.dp, vertical = 7.dp),
                 color = HyperColors.primaryText,
                 style = HyperTheme.typography.bodySmall.copy(fontSize = 12.sp, lineHeight = 15.6.sp),
@@ -104,10 +120,10 @@ private class HyperTooltipPositionProvider(
         val centerX = anchor.center.x.toInt() - popupContentSize.width / 2
         val above = anchor.top.toInt() - popupContentSize.height - gap
         val below = anchor.bottom.toInt() + gap
-        val y = if (above >= 0) above else below
+        val y = if (above >= gap * 3 / 2) above else below
         return IntOffset(
-            centerX.coerceIn(0, (windowSize.width - popupContentSize.width).coerceAtLeast(0)),
-            y.coerceIn(0, (windowSize.height - popupContentSize.height).coerceAtLeast(0)),
+            centerX.coerceIn(gap * 3 / 2, (windowSize.width - popupContentSize.width - gap * 3 / 2).coerceAtLeast(gap * 3 / 2)),
+            y.coerceIn(gap * 3 / 2, (windowSize.height - popupContentSize.height - gap * 3 / 2).coerceAtLeast(gap * 3 / 2)),
         )
     }
 }

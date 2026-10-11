@@ -33,7 +33,7 @@ internal fun hyperGlassSurfaceVisuals(
     containerColor: Color,
     elevation: Dp,
     depth: HyperSurfaceDepthVisuals? = null,
-    blur: Dp = 20.dp
+    blur: Dp = hyperGlass.blur
 ): HyperGlassSurfaceVisuals = HyperGlassSurfaceVisuals(
     containerColor = containerColor,
     depth = depth ?: hyperSurfaceDepthVisuals(HyperSurfaceDepthRole.StructuralPanel, elevation),
@@ -46,8 +46,8 @@ internal fun Modifier.hyperFrostedSurface(
     shape: Shape,
     elevation: Dp = 12.dp,
     border: BorderStroke? = null,
-    blur: Dp = 20.dp
+    blur: Dp? = null
 ): Modifier = composed {
     val depth = hyperSurfaceDepthVisuals(HyperSurfaceDepthRole.StructuralPanel, elevation)
-    hyperGlassSurface(shape, HyperGlassSurfaceVisuals(containerColor, depth, blur), border)
+    hyperGlassSurface(shape, HyperGlassSurfaceVisuals(containerColor, depth, blur ?: hyperGlass.blur), border)
 }

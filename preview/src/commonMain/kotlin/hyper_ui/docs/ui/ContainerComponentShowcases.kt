@@ -3,22 +3,16 @@ package hyper_ui.docs.ui
 import hyper_ui.*
 import hyper_ui.docs.theme.LocalDocsColorScheme
 
-import hyper_ui.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -74,52 +67,16 @@ fun ColorPickerDemo() {
 
 @Composable
 fun PanelDemo() {
-    var acknowledged by remember { mutableStateOf(false) }
-
-    HyperCard(
-        modifier = Modifier.widthIn(max = 520.dp),
-        colors = HyperCardDefaults.colors(
-            containerColor = LocalDocsColorScheme.current.surface
-        )
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ContainerIconBadge(
-                imageVector = if (acknowledged) Icons.Default.Star else Icons.Default.Check,
-                tint = LocalDocsColorScheme.current.secondary,
-                background = LocalDocsColorScheme.current.secondaryContainer
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                HyperText(
-                    text = "系统状态",
-                    color = LocalDocsColorScheme.current.onSurface,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                HyperText(
-                    text = if (acknowledged) "已查看状态详情" else "运行正常，最近同步 2 分钟前",
-                    color = LocalDocsColorScheme.current.onSurfaceVariant,
-                    fontSize = 14.sp
-                )
-            }
-        }
-        HyperDivider(color = LocalDocsColorScheme.current.outlineVariant)
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            HyperButton(
-                onClick = { acknowledged = true }
-            ) {
-                HyperText(text = "查看详情")
-            }
-            HyperButton(
-                onClick = { acknowledged = false },
-                type = "outline"
-            ) {
-                HyperText(text = "重置")
-            }
-        }
+    var selected by remember { mutableStateOf(false) }
+    var feedback by remember { mutableStateOf("等待操作") }
+    HyperCard(selected = selected, onClick = { selected = !selected },
+        titleContent = { HyperText("系统状态") },
+        subtitleContent = { HyperText(if (selected) "卡片已选中" else "运行正常，最近同步 2 分钟前") },
+        leadingContent = { HyperIcon(HyperReferenceIcons.Check, null, tint = HyperColors.accent) },
+        actionContent = { HyperButton({ selected = !selected }, type = "ghost", size = "small") { HyperText("选择") } },
+        footerContent = { HyperButton({ feedback = "已查看详情" }) { HyperText("查看详情") } }) {
+        HyperText(feedback)
+        HyperListTile(headlineContent = { HyperText("卡片内自动使用 plain 行") }, onClick = { feedback = "列表项已点击" })
     }
 }
 

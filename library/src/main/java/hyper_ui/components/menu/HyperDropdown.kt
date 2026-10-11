@@ -1,221 +1,77 @@
-/** 文件职责：提供 HyperDropdown 浮层菜单、菜单项语义及受控关闭行为。 */
+/** 文件职责：移植参考 HyperDropdown 的字段触发器、锚点菜单与受控选项。 */
 package hyper_ui
 
-import androidx.compose.foundation.background
-import hyper_ui.core.interaction.hyperNoRippleClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
+import hyper_ui.core.icon.HyperCheckIcon
+import hyper_ui.core.interaction.hyperNoRippleClickable
 
 @Immutable
-data class HyperDropdownColors(
-    val containerColor: Color,
-    val contentColor: Color,
-    val dangerContentColor: Color,
-    val disabledContentColor: Color,
-    val pressedContainerColor: Color,
-    val dividerColor: Color
-)
-
-enum class HyperDropdownItemTone {
-    Normal,
-    Danger
-}
+data class HyperOption<T>(val value: T, val label: String, val enabled: Boolean = true)
 
 @Composable
-fun HyperDropdown(
-    expanded: Boolean,
-    onDismissRequest: () -> Unit,
+fun <T> HyperDropdown(
+    options: List<HyperOption<T>>,
+    value: T?,
+    onValueChange: (T) -> Unit,
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperDropdownDefaults.MenuPadding),
-    alignment: Alignment = Alignment.TopEnd,
-    offset: DpOffset = DpOffset(0.dp, HyperDropdownDefaults.AnchorOffsetY),
-    shape: Shape = HyperDropdownDefaults.Shape,
-    colors: HyperDropdownColors = HyperDropdownDefaults.colors(),
-    content: @Composable HyperDropdownScope.() -> Unit
+    enabled: Boolean = true,
+    label: String? = null,
+    placeholder: String = "请选择",
+    menuMaxHeight: Dp = 320.dp,
+    width: Dp? = null
 ) {
-    val transitionProgress = hyperOverlayProgress(expanded)
-    if (!expanded && transitionProgress == 0f) return
-
-    val intOffset = LocalDensity.current.run {
-        IntOffset(offset.x.roundToPx(), offset.y.roundToPx())
-    }
-    val resolvedColors = resolveHyperDropdownColors(colors)
-
-    Popup(
-        alignment = alignment,
-        offset = intOffset,
-        onDismissRequest = onDismissRequest,
-        properties = PopupProperties(focusable = true)
-    ) {
-        Column(
-            modifier = modifier
-                .hyperOverlayMotion(transitionProgress)
-                .width(IntrinsicSize.Max)
-                .widthIn(max = HyperDropdownDefaults.MaxWidth)
-                .heightIn(max = HyperDropdownDefaults.MaxHeight)
-                .hyperDropdownSurface(
-                    shape = shape,
-                    containerColor = resolvedColors.containerColor,
-                    visuals = hyperDropdownSurfaceVisuals()
-                )
-                .verticalScroll(rememberScrollState())
-                .then(contentModifier)
-        ) {
-            val scope = remember(onDismissRequest, resolvedColors) {
-                HyperDropdownScope(
-                    onDismiss = onDismissRequest,
-                    colors = resolvedColors
-                )
+    require(menuMaxHeight > 0.dp) { "menuMaxHeight 必须大于 0.dp" }
+    require(width == null || width > 0.dp) { "width 必须大于 0.dp" }
+    var expanded by remember { mutableStateOf(false) }
+    var anchor by remember { mutableStateOf<Rect?>(null) }
+    val rotation by androidx.compose.animation.core.animateFloatAsState(if (expanded) 180f else 0f,
+        androidx.compose.animation.core.tween(HyperMotionSpec.MenuDuration, easing = HyperMotionSpec.OverlayCurve), label = "HyperDropdownChevron")
+    val selected = options.firstOrNull { it.value == value }
+    LaunchedEffect(enabled) { if (!enabled) expanded = false }
+    Column(modifier.then(if (width != null) Modifier.width(width) else Modifier)) {
+        if (label != null) HyperText(label, Modifier.padding(bottom = 8.dp), fontSize = 13.sp, lineHeight = 16.9.sp, fontWeight = FontWeight.SemiBold)
+        BoxWithConstraints {
+            val triggerWidth = width ?: if (constraints.hasBoundedWidth) maxWidth else 240.dp
+            Row(Modifier.width(triggerWidth).onGloballyPositioned { anchor = it.boundsInWindow() }
+                .defaultMinSize(minHeight = 48.dp)
+                .hyperNoRippleClickable(enabled = enabled, onClick = { expanded = !expanded })
+                .hyperFrostedSurface(hyperGlass.surfaceSubtle, RoundedCornerShape(16.dp), elevation = 0.dp,
+                    border = BorderStroke(1.dp, HyperColors.fieldBorder))
+                .padding(horizontal = 14.dp, vertical = 11.dp), verticalAlignment = Alignment.CenterVertically) {
+                HyperText(selected?.label ?: placeholder, Modifier.weight(1f),
+                    color = if (selected == null) HyperColors.secondaryText else HyperColors.primaryText,
+                    fontSize = 14.sp, lineHeight = 18.2.sp, fontWeight = FontWeight.Medium, maxLines = 1)
+                Spacer(Modifier.width(10.dp))
+                HyperIcon(HyperReferenceIcons.ChevronDown,
+                    null, Modifier.size(18.dp).graphicsLayer { rotationZ = rotation }, HyperColors.secondaryText)
             }
-            scope.content()
-        }
-    }
-}
-
-class HyperDropdownScope internal constructor(
-    private val onDismiss: () -> Unit,
-    private val colors: HyperDropdownColors
-) {
-    @Composable
-    fun Item(
-        onClick: () -> Unit,
-        modifier: Modifier = Modifier,
-        contentModifier: Modifier = Modifier.padding(HyperDropdownDefaults.ItemPadding),
-        enabled: Boolean = true,
-        closeOnClick: Boolean = true,
-        tone: HyperDropdownItemTone = HyperDropdownItemTone.Normal,
-        content: @Composable RowScope.() -> Unit
-    ) {
-        val interactionSource = remember { MutableInteractionSource() }
-        val pressed by interactionSource.collectIsPressedAsState()
-        val contentColor = when {
-            !enabled -> colors.disabledContentColor
-            tone == HyperDropdownItemTone.Danger -> colors.dangerContentColor
-            else -> colors.contentColor
-        }
-        val pressedContainerColor = if (enabled && pressed) {
-            colors.pressedContainerColor
-        } else {
-            Color.Transparent
-        }
-
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(HyperDropdownDefaults.ItemHeight)
-                .clip(HyperDropdownDefaults.ItemShape)
-                .background(pressedContainerColor)
-                .hyperNoRippleClickable(
-                    interactionSource = interactionSource,
-                    enabled = enabled,
-                    role = Role.Button,
-                    onClick = {
-                        onClick()
-                        if (closeOnClick) {
-                            onDismiss()
-                        }
-                    }
-                )
-                .then(contentModifier),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
-                CompositionLocalProvider(LocalHyperTextStyle provides HyperDropdownDefaults.ItemTextStyle) {
-                    content()
+            HyperAnchoredSurface({ expanded = false }, triggerWidth, menuMaxHeight, PaddingValues(5.dp), anchorBounds = anchor, visible = expanded) {
+                if (options.isEmpty()) HyperText("暂无选项", Modifier.fillMaxWidth().padding(16.dp),
+                    color = HyperColors.secondaryText, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                options.forEach { option ->
+                    HyperListTile(type = "plain", selected = option.value == value, enabled = option.enabled,
+                        showChevron = false, headlineContent = { HyperText(option.label, maxLines = 2) },
+                        trailingContent = if (option.value == value) {
+                            { CompositionLocalProvider(LocalHyperContentColor provides HyperColors.accent) {
+                                HyperCheckIcon(Modifier.size(18.dp))
+                            } }
+                        } else null,
+                        onClick = { onValueChange(option.value); expanded = false })
                 }
             }
         }
-    }
-
-    @Composable
-    fun Divider(modifier: Modifier = Modifier) {
-        HyperDivider(
-            modifier = modifier.padding(HyperDropdownDefaults.DividerPadding),
-            color = colors.dividerColor
-        )
-    }
-}
-
-object HyperDropdownDefaults {
-    val MaxWidth = 240.dp
-    val MaxHeight = 432.dp
-    val ItemHeight = 44.dp
-    val AnchorOffsetY = 52.dp
-    val Elevation = 10.dp
-    val Shape: Shape = RoundedCornerShape(18.dp)
-    val ItemShape: Shape = RoundedCornerShape(16.dp)
-    val MenuPadding = PaddingValues(5.dp)
-    val ItemPadding = PaddingValues(horizontal = 14.dp)
-    val DividerPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
-    val ItemTextStyle = TextStyle(
-        fontSize = 14.sp,
-        lineHeight = 17.5.sp,
-        fontWeight = FontWeight.SemiBold
-    )
-
-    @Composable
-    fun colors(
-        containerColor: Color = Color.Unspecified,
-        contentColor: Color = Color.Unspecified,
-        dangerContentColor: Color = Color.Unspecified,
-        disabledContentColor: Color = Color.Unspecified,
-        pressedContainerColor: Color = Color.Unspecified,
-        dividerColor: Color = Color.Unspecified
-    ): HyperDropdownColors {
-        val isLight = HyperColors.isLight
-        return HyperDropdownColors(
-            containerColor = resolveHyperContainerColor(
-                containerColor,
-                hyperGlass.surfaceStrong
-            ),
-            contentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText),
-            dangerContentColor = resolveHyperContainerColor(dangerContentColor, HyperColors.danger),
-            disabledContentColor = resolveHyperContainerColor(
-                disabledContentColor,
-                HyperColors.disabledText
-            ),
-            pressedContainerColor = resolveHyperContainerColor(
-                pressedContainerColor,
-                hyperGlass.pressed
-            ),
-            dividerColor = resolveHyperContainerColor(
-                dividerColor,
-                HyperColors.divider
-            )
-        )
     }
 }

@@ -4,8 +4,8 @@ package hyper_ui.docs.data
 import hyper_ui.docs.ui.NavBarDemo
 import hyper_ui.docs.ui.DrawerDemo
 import hyper_ui.docs.ui.SlideMenuDemo
-import hyper_ui.docs.ui.DockedTabBarDemo
-import hyper_ui.docs.ui.FloatingTabBarDemo
+import hyper_ui.docs.ui.SingleTabBarDemo
+import hyper_ui.docs.ui.MultipleTabBarDemo
 
 private const val GROUP_NAVIGATION = "导航组件"
 
@@ -72,41 +72,19 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "drawer",
         group = GROUP_NAVIGATION,
         title = "HyperDrawer",
-        description = "抽屉使用共享结构描边和低抬升阴影的不透明玻璃；支持四向、方向化间距、安全区与可配置滚动。",
+        description = "参考 30dp 圆角浮动抽屉；两侧默认宽 320dp、外间距 12dp、280ms 淡入和平移。",
         code = """
-            HyperDrawer(
-                open = open,
-                onDismissRequest = { open = false },
-                position = HyperDrawerPosition.Left,
-                defaultSetPadding = true,
-                drawerContentScrollEnabled = true,
+            HyperDrawer(open = open, onDismissRequest = { open = false }, title = "导航",
+                footerContent = { HyperButton(onClose) { HyperText("关闭") } },
                 drawerContent = {
-                    HyperDrawerHeader(
-                        leadingContent = { Icon(Icons.Default.Menu, null) },
-                        headlineContent = { Text("HyperUI") },
-                        supportingContent = { Text("左侧抽屉") }
-                    )
-                    HyperDrawerItem(
-                        selected = selectedPageId == "home",
-                        onClick = { selectedPageId = "home" },
-                        leadingContent = { Icon(Icons.Default.Home, null) },
-                        headlineContent = { Text("首页") }
-                    )
-                }
-            ) {
-                content()
-            }
+                    HyperDrawerItem(headlineContent = { HyperText("首页") }, selected = homeSelected, onClick = onHome)
+                }) { pageContent() }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("方向", "position = Left/Right/Top/Bottom", "四向直接显示，不执行过渡"),
-            DemoVariant("面板尺寸", "drawerModifier = Modifier.width/height", "按方向定制独立面板节点"),
-            DemoVariant("默认 Padding", "defaultSetPadding = true", "方向化内容留白并避让 safeDrawing"),
-            DemoVariant("完整内容区", "defaultSetPadding = false", "不注入默认间距或系统栏避让"),
-            DemoVariant("场景间距", "drawerContentModifier", "在默认策略之后追加调用方布局"),
-            DemoVariant("滚动职责", "drawerContentScrollEnabled", "普通内容由面板滚动，懒列表关闭外层滚动"),
-            DemoVariant("结构玻璃", "colors.containerColor", "玻璃表面、柔和描边与双层阴影"),
-            DemoVariant("选中项", "selected = true", "轻量主题染色，不重复铺设面板底色"),
-            DemoVariant("无蒙层", "dismissOnClickOutside", "仅处理外部点击，不绘制背景或遮罩")
+            DemoVariant("左右方向", "position", "逻辑方向与安全区"),
+            DemoVariant("标题与页脚", "title / footerContent", "固定头尾，正文滚动"),
+            DemoVariant("材质", "HyperMaterial", "随主题切换 Solid/Soft/Clear"),
+            DemoVariant("关闭", "dismissOnClickOutside", "主题 scrim 蒙层")
         ),
         apiDocumentPaths = listOf("navigation/hyper-drawer.md"),
         content = { DrawerDemo() },
@@ -116,79 +94,63 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tabs",
         group = GROUP_NAVIGATION,
         title = "HyperTabs",
-        description = "横向分组菜单。每个项目直接复用 HyperButton 的表面、描边、按压与禁用态，菜单文字、计数或图标由 item slot 渲染。",
+        description = "共享的 54dp 分类胶囊，选中底面使用材质 selection；支持等宽与横向滚动。",
         code = """
-            HyperTabs(
-                items = categories,
-                selectedItem = selected,
-                onSelected = { selected = it }
-            ) { item ->
-                Text(item)
+            HyperTabs(items = categories, selectedItem = selected, onSelected = { selected = it }, scrollable = false) {
+                HyperText(it)
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("选中项", "selectedItem", "默认使用 type = filled"),
-            DemoVariant("未选中项", "unselectedType", "默认使用 type = tonal"),
-            DemoVariant("描边选中态", "selectedType = Outline", "直接使用 HyperButton 的 1dp 强调色描边"),
-            DemoVariant("自定义配色", "selectedColors", "直接接收 HyperButtonColors"),
-            DemoVariant("禁用项", "itemEnabled = false", "复用 HyperButton 禁用态")
+            DemoVariant("等宽", "scrollable = false", "统一共享表面"),
+            DemoVariant("滚动", "scrollable = true", "每项最小 76dp"),
+            DemoVariant("选中", "selectedItem", "44dp 指示底面"),
+            DemoVariant("禁用项", "itemEnabled", "阻止选中回调")
         ),
         apiDocumentPaths = listOf("navigation/hyper-tabs.md"),
         content = { SlideMenuDemo() }
     ),
     ComponentDemo(
-        id = "tab-bar-docked",
+        id = "tab-bar-single",
         group = GROUP_NAVIGATION,
-        title = "HyperTabBar · 贴底",
-        description = "贴底导航预览。点击标签可查看选中态，顶部发丝线与底部留白采用默认值。",
+        title = "HyperTabBar · 单动作",
+        description = "56dp 单动作玻璃按钮，可操作角标与禁用状态。",
         code = """
-            HyperTabBar(
-                items = tabs,
-                itemSelected = { it.id == selectedTabId },
-                onItemClick = { selectedTabId = it.id }
-            ) { item ->
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(item.icon, contentDescription = item.label)
-                    Text(item.label)
-                }
+            HyperTabBar(items = listOf(action), type = "single", onItemClick = onAction, badgeCount = 3) {
+                HyperIcon(it.icon, it.label)
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("贴底容器", "type = docked", "55dp 操作区与 5dp 底部留白"),
-            DemoVariant("顶部发丝线", "topDivider", "默认显示 0.5dp 低对比分隔线"),
-            DemoVariant("选中态", "itemSelected", "点击标签切换当前页面和内容色")
+            DemoVariant("单动作", "type = single", "56dp 方形容器，圆角 28dp"),
+            DemoVariant("角标", "badgeCount", "16dp 角标，最大显示 99+"),
+            DemoVariant("禁用", "enabled", "关闭点击与拖动")
         ),
         apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
-        content = { DockedTabBarDemo() },
+        content = { SingleTabBarDemo() },
         fullScreenPreview = true,
         fillsBottomSafeArea = true
     ),
     ComponentDemo(
-        id = "tab-bar-floating",
+        id = "tab-bar-multiple",
         group = GROUP_NAVIGATION,
-        title = "HyperTabBar · 悬浮胶囊",
-        description = "悬浮玻璃胶囊预览。点击或拖动标签，可查看托盘按压、跟手和弹簧吸附。",
+        title = "HyperTabBar · 多标签",
+        description = "56dp 内容收缩玻璃导航，点击或拖动标签切换 160ms 平移指示器。",
         code = """
-            HyperTabBar(
-                items = tabs,
-                type = "floating",
-                itemSelected = { it.id == selectedTabId },
-                onItemClick = { selectedTabId = it.id }
-            ) { item ->
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(item.icon, contentDescription = item.label)
-                    Text(item.label)
+            HyperTabBar(items = tabs, itemLabel = { it.label }, itemSelected = { it.id == selectedId },
+                onItemClick = { selectedId = it.id }) { item ->
+                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                    HyperIcon(item.icon, null)
+                    HyperText(item.label)
                 }
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("玻璃胶囊", "type = floating", "轻薄磨砂底座与单层柔和阴影"),
-            DemoVariant("液态按压", "press", "按下时指示托盘展开"),
-            DemoVariant("拖动吸附", "drag / release", "托盘跟手并吸附到最近标签"),
-            DemoVariant("选中态", "itemSelected", "点击标签切换当前页面和内容色")
+            DemoVariant("多标签", "type = multiple", "单元格最小 76dp，外侧 20dp 间距"),
+            DemoVariant("选中", "itemSelected", "160ms easeOutCubic"),
+            DemoVariant("拖动", "onItemClick", "松手后通知调用方"),
+            DemoVariant("底部安全区", "safeArea", "避让系统手势区域")
         ),
         apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
-        content = { FloatingTabBarDemo() },
+        content = { MultipleTabBarDemo() },
         fullScreenPreview = true
     )
 )

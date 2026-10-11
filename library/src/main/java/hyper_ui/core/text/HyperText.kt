@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 fun HyperText(
     text: String,
     modifier: Modifier = Modifier,
-    type: String = "h4",
+    size: String = "default",
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
@@ -41,16 +41,11 @@ fun HyperText(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle? = null
 ) {
-    require(type in setOf("h1", "h2", "h3", "h4", "h5", "h6")) {
-        "不支持的 HyperText type: $type"
-    }
-    val resolvedStyle = style ?: when (type) {
-        "h1" -> HyperTheme.typography.headlineSmall.copy(fontSize = 32.sp, lineHeight = 40.sp, fontWeight = FontWeight.Bold)
-        "h2" -> HyperTheme.typography.titleLarge
-        "h3" -> HyperTheme.typography.titleMedium
-        "h4" -> HyperTheme.typography.bodyLarge
-        "h5" -> HyperTheme.typography.bodySmall.copy(fontSize = 13.sp, lineHeight = 18.sp)
-        else -> HyperTheme.typography.bodySmall
+    requireHyperComponentSize(size)
+    val resolvedStyle = style ?: when (size) {
+        "large" -> HyperTheme.typography.bodyLarge.copy(fontSize = 18.sp, lineHeight = 25.2.sp, fontWeight = FontWeight.Bold)
+        "small" -> HyperTheme.typography.bodySmall.copy(fontSize = 12.sp, lineHeight = 16.8.sp, color = HyperColors.secondaryText)
+        else -> LocalHyperTextStyle.current
     }
     val resolvedColor = when {
         color != Color.Unspecified -> color

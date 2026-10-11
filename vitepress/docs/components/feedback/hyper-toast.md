@@ -1,10 +1,28 @@
 # HyperToast
 
-包名：`hyper_ui`。
+包名：hyper_ui。调用方使用 `import hyper_ui.*`。
 
 <WasmPreview demo="toast" title="HyperToast 交互预览" />
 
-## 公开签名与默认值
+## 样式约定
+
+strong 材质，宽 180..420dp、radius 18dp，语义色 10/255 合成底面、105/255 描边。图标徽章 30dp、图标 17dp；文字 14sp/500、行高 1.35。默认 2000ms。
+
+## 状态归属与使用约束
+
+visible 由调用方持有。durationMillis=0 不自动关闭；计时结束只请求关闭。tone 支持 Neutral/Primary/Success/Info/Warning/Error。Android 原生 hyperToast 与 Compose 组件分别使用。
+
+支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
+
+## 最小调用
+
+```kotlin
+import hyper_ui.*
+
+HyperToast(visible, "保存成功", { visible = false }, tone = HyperToastTone.Success)
+```
+
+## HyperToast API / Props
 
 ```kotlin
 @Composable
@@ -13,40 +31,52 @@ fun HyperToast(
     message: String,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    durationMillis: Long = 3000L,
+    durationMillis: Long = 2000L,
     tone: HyperToastTone = HyperToastTone.Neutral,
     leadingContent: (@Composable () -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null
 )
-
-enum class HyperToastTone { Neutral, Success, Info, Warning, Error }
 ```
-
-## Props（参数）
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| visible | Boolean | 是 | — | 是否显示组件，由调用方持有。 |
+| visible | Boolean | 是 | — | 调用方持有的可见状态。 |
 | message | String | 是 | — | 提示消息文本。 |
-| onDismissRequest | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
-| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| durationMillis | Long | 否 | 3000L | 提示自动消失前的持续时间，单位毫秒。 |
+| onDismissRequest | () -&gt; Unit | 是 | — | 请求关闭，由调用方修改状态。 |
+| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
+| durationMillis | Long | 否 | 2000L | 自动关闭等待时间；0 表示不自动关闭。 |
 | tone | HyperToastTone | 否 | HyperToastTone.Neutral | 提示的语义色类型。 |
-| leadingContent | (@Composable () -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
-| actionContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 操作按钮或操作区内容，由调用方提供。 |
+| leadingContent | (@Composable () -&gt; Unit)? | 否 | null | 前导插槽。 |
+| actionContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 操作区插槽。 |
 
-## 最小用法
+## hyperToast API / Props
 
 ```kotlin
-var visible by remember { mutableStateOf(false) }
-HyperToast(
-    visible = visible,
-    message = "保存成功",
-    onDismissRequest = { visible = false },
-    tone = HyperToastTone.Success
+fun hyperToast(
+    context: Context,
+    message: CharSequence,
+    duration: HyperToastDuration = HyperToastDuration.Short
 )
 ```
 
-## 约束
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| context | Context | 是 | — | 可覆盖的 context 配置；默认表达式见此表。 |
+| message | CharSequence | 是 | — | 提示消息文本。 |
+| duration | HyperToastDuration | 否 | HyperToastDuration.Short | 可覆盖的 duration 配置；默认表达式见此表。 |
 
-- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。
+## hyperToast API / Props
+
+```kotlin
+fun hyperToast(
+    context: Context,
+    messageResource: Int,
+    duration: HyperToastDuration = HyperToastDuration.Short
+)
+```
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| context | Context | 是 | — | 可覆盖的 context 配置；默认表达式见此表。 |
+| messageResource | Int | 是 | — | 可覆盖的 messageResource 配置；默认表达式见此表。 |
+| duration | HyperToastDuration | 否 | HyperToastDuration.Short | 可覆盖的 duration 配置；默认表达式见此表。 |

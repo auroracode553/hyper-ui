@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 internal fun HyperFloatingPanel(
@@ -39,6 +40,7 @@ internal fun HyperFloatingPanel(
     shape: Shape,
     containerColor: Color,
     border: BorderStroke?,
+    contentPadding: androidx.compose.foundation.layout.PaddingValues = HyperFloatingPanelDefaults.ContentPadding,
     horizontalAlignment: Alignment.Horizontal,
     verticalArrangement: Arrangement.Vertical,
     actionArrangement: Arrangement.Horizontal,
@@ -54,15 +56,17 @@ internal fun HyperFloatingPanel(
             .hyperFrostedSurface(
                 containerColor = containerColor,
                 shape = shape,
-                border = border
+                border = border,
+                blur = hyperGlass.blurStrong
             )
-            .padding(HyperFloatingPanelDefaults.ContentPadding),
+            .padding(contentPadding),
         horizontalAlignment = horizontalAlignment,
-        verticalArrangement = Arrangement.spacedBy(HyperFloatingPanelDefaults.ContentSpacing)
+        verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         CompositionLocalProvider(LocalHyperContentColor provides HyperColors.primaryText) {
             if (resolvedTitle != null) {
                 HyperFloatingPanelTitle(title = resolvedTitle)
+                Box(Modifier.height(10.dp))
             }
 
             Box(
@@ -95,6 +99,7 @@ internal fun HyperFloatingPanel(
             }
 
             if (actionContent != null) {
+                Box(Modifier.height(18.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = actionArrangement,
@@ -112,7 +117,7 @@ private fun HyperFloatingPanelTitle(title: String) {
         text = title,
         modifier = Modifier.fillMaxWidth(),
         color = HyperColors.primaryText,
-        style = HyperTheme.typography.titleMedium,
+        style = HyperTheme.typography.titleMedium.copy(fontSize = 20.sp, lineHeight = 28.sp),
         fontWeight = FontWeight.SemiBold,
         textAlign = TextAlign.Start,
         maxLines = 2,
@@ -164,10 +169,10 @@ private fun HyperFloatingPanelScrollIndicator(
 
 internal object HyperFloatingPanelDefaults {
     val Shape: Shape = RoundedCornerShape(26.dp)
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(20.dp)
-    val ContentSpacing = 16.dp
-    val ActionSpacing = 12.dp
-    const val ShowScrollIndicator = true
+    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(18.dp)
+    val ContentSpacing = 0.dp
+    val ActionSpacing = 8.dp
+    const val ShowScrollIndicator = false
     val ScrollIndicatorWidth = 3.dp
     val ScrollIndicatorContentPadding = 10.dp
     val ScrollIndicatorMinHeight = 32.dp

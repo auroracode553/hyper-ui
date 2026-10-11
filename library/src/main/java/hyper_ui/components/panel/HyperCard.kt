@@ -8,15 +8,24 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.CompositionLocalProvider
+import hyper_ui.core.interaction.hyperNoRippleClickable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
 
 @Immutable
 data class HyperCardColors(
@@ -32,18 +41,27 @@ data class HyperCardColors(
 fun HyperCard(
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperCardDefaults.ContentPadding),
-    colors: HyperCardColors = HyperCardDefaults.colors(),
+    selected: Boolean = false,
+    onClick: (() -> Unit)? = null,
+    colors: HyperCardColors = HyperCardDefaults.colors(selected = selected),
     shape: Shape = HyperCardDefaults.Shape,
     elevation: Dp = HyperCardDefaults.Elevation,
-    border: BorderStroke? = HyperCardDefaults.border(),
+    border: BorderStroke? = HyperCardDefaults.border(selected = selected),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(HyperCardDefaults.ContentSpacing),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    titleContent: (@Composable () -> Unit)? = null,
+    subtitleContent: (@Composable () -> Unit)? = null,
+    leadingContent: (@Composable () -> Unit)? = null,
+    actionContent: (@Composable RowScope.() -> Unit)? = null,
+    footerContent: (@Composable ColumnScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    CompositionLocalProvider(LocalHyperSurfacePresent provides true) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-                        .hyperFrostedSurface(
+            .then(if (onClick != null) Modifier.hyperNoRippleClickable(onClick = onClick) else Modifier)
+            .hyperFrostedSurface(
                 containerColor = colors.containerColor,
                 shape = shape,
                 elevation = elevation,
@@ -51,29 +69,57 @@ fun HyperCard(
             )
     ) {
         Column(
-            modifier = contentModifier.fillMaxWidth(),
+            modifier = Modifier.then(contentModifier).fillMaxWidth(),
             horizontalAlignment = horizontalAlignment,
             verticalArrangement = verticalArrangement,
-            content = content
-        )
+        ) {
+            if (titleContent != null || subtitleContent != null || leadingContent != null || actionContent != null) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+                    if (leadingContent != null) { leadingContent(); Spacer(Modifier.width(12.dp)) }
+                    Column(Modifier.weight(1f)) {
+                        if (titleContent != null) CompositionLocalProvider(
+                            LocalHyperTextStyle provides HyperTheme.typography.bodyMedium.copy(
+                                fontSize = 14.sp, lineHeight = 17.5.sp, fontWeight = FontWeight.SemiBold)
+                        ) { titleContent() }
+                        if (subtitleContent != null) {
+                            Spacer(Modifier.height(2.dp))
+                            CompositionLocalProvider(LocalHyperContentColor provides HyperColors.secondaryText,
+                                LocalHyperTextStyle provides HyperTheme.typography.bodyMedium.copy(fontSize = 13.sp, lineHeight = 16.9.sp)
+                            ) { subtitleContent() }
+                        }
+                    }
+                    if (actionContent != null) {
+                        Spacer(Modifier.width(8.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), content = actionContent)
+                    }
+                }
+            }
+            content()
+            if (footerContent != null) {
+                HyperDivider()
+                footerContent()
+            }
+        }
+    }
     }
 }
 
 object HyperCardDefaults {
     val Shape: Shape = RoundedCornerShape(HyperStyleDefaults.LargeCornerRadius)
     val Elevation = 12.dp
-    // 16dp 足以避开圆角边界，也避免调用方组合 40dp 控件时形成过高卡片。
-    val ContentPadding = PaddingValues(16.dp)
+    // 参考 cardPadding = 12；边框仅绘制，不额外占位。
+    val ContentPadding = PaddingValues(12.dp)
     val ContentSpacing = 12.dp
 
     @Composable
-    fun colors(containerColor: Color = Color.Unspecified): HyperCardColors = HyperCardColors(
+    fun colors(containerColor: Color = Color.Unspecified, selected: Boolean = false): HyperCardColors = HyperCardColors(
         containerColor = resolveHyperContainerColor(
             containerColor = containerColor,
-            fallbackColor = hyperGlass.surface
+            fallbackColor = if (selected) hyperGlass.surfaceStrong else hyperGlass.surface
         )
     )
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = BorderStroke(1.dp, resolveHyperContainerColor(color, hyperGlass.border))
+    fun border(color: Color = Color.Unspecified, selected: Boolean = false): BorderStroke =
+        BorderStroke(1.dp, resolveHyperContainerColor(color, if (selected) HyperColors.accent.copy(alpha = 90 / 255f) else hyperGlass.border))
 }

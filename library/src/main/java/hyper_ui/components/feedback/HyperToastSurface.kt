@@ -27,11 +27,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextOverflow
-import hyper_ui.core.icon.HyperCheckIcon
-import hyper_ui.core.icon.HyperCloseIcon
+import androidx.compose.ui.text.font.FontWeight
 import kotlinx.coroutines.delay
 
-enum class HyperToastTone { Neutral, Success, Info, Warning, Error }
+enum class HyperToastTone { Neutral, Primary, Success, Info, Warning, Error }
 
 /** 放置在页面 Box 的底部；显隐由调用方持有，计时结束仅请求关闭。 */
 @Composable
@@ -40,7 +39,7 @@ fun HyperToast(
     message: String,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    durationMillis: Long = 3000L,
+    durationMillis: Long = 2000L,
     tone: HyperToastTone = HyperToastTone.Neutral,
     leadingContent: (@Composable () -> Unit)? = null,
     actionContent: (@Composable RowScope.() -> Unit)? = null
@@ -50,21 +49,21 @@ fun HyperToast(
     LaunchedEffect(visible, message, durationMillis) {
         if (visible && durationMillis > 0) { delay(durationMillis); dismiss() }
     }
-    val transitionProgress = hyperOverlayProgress(visible)
-    if (!visible && transitionProgress == 0f) return
+    if (!visible) return
     val toneColor = when (tone) {
-        HyperToastTone.Neutral -> HyperColors.accent
+        HyperToastTone.Neutral -> HyperColors.secondaryText
+        HyperToastTone.Primary -> HyperColors.accent
         HyperToastTone.Success -> HyperColors.success
         HyperToastTone.Info -> HyperColors.info
         HyperToastTone.Warning -> HyperColors.warning
         HyperToastTone.Error -> HyperColors.danger
     }
-    val surfaceColor = toneColor.copy(alpha = 0.04f).compositeOver(hyperGlass.surfaceStrong)
+    val surfaceColor = toneColor.copy(alpha = 10 / 255f).compositeOver(hyperGlass.surfaceStrong)
     Row(
-        modifier.hyperOverlayMotion(transitionProgress).widthIn(min = 180.dp, max = 420.dp)
+        modifier.widthIn(min = 180.dp, max = 420.dp)
             .hyperFrostedSurface(
-                surfaceColor, RoundedCornerShape(18.dp), blur = 28.dp,
-                border = BorderStroke(1.dp, toneColor.copy(alpha = 0.4f))
+                surfaceColor, RoundedCornerShape(18.dp), blur = hyperGlass.blurStrong,
+                border = BorderStroke(1.dp, toneColor.copy(alpha = 105 / 255f))
             )
             .semantics { liveRegion = LiveRegionMode.Polite }
             .padding(start = 12.dp, top = 10.dp, end = 8.dp, bottom = 10.dp),
@@ -74,7 +73,7 @@ fun HyperToast(
         CompositionLocalProvider(LocalHyperContentColor provides HyperColors.primaryText) {
             if (leadingContent != null) leadingContent() else HyperToastLeading(tone, toneColor)
             HyperText(message, Modifier.weight(1f, fill = false),
-                style = HyperTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+                style = HyperTheme.typography.bodyMedium.copy(fontSize = 14.sp, lineHeight = 18.9.sp, fontWeight = FontWeight.Medium),
                 maxLines = 3, overflow = TextOverflow.Ellipsis)
             actionContent?.invoke(this)
         }
@@ -83,16 +82,17 @@ fun HyperToast(
 
 @Composable
 private fun HyperToastLeading(tone: HyperToastTone, color: Color) {
-    Box(Modifier.size(30.dp).background(color.copy(alpha = 0.12f), CircleShape),
+    Box(Modifier.size(30.dp).background(color.copy(alpha = 24 / 255f), CircleShape),
         contentAlignment = Alignment.Center) {
         CompositionLocalProvider(LocalHyperContentColor provides color) {
-            when (tone) {
-                HyperToastTone.Success -> HyperCheckIcon(Modifier.size(17.dp))
-                HyperToastTone.Error -> HyperCloseIcon(Modifier.size(17.dp))
-                HyperToastTone.Neutral -> Box(Modifier.size(6.dp).background(color, CircleShape))
-                HyperToastTone.Info -> HyperText("i", style = HyperTheme.typography.labelLarge)
-                HyperToastTone.Warning -> HyperText("!", style = HyperTheme.typography.labelLarge)
-            }
+            HyperIcon(when (tone) {
+                HyperToastTone.Success -> HyperReferenceIcons.Check
+                HyperToastTone.Error -> HyperReferenceIcons.Close
+                HyperToastTone.Neutral -> HyperReferenceIcons.Notifications
+                HyperToastTone.Primary -> HyperReferenceIcons.Sparkles
+                HyperToastTone.Info -> HyperReferenceIcons.Info
+                HyperToastTone.Warning -> HyperReferenceIcons.CircleAlert
+            }, null, Modifier.size(17.dp))
         }
     }
 }

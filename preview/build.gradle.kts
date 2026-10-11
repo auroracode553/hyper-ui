@@ -54,8 +54,6 @@ kotlin {
             kotlin.exclude("**/HyperBatteryState.kt")
             // Android Dialog 窗口动画配置由跨平台 Preview 使用同包宿主替代。
             kotlin.exclude("**/HyperDialogHost.kt")
-            // Android Lucide VectorDrawable 由跨平台 Preview 使用同包图标替身。
-            kotlin.exclude("**/HyperLucideIcons.kt")
             dependencies {
                 // Preview 与正式组件复用同一动画和背景模糊实现。
                 implementation("org.jetbrains.compose.foundation:foundation:${libs.versions.composeMultiplatform.get()}")

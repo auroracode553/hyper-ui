@@ -13,16 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,17 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperTabBar
-import hyper_ui.HyperTabBarDefaults
 import hyper_ui.HyperDrawer
 import hyper_ui.HyperDrawerHeader
 import hyper_ui.HyperDrawerItem
 import hyper_ui.HyperDrawerPosition
 import hyper_ui.HyperTabs
-import hyper_ui.docs.theme.DocsBorder
 
 private data class DemoNavItem(
     val id: String,
@@ -56,7 +45,7 @@ private val DockedTabBarGestureClearance = 8.dp
 fun DrawerDemo() {
     var drawerOpen by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf("首页") }
-    var position by remember { mutableStateOf(HyperDrawerPosition.Left) }
+    var position by remember { mutableStateOf(HyperDrawerPosition.Right) }
     var padding by remember { mutableStateOf(true) }
     var scroll by remember { mutableStateOf(true) }
     Box(Modifier.fillMaxSize()) {
@@ -64,6 +53,8 @@ fun DrawerDemo() {
             open = drawerOpen,
             onDismissRequest = { drawerOpen = false },
             position = position,
+            title = "导航",
+            footerContent = { HyperText("固定页脚", size = "small") },
             defaultSetPadding = padding,
             drawerContentScrollEnabled = scroll,
             drawerContent = {
@@ -95,121 +86,56 @@ fun DrawerDemo() {
 
 @Composable
 fun SlideMenuDemo() {
-    val categories = remember {
-        listOf("全部", "恶意网址", "广告", "恶意跳转", "打开应用")
-    }
+    val categories = listOf("全部", "恶意网址", "广告", "恶意跳转", "打开应用")
     var selected by remember { mutableStateOf("全部") }
-    var useOutlineSelection by remember { mutableStateOf(false) }
-    var useCustomSelectionColors by remember { mutableStateOf(false) }
-    val selectedType = if (useOutlineSelection) {
-        "outline"
-    } else {
-        "filled"
-    }
-    val selectedColors = if (useCustomSelectionColors) {
-        HyperButtonDefaults.colors(
-            type = selectedType,
-            containerColor = LocalDocsColorScheme.current.tertiaryContainer,
-            contentColor = LocalDocsColorScheme.current.onTertiaryContainer
-        )
-    } else {
-        HyperButtonDefaults.colors(selectedType)
-    }
-
-    Column(
-        modifier = Modifier.widthIn(max = 520.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(
-                onClick = { useOutlineSelection = !useOutlineSelection },
-                type = if (useOutlineSelection) "tonal" else "tonal"
-            ) {
-                HyperText(if (useOutlineSelection) "选中项：描边" else "选中项：实色")
-            }
-            HyperButton(
-                onClick = { useCustomSelectionColors = !useCustomSelectionColors },
-                type = if (useCustomSelectionColors) "tonal" else "tonal"
-            ) {
-                HyperText(if (useCustomSelectionColors) "自定义配色：开" else "自定义配色：关")
-            }
+    var scrollable by remember { mutableStateOf(false) }
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        HyperButton({ scrollable = !scrollable }, type = "ghost") {
+            HyperText(if (scrollable) "切换等宽" else "切换滚动")
         }
-        // 示例只把分类文本交给 slot；组件本身不拥有分类、计数或业务筛选规则。
-        HyperTabs(
-            items = categories,
-            selectedItem = selected,
-            onSelected = { selected = it },
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            itemEnabled = { it != "打开应用" },
-            selectedType = selectedType,
-            selectedColors = selectedColors
-        ) { item ->
-            HyperText(text = item, fontSize = 13.sp)
-        }
-        HyperText(
-            text = "当前选中：$selected",
-            color = LocalDocsColorScheme.current.onSurfaceVariant,
-            fontSize = 13.sp,
-            lineHeight = 18.sp
-        )
+        HyperTabs(categories, selected, { selected = it }, scrollable = scrollable,
+            itemEnabled = { it != "打开应用" }) { HyperText(it, maxLines = 1) }
+        HyperText("当前选中：$selected", size = "small")
     }
 }
 
 @Composable
-fun DockedTabBarDemo() {
-    TabBarDemo(type = "docked")
-}
+fun SingleTabBarDemo() { TabBarDemo(single = true) }
 
 @Composable
-fun FloatingTabBarDemo() {
-    TabBarDemo(type = "floating")
-}
+fun MultipleTabBarDemo() { TabBarDemo(single = false) }
 
 @Composable
-private fun TabBarDemo(type: String) {
-    // 直接使用预览宿主的手机视口，避免在屏幕中再次绘制手机边框。
-    var selectedItemId by remember { mutableStateOf("home") }
+private fun TabBarDemo(single: Boolean) {
+    var selectedId by remember { mutableStateOf("home") }
+    var enabled by remember { mutableStateOf(true) }
+    var count by remember { mutableStateOf(3) }
     val items = listOf(
-        DemoNavItem("home", "首页", Icons.Default.Home),
-        DemoNavItem("recent", "最近", Icons.Default.Info),
-        DemoNavItem("notice", "消息", Icons.Default.Notifications),
-        DemoNavItem("settings", "设置", Icons.Default.Settings),
+        DemoNavItem("home", "首页", HyperReferenceIcons.Home),
+        DemoNavItem("recent", "最近", HyperReferenceIcons.Info),
+        DemoNavItem("notice", "消息", HyperReferenceIcons.Notifications),
+        DemoNavItem("settings", "设置", HyperReferenceIcons.Settings)
     )
-    val selectedTitle = items.firstOrNull { it.id == selectedItemId }?.label ?: "首页"
-    val floating = type == "floating"
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-            HyperText(
-                text = "当前页面：$selectedTitle",
-                modifier = Modifier.align(Alignment.Center),
-                color = LocalDocsColorScheme.current.onSurface,
-                fontSize = 14.sp
-            )
+    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton({ enabled = !enabled }, type = "ghost") { HyperText(if (enabled) "禁用" else "启用") }
+            if (single) HyperButton({ count = if (count == 0) 3 else 0 }, type = "ghost") { HyperText("切换角标") }
+        }
+        Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+            HyperText("当前页面：${items.first { it.id == selectedId }.label}")
         }
         HyperTabBar(
-            items = items,
-            type = type,
-            modifier = if (floating) Modifier else Modifier.height(
-                HyperTabBarDefaults.Height + HyperTabBarDefaults.BottomPadding + DockedTabBarGestureClearance
-            ),
-            itemSelected = { item -> item.id == selectedItemId },
-            onItemClick = { item -> selectedItemId = item.id }
+            items = if (single) listOf(items.first()) else items,
+            onItemClick = { selectedId = it.id; if (single) count++ },
+            type = if (single) "single" else "multiple",
+            enabled = enabled,
+            itemSelected = { it.id == selectedId },
+            itemLabel = { it.label },
+            badgeCount = count
         ) { item ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = if (floating) {
-                    Arrangement.spacedBy(2.dp)
-                } else {
-                    Arrangement.Center
-                }
-            ) {
-                HyperIcon(
-                    imageVector = item.icon,
-                    contentDescription = item.label,
-                    modifier = Modifier.size(if (floating) 20.dp else 24.dp)
-                )
-                HyperText(text = item.label, fontSize = 11.sp)
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                HyperIcon(item.icon, item.label)
+                if (!single) HyperText(item.label, maxLines = 1)
             }
         }
     }

@@ -1,7 +1,8 @@
 /** 文件职责：所有轻量点击控件共享 HyPressable 的按压反馈与键盘语义。 */
 package hyper_ui.core.interaction
 
-import androidx.compose.animation.core.CubicBezierEasing
+import hyper_ui.HyperMotionSpec
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ internal fun Modifier.hyperNoRippleClickable(
     role: Role? = null,
     interactionSource: MutableInteractionSource? = null,
     onPressChanged: ((Boolean) -> Unit)? = null,
+    pressedScale: Float = 0.975f,
     onClick: () -> Unit
 ): Modifier = composed {
     val source = interactionSource ?: remember { MutableInteractionSource() }
@@ -36,11 +38,11 @@ internal fun Modifier.hyperNoRippleClickable(
     val pressed = enabled && (pointerPressed || interactionPressed)
     val progress by animateFloatAsState(
         targetValue = if (pressed) 1f else 0f,
-        animationSpec = tween(if (pressed) 85 else 180, easing = CubicBezierEasing(0.215f, 0.61f, 0.355f, 1f)),
+        animationSpec = tween(if (pressed) HyperMotionSpec.PressInDuration else HyperMotionSpec.PressOutDuration, easing = HyperMotionSpec.OverlayCurve),
         label = "HyperPress"
     )
     Modifier.graphicsLayer {
-        scaleX = 1f - 0.025f * progress
+        scaleX = 1f - (1f - pressedScale) * progress
         scaleY = scaleX
         alpha = 1f - 0.08f * progress
     }.pointerInput(enabled) {

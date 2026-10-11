@@ -47,7 +47,7 @@ fun HyperButton(
     size: String = "default",
     colors: HyperButtonColors = HyperButtonDefaults.colors(type),
     border: BorderStroke? = HyperButtonDefaults.border(type, enabled),
-    shape: Shape = HyperButtonDefaults.Shape,
+    shape: Shape = HyperButtonDefaults.shape(size),
     contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(size),
     role: Role = Role.Button,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
@@ -76,34 +76,44 @@ fun HyperButton(
             .hyperNoRippleClickable(enabled = enabled && !loading, role = role, onClick = onClick)
             .hyperButtonSurface(container, shape, type, enabled, border)
             .semantics { if (loading) stateDescription = "正在处理" }
-            .then(if (isIconType) Modifier else Modifier.padding(contentPadding)),
+            .then(if (isIconType) Modifier else Modifier.padding(contentPadding).padding(1.dp)),
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {
         CompositionLocalProvider(
             LocalHyperContentColor provides foreground,
-            LocalHyperTextStyle provides HyperButtonDefaults.textStyle(size)
+            LocalHyperTextStyle provides HyperButtonDefaults.textStyle(size),
+            LocalHyperIconSize provides HyperButtonDefaults.iconSize(size, isIconType)
         ) {
             if (loading) HyperProgress(
                 type = "circular",
-                modifier = Modifier.size(16.dp),
+                showLabel = false,
+                modifier = Modifier.size(if (isIconType)
+                    (HyperButtonDefaults.iconSize(size, iconOnly = true) - 2.dp).coerceAtLeast(12.dp) else 16.dp),
                 strokeWidth = 2.dp,
-                colors = HyperProgressDefaults.colors(Color.Transparent, foreground)
+                colors = HyperProgressDefaults.colors(hyperGlass.controlTrack, foreground)
             )
-            content()
+            if (!isIconType || !loading) content()
         }
     }
 }
 
 object HyperButtonDefaults {
     val MinHeight = 38.dp
-    val IconSize = 18.dp
+    val IconSize = 20.dp
     val ContentSpacing = 8.dp
     val ContentPadding = PaddingValues(horizontal = 14.dp)
-    val Shape: Shape = RoundedCornerShape(16.dp)
+    val Shape: Shape = RoundedCornerShape(percent = 50)
+
+    fun shape(size: String = "default"): Shape = RoundedCornerShape(height(size) / 2)
+
+    fun iconSize(size: String = "default", iconOnly: Boolean = false): Dp {
+        val difference = height(size).value - 38f
+        return (if (iconOnly) 20f + difference / 3f else 17f + difference / 6f).dp
+    }
 
     fun height(size: String = "default"): Dp =
-        hyperComponentSize(size, small = 32.dp, normal = MinHeight, large = 48.dp)
+        hyperComponentSize(size, small = 32.dp, normal = MinHeight, large = 44.dp)
 
     fun contentPadding(size: String = "default"): PaddingValues {
         val height = height(size)
@@ -141,7 +151,7 @@ object HyperButtonDefaults {
             resolveHyperContainerColor(containerColor, fill),
             resolveHyperContainerColor(contentColor, foreground),
             resolveHyperContainerColor(disabledContainerColor,
-                if (type == "ghost" || type == "icon") Color.Transparent else hyperGlass.controlTrack),
+                if (type == "ghost") Color.Transparent else hyperGlass.controlTrack),
             resolveHyperContainerColor(disabledContentColor, HyperColors.secondaryText.copy(alpha = 150 / 255f))
         )
     }
@@ -153,8 +163,8 @@ object HyperButtonDefaults {
         color: Color = Color.Unspecified
     ): BorderStroke? {
         val fallback = when {
-            !enabled -> HyperColors.divider.copy(alpha = 110 / 255f)
             type == "ghost" -> Color.Transparent
+            !enabled -> HyperColors.divider.copy(alpha = 110 / 255f)
             type == "icon" -> hyperGlass.edgeHighlight
             type == "outline" -> HyperColors.divider
             type == "tonal" -> hyperGlass.edgeHighlight

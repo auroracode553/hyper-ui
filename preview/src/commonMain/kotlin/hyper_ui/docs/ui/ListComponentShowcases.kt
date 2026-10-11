@@ -17,11 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,14 +53,14 @@ fun HyperMenuGroupDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HyperText(
-            text = "菜单列表使用 44dp 单行与 58dp 描述行，外部视觉由 modifier 组合",
+            text = "菜单组 radius 18dp、padding 4dp，条目最小 46dp；组内自动使用 plain 行",
             color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp
         )
         Box(modifier = Modifier.height(220.dp)) {
             HyperMenuGroup(items = items) { item ->
                 HyperListTile(
-                    leadingContent = { ListIcon(iconFor(item)) },
+                    leadingIcon = iconFor(item),
                     headlineContent = { ListTitle(item) },
                     supportingContent = { ListDescription("点击查看配置") },
                     dividerVisible = true,
@@ -76,7 +71,7 @@ fun HyperMenuGroupDemo() {
 
         HyperMenuGroup {
             HyperListTile(
-                leadingContent = { ListIcon(Icons.Default.Notifications) },
+                leadingIcon = HyperReferenceIcons.Notifications,
                 headlineContent = { HyperText("推送通知") },
                 supportingContent = { HyperText("接收系统消息提醒") },
                 dividerVisible = true,
@@ -89,7 +84,7 @@ fun HyperMenuGroupDemo() {
                 }
             )
             HyperListTile(
-                leadingContent = { ListIcon(Icons.Default.Check) },
+                leadingIcon = HyperReferenceIcons.Check,
                 headlineContent = { HyperText("自动同步") },
                 supportingContent = { HyperText("网络可用时自动刷新数据") },
                 dividerVisible = true,
@@ -97,12 +92,12 @@ fun HyperMenuGroupDemo() {
                 trailingContent = {
                     HyperCheckbox(
                         checked = autoSync,
-                        onCheckedChange = { autoSync = it }
+                        onCheckedChange = { autoSync = it == true }
                     )
                 }
             )
             HyperListTile(
-                leadingContent = { ListIcon(Icons.Default.Settings) },
+                leadingIcon = HyperReferenceIcons.Settings,
                 headlineContent = { HyperText("性能模式") },
                 supportingContent = { HyperText("优先保证流畅度") },
                 trailingContent = {
@@ -209,7 +204,7 @@ fun HyperListDemo() {
                         } else {
                             Modifier.padding(HyperListTileDefaults.ContentPadding)
                         },
-                        leadingContent = { ListIcon(iconFor(item)) },
+                        leadingIcon = iconFor(item),
                         headlineContent = { ListTitle(item) },
                         supportingContent = { ListDescription("点击查看配置") },
                         dividerVisible = index < items.lastIndex,
@@ -282,14 +277,14 @@ fun HyperSectionedListDemo() {
             ) { _, entry ->
                 HyperListTile(
                     onClick = { selectedEntry = entry },
-                    leadingContent = { ListIcon(iconFor(entry)) },
+                    leadingIcon = iconFor(entry),
                     headlineContent = { ListTitle(entry) },
                     supportingContent = { ListDescription("点击切换选中状态") },
                     trailingContent = {
                         HyperCheckbox(
                             checked = selectedEntry == entry,
                             onCheckedChange = { checked ->
-                                selectedEntry = if (checked) entry else null
+                                selectedEntry = if (checked == true) entry else null
                             }
                         )
                     }
@@ -322,9 +317,9 @@ private fun ListTitle(text: String) {
     HyperText(
         text = text,
         color = LocalHyperContentColor.current,
-        fontSize = 17.sp,
-        lineHeight = 22.sp,
-        fontWeight = FontWeight.Medium
+        fontSize = 14.sp,
+        lineHeight = 17.5.sp,
+        fontWeight = FontWeight.SemiBold
     )
 }
 
@@ -333,14 +328,35 @@ private fun ListDescription(text: String) {
     HyperText(
         text = text,
         color = LocalHyperContentColor.current,
-        fontSize = 14.sp,
-        lineHeight = 19.sp
+        fontSize = 12.sp,
+        lineHeight = 16.2.sp
     )
 }
 
 private fun iconFor(item: String): ImageVector = when (item) {
-    "系统设置" -> Icons.Default.Settings
-    "通知权限" -> Icons.Default.Notifications
-    "同步策略" -> Icons.Default.Check
-    else -> Icons.Default.Lock
+    "系统设置" -> HyperReferenceIcons.Settings
+    "通知权限" -> HyperReferenceIcons.Notifications
+    "同步策略" -> HyperReferenceIcons.Check
+    else -> HyperReferenceIcons.Lock
+}
+
+@Composable
+fun ListTileDemo() {
+    var type by remember { mutableStateOf("auto") }
+    var selected by remember { mutableStateOf(false) }
+    var enabled by remember { mutableStateOf(true) }
+    var feedback by remember { mutableStateOf("等待操作") }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        HyperSegmentedControl(listOf("auto", "plain", "glass"), type, { type = it }) { HyperText(it) }
+        HyperButton({ selected = !selected }, type = "ghost") { HyperText("切换选中") }
+        HyperButton({ enabled = !enabled }, type = "ghost") { HyperText("切换禁用") }
+        HyperListTile(type = type, selected = selected, enabled = enabled, leadingIcon = HyperReferenceIcons.Settings,
+            headlineContent = { HyperText("系统设置") }, supportingContent = { HyperText("查看配置与同步状态") },
+            metaContent = { HyperText("刚刚更新") }, onClick = { feedback = "已点击：$type" })
+        HyperCard(titleContent = { HyperText("auto 在卡片内") }) {
+            HyperListTile(headlineContent = { HyperText("继承已有表面") }, leadingIcon = HyperReferenceIcons.Check,
+                selected = selected, onClick = { feedback = "已点击卡片内条目" })
+        }
+        HyperText(feedback, size = "small")
+    }
 }

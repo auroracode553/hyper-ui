@@ -1,26 +1,18 @@
-/** 文件职责：在 hyper_ui 中负责提供 library/src/main/java/hyper_ui/components/list/HyperListTile 可复用界面组件及交互封装。 */
+/** 文件职责：参考 HyperListTile 的自动表面、选中态、图标块与受控动作。 */
 package hyper_ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,224 +29,121 @@ data class HyperListTileColors(
 internal val LocalHyperListTileDividerSuppressed = staticCompositionLocalOf { false }
 internal val LocalHyperListTileContainerColor = staticCompositionLocalOf { Color.Unspecified }
 
-/**
- * 列表项组件。
- *
- * modifier 控制列表项外壳，contentModifier 控制列表项内部内容布局。
- */
 @Composable
 fun HyperListTile(
     headlineContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier.padding(HyperListTileDefaults.ContentPadding),
-    dividerModifier: Modifier = Modifier.padding(start = HyperListTileDefaults.DividerInset),
+    dividerModifier: Modifier = Modifier.padding(horizontal = 14.dp),
+    type: String = "auto",
+    selected: Boolean = false,
     enabled: Boolean = true,
+    showChevron: Boolean = true,
     dividerVisible: Boolean = false,
     colors: HyperListTileColors = HyperListTileDefaults.colors(),
     onClick: (() -> Unit)? = null,
+    leadingIcon: ImageVector? = null,
+    leadingColor: Color = HyperColors.accent,
     leadingContent: (@Composable RowScope.() -> Unit)? = null,
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
+    metaContent: (@Composable ColumnScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null
 ) {
-    val minHeight = HyperListTileDefaults.minHeight(
-        hasSupportingContent = supportingContent != null
-    )
-    val containerColor = currentHyperListTileContainerColor()
-    val requestedContentColor = if (enabled) colors.contentColor else colors.disabledContentColor
-    val requestedSupportingColor = if (enabled) colors.supportingColor else colors.disabledContentColor
-    val contentColor = resolveHyperOpaqueColor(
-        color = requestedContentColor,
-        fallbackColor = if (enabled) HyperColors.primaryText else HyperColors.secondaryText,
-        backgroundColor = containerColor
-    )
-    val supportingColor = resolveHyperOpaqueColor(
-        color = requestedSupportingColor,
-        fallbackColor = HyperColors.secondaryText,
-        backgroundColor = containerColor
-    )
-    val dividerColor = resolveHyperOpaqueColor(
-        color = colors.dividerColor,
-        fallbackColor = HyperColors.divider,
-        backgroundColor = containerColor
-    )
-    val shouldShowDivider = dividerVisible && !LocalHyperListTileDividerSuppressed.current
-    val clickModifier = if (onClick != null) {
-        Modifier.hyperNoRippleClickable(
-            enabled = enabled,
-            role = Role.Button,
-            onClick = onClick
-        )
-    } else {
-        Modifier
-    }
-
-    Column(
-        // modifier 描述完整列表项外壳，必须同时约束内容行和分割线。
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = minHeight)
-                .then(clickModifier)
-                .then(contentModifier),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (leadingContent != null) {
-                CompositionLocalProvider(
-                    LocalHyperContentColor provides contentColor,
-                    LocalHyperTextStyle provides HyperListTileDefaults.LeadingTextStyle
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        content = leadingContent
-                    )
+    require(type in setOf("auto", "plain", "glass")) { "type 必须为 auto、plain 或 glass" }
+    val plain = type == "plain" || (type == "auto" &&
+        (LocalHyperSurfacePresent.current || LocalHyperListTileContainerColor.current != Color.Unspecified))
+    val rowShape = RoundedCornerShape(if (plain) 12.dp else 15.dp)
+    val selectedBackground by androidx.compose.animation.animateColorAsState(
+        if (selected) hyperGlass.selection else Color.Transparent,
+        androidx.compose.animation.core.tween(HyperMotionSpec.MenuDuration, easing = HyperMotionSpec.EaseOutCubic),
+        label = "HyperListTileSelection")
+    val hasLeading = leadingContent != null || leadingIcon != null
+    val hasTrailing = trailingContent != null || (showChevron && onClick != null)
+    val surface = if (plain) Modifier else Modifier
+        .then(if (onClick != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
+            onClick = onClick) else Modifier)
+        .hyperFrostedSurface(
+        if (selected) hyperGlass.surfaceStrong else hyperGlass.surface,
+        RoundedCornerShape(18.dp),
+        border = if (selected) BorderStroke(1.dp, HyperColors.accent.copy(alpha = 90 / 255f)) else null
+    ).padding(3.dp)
+    Column(modifier.fillMaxWidth().then(surface)) {
+        Row(Modifier.fillMaxWidth().defaultMinSize(minHeight = 46.dp)
+            .then(if (plain && onClick != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
+                pressedScale = 0.992f, onClick = onClick) else Modifier)
+            .background(selectedBackground, rowShape)
+            .then(contentModifier), verticalAlignment = Alignment.CenterVertically) {
+            if (hasLeading) {
+                CompositionLocalProvider(LocalHyperContentColor provides if (enabled) colors.contentColor else colors.disabledContentColor,
+                    LocalHyperIconSize provides 18.dp) {
+                    if (leadingContent != null) leadingContent() else Box(
+                        Modifier.size(34.dp).hyperSolidSurface(leadingColor.copy(alpha = 28 / 255f),
+                            RoundedCornerShape(11.dp), border = BorderStroke(1.dp, hyperGlass.border)),
+                        contentAlignment = Alignment.Center
+                    ) { HyperIcon(leadingIcon!!, null, tint = leadingColor) }
                 }
             }
-
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(
-                        start = if (leadingContent == null) 0.dp else HyperListTileDefaults.ContentGap,
-                        end = if (trailingContent == null) 0.dp else HyperListTileDefaults.ContentGap
-                    ),
-                verticalArrangement = Arrangement.spacedBy(HyperListTileDefaults.TextGap)
-            ) {
-                // 为裸 HyperText(...) 提供稳定的列表层级，调用方显式 style 仍可覆盖。
-                CompositionLocalProvider(
-                    LocalHyperContentColor provides contentColor,
-                    LocalHyperTextStyle provides HyperListTileDefaults.HeadlineTextStyle
-                ) {
-                    headlineContent()
-                }
+            Column(Modifier.weight(1f).padding(start = if (hasLeading) 12.dp else 0.dp,
+                end = if (hasTrailing) 12.dp else 0.dp)) {
+                CompositionLocalProvider(LocalHyperContentColor provides if (enabled) colors.contentColor else colors.disabledContentColor,
+                    LocalHyperTextStyle provides HyperListTileDefaults.HeadlineTextStyle) { headlineContent() }
                 if (supportingContent != null) {
-                    CompositionLocalProvider(
-                        LocalHyperContentColor provides supportingColor,
-                        LocalHyperTextStyle provides HyperListTileDefaults.SupportingTextStyle
-                    ) {
-                        supportingContent()
-                    }
+                    Spacer(Modifier.height(3.dp))
+                    CompositionLocalProvider(LocalHyperContentColor provides colors.supportingColor,
+                        LocalHyperTextStyle provides HyperListTileDefaults.SupportingTextStyle) { supportingContent() }
+                }
+                if (metaContent != null) {
+                    Spacer(Modifier.height(4.dp))
+                    CompositionLocalProvider(LocalHyperContentColor provides colors.supportingColor,
+                        LocalHyperTextStyle provides HyperTheme.typography.bodySmall.copy(fontSize = 11.sp, lineHeight = 15.4.sp)) { metaContent() }
                 }
             }
-
-            if (trailingContent != null) {
-                CompositionLocalProvider(
-                    LocalHyperContentColor provides contentColor,
-                    LocalHyperTextStyle provides HyperListTileDefaults.TrailingTextStyle
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        content = trailingContent
-                    )
+            if (hasTrailing) {
+                CompositionLocalProvider(LocalHyperContentColor provides colors.supportingColor,
+                    LocalHyperTextStyle provides HyperListTileDefaults.TrailingTextStyle) {
+                    if (trailingContent != null) trailingContent() else HyperIcon(HyperReferenceIcons.ChevronRight,
+                        null, Modifier.size(18.dp))
                 }
             }
         }
-
-        if (shouldShowDivider) {
-            HyperListDivider(
-                modifier = dividerModifier,
-                color = dividerColor
-            )
+        if (dividerVisible && !LocalHyperListTileDividerSuppressed.current) {
+            HyperListDivider(dividerModifier, colors.dividerColor)
         }
     }
 }
 
-/** 列表组件共用同一分割线实现，保证普通列表与分段列表的尺寸一致。 */
 @Composable
-internal fun HyperListDivider(
-    modifier: Modifier,
-    color: Color
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(HyperListTileDefaults.DividerHeight)
-            .background(color)
-    )
+internal fun HyperListDivider(modifier: Modifier, color: Color) {
+    HyperDivider(modifier, color)
 }
 
 object HyperListTileDefaults {
-    /** 单行保持紧凑；带说明的双行项增加纵向呼吸空间，避免标题与描述显得拥挤。 */
-    val SingleLineMinHeight = 44.dp
-    val SupportingMinHeight = 58.dp
+    val SingleLineMinHeight = 46.dp
+    val SupportingMinHeight = 46.dp
     val ContentGap = 12.dp
     val TextGap = 3.dp
-    val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 14.dp, vertical = 8.dp)
-    /** 分割线起点与内容起点保持一致（均从容器内容区开始）。 */
-    val DividerInset = 0.dp
+    val ContentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+    val DividerInset = 14.dp
     val DividerHeight = 1.dp
-
-    /** 根据是否存在 supporting slot 返回稳定的默认行高，调用方无需判断内容密度。 */
-    fun minHeight(hasSupportingContent: Boolean): Dp = if (hasSupportingContent) {
-        SupportingMinHeight
-    } else {
-        SingleLineMinHeight
-    }
-
+    fun minHeight(hasSupportingContent: Boolean): Dp = 46.dp
     val LeadingTextStyle: TextStyle
-        @Composable get() = HyperTheme.typography.bodyMedium.copy(
-            fontSize = 15.sp,
-            lineHeight = 20.sp
-        )
-
+        @Composable get() = HyperTheme.typography.bodyMedium
     val HeadlineTextStyle: TextStyle
-        @Composable get() = HyperTheme.typography.bodyLarge.copy(
-            fontSize = 14.sp,
-            lineHeight = 17.5.sp,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
-        )
-
+        @Composable get() = HyperTheme.typography.bodyMedium.copy(fontSize = 14.sp, lineHeight = 17.5.sp, fontWeight = FontWeight.SemiBold)
     val SupportingTextStyle: TextStyle
-        @Composable get() = HyperTheme.typography.bodyMedium.copy(
-            fontSize = 12.sp,
-            lineHeight = 16.2.sp
-        )
-
+        @Composable get() = HyperTheme.typography.bodySmall.copy(fontSize = 12.sp, lineHeight = 16.2.sp)
     val TrailingTextStyle: TextStyle
-        @Composable get() = HyperTheme.typography.labelMedium.copy(
-            fontSize = 13.sp,
-            lineHeight = 18.sp
-        )
-
+        @Composable get() = HyperTheme.typography.bodyMedium.copy(fontSize = 13.sp, lineHeight = 18.2.sp)
     @Composable
     fun colors(
         contentColor: Color = Color.Unspecified,
         supportingColor: Color = Color.Unspecified,
         disabledContentColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
-    ): HyperListTileColors {
-        val containerColor = currentHyperListTileContainerColor()
-        val resolvedContentColor = resolveHyperOpaqueColor(
-            color = contentColor,
-            fallbackColor = HyperColors.primaryText,
-            backgroundColor = containerColor
-        )
-
-        return HyperListTileColors(
-            contentColor = resolvedContentColor,
-            supportingColor = resolveHyperOpaqueColor(
-                color = supportingColor,
-                fallbackColor = HyperColors.secondaryText,
-                backgroundColor = containerColor
-            ),
-            disabledContentColor = resolveHyperOpaqueColor(
-                color = disabledContentColor,
-                fallbackColor = HyperColors.secondaryText,
-                backgroundColor = containerColor
-            ),
-            dividerColor = resolveHyperOpaqueColor(
-                color = dividerColor,
-                fallbackColor = HyperColors.divider,
-                backgroundColor = containerColor
-            )
-        )
-    }
-}
-
-/** 返回父列表提供的实色背景；独立列表项默认按页面背景解析颜色。 */
-@Composable
-private fun currentHyperListTileContainerColor(): Color {
-    val providedColor = LocalHyperListTileContainerColor.current
-    return if (providedColor == Color.Unspecified) HyperColors.pageBackground else providedColor
+    ) = HyperListTileColors(
+        resolveHyperContainerColor(contentColor, HyperColors.primaryText),
+        resolveHyperContainerColor(supportingColor, HyperColors.secondaryText),
+        resolveHyperContainerColor(disabledContentColor, HyperColors.secondaryText),
+        resolveHyperContainerColor(dividerColor, HyperColors.divider)
+    )
 }

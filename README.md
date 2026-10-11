@@ -10,7 +10,9 @@
 
 ## Flutter 参考设计与 Compose API
 
-默认视觉令牌以 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 为参考：蓝色主题色 `rgba(71, 111, 232)`、浅深色玻璃表面、38dp 按钮、16dp 基础圆角和即时按压反馈。组件公开 API 采用统一字符串词汇：`type` 负责渲染类型，`size` 负责 `small`、`default`、`large` 尺寸。按钮按下立即开始 85ms 的整体缩放与透明度过渡，释放或拖出取消后用 180ms 恢复。`HyperThemeConfig` 可注入 `themeColor`、`typography`、`shapes` 与 `glass`；需要真实背景模糊时用 `HyperBackdrop` 包裹背景和组件。`HyperSlideMenu` 是受控列表侧滑操作，`HyperTabs` 负责横向分类切换。语义色由 `colors` 注入，加载态由 `loading` 控制。组件公开 API 统一在 `hyper_ui` 包。
+默认视觉以 `D:/my_project/flutter_project/doc_ui_kit/ui` 的同名组件源码为准。默认材质为 `HyperMaterial.Solid`，同时提供 `Soft`、`Clear`；颜色、字号、行高、圆角、间距、图标和动效均按参考参数重构。按钮高度 32/38/44dp，输入框圆角 20dp，分段控件 40dp，Tabs 54dp，TabBar 56dp。完整对应值和验收边界见 [样式对照](vitepress/docs/style-reference.md)。
+
+此次 API 调整：`HyperDropdown` 使用 options/value/onValueChange，`HyperPopover` 提供 anchorContent，`HyperTabBar.type` 使用 single/multiple，`HyperCheckbox.checked` 为可空三态值。滑块的旧中心点/光晕颜色和更新弹窗旧布局的无效文案参数已删除。项目内调用与 Preview 已同步；接入方按各组件页迁移。
 
 ```kotlin
 HyperThemeConfig {
@@ -29,7 +31,7 @@ HyperThemeConfig {
 - 调用方可以通过 Maven 坐标、源码模块或 AAR 引入 HyperUI。
 - 当前项目使用 AGP 9.4.0，Kotlin Android 支持由 AGP 内置，不再额外应用 `org.jetbrains.kotlin.android` 插件。
 - 当前库的 `minSdk` 为 `30`，调用方应用的 `minSdk` 不能低于 30。
-- HyperUI 内置语义图标统一使用 `com.composables:icons-lucide-android:2.2.1` VectorDrawable，不再用 Canvas 手绘图标；可替换图标继续保留 slot。
+- HyperUI 内置语义图标共享参考项目 Lucide 3.1.24 字体的原始轮廓，Android 与 Preview 使用同一份 ImageVector；调用方可通过 slot 提供自己的图标。
 - AI 或新调用者应优先阅读 [vitepress/docs/index.md](vitepress/docs/index.md)，再按 [组件索引](vitepress/docs/component-index.md) 打开具体组件页。
 - `vitepress/docs/` 是权威 Markdown 文档，`vitepress/` 负责网页渲染，`preview/` 只负责文档交互预览。当前公开支持范围是 Android 手机端。
 - 手机端布局与交互约束见 [移动端规范](vitepress/docs/mobile-guidelines.md)。
@@ -72,7 +74,7 @@ https://gitee.com/my_new_way/hyper_ui/blob/master/vitepress/docs/index.md
 - HyperUI 公开 API 统一在 `hyper_ui` 包，可使用 `import hyper_ui.*`。
 - 使用前包裹 `HyperThemeConfig`。
 - 组件不持有业务状态，状态由调用方管理。
-- HyperUI 已在库内部使用 `com.composables:icons-lucide-android:2.2.1` 提供默认语义图标；调用方若要直接引用 `LucideR.drawable`，仍应显式声明该依赖。
+- HyperUI 内部使用共享参考版本 Lucide 字体轮廓；调用方若要直接引用 `LucideR.drawable`，需自主声明对应 Android 图标依赖。
 ```
 
 ## 适用范围
@@ -194,14 +196,14 @@ HyperButton(type = "icon", onClick = onSearch) {
 }
 ```
 
-该 Android artifact 使用 `VectorDrawable` 资源。HyperUI 当前引用 `check`、`zap`、`fast-forward`、`gauge`、`x`、`rotate-ccw`、`move-horizontal` 与 `pencil`；Release 资源裁剪可移除未引用资源。项目不引入 `material-icons-extended`。
+调用方可选择上述 Android VectorDrawable 资源；库内默认图标使用共享的 Lucide 字体原始轮廓，避免 Android 与 Preview 图标不同。图标路径许可见 [Lucide 许可](library/NOTICE-LUCIDE.txt)。
 
 ## 组件范围
 
 - 主题与材质：`HyperThemeConfig`、`HyperTheme`、`HyperColors`、`HyperGlassTokens`、`HyperBackdrop`、`HyperSoftBackground`。
-- 基础与表单：`HyperButton`（含 `type = "icon"`）、`HyperTextField`、`HyperSwitch`（清晰的关闭态中性轨道）、`HyperCheckbox`、`HyperRadio`、`HyperSegmentedControl`、`HyperSlider`。
+- 基础与表单：`HyperText`、`HyperIcon`、`HyperDivider`、`HyperButton`（含 `type = "icon"`）、`HyperTextField`、`HyperSwitch`（清晰的关闭态中性轨道）、`HyperCheckbox`、`HyperRadio`、`HyperSegmentedControl`、`HyperSlider`。
 - 容器与列表：`HyperCard`、`HyperColorPicker`、`HyperList`、`HyperSectionedList`、`HyperMenuGroup`、`HyperListTile`。
-- 导航与操作：`HyperNavBar`（默认透明、固定顶部状态栏避让；通过 `type = custom/backOnly/titleOnly/backWithTitle/more/edit` 选择固定布局，`custom` 提供完整插槽；搭配 `HyperNavBarPage` 让正文滚到导航栏后方）、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperTabs`（横向分类）、`HyperTabBar`（文档页分别提供贴底与悬浮胶囊交互预览）。
+- 导航与操作：`HyperNavBar`（默认透明、固定顶部状态栏避让；通过 `type = custom/backOnly/titleOnly/backWithTitle/more/edit` 选择固定布局，`custom` 提供完整插槽；搭配 `HyperNavBarPage` 让正文滚到导航栏后方）、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperTabs`（横向分类）、`HyperTabBar`（文档页分别提供单动作与多标签交互预览）。
 - 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopover`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
 - Android 系统工具：`hyperToast`、`HyperBatteryState`、`readHyperBatteryState`、`rememberHyperBatteryState`。它们不进入 Preview 的跨平台编译链，真实调用仅限 Android。
 
@@ -210,10 +212,10 @@ HyperButton(type = "icon", onClick = onSearch) {
 ## 状态管理原则
 
 - 组件不持有业务状态。
-- `value`、`checked`、`selected`、`visible`、`open`、`expanded` 等状态由调用方管理。
+- `value`、`checked`、`selected`、`visible`、`open`、等业务状态由调用方管理；Dropdown 内部维护临时展开状态。
 - 组件通过 `onValueChange`、`onCheckedChange`、`onClick`、`onDismissRequest` 等回调通知调用方。
 - 外部尺寸和间距由 `modifier` 控制；按钮等组件提供与参考设计对应的语义化尺寸参数，内部独立布局节点提供具名修饰符。
-- `HyperPopover` 是窗口级轻量 Popup；`HyperDialog` 使用 Compose Dialog 宿主，并通过 `usePlatformDefaultWidth = false` 关闭平台默认宽度。该参数不是动画开关；它配合全尺寸根节点固定 Window 首帧测量，面板在根节点内居中并保持 280–360dp 宽度边界。外部点击由根节点命中层处理，返回键继续由 `dismissOnBackPress` 控制。`HyperAlertDialog` 基于 `HyperDialog` 提供 body/action 结构并固定使用标准实色描边。
+- `HyperPopover` 为锚定触发点的内容浮层。`HyperDialog` 使用 Compose Dialog 的全尺寸根节点，面板最大宽 420dp、窗口间距 24dp；滚动正文与固定操作区分开，关闭由调用方维护 visible。
 - 业务状态由调用方持有；组件可以在状态变化时执行按压、弹出、拖动吸附等视觉过渡。
 
 示例：

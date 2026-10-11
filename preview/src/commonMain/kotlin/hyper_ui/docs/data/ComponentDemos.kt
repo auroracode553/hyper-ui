@@ -29,7 +29,7 @@ data class ComponentDemo(
     val useReferencePreview: Boolean = true
 )
 
-/** 聚合稳定 Preview ID；导航分组提供返回布局切换、固定顶部避让与透明叠加滚动示例。 */
+/** 聚合稳定 Preview ID；主题与组件演示同步 doc_ui_kit 的 Solid/Soft/Clear、尺寸和受控状态。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos())
     addAll(formComponentDemos())

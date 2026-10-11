@@ -82,4 +82,4 @@ src/main/java/hyper_ui/
 
 ## 图标依赖策略
 
-HyperUI 内置语义图标通过内部 `implementation` 依赖统一使用 `com.composables:icons-lucide-android:2.2.1` VectorDrawable，不再用 Canvas 手绘。可替换图标仍保留 slot；调用方若要直接引用 `LucideR.drawable`，需要显式声明依赖。完整方式见 [接入与最小配置](../vitepress/docs/getting-started.md#推荐图标方案android)。
+HyperUI 内置语义图标使用 参考项目 Lucide 3.1.24 字体的共享原始轮廓，Android 与 Preview 采用同一份 ImageVector。调用方可通过 slot 提供图标；直接使用 LucideR 时自主声明图标依赖。样式与 API 迁移见 [样式对照](../vitepress/docs/style-reference.md)。

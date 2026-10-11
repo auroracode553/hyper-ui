@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
@@ -149,7 +148,7 @@ fun HyperPlaybackSpeedPanel(
             modifier = modifier
                 .widthIn(max = HyperPlaybackSpeedPanelDefaults.MaxWidth)
                 .fillMaxWidth(HyperPlaybackSpeedPanelDefaults.WidthFraction)
-                .hyperFrostedSurface(colors.containerColor, shape, blur = 28.dp,
+                .hyperFrostedSurface(colors.containerColor, shape, blur = hyperGlass.blurStrong,
                     border = androidx.compose.foundation.BorderStroke(1.dp, colors.panelBorderColor))
                 .padding(HyperPlaybackSpeedPanelDefaults.ContentPadding),
             verticalArrangement = Arrangement.spacedBy(
@@ -282,6 +281,7 @@ private fun HyperPlaybackSpeedSlider(
     colors: HyperPlaybackSpeedPanelColors
 ) {
     HyperSlider(
+        showValue = false,
         value = currentSpeed,
         onValueChange = onSpeedChange,
         modifier = Modifier.semantics {
@@ -299,9 +299,7 @@ private fun HyperPlaybackSpeedSlider(
             trackColor = colors.trackColor,
             activeTrackColor = colors.accentColor,
             segmentMarkerColor = colors.segmentMarkerColor,
-            thumbColor = colors.contentColor,
-            thumbCenterColor = colors.accentColor,
-            thumbHaloColor = colors.accentColor.copy(alpha = 0.22f)
+            thumbColor = colors.contentColor
         )
     )
 }

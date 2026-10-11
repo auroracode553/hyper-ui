@@ -33,5 +33,4 @@ internal fun Modifier.hyperTextFieldSurface(
         visuals = visuals.depth
     )
         .clip(shape)
-        .hyperBackdropEffect(14.dp)
         .background(visuals.containerColor)

@@ -10,7 +10,10 @@ data class HyperAppRelease(
     val releaseNotes: String,
     val packageFileName: String,
     val packageDownloadUrl: String,
-    val isPrerelease: Boolean = false
+    val isPrerelease: Boolean = false,
+    val highlights: List<String> = emptyList(),
+    val releaseDate: String? = null,
+    val sizeLabel: String? = null
 )
 
 @Immutable
@@ -65,6 +68,20 @@ sealed interface HyperUpdateDialogState {
     ) : HyperUpdateDialogState
 
     @Immutable
+    data class Downloading(val currentVersionName: String, val release: HyperAppRelease,
+        val progress: Float? = null, val progressText: String? = null) : HyperUpdateDialogState
+
+    @Immutable
+    data class ReadyToInstall(val currentVersionName: String, val release: HyperAppRelease) : HyperUpdateDialogState
+
+    @Immutable
+    data class Installing(val currentVersionName: String, val release: HyperAppRelease,
+        val progress: Float? = null, val progressText: String? = null) : HyperUpdateDialogState
+
+    @Immutable
+    data class Completed(val currentVersionName: String, val release: HyperAppRelease? = null) : HyperUpdateDialogState
+
+    @Immutable
     data class Error(
         val currentVersionName: String,
         val message: String
@@ -73,22 +90,16 @@ sealed interface HyperUpdateDialogState {
 
 @Immutable
 data class HyperUpdateDialogTexts(
-    val checkTitle: String = "检查更新",
+    val checkTitle: String = "正在检查更新",
     val updateAvailableTitle: String = "发现新版本",
     val downloadQueuedTitle: String = "已开始下载",
-    val errorTitle: String = "检查更新失败",
-    val checkingMessage: String = "正在请求最新版本…",
-    val upToDateMessage: String = "当前已是最新版本",
-    val currentVersionLabel: String = "当前版本",
-    val latestVersionLabel: String = "最新版本",
-    val packageFileLabel: String = "更新包",
-    val prereleaseWarning: String = "这是预发布版本，请确认后再安装。",
-    val releaseNotesLabel: String = "更新说明",
-    val emptyReleaseNotes: String = "暂无更新说明",
+    val errorTitle: String = "更新遇到了一点问题",
+    val checkingMessage: String = "正在获取版本信息，请稍候。",
+    val upToDateMessage: String = "所有新功能与体验优化，都已为你准备好。",
     val downloadQueuedMessage: String = "更新包已交给系统下载管理器。",
     val downloadNotificationHint: String = "下载进度和完成结果可在系统通知或“下载”中查看。",
     val cancelAction: String = "取消",
-    val downloadAction: String = "立即下载",
+    val downloadAction: String = "立即更新",
     val closeAction: String = "关闭",
     val retryAction: String = "重试"
 )

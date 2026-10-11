@@ -26,7 +26,7 @@ import hyper_ui.HyperText
 import hyper_ui.HyperTheme
 import hyper_ui.HyperThemeConfig
 import hyper_ui.docs.ThemeColorController
-import hyper_ui.docs.theme.DocsMaterial
+import hyper_ui.HyperMaterial
 import hyper_ui.docs.theme.LocalDocsColorScheme
 import hyper_ui.docs.theme.docsGlassTokens
 
@@ -82,7 +82,7 @@ internal fun DocsThemeControls(
             modifier = Modifier.horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            DocsMaterial.values().forEach { material ->
+            HyperMaterial.values().forEach { material ->
                 MaterialPreview(
                     material = material,
                     selected = material == controller.material,
@@ -108,18 +108,19 @@ private fun PreviewToggle(
 
 @Composable
 private fun MaterialPreview(
-    material: DocsMaterial,
+    material: HyperMaterial,
     selected: Boolean,
     controller: ThemeColorController
 ) {
     val label = when (material) {
-        DocsMaterial.Solid -> "实色"
-        DocsMaterial.Soft -> "柔和"
-        DocsMaterial.Clear -> "清透"
+        HyperMaterial.Solid -> "实色"
+        HyperMaterial.Soft -> "柔和"
+        HyperMaterial.Clear -> "清透"
     }
     HyperThemeConfig(
         themeColor = controller.color,
         darkTheme = controller.darkTheme,
+        material = material,
         glass = docsGlassTokens(controller.darkTheme, material)
     ) {
         HyperCard(

@@ -3,6 +3,7 @@ package hyper_ui.docs.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import hyper_ui.HyperTypography
@@ -16,7 +17,7 @@ import org.jetbrains.compose.resources.Font
  */
 @Composable
 internal fun docsTextStyle(): TextStyle {
-    return TextStyle(fontFamily = docsFontFamily())
+    return TextStyle(fontFamily = docsFontFamily(), fontSize = 14.sp, lineHeight = 19.6.sp)
 }
 
 @Composable
@@ -24,6 +25,7 @@ private fun docsFontFamily(): FontFamily {
     return FontFamily(
         Font(Res.font.noto_sans_sc_wght, weight = FontWeight.Normal),
         Font(Res.font.noto_sans_sc_wght, weight = FontWeight.Medium),
+        Font(Res.font.noto_sans_sc_wght, weight = FontWeight.SemiBold),
         Font(Res.font.noto_sans_sc_wght, weight = FontWeight.Bold)
     )
 }

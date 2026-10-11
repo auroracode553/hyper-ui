@@ -11,7 +11,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.Color
 import hyper_ui.rgba
 import hyper_ui.docs.theme.DefaultDocsThemeColor
-import hyper_ui.docs.theme.DocsMaterial
+import hyper_ui.HyperMaterial
 import hyper_ui.docs.theme.HyperDocsTheme
 import hyper_ui.docs.ui.HyperDocsApp
 
@@ -35,7 +35,7 @@ class ThemeColorController(initial: Color) {
     var customAccent by mutableStateOf(false)
         private set
 
-    var material by mutableStateOf(DocsMaterial.Soft)
+    var material by mutableStateOf(HyperMaterial.Solid)
         private set
 
     fun update(newColor: Color) {
@@ -53,7 +53,7 @@ class ThemeColorController(initial: Color) {
         update(if (customAccent) DefaultDocsThemeColor else rgba(154, 130, 215))
     }
 
-    fun updateMaterial(newMaterial: DocsMaterial) { material = newMaterial }
+    fun updateMaterial(newMaterial: HyperMaterial) { material = newMaterial }
 }
 
 @Composable

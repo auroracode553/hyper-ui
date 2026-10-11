@@ -28,7 +28,7 @@ fun HyperAlertDialog(
         val dialogColumnScope = this
 
         bodyContent?.let { body ->
-            CompositionLocalProvider(LocalHyperContentColor provides HyperColors.secondaryText) {
+            CompositionLocalProvider(LocalHyperContentColor provides HyperColors.primaryText) {
                 body.invoke(dialogColumnScope)
             }
         }

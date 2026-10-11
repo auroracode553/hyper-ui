@@ -4,6 +4,8 @@
 
 <WasmPreview demo="hyper_list" title="HyperList 交互预览" />
 
+默认 regular 材质、18dp 圆角、内容四周 4dp 留白；子项使用 plain 样式并管理自身 14dp 横向内边距。
+
 ## 公开签名与默认值
 
 ```kotlin

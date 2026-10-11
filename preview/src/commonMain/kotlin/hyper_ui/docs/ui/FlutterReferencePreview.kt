@@ -19,6 +19,7 @@ internal fun FlutterReferencePreview(content: @Composable () -> Unit) {
         themeColor = accent,
         darkTheme = dark,
         typography = HyperTheme.typography,
+        material = settings.material,
         glass = docsGlassTokens(dark, settings.material)
     ) {
         val scheme = LocalDocsColorScheme.current.copy(

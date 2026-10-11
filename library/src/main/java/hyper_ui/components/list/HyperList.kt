@@ -2,7 +2,6 @@
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
@@ -53,7 +51,7 @@ fun HyperList(
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
-                .hyperFrostedSurface(containerColor, shape, blur = 18.dp, border = border)
+                .hyperFrostedSurface(containerColor, shape, blur = hyperGlass.blur, border = border)
                 .then(contentModifier),
             state = state,
             contentPadding = contentPadding,
@@ -65,7 +63,7 @@ fun HyperList(
 
 object HyperListDefaults {
     val Shape: Shape = RoundedCornerShape(18.dp)
-    /** 列表容器默认提供左右 16.dp 内容留白，子项（HyperListTile 等）无需重复设置水平 padding。 */
+    /** 列表容器采用统一 4dp 留白；列表条目管理自身 14dp 横向内边距。 */
     val ContentPadding: PaddingValues = PaddingValues(4.dp)
 
     @Composable

@@ -13,6 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -42,8 +47,9 @@ fun HyperProgress(
     modifier: Modifier = Modifier,
     type: String = "linear",
     size: String = "default",
+    showLabel: Boolean = true,
     shape: Shape = HyperProgressDefaults.LinearShape,
-    strokeWidth: Dp = HyperProgressDefaults.CircularStrokeWidth,
+    strokeWidth: Dp = HyperProgressDefaults.strokeWidth(size),
     colors: HyperProgressColors = HyperProgressDefaults.colors(),
     trackBorder: BorderStroke? = null
 ) {
@@ -51,22 +57,30 @@ fun HyperProgress(
         "不支持的 HyperProgress type: $type"
     }
     if (type == "circular") {
+        Box(modifier = modifier.size(hyperComponentSize(size, 48.dp, 64.dp, 80.dp)), contentAlignment = Alignment.Center) {
         HyperCircularProgress(
             progress = progress,
-            modifier = modifier,
+            modifier = Modifier.matchParentSize(),
             size = size,
             strokeWidth = strokeWidth,
             colors = colors
         )
+        if (showLabel && progress != null && progress.isFinite()) HyperText(
+            "${kotlin.math.round(progress.coerceIn(0f, 1f) * 100).toInt()}%", fontSize = 12.sp)
+        }
     } else {
+        Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         HyperLinearProgress(
             progress = progress,
-            modifier = modifier,
+            modifier = Modifier.weight(1f),
             size = size,
             shape = shape,
             colors = colors,
             trackBorder = trackBorder
         )
+        if (showLabel && progress != null && progress.isFinite()) HyperText(
+            "${kotlin.math.round(progress.coerceIn(0f, 1f) * 100).toInt()}%", Modifier.padding(start = 12.dp))
+        }
     }
 }
 
@@ -79,8 +93,10 @@ private fun HyperLinearProgress(
     colors: HyperProgressColors = HyperProgressDefaults.colors(),
     trackBorder: BorderStroke? = null
 ) {
-    val resolvedHeight = hyperComponentSize(size, 3.dp, HyperProgressDefaults.LinearHeight, 8.dp)
-    val coercedProgress = progress?.coerceIn(0f, 1f)
+    val resolvedHeight = hyperComponentSize(size, 4.dp, HyperProgressDefaults.LinearHeight, 12.dp)
+    val coercedProgress = progress?.takeIf { it.isFinite() }?.coerceIn(0f, 1f)
+    val displayedProgress by animateFloatAsState(coercedProgress ?: 0f,
+        tween(220, easing = HyperMotionSpec.EaseOutCubic), label = "HyperProgressValue")
     val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
     val semanticsInfo = if (coercedProgress == null) {
@@ -112,11 +128,8 @@ private fun HyperLinearProgress(
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .fillMaxWidth(coercedProgress)
-                    .hyperSolidSurface(
-                        containerColor = resolvedIndicatorColor,
-                        shape = shape
-                    )
+                    .fillMaxWidth(displayedProgress)
+                    .background(resolvedIndicatorColor)
             )
         }
     }
@@ -130,11 +143,11 @@ private fun HyperCircularProgress(
     strokeWidth: Dp = HyperProgressDefaults.CircularStrokeWidth,
     colors: HyperProgressColors = HyperProgressDefaults.colors()
 ) {
-    val resolvedSize = hyperComponentSize(size, 24.dp, HyperProgressDefaults.CircularSize, 48.dp)
-    val coercedProgress = progress?.coerceIn(0f, 1f)
+    val resolvedSize = hyperComponentSize(size, 48.dp, HyperProgressDefaults.CircularSize, 80.dp)
+    val coercedProgress = progress?.takeIf { it.isFinite() }?.coerceIn(0f, 1f)
     val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
-    val rotation = if (coercedProgress == null) hyperIndeterminatePhase() * 360f else 0f
+    val rotation = if (coercedProgress == null) hyperIndeterminatePhase(1100) * 360f else 0f
     val displayedProgress = coercedProgress
         ?: HyperProgressDefaults.CircularIndeterminateSweepFraction
     val semanticsInfo = if (coercedProgress == null) {
@@ -181,7 +194,7 @@ private fun IndeterminateLinearSegment(
     segmentWidth: Dp,
     segmentShape: Shape
 ) {
-    val phase = hyperIndeterminatePhase()
+    val phase = hyperIndeterminatePhase(1400)
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
@@ -192,21 +205,19 @@ private fun IndeterminateLinearSegment(
                 .fillMaxHeight()
                 .width(segmentWidth)
                 .offset(x = (maxWidth + segmentWidth) * phase - segmentWidth)
-                .hyperSolidSurface(
-                    containerColor = indicatorColor,
-                    shape = segmentShape
-                )
+                .background(indicatorColor)
         )
     }
 }
 
 object HyperProgressDefaults {
-    val LinearHeight = 4.dp
+    val LinearHeight = 6.dp
     val LinearShape: Shape = RoundedCornerShape(percent = 50)
-    val CircularSize = 32.dp
-    val CircularStrokeWidth = 3.dp
-    const val IndeterminateSegmentFraction = 0.36f
-    const val CircularIndeterminateSweepFraction = 0.26f
+    val CircularSize = 64.dp
+    val CircularStrokeWidth = 6.dp
+    fun strokeWidth(size: String = "default"): Dp = hyperComponentSize(size, 4.dp, 6.dp, 8.dp)
+    const val IndeterminateSegmentFraction = 0.32f
+    const val CircularIndeterminateSweepFraction = 0.72f
 
     @Composable
     fun colors(
@@ -229,9 +240,9 @@ object HyperProgressDefaults {
 
 /** 语义加载动画只在未指定进度时运行，确定进度不创建无限动画。 */
 @Composable
-private fun hyperIndeterminatePhase(): Float {
+private fun hyperIndeterminatePhase(durationMillis: Int): Float {
     val transition = rememberInfiniteTransition(label = "HyperLoading")
     val phase by transition.animateFloat(0f, 1f,
-        infiniteRepeatable(tween(1333, easing = LinearEasing)), label = "HyperLoadingPhase")
+        infiniteRepeatable(tween(durationMillis, easing = LinearEasing)), label = "HyperLoadingPhase")
     return phase
 }

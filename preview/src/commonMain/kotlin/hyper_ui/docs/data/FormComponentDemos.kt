@@ -23,8 +23,8 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("选中", "selected = true", "主题实色与内部圆点"),
-            DemoVariant("未选中", "selected = false", "实色容器与主题描边"),
+            DemoVariant("选中", "selected = true", "21dp 圆环，选中环宽 6dp、内部 subtle 表面"),
+            DemoVariant("未选中", "selected = false", "21dp 圆环，普通轮廓 1.5dp"),
             DemoVariant("禁用", "enabled = false", "禁用实色状态")
         ),
         apiDocumentPaths = listOf("form/hyper-radio.md"),
@@ -34,18 +34,18 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "segmented",
         group = GROUP_FORM,
         title = "HyperSegmentedControl",
-        description = "默认总高 40dp 的等宽或内容宽度分段控制器；轨道负责布局，每个分段直接复用 HyperButton。",
+        description = "默认总高 40dp 的等宽或内容宽度分段控制器；共用轨道、选中底板与受控标签插槽。",
         code = """
             HyperSegmentedControl(
                 items = periods,
                 selectedItem = selectedPeriod,
                 onSelected = { selectedPeriod = it }
             ) { period ->
-                Text(period.label)
+                HyperText(period.label)
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("紧凑默认", "Height = 36.dp", "32dp 分段与 2dp 轨道留白"),
+            DemoVariant("默认尺寸", "Height = 40.dp", "32dp 分段与 4dp 轨道留白；等宽底板平移 260ms"),
             DemoVariant("禁用项", "itemEnabled", "单独禁用指定分段"),
             DemoVariant("自定义颜色", "HyperSegmentedControlDefaults.colors", "覆盖选中项和内容色")
         ),
@@ -65,7 +65,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("选中", "checked = true", "主题实色与 Lucide check 图标"),
-            DemoVariant("未选中", "checked = false", "实色容器与主题描边"),
+            DemoVariant("未选中", "checked = false", "21dp 圆环，普通轮廓 1.5dp"),
             DemoVariant("禁用", "enabled = false", "禁用实色状态")
         ),
         apiDocumentPaths = listOf("form/hyper-checkbox.md"),
@@ -77,43 +77,16 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperTextField",
         description = "受控文本输入框：预览覆盖基础、清空、密码显隐、前后缀、多行计数、禁用、只读和错误态。",
         code = """
-            HyperTextField(
-                value = value,
-                onValueChange = { value = it },
-                labelContent = { Text("备注") },
-                placeholderContent = { Text("写一点说明") },
-                supportingContent = { Text("${'$'}{value.length}/80") },
-                type = "textarea",
-                rows = 3
-            )
-
-            HyperTextField(
-                value = keyword,
-                onValueChange = { keyword = it },
-                placeholderContent = { Text("搜索组件") },
-                startContent = {
-                    Icon(Icons.Default.Search, contentDescription = null)
-                },
-                endContent = {
-                    HyperButton(
-                        type = "icon",
-                        onClick = { keyword = "" },
-                        size = "small"
-                    ) {
-                        Icon(Icons.Default.Close, contentDescription = "清空")
-                    }
-                }
-            )
+            HyperTextField(value, { value = it }, clearable = true, size = "default",
+                placeholderContent = { HyperText("请输入内容") })
+            HyperTextField(password, { password = it }, type = "password", showPasswordToggle = true)
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认表面", "68.dp 圆角描边容器", "白色输入面、低对比度中性描边"),
-            DemoVariant("type 驱动", "type = text / textarea / password", "同一组件切换单行、多行和密码形态"),
-            DemoVariant("聚焦", "interactionSource focused", "主题色替换公共中性描边，阴影提高到 5dp"),
-            DemoVariant("默认光标", "selection = TextRange(value.length)", "首次聚焦位于现有文本末尾"),
-            DemoVariant("多行/错误", "type = Textarea, rows = 3, isError", "错误色替换公共中性描边"),
-            DemoVariant("禁用/只读", "enabled / readOnly", "禁用态保留弱描边并关闭阴影，只读态抑制聚焦强调"),
-            DemoVariant("左右插槽", "startContent / endContent", "搜索图标与清除操作"),
-            DemoVariant("清空与密码", "endContent / visualTransformation", "清空按钮与密码显隐由调用方状态控制")
+            DemoVariant("尺寸", "size", "14/16/18sp；圆角 20dp，padding 按档位联动"),
+            DemoVariant("聚焦", "inputModifier / interactionSource", "即时 1.5dp 主题描边，无额外阴影"),
+            DemoVariant("状态", "enabled / readOnly / isError", "禁用、只读与错误可切换"),
+            DemoVariant("内置操作", "clearable / showPasswordToggle", "30dp 控件、18dp Lucide 图标"),
+            DemoVariant("多行计数", "type / rows / maxlength / showWordLimit", "3 行输入与字符限制")
         ),
         apiDocumentPaths = listOf("form/hyper-text-field.md"),
         content = { TextFieldDemo() }
@@ -141,7 +114,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "slider",
         group = GROUP_FORM,
         title = "HyperSlider",
-        description = "支持连续拖动、等距吸附、可选分段点、只读态与三层圆点，业务值由调用方持有。",
+        description = "6dp 轨道与 20dp 圆形手柄，支持连续拖动、等距吸附、可选分段点和只读态，业务值由调用方持有。",
         code = """
             HyperSlider(
                 value = speed,
@@ -153,14 +126,14 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant(
-                "紧凑连续",
-                "steps = 0, trackHeight = 3.dp, thumbSize = 12.dp",
-                "无分段点的媒体进度条"
+                "默认连续",
+                "valueRange = 0f..100f, showValue = true",
+                "44dp 触摸高度、6dp 轨道、20dp 手柄、2dp 描边"
             ),
             DemoVariant("分段", "steps = 4, showSegmentMarkers = true", "吸附并显示全部分段点"),
             DemoVariant("指定标记", "segmentValues", "只展示业务主刻度"),
             DemoVariant("只读", "readOnly = true", "保留正常配色但关闭交互"),
-            DemoVariant("禁用", "enabled = false", "禁用轨道、标记与三层圆点")
+            DemoVariant("禁用", "enabled = false", "保留品牌轨道，手柄使用 muted 底色")
         ),
         apiDocumentPaths = listOf("form/hyper-slider.md"),
         content = { SliderDemo() }

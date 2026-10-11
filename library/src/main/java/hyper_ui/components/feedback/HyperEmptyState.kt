@@ -55,24 +55,26 @@ fun HyperEmptyState(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = HyperEmptyStateDefaults.HorizontalPadding),
+            .padding(HyperEmptyStateDefaults.HorizontalPadding),
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = contentModifier
                 .widthIn(max = HyperEmptyStateDefaults.PanelMaxWidth),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             iconContent?.let { icon ->
                 CompositionLocalProvider(
-                    LocalHyperContentColor provides resolvedColors.iconContentColor
+                    LocalHyperContentColor provides resolvedColors.iconContentColor,
+                    LocalHyperIconSize provides 24.dp
                 ) {
                     Box(Modifier.size(56.dp).hyperFrostedSurface(
                         hyperGlass.surfaceSubtle, RoundedCornerShape(24.dp), elevation = 0.dp,
-                        border = androidx.compose.foundation.BorderStroke(1.dp, HyperColors.fieldBorder), blur = 14.dp
+                        border = androidx.compose.foundation.BorderStroke(1.dp, HyperColors.fieldBorder), blur = hyperGlass.blur
                     ), contentAlignment = Alignment.Center) { icon() }
                 }
+                Spacer(Modifier.height(12.dp))
             }
 
             HyperText(
@@ -85,6 +87,7 @@ fun HyperEmptyState(
             )
 
             if (supportingText != null) {
+                Spacer(Modifier.height(8.dp))
                 HyperText(
                     text = supportingText,
                     modifier = Modifier.fillMaxWidth(),
@@ -95,6 +98,7 @@ fun HyperEmptyState(
             }
 
             actionContent?.let { actions ->
+                Spacer(Modifier.height(12.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(
@@ -110,8 +114,8 @@ fun HyperEmptyState(
 }
 
 object HyperEmptyStateDefaults {
-    val HorizontalPadding = 24.dp
-    val PanelMaxWidth = 520.dp
+    val HorizontalPadding = 20.dp
+    val PanelMaxWidth = 430.dp
     val ActionSpacing = 8.dp
 
     @Composable

@@ -18,7 +18,7 @@ import hyper_ui.HyperText
 import hyper_ui.HyperTextField
 import hyper_ui.HyperTheme
 import hyper_ui.HyperThemeConfig
-import hyper_ui.docs.theme.DocsMaterial
+import hyper_ui.HyperMaterial
 import hyper_ui.docs.theme.docsGlassTokens
 
 private const val GROUP_THEME = "主题配置"
@@ -31,13 +31,13 @@ internal fun themeComponentDemos(): List<ComponentDemo> = listOf(
         description = "切换实色、柔和与清透材质，观察同一组控件的表面层级。",
         code = """
             HyperThemeConfig(
-                glass = HyperGlassTokens.light()
+                material = HyperMaterial.Solid
             ) { content() }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("实色", "DocsMaterial.Solid", "不透明表面"),
-            DemoVariant("柔和", "DocsMaterial.Soft", "默认玻璃表面"),
-            DemoVariant("清透", "DocsMaterial.Clear", "更低透明度表面")
+            DemoVariant("实色", "HyperMaterial.Solid", "不透明表面"),
+            DemoVariant("柔和", "HyperMaterial.Soft", "20/28dp 模糊玻璃表面"),
+            DemoVariant("清透", "HyperMaterial.Clear", "更低透明度表面")
         ),
         apiDocumentPaths = emptyList(),
         content = { ThemeMaterialDemo() },
@@ -47,17 +47,18 @@ internal fun themeComponentDemos(): List<ComponentDemo> = listOf(
 
 @Composable
 private fun ThemeMaterialDemo() {
-    var material by remember { mutableStateOf(DocsMaterial.Soft) }
+    var material by remember { mutableStateOf(HyperMaterial.Solid) }
     HyperThemeConfig(
         themeColor = HyperTheme.colors.themeColor,
         darkTheme = HyperTheme.isDark,
         typography = HyperTheme.typography,
         shapes = HyperTheme.shapes,
+        material = material,
         glass = docsGlassTokens(HyperTheme.isDark, material)
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                DocsMaterial.values().forEach { option ->
+                HyperMaterial.values().forEach { option ->
                     HyperButton(
                         onClick = { material = option },
                         type = if (option == material) "filled" else "tonal",
@@ -82,8 +83,8 @@ private fun ThemeMaterialDemo() {
     }
 }
 
-private fun DocsMaterial.label(): String = when (this) {
-    DocsMaterial.Solid -> "实色"
-    DocsMaterial.Soft -> "柔和"
-    DocsMaterial.Clear -> "清透"
+private fun HyperMaterial.label(): String = when (this) {
+    HyperMaterial.Solid -> "实色"
+    HyperMaterial.Soft -> "柔和"
+    HyperMaterial.Clear -> "清透"
 }

@@ -2,6 +2,8 @@
 package hyper_ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,30 +15,35 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.font.FontWeight
+import hyper_ui.core.icon.HyperCloseIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import hyper_ui.core.interaction.hyperNoRippleClickable
 
 enum class HyperDrawerPosition {
     Left,
@@ -68,19 +75,31 @@ fun HyperDrawer(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     drawerModifier: Modifier = Modifier,
-    position: HyperDrawerPosition = HyperDrawerPosition.Left,
+    position: HyperDrawerPosition = HyperDrawerPosition.Right,
     defaultSetPadding: Boolean = true,
     drawerContentModifier: Modifier = Modifier,
     drawerContentScrollEnabled: Boolean = true,
     colors: HyperDrawerColors = HyperDrawerDefaults.colors(),
     dismissOnClickOutside: Boolean = true,
+    title: String? = null,
+    footerContent: (@Composable ColumnScope.() -> Unit)? = null,
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val transitionProgress = hyperOverlayProgress(open)
+    val transitionProgress = hyperOverlayProgress(open, durationMillis = HyperMotionSpec.OverlayDuration)
     val isPresent = open || transitionProgress > 0f
     val resolvedColors = resolveHyperDrawerColors(colors)
     val drawerContentScrollState = rememberScrollState()
+    val density = LocalDensity.current
+    val direction = LocalLayoutDirection.current
+    val safe = WindowInsets.safeDrawing.exclude(WindowInsets.ime)
+    val outerPadding = if (defaultSetPadding) with(density) {
+        val left = maxOf(12.dp, safe.getLeft(this, direction).toDp())
+        val right = maxOf(12.dp, safe.getRight(this, direction).toDp())
+        PaddingValues(start = if (direction == androidx.compose.ui.unit.LayoutDirection.Rtl) right else left,
+            end = if (direction == androidx.compose.ui.unit.LayoutDirection.Rtl) left else right,
+            top = maxOf(12.dp, safe.getTop(this).toDp()), bottom = maxOf(12.dp, safe.getBottom(this).toDp()))
+    } else PaddingValues(12.dp)
     val drawerAlignment = when (position) {
         HyperDrawerPosition.Left -> Alignment.CenterStart
         HyperDrawerPosition.Right -> Alignment.CenterEnd
@@ -94,6 +113,7 @@ fun HyperDrawer(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
+                .imePadding()
                 .zIndex(HyperDrawerDefaults.DrawerZIndex)
         ) {
             if (isPresent) {
@@ -101,19 +121,20 @@ fun HyperDrawer(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(hyperGlass.scrim.copy(alpha = hyperGlass.scrim.alpha * transitionProgress))
-                        .hyperNoRippleClickable(onClick = { if (dismissOnClickOutside) onDismissRequest() })
+                        .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null,
+                            onClick = { if (dismissOnClickOutside) onDismissRequest() })
                 )
             }
 
-            val maxDrawerWidth = maxWidth * HyperDrawerDefaults.MaxWidthFraction
-            val maxDrawerHeight = maxHeight * HyperDrawerDefaults.MaxHeightFraction
+            val maxDrawerWidth = maxWidth
+            val maxDrawerHeight = (maxHeight - 24.dp).coerceAtLeast(0.dp)
             val drawerSizeModifier = when (position) {
                 HyperDrawerPosition.Left,
                 HyperDrawerPosition.Right -> Modifier
                     .widthIn(max = maxDrawerWidth)
                     .then(drawerModifier)
                     .fillMaxHeight()
-                    .width(HyperDrawerDefaults.Width)
+                    .width(HyperDrawerDefaults.Width + 24.dp)
 
                 HyperDrawerPosition.Top,
                 HyperDrawerPosition.Bottom -> Modifier
@@ -126,12 +147,22 @@ fun HyperDrawer(
                 Column(
                     modifier = drawerSizeModifier
                         .align(drawerAlignment)
-                        .hyperOverlayMotion(transitionProgress)
+                        .padding(outerPadding)
+                        .graphicsLayer {
+                            alpha = transitionProgress
+                            when (position) {
+                                HyperDrawerPosition.Left -> translationX = constraints.maxWidth * (if (direction == androidx.compose.ui.unit.LayoutDirection.Rtl) 0.12f else -0.12f) * (1f - transitionProgress)
+                                HyperDrawerPosition.Right -> translationX = constraints.maxWidth * (if (direction == androidx.compose.ui.unit.LayoutDirection.Rtl) -0.12f else 0.12f) * (1f - transitionProgress)
+                                HyperDrawerPosition.Top -> translationY = -size.height * 0.12f * (1f - transitionProgress)
+                                HyperDrawerPosition.Bottom -> translationY = size.height * 0.12f * (1f - transitionProgress)
+                            }
+                        }
                         .hyperGlassSurface(
                             shape = drawerShape(position),
                             visuals = hyperGlassSurfaceVisuals(
                                 containerColor = resolvedColors.containerColor,
                                 elevation = HyperDrawerDefaults.Elevation,
+                                blur = hyperGlass.blurStrong,
 
                                 depth = hyperSurfaceDepthVisuals(
                                     role = HyperSurfaceDepthRole.StructuralPanel,
@@ -139,34 +170,27 @@ fun HyperDrawer(
                                 )
                             )
                         )
-                        .then(
-                            if (defaultSetPadding) {
-                                // 默认保持方向化内容留白并避让系统栏；完整内容区由调用方显式关闭。
-                                Modifier
-                                    .windowInsetsPadding(
-                                        WindowInsets.safeDrawing.only(
-                                            drawerSafeDrawingSides(position)
-                                        )
-                                    )
-                                    .padding(HyperDrawerDefaults.contentPadding(position))
-                            } else {
-                                Modifier
-                            }
-                        )
                         // 调用方修饰符始终叠加在默认策略之后，用于补充场景布局。
-                        .then(drawerContentModifier)
-                        .then(
-                            if (drawerContentScrollEnabled) {
-                                // 普通内容由抽屉负责溢出滚动；懒列表必须关闭此层滚动。
-                                Modifier.verticalScroll(drawerContentScrollState)
-                            } else {
-                                Modifier
-                            }
-                        ),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                        .then(drawerContentModifier),
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
-                    CompositionLocalProvider(LocalHyperContentColor provides resolvedColors.contentColor) {
-                        drawerContent()
+                    CompositionLocalProvider(LocalHyperContentColor provides resolvedColors.contentColor,
+                        LocalHyperSurfacePresent provides true) {
+                        Row(Modifier.fillMaxWidth().padding(start = 20.dp, top = 12.dp, end = 8.dp, bottom = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically) {
+                            if (title != null) HyperText(title, Modifier.weight(1f), fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            else androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                            HyperTooltip("关闭") {
+                                HyperButton(onDismissRequest, type = "icon") { HyperCloseIcon(Modifier.size(20.dp)) }
+                            }
+                        }
+                        Column(Modifier.weight(1f, fill = position == HyperDrawerPosition.Left || position == HyperDrawerPosition.Right)
+                            .then(if (drawerContentScrollEnabled) Modifier.verticalScroll(drawerContentScrollState) else Modifier)
+                            .then(if (defaultSetPadding) Modifier.padding(16.dp) else Modifier), content = drawerContent)
+                        if (footerContent != null) {
+                            HyperDivider()
+                            Column(Modifier.padding(16.dp), content = footerContent)
+                        }
                     }
                 }
             }
@@ -216,112 +240,21 @@ fun HyperDrawerItem(
     supportingContent: (@Composable ColumnScope.() -> Unit)? = null,
     trailingContent: (@Composable RowScope.() -> Unit)? = null
 ) {
-    val rowClickModifier = if (onClick != null) {
-        Modifier.hyperNoRippleClickable(
-            enabled = enabled,
-            role = Role.Button,
-            onClick = onClick
-        )
-    } else {
-        Modifier
-    }
-    val resolvedColors = resolveHyperDrawerColors(colors)
-    val containerColor = if (selected) {
-        resolvedColors.selectedContainerColor
-    } else {
-        Color.Transparent
-    }
-    val contentColor = when {
-        !enabled -> resolvedColors.disabledContentColor
-        selected -> resolvedColors.selectedContentColor
-        else -> resolvedColors.contentColor
-    }
-    val supportingColor = if (enabled) {
-        resolvedColors.supportingColor
-    } else {
-        resolvedColors.disabledContentColor
-    }
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .hyperSolidSurface(containerColor, RoundedCornerShape(16.dp))
-                .then(rowClickModifier)
-                .defaultMinSize(minHeight = HyperDrawerDefaults.ItemMinHeight)
-                .then(contentModifier),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (leadingContent != null) {
-                CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
-                    leadingContent()
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(
-                        start = if (leadingContent == null) 0.dp else 14.dp,
-                        end = if (trailingContent == null) 0.dp else 14.dp
-                    ),
-                verticalArrangement = Arrangement.spacedBy(3.dp)
-            ) {
-                CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
-                    headlineContent()
-                }
-                if (supportingContent != null) {
-                    CompositionLocalProvider(LocalHyperContentColor provides supportingColor) {
-                        supportingContent()
-                    }
-                }
-            }
-
-            if (trailingContent != null) {
-                CompositionLocalProvider(LocalHyperContentColor provides contentColor) {
-                    trailingContent()
-                }
-            }
-        }
-
-        if (dividerVisible) {
-            HyperDivider(
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
-                color = resolvedColors.dividerColor
-            )
-        }
-    }
+    val resolved = resolveHyperDrawerColors(colors)
+    val foreground = if (selected) resolved.selectedContentColor else resolved.contentColor
+    HyperListTile(
+        headlineContent = headlineContent,
+        modifier = modifier.background(if (selected) resolved.selectedContainerColor else Color.Transparent, RoundedCornerShape(12.dp)),
+        contentModifier = contentModifier,
+        type = "plain", enabled = enabled, showChevron = false,
+        dividerVisible = dividerVisible, onClick = onClick,
+        colors = HyperListTileColors(foreground, resolved.supportingColor, resolved.disabledContentColor, resolved.dividerColor),
+        leadingContent = leadingContent, supportingContent = supportingContent, trailingContent = trailingContent
+    )
 }
 
 private fun drawerShape(position: HyperDrawerPosition): RoundedCornerShape {
-    val radius = HyperStyleDefaults.ExtraLargeCornerRadius
-    return when (position) {
-        HyperDrawerPosition.Left -> RoundedCornerShape(
-            topEnd = radius,
-            bottomEnd = radius
-        )
-        HyperDrawerPosition.Right -> RoundedCornerShape(
-            topStart = radius,
-            bottomStart = radius
-        )
-        HyperDrawerPosition.Top -> RoundedCornerShape(
-            bottomStart = radius,
-            bottomEnd = radius
-        )
-        HyperDrawerPosition.Bottom -> RoundedCornerShape(
-            topStart = radius,
-            topEnd = radius
-        )
-    }
-}
-
-/** 默认 Padding 开启时，按抽屉方向避让相邻系统栏和横向安全区。 */
-private fun drawerSafeDrawingSides(position: HyperDrawerPosition): WindowInsetsSides = when (position) {
-    HyperDrawerPosition.Left -> WindowInsetsSides.Start + WindowInsetsSides.Vertical
-    HyperDrawerPosition.Right -> WindowInsetsSides.End + WindowInsetsSides.Vertical
-    HyperDrawerPosition.Top -> WindowInsetsSides.Top + WindowInsetsSides.Horizontal
-    HyperDrawerPosition.Bottom -> WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal
+    return RoundedCornerShape(30.dp)
 }
 
 object HyperDrawerDefaults {
@@ -329,8 +262,8 @@ object HyperDrawerDefaults {
     val Elevation = 12.dp
     val SelectedItemElevation = 0.dp
     val HeaderPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp)
-    val ItemPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp)
-    val ItemMinHeight = 44.dp
+    val ItemPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+    val ItemMinHeight = 46.dp
     const val MaxWidthFraction = 0.88f
     const val MaxHeightFraction = 0.88f
     const val DrawerZIndex = 9f
@@ -370,7 +303,7 @@ private fun resolveHyperDrawerColors(colors: HyperDrawerColors): HyperDrawerColo
     val containerColor = resolveHyperContainerColor(colors.containerColor, defaultHyperDrawerContainerColor())
     val selectedContainerColor = resolveHyperContainerColor(
         colors.selectedContainerColor,
-        HyperColors.softContainer
+        hyperGlass.selection
     )
 
     return HyperDrawerColors(
@@ -387,6 +320,6 @@ private fun resolveHyperDrawerColors(colors: HyperDrawerColors): HyperDrawerColo
     )
 }
 
-/** 抽屉属于大面积导航结构，默认使用主题卡片色的不透明玻璃基底。 */
+/** 抽屉采用当前材质的 prominent 表面。 */
 @Composable
 private fun defaultHyperDrawerContainerColor(): Color = hyperGlass.surfaceStrong

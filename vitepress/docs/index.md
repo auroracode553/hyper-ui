@@ -7,7 +7,7 @@ aside: false
 hero:
   name: HyperUI
   text: Android 手机端 Compose UI
-  tagline: HyperOS 风格玻璃材质与受控交互组件
+  tagline: 参考 doc_ui_kit 的材质、尺寸与受控交互组件
   actions:
     - theme: brand
       text: 开始接入
@@ -37,6 +37,8 @@ HyperButton(
     size = "default"
 ) { HyperText("保存") }
 ```
+
+默认 `HyperThemeConfig(material = HyperMaterial.Solid)`。同名组件的尺寸、材质和迁移规则见 [样式对照](style-reference.md)。Dropdown 的值由调用方管理，临时展开状态由组件维护。
 
 ## API 约定
 

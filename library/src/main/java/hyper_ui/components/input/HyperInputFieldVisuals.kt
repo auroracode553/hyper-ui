@@ -38,18 +38,15 @@ internal fun hyperInputFieldVisuals(
     isFocused: Boolean,
     colors: HyperTextFieldColors
 ): HyperInputFieldVisuals {
-    val isLight = HyperColors.isLight
-    val showsFocus = enabled && !readOnly && isFocused
+    val showsFocus = isFocused
     val containerColor = when {
         !enabled -> colors.disabledContainerColor
         isError -> colors.errorContainerColor
         else -> colors.containerColor
     }
     val indicatorColor = when {
-        isError && showsFocus -> colors.errorColor
-        isError -> colors.errorColor.copy(alpha = 180 / 255f)
-        showsFocus -> colors.cursorColor.copy(alpha = 190 / 255f)
-        !enabled -> HyperColors.fieldBorder.copy(alpha = 110 / 255f)
+        isError -> colors.errorColor
+        showsFocus -> colors.cursorColor
         else -> HyperColors.fieldBorder
     }
     val elevation = when {
@@ -79,9 +76,9 @@ internal fun hyperInputFieldVisuals(
             depth = depth
         ),
         contentColor = if (enabled) colors.contentColor else colors.disabledContentColor,
-        placeholderColor = if (enabled) colors.placeholderColor else colors.disabledContentColor,
-        labelColor = if (isError) colors.errorColor else if (enabled) colors.labelColor else colors.disabledContentColor,
-        supportingColor = if (isError) colors.errorColor else if (enabled) colors.supportingColor else colors.disabledContentColor,
-        cursorColor = if (isError) colors.errorColor else colors.cursorColor
+        placeholderColor = colors.placeholderColor,
+        labelColor = if (isError) colors.errorColor else colors.labelColor,
+        supportingColor = if (isError) colors.errorColor else colors.supportingColor,
+        cursorColor = colors.cursorColor
     )
 }

@@ -13,8 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+import hyper_ui.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -103,7 +102,7 @@ fun NavBarDemo() {
                         .padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    HyperIcon(Icons.Default.Home, "导航示例", Modifier.size(28.dp))
+                    HyperIcon(HyperReferenceIcons.Home, "导航示例", Modifier.size(28.dp))
                     HyperText("常见顶部导航", fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     HyperText(example.explanation, fontSize = 14.sp)
                     NavBarExampleChoices(example) { selected ->

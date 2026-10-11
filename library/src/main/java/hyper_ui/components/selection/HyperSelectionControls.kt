@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,11 +22,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.DpOffset
 import hyper_ui.core.icon.HyperCheckIcon
+import hyper_ui.core.interaction.hyperNoRippleClickable
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun HyperSwitch(
@@ -41,31 +49,29 @@ fun HyperSwitch(
     checkedThumbColor: Color = Color(1f, 1f, 1f, 1f),
     uncheckedThumbColor: Color = Color.Unspecified
 ) {
-    val progress by animateFloatAsState(if (checked) 1f else 0f, tween(160), label = "HyperSwitch")
+    val curve = HyperMotionSpec.SelectionCurve
+    val progress by animateFloatAsState(if (checked) 1f else 0f, tween(HyperMotionSpec.StateDuration, easing = curve), label = "HyperSwitch")
     val targetTrack = when {
-        !enabled && checked -> HyperColors.accent.copy(alpha = 0.38f).compositeOver(HyperColors.softContainer)
-        !enabled -> HyperColors.softContainer.copy(alpha = 0.7f)
         checked -> resolveHyperContainerColor(checkedTrackColor, HyperColors.accent)
-        else -> resolveHyperContainerColor(uncheckedTrackColor, HyperColors.softContainer)
+            .let { if (enabled) it else it.copy(alpha = 90 / 255f) }
+        else -> resolveHyperContainerColor(uncheckedTrackColor,
+            hyperGlass.controlTrack.compositeOver(if (enabled) hyperGlass.surfaceStrong else hyperGlass.surfaceSubtle))
     }
-    val track by animateColorAsState(targetTrack, tween(160), label = "HyperSwitchTrack")
+    val track by animateColorAsState(targetTrack, tween(HyperMotionSpec.StateDuration, easing = curve), label = "HyperSwitchTrack")
     val targetThumb = when {
-        !enabled -> HyperColors.cardContainer.copy(alpha = 0.75f)
         checked -> checkedThumbColor
         else -> resolveHyperContainerColor(uncheckedThumbColor, HyperColors.cardContainer)
     }
-    val thumb by animateColorAsState(targetThumb, tween(160), label = "HyperSwitchThumb")
+    val thumb by animateColorAsState(targetThumb, tween(HyperMotionSpec.StateDuration, easing = curve), label = "HyperSwitchThumb")
     val outline = when {
         checked -> Color.Transparent
-        !enabled -> HyperColors.secondaryText.copy(alpha = 0.12f)
-        else -> HyperColors.secondaryText.copy(alpha = 0.26f)
+        else -> hyperGlass.border
     }
     val source = remember { MutableInteractionSource() }
     Box(
-        modifier.size(52.dp, 44.dp).toggleable(
-            value = checked, enabled = enabled, role = Role.Switch,
-            interactionSource = source, indication = null, onValueChange = onCheckedChange
-        ),
+        modifier.size(52.dp, 32.dp)
+            .hyperNoRippleClickable(enabled, Role.Switch, source, onClick = { onCheckedChange(!checked) })
+            .semantics { toggleableState = if (checked) ToggleableState.On else ToggleableState.Off; if (!enabled) disabled() },
         contentAlignment = Alignment.Center
     ) {
         Box(Modifier.width(HyperSwitchDefaults.TrackWidth).height(HyperSwitchDefaults.TrackHeight)
@@ -74,7 +80,8 @@ fun HyperSwitch(
             Box(Modifier.align(Alignment.CenterStart)
                 .offset(x = HyperSwitchDefaults.TrackPadding + 20.dp * progress)
                 .size(HyperSwitchDefaults.ThumbSize)
-                .shadow(if (enabled) 2.dp else 0.dp, CircleShape)
+                .dropShadow(CircleShape, Shadow(radius = 3.dp, offset = DpOffset(0.dp, 1.dp),
+                    color = hyperGlass.shadow.copy(alpha = hyperGlass.shadow.alpha * if (enabled) 1f else 0.5f)))
                 .clip(CircleShape).background(thumb))
         }
     }
@@ -82,30 +89,40 @@ fun HyperSwitch(
 
 @Composable
 fun HyperCheckbox(
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
+    checked: Boolean?,
+    onCheckedChange: (Boolean?) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    tristate: Boolean = false,
     checkedColor: Color = Color.Unspecified,
     uncheckedColor: Color = Color.Unspecified,
     uncheckedBorderColor: Color = Color.Unspecified,
     checkmarkColor: Color = Color(1f, 1f, 1f, 1f)
 ) {
+    require(tristate || checked != null) { "checked = null 需要 tristate = true" }
+    val selected = checked == true || (tristate && checked == null)
     val selectedColor = resolveHyperContainerColor(checkedColor, HyperColors.accent)
-    val fill = if (checked) selectedColor else resolveHyperContainerColor(uncheckedColor, hyperGlass.surfaceSubtle)
-    val border = if (checked) selectedColor else resolveHyperContainerColor(uncheckedBorderColor, HyperColors.fieldBorder)
+    val fill by animateColorAsState(if (selected) selectedColor else resolveHyperContainerColor(uncheckedColor, hyperGlass.surfaceSubtle),
+        tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.SelectionCurve), label = "HyperCheckboxFill")
+    val border by animateColorAsState(if (selected) selectedColor else resolveHyperContainerColor(uncheckedBorderColor, HyperColors.fieldBorder),
+        tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.SelectionCurve), label = "HyperCheckboxBorder")
+    val markProgress by animateFloatAsState(if (selected) 1f else 0f,
+        tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.OverlayCurve), label = "HyperCheckboxMark")
     val shape = RoundedCornerShape(7.dp)
     Box(
-        modifier.size(44.dp).toggleable(
-            value = checked, enabled = enabled, role = Role.Checkbox,
-            interactionSource = remember { MutableInteractionSource() }, indication = null,
-            onValueChange = onCheckedChange
-        ), contentAlignment = Alignment.Center
+        modifier.size(44.dp)
+            .hyperNoRippleClickable(enabled, Role.Checkbox, onClick = {
+                onCheckedChange(if (tristate) when (checked) { true -> null; false -> true; null -> false } else checked != true)
+            })
+            .semantics { toggleableState = when (checked) { true -> ToggleableState.On; false -> ToggleableState.Off; null -> ToggleableState.Indeterminate }; if (!enabled) disabled() },
+        contentAlignment = Alignment.Center
     ) {
         Box(Modifier.size(21.dp).clip(shape).background(fill)
             .border(1.5.dp, border, shape), contentAlignment = Alignment.Center) {
-            if (checked) CompositionLocalProvider(LocalHyperContentColor provides checkmarkColor) {
-                HyperCheckIcon(Modifier.size(15.dp))
+            CompositionLocalProvider(LocalHyperContentColor provides checkmarkColor) {
+                val mark = Modifier.size(15.dp).graphicsLayer { alpha = markProgress; scaleX = 0.8f + 0.2f * markProgress; scaleY = scaleX }
+                if (checked == null) HyperIcon(HyperReferenceIcons.Minus, null, mark)
+                else HyperCheckIcon(mark)
             }
         }
     }
@@ -123,33 +140,31 @@ fun HyperRadio(
     innerDotColor: Color = Color.Unspecified
 ) {
     val active = resolveHyperContainerColor(selectedColor, HyperColors.accent)
-    val ring = when {
-        !enabled -> HyperColors.secondaryText.copy(alpha = 80 / 255f)
+    val targetRing = when {
         selected -> active
-        else -> resolveHyperContainerColor(unselectedBorderColor, HyperColors.secondaryText)
+        else -> resolveHyperContainerColor(unselectedBorderColor, HyperColors.fieldBorder)
     }
+    val ring by animateColorAsState(targetRing, tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.SelectionCurve), label = "HyperRadioRing")
+    val ringWidth by animateFloatAsState(if (selected) 6f else 1.5f, tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.SelectionCurve), label = "HyperRadioWidth")
     Box(
-        modifier.size(40.dp).then(if (onClick != null) Modifier.selectable(
-            selected = selected, enabled = enabled, role = Role.RadioButton,
-            interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onClick
-        ) else Modifier), contentAlignment = Alignment.Center
+        modifier.size(44.dp).then(if (onClick != null) Modifier.hyperNoRippleClickable(
+            enabled = enabled, role = Role.RadioButton, onClick = onClick
+        ) else Modifier).semantics { this.selected = selected; if (!enabled || onClick == null) disabled() },
+        contentAlignment = Alignment.Center
     ) {
-        Box(Modifier.size(20.dp).clip(CircleShape)
-            .background(resolveHyperContainerColor(unselectedColor, Color.Transparent))
-            .border(2.dp, ring, CircleShape), contentAlignment = Alignment.Center) {
-            if (selected) Box(Modifier.size(10.dp).background(
-                if (enabled) resolveHyperContainerColor(innerDotColor, active) else ring, CircleShape))
-        }
+        Box(Modifier.size(21.dp).clip(CircleShape)
+            .background(resolveHyperContainerColor(if (selected) innerDotColor else unselectedColor, hyperGlass.surfaceSubtle))
+            .border(ringWidth.dp, ring, CircleShape))
     }
 }
 
 object HyperSwitchDefaults {
     val TrackWidth = 52.dp
     val TrackHeight = 32.dp
-    val TrackPadding = 4.dp
+    val TrackPadding = 5.dp
     val TrackElevation = 0.dp
     val TrackBorderWidth = 1.dp
-    val ThumbSize = 24.dp
+    val ThumbSize = 22.dp
     val ThumbElevation = 0.dp
     val ThumbBorderWidth = 0.dp
 }
@@ -160,7 +175,7 @@ object HyperCheckboxDefaults {
     val CheckmarkSize = 15.dp
 }
 object HyperRadioDefaults {
-    val OuterSize = 20.dp
-    val InnerDotSize = 10.dp
-    val BorderWidth = 2.dp
+    val OuterSize = 21.dp
+    val InnerDotSize = 9.dp
+    val BorderWidth = 1.5.dp
 }

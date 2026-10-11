@@ -2,6 +2,7 @@
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,6 +48,7 @@ fun HyperDialog(
     showScrollIndicator: Boolean = HyperDialogDefaults.ShowScrollIndicator,
     actionContent: (@Composable RowScope.() -> Unit)? = null,
     border: BorderStroke? = HyperDialogDefaults.border(),
+    contentPadding: androidx.compose.foundation.layout.PaddingValues = HyperDialogDefaults.ContentPadding,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val transitionProgress = hyperOverlayProgress(visible)
@@ -60,7 +62,8 @@ fun HyperDialog(
         dismissOnBackPress = dismissOnBackPress
     ) {
         BoxWithConstraints(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
+                .background(hyperGlass.scrim.copy(alpha = hyperGlass.scrim.alpha * transitionProgress)),
             contentAlignment = Alignment.Center
         ) {
             if (dismissOnClickOutside) {
@@ -83,7 +86,7 @@ fun HyperDialog(
             HyperFloatingPanel(
                 title = title,
                 modifier = modifier
-                    .hyperOverlayMotion(transitionProgress)
+                    .hyperOverlayMotion(transitionProgress, beginScale = 0.96f)
                     .widthIn(
                         min = resolvedMinWidth,
                         max = resolvedMaxWidth
@@ -98,6 +101,7 @@ fun HyperDialog(
                 shape = shape,
                 containerColor = containerColor,
                 border = border,
+                contentPadding = contentPadding,
                 horizontalAlignment = horizontalAlignment,
                 verticalArrangement = verticalArrangement,
                 actionArrangement = actionArrangement,
@@ -109,13 +113,14 @@ fun HyperDialog(
     }
 }
 
-private val HyperDialogWindowPadding = 16.dp
+private val HyperDialogWindowPadding = 24.dp
 
 object HyperDialogDefaults {
-    val MinWidth = 280.dp
-    val MaxWidth = 360.dp
+    val MinWidth = 0.dp
+    val MaxWidth = 420.dp
     val Shape: Shape = HyperFloatingPanelDefaults.Shape
     val ContentSpacing = HyperFloatingPanelDefaults.ContentSpacing
+    val ContentPadding = HyperFloatingPanelDefaults.ContentPadding
     val ActionSpacing = HyperFloatingPanelDefaults.ActionSpacing
     const val ShowScrollIndicator = HyperFloatingPanelDefaults.ShowScrollIndicator
 

@@ -28,10 +28,10 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 title = "暂无历史记录",
                 description = "浏览过的页面会显示在这里",
                 iconContent = {
-                    Icon(Icons.Default.Search, contentDescription = null)
+                    Icon(searchIcon, contentDescription = null)
                 },
                 actionContent = {
-                    HyperButton(onClick = onRefresh) { Text("重新加载") }
+                    HyperButton(onClick = onRefresh) { HyperText("重新加载") }
                 }
             )
         """.trimIndent(),
@@ -49,31 +49,16 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dropdown",
         group = GROUP_FEEDBACK,
         title = "HyperDropdown",
-        description = "参考系统菜单的内容自适应柔雾浮层：宽圆角、公共浮层描边与阴影、18sp 文本及危险项语义。",
+        description = "选择字段与匹配触发器宽度的锚定选项浮层，支持禁用、空选项和当前值。",
         code = """
-            HyperDropdown(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                Item(onClick = onChangeBackground) {
-                    Text("更换背景")
-                }
-                Item(
-                    onClick = onDelete,
-                    tone = HyperDropdownItemTone.Danger
-                ) {
-                    Text("删除")
-                }
-            }
+            HyperDropdown(options = listOf(HyperOption("all", "全部"), HyperOption("favorite", "收藏")),
+                value = selected, onValueChange = { selected = it }, label = "范围")
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("展开/关闭", "expanded", "乳白/炭灰面板与公共浮层深度"),
-            DemoVariant("自适应宽度", "IntrinsicSize.Max", "按最宽菜单项收缩，最大 220dp"),
-            DemoVariant("菜单项", "Item(closeOnClick)", "48dp 行高与即时按压反馈"),
-            DemoVariant("危险项", "tone = Danger", "自动使用主题危险色"),
-            DemoVariant("禁用态", "enabled = false", "降低文字对比度并取消反馈"),
-            DemoVariant("自定义色", "HyperDropdownDefaults.colors", "保留调用方容器色 alpha"),
-            DemoVariant("可选分隔线", "Divider()", "默认示例保持参考图的无分隔布局")
+            DemoVariant("受控值", "value / onValueChange", "选项选择后收起"),
+            DemoVariant("禁用", "enabled / HyperOption.enabled", "关闭交互"),
+            DemoVariant("浮层", "menuMaxHeight", "默认最大 320dp"),
+            DemoVariant("空列表", "options = emptyList()", "保留字段与占位文本")
         ),
         apiDocumentPaths = listOf("feedback/hyper-dropdown.md"),
         content = { DropdownMenuDemo() }
@@ -110,18 +95,16 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "progress",
         group = GROUP_FEEDBACK,
         title = "HyperProgress",
-        description = "线性与圆形轨道均使用参考令牌配色；progress 为 null 时表示不确定加载。",
+        description = "参考线性与圆形进度的三档尺寸，标签、归一化进度及不确定动画。",
         code = """
-            HyperProgress(type = "linear", progress = progress, size = "default")
-            HyperProgress(type = "linear", progress = null)
-            HyperProgress(type = "circular", progress = progress)
-            HyperProgress(type = "circular", progress = null)
+            HyperProgress(progress = progress, showLabel = true)
+            HyperProgress(progress = null, type = "circular", size = "small", showLabel = false)
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("线性确定", "progress: Float", "实色轨道、指示条与描边"),
-            DemoVariant("线性不确定", "progress = null", "静态居中指示段"),
-            DemoVariant("圆形确定", "progress: Float", "圆形 stroke"),
-            DemoVariant("圆形不确定", "progress = null", "静态 stroke 弧段")
+            DemoVariant("线性尺寸", "size", "4 / 6 / 12dp"),
+            DemoVariant("圆形尺寸", "size", "48 / 64 / 80dp，stroke 4 / 6 / 8dp"),
+            DemoVariant("不确定", "progress = null", "移动条 1400ms，圆环 1100ms"),
+            DemoVariant("标签", "showLabel", "默认显示百分比")
         ),
         apiDocumentPaths = listOf("feedback/hyper-progress.md"),
         content = { ProgressDemo() }
@@ -136,7 +119,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 progress = brightness,
                 label = "${'$'}{(brightness * 100).toInt()}%",
                 iconContent = {
-                    Icon(Icons.Default.Info, contentDescription = null)
+                    Icon(infoIcon, contentDescription = null)
                 }
             )
         """.trimIndent(),
@@ -185,7 +168,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             HyperPlaybackSpeedScale(
                 selectedSpeed = temporarySpeed,
                 leadingContent = {
-                    Icon(Icons.Default.FastForward, contentDescription = null)
+                    Icon(fastForwardIcon, contentDescription = null)
                 }
             )
         """.trimIndent(),
@@ -238,7 +221,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 onDismissRequest = onDismiss,
                 title = "编辑备注",
                 actionContent = {
-                    HyperButton(onClick = onSave) { Text("保存") }
+                    HyperButton(onClick = onSave) { HyperText("保存") }
                 }
             ) {
                 HyperTextField(
@@ -261,30 +244,16 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_popup",
         group = GROUP_FEEDBACK,
         title = "HyperPopover",
-        description = "窗口居中的基础浮层最大高度为窗口的 70%，长内容滚动且操作区固定。",
+        description = "贴着触发点定位的内容浮层，默认最大宽 280dp、高度不超过窗口 40%，空间不足自动翻转。",
         code = """
-            HyperPopover(
-                visible = visible,
-                onDismissRequest = onDismiss,
-                title = "编辑备注",
-                dismissOnClickOutside = dismissOnClickOutside,
-                actionContent = {
-                    HyperButton(onClick = onCancel) { Text("取消") }
-                    HyperButton(onClick = onSave) { Text("保存") }
-                }
-            ) {
-                HyperTextField(
-                    value = value,
-                    onValueChange = onValueChange
-                )
-            }
+            HyperPopover(visible = visible, onDismissRequest = { visible = false }, anchorContent = {
+                HyperButton({ visible = !visible }) { HyperText("编辑备注") }
+            }) { HyperTextField(note, { note = it }) }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("基础面板", "visible + content", "响应式玻璃浮层面板"),
-            DemoVariant("响应式高度", "MaxHeightFraction", "最大为窗口高度的 70%"),
-            DemoVariant("窗口居中", "Popup host", "自定义位置提供器忽略调用节点锚点"),
-            DemoVariant("外部关闭", "dismissOnClickOutside", "仅点击处理，不绘制遮罩"),
-            DemoVariant("操作区", "actionContent", "固定底部按钮 slot")
+            DemoVariant("锚定", "anchorContent", "6dp 间距与 12dp 安全边距"),
+            DemoVariant("长内容", "content", "达到高度上限后滚动"),
+            DemoVariant("受控显隐", "visible", "外部点击请求关闭")
         ),
         apiDocumentPaths = listOf("feedback/hyper-popover.md"),
         content = { HyperPopoverDemo() }
@@ -300,13 +269,13 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 onDismissRequest = onDismiss,
                 title = "确认删除",
                 dismissOnClickOutside = dismissOnClickOutside,
-                bodyContent = { Text("删除后无法恢复，是否继续？") },
+                bodyContent = { HyperText("删除后无法恢复，是否继续？") },
                 actionContent = {
-                    HyperButton(onClick = onDismiss) { Text("取消") }
+                    HyperButton(onClick = onDismiss) { HyperText("取消") }
                     HyperButton(
                         onClick = onDelete,
                         type = "danger"
-                    ) { Text("删除") }
+                    ) { HyperText("删除") }
                 }
             )
         """.trimIndent(),
@@ -323,44 +292,34 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "tooltip",
         group = GROUP_FEEDBACK,
         title = "HyperTooltip",
-        description = "不依赖外部设计组件库 的轻量提示浮层，支持悬停提示。",
+        description = "12dp 圆角轻提示；悬停与长按延迟 500ms、焦点即时显示，支持禁用和长文本宽度。",
         code = """
             HyperTooltip(text = "提示文本") {
                 HyperText("悬停查看")
             }
         """.trimIndent(),
-        variants = listOf(DemoVariant("悬停", "text", "锚点上方显示提示")),
+        variants = listOf(
+            DemoVariant("触发", "hover / long press / focus", "悬停和长按 500ms，焦点即时"),
+            DemoVariant("禁用与延迟", "enabled / hoverDelayMillis", "可切换状态与悬停等待时间"),
+            DemoVariant("宽度", "maxWidth", "长文本在 240dp 内换行")
+        ),
         apiDocumentPaths = listOf("feedback/hyper-tooltip.md"),
         content = { HyperTooltipDemo() }
-    ),    ComponentDemo(
+    ),
+    ComponentDemo(
         id = "update_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperUpdateDialog",
-        description = "继承稳定全尺寸 Dialog 根节点的应用更新弹窗；调用方持有状态并注入 Release 加载与下载动作。",
+        description = "参考 28dp 圆角更新弹窗，版本、摘要、下载、安装、必要更新与完成状态可操作模拟。",
         code = """
-            val checker = HyperUpdateChecker(
-                HyperReleaseLoader { releaseUrl ->
-                    repository.loadLatestRelease(releaseUrl)
-                }
-            )
-            val result = checker.check(
-                HyperUpdateRequest(
-                    currentVersionName = currentVersion,
-                    releaseUrl = releaseUrl
-                )
-            )
-
-            HyperUpdateDialog(
-                state = updateState,
-                onDismissRequest = onDismiss,
-                onRetry = onRetry,
-                onDownload = onDownload
-            )
+            HyperUpdateDialog(state = state, onDismissRequest = onClose, onRetry = onRetry,
+                onDownload = onDownload, onInstall = onInstall, mandatory = false)
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("检查中", "HyperUpdateState.Checking", "加载状态"),
-            DemoVariant("可更新", "HyperUpdateState.UpdateAvailable", "版本信息与下载操作"),
-            DemoVariant("已最新/失败", "UpToDate / Error", "结果反馈与重试")
+            DemoVariant("状态", "HyperUpdateDialogState", "检查/更新/下载/安装/完成/错误"),
+            DemoVariant("必要更新", "mandatory", "安装与必要更新阶段锁定关闭"),
+            DemoVariant("业务回调", "onDownload / onInstall", "仅派发动作，调用方维护状态"),
+            DemoVariant("模拟", "Preview", "不访问网络或实际安装")
         ),
         apiDocumentPaths = listOf("feedback/hyper-update-dialog.md"),
         content = { UpdateDialogDemo() }

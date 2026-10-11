@@ -1,51 +1,60 @@
 # HyperDropdown
 
-包名：`hyper_ui`。
+包名：hyper_ui。调用方使用 `import hyper_ui.*`。
 
 <WasmPreview demo="dropdown" title="HyperDropdown 交互预览" />
 
-## 公开签名与默认值
+## 样式约定
+
+选择字段 subtle 材质 radius 16dp，最小高 48dp，padding 14×11dp。菜单 strong radius 18dp、padding 5dp，选项为 plain 列表行；选中项带 18dp 勾。菜单宽度匹配字段、默认最大高 320dp。
+
+## 状态归属与使用约束
+
+值由调用方持有，展开状态由组件维护。空选项和禁用项不派发值变化。浮层按安全区和键盘空间翻转、限制尺寸。
+
+支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
+
+## 最小调用
+
+```kotlin
+import hyper_ui.*
+
+HyperDropdown(listOf(HyperOption("all", "全部"), HyperOption("saved", "收藏")), value, { value = it }, label = "范围")
+```
+
+## HyperDropdown API / Props
 
 ```kotlin
 @Composable
-fun HyperDropdown(
-    expanded: Boolean,
-    onDismissRequest: () -> Unit,
+fun <T> HyperDropdown(
+    options: List<HyperOption<T>>,
+    value: T?,
+    onValueChange: (T) -> Unit,
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperDropdownDefaults.MenuPadding),
-    alignment: Alignment = Alignment.TopEnd,
-    offset: DpOffset = DpOffset(0.dp, HyperDropdownDefaults.AnchorOffsetY),
-    shape: Shape = HyperDropdownDefaults.Shape,
-    colors: HyperDropdownColors = HyperDropdownDefaults.colors(),
-    content: @Composable HyperDropdownScope.() -> Unit
+    enabled: Boolean = true,
+    label: String? = null,
+    placeholder: String = "请选择",
+    menuMaxHeight: Dp = 320.dp,
+    width: Dp? = null
 )
 ```
 
-## Props（参数）
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| options | List&lt;HyperOption&lt;T&gt;&gt; | 是 | — | 值、标签、可用状态组成的选项列表。 |
+| value | T? | 是 | — | 调用方持有的当前值。 |
+| onValueChange | (T) -&gt; Unit | 是 | — | 用户修改值时通知调用方。 |
+| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
+| enabled | Boolean | 否 | true | 是否允许用户操作。 |
+| label | String? | 否 | null | 可覆盖的 label 配置；默认表达式见此表。 |
+| placeholder | String | 否 | "请选择" | 可覆盖的 placeholder 配置；默认表达式见此表。 |
+| menuMaxHeight | Dp | 否 | 320.dp | 选项菜单最大高度；同时受可用安全空间限制。 |
+| width | Dp? | 否 | null | 字段宽度；null 时使用父约束。 |
+
+## HyperOption 配置
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| expanded | Boolean | 是 | — | 菜单是否展开，由调用方持有。 |
-| onDismissRequest | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
-| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| contentModifier | Modifier | 否 | Modifier.padding(HyperDropdownDefaults.MenuPadding) | 内部内容区域的布局修饰符。 |
-| alignment | Alignment | 否 | Alignment.TopEnd | 弹出菜单相对于窗口的对齐方式。 |
-| offset | DpOffset | 否 | DpOffset(0.dp, HyperDropdownDefaults.AnchorOffsetY) | 弹出菜单相对对齐位置的偏移。 |
-| shape | Shape | 否 | HyperDropdownDefaults.Shape | 组件容器的形状。 |
-| colors | HyperDropdownColors | 否 | HyperDropdownDefaults.colors() | 组件各状态的颜色配置。 |
-| content | @Composable HyperDropdownScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |
-
-## 最小用法
-
-```kotlin
-HyperDropdown(
-    expanded = expanded,
-    onDismissRequest = { expanded = false }
-) {
-    Item(onClick = onSelect) { HyperText("菜单项") }
-}
-```
-
-## 约束
-
-- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。
+| value | T | 是 | — | 调用方持有的当前值。 |
+| label | String | 是 | — | 可覆盖的 label 配置；默认表达式见此表。 |
+| enabled | Boolean | 否 | true | 是否允许用户操作。 |

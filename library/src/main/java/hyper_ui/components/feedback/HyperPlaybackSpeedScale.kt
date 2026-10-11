@@ -105,9 +105,8 @@ private fun CompactSpeedScaleContent(
     ) {
         val endpointAreaWidth = minOf(EndpointAreaWidth, maxWidth * 0.25f)
         val trackWidth = (maxWidth - endpointAreaWidth * 2f).coerceAtLeast(0.dp)
-        val thumbHaloSize = HyperPlaybackSpeedScaleDefaults.TrackThumbSize *
-            HyperSliderDefaults.ThumbHaloScale
-        val markerTravelWidth = (trackWidth - thumbHaloSize).coerceAtLeast(0.dp)
+        val thumbSize = HyperPlaybackSpeedScaleDefaults.TrackThumbSize
+        val markerTravelWidth = (trackWidth - thumbSize).coerceAtLeast(0.dp)
 
         speedOptions.forEachIndexed { index, speed ->
             val isOnlyOption = speedOptions.size == 1
@@ -118,7 +117,7 @@ private fun CompactSpeedScaleContent(
             }
             val isEndpoint = !isOnlyOption &&
                 (index == 0 || index == speedOptions.lastIndex)
-            val markerCenter = endpointAreaWidth + thumbHaloSize * 0.5f +
+            val markerCenter = endpointAreaWidth + thumbSize * 0.5f +
                 markerTravelWidth * fraction
             val labelOffset = if (isOnlyOption) {
                 (maxWidth - HyperPlaybackSpeedScaleDefaults.LabelWidth) * 0.5f
@@ -197,6 +196,7 @@ private fun SpeedTrack(
 ) {
     val sliderMaximum = (itemCount - 1).coerceAtLeast(1).toFloat()
     HyperSlider(
+        showValue = false,
         value = selectedIndex.toFloat(),
         onValueChange = {},
         modifier = modifier,
@@ -213,9 +213,7 @@ private fun SpeedTrack(
             trackColor = colors.trackColor,
             activeTrackColor = colors.activeTrackColor,
             segmentMarkerColor = colors.tickColor,
-            thumbColor = colors.valueColor,
-            thumbCenterColor = colors.selectedTickColor,
-            thumbHaloColor = colors.selectedTickColor.copy(alpha = 0.22f)
+            thumbColor = colors.valueColor
         )
     )
 }

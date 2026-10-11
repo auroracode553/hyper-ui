@@ -4,7 +4,8 @@ import hyper_ui.*
 import hyper_ui.LocalHyperContentColor
 import hyper_ui.docs.theme.LocalDocsColorScheme
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,14 +14,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,8 +33,6 @@ import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperButton
 import hyper_ui.HyperDialog
 import hyper_ui.HyperDropdown
-import hyper_ui.HyperDropdownDefaults
-import hyper_ui.HyperDropdownItemTone
 import hyper_ui.HyperEmptyState
 import hyper_ui.HyperPopover
 import hyper_ui.HyperLevelCapsule
@@ -82,9 +76,9 @@ fun EmptyStateDemo() {
             description = if (showDescription) "浏览过的页面会显示在这里" else null,
             iconContent = {
                 HyperIcon(
-                    imageVector = Icons.Default.Search,
+                    imageVector = HyperReferenceIcons.Search,
                     contentDescription = null,
-                    modifier = Modifier.size(44.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             },
             actionContent = {
@@ -98,108 +92,24 @@ fun EmptyStateDemo() {
 
 @Composable
 fun DropdownMenuDemo() {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedAction by remember { mutableStateOf("尚未选择") }
-    var desktopEnabled by remember { mutableStateOf(true) }
-    var useCoolTint by remember { mutableStateOf(false) }
-    var showDivider by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = Modifier
-            .widthIn(max = 420.dp)
-            .height(400.dp),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            HyperText(
-                text = "内容自适应宽度 · 纯文字菜单",
-                color = LocalDocsColorScheme.current.onSurfaceVariant,
-                fontSize = 13.sp
-            )
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                HyperButton(
-                    onClick = { expanded = true },
-                    type = "outline"
-                ) {
-                    HyperText(text = "打开菜单")
-                }
-                HyperButton(
-                    onClick = { useCoolTint = !useCoolTint },
-                    type = "tonal"
-                ) {
-                    HyperText(text = if (useCoolTint) "恢复默认色" else "冷色面板")
-                }
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                HyperButton(
-                    onClick = { desktopEnabled = !desktopEnabled },
-                    type = "outline"
-                ) {
-                    HyperText(text = if (desktopEnabled) "禁用桌面项" else "启用桌面项")
-                }
-                HyperButton(
-                    onClick = { showDivider = !showDivider },
-                    type = "tonal"
-                ) {
-                    HyperText(text = if (showDivider) "隐藏分隔线" else "显示分隔线")
-                }
-            }
-            HyperText(
-                text = selectedAction,
-                color = LocalDocsColorScheme.current.onSurfaceVariant,
-                fontSize = 13.sp
-            )
+    var selected by remember { mutableStateOf<String?>(null) }
+    var enabled by remember { mutableStateOf(true) }
+    var empty by remember { mutableStateOf(false) }
+    var lastEnabled by remember { mutableStateOf(false) }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton({ enabled = !enabled }, type = "ghost") { HyperText(if (enabled) "禁用字段" else "启用字段") }
+            HyperButton({ empty = !empty }, type = "ghost") { HyperText(if (empty) "恢复选项" else "空列表") }
         }
-
+        HyperButton({ lastEnabled = !lastEnabled }, type = "tonal", size = "small") { HyperText("切换末项禁用态") }
         HyperDropdown(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            alignment = Alignment.TopCenter,
-            colors = if (useCoolTint) {
-                HyperDropdownDefaults.colors(
-                    containerColor = Color(0.92f, 0.96f, 1f, 0.96f),
-                    contentColor = Color(0.08f, 0.11f, 0.16f, 1f),
-                    disabledContentColor = Color(0.08f, 0.11f, 0.16f, 0.38f),
-                    pressedContainerColor = Color(0f, 0.12f, 0.24f, 0.07f)
-                )
-            } else {
-                HyperDropdownDefaults.colors()
-            }
-        ) {
-            Item(onClick = { selectedAction = "已选择：更换背景" }) {
-                HyperText(text = "更换背景")
-            }
-            Item(onClick = { selectedAction = "已选择：设为私密" }) {
-                HyperText(text = "设为私密")
-            }
-            Item(onClick = { selectedAction = "已选择：移动到" }) {
-                HyperText(text = "移动到")
-            }
-            Item(
-                onClick = { selectedAction = "已选择：设置提醒（菜单保持展开）" },
-                closeOnClick = false
-            ) {
-                HyperText(text = "设置提醒")
-            }
-            if (showDivider) {
-                Divider()
-            }
-            Item(
-                onClick = { selectedAction = "已选择：发送到桌面" },
-                enabled = desktopEnabled
-            ) {
-                HyperText(text = "发送到桌面")
-            }
-            Item(
-                onClick = { selectedAction = "已选择：删除" },
-                tone = HyperDropdownItemTone.Danger
-            ) {
-                HyperText(text = "删除")
-            }
-        }
+            options = if (empty) emptyList() else listOf(
+                HyperOption("compact", "紧凑布局"), HyperOption("standard", "标准布局"),
+                HyperOption("comfortable", "舒适布局", enabled = lastEnabled)
+            ),
+            value = selected, onValueChange = { selected = it }, enabled = enabled, label = "布局选择"
+        )
+        HyperText("当前值：${selected ?: "尚未选择"}", size = "small")
     }
 }
 
@@ -311,7 +221,7 @@ fun ProgressDemo() {
             HyperProgress(
                 type = "circular",
                 progress = null,
-                modifier = Modifier.size(44.dp),
+                modifier = Modifier.size(24.dp),
                 strokeWidth = 4.dp,
                 colors = HyperProgressDefaults.colors(
                     indicatorColor = LocalDocsColorScheme.current.primary
@@ -336,7 +246,7 @@ fun LevelCapsuleDemo() {
             iconContent = if (showIcon) {
                 {
                     HyperIcon(
-                        imageVector = Icons.Default.Info,
+                        imageVector = HyperReferenceIcons.Info,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp)
                     )
@@ -504,7 +414,7 @@ fun DialogDemo() {
                 showDialog = true
             }
         ) {
-            HyperText(text = "查看 70% 高度长内容")
+            HyperText(text = "查看长内容")
         }
         HyperButton(
             type = "outline",
@@ -548,8 +458,7 @@ fun DialogDemo() {
         },
         actionContent = {
             HyperButton(
-                modifier = Modifier.weight(1f),
-                type = "outline",
+                type = "ghost",
                 onClick = {
                     resultText = "已取消"
                     showDialog = false
@@ -558,7 +467,6 @@ fun DialogDemo() {
                 HyperText(text = "取消")
             }
             HyperButton(
-                modifier = Modifier.weight(1f),
                 type = "danger",
                 onClick = {
                     resultText = "已确认删除"
@@ -573,164 +481,81 @@ fun DialogDemo() {
 
 @Composable
 fun HyperPopoverDemo() {
-    var showPopup by remember { mutableStateOf(false) }
+    var visible by remember { mutableStateOf(false) }
     var savedNote by remember { mutableStateOf("默认备注") }
-    var draftNote by remember { mutableStateOf(savedNote) }
-    var dismissOnClickOutside by remember { mutableStateOf(true) }
-
-    Column(
-        modifier = Modifier.widthIn(max = 420.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        HyperButton(
-            onClick = {
-                draftNote = savedNote
-                showPopup = true
+    var draft by remember { mutableStateOf(savedNote) }
+    var longContent by remember { mutableStateOf(false) }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        HyperButton({ longContent = !longContent }, type = "ghost") { HyperText("切换长内容") }
+        HyperPopover(
+            visible = visible, onDismissRequest = { visible = false },
+            anchorContent = {
+                HyperButton({ draft = savedNote; visible = !visible }) { HyperText("编辑备注") }
             }
         ) {
-            HyperText(text = "编辑备注")
-        }
-        HyperButton(
-            type = "outline",
-            onClick = { dismissOnClickOutside = !dismissOnClickOutside }
-        ) {
-            HyperText(text = if (dismissOnClickOutside) "空白关闭：开启" else "空白关闭：关闭")
-        }
-        HyperText(
-            text = "当前备注：$savedNote",
-            color = LocalDocsColorScheme.current.onSurfaceVariant,
-            fontSize = 13.sp,
-            lineHeight = 18.sp
-        )
-        HyperText(
-            text = "可缩放预览窗口验证：浮层始终相对窗口居中，宽度限制在 280–360dp，最大高度为窗口的 70%。",
-            color = LocalDocsColorScheme.current.onSurfaceVariant,
-            fontSize = 13.sp,
-            lineHeight = 18.sp,
-            textAlign = TextAlign.Center
-        )
-        HyperText(
-            text = "基础浮层由 Popup 位置提供器居中；模态任务应使用独立的 HyperDialog。",
-            color = LocalDocsColorScheme.current.onSurfaceVariant,
-            fontSize = 13.sp,
-            textAlign = TextAlign.Center
-        )
-    }
-
-    HyperPopover(
-        visible = showPopup,
-        onDismissRequest = { showPopup = false },
-        title = "编辑备注",
-        dismissOnClickOutside = dismissOnClickOutside,
-        actionContent = {
-            HyperButton(
-                type = "outline",
-                onClick = { showPopup = false }
-            ) {
-                HyperText(text = "取消")
-            }
-            HyperButton(
-                onClick = {
-                    savedNote = draftNote.ifBlank { "未填写备注" }
-                    showPopup = false
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                HyperText("编辑备注", fontWeight = FontWeight.SemiBold)
+                HyperTextField(draft, { draft = it }, placeholderContent = { HyperText("填写备注") })
+                if (longContent) repeat(12) { HyperText("补充说明 ${it + 1}", size = "small") }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    HyperButton({ visible = false }, type = "ghost", size = "small") { HyperText("取消") }
+                    HyperButton({ savedNote = draft; visible = false }, size = "small") { HyperText("保存") }
                 }
-            ) {
-                HyperText(text = "保存")
             }
         }
-    ) {
-        popupContent(draftNote) { draftNote = it }
+        HyperText("当前备注：$savedNote", size = "small")
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun UpdateDialogDemo() {
-    val previewRelease = remember {
-        HyperAppRelease(
-            versionName = "1.2.0",
-            displayName = "文档查看器 1.2.0",
-            releaseNotes = "优化大文档加载速度，并修复部分表格预览问题。",
-            packageFileName = "app-release.apk",
-            packageDownloadUrl = "https://example.com/app-release.apk"
-        )
-    }
+    val release = remember { HyperAppRelease("1.2.0", "文档查看器", "优化大文档加载速度", "app.apk", "https://example.com/app.apk",
+        highlights = listOf("优化大文档加载速度", "修复部分表格预览问题"), releaseDate = "2026-10-11", sizeLabel = "32 MB") }
     var state by remember { mutableStateOf<HyperUpdateDialogState>(HyperUpdateDialogState.Idle) }
-    var resultText by remember { mutableStateOf("选择一种状态查看弹窗") }
-
-    Column(
-        modifier = Modifier.widthIn(max = 520.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            HyperButton(
-                onClick = {
-                    state = HyperUpdateDialogState.UpdateAvailable(
-                        currentVersionName = "1.0.0",
-                        release = previewRelease
-                    )
+    var mandatory by remember { mutableStateOf(false) }
+    var progress by remember { mutableStateOf(0.42f) }
+    val stages = listOf("发现更新", "检查中", "系统排队", "下载中", "准备安装", "安装中", "完成", "最新", "失败")
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        HyperButton({ mandatory = !mandatory }, type = "ghost") { HyperText(if (mandatory) "必要更新：开启" else "必要更新：关闭") }
+        HyperSlider(progress, { progress = it }, valueRange = 0f..1f, showValue = false)
+        HyperText("模拟进度 ${(progress * 100).toInt()}%，检查/下载/安装状态 2.5 秒后模拟完成。", size = "small")
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            stages.forEach { stage -> HyperButton({
+                state = when (stage) {
+                    "发现更新" -> HyperUpdateDialogState.UpdateAvailable("1.0.0", release)
+                    "检查中" -> HyperUpdateDialogState.Checking("1.0.0")
+                    "系统排队" -> HyperUpdateDialogState.DownloadQueued("1.0.0", release, 42L)
+                    "下载中" -> HyperUpdateDialogState.Downloading("1.0.0", release, progress, "13.4 MB / 32 MB · 2 MB/s")
+                    "准备安装" -> HyperUpdateDialogState.ReadyToInstall("1.0.0", release)
+                    "安装中" -> HyperUpdateDialogState.Installing("1.0.0", release, progress)
+                    "完成" -> HyperUpdateDialogState.Completed("1.2.0", release)
+                    "最新" -> HyperUpdateDialogState.UpToDate("1.2.0")
+                    else -> HyperUpdateDialogState.Error("1.0.0", "无法连接更新服务，请稍后重试")
                 }
-            ) {
-                HyperText("发现更新")
-            }
-            HyperButton(
-                type = "outline",
-                onClick = { state = HyperUpdateDialogState.Checking("1.0.0") }
-            ) {
-                HyperText("检查中")
-            }
+            }, type = "outline", size = "small") { HyperText(stage) } }
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            HyperButton(
-                type = "outline",
-                onClick = { state = HyperUpdateDialogState.UpToDate("1.2.0") }
-            ) {
-                HyperText("已是最新")
-            }
-            HyperButton(
-                type = "outline",
-                onClick = {
-                    state = HyperUpdateDialogState.Error(
-                        currentVersionName = "1.0.0",
-                        message = "无法连接更新服务，请稍后重试"
-                    )
-                }
-            ) {
-                HyperText("请求失败")
-            }
-        }
-        HyperText(
-            text = resultText,
-            color = LocalDocsColorScheme.current.onSurfaceVariant,
-            fontSize = 13.sp
-        )
-        HyperText(
-            text = "更新弹窗及内部按钮、进度指示器均为实色",
-            color = LocalDocsColorScheme.current.onSurfaceVariant,
-            fontSize = 13.sp
-        )
     }
-
-    HyperUpdateDialog(
-        state = state,
-        onDismissRequest = {
-            state = HyperUpdateDialogState.Idle
-            resultText = "已关闭弹窗"
-        },
-        onRetry = {
-            state = HyperUpdateDialogState.Checking("1.0.0")
-            resultText = "已请求重试"
-        },
-        onDownload = {
-            state = HyperUpdateDialogState.DownloadQueued(
-                currentVersionName = "1.0.0",
-                release = previewRelease,
-                downloadId = 1001L
-            )
-            resultText = "已确认下载"
+    androidx.compose.runtime.LaunchedEffect(state) {
+        val shownState = state
+        if (shownState is HyperUpdateDialogState.Installing || shownState is HyperUpdateDialogState.Checking || shownState is HyperUpdateDialogState.Downloading) {
+            kotlinx.coroutines.delay(2500)
+            state = when (shownState) {
+                is HyperUpdateDialogState.Checking -> HyperUpdateDialogState.UpdateAvailable("1.0.0", release)
+                is HyperUpdateDialogState.Downloading -> HyperUpdateDialogState.ReadyToInstall("1.0.0", release)
+                else -> HyperUpdateDialogState.Completed("1.2.0", release)
+            }
         }
-    )
+    }
+    HyperUpdateDialog(state, { state = HyperUpdateDialogState.Idle },
+        onRetry = { state = HyperUpdateDialogState.Checking("1.0.0") },
+        onDownload = { state = HyperUpdateDialogState.Downloading("1.0.0", release, progress) },
+        mandatory = mandatory,
+        onInstall = { state = HyperUpdateDialogState.Installing("1.0.0", release, progress) })
+    // 模拟安装完成由宿主控制，不由 UI 组件执行安装。
+    if (state is HyperUpdateDialogState.Installing) {
+        HyperButton({ state = HyperUpdateDialogState.Completed("1.2.0", release) }, type = "ghost") { HyperText("宿主模拟完成更新") }
+    }
 }
 
 @Composable
@@ -765,9 +590,9 @@ private fun DialogBody(text: String) {
     HyperText(
         text = text,
         color = LocalDocsColorScheme.current.onSurfaceVariant,
-        fontSize = 16.sp,
-        lineHeight = 22.sp,
-        textAlign = TextAlign.Center,
+        fontSize = 14.sp,
+        lineHeight = 19.6.sp,
+        textAlign = TextAlign.Start,
         modifier = Modifier.fillMaxWidth()
     )
 }

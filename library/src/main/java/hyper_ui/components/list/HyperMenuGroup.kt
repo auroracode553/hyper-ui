@@ -1,7 +1,6 @@
 /** 文件职责：在 hyper_ui 中负责承载菜单列表容器 HyperMenuGroup。 */
 package hyper_ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,9 +8,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -53,11 +50,11 @@ fun <T> HyperMenuGroup(
                 containerColor = containerColor,
                 shape = shape
             )
-            .then(contentModifier)
-            .verticalScroll(rememberScrollState()),
+            .then(contentModifier),
         verticalArrangement = verticalArrangement
     ) {
         items.forEachIndexed { index, item ->
+            if (index > 0) HyperDivider(Modifier.padding(horizontal = 14.dp))
             val isFirst = index == 0
             val isLast = index == items.lastIndex
             Box(
@@ -67,7 +64,7 @@ fun <T> HyperMenuGroup(
 
             ) {
                 CompositionLocalProvider(
-                    LocalHyperListTileDividerSuppressed provides isLast,
+                    LocalHyperListTileDividerSuppressed provides true,
                     LocalHyperListTileContainerColor provides containerColor
                 ) {
                     itemContent(item)
@@ -113,7 +110,7 @@ fun HyperMenuGroup(
 
 object HyperMenuGroupDefaults {
     val Shape: Shape = RoundedCornerShape(MenuListCornerRadius)
-    /** 菜单容器统一提供左右 16.dp 内容留白，子项（HyperListTile 等）无需重复设置水平 padding；垂直 4.dp 保留首尾圆角安全区。 */
+    /** 参考菜单容器统一 padding 4dp，边框仅绘制。 */
     val ContentPadding = PaddingValues(4.dp)
 
     @Composable

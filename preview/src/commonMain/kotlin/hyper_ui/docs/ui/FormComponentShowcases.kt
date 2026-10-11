@@ -8,14 +8,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,8 +23,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
@@ -39,7 +33,6 @@ import hyper_ui.HyperSlider
 import hyper_ui.HyperSliderDefaults
 import hyper_ui.HyperSwitch
 import hyper_ui.HyperTextField
-import hyper_ui.HyperTextFieldDefaults
 
 @Composable
 fun RadioDemo() {
@@ -100,7 +93,7 @@ fun SegmentedDemo() {
         ) { period ->
             HyperText(
                 text = period,
-                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
                 fontSize = 13.sp,
                 lineHeight = 18.sp
             )
@@ -123,7 +116,7 @@ fun SegmentedDemo() {
         ) { mode ->
             HyperText(
                 text = mode,
-                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
                 fontSize = 13.sp,
                 lineHeight = 18.sp
             )
@@ -135,6 +128,7 @@ fun SegmentedDemo() {
 fun CheckboxDemo() {
     var checkedA by remember { mutableStateOf(true) }
     var checkedB by remember { mutableStateOf(false) }
+    var triState by remember { mutableStateOf<Boolean?>(null) }
 
     FormControlGroup {
         FormControlOption(
@@ -143,7 +137,7 @@ fun CheckboxDemo() {
         ) {
             HyperCheckbox(
                 checked = checkedA,
-                onCheckedChange = { checkedA = it }
+                onCheckedChange = { checkedA = it == true }
             )
         }
         FormControlOption(
@@ -152,8 +146,12 @@ fun CheckboxDemo() {
         ) {
             HyperCheckbox(
                 checked = checkedB,
-                onCheckedChange = { checkedB = it }
+                onCheckedChange = { checkedB = it == true }
             )
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            HyperCheckbox(triState, { triState = it }, tristate = true)
+            HyperText("三态：${triState ?: "不确定"}")
         }
         FormControlOption(
             text = "禁用选项",
@@ -170,96 +168,27 @@ fun CheckboxDemo() {
 
 @Composable
 fun TextFieldDemo() {
-    var name by remember { mutableStateOf("") }
-    var clearableValue by remember { mutableStateOf("示例内容") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
+    var value by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("password") }
     var note by remember { mutableStateOf("") }
-    var keyword by remember { mutableStateOf("") }
-    var errorValue by remember { mutableStateOf("") }
-    var forceNoteError by remember { mutableStateOf(false) }
-    val nameFocusRequester = remember { FocusRequester() }
-    val isNoteError = forceNoteError || note.length > 80
-
-    Column(
-        modifier = Modifier.widthIn(max = 320.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        HyperTextField(
-            value = name,
-            onValueChange = { name = it },
-            labelContent = { FieldLabel("基础输入") },
-            placeholderContent = { FieldPlaceholder("请输入内容") },
-            inputModifier = Modifier.focusRequester(nameFocusRequester)
-        )
-        HyperTextField(
-            value = clearableValue,
-            onValueChange = { clearableValue = it },
-            labelContent = { FieldLabel("可清空") },
-            placeholderContent = { FieldPlaceholder("请输入内容") },
-            endContent = if (clearableValue.isNotEmpty()) {{
-                HyperButton(type = "icon", onClick = { clearableValue = "" }, size = "small") {
-                    HyperIcon(Icons.Default.Close, contentDescription = "清空内容", modifier = Modifier.size(18.dp))
-                }
-            }} else null
-        )
-        HyperTextField(
-            value = password,
-            onValueChange = { password = it },
-            labelContent = { FieldLabel("密码显隐") },
-            placeholderContent = { FieldPlaceholder("请输入密码") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            endContent = {
-                HyperButton(
-                    onClick = { passwordVisible = !passwordVisible },
-                    type = "ghost",
-                    size = "small"
-                ) { HyperText(if (passwordVisible) "隐藏" else "显示") }
-            }
-        )
-        HyperTextField(
-            value = keyword,
-            onValueChange = { keyword = it },
-            labelContent = { FieldLabel("前区与后区插槽") },
-            placeholderContent = { FieldPlaceholder("搜索组件") },
-            startContent = {
-                HyperIcon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(20.dp))
-            },
-            endContent = {
-                HyperButton(type = "icon", onClick = { keyword = "" }, size = "small") {
-                    HyperIcon(Icons.Default.Close, contentDescription = "清空搜索", modifier = Modifier.size(18.dp))
-                }
-            }
-        )
-        HyperTextField(
-            value = note,
-            onValueChange = { note = it.take(80) },
-            labelContent = { FieldLabel("多行输入") },
-            placeholderContent = { FieldPlaceholder("请输入多行内容") },
-            supportingContent = { FieldSupporting("${note.length}/80") },
-            type = "textarea",
-            rows = 3,
-            inputModifier = Modifier.heightIn(min = 92.dp),
-            isError = isNoteError
-        )
-        HyperTextField(value = "禁用内容", onValueChange = {},
-            labelContent = { FieldLabel("禁用态") }, enabled = false)
-        HyperTextField(
-            value = "只读内容",
-            onValueChange = {},
-            labelContent = { FieldLabel("只读态") },
-            readOnly = true
-        )
-        HyperTextField(value = errorValue, onValueChange = { errorValue = it },
-            labelContent = { FieldLabel("错误态") },
-            placeholderContent = { FieldPlaceholder("请输入有效内容") },
-            isError = true)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(onClick = { nameFocusRequester.requestFocus() }) { HyperText("查看聚焦") }
-            HyperButton(onClick = { forceNoteError = !forceNoteError }) {
-                HyperText(if (forceNoteError) "关闭多行错误" else "多行错误态")
-            }
-        }
+    var size by remember { mutableStateOf("default") }
+    var enabled by remember { mutableStateOf(true) }
+    var error by remember { mutableStateOf(false) }
+    var readOnly by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        HyperSegmentedControl(listOf("small", "default", "large"), size, { size = it }) { HyperText(it) }
+        HyperButton({ enabled = !enabled }, type = "ghost") { HyperText("切换禁用") }
+        HyperButton({ error = !error }, type = "ghost") { HyperText("切换错误") }
+        HyperButton({ readOnly = !readOnly }, type = "ghost") { HyperText("切换只读") }
+        HyperTextField(value, { value = it }, size = size, clearable = true, enabled = enabled, isError = error, readOnly = readOnly,
+            inputModifier = Modifier.focusRequester(focusRequester), labelContent = { HyperText("基础输入与清空") },
+            placeholderContent = { HyperText("请输入内容") })
+        HyperTextField(password, { password = it }, type = "password", size = size, showPasswordToggle = true,
+            labelContent = { HyperText("密码显隐") }, placeholderContent = { HyperText("请输入密码") })
+        HyperTextField(note, { note = it }, type = "textarea", size = size, rows = 3, maxlength = 80, showWordLimit = true,
+            labelContent = { HyperText("多行输入") }, placeholderContent = { HyperText("请输入多行内容") })
+        HyperButton({ focusRequester.requestFocus() }, size = "small") { HyperText("查看聚焦") }
     }
 }
 
@@ -293,7 +222,7 @@ fun SwitchDemo() {
 
 @Composable
 fun SliderDemo() {
-    var continuousValue by remember { mutableStateOf(0.42f) }
+    var continuousValue by remember { mutableStateOf(42f) }
     var steppedValue by remember { mutableStateOf(2f) }
     var showSegmentMarkers by remember { mutableStateOf(true) }
 
@@ -301,14 +230,13 @@ fun SliderDemo() {
         modifier = Modifier.widthIn(max = 520.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        HyperText(text = "紧凑连续进度 ${(continuousValue * 100).toInt()}%")
+        HyperText(text = "紧凑连续进度 ${continuousValue.toInt()}%")
         HyperSlider(
             value = continuousValue,
             onValueChange = { continuousValue = it },
             modifier = Modifier.fillMaxWidth(),
             showSegmentMarkers = false,
-            trackHeight = 3.dp,
-            thumbSize = 12.dp
+            showValue = true
         )
 
         Row(
@@ -346,7 +274,7 @@ fun SliderDemo() {
 
         HyperText(text = "禁用状态")
         HyperSlider(
-            value = 0.65f,
+            value = 65f,
             onValueChange = {},
             enabled = false,
             modifier = Modifier.fillMaxWidth()

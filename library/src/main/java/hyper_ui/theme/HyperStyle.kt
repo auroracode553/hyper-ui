@@ -128,13 +128,14 @@ data class HyperShapes(
 
 private val LocalHyperTypography = staticCompositionLocalOf { HyperTypography() }
 private val LocalHyperShapes = staticCompositionLocalOf { HyperShapes() }
-private val LocalHyperGlass = staticCompositionLocalOf { HyperGlassTokens.light() }
+private val LocalHyperGlass = staticCompositionLocalOf { HyperGlassTokens.forMaterial(false, HyperMaterial.Solid) }
+private val LocalHyperMaterial = staticCompositionLocalOf { HyperMaterial.Solid }
 
 /** 全局内容色：替代 系统内容色。 */
 val LocalHyperContentColor = staticCompositionLocalOf { HyperStyleDefaults.LightPrimaryText }
 
 /** 全局默认文本样式：替代 系统文本样式。 */
-val LocalHyperTextStyle = staticCompositionLocalOf { HyperTypography().bodyLarge }
+val LocalHyperTextStyle = staticCompositionLocalOf { HyperTypography().bodyMedium.copy(lineHeight = 19.6.sp) }
 
 @Composable
 fun HyperThemeConfig(
@@ -143,7 +144,8 @@ fun HyperThemeConfig(
     darkTheme: Boolean = isSystemInDarkTheme(),
     typography: HyperTypography = HyperStyleDefaults.Typography,
     shapes: HyperShapes = HyperStyleDefaults.Shapes,
-    glass: HyperGlassTokens = if (darkTheme) HyperGlassTokens.dark() else HyperGlassTokens.light(),
+    material: HyperMaterial = HyperMaterial.Solid,
+    glass: HyperGlassTokens = HyperGlassTokens.forMaterial(darkTheme, material),
     content: @Composable () -> Unit
 ) {
     val defaultContentColor = if (darkTheme) {
@@ -160,13 +162,18 @@ fun HyperThemeConfig(
         LocalHyperTypography provides typography,
         LocalHyperShapes provides shapes,
         LocalHyperGlass provides glass,
+        LocalHyperMaterial provides material,
         LocalHyperContentColor provides defaultContentColor,
-        LocalHyperTextStyle provides typography.bodyLarge,
+        LocalHyperTextStyle provides typography.bodyMedium.copy(lineHeight = 19.6.sp),
         content = content
     )
 }
 
 object HyperTheme {
+    val material: HyperMaterial
+        @Composable @ReadOnlyComposable
+        get() = LocalHyperMaterial.current
+
     val glass: HyperGlassTokens
         @Composable @ReadOnlyComposable
         get() = LocalHyperGlass.current

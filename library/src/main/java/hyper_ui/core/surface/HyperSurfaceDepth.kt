@@ -112,7 +112,7 @@ internal fun hyperSurfaceDepthVisuals(
     return hyperSurfaceDepthVisuals(
         strokeColor = if (enabled) hyperGlass.border else HyperColors.divider.copy(alpha = 110 / 255f),
         elevation = if (enabled) elevation else 0.dp,
-        ambientShadowColor = Color(0f, 0f, 0f, if (HyperColors.isLight) 8 / 255f else 35 / 255f),
-        spotShadowColor = Color(0f, 0f, 0f, if (HyperColors.isLight) 20 / 255f else 82 / 255f)
+        ambientShadowColor = hyperGlass.shadow.copy(alpha = hyperGlass.shadow.alpha * 0.42f),
+        spotShadowColor = hyperGlass.shadow
     )
 }

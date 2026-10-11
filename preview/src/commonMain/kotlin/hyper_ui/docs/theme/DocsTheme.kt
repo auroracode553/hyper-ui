@@ -8,6 +8,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import hyper_ui.HyperGlassTokens
+import hyper_ui.HyperMaterial
 import hyper_ui.HyperThemeConfig
 import hyper_ui.LocalHyperContentColor
 import hyper_ui.LocalHyperTextStyle
@@ -22,28 +23,8 @@ internal val DocsPreviewBackground = rgba(241, 243, 247, 1f)
 
 internal val DefaultDocsThemeColor = rgba(71, 111, 232, 1f)
 
-/** Preview-only material presets aligned with the Flutter reference project. */
-enum class DocsMaterial {
-    Solid,
-    Soft,
-    Clear
-}
-
-internal fun docsGlassTokens(darkTheme: Boolean, material: DocsMaterial): HyperGlassTokens {
-    val base = if (darkTheme) HyperGlassTokens.dark() else HyperGlassTokens.light()
-    return when (material) {
-        DocsMaterial.Solid -> base.copy(
-            surface = base.surface.copy(alpha = 1f),
-            surfaceStrong = base.surfaceStrong.copy(alpha = 1f),
-            surfaceSubtle = base.surfaceSubtle.copy(alpha = 0.96f)
-        )
-        DocsMaterial.Soft -> base
-        DocsMaterial.Clear -> base.copy(
-            surface = base.surface.copy(alpha = 0.48f),
-            surfaceStrong = base.surfaceStrong.copy(alpha = 0.64f),
-            surfaceSubtle = base.surfaceSubtle.copy(alpha = 0.24f)
-        )
-    }
+internal fun docsGlassTokens(darkTheme: Boolean, material: HyperMaterial): HyperGlassTokens {
+    return HyperGlassTokens.forMaterial(darkTheme, material)
 }
 
 // 文档浅色主题的固定语义色，替代原 系统浅色语义色 的对应槽位。
@@ -141,7 +122,7 @@ internal fun Color.darken(ratio: Float): Color {
 fun HyperDocsTheme(
     themeColor: Color = DefaultDocsThemeColor,
     darkTheme: Boolean = isSystemInDarkTheme(),
-    material: DocsMaterial = DocsMaterial.Soft,
+    material: HyperMaterial = HyperMaterial.Solid,
     patternedBackground: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -180,6 +161,7 @@ fun HyperDocsTheme(
         themeColor = themeColor,
         darkTheme = darkTheme,
         typography = docsTypography(),
+        material = material,
         glass = docsGlassTokens(darkTheme, material)
     ) {
         CompositionLocalProvider(

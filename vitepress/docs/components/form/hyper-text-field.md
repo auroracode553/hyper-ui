@@ -1,10 +1,28 @@
 # HyperTextField
 
-包名：`hyper_ui`。
+包名：hyper_ui。调用方使用 `import hyper_ui.*`。
 
 <WasmPreview demo="text_field" title="HyperTextField 交互预览" />
 
-## 公开签名与默认值
+## 样式约定
+
+输入框圆角 20dp。small/default/large 字号 14/16/18sp、行高 1.3，横向 padding 14/18/20dp，纵向 7/9/11dp。textarea 上下各多 3dp。支持 text/search/password/textarea/email/url/number/tel。聚焦轮廓 1.5dp，普通 1dp。
+
+## 状态归属与使用约束
+
+文本由调用方持有，selection/composition 和密码临时显隐由组件维护。错误优先于聚焦。showPasswordToggle 默认 false。endContent 与内置密码/清空操作同时显示；清空按钮在空值时保持占位，计数在下方右侧。
+
+支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
+
+## 最小调用
+
+```kotlin
+import hyper_ui.*
+
+HyperTextField(value, { value = it }, clearable = true, placeholderContent = { HyperText("请输入") })
+```
+
+## HyperTextField API / Props
 
 ```kotlin
 @Composable
@@ -20,16 +38,13 @@ fun HyperTextField(
     readOnly: Boolean = false,
     isError: Boolean = false,
     clearable: Boolean = false,
-    showPasswordToggle: Boolean = true,
+    showPasswordToggle: Boolean = false,
     maxlength: Int? = null,
     showWordLimit: Boolean = false,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
-    textStyle: TextStyle = HyperTheme.typography.bodyMedium.copy(
-        fontSize = 14.sp,
-        lineHeight = 19.sp
-    ),
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    textStyle: TextStyle = HyperTextFieldDefaults.textStyle(size),
+    keyboardOptions: KeyboardOptions = HyperTextFieldDefaults.keyboardOptions(type),
     keyboardActions: KeyboardActions = KeyboardActions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -42,28 +57,26 @@ fun HyperTextField(
 )
 ```
 
-## Props（参数）
-
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| value | String | 是 | — | 由调用方持有的当前值。 |
-| onValueChange | (String) -&gt; Unit | 是 | — | 值变化时通知调用方更新状态。 |
-| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| inputModifier | Modifier | 否 | Modifier | 输入控件自身的布局和交互修饰符。 |
-| type | String | 否 | &quot;text&quot; | 组件的视觉或布局形态。 |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
-| rows | Int | 否 | HyperTextFieldDefaults.TextareaRows | 多行输入的显示行数。 |
-| enabled | Boolean | 否 | true | 是否允许用户交互。 |
-| readOnly | Boolean | 否 | false | 是否只展示当前值而禁止修改。 |
+| value | String | 是 | — | 调用方持有的当前值。 |
+| onValueChange | (String) -&gt; Unit | 是 | — | 用户修改值时通知调用方。 |
+| modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
+| inputModifier | Modifier | 否 | Modifier | 输入节点修饰符，供焦点与额外布局使用。 |
+| type | String | 否 | "text" | 渲染形态；合法值见本页样式约定。 |
+| size | String | 否 | "default" | small/default/large 尺寸档位。 |
+| rows | Int | 否 | HyperTextFieldDefaults.TextareaRows | 多行输入可见行数。 |
+| enabled | Boolean | 否 | true | 是否允许用户操作。 |
+| readOnly | Boolean | 否 | false | 只读；保持正常外观并停止修改值。 |
 | isError | Boolean | 否 | false | 是否显示错误状态。 |
-| clearable | Boolean | 否 | false | 是否在有内容时显示清空操作。 |
-| showPasswordToggle | Boolean | 否 | true | 密码类型是否显示显隐操作。 |
-| maxlength | Int? | 否 | null | 允许输入的最大字符数。 |
-| showWordLimit | Boolean | 否 | false | 是否显示字符数和上限。 |
-| shape | Shape | 否 | HyperTextFieldDefaults.Shape | 组件容器的形状。 |
-| colors | HyperTextFieldColors | 否 | HyperTextFieldDefaults.colors() | 组件各状态的颜色配置。 |
-| textStyle | TextStyle | 否 | HyperTheme.typography.bodyMedium.copy( fontSize = 14.sp, lineHeight = 19.sp ) | 输入文字的排版样式。 |
-| keyboardOptions | KeyboardOptions | 否 | KeyboardOptions.Default | 软键盘类型与输入配置。 |
+| clearable | Boolean | 否 | false | 启用 30dp 清空控件；空文本保留占位。 |
+| showPasswordToggle | Boolean | 否 | false | password 类型的 30dp 显隐控件。 |
+| maxlength | Int? | 否 | null | 文本最大长度；null 不限制。 |
+| showWordLimit | Boolean | 否 | false | 显示已用字符数与最大长度。 |
+| shape | Shape | 否 | HyperTextFieldDefaults.Shape | 表面形状。 |
+| colors | HyperTextFieldColors | 否 | HyperTextFieldDefaults.colors() | 各状态配色配置。 |
+| textStyle | TextStyle | 否 | HyperTextFieldDefaults.textStyle(size) | 输入文字的排版样式。 |
+| keyboardOptions | KeyboardOptions | 否 | HyperTextFieldDefaults.keyboardOptions(type) | 软键盘类型与输入配置。 |
 | keyboardActions | KeyboardActions | 否 | KeyboardActions() | 软键盘动作回调。 |
 | visualTransformation | VisualTransformation | 否 | VisualTransformation.None | 输入文字的视觉变换方式。 |
 | interactionSource | MutableInteractionSource | 否 | remember { MutableInteractionSource() } | 输入控件的交互状态来源。 |
@@ -72,25 +85,82 @@ fun HyperTextField(
 | placeholderContent | (@Composable () -&gt; Unit)? | 否 | null | 输入框占位内容。 |
 | startContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 输入框起始端的自定义内容。 |
 | endContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 输入框末端的自定义内容。 |
-| supportingContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 标题或输入框下方的辅助内容。 |
+| supportingContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 辅助说明插槽。 |
 
-## 最小用法
+## HyperTextFieldDefaults.contentPadding API / Props
 
 ```kotlin
-HyperTextField(
-    value = value,
-    onValueChange = { value = it },
-    type = "textarea",
-    rows = 3,
-    labelContent = { Text("备注") },
-    placeholderContent = { Text("写一点说明") },
-    maxlength = 80,
-    showWordLimit = true
-)
+fun contentPadding(size: String = "default", multiline: Boolean = false): androidx.compose.foundation.layout.PaddingValues =
 ```
 
-`type = "text"` 为单行输入，`type = "textarea"` 使用 `rows` 控制多行高度，`type = "password"` 自动使用密码变换并显示显隐操作。`size` 支持 `small`、`default`、`large`；`clearable`、`maxlength` 和 `showWordLimit` 由组件统一处理。
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| size | String | 否 | "default" | small/default/large 尺寸档位。 |
+| multiline | Boolean | 否 | false | 可覆盖的 multiline 配置；默认表达式见此表。 |
 
-## 约束
+## HyperTextFieldDefaults.textStyle API / Props
 
-- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。
+```kotlin
+@Composable
+    fun textStyle(size: String = "default"): TextStyle
+```
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| size | String | 否 | "default" | small/default/large 尺寸档位。 |
+
+## HyperTextFieldDefaults.keyboardOptions API / Props
+
+```kotlin
+fun keyboardOptions(type: String = "text"): KeyboardOptions
+```
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| type | String | 否 | "text" | 渲染形态；合法值见本页样式约定。 |
+
+## HyperTextFieldDefaults.colors API / Props
+
+```kotlin
+@Composable
+    fun colors(
+        containerColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
+        errorContainerColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
+        contentColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
+        placeholderColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
+        labelColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
+        supportingColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
+        errorColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
+        cursorColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
+        disabledContainerColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified,
+        disabledContentColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Unspecified
+    ): HyperTextFieldColors
+```
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| containerColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 表面背景色；Color.Unspecified 使用组件的主题默认值。 |
+| errorContainerColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 错误态的输入表面背景色。 |
+| contentColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 主要文字与图标颜色。 |
+| placeholderColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 输入占位文字颜色。 |
+| labelColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 输入标签颜色。 |
+| supportingColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 说明文字颜色。 |
+| errorColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 错误轮廓与说明颜色。 |
+| cursorColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 光标与聚焦轮廓颜色。 |
+| disabledContainerColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 禁用时的表面背景色。 |
+| disabledContentColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 禁用时的正文颜色；默认沿用正常文字色。 |
+
+## HyperTextFieldColors 配置
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| containerColor | Color | 是 | — | 表面背景色；Color.Unspecified 使用组件的主题默认值。 |
+| errorContainerColor | Color | 是 | — | 错误态的输入表面背景色。 |
+| contentColor | Color | 是 | — | 主要文字与图标颜色。 |
+| placeholderColor | Color | 是 | — | 输入占位文字颜色。 |
+| labelColor | Color | 是 | — | 输入标签颜色。 |
+| supportingColor | Color | 是 | — | 说明文字颜色。 |
+| errorColor | Color | 是 | — | 错误轮廓与说明颜色。 |
+| cursorColor | Color | 是 | — | 光标与聚焦轮廓颜色。 |
+| disabledContainerColor | Color | 是 | — | 禁用时的表面背景色。 |
+| disabledContentColor | Color | 是 | — | 禁用时的正文颜色；默认沿用正常文字色。 |
