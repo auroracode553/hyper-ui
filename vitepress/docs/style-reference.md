@@ -78,4 +78,4 @@ HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 
 
 ## 依赖
 
-本次未新增或安装依赖。继续使用仓库声明的 Compose foundation/ui/runtime/animation 与 Haze 1.7.1；调用方可选的 Lucide Android 图标资源依赖需自行安装。内置共享路径的许可保存在 library/NOTICE-LUCIDE.txt。
+本次未新增或安装依赖。继续使用仓库声明的 Compose foundation/ui/runtime/animation 与 Haze 1.7.1；调用方可选的 Lucide Android 图标资源依赖需自行安装。

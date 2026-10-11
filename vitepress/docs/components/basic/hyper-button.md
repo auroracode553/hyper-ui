@@ -39,7 +39,9 @@ colorStyle 支持 primary/success/info/warning/danger；color 为自定义基色
 
 loading 与 enabled 由调用方控制，加载时停止点击。
 
-交互预览仅保留一个禁用文字按钮，不重复展示禁用后外观相同的配色。
+交互预览以 Flutter ButtonsExample 为基准，分组、文案、图标和 8/16dp 间距保持一致；仅保留一个禁用文字按钮，不重复展示外观相同的禁用配色。
+
+手机预览使用同一白色屏幕、52dp 顶部留白与 350×680 外框；中英文使用合并的 Roboto / Noto Sans SC 预览字体，阴影按渲染后端换算相同的模糊范围。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 

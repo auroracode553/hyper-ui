@@ -23,7 +23,7 @@ internal fun ComponentPreviewViewport(
     key(demo.id) {
         PreviewSceneBackdrop(modifier.fillMaxSize()) {
             val top = if (deviceSafeAreas && !demo.fillsTopSafeArea) PreviewTopSafeArea else 0.dp
-            val bottom = if (deviceSafeAreas && !demo.fillsBottomSafeArea) PreviewBottomSafeArea else 0.dp
+            val bottom = if (deviceSafeAreas && demo.fullScreenPreview && !demo.fillsBottomSafeArea) PreviewBottomSafeArea else 0.dp
             Box(Modifier.fillMaxSize().padding(top = top, bottom = bottom)) {
                 if (demo.fullScreenPreview) {
                     // 页面示例获得有限的整屏约束；列表或正文自己管理滚动。

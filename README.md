@@ -198,7 +198,7 @@ HyperButton(type = "icon", onClick = onSearch) {
 }
 ```
 
-调用方可选择上述 Android VectorDrawable 资源；库内默认图标使用共享的 Lucide 字体原始轮廓，避免 Android 与 Preview 图标不同。图标路径许可见 [Lucide 许可](library/NOTICE-LUCIDE.txt)。
+调用方可选择上述 Android VectorDrawable 资源；库内默认图标使用共享的 Lucide 字体原始轮廓，避免 Android 与 Preview 图标不同。
 
 ## 组件范围
 
@@ -211,7 +211,9 @@ HyperButton(type = "icon", onClick = onSearch) {
 `HyperUpdateDialog` 的错误状态采用简洁布局，只保留错误原因、重试与关闭，不展示状态图标、大标题、当前版本框和操作区分隔线；文案配置已移除不再使用的 `errorTitle`。
 更新弹窗的关闭、取消和稍后再说省略 `type`，使用 `HyperButton` 默认描边样式；主操作显式使用 `type = "filled"` 和 `colorStyle = "primary"`。
 更新弹窗各状态标识块统一为 40dp、图标 20dp、环形进度 30dp；检查中隐藏当前版本，其他状态的版本信息直接排版，不嵌套版本卡片。
-按钮配色与显示形态独立：`type` 仅支持 `filled`、`tonal`、`icon`，省略时默认白色描边；`colorStyle` 支持 `primary`、`success`、`info`、`warning`、`danger`，自定义 `color` 优先于预设配色。按钮预览保留单个禁用文字示例，移除重复的禁用配色组。库内组件和 Preview 均使用这些标准类型，并与 `D:/my_project/flutter_project/doc_ui_kit` 同步维护。
+按钮配色与显示形态独立：`type` 仅支持 `filled`、`tonal`、`icon`，省略时默认白色描边；`colorStyle` 支持 `primary`、`success`、`info`、`warning`、`danger`，自定义 `color` 优先于预设配色。按钮预览以 Flutter ButtonsExample 为基准，分组、文案、图标和 8/16dp 间距一致，保留单个禁用文字示例；手机外框、白色背景和 52dp 顶部留白同步，不添加额外状态栏、分组标题、开关或点击计数。库内组件和 Preview 均使用这些标准类型，并与 `D:/my_project/flutter_project/doc_ui_kit` 同步维护。
+
+Preview 使用合并 Roboto 与 Noto Sans SC 的独立字体，避免 Wasm 中文回退失效并保持 Flutter 的拉丁字符宽度。生成工具位于 `preview/tools/generate-preview-font.py`，仅重新生成字体时需要 fontTools；正常构建直接使用已保存的字体，不需要 Python 或新依赖。Android 与 Preview 的按钮阴影分别由 `HyperButtonShadowRadius.kt` 与 `PreviewButtonShadowRadius.kt` 换算后端单位，公开按钮 API 不变。
 - Android 系统工具：`hyperToast`、`HyperBatteryState`、`readHyperBatteryState`、`rememberHyperBatteryState`。它们不进入 Preview 的跨平台编译链，真实调用仅限 Android。
 
 所有公开 API 位于 `hyper_ui` 包；`hyper_ui.core` 仅供库内部使用。详细签名和默认值以[组件索引](vitepress/docs/component-index.md)及各组件页为准。

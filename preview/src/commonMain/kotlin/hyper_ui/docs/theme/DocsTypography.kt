@@ -8,12 +8,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import hyper_ui.HyperTypography
 import hyper_ui.docs.generated.resources.Res
-import hyper_ui.docs.generated.resources.noto_sans_sc_wght
+import hyper_ui.docs.generated.resources.hyper_ui_preview
 import org.jetbrains.compose.resources.Font
 
 /**
- * 文档默认文本样式：为未显式指定字体的文档文本统一装配 Noto Sans SC 字体族，
- * 替代原 系统 Typography 体系。
+ * 单一字体合并 Flutter Web 的 Roboto 与 Noto Sans SC，避免 Wasm 中文回退失效。
  */
 @Composable
 internal fun docsTextStyle(): TextStyle {
@@ -23,10 +22,7 @@ internal fun docsTextStyle(): TextStyle {
 @Composable
 private fun docsFontFamily(): FontFamily {
     return FontFamily(
-        Font(Res.font.noto_sans_sc_wght, weight = FontWeight.Normal),
-        Font(Res.font.noto_sans_sc_wght, weight = FontWeight.Medium),
-        Font(Res.font.noto_sans_sc_wght, weight = FontWeight.SemiBold),
-        Font(Res.font.noto_sans_sc_wght, weight = FontWeight.Bold)
+        Font(Res.font.hyper_ui_preview, weight = FontWeight.Normal)
     )
 }
 

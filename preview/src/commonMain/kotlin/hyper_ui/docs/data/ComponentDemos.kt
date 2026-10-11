@@ -31,7 +31,7 @@ data class ComponentDemo(
 
 /** 聚合稳定 Preview ID；分组示例同步参考展示结构，页面示例自行滚动，普通示例由统一视口滚动。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
-    addAll(basicComponentDemos()) // button 默认描边；禁用态保留单个示例，避免重复配色。
+    addAll(basicComponentDemos()) // button 预览对齐 Flutter ButtonsExample；禁用态保留单个示例。
     addAll(formComponentDemos())
     addAll(containerComponentDemos())
     addAll(navigationComponentDemos())

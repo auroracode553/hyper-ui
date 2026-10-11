@@ -24,7 +24,7 @@ internal fun Modifier.hyperButtonSurface(
 ): Modifier {
     val filled = enabled && type == "filled"
     return then(if (filled) Modifier.dropShadow(shape, Shadow(
-        radius = 16.dp, spread = (-5).dp, offset = DpOffset(0.dp, 7.dp),
+        radius = hyperButtonShadowRadius(16.dp), spread = (-5).dp, offset = DpOffset(0.dp, 7.dp),
         color = containerColor.copy(alpha = 50 / 255f)
     )) else Modifier)
         .clip(shape)

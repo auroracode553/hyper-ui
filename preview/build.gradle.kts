@@ -54,6 +54,8 @@ kotlin {
             kotlin.exclude("**/HyperBatteryState.kt")
             // Android Dialog 窗口动画配置由跨平台 Preview 使用同包宿主替代。
             kotlin.exclude("**/HyperDialogHost.kt")
+            // Android 与 Preview 的阴影后端使用不同单位，复用按钮但替换内部换算。
+            kotlin.exclude("**/HyperButtonShadowRadius.kt")
             dependencies {
                 // Preview 与正式组件复用同一动画和背景模糊实现。
                 implementation("org.jetbrains.compose.foundation:foundation:${libs.versions.composeMultiplatform.get()}")
@@ -85,7 +87,10 @@ kotlin {
 val mergedResourcesDir = layout.buildDirectory.dir("generated/merged-compose-resources")
 val prepareMergedResources = tasks.register<Sync>("prepareMergedResources") {
     // 首先复制默认的 composeResources（包含字体等）
-    from(layout.projectDirectory.dir("src/commonMain/composeResources"))
+    from(layout.projectDirectory.dir("src/commonMain/composeResources")) {
+        // 字体生成输入不进入文档产物；只分发合并后的完整中英文字体。
+        exclude("font/noto_sans_sc_wght.ttf", "font/roboto_regular.ttf")
+    }
     // 然后复制 API 文档 markdown 文件
     from(layout.projectDirectory.dir("../vitepress/docs/components")) {
         into("files/api")
@@ -126,6 +131,10 @@ tasks.register<Copy>("publishWasmToVitePress") {
             "Wasm 预览发布不完整：缺少 index.html 或 hyper-ui-preview.js"
         }
         readinessFile.writeText("{\"version\":\"${System.currentTimeMillis()}\"}\n")
+        // 手动生成成功也要清除 watcher 的旧错误，避免完整新产物被错误遮罩挡住。
+        output.resolve("preview-build-status.json").writeText(
+            "{\"phase\":\"ready\",\"message\":\"组件预览已更新\",\"updatedAt\":${System.currentTimeMillis()}}\n"
+        )
         println("Wasm 产物已复制到 vitepress/public/wasm-preview/")
         println("刷新 VitePress 页面即可在文档中看到交互预览")
     }

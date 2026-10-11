@@ -1,12 +1,12 @@
 .wasm-preview {
-  margin: 24px 0;
+  margin: 20px 0 34px;
 }
 
 .wasm-preview__header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: 18px;
   padding: 2px 4px 14px;
 }
 
@@ -56,9 +56,9 @@
 
 .wasm-preview__title {
   color: var(--vp-c-text-1);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.5;
+  font-size: 15px;
+  font-weight: 680;
+  line-height: 1.35;
 }
 
 .vp-doc .wasm-preview__update-note {
@@ -92,8 +92,13 @@
 .wasm-preview__stage {
   display: flex;
   overflow-x: auto;
-  padding: 12px 8px 28px;
-  background: transparent;
+  padding: 24px 4px;
+  /* 与 Flutter 文档预览舞台的页面底色一致。 */
+  background: #f4f6fb;
+}
+
+.dark .wasm-preview__stage {
+  background: #111318;
 }
 
 /* 手机保持真实宽度，默认 350×680；窄文档区域横向滚动，不压缩或裁掉视口。 */
@@ -109,15 +114,11 @@
   box-shadow:
     0 0 0 2px #0e1013,
     0 0 0 5px #2a2d36,
-    0 18px 44px -22px rgba(28, 40, 72, 0.45);
+    0 8px 28px -16px rgba(28, 40, 72, 0.25);
 }
 
 .dark .wasm-preview__device {
   background: #0b0d11;
-}
-
-.dark .wasm-preview__status-bar {
-  color: rgb(243, 244, 246);
 }
 
 /* 屏幕区域：整屏交给 iframe，组件自行处理状态栏/灵动岛 inset */
@@ -128,7 +129,7 @@
   bottom: 0;
   left: 0;
   overflow: hidden;
-  background: var(--vp-c-bg);
+  background: transparent;
   touch-action: none;
   user-select: none;
 }
@@ -138,42 +139,8 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: var(--vp-c-bg);
+  background: transparent;
   user-select: none;
-}
-
-/* 状态信息属于文档手机外壳，位于 Compose 顶部安全区内。 */
-.wasm-preview__status-bar {
-  position: absolute;
-  z-index: 6;
-  top: 18px;
-  right: 22px;
-  left: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 18px;
-  color: #171a20;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 18px;
-  pointer-events: none;
-}
-
-.wasm-preview__status-icons {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.wasm-preview__status-icons svg {
-  display: block;
-  width: 16px;
-  height: 14px;
-}
-
-.wasm-preview__status-icons svg:last-child {
-  width: 25px;
 }
 
 /* 灵动岛 + 摄像头 */

@@ -22,47 +22,46 @@ import hyper_ui.*
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ButtonDemo() {
-    var clicks by remember { mutableStateOf(0) }
-    var loading by remember { mutableStateOf(false) }
+    // 与 Flutter ButtonsExample 保持相同分组、顺序、文案、状态及 8/16dp 间距。
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        PreviewSectionLabel("文字按钮 · 按内容收缩")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ clicks += 1 }, size = "small") { HyperText("小按钮") }
-            HyperButton({ clicks += 1 }) { HyperText("默认按钮") }
-            HyperButton({ clicks += 1 }, size = "large") { HyperText("大按钮") }
+            HyperButton({}, size = "small") { HyperText("小按钮") }
+            HyperButton({}) { HyperText("默认按钮") }
+            HyperButton({}, size = "large") { HyperText("大按钮") }
             HyperButton({}, loading = true) { HyperText("处理中") }
         }
-        PreviewSectionLabel("配色预设 · 默认 / Primary / Success / Info / Warning / Danger")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ clicks += 1 }, colorStyle = "primary", type = "filled") { HyperText("主操作") }
-            HyperButton({ clicks += 1 }, colorStyle = "success", type = "filled") { HyperText("成功") }
-            HyperButton({ clicks += 1 }, colorStyle = "info", type = "filled") { HyperText("信息") }
-            HyperButton({ clicks += 1 }, colorStyle = "warning", type = "filled") { HyperText("警告") }
-            HyperButton({ clicks += 1 }) { HyperIcon(HyperReferenceIcons.Search, null); HyperText("查找") }
-            HyperButton({ clicks = 0 }, colorStyle = "danger", type = "filled") { HyperIcon(HyperReferenceIcons.Delete, null); HyperText("删除") }
-            HyperButton({ clicks += 1 }, type = "tonal", colorStyle = "primary") { HyperIcon(HyperReferenceIcons.Settings, null); HyperText("柔色设置") }
-            HyperButton({ clicks += 1 }) { HyperText("稍后处理") }
+            HyperButton({}, type = "filled", colorStyle = "primary") { HyperText("Primary") }
+            HyperButton({}, type = "filled", colorStyle = "success") { HyperText("Success") }
+            HyperButton({}, type = "filled", colorStyle = "info") { HyperText("Info") }
+            HyperButton({}, type = "filled", colorStyle = "warning") { HyperText("Warning") }
+            HyperButton({}) { HyperIcon(HyperReferenceIcons.Share, null); HyperText("导出") }
+            HyperButton({}, type = "filled", colorStyle = "danger") { HyperIcon(HyperReferenceIcons.Delete, null); HyperText("Danger") }
+            HyperButton({}) { HyperIcon(HyperReferenceIcons.Settings, null); HyperText("带图标胶囊") }
         }
-        PreviewSectionLabel("独立图标入口")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ clicks += 1 }, type = "icon") { HyperIcon(HyperReferenceIcons.Search, "搜索") }
-            HyperButton({ clicks += 1 }, type = "icon") { HyperIcon(HyperReferenceIcons.Notifications, "通知") }
-            HyperButton({ clicks += 1 }, type = "icon", loading = loading) { HyperIcon(HyperReferenceIcons.Refresh, "刷新") }
-            HyperButton({}, type = "icon", enabled = false) { HyperIcon(HyperReferenceIcons.Lock, "不可用") }
+            HyperButton({}, type = "icon") { HyperIcon(HyperReferenceIcons.Plus, "新建") }
+            HyperButton({}, type = "icon") { HyperIcon(HyperReferenceIcons.Refresh, "刷新") }
+            HyperButton({}, type = "icon") { HyperIcon(HyperReferenceIcons.Share, "分享") }
+            HyperButton({}, type = "icon", colorStyle = "danger") { HyperIcon(HyperReferenceIcons.Delete, "删除") }
+            HyperButton({}, type = "icon", loading = true) { HyperIcon(HyperReferenceIcons.Refresh, "加载中") }
         }
-        PreviewSectionLabel("同一配色的不同显示类型")
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ clicks += 1 }, colorStyle = "success") { HyperText("默认描边") }
-            HyperButton({ clicks += 1 }, type = "tonal", colorStyle = "success") { HyperText("柔色") }
-            HyperButton({ clicks += 1 }, type = "filled", colorStyle = "success") { HyperText("填充") }
-            HyperButton({ clicks += 1 }, type = "icon", colorStyle = "success") { HyperIcon(HyperReferenceIcons.Check, "成功") }
-            HyperButton({ clicks += 1 }, type = "filled", colorStyle = "danger", color = HyperColors.accent) { HyperText("自定义颜色优先") }
-        }
-        PreviewSectionLabel("通栏与交互状态")
-        PreviewToggle("加载中", loading) { loading = it }
-        HyperButton({ clicks += 1 }, modifier = Modifier.fillMaxWidth(), loading = loading, colorStyle = "primary", type = "filled") { HyperText("通栏按钮") }
         HyperButton({}, enabled = false) { HyperText("不可用") }
-        HyperText("点击次数：$clicks", size = "small", color = HyperColors.secondaryText)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            listOf(null, "primary", "success", "info", "warning", "danger").forEach { colorStyle ->
+                HyperButton({}, type = "filled", colorStyle = colorStyle, loading = true) { HyperText(colorStyle ?: "Default") }
+            }
+        }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton({}, colorStyle = "success") { HyperText("默认描边") }
+            HyperButton({}, type = "tonal", colorStyle = "success") { HyperText("柔色") }
+            HyperButton({}, type = "filled", colorStyle = "success") { HyperText("填充") }
+            HyperButton({}, type = "icon", colorStyle = "success") { HyperIcon(HyperReferenceIcons.Check, "成功") }
+            HyperButton({}, type = "filled", colorStyle = "danger", color = HyperColors.accent) { HyperText("自定义颜色优先") }
+        }
+        HyperButton({}, Modifier.fillMaxWidth(), type = "filled", colorStyle = "primary") {
+            HyperText("通栏按钮（expanded: true）")
+        }
     }
 }
 

@@ -8,15 +8,15 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperBackdrop
-import hyper_ui.HyperColors
 import hyper_ui.HyperSoftBackground
 import hyper_ui.docs.LocalThemeColor
 
 /** 预览手机的状态栏与手势条安全区。 */
-internal val PreviewTopSafeArea = 48.dp
-internal val PreviewBottomSafeArea = 32.dp
+internal val PreviewTopSafeArea = 52.dp
+internal val PreviewBottomSafeArea = 24.dp
 
 @Composable
 internal fun PreviewSceneBackdrop(
@@ -42,7 +42,10 @@ internal fun PreviewSceneBackdrop(
                     }
                 }
             } else {
-                Box(Modifier.matchParentSize().background(HyperColors.pageBackground))
+                // Flutter 普通示例的透明画布覆盖在白色手机屏幕上，深色屏幕为 11/13/17。
+                val screen = if (settings.darkTheme) Color(11 / 255f, 13 / 255f, 17 / 255f, 1f)
+                    else Color(1f, 1f, 1f, 1f)
+                Box(Modifier.matchParentSize().background(screen))
             }
         },
         content = content
