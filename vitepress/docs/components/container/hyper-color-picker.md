@@ -1,10 +1,47 @@
+---
+description: 从颜色面板选择颜色，颜色状态由调用方持有。
+---
+
 # HyperColorPicker
 
-包名：`hyper_ui`。
+从颜色面板选择颜色，颜色状态由调用方持有。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="color-picker" title="HyperColorPicker 交互预览" />
 
-## 公开签名与默认值
+## 使用方式
+
+<details class="component-doc__details">
+<summary>最小调用</summary>
+
+```kotlin
+var selectedId by remember { mutableStateOf("ocean_blue") }
+
+HyperColorPicker(
+    selectedId = selectedId,
+    onSelected = { option -> selectedId = option.id }
+)
+```
+
+</details>
+
+## 使用约定
+
+**约束**
+
+业务状态由调用方管理，组件只负责 UI 与回调。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperColorPicker
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @OptIn(ExperimentalLayoutApi::class)
@@ -22,7 +59,7 @@ fun HyperColorPicker(
 )
 ```
 
-## Props（参数）
+</details>
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -35,18 +72,3 @@ fun HyperColorPicker(
 | horizontalSpacing | Dp | 否 | HyperColorPickerDefaults.horizontalSpacing | 颜色选项之间的水平间距。 |
 | verticalSpacing | Dp | 否 | HyperColorPickerDefaults.verticalSpacing | 颜色选项之间的垂直间距。 |
 | labelTopSpacing | Dp | 否 | HyperColorPickerDefaults.labelTopSpacing | 颜色名称与色块之间的间距。 |
-
-## 最小用法
-
-```kotlin
-var selectedId by remember { mutableStateOf("ocean_blue") }
-
-HyperColorPicker(
-    selectedId = selectedId,
-    onSelected = { option -> selectedId = option.id }
-)
-```
-
-## 约束
-
-- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。

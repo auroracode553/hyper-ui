@@ -1,20 +1,21 @@
+---
+description: 胶囊按钮，用于主要操作、次要操作、危险操作和独立图标入口。
+---
+
 # HyperButton
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+胶囊按钮，用于主要操作、次要操作、危险操作和独立图标入口。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="button" title="HyperButton 交互预览" />
 
-## 样式约定
+## 使用方式
 
-按钮 small/default/large 高度 32/38/44dp，圆角为高度一半；支持 filled/tonal/outline/ghost/danger/icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
-
-## 状态归属与使用约束
-
-loading 与 enabled 由调用方控制，加载时停止点击。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -22,7 +23,26 @@ import hyper_ui.*
 HyperButton(onClick = onSave) { HyperText("保存") }
 ```
 
-## HyperButton API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+按钮 small/default/large 高度 32/38/44dp，圆角为高度一半；支持 filled/tonal/outline/ghost/danger/icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
+
+**状态归属**
+
+loading 与 enabled 由调用方控制，加载时停止点击。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperButton
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -44,6 +64,8 @@ fun HyperButton(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | onClick | () -&gt; Unit | 是 | — | 用户点击回调。 |
@@ -61,7 +83,10 @@ fun HyperButton(
 | verticalAlignment | Alignment.Vertical | 否 | Alignment.CenterVertically | 子项的垂直对齐方式。 |
 | content | @Composable RowScope.() -&gt; Unit | 是 | — | 主体内容插槽。 |
 
-## HyperButtonDefaults.shape API / Props
+<details class="component-doc__details component-doc__advanced">
+<summary>默认配置与数据类型</summary>
+
+**HyperButtonDefaults.shape**
 
 ```kotlin
 fun shape(size: String = "default"): Shape
@@ -71,7 +96,7 @@ fun shape(size: String = "default"): Shape
 | --- | --- | --- | --- | --- |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
 
-## HyperButtonDefaults.iconSize API / Props
+**HyperButtonDefaults.iconSize**
 
 ```kotlin
 fun iconSize(size: String = "default", iconOnly: Boolean = false): Dp
@@ -80,9 +105,9 @@ fun iconSize(size: String = "default", iconOnly: Boolean = false): Dp
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
-| iconOnly | Boolean | 否 | false | 可覆盖的 iconOnly 配置；默认表达式见此表。 |
+| iconOnly | Boolean | 否 | false | 计算纯图标入口的尺寸与内边距。 |
 
-## HyperButtonDefaults.height API / Props
+**HyperButtonDefaults.height**
 
 ```kotlin
 fun height(size: String = "default"): Dp =
@@ -92,7 +117,7 @@ fun height(size: String = "default"): Dp =
 | --- | --- | --- | --- | --- |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
 
-## HyperButtonDefaults.contentPadding API / Props
+**HyperButtonDefaults.contentPadding**
 
 ```kotlin
 fun contentPadding(size: String = "default"): PaddingValues
@@ -102,7 +127,7 @@ fun contentPadding(size: String = "default"): PaddingValues
 | --- | --- | --- | --- | --- |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
 
-## HyperButtonDefaults.textStyle API / Props
+**HyperButtonDefaults.textStyle**
 
 ```kotlin
 @Composable
@@ -113,7 +138,7 @@ fun contentPadding(size: String = "default"): PaddingValues
 | --- | --- | --- | --- | --- |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
 
-## HyperButtonDefaults.colors API / Props
+**HyperButtonDefaults.colors**
 
 ```kotlin
 @Composable
@@ -134,7 +159,7 @@ fun contentPadding(size: String = "default"): PaddingValues
 | disabledContainerColor | Color | 否 | Color.Unspecified | 禁用时的表面背景色。 |
 | disabledContentColor | Color | 否 | Color.Unspecified | 禁用时的文字与图标颜色。 |
 
-## HyperButtonDefaults.border API / Props
+**HyperButtonDefaults.border**
 
 ```kotlin
 @Composable
@@ -151,7 +176,7 @@ fun contentPadding(size: String = "default"): PaddingValues
 | enabled | Boolean | 否 | true | 是否允许用户操作。 |
 | color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
 
-## HyperButtonColors 配置
+**HyperButtonColors 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -159,3 +184,5 @@ fun contentPadding(size: String = "default"): PaddingValues
 | contentColor | Color | 是 | — | 主要文字与图标颜色。 |
 | disabledContainerColor | Color | 是 | — | 禁用时的表面背景色。 |
 | disabledContentColor | Color | 是 | — | 禁用时的文字与图标颜色。 |
+
+</details>

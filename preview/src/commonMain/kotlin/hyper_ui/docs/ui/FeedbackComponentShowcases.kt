@@ -46,46 +46,23 @@ import hyper_ui.HyperUpdateDialogState
 
 @Composable
 fun EmptyStateDemo() {
-    var showDescription by remember { mutableStateOf(true) }
+    var descriptionVisible by remember { mutableStateOf(true) }
     var feedback by remember { mutableStateOf("等待操作") }
-
-    Column(
-        modifier = Modifier
-            .widthIn(max = 520.dp)
-            .heightIn(min = 360.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(
-                type = "outline",
-                onClick = { showDescription = !showDescription }
-            ) {
-                HyperText(if (showDescription) "隐藏说明" else "显示说明")
-            }
-            HyperText(
-                text = feedback,
-                modifier = Modifier.align(Alignment.CenterVertically),
-                color = LocalDocsColorScheme.current.onSurfaceVariant,
-                fontSize = 13.sp
-            )
-        }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        PreviewSectionLabel("带恢复操作")
+        PreviewToggle("显示说明", descriptionVisible) { descriptionVisible = it }
         HyperEmptyState(
-            title = "暂无历史记录",
-            modifier = Modifier.weight(1f),
-            description = if (showDescription) "浏览过的页面会显示在这里" else null,
-            iconContent = {
-                HyperIcon(
-                    imageVector = HyperReferenceIcons.Search,
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
-                )
-            },
-            actionContent = {
-                HyperButton(onClick = { feedback = "已请求重新加载" }) {
-                    HyperText("重新加载")
-                }
-            }
+            title = "没有找到结果",
+            description = if (descriptionVisible) "换一个关键词，或者清除筛选条件后重试。" else null,
+            iconContent = { HyperIcon(HyperReferenceIcons.Search, null) },
+            actionContent = { HyperButton({ feedback = "已清除筛选" }, type = "tonal") { HyperText("清除筛选") } }
+        )
+        HyperText(feedback, size = "small", color = HyperColors.secondaryText)
+        PreviewSectionLabel("纯提示 · 无操作按钮")
+        HyperEmptyState(
+            title = "这里还是空的",
+            description = "创建第一个项目后，它会出现在这里。",
+            iconContent = { HyperIcon(HyperReferenceIcons.Info, null) }
         )
     }
 }

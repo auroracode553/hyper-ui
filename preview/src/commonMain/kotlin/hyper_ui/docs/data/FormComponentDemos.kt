@@ -75,7 +75,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "text_field",
         group = GROUP_FORM,
         title = "HyperTextField",
-        description = "受控文本输入框：预览覆盖基础、清空、密码显隐、前后缀、多行计数、禁用、只读和错误态。",
+        description = "分组呈现基础清空、密码显隐、金额前后缀和多行计数；尺寸、禁用、只读与错误状态可操作。",
         code = """
             HyperTextField(value, { value = it }, clearable = true, size = "default",
                 placeholderContent = { HyperText("请输入内容") })

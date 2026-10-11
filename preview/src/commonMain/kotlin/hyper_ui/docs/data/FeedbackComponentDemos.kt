@@ -22,13 +22,13 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "empty_state",
         group = GROUP_FEEDBACK,
         title = "HyperEmptyState",
-        description = "页面级空数据状态统一由 HyperCard 承载，图标和操作通过 Slot 注入。",
+        description = "56dp 图标块与居中文案组成空状态；可注入恢复操作。",
         code = """
             HyperEmptyState(
                 title = "暂无历史记录",
                 description = "浏览过的页面会显示在这里",
                 iconContent = {
-                    Icon(searchIcon, contentDescription = null)
+                    HyperIcon(searchIcon, contentDescription = null)
                 },
                 actionContent = {
                     HyperButton(onClick = onRefresh) { HyperText("重新加载") }
@@ -39,7 +39,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("纯标题", "description = null", "紧凑空状态文案"),
             DemoVariant("辅助说明", "description", "居中次级说明"),
             DemoVariant("图标", "iconContent", "由调用方注入图标资源"),
-            DemoVariant("统一面板", "HyperCard", "直接复用通用面板的默认样式"),
+            DemoVariant("布局", "iconContent / actionContent", "56dp 图标块、20dp 内容留白"),
             DemoVariant("操作", "actionContent", "由调用方持有交互和结果状态")
         ),
         apiDocumentPaths = listOf("feedback/hyper-empty-state.md"),
@@ -119,7 +119,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 progress = brightness,
                 label = "${'$'}{(brightness * 100).toInt()}%",
                 iconContent = {
-                    Icon(infoIcon, contentDescription = null)
+                    HyperIcon(infoIcon, contentDescription = null)
                 }
             )
         """.trimIndent(),
@@ -163,12 +163,12 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "playback_speed_scale",
         group = GROUP_FEEDBACK,
         title = "HyperPlaybackSpeedScale",
-        description = "播放器长按临时加速使用的紧凑型主题玻璃玻璃刻度，两端标签让出轨道上方空间。",
+        description = "播放器长按临时加速使用的紧凑型主题玻璃刻度，两端标签让出轨道上方空间。",
         code = """
             HyperPlaybackSpeedScale(
                 selectedSpeed = temporarySpeed,
                 leadingContent = {
-                    Icon(fastForwardIcon, contentDescription = null)
+                    HyperIcon(fastForwardIcon, contentDescription = null)
                 }
             )
         """.trimIndent(),

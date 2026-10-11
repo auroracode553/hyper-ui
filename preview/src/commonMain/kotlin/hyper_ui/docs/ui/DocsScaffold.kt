@@ -235,19 +235,7 @@ private fun MobilePreviewTopBar(
 /** 手机模式只展示真实组件视口，代码和 API 详情留在桌面文档布局。 */
 @Composable
 private fun MobilePreviewContent(demo: ComponentDemo, modifier: Modifier = Modifier) {
-    PreviewSceneBackdrop(modifier = modifier.fillMaxSize()) {
-        if (demo.fullScreenPreview) {
-            Box(modifier = Modifier.fillMaxSize()) { demo.content() }
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) { demo.content() }
-        }
-    }
+    ComponentPreviewViewport(demo, modifier)
 }
 
 @Composable
@@ -357,34 +345,33 @@ private fun ComponentHeader(demo: ComponentDemo) {
 
 @Composable
 private fun PreviewCard(demo: ComponentDemo) {
+    var showVariants by remember(demo.id) { mutableStateOf(false) }
     DocsCard {
         SectionLabel(title = "交互示例")
-        PreviewSceneBackdrop(
-            modifier = Modifier
-                .fillMaxWidth()
-                .then(if (demo.fullScreenPreview) Modifier.height(600.dp) else Modifier.heightIn(min = 220.dp))
-                .padding(22.dp)
-        ) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                demo.content()
-            }
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
+            ComponentPreviewViewport(demo, Modifier.widthIn(max = 390.dp).fillMaxWidth().height(680.dp))
         }
-        SectionLabel(title = "预览属性与样式")
-        DocumentationTable(
-            headers = listOf("预览项", "关键属性", "样式说明"),
-            rows = demo.variants.map { variant ->
-                listOf(variant.label, variant.properties, variant.style)
-            },
-            columnWidths = listOf(180.dp, 340.dp, 360.dp)
-        )
+        HyperButton({ showVariants = !showVariants }, type = "ghost") {
+            HyperText(if (showVariants) "收起预览说明" else "查看预览说明")
+        }
+        if (showVariants) {
+            DocumentationTable(
+                headers = listOf("预览项", "关键属性", "样式说明"),
+                rows = demo.variants.map { listOf(it.label, it.properties, it.style) },
+                columnWidths = listOf(180.dp, 340.dp, 360.dp)
+            )
+        }
     }
 }
 
 @Composable
 private fun CodeCard(code: String) {
+    var expanded by remember(code) { mutableStateOf(false) }
     DocsCard {
-        SectionLabel(title = "示例代码")
-        HyperText(
+        HyperButton({ expanded = !expanded }, type = "ghost") {
+            HyperText(if (expanded) "收起示例代码" else "查看示例代码")
+        }
+        if (expanded) HyperText(
             text = code,
             modifier = Modifier
                 .fillMaxWidth()

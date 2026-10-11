@@ -26,6 +26,8 @@ HyperThemeConfig {
 
 完整签名、逐项 Props 表格、状态归属和交互预览见 [组件索引](vitepress/docs/component-index.md)。
 
+组件文档统一按用途、交互示例、最小调用、使用约定与公开 API 组织；长签名和辅助配置可展开查看，完整五列 Props 表始终保留。手机 Preview 提供 320/350/390/430dp 宽度与重置。页面级列表占满剩余视口并自行滚动，普通组件由宿主滚动；布局规则见 [交互预览](vitepress/docs/preview.md)。
+
 ## 先看结论
 
 - 调用方可以通过 Maven 坐标、源码模块或 AAR 引入 HyperUI。

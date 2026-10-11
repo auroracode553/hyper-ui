@@ -1,20 +1,21 @@
+---
+description: 从屏幕边缘展开辅助内容，支持标题、可滚动正文和固定操作区。
+---
+
 # HyperDrawer
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+从屏幕边缘展开辅助内容，支持标题、可滚动正文和固定操作区。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="drawer" title="HyperDrawer 交互预览" />
 
-## 样式约定
+## 使用方式
 
-默认 Right 浮动抽屉，常规左右宽 320dp、外侧间距 12dp、radius 30dp、strong 材质、scrim 蒙层。280ms easeOutCubic 淡入与 12% 位移。标题 18sp，正文 padding 16dp，页脚固定。
-
-## 状态归属与使用约束
-
-调用方持有 open。懒列表关闭 drawerContentScrollEnabled，避免嵌套滚动；Left/Right 为逻辑方向，随 RTL 映射。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -24,7 +25,26 @@ HyperDrawer(open, { open = false }, title = "导航", drawerContent = {
 }) { pageContent() }
 ```
 
-## HyperDrawer API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+默认 Right 浮动抽屉，常规左右宽 320dp、外侧间距 12dp、radius 30dp、strong 材质、scrim 蒙层。280ms easeOutCubic 淡入与 12% 位移。标题 18sp，正文 padding 16dp，页脚固定。
+
+**状态归属**
+
+调用方持有 open。懒列表关闭 drawerContentScrollEnabled，避免嵌套滚动；Left/Right 为逻辑方向，随 RTL 映射。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperDrawer
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -46,6 +66,8 @@ fun HyperDrawer(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | open | Boolean | 是 | — | 抽屉是否打开，由调用方持有。 |
@@ -63,7 +85,10 @@ fun HyperDrawer(
 | drawerContent | @Composable ColumnScope.() -&gt; Unit | 是 | — | 抽屉中的内容。 |
 | content | @Composable BoxScope.() -&gt; Unit | 是 | — | 主体内容插槽。 |
 
-## HyperDrawerHeader API / Props
+### HyperDrawerHeader
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -76,6 +101,8 @@ fun HyperDrawerHeader(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | headlineContent | @Composable ColumnScope.() -&gt; Unit | 是 | — | 主标题插槽。 |
@@ -84,7 +111,10 @@ fun HyperDrawerHeader(
 | leadingContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 前导插槽。 |
 | supportingContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 辅助说明插槽。 |
 
-## HyperDrawerItem API / Props
+### HyperDrawerItem
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -103,6 +133,8 @@ fun HyperDrawerItem(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | headlineContent | @Composable ColumnScope.() -&gt; Unit | 是 | — | 主标题插槽。 |
@@ -117,7 +149,10 @@ fun HyperDrawerItem(
 | supportingContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 辅助说明插槽。 |
 | trailingContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 尾部插槽。 |
 
-## HyperDrawerDefaults.contentPadding API / Props
+<details class="component-doc__details component-doc__advanced">
+<summary>默认配置与数据类型</summary>
+
+**HyperDrawerDefaults.contentPadding**
 
 ```kotlin
 fun contentPadding(position: HyperDrawerPosition): PaddingValues
@@ -127,7 +162,7 @@ fun contentPadding(position: HyperDrawerPosition): PaddingValues
 | --- | --- | --- | --- | --- |
 | position | HyperDrawerPosition | 是 | — | 抽屉从哪一侧进入。 |
 
-## HyperDrawerDefaults.colors API / Props
+**HyperDrawerDefaults.colors**
 
 ```kotlin
 @Composable
@@ -152,7 +187,7 @@ fun contentPadding(position: HyperDrawerPosition): PaddingValues
 | disabledContentColor | Color | 否 | Color.Unspecified | 禁用时的文字与图标颜色。 |
 | dividerColor | Color | 否 | Color.Unspecified | 分隔线颜色。 |
 
-## HyperDrawerColors 配置
+**HyperDrawerColors 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -163,3 +198,5 @@ fun contentPadding(position: HyperDrawerPosition): PaddingValues
 | selectedContentColor | Color | 是 | — | 选中条目的文字与图标颜色。 |
 | disabledContentColor | Color | 是 | — | 禁用时的文字与图标颜色。 |
 | dividerColor | Color | 是 | — | 分隔线颜色。 |
+
+</details>

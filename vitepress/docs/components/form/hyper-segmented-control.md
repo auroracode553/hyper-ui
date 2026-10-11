@@ -1,22 +1,21 @@
+---
+description: 在少量互斥选项之间切换，支持等宽、图标和禁用项。
+---
+
 # HyperSegmentedControl
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+在少量互斥选项之间切换，支持等宽、图标和禁用项。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="segmented" title="HyperSegmentedControl 交互预览" />
 
-## 样式约定
+## 使用方式
 
-共享 subtle 表面 radius 18dp、内部 padding 4dp，总高 40dp。条目高 32dp、radius 16dp、padding 12dp；文字 13sp，选中 600、普通 500；选中底面使用 selection。
-
-等宽模式的选中底板按 260ms selectionCurve 连续平移；内容宽度模式按 160ms 过渡底色。
-
-## 状态归属与使用约束
-
-调用方持有 selectedItem；equalWidth=false 按内容收缩。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -24,7 +23,28 @@ import hyper_ui.*
 HyperSegmentedControl(items, selected, { selected = it }) { HyperText(it) }
 ```
 
-## HyperSegmentedControl API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+共享 subtle 表面 radius 18dp、内部 padding 4dp，总高 40dp。条目高 32dp、radius 16dp、padding 12dp；文字 13sp，选中 600、普通 500；选中底面使用 selection。
+
+等宽模式的选中底板按 260ms selectionCurve 连续平移；内容宽度模式按 160ms 过渡底色。
+
+**状态归属**
+
+调用方持有 selectedItem；equalWidth=false 按内容收缩。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperSegmentedControl
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -45,6 +65,8 @@ fun <T> HyperSegmentedControl(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | items | List&lt;T&gt; | 是 | — | 待呈现条目。 |
@@ -61,7 +83,10 @@ fun <T> HyperSegmentedControl(
 | itemContentPadding | PaddingValues | 否 | HyperSegmentedControlDefaults.ItemContentPadding | 单个选项的内部留白。 |
 | itemContent | @Composable HyperSegmentOptionScope.(item: T) -&gt; Unit | 是 | — | 条目内容插槽。 |
 
-## HyperSegmentedControlDefaults.colors API / Props
+<details class="component-doc__details component-doc__advanced">
+<summary>默认配置与数据类型</summary>
+
+**HyperSegmentedControlDefaults.colors**
 
 ```kotlin
 @Composable
@@ -84,7 +109,7 @@ fun <T> HyperSegmentedControl(
 | unselectedContentColor | Color | 否 | Color.Unspecified | 未选中条目的文字与图标颜色。 |
 | disabledContentColor | Color | 否 | Color.Unspecified | 禁用时的文字与图标颜色。 |
 
-## HyperSegmentedControlColors 配置
+**HyperSegmentedControlColors 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -94,3 +119,5 @@ fun <T> HyperSegmentedControl(
 | selectedContentColor | Color | 是 | — | 选中条目的文字与图标颜色。 |
 | unselectedContentColor | Color | 是 | — | 未选中条目的文字与图标颜色。 |
 | disabledContentColor | Color | 是 | — | 禁用时的文字与图标颜色。 |
+
+</details>

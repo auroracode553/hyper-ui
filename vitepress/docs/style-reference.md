@@ -63,12 +63,16 @@ HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 
 - components/popup/HyperAnchoredSurface.kt 共用于 Dropdown、Popover，处理安全区、键盘和上下翻转。
 - components/update/HyperUpdatePresentation.kt 只映射显示数据，HyperUpdateContent.kt 组合内容与操作区，HyperUpdateDialog.kt 承担受控入口。
 - preview 的 ComponentDemos 聚合各分组元数据，*ComponentShowcases 提供可操作的大小、禁用、选中与进度状态。
+- ComponentPreviewViewport 统一有限视口与滚动归属；PageListShowcases 为页面级列表提供剩余高度，PreviewSectionLabel 统一示例分组与操作行。
+- component-doc.css 负责文档层级、折叠源码与参数表排版；MarkdownDocument 让桌面 Preview 读取相同 Markdown 并呈现折叠内容。
 
 ## 验收状态与手动说明
 
-已按参考源码核对参数，并对 91 个 Kotlin 源文件、37 个 Preview 入口和 33 个共享图标进行静态检查：调用参数、项目内导入、文档签名、完整 Props 表、Preview ID、颜色格式、文件规模与差异格式均未发现问题。静态检查不能替代编译和运行验收。遵照 AGENTS.md，未运行、编译、打包、部署或安装依赖。
+已按参考源码核对参数，并对 94 个 Kotlin 源文件、37 个 Preview 入口和 33 个共享图标进行静态检查：调用参数、项目内导入、文档签名、Preview ID、颜色格式、文件规模与差异格式均未发现问题。36 个组件页的 91 张完整五列 Props 表均保留，代码与折叠标签结构检查通过。
 
-因此当前结论是源码参数与结构对齐，尚不能声明经过验证的像素 100% 一致。Flutter 与 Compose 的字体度量、阴影和背景模糊后端不同，需要在相同 Android 设备、密度、字号缩放、安全区与字体配置下，分别截图核对。现有 Wasm 静态产物也未重新生成，页面可能仍显示此前版本；请在允许构建的环境中自主重新生成 Preview 产物。
+复用使用者事先运行的文档服务与监听进程，在其发布新 Wasm 产物后进行浏览器验收：320/350/390/430dp 均为实际宽度、视口高 680px；普通列表和分段列表可滚动到最后一项并选中；菜单点击反馈与复选状态、输入框清空和前后缀共存均正常。参数表保持可见，源码可以展开。遵照 AGENTS.md，未主动启动项目运行、编译、打包、部署或依赖安装；已有监听进程的产物更新与主动执行构建分别记录。
+
+当前结论是源码参数、文档结构和上述浏览器交互检查通过，尚不能声明 Android 像素 100% 一致。Flutter 与 Compose 的字体度量、阴影和背景模糊后端不同，需要在相同 Android 设备、密度、字号缩放、安全区与字体配置下，分别截图核对。Kotlin 修改需要新的 Wasm 产物；文档热更新本身不能证明手机内的示例已更新，应以产物版本与实际交互为准。
 
 建议按浅/深色 × Solid/Soft/Clear，依次检查 320/360/390/430dp、禁用/聚焦/错误/选中/加载、键盘展开、RTL 与长文本。不附自动构建命令或启动脚本。
 

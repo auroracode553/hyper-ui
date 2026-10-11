@@ -1,20 +1,21 @@
+---
+description: 展示版本信息、下载进度和安装阶段；更新任务由调用方执行。
+---
+
 # HyperUpdateDialog
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+展示版本信息、下载进度和安装阶段；更新任务由调用方执行。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="update_dialog" title="HyperUpdateDialog 交互预览" />
 
-## 样式约定
+## 使用方式
 
-strong 材质、radius 28dp、最大宽 420dp、padding 24dp。标识 64dp、标题 24sp、进度 28sp；版本徽章和本次更新摘要遵循参考布局，操作区固定。
-
-## 状态归属与使用约束
-
-Idle 不显示。检查/下载/安装使用受控状态；Installing 或 mandatory 未完成时禁止外部点击与返回关闭。UI 只通知调用方，不检查网络、下载或安装。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -22,7 +23,26 @@ import hyper_ui.*
 HyperUpdateDialog(state, onDismissRequest = onClose, onRetry = onRetry, onDownload = onDownload, onInstall = onInstall)
 ```
 
-## HyperUpdateDialog API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+strong 材质、radius 28dp、最大宽 420dp、padding 24dp。标识 64dp、标题 24sp、进度 28sp；版本徽章和本次更新摘要遵循参考布局，操作区固定。
+
+**状态归属**
+
+Idle 不显示。检查/下载/安装使用受控状态；Installing 或 mandatory 未完成时禁止外部点击与返回关闭。UI 只通知调用方，不检查网络、下载或安装。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperUpdateDialog
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -41,6 +61,8 @@ fun HyperUpdateDialog(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | state | HyperUpdateDialogState | 是 | — | 调用方持有的更新状态。 |
@@ -55,7 +77,10 @@ fun HyperUpdateDialog(
 | onCheck | () -&gt; Unit | 否 | onRetry | 通知业务检查更新。 |
 | onCancel | () -&gt; Unit | 否 | onDismissRequest | 通知业务取消。 |
 
-## HyperAppRelease 配置
+<details class="component-doc__details component-doc__advanced">
+<summary>默认配置与数据类型</summary>
+
+**HyperAppRelease 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -69,14 +94,14 @@ fun HyperUpdateDialog(
 | releaseDate | String? | 否 | null | 版本区域的可选日期文案。 |
 | sizeLabel | String? | 否 | null | 版本区域的可选包大小文案。 |
 
-## HyperUpdateRequest 配置
+**HyperUpdateRequest 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | currentVersionName | String | 是 | — | 调用方提供的当前版本号。 |
 | releaseUrl | String | 是 | — | 版本检查地址，由调用方的 ReleaseLoader 使用。 |
 
-## HyperUpdateDialogTexts 配置
+**HyperUpdateDialogTexts 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -93,7 +118,7 @@ fun HyperUpdateDialog(
 | closeAction | String | 否 | "关闭" | 关闭按钮文字。 |
 | retryAction | String | 否 | "重试" | 重试按钮文字。 |
 
-## 状态类型
+**状态类型**
 
 | 状态 | 必需数据 | 作用 |
 | --- | --- | --- |
@@ -107,3 +132,5 @@ fun HyperUpdateDialog(
 | Installing | currentVersionName, release；progress=null，progressText=null | 安装阶段，锁定关闭 |
 | Completed | currentVersionName；release=null | 完成后允许关闭 |
 | Error | currentVersionName, message | 错误说明与重试 |
+
+</details>

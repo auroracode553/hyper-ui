@@ -1,20 +1,21 @@
+---
+description: 为操作提供简短说明，支持悬停、长按和键盘聚焦。
+---
+
 # HyperTooltip
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+为操作提供简短说明，支持悬停、长按和键盘聚焦。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="tooltip" title="HyperTooltip 交互预览" />
 
-## 样式约定
+## 使用方式
 
-strong 玻璃 radius 12dp、文字 12sp/1.3、padding 10×7dp。默认最大宽 240dp，锚点间距 8dp，悬停与手机长按等待 500ms，焦点立即展示。
-
-## 状态归属与使用约束
-
-仅维护临时提示显隐；不截获内容的点击回调。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -22,7 +23,26 @@ import hyper_ui.*
 HyperTooltip("提示") { HyperButton(onSave) { HyperText("保存") } }
 ```
 
-## HyperTooltip API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+strong 玻璃 radius 12dp、文字 12sp/1.3、padding 10×7dp。默认最大宽 240dp，锚点间距 8dp，悬停与手机长按等待 500ms，焦点立即展示。
+
+**状态归属**
+
+仅维护临时提示显隐；不截获内容的点击回调。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperTooltip
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -35,6 +55,8 @@ fun HyperTooltip(
     content: @Composable () -> Unit,
 )
 ```
+
+</details>
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |

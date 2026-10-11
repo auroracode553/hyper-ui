@@ -11,7 +11,7 @@ private const val GROUP_CONTAINER = "容器组件"
 internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "glass_material", group = GROUP_CONTAINER, title = "HyperBackdrop / HyperGlassTokens",
-        description = "背景采样与轻薄、标准、强调、实色四档玻璃表面；可调透明度。",
+        description = "背景采样与 Solid、Soft、Clear 三档材质；观察 subtle、regular、strong 表面层级。",
         code = """
             HyperThemeConfig {
                 HyperBackdrop {
@@ -49,7 +49,7 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         id = "panel",
         group = GROUP_CONTAINER,
         title = "HyperCard",
-        description = "通用 slot 容器，默认带轻描边、内容间距并始终按 shape 裁剪；外壳和内容区分别使用 modifier、contentModifier。",
+        description = "通用 slot 容器，标题、副标题、正文、页脚与操作插槽；24dp 圆角、12dp 内边距，支持选中状态。",
         code = """
             HyperCard(
                 colors = HyperCardDefaults.colors(
@@ -64,8 +64,8 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认面板", "colors = defaults", "实色容器、圆角与轻描边"),
-            DemoVariant("默认留白", "ContentPadding = 16.dp", "无需在直接子节点重复添加整块 padding"),
+            DemoVariant("表面", "selected / colors", "regular 材质，选中时使用 strong"),
+            DemoVariant("默认留白", "ContentPadding = 12.dp", "无需在直接子节点重复添加整块 padding"),
             DemoVariant("自定义内容", "content slot", "标题、状态与操作组合"),
             DemoVariant("内容布局", "contentModifier = Modifier.padding(...)", "独立控制面板内部内容区")
         ),

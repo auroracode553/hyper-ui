@@ -1,22 +1,21 @@
+---
+description: 用于确认、删除等需要明确结果的操作，提供标题、说明和操作插槽。
+---
+
 # HyperAlertDialog
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+用于确认、删除等需要明确结果的操作，提供标题、说明和操作插槽。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="dialog" title="HyperAlertDialog 交互预览" />
 
-## 样式约定
+## 使用方式
 
-复用 HyperDialog 的 26dp 圆角、420dp 最大宽与 250ms 淡入与 0.96 → 1 缩放。标题、可滚动正文、固定操作区通过明确插槽组成。
-
-正文默认继承主题主文字色；取消操作可使用 ghost 按钮，危险操作使用 danger。
-
-## 状态归属与使用约束
-
-调用方持有 visible，确认业务通过 actionContent 回调处理。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -25,7 +24,28 @@ HyperAlertDialog(visible, { visible = false }, title = "确认删除", bodyConte
     actionContent = { HyperButton(onDelete, type = "danger") { HyperText("删除") } })
 ```
 
-## HyperAlertDialog API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+复用 HyperDialog 的 26dp 圆角、420dp 最大宽与 250ms 淡入与 0.96 → 1 缩放。标题、可滚动正文、固定操作区通过明确插槽组成。
+
+正文默认继承主题主文字色；取消操作可使用 ghost 按钮，危险操作使用 danger。
+
+**状态归属**
+
+调用方持有 visible，确认业务通过 actionContent 回调处理。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperAlertDialog
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -39,6 +59,8 @@ fun HyperAlertDialog(
     actionContent: (@Composable RowScope.() -> Unit)? = null
 )
 ```
+
+</details>
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |

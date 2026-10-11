@@ -1,20 +1,21 @@
+---
+description: 展示确定或不定进度，提供线性与圆环两种形态。
+---
+
 # HyperProgress
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+展示确定或不定进度，提供线性与圆环两种形态。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="progress" title="HyperProgress 交互预览" />
 
-## 样式约定
+## 使用方式
 
-linear 高度 4/6/12dp，确定值 220ms easeOutCubic；circular 直径 48/64/80dp、stroke 4/6/8dp。不确定线性段宽 32%、周期 1400ms；圆环占 72%、周期 1100ms。
-
-## 状态归属与使用约束
-
-调用方持有 progress。有限值收敛 0..1；非有限值按不确定处理。showLabel 默认 true，圆环标签 12sp。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -23,7 +24,26 @@ HyperProgress(progress, showLabel = true)
 HyperProgress(type = "circular", progress = null, showLabel = false)
 ```
 
-## HyperProgress API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+linear 高度 4/6/12dp，确定值 220ms easeOutCubic；circular 直径 48/64/80dp、stroke 4/6/8dp。不确定线性段宽 32%、周期 1400ms；圆环占 72%、周期 1100ms。
+
+**状态归属**
+
+调用方持有 progress。有限值收敛 0..1；非有限值按不确定处理。showLabel 默认 true，圆环标签 12sp。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperProgress
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -40,6 +60,8 @@ fun HyperProgress(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | progress | Float? | 否 | null | 0..1 进度；null 或非有限值表示不确定。 |
@@ -52,7 +74,10 @@ fun HyperProgress(
 | colors | HyperProgressColors | 否 | HyperProgressDefaults.colors() | 各状态配色配置。 |
 | trackBorder | BorderStroke? | 否 | null | 进度轨道的边框配置。 |
 
-## HyperProgressDefaults.strokeWidth API / Props
+<details class="component-doc__details component-doc__advanced">
+<summary>默认配置与数据类型</summary>
+
+**HyperProgressDefaults.strokeWidth**
 
 ```kotlin
 fun strokeWidth(size: String = "default"): Dp
@@ -62,7 +87,7 @@ fun strokeWidth(size: String = "default"): Dp
 | --- | --- | --- | --- | --- |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
 
-## HyperProgressDefaults.colors API / Props
+**HyperProgressDefaults.colors**
 
 ```kotlin
 @Composable
@@ -77,7 +102,7 @@ fun strokeWidth(size: String = "default"): Dp
 | trackColor | Color | 否 | Color.Unspecified | 背景轨道颜色。 |
 | indicatorColor | Color | 否 | Color.Unspecified | 进度指示颜色。 |
 
-## HyperProgressDefaults.linearTrackBorder API / Props
+**HyperProgressDefaults.linearTrackBorder**
 
 ```kotlin
 @Composable
@@ -88,9 +113,11 @@ fun strokeWidth(size: String = "default"): Dp
 | --- | --- | --- | --- | --- |
 | color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
 
-## HyperProgressColors 配置
+**HyperProgressColors 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | trackColor | Color | 是 | — | 背景轨道颜色。 |
 | indicatorColor | Color | 是 | — | 进度指示颜色。 |
+
+</details>

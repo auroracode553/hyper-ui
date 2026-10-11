@@ -10,11 +10,62 @@
   padding: 2px 4px 14px;
 }
 
+.wasm-preview__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.wasm-preview__width-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+}
+
+.wasm-preview__width-control select,
+.wasm-preview__tool-button {
+  min-height: 30px;
+  padding: 4px 8px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.wasm-preview__tool-button:hover {
+  color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+}
+
+.wasm-preview__tool-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.wasm-preview__width-control select:focus-visible,
+.wasm-preview__tool-button:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+}
+
 .wasm-preview__title {
   color: var(--vp-c-text-1);
   font-size: 14px;
   font-weight: 600;
   line-height: 1.5;
+}
+
+.vp-doc .wasm-preview__update-note {
+  margin: 0 4px 12px;
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .wasm-preview__open-link {
@@ -40,17 +91,18 @@
 /* 舞台：居中放手机 */
 .wasm-preview__stage {
   display: flex;
-  justify-content: center;
-  padding: 12px 4px 28px;
+  overflow-x: auto;
+  padding: 12px 8px 28px;
   background: transparent;
 }
 
-/* 手机外壳：固定 350x680，大圆角 + 双层金属边框 */
+/* 手机保持真实宽度，默认 350×680；窄文档区域横向滚动，不压缩或裁掉视口。 */
 .wasm-preview__device {
   position: relative;
   flex: 0 0 auto;
-  width: 350px;
+  width: var(--preview-width, 350px);
   height: 680px;
+  margin-inline: auto;
   overflow: hidden;
   border-radius: 48px;
   background: #ffffff;
@@ -62,6 +114,10 @@
 
 .dark .wasm-preview__device {
   background: #0b0d11;
+}
+
+.dark .wasm-preview__status-bar {
+  color: rgb(243, 244, 246);
 }
 
 /* 屏幕区域：整屏交给 iframe，组件自行处理状态栏/灵动岛 inset */
@@ -332,17 +388,11 @@
   }
 }
 
-/* 极窄窗口防溢出：手机撑满内容区，仅作兜底，不做布局切换 */
-@media (max-width: 420px) {
-  .wasm-preview__stage {
-    padding-right: 0;
-    padding-left: 0;
-  }
-
-  .wasm-preview__device {
-    width: 100%;
-    max-width: 350px;
-    height: 640px;
+@media (max-width: 640px) {
+  .wasm-preview__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 }
 

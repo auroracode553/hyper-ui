@@ -1,20 +1,21 @@
+---
+description: 通过拖动选择范围内数值，支持离散刻度、数值标签与提交回调。
+---
+
 # HyperSlider
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+通过拖动选择范围内数值，支持离散刻度、数值标签与提交回调。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="slider" title="HyperSlider 交互预览" />
 
-## 样式约定
+## 使用方式
 
-默认值域 0..100，显示数值，44dp 触摸高、6dp 轨道、20dp 白色圆形滑块和 2dp 品牌描边。滑块中心沿完整轨道移动，并在边缘限制可见滑块。旧版中心点与光晕配置已删除，不保留无效颜色入口。
-
-## 状态归属与使用约束
-
-值由调用方持有。steps 仅控制等距吸附，segmentValues 控制标记；0..1 使用场景必须显式传 valueRange=0f..1f。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -22,7 +23,26 @@ import hyper_ui.*
 HyperSlider(value, { value = it })
 ```
 
-## HyperSlider API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+默认值域 0..100，显示数值，44dp 触摸高、6dp 轨道、20dp 白色圆形滑块和 2dp 品牌描边。滑块中心沿完整轨道移动，并在边缘限制可见滑块。旧版中心点与光晕配置已删除，不保留无效颜色入口。
+
+**状态归属**
+
+值由调用方持有。steps 仅控制等距吸附，segmentValues 控制标记；0..1 使用场景必须显式传 valueRange=0f..1f。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperSlider
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -51,6 +71,8 @@ fun HyperSlider(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | value | Float | 是 | — | 调用方持有的当前值。 |
@@ -75,7 +97,10 @@ fun HyperSlider(
 | trackBorder | BorderStroke? | 否 | null | 进度轨道的边框配置。 |
 | thumbBorder | BorderStroke? | 否 | HyperSliderDefaults.thumbBorder() | 滑块手柄的边框配置。 |
 
-## HyperSliderDefaults.colors API / Props
+<details class="component-doc__details component-doc__advanced">
+<summary>默认配置与数据类型</summary>
+
+**HyperSliderDefaults.colors**
 
 ```kotlin
 @Composable
@@ -102,7 +127,7 @@ fun HyperSlider(
 | disabledSegmentMarkerColor | Color | 否 | Color.Unspecified | 禁用时的刻度点颜色。 |
 | disabledThumbColor | Color | 否 | Color.Unspecified | 禁用时的手柄填充色。 |
 
-## HyperSliderDefaults.trackBorder API / Props
+**HyperSliderDefaults.trackBorder**
 
 ```kotlin
 @Composable
@@ -113,7 +138,7 @@ fun HyperSlider(
 | --- | --- | --- | --- | --- |
 | color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
 
-## HyperSliderDefaults.thumbBorder API / Props
+**HyperSliderDefaults.thumbBorder**
 
 ```kotlin
 @Composable
@@ -124,7 +149,7 @@ fun HyperSlider(
 | --- | --- | --- | --- | --- |
 | color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
 
-## HyperSliderColors 配置
+**HyperSliderColors 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -136,3 +161,5 @@ fun HyperSlider(
 | disabledActiveTrackColor | Color | 是 | — | 禁用时的已填充轨道。 |
 | disabledSegmentMarkerColor | Color | 是 | — | 禁用时的刻度点颜色。 |
 | disabledThumbColor | Color | 是 | — | 禁用时的手柄填充色。 |
+
+</details>

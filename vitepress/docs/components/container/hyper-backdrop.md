@@ -1,10 +1,46 @@
+---
+description: 为悬浮表面提供共享的背景采样，配合 Solid、Soft、Clear 三种材质。
+---
+
 # HyperBackdrop 与玻璃令牌
 
-包名：`hyper_ui`。背景与前景由调用方提供；背景采样状态由 `rememberHyperBackdropState()` 创建，可传给 `hyperBackdropSource`。材质颜色通过 `HyperThemeConfig(glass = ...)` 注入。
+为悬浮表面提供共享的背景采样，配合 Solid、Soft、Clear 三种材质。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="glass_material" title="玻璃材质交互预览" />
 
-## 公开签名与默认值
+## 使用方式
+
+<details class="component-doc__details">
+<summary>最小调用</summary>
+
+```kotlin
+HyperThemeConfig {
+    HyperBackdrop() {
+        HyperCard { HyperText("玻璃卡片") }
+    }
+}
+```
+
+</details>
+
+## 使用约定
+
+**约束**
+
+业务状态由调用方管理，组件只负责 UI 与回调。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperBackdrop
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -28,7 +64,7 @@ fun HyperSoftBackground(
 )
 ```
 
-## Props（参数）
+</details>
 
 ### HyperBackdrop
 
@@ -52,17 +88,3 @@ fun HyperSoftBackground(
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | intensity | Float | 否 | 1f | 柔和背景效果的强度。 |
 | content | @Composable BoxScope.() -&gt; Unit | 否 | {} | 组件主体内容，由调用方提供。 |
-
-## 最小用法
-
-```kotlin
-HyperThemeConfig {
-    HyperBackdrop() {
-        HyperCard { HyperText("玻璃卡片") }
-    }
-}
-```
-
-## 约束
-
-- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。

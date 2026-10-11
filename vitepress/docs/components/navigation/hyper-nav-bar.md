@@ -1,20 +1,21 @@
+---
+description: 透明页面导航栏，组织返回入口、标题、副标题和右侧操作。
+---
+
 # HyperNavBar
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+透明页面导航栏，组织返回入口、标题、副标题和右侧操作。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="nav-bar" title="HyperNavBar 交互预览" />
 
-## 样式约定
+## 使用方式
 
-透明导航操作层默认 44dp，水平留白 16dp，标题 16sp/600、行高 1.2、字距 -0.2sp；副标题 11sp、间隔 2dp。固定按钮 38dp、图标 20dp。顶部状态栏另计安全区。
-
-## 状态归属与使用约束
-
-通过 HyperNavBarPage 组合滚动正文，避免重复计算顶部安全区。固定类型仅使用标题和对应回调；custom 接收插槽。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -22,7 +23,26 @@ import hyper_ui.*
 HyperNavBar(type = "backWithTitle", titleContent = { HyperText("详情") }, onBackClick = onBack)
 ```
 
-## HyperNavBar API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+透明导航操作层默认 44dp，水平留白 16dp，标题 16sp/600、行高 1.2、字距 -0.2sp；副标题 11sp、间隔 2dp。固定按钮 38dp、图标 20dp。顶部状态栏另计安全区。
+
+**状态归属**
+
+通过 HyperNavBarPage 组合滚动正文，避免重复计算顶部安全区。固定类型仅使用标题和对应回调；custom 接收插槽。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperNavBar
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -47,6 +67,8 @@ fun HyperNavBar(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | type | String | 否 | HyperNavBarDefaults.TypeCustom | 渲染形态；合法值见本页样式约定。 |
@@ -67,7 +89,10 @@ fun HyperNavBar(
 | actions | List&lt;@Composable () -&gt; Unit&gt; | 否 | emptyList() | 导航栏操作项内容。 |
 | child | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 导航栏附加子内容。 |
 
-## HyperNavBarPage API / Props
+### HyperNavBarPage
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -81,6 +106,8 @@ fun HyperNavBarPage(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | navBar | @Composable () -&gt; Unit | 是 | — | 页面顶部导航栏内容。 |
@@ -90,7 +117,10 @@ fun HyperNavBarPage(
 | bottomSafeArea | Boolean | 否 | true | 是否为底部系统安全区留白。 |
 | content | @Composable BoxScope.(PaddingValues) -&gt; Unit | 是 | — | 主体内容插槽。 |
 
-## HyperNavBarBackButton API / Props
+### HyperNavBarBackButton
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -100,6 +130,8 @@ fun HyperNavBarBackButton(
     contentDescription: String = "返回"
 )
 ```
+
+</details>
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |

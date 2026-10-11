@@ -1,20 +1,21 @@
+---
+description: 用于空列表、搜索无结果等场景，可组合恢复操作。
+---
+
 # HyperEmptyState
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+用于空列表、搜索无结果等场景，可组合恢复操作。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="empty_state" title="HyperEmptyState 交互预览" />
 
-## 样式约定
+## 使用方式
 
-内容 padding 20dp，图标徽章56dp、radius 24dp、24dp 图标；标题 16sp/600、说明 13sp/1.45。图标到标题 12dp、说明 8dp、操作 12dp。
-
-## 状态归属与使用约束
-
-页面数据与操作结果由调用方持有。说明或插槽为 null 时省略。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -24,7 +25,26 @@ HyperEmptyState(title = "暂无内容", description = "数据会显示在这里"
 })
 ```
 
-## HyperEmptyState API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+内容 padding 20dp，图标徽章56dp、radius 24dp、24dp 图标；标题 16sp/600、说明 13sp/1.45。图标到标题 12dp、说明 8dp、操作 12dp。
+
+**状态归属**
+
+页面数据与操作结果由调用方持有。说明或插槽为 null 时省略。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperEmptyState
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -39,6 +59,8 @@ fun HyperEmptyState(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | title | String | 是 | — | 标题；null 时省略。 |
@@ -49,7 +71,10 @@ fun HyperEmptyState(
 | iconContent | (@Composable () -&gt; Unit)? | 否 | null | 图标区域的自定义内容。 |
 | actionContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 操作区插槽。 |
 
-## HyperEmptyStateDefaults.colors API / Props
+<details class="component-doc__details component-doc__advanced">
+<summary>默认配置与数据类型</summary>
+
+**HyperEmptyStateDefaults.colors**
 
 ```kotlin
 @Composable
@@ -66,10 +91,12 @@ fun HyperEmptyState(
 | titleColor | Color | 否 | Color.Unspecified | 标题颜色。 |
 | descriptionColor | Color | 否 | Color.Unspecified | 说明颜色。 |
 
-## HyperEmptyStateColors 配置
+**HyperEmptyStateColors 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | iconContentColor | Color | 是 | — | 空状态图标颜色。 |
 | titleColor | Color | 是 | — | 标题颜色。 |
 | descriptionColor | Color | 是 | — | 说明颜色。 |
+
+</details>

@@ -1,4 +1,4 @@
-/** 文件职责：解析 Preview 使用的 VitePress Markdown，并提取公开 API 参数。 */
+/** 文件职责：解析唯一的 VitePress Markdown 正文，保留表格、代码与可折叠内容。 */
 package hyper_ui.docs.markdown
 
 sealed interface MarkdownBlock {
@@ -8,29 +8,45 @@ sealed interface MarkdownBlock {
     data class Quote(val text: String) : MarkdownBlock
     data class Code(val language: String, val content: String) : MarkdownBlock
     data class Table(val headers: List<String>, val rows: List<List<String>>) : MarkdownBlock
+    data class Disclosure(val title: String, val blocks: List<MarkdownBlock>) : MarkdownBlock
 }
-
-data class ApiParameter(
-    val name: String,
-    val type: String,
-    val defaultValue: String
-)
-
-data class ApiSignature(
-    val name: String,
-    val kind: String,
-    val parameters: List<ApiParameter>
-)
 
 fun parseMarkdown(markdown: String): List<MarkdownBlock> {
     val lines = markdown.replace("\r\n", "\n").split('\n')
     val blocks = mutableListOf<MarkdownBlock>()
     var index = 0
 
+    // VitePress 页面元数据不属于正文；桌面 Preview 也读取同一份 Markdown。
+    if (lines.firstOrNull()?.trim() == "---") {
+        index = 1
+        while (index < lines.size && lines[index].trim() != "---") index += 1
+        if (index < lines.size) index += 1
+    }
+
     while (index < lines.size) {
         val trimmed = lines[index].trim()
         when {
             trimmed.isEmpty() || trimmed.startsWith("<WasmPreview") -> index += 1
+            trimmed.startsWith("<details") -> {
+                val content = mutableListOf<String>()
+                var depth = 1
+                var inCode = false
+                index += 1
+                while (index < lines.size && depth > 0) {
+                    val line = lines[index]
+                    val value = line.trim()
+                    if (value.startsWith("```")) inCode = !inCode
+                    if (!inCode) {
+                        if (value.startsWith("<details")) depth += 1
+                        if (value == "</details>") depth -= 1
+                    }
+                    if (depth > 0) content += line
+                    index += 1
+                }
+                val summaryIndex = content.indexOfFirst { it.trim().startsWith("<summary>") }
+                val title = if (summaryIndex >= 0) cleanInlineMarkdown(content.removeAt(summaryIndex)) else "详细说明"
+                blocks += MarkdownBlock.Disclosure(title, parseMarkdown(content.joinToString("\n")))
+            }
             trimmed.startsWith("```") -> {
                 val language = trimmed.removePrefix("```").trim()
                 val code = mutableListOf<String>()
@@ -81,120 +97,6 @@ fun parseMarkdown(markdown: String): List<MarkdownBlock> {
     return blocks
 }
 
-fun extractApiSignatures(blocks: List<MarkdownBlock>): List<ApiSignature> = blocks
-    .filterIsInstance<MarkdownBlock.Code>()
-    .filter { it.language.isBlank() || it.language.equals("kotlin", ignoreCase = true) }
-    .flatMap { extractDeclarations(it.content) }
-
-private fun extractDeclarations(code: String): List<ApiSignature> {
-    val declarations = mutableListOf<ApiSignature>()
-    val pattern = Regex("(?:data\\s+class|fun)\\s+(?:<[^>]+>\\s*)?([A-Za-z_][A-Za-z0-9_]*)\\s*\\(")
-    pattern.findAll(code).forEach { match ->
-        val openingParenthesis = code.indexOf('(', startIndex = match.range.first)
-        val closingParenthesis = findMatchingParenthesis(code, openingParenthesis)
-        if (openingParenthesis < 0 || closingParenthesis < 0) return@forEach
-
-        val declarationPrefix = code.substring(match.range.first, openingParenthesis)
-        val kind = if (declarationPrefix.startsWith("data class")) "数据属性" else "函数参数"
-        val parameters = splitTopLevel(code.substring(openingParenthesis + 1, closingParenthesis))
-            .mapNotNull(::parseParameter)
-        if (parameters.isNotEmpty()) {
-            declarations += ApiSignature(
-                name = match.groupValues[1],
-                kind = kind,
-                parameters = parameters
-            )
-        }
-    }
-    return declarations
-}
-
-private fun parseParameter(source: String): ApiParameter? {
-    val normalized = source.trim().removePrefix("val ").removePrefix("var ")
-    if (normalized.isBlank()) return null
-    val colonIndex = findTopLevelCharacter(normalized, ':')
-    if (colonIndex <= 0) return null
-    val equalsIndex = findTopLevelCharacter(normalized, '=', startIndex = colonIndex + 1)
-    val name = normalized.substring(0, colonIndex).trim()
-    val type = if (equalsIndex >= 0) {
-        normalized.substring(colonIndex + 1, equalsIndex).trim()
-    } else {
-        normalized.substring(colonIndex + 1).trim()
-    }
-    val defaultValue = if (equalsIndex >= 0) {
-        normalized.substring(equalsIndex + 1).trim().replace(Regex("\\s+"), " ")
-    } else {
-        "必填"
-    }
-    return ApiParameter(name = name, type = type, defaultValue = defaultValue)
-}
-
-private fun splitTopLevel(source: String): List<String> {
-    val result = mutableListOf<String>()
-    var start = 0
-    var roundDepth = 0
-    var angleDepth = 0
-    var squareDepth = 0
-    var curlyDepth = 0
-
-    source.forEachIndexed { index, character ->
-        when (character) {
-            '(' -> roundDepth += 1
-            ')' -> roundDepth -= 1
-            '<' -> angleDepth += 1
-            '>' -> angleDepth = (angleDepth - 1).coerceAtLeast(0)
-            '[' -> squareDepth += 1
-            ']' -> squareDepth -= 1
-            '{' -> curlyDepth += 1
-            '}' -> curlyDepth -= 1
-            ',' -> if (roundDepth == 0 && angleDepth == 0 && squareDepth == 0 && curlyDepth == 0) {
-                result += source.substring(start, index)
-                start = index + 1
-            }
-        }
-    }
-    result += source.substring(start)
-    return result
-}
-
-private fun findMatchingParenthesis(source: String, openingIndex: Int): Int {
-    if (openingIndex < 0) return -1
-    var depth = 0
-    for (index in openingIndex until source.length) {
-        when (source[index]) {
-            '(' -> depth += 1
-            ')' -> {
-                depth -= 1
-                if (depth == 0) return index
-            }
-        }
-    }
-    return -1
-}
-
-private fun findTopLevelCharacter(source: String, target: Char, startIndex: Int = 0): Int {
-    var roundDepth = 0
-    var angleDepth = 0
-    var squareDepth = 0
-    var curlyDepth = 0
-    for (index in startIndex until source.length) {
-        when (source[index]) {
-            '(' -> roundDepth += 1
-            ')' -> roundDepth -= 1
-            '<' -> angleDepth += 1
-            '>' -> angleDepth = (angleDepth - 1).coerceAtLeast(0)
-            '[' -> squareDepth += 1
-            ']' -> squareDepth -= 1
-            '{' -> curlyDepth += 1
-            '}' -> curlyDepth -= 1
-            target -> if (roundDepth == 0 && angleDepth == 0 && squareDepth == 0 && curlyDepth == 0) {
-                return index
-            }
-        }
-    }
-    return -1
-}
-
 private fun isMarkdownTableHeader(lines: List<String>, index: Int): Boolean {
     if (index + 1 >= lines.size || !lines[index].trim().startsWith("|")) return false
     val separator = lines[index + 1].trim()
@@ -219,11 +121,16 @@ private fun startsNewBlock(lines: List<String>, index: Int): Boolean {
         trimmed.startsWith("- ") ||
         trimmed.startsWith("> ") ||
         trimmed.startsWith("<WasmPreview") ||
+        trimmed.startsWith("<details") ||
         isMarkdownTableHeader(lines, index)
 }
 
 private fun cleanInlineMarkdown(value: String): String = value
+    .replace(Regex("</?(?:p|summary|span|strong|em)(?:\\s[^>]*)?>"), "")
     .replace(Regex("`([^`]*)`"), "\$1")
     .replace(Regex("\\[([^]]+)]\\([^)]+\\)"), "\$1")
     .replace("**", "")
     .replace("__", "")
+    .replace("&lt;", "<")
+    .replace("&gt;", ">")
+    .replace("&amp;", "&")

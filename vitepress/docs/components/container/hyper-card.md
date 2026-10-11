@@ -1,20 +1,21 @@
+---
+description: 组织标题、说明、操作、正文和页脚，支持选中状态。
+---
+
 # HyperCard
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+组织标题、说明、操作、正文和页脚，支持选中状态。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="panel" title="HyperCard 交互预览" />
 
-## 样式约定
+## 使用方式
 
-卡片 regular 材质、24dp 圆角、12dp 内容间距。标题 14sp/600、副标题 13sp，头部与正文、页脚间距 12dp；selected 使用 strong 与强调色轮廓。
-
-## 状态归属与使用约束
-
-selected、onClick 与业务数据由调用方维护；卡片内 ListTile 自动使用 plain。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -22,7 +23,26 @@ import hyper_ui.*
 HyperCard(titleContent = { HyperText("标题") }, subtitleContent = { HyperText("说明") }) { HyperText("正文") }
 ```
 
-## HyperCard API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+卡片 regular 材质、24dp 圆角、12dp 内容间距。标题 14sp/600、副标题 13sp，头部与正文、页脚间距 12dp；selected 使用 strong 与强调色轮廓。
+
+**状态归属**
+
+selected、onClick 与业务数据由调用方维护；卡片内 ListTile 自动使用 plain。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperCard
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -46,6 +66,8 @@ fun HyperCard(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
@@ -65,7 +87,10 @@ fun HyperCard(
 | footerContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 固定页脚插槽。 |
 | content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 主体内容插槽。 |
 
-## HyperCardDefaults.colors API / Props
+<details class="component-doc__details component-doc__advanced">
+<summary>默认配置与数据类型</summary>
+
+**HyperCardDefaults.colors**
 
 ```kotlin
 @Composable
@@ -77,7 +102,7 @@ fun HyperCard(
 | containerColor | Color | 否 | Color.Unspecified | 表面背景色；Color.Unspecified 使用组件的主题默认值。 |
 | selected | Boolean | 否 | false | 调用方持有的选中状态。 |
 
-## HyperCardDefaults.border API / Props
+**HyperCardDefaults.border**
 
 ```kotlin
 @Composable
@@ -89,8 +114,10 @@ fun HyperCard(
 | color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
 | selected | Boolean | 否 | false | 调用方持有的选中状态。 |
 
-## HyperCardColors 配置
+**HyperCardColors 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | containerColor | Color | 是 | — | 表面背景色；Color.Unspecified 使用组件的主题默认值。 |
+
+</details>

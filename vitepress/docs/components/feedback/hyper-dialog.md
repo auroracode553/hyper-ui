@@ -1,20 +1,21 @@
+---
+description: 模态内容容器，提供标题、正文、操作区和受控关闭。
+---
+
 # HyperDialog
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+模态内容容器，提供标题、正文、操作区和受控关闭。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="hyper_dialog" title="HyperDialog 交互预览" />
 
-## 样式约定
+## 使用方式
 
-最大宽 420dp、窗口外间距 24dp、radius 26dp、strong 材质。默认 padding 18dp，标题 20sp/600，正文间隔 10dp，操作区距离 18dp、按钮间隔 8dp；250ms 淡入与 0.96 → 1 缩放。
-
-## 状态归属与使用约束
-
-visible 由调用方持有，滚动正文与固定 actionContent 分开。系统返回和外部点击按配置请求关闭。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -22,7 +23,26 @@ import hyper_ui.*
 HyperDialog(visible, { visible = false }, title = "确认") { HyperText("正文") }
 ```
 
-## HyperDialog API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+最大宽 420dp、窗口外间距 24dp、radius 26dp、strong 材质。默认 padding 18dp，标题 20sp/600，正文间隔 10dp，操作区距离 18dp、按钮间隔 8dp；250ms 淡入与 0.96 → 1 缩放。
+
+**状态归属**
+
+visible 由调用方持有，滚动正文与固定 actionContent 分开。系统返回和外部点击按配置请求关闭。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperDialog
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -49,6 +69,8 @@ fun HyperDialog(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | visible | Boolean | 是 | — | 调用方持有的可见状态。 |
@@ -65,10 +87,13 @@ fun HyperDialog(
 | showScrollIndicator | Boolean | 否 | HyperDialogDefaults.ShowScrollIndicator | 内容滚动时是否显示滚动提示。 |
 | actionContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 操作区插槽。 |
 | border | BorderStroke? | 否 | HyperDialogDefaults.border() | 轮廓覆盖。 |
-| contentPadding | androidx.compose.foundation.layout.PaddingValues | 否 | HyperDialogDefaults.ContentPadding | 可覆盖的 contentPadding 配置；默认表达式见此表。 |
+| contentPadding | androidx.compose.foundation.layout.PaddingValues | 否 | HyperDialogDefaults.ContentPadding | 内容区的内部留白。 |
 | content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 主体内容插槽。 |
 
-## HyperDialogDefaults.colors API / Props
+<details class="component-doc__details component-doc__advanced">
+<summary>默认配置与数据类型</summary>
+
+**HyperDialogDefaults.colors**
 
 ```kotlin
 @Composable
@@ -79,7 +104,7 @@ fun HyperDialog(
 | --- | --- | --- | --- | --- |
 | containerColor | Color | 否 | Color.Unspecified | 表面背景色；Color.Unspecified 使用组件的主题默认值。 |
 
-## HyperDialogDefaults.border API / Props
+**HyperDialogDefaults.border**
 
 ```kotlin
 @Composable
@@ -90,8 +115,10 @@ fun HyperDialog(
 | --- | --- | --- | --- | --- |
 | color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
 
-## HyperDialogColors 配置
+**HyperDialogColors 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | containerColor | Color | 是 | — | 表面背景色；Color.Unspecified 使用组件的主题默认值。 |
+
+</details>

@@ -1,10 +1,55 @@
+---
+description: 组合倍速选择与快捷操作，播放行为由调用方执行。
+---
+
 # HyperPlaybackSpeedPanel
 
-包名：`hyper_ui`。
+组合倍速选择与快捷操作，播放行为由调用方执行。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="playback_speed_panel" title="HyperPlaybackSpeedPanel 交互预览" />
 
-## 公开签名与默认值
+## 使用方式
+
+<details class="component-doc__details">
+<summary>最小调用</summary>
+
+```kotlin
+var panelVisible by remember { mutableStateOf(false) }
+var playbackSpeed by remember { mutableStateOf(1f) }
+
+HyperPlaybackSpeedPanelOverlay(
+    visible = panelVisible,
+    currentSpeed = playbackSpeed,
+    onSpeedChange = { speed -> playbackSpeed = speed },
+    onDismissRequest = { panelVisible = false },
+    onCustomSpeedRequest = { customDialogVisible = true },
+    texts = HyperPlaybackSpeedPanelTexts(
+        title = stringResource(R.string.playback_speed),
+        customAction = stringResource(R.string.custom)
+    )
+)
+```
+
+</details>
+
+## 使用约定
+
+**约束**
+
+业务状态由调用方管理，组件只负责 UI 与回调。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperPlaybackSpeedPanel
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -52,7 +97,7 @@ fun HyperPlaybackSpeedPanel(
 )
 ```
 
-## Props（参数）
+</details>
 
 ### HyperPlaybackSpeedPanelOverlay
 
@@ -99,26 +144,3 @@ fun HyperPlaybackSpeedPanel(
 | hintLeadingContent | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 提示信息的前置内容。 |
 | resetContent | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 重置操作的自定义内容。 |
 | customActionLeadingContent | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 自定义速度操作的前置内容。 |
-
-## 最小用法
-
-```kotlin
-var panelVisible by remember { mutableStateOf(false) }
-var playbackSpeed by remember { mutableStateOf(1f) }
-
-HyperPlaybackSpeedPanelOverlay(
-    visible = panelVisible,
-    currentSpeed = playbackSpeed,
-    onSpeedChange = { speed -> playbackSpeed = speed },
-    onDismissRequest = { panelVisible = false },
-    onCustomSpeedRequest = { customDialogVisible = true },
-    texts = HyperPlaybackSpeedPanelTexts(
-        title = stringResource(R.string.playback_speed),
-        customAction = stringResource(R.string.custom)
-    )
-)
-```
-
-## 约束
-
-- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。

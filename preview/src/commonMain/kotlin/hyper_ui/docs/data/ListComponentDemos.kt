@@ -41,13 +41,14 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
             "list/hyper-list.md",
             "list/hyper-list-tile.md"
         ),
-        content = { HyperListDemo() }
+        content = { HyperListDemo() },
+        fullScreenPreview = true
     ),
     ComponentDemo(
         id = "hyper_menu_list",
         group = GROUP_LIST,
         title = "HyperMenuGroup",
-        description = "只用于少量菜单、设置项和操作入口的共享材质圆角菜单容器，不用于数据列表。",
+        description = "账户与应用偏好的分组菜单；展示静态设置入口、开关与复选状态。",
         code = """
             HyperMenuGroup(items = items) { item ->
                 HyperListTile(
@@ -103,16 +104,18 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("懒分段", "sections + items", "标题与每个数据行独立懒加载"),
-            DemoVariant("自动圆角", "首项 / 中间项 / 尾项", "每组形成独立的 16dp 圆角卡片"),
+            DemoVariant("自动圆角", "首项 / 中间项 / 尾项", "每组形成独立的 18dp 圆角卡片"),
             DemoVariant("自动分割线", "dividerModifier", "组内非末项绘制，末项自动隐藏"),
             DemoVariant("稳定复用", "sectionKey + itemKey", "分段标题和数据行使用独立稳定 key"),
-            DemoVariant("可调间距", "sectionSpacing", "支持紧凑和标准分段节奏")
+            DemoVariant("可调间距", "sectionSpacing", "支持紧凑和标准分段节奏"),
+            DemoVariant("整屏滚动", "fullScreenPreview + Modifier.weight(1f)", "列表占满控件下方视口，滚动到最后一组")
         ),
         apiDocumentPaths = listOf(
             "list/hyper-sectioned-list.md",
             "list/hyper-list-tile.md"
         ),
-        content = { HyperSectionedListDemo() }
+        content = { HyperSectionedListDemo() },
+        fullScreenPreview = true
     ),
     ComponentDemo(id = "list-tile", group = GROUP_LIST, title = "HyperListTile",
         description = "参考 46dp 条目、34dp 图标块，auto/plain/glass、选中与禁用可操作。",

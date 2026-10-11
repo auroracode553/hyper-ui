@@ -1,10 +1,59 @@
+---
+description: 按日期或分类组织页面数据，标题与数据行独立懒加载，自动管理组内圆角与分隔线。
+---
+
 # HyperSectionedList
 
-包名：`hyper_ui`。
+按日期或分类组织页面数据，标题与数据行独立懒加载，自动管理组内圆角与分隔线。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="hyper_sectioned_list" title="HyperSectionedList 交互预览" />
 
-## 公开签名与默认值
+## 使用方式
+
+<details class="component-doc__details">
+<summary>最小调用</summary>
+
+```kotlin
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import hyper_ui.*
+
+HyperSectionedList(
+    modifier = Modifier.fillMaxSize(),
+    sections = groups,
+    items = { it.entries },
+    sectionKey = { "section-${it.id}" },
+    itemKey = { group, entry -> "entry-${group.id}-${entry.id}" },
+    headerContent = { HyperText(it.title) }
+) { _, entry ->
+    HyperListTile(headlineContent = { HyperText(entry.title) })
+}
+```
+
+</details>
+
+## 使用约定
+
+**滚动布局**
+
+列表需要有限高度。页面正文使用 Modifier.fillMaxSize()；顶部控件与列表组合时，列表使用 Modifier.weight(1f) 占满剩余视口，不使用固定 340dp 高度或外层 verticalScroll。默认左右留白 16dp，由列表统一提供，外层无需再次添加。分组和条目 key 必须在整个列表中唯一。选择状态由调用方持有。
+
+**约束**
+
+业务状态由调用方管理，组件只负责 UI 与回调。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperSectionedList
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -28,7 +77,7 @@ fun <S, T> HyperSectionedList(
 )
 ```
 
-## Props（参数）
+</details>
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -46,31 +95,3 @@ fun <S, T> HyperSectionedList(
 | colors | HyperSectionedListColors | 否 | HyperSectionedListDefaults.colors() | 组件各状态的颜色配置。 |
 | headerContent | @Composable (section: S) -&gt; Unit | 是 | — | 每个分组的标题内容。 |
 | itemContent | @Composable (section: S, item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |
-
-## 最小用法
-
-```kotlin
-import androidx.compose.foundation.layout.PaddingValues
-import hyper_ui.HyperText
-import androidx.compose.ui.unit.dp
-import hyper_ui.*
-
-HyperSectionedList(
-    sections = historyGroups,
-    items = { group -> group.histories },
-    sectionKey = { group -> "history-section-${group.date}" },
-    itemKey = { _, history -> "history-item-${history.id}" },
-    contentPadding = PaddingValues(horizontal = 10.dp),
-    headerContent = { group -> Text(group.title) }
-) { _, history ->
-    HyperListTile(
-        headlineContent = { Text(history.title) },
-        supportingContent = { Text(history.url) },
-        onClick = { openHistory(history) }
-    )
-}
-```
-
-## 约束
-
-- 支持 Android 手机端；业务状态由调用方管理，组件只负责 UI 与回调。

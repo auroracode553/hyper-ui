@@ -170,6 +170,7 @@ fun CheckboxDemo() {
 fun TextFieldDemo() {
     var value by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("password") }
+    var amount by remember { mutableStateOf("128") }
     var note by remember { mutableStateOf("") }
     var size by remember { mutableStateOf("default") }
     var enabled by remember { mutableStateOf(true) }
@@ -178,14 +179,20 @@ fun TextFieldDemo() {
     val focusRequester = remember { FocusRequester() }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         HyperSegmentedControl(listOf("small", "default", "large"), size, { size = it }) { HyperText(it) }
-        HyperButton({ enabled = !enabled }, type = "ghost") { HyperText("切换禁用") }
-        HyperButton({ error = !error }, type = "ghost") { HyperText("切换错误") }
-        HyperButton({ readOnly = !readOnly }, type = "ghost") { HyperText("切换只读") }
+        PreviewToggle("允许输入", enabled) { enabled = it }
+        PreviewToggle("错误状态", error) { error = it }
+        PreviewToggle("只读", readOnly) { readOnly = it }
+        PreviewSectionLabel("基础输入与清空")
         HyperTextField(value, { value = it }, size = size, clearable = true, enabled = enabled, isError = error, readOnly = readOnly,
-            inputModifier = Modifier.focusRequester(focusRequester), labelContent = { HyperText("基础输入与清空") },
+            inputModifier = Modifier.focusRequester(focusRequester),
             placeholderContent = { HyperText("请输入内容") })
+        PreviewSectionLabel("密码显隐")
         HyperTextField(password, { password = it }, type = "password", size = size, showPasswordToggle = true,
-            labelContent = { HyperText("密码显隐") }, placeholderContent = { HyperText("请输入密码") })
+            placeholderContent = { HyperText("请输入密码") })
+        PreviewSectionLabel("前后缀插槽")
+        HyperTextField(amount, { amount = it }, type = "number", size = size, clearable = true,
+            labelContent = { HyperText("金额") }, startContent = { HyperText("¥") }, endContent = { HyperText("元") })
+        PreviewSectionLabel("多行与字数限制")
         HyperTextField(note, { note = it }, type = "textarea", size = size, rows = 3, maxlength = 80, showWordLimit = true,
             labelContent = { HyperText("多行输入") }, placeholderContent = { HyperText("请输入多行内容") })
         HyperButton({ focusRequester.requestFocus() }, size = "small") { HyperText("查看聚焦") }

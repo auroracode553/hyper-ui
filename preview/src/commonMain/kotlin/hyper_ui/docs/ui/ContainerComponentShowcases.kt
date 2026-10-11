@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -67,16 +68,27 @@ fun ColorPickerDemo() {
 
 @Composable
 fun PanelDemo() {
-    var selected by remember { mutableStateOf(false) }
-    var feedback by remember { mutableStateOf("等待操作") }
-    HyperCard(selected = selected, onClick = { selected = !selected },
-        titleContent = { HyperText("系统状态") },
-        subtitleContent = { HyperText(if (selected) "卡片已选中" else "运行正常，最近同步 2 分钟前") },
-        leadingContent = { HyperIcon(HyperReferenceIcons.Check, null, tint = HyperColors.accent) },
-        actionContent = { HyperButton({ selected = !selected }, type = "ghost", size = "small") { HyperText("选择") } },
-        footerContent = { HyperButton({ feedback = "已查看详情" }) { HyperText("查看详情") } }) {
-        HyperText(feedback)
-        HyperListTile(headlineContent = { HyperText("卡片内自动使用 plain 行") }, onClick = { feedback = "列表项已点击" })
+    var selected by remember { mutableStateOf(true) }
+    var feedback by remember { mutableStateOf("上次更新：今天 09:30") }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        PreviewSectionLabel("完整结构 · 标题、说明、操作、正文与页脚")
+        HyperCard(
+            titleContent = { HyperText("本周专注") },
+            subtitleContent = { HyperText("保持轻量、清晰的内容层级") },
+            leadingContent = { HyperIcon(HyperReferenceIcons.Sparkles, null) },
+            actionContent = { HyperButton({ feedback = "已打开更多操作" }, type = "icon", size = "small") { HyperIcon(HyperReferenceIcons.More, "更多") } },
+            footerContent = { HyperText(feedback, size = "small") }
+        ) {
+            HyperText("卡片组织内容与操作，业务状态由调用方持有。")
+        }
+        PreviewSectionLabel("选中状态")
+        PreviewToggle("选中方案", selected) { selected = it }
+        HyperCard(selected = selected, onClick = { selected = !selected },
+            titleContent = { HyperText("已选择的方案") }, subtitleContent = { HyperText("点击卡片切换选择状态") }) {
+            HyperText("选中时以品牌色强调当前方案。")
+        }
+        PreviewSectionLabel("纯内容容器")
+        HyperCard { HyperText("省略标题和副标题，直接承载正文。") }
     }
 }
 
@@ -105,18 +117,19 @@ private fun ContainerIconBadge(
 /** 材质令牌可注入；使用已有主题方向，避免在预览中误重置深色模式。 */
 @Composable
 fun GlassMaterialDemo() {
-    var opacity by remember { mutableStateOf(217 / 255f) }
+    val surfaceAlpha = HyperTheme.glass.surface.alpha
+    var opacity by remember(surfaceAlpha) { mutableStateOf(surfaceAlpha) }
     val glass = HyperTheme.glass.copy(surface = HyperTheme.glass.surface.copy(alpha = opacity))
     HyperThemeConfig(
         themeColor = HyperTheme.colors.themeColor,
         darkTheme = HyperTheme.isDark,
         typography = HyperTheme.typography,
         shapes = HyperTheme.shapes,
+        material = HyperTheme.material,
         glass = glass
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            HyperText("四档重量（weight 控制表面层级）", fontSize = 12.sp,
-                color = LocalDocsColorScheme.current.onSurfaceVariant)
+            PreviewSectionLabel("同一材质的表面层级")
             listOf(
                 "Subtle · 小面积和辅助表面" to glass.surfaceSubtle,
                 "Regular · 常规内容表面" to glass.surface,

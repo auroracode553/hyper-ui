@@ -1,20 +1,21 @@
+---
+description: 受控文本输入，支持清空、密码、多行、计数、错误与只读状态。
+---
+
 # HyperTextField
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+受控文本输入，支持清空、密码、多行、计数、错误与只读状态。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="text_field" title="HyperTextField 交互预览" />
 
-## 样式约定
+## 使用方式
 
-输入框圆角 20dp。small/default/large 字号 14/16/18sp、行高 1.3，横向 padding 14/18/20dp，纵向 7/9/11dp。textarea 上下各多 3dp。支持 text/search/password/textarea/email/url/number/tel。聚焦轮廓 1.5dp，普通 1dp。
-
-## 状态归属与使用约束
-
-文本由调用方持有，selection/composition 和密码临时显隐由组件维护。错误优先于聚焦。showPasswordToggle 默认 false。endContent 与内置密码/清空操作同时显示；清空按钮在空值时保持占位，计数在下方右侧。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -22,7 +23,28 @@ import hyper_ui.*
 HyperTextField(value, { value = it }, clearable = true, placeholderContent = { HyperText("请输入") })
 ```
 
-## HyperTextField API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+输入框圆角 20dp。small/default/large 字号 14/16/18sp、行高 1.3，横向 padding 14/18/20dp，纵向 7/9/11dp。textarea 上下各多 3dp。支持 text/search/password/textarea/email/url/number/tel。聚焦轮廓 1.5dp，普通 1dp。
+
+Preview 使用参考项目的外部标签分组；已经有外部标题时无需重复传入 labelContent。金额示例保留标签插槽，并同时展示前后缀与内置清空操作。
+
+**状态归属**
+
+文本由调用方持有，selection/composition 和密码临时显隐由组件维护。错误优先于聚焦。showPasswordToggle 默认 false。endContent 与内置密码/清空操作同时显示；清空按钮在空值时保持占位，计数在下方右侧。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperTextField
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -57,6 +79,8 @@ fun HyperTextField(
 )
 ```
 
+</details>
+
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | value | String | 是 | — | 调用方持有的当前值。 |
@@ -87,7 +111,10 @@ fun HyperTextField(
 | endContent | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 输入框末端的自定义内容。 |
 | supportingContent | (@Composable ColumnScope.() -&gt; Unit)? | 否 | null | 辅助说明插槽。 |
 
-## HyperTextFieldDefaults.contentPadding API / Props
+<details class="component-doc__details component-doc__advanced">
+<summary>默认配置与数据类型</summary>
+
+**HyperTextFieldDefaults.contentPadding**
 
 ```kotlin
 fun contentPadding(size: String = "default", multiline: Boolean = false): androidx.compose.foundation.layout.PaddingValues =
@@ -96,9 +123,9 @@ fun contentPadding(size: String = "default", multiline: Boolean = false): androi
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
-| multiline | Boolean | 否 | false | 可覆盖的 multiline 配置；默认表达式见此表。 |
+| multiline | Boolean | 否 | false | 是否按多行输入增加纵向留白。 |
 
-## HyperTextFieldDefaults.textStyle API / Props
+**HyperTextFieldDefaults.textStyle**
 
 ```kotlin
 @Composable
@@ -109,7 +136,7 @@ fun contentPadding(size: String = "default", multiline: Boolean = false): androi
 | --- | --- | --- | --- | --- |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
 
-## HyperTextFieldDefaults.keyboardOptions API / Props
+**HyperTextFieldDefaults.keyboardOptions**
 
 ```kotlin
 fun keyboardOptions(type: String = "text"): KeyboardOptions
@@ -119,7 +146,7 @@ fun keyboardOptions(type: String = "text"): KeyboardOptions
 | --- | --- | --- | --- | --- |
 | type | String | 否 | "text" | 渲染形态；合法值见本页样式约定。 |
 
-## HyperTextFieldDefaults.colors API / Props
+**HyperTextFieldDefaults.colors**
 
 ```kotlin
 @Composable
@@ -150,7 +177,7 @@ fun keyboardOptions(type: String = "text"): KeyboardOptions
 | disabledContainerColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 禁用时的表面背景色。 |
 | disabledContentColor | androidx.compose.ui.graphics.Color | 否 | androidx.compose.ui.graphics.Color.Unspecified | 禁用时的正文颜色；默认沿用正常文字色。 |
 
-## HyperTextFieldColors 配置
+**HyperTextFieldColors 配置**
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -164,3 +191,5 @@ fun keyboardOptions(type: String = "text"): KeyboardOptions
 | cursorColor | Color | 是 | — | 光标与聚焦轮廓颜色。 |
 | disabledContainerColor | Color | 是 | — | 禁用时的表面背景色。 |
 | disabledContentColor | Color | 是 | — | 禁用时的正文颜色；默认沿用正常文字色。 |
+
+</details>

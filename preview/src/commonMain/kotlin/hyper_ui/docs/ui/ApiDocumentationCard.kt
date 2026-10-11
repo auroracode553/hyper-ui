@@ -25,9 +25,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.docs.generated.resources.Res
-import hyper_ui.docs.markdown.ApiSignature
 import hyper_ui.docs.markdown.MarkdownBlock
-import hyper_ui.docs.markdown.extractApiSignatures
 import hyper_ui.docs.markdown.parseMarkdown
 import hyper_ui.docs.theme.DocsBorder
 import hyper_ui.docs.theme.DocsCodeBackground
@@ -76,7 +74,6 @@ internal fun ApiDocumentationCard(documentPaths: List<String>) {
 @Composable
 private fun ApiDocumentSection(path: String, markdown: String) {
     val blocks = remember(markdown) { parseMarkdown(markdown) }
-    val signatures = remember(blocks) { extractApiSignatures(blocks) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         HyperText(
             text = path.substringAfterLast('/').removeSuffix(".md"),
@@ -84,29 +81,7 @@ private fun ApiDocumentSection(path: String, markdown: String) {
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold
         )
-        signatures.forEach { signature ->
-            ApiSignatureTable(signature)
-        }
         MarkdownContent(blocks)
-    }
-}
-
-@Composable
-private fun ApiSignatureTable(signature: ApiSignature) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        HyperText(
-            text = "${signature.name} · ${signature.kind}",
-            color = LocalDocsColorScheme.current.onSurface,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-        DocumentationTable(
-            headers = listOf("属性", "类型", "默认值 / 必填"),
-            rows = signature.parameters.map { parameter ->
-                listOf(parameter.name, parameter.type, parameter.defaultValue)
-            },
-            columnWidths = listOf(180.dp, 360.dp, 360.dp)
-        )
     }
 }
 
@@ -115,6 +90,7 @@ private fun MarkdownContent(blocks: List<MarkdownBlock>) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         blocks.forEach { block ->
             when (block) {
+                is MarkdownBlock.Disclosure -> MarkdownDisclosure(block)
                 is MarkdownBlock.Heading -> MarkdownHeading(block)
                 is MarkdownBlock.Paragraph -> MarkdownText(block.text)
                 is MarkdownBlock.Bullet -> Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -149,6 +125,17 @@ private fun MarkdownContent(blocks: List<MarkdownBlock>) {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun MarkdownDisclosure(block: MarkdownBlock.Disclosure) {
+    var expanded by remember(block) { mutableStateOf(false) }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        HyperButton(onClick = { expanded = !expanded }, type = "ghost", modifier = Modifier.fillMaxWidth()) {
+            HyperText(if (expanded) "收起：${block.title}" else block.title)
+        }
+        if (expanded) MarkdownContent(block.blocks)
     }
 }
 

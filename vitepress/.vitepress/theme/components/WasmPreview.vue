@@ -16,12 +16,10 @@ interface BuildStatus {
 interface WasmPreviewProps {
   demo?: string
   title?: string
-  height?: number | string
 }
 
 const props = withDefaults(defineProps<WasmPreviewProps>(), {
-  title: 'HyperUI 交互预览',
-  height: 480
+  title: 'HyperUI 交互预览'
 })
 
 const READINESS_FILE = '/wasm-preview/preview-ready.json'
@@ -50,6 +48,9 @@ const clock = ref(Date.now())
 const framePhase = ref<FramePhase>('loading')
 const frameAttempt = ref(0)
 const frame = ref<HTMLIFrameElement | null>(null)
+const previewWidth = ref(350)
+const viewportWidths = [320, 350, 390, 430]
+const deviceStyle = computed(() => ({ '--preview-width': `${previewWidth.value}px` }))
 let pollTimer: ReturnType<typeof setInterval> | undefined
 let frameTimer: ReturnType<typeof setTimeout> | undefined
 let canvasTimer: ReturnType<typeof setInterval> | undefined
@@ -73,6 +74,10 @@ const displayPhase = computed<DisplayPhase>(() => {
   return framePhase.value
 })
 
+// 更新期间保留已经就绪的交互画面；新产物加载时才重新显示首帧遮罩。
+const retainingPreview = computed(() => sourceAvailable.value && framePhase.value === 'ready'
+  && ['preparing', 'compiling', 'error'].includes(displayPhase.value))
+
 const progressSteps: Record<DisplayPhase, number> = {
   checking: 0, preparing: 1, compiling: 2, loading: 3,
   rendering: 4, ready: 0, missing: 0, error: 0
@@ -81,10 +86,10 @@ const progressStep = computed(() => progressSteps[displayPhase.value])
 
 const statusText = computed(() => {
   switch (displayPhase.value) {
-    case 'preparing': return buildStatus.value?.message || '正在准备 Wasm 依赖与包锁文件'
-    case 'compiling': return buildStatus.value?.message || '正在编译组件预览'
-    case 'loading': return '正在加载 Wasm 预览资源'
-    case 'rendering': return '正在渲染组件首帧'
+    case 'preparing': return '正在准备预览'
+    case 'compiling': return '预览正在更新'
+    case 'loading': return '正在加载示例'
+    case 'rendering': return '正在显示示例'
     case 'error': return buildStatus.value?.phase === 'error'
       ? buildStatus.value.message : '组件预览加载超时，请重新检查'
     case 'missing': return developmentSource
@@ -96,12 +101,12 @@ const statusText = computed(() => {
 const statusDetail = computed(() => {
   if (displayPhase.value === 'preparing' || displayPhase.value === 'compiling') {
     const elapsedSeconds = Math.max(0, Math.floor((clock.value - (buildStatus.value?.updatedAt || clock.value)) / 1000))
-    return `本阶段已耗时 ${Math.floor(elapsedSeconds / 60)} 分 ${elapsedSeconds % 60} 秒；详细任务进度请查看 dev:watch 终端。`
+    return `本阶段已耗时 ${Math.floor(elapsedSeconds / 60)} 分 ${elapsedSeconds % 60} 秒，页面正文可继续阅读。`
   }
   if (displayPhase.value === 'error') return buildStatus.value?.phase === 'error'
     ? '修复终端中的错误后保存 Kotlin 文件，预览会自动重试。'
     : '请检查浏览器控制台或 Wasm 开发服务器，再重新检查。'
-  if (displayPhase.value === 'missing') return '启动 dev:watch 后，组件编译状态和预览会自动出现在这里。'
+  if (displayPhase.value === 'missing') return '请由维护者生成 Preview 产物，然后重新检查。'
   return '页面已可阅读，组件就绪后会自动显示。'
 })
 
@@ -239,18 +244,31 @@ onBeforeUnmount(() => {
   <figure class="wasm-preview">
     <figcaption class="wasm-preview__header">
       <span class="wasm-preview__title">{{ title }}</span>
-      <a
+      <div class="wasm-preview__toolbar" aria-label="预览工具">
+        <label class="wasm-preview__width-control">
+          <span>手机宽度</span>
+          <select v-model.number="previewWidth" aria-label="手机预览宽度">
+            <option v-for="width in viewportWidths" :key="width" :value="width">{{ width }}dp</option>
+          </select>
+        </label>
+        <button type="button" class="wasm-preview__tool-button" :disabled="!sourceAvailable" @click="retryPreview">重置</button>
+        <a
         v-if="sourceAvailable"
         class="wasm-preview__open-link"
         :href="resolvedSource"
         target="_blank"
         rel="noreferrer"
         :aria-label="`在新窗口打开：${title}`"
-      >在新窗口打开</a>
+        >打开预览</a>
+      </div>
     </figcaption>
 
+    <p v-if="retainingPreview" class="wasm-preview__update-note" role="status">
+      {{ statusText }} · 当前显示上次生成的示例
+    </p>
+
     <div class="wasm-preview__stage">
-      <div class="wasm-preview__device">
+      <div class="wasm-preview__device" :style="deviceStyle">
         <div class="wasm-preview__status-bar" aria-hidden="true">
           <span class="wasm-preview__time">9:41</span>
           <span class="wasm-preview__status-icons">
@@ -280,7 +298,7 @@ onBeforeUnmount(() => {
             @load="onFrameLoad"
           />
           <div
-            v-if="displayPhase !== 'ready'"
+            v-if="displayPhase !== 'ready' && !retainingPreview"
             class="wasm-preview__status"
             :aria-busy="progressStep > 0 || displayPhase === 'checking'"
           >

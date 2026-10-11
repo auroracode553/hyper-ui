@@ -19,6 +19,13 @@ export default defineConfig({
   description: 'HyperUI Android 手机端 Compose UI 组件库文档与交互预览',
   lastUpdated: true,
   ...createAiDocsConfig({ siteUrl }),
+  markdown: {
+    config(md) {
+      // 保留完整五列参数表；窄页面在表格区域滚动，不压缩手机预览。
+      md.renderer.rules.table_open = () => '<div class="doc-table-scroll" tabindex="0" role="region" aria-label="文档参数表"><table>\n'
+      md.renderer.rules.table_close = () => '</table></div>\n'
+    }
+  },
   vite: {
     // Markdown 源码位于 vitepress/docs/，静态预览产物集中保存在 vitepress/public/。
     publicDir: publicDirectory

@@ -19,7 +19,7 @@ data class ComponentDemo(
     val variants: List<DemoVariant>,
     val apiDocumentPaths: List<String>,
     val content: @Composable () -> Unit,
-    /** 组件是否直接占用嵌入预览的完整手机视口。 */
+    /** 页面示例占用有限的剩余视口并自行滚动；普通示例由宿主滚动，禁止重复嵌套。 */
     val fullScreenPreview: Boolean = false,
     /** 沉浸式页面自行避让状态栏时，宿主允许内容绘制到屏幕顶端。 */
     val fillsTopSafeArea: Boolean = false,
@@ -29,7 +29,7 @@ data class ComponentDemo(
     val useReferencePreview: Boolean = true
 )
 
-/** 聚合稳定 Preview ID；主题与组件演示同步 doc_ui_kit 的 Solid/Soft/Clear、尺寸和受控状态。 */
+/** 聚合稳定 Preview ID；分组示例同步参考展示结构，页面示例自行滚动，普通示例由统一视口滚动。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos())
     addAll(formComponentDemos())

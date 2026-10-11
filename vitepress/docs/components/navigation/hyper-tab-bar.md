@@ -1,20 +1,21 @@
+---
+description: 悬浮底部入口，提供单动作与多项导航两种形态。
+---
+
 # HyperTabBar
 
-包名：hyper_ui。调用方使用 `import hyper_ui.*`。
+悬浮底部入口，提供单动作与多项导航两种形态。
+
+<p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
+
+## 交互示例
 
 <WasmPreview demo="tab-bar-multiple" title="HyperTabBar 交互预览" />
 
-## 样式约定
+## 使用方式
 
-type 为 multiple 或 single。multiple 高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 20dp、top 8dp。指示器 160ms easeOutCubic。图标 23dp、文字 12sp、间距 1dp。single 为 56dp 方形 regular 玻璃、22dp 图标、16dp 角标。
-
-## 状态归属与使用约束
-
-multiple 至少 2 项，single 恰好 1 项。itemLabel 必须与实际显示文字一致。320..430dp 内父约束优先；选中值由调用方管理。
-
-支持范围为 Android 手机竖屏 320–430dp；Desktop/Wasm 仅用于 Preview。显式尺寸、颜色或排版覆盖会改变参考默认效果。
-
-## 最小调用
+<details class="component-doc__details">
+<summary>最小调用</summary>
 
 ```kotlin
 import hyper_ui.*
@@ -29,7 +30,26 @@ HyperTabBar(items, onItemClick = { selected = it }, itemSelected = { it == selec
 
 <WasmPreview demo="tab-bar-single" title="单动作与角标" />
 
-## HyperTabBar API / Props
+</details>
+
+## 使用约定
+
+**样式约定**
+
+type 为 multiple 或 single。multiple 高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 20dp、top 8dp。指示器 160ms easeOutCubic。图标 23dp、文字 12sp、间距 1dp。single 为 56dp 方形 regular 玻璃、22dp 图标、16dp 角标。
+
+**状态归属**
+
+multiple 至少 2 项，single 恰好 1 项。itemLabel 必须与实际显示文字一致。320..430dp 内父约束优先；选中值由调用方管理。
+
+Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+## 公开 API
+
+### HyperTabBar
+
+<details class="component-doc__details">
+<summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
@@ -49,6 +69,8 @@ fun <T> HyperTabBar(
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
 )
 ```
+
+</details>
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
