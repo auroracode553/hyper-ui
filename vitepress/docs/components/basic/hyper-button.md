@@ -20,7 +20,9 @@ description: 胶囊按钮，用于主要操作、次要操作、危险操作和�
 ```kotlin
 import hyper_ui.*
 
-HyperButton(onClick = onSave) { HyperText("保存") }
+HyperButton(onClick = onClose) { HyperText("关闭") }
+HyperButton(onClick = onSave, type = "filled", colorStyle = "primary") { HyperText("保存") }
+HyperButton(onClick = onConfirm, type = "tonal", colorStyle = "success") { HyperText("确认") }
 ```
 
 </details>
@@ -29,11 +31,15 @@ HyperButton(onClick = onSave) { HyperText("保存") }
 
 **样式约定**
 
-按钮 small/default/large 高度 32/38/44dp，圆角为高度一半。省略 type 时使用默认描边；显式类型仅支持 filled/tonal/danger/icon。主操作使用 filled，独立图标入口使用 icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
+按钮 small/default/large 高度 32/38/44dp，圆角为高度一半。省略 type 时使用默认描边；显式类型仅支持 filled/tonal/icon。主操作使用 filled 与 colorStyle = primary，独立图标入口使用 icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
+
+colorStyle 支持 primary/success/info/warning/danger；color 为自定义基色，优先于 colorStyle。两者都省略时为白色中性样式，深色模式随主题。配色不会改变 type；例如同一个 success 配色可用于默认描边、filled、tonal 或 icon。
 
 **状态归属**
 
 loading 与 enabled 由调用方控制，加载时停止点击。
+
+交互预览仅保留一个禁用文字按钮，不重复展示禁用后外观相同的配色。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -52,9 +58,11 @@ fun HyperButton(
     enabled: Boolean = true,
     loading: Boolean = false,
     type: String? = null,
+    color: Color = Color.Unspecified,
+    colorStyle: String? = null,
     size: String = "default",
-    colors: HyperButtonColors = HyperButtonDefaults.colors(type),
-    border: BorderStroke? = HyperButtonDefaults.border(type, enabled),
+    colors: HyperButtonColors = HyperButtonDefaults.colors(type, color = color, colorStyle = colorStyle),
+    border: BorderStroke? = HyperButtonDefaults.border(type, enabled, color = color, colorStyle = colorStyle),
     shape: Shape = HyperButtonDefaults.shape(size),
     contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(size),
     role: Role = Role.Button,
@@ -72,10 +80,12 @@ fun HyperButton(
 | modifier | Modifier | 否 | Modifier | 外部尺寸、位置与间距。 |
 | enabled | Boolean | 否 | true | 是否允许用户操作。 |
 | loading | Boolean | 否 | false | 是否处于加载态；加载时阻止重复点击。 |
-| type | String? | 否 | null | 省略时默认描边；显式类型为 filled、tonal、danger、icon，其他值抛出参数错误。 |
+| type | String? | 否 | null | 省略时默认描边；显式类型为 filled、tonal、icon，其他值抛出参数错误。 |
+| color | Color | 否 | Color.Unspecified | 自定义基色，优先于 colorStyle，随 type 应用于填充、文字与轮廓。 |
+| colorStyle | String? | 否 | null | primary/success/info/warning/danger 语义配色；省略为白色中性样式。 |
 | size | String | 否 | "default" | small/default/large 尺寸档位。 |
-| colors | HyperButtonColors | 否 | HyperButtonDefaults.colors(type) | 各状态配色配置。 |
-| border | BorderStroke? | 否 | HyperButtonDefaults.border(type, enabled) | 轮廓覆盖。 |
+| colors | HyperButtonColors | 否 | HyperButtonDefaults.colors(type, color = color, colorStyle = colorStyle) | 各状态配色配置。 |
+| border | BorderStroke? | 否 | HyperButtonDefaults.border(type, enabled, color = color, colorStyle = colorStyle) | 轮廓覆盖。 |
 | shape | Shape | 否 | HyperButtonDefaults.shape(size) | 表面形状。 |
 | contentPadding | PaddingValues | 否 | HyperButtonDefaults.contentPadding(size) | 主体内容的内部留白。 |
 | role | Role | 否 | Role.Button | 组件的无障碍语义角色。 |
@@ -147,17 +157,21 @@ fun contentPadding(size: String = "default"): PaddingValues
         containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified,
         disabledContainerColor: Color = Color.Unspecified,
-        disabledContentColor: Color = Color.Unspecified
+        disabledContentColor: Color = Color.Unspecified,
+        color: Color = Color.Unspecified,
+        colorStyle: String? = null
     ): HyperButtonColors
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| type | String? | 否 | null | 省略时默认描边；显式类型为 filled、tonal、danger、icon。 |
+| type | String? | 否 | null | 省略时默认描边；显式类型为 filled、tonal、icon。 |
 | containerColor | Color | 否 | Color.Unspecified | 表面背景色；Color.Unspecified 使用组件的主题默认值。 |
 | contentColor | Color | 否 | Color.Unspecified | 主要文字与图标颜色。 |
 | disabledContainerColor | Color | 否 | Color.Unspecified | 禁用时的表面背景色。 |
 | disabledContentColor | Color | 否 | Color.Unspecified | 禁用时的文字与图标颜色。 |
+| color | Color | 否 | Color.Unspecified | 自定义基色，优先于 colorStyle。 |
+| colorStyle | String? | 否 | null | primary/success/info/warning/danger 预设配色。 |
 
 **HyperButtonDefaults.border**
 
@@ -166,15 +180,17 @@ fun contentPadding(size: String = "default"): PaddingValues
     fun border(
         type: String? = null,
         enabled: Boolean = true,
-        color: Color = Color.Unspecified
+        color: Color = Color.Unspecified,
+        colorStyle: String? = null
     ): BorderStroke?
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| type | String? | 否 | null | 省略时默认描边；显式类型为 filled、tonal、danger、icon。 |
+| type | String? | 否 | null | 省略时默认描边；显式类型为 filled、tonal、icon。 |
 | enabled | Boolean | 否 | true | 是否允许用户操作。 |
-| color | Color | 否 | Color.Unspecified | 颜色覆盖。 |
+| color | Color | 否 | Color.Unspecified | 自定义基色，参与轮廓配色。 |
+| colorStyle | String? | 否 | null | primary/success/info/warning/danger 预设配色。 |
 
 **HyperButtonColors 配置**
 

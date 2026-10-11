@@ -63,7 +63,7 @@ fun PlaybackSpeedScaleDemo() {
             HyperButton(
                 enabled = selectedIndex < speedOptions.lastIndex,
                 onClick = { selectedSpeed = speedOptions[selectedIndex + 1] },
-                type = "filled",
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText("向右调速")
             }
@@ -108,7 +108,7 @@ fun PlaybackSpeedPanelDemo() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                HyperButton(onClick = { panelVisible = true }, type = "filled") {
+                HyperButton(onClick = { panelVisible = true }, colorStyle = "primary", type = "filled") {
                     HyperText("打开速度面板")
                 }
                 HyperButton(

@@ -18,7 +18,7 @@ fun HyperNavBarBackButton(
         onClick = onClick,
         modifier = modifier.semantics { this.contentDescription = contentDescription },
         type = "icon",
-        colors = HyperButtonDefaults.colors("icon", containerColor = hyperGlass.surfaceStrong)
+        colors = HyperButtonDefaults.colors(null, containerColor = hyperGlass.surfaceStrong)
     ) {
         HyperIcon(
             imageVector = HyperReferenceIcons.ChevronLeft,
@@ -39,7 +39,7 @@ internal fun HyperNavBarMoreButton(
         onClick = onClick,
         modifier = modifier.semantics { this.contentDescription = contentDescription },
         type = "icon",
-        colors = HyperButtonDefaults.colors("icon", containerColor = hyperGlass.surfaceStrong)
+        colors = HyperButtonDefaults.colors(null, containerColor = hyperGlass.surfaceStrong)
     ) {
         HyperIcon(
             imageVector = HyperReferenceIcons.More,

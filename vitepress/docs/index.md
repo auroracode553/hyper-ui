@@ -33,7 +33,7 @@ import hyper_ui.*
 
 HyperButton(
     onClick = onSave,
-    type = "filled",
+    colorStyle = "primary", type = "filled",
     size = "default"
 ) { HyperText("保存") }
 ```

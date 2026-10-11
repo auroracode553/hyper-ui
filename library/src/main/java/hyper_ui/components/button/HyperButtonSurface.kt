@@ -22,7 +22,7 @@ internal fun Modifier.hyperButtonSurface(
     enabled: Boolean,
     border: BorderStroke?
 ): Modifier {
-    val filled = enabled && type != null
+    val filled = enabled && type == "filled"
     return then(if (filled) Modifier.dropShadow(shape, Shadow(
         radius = 16.dp, spread = (-5).dp, offset = DpOffset(0.dp, 7.dp),
         color = containerColor.copy(alpha = 50 / 255f)

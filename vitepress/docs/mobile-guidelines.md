@@ -19,7 +19,7 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 | `default` | 手机页面中的常规控件，默认值 |
 | `large` | 主要入口、媒体操作和需要更强视觉层级的控件 |
 
-`type` 只表示同一组件内的渲染形态，例如按钮的 `filled` 或输入框的 `textarea`；`size` 只改变组件的视觉尺度。外部宽度不要通过新增 `width` API 解决，使用 `Modifier.fillMaxWidth()`、`widthIn()` 或父布局约束。
+`type` 只表示同一组件内的渲染形态，例如按钮的 `filled` 或输入框的 `textarea`；按钮配色通过独立的 `colorStyle` 与 `color` 控制；`size` 只改变组件的视觉尺度。外部宽度不要通过新增 `width` API 解决，使用 `Modifier.fillMaxWidth()`、`widthIn()` 或父布局约束。
 
 ## 触控与反馈
 

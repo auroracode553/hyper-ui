@@ -98,9 +98,8 @@ private fun PreviewToggle(
     label: String,
     onClick: () -> Unit
 ) {
-    HyperButton(
+    HyperButton(type = "tonal",
         onClick = onClick,
-        type = "tonal",
         size = "small",
         contentPadding = HyperButtonDefaults.contentPadding("small")
     ) { HyperText(label, maxLines = 1) }

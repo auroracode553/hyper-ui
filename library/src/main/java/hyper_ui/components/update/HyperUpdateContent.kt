@@ -150,7 +150,7 @@ internal fun HyperUpdateActions(view: HyperUpdatePresentation, texts: HyperUpdat
                 is HyperUpdateDialogState.Completed -> Triple("开始使用", onClose, HyperReferenceIcons.Check)
                 else -> Triple("再次检查", onCheck, HyperReferenceIcons.Refresh)
             }
-            HyperButton(action, Modifier.fillMaxWidth(), type = "filled") { HyperIcon(icon, null); HyperText(label) }
+            HyperButton(action, Modifier.fillMaxWidth(), colorStyle = "primary", type = "filled") { HyperIcon(icon, null); HyperText(label) }
         }
         val secondary = !locked && (view.busy || view.state is HyperUpdateDialogState.UpdateAvailable ||
             view.state is HyperUpdateDialogState.ReadyToInstall || view.state is HyperUpdateDialogState.Error)

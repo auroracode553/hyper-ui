@@ -21,7 +21,7 @@ description: 用于确认、删除等需要明确结果的操作，提供标题�
 import hyper_ui.*
 
 HyperAlertDialog(visible, { visible = false }, title = "确认删除", bodyContent = { HyperText("删除后无法恢复") },
-    actionContent = { HyperButton(onDelete, type = "danger") { HyperText("删除") } })
+    actionContent = { HyperButton(onDelete, colorStyle = "danger", type = "filled") { HyperText("删除") } })
 ```
 
 </details>

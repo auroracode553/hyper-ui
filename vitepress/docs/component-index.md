@@ -11,7 +11,7 @@ HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列�
 | [HyperText](components/basic/hyper-text.md) | 12 / 14 / 18sp 文字 |
 | [HyperIcon](components/basic/hyper-icon.md) | 18 / 24 / 32dp 图标与插槽继承 |
 | [HyperDivider](components/basic/hyper-divider.md) | 实线、虚线和方向缩进 |
-| [HyperButton](components/basic/hyper-button.md) | 默认描边；显式 filled、tonal、danger、icon |
+| [HyperButton](components/basic/hyper-button.md) | 默认白色描边；type 控制 filled/tonal/icon，color/colorStyle 控制配色；禁用态保留单个示例 |
 
 ## 表单
 

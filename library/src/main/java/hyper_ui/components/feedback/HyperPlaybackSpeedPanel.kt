@@ -488,7 +488,6 @@ private fun HyperPlaybackSpeedCustomAction(
 private fun panelButtonColors(
     colors: HyperPlaybackSpeedPanelColors
 ): HyperButtonColors = HyperButtonDefaults.colors(
-    type = "tonal",
     containerColor = colors.contentColor.copy(alpha = 0.10f),
     contentColor = colors.contentColor,
     disabledContainerColor = colors.contentColor.copy(alpha = 0.05f),

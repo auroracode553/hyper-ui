@@ -137,7 +137,7 @@ private fun NavBarExampleChoices(selected: NavBarExample, onSelect: (NavBarExamp
                 HyperButton(
                     onClick = { onSelect(example) },
                     modifier = Modifier.weight(1f),
-                    type = if (example == selected) "tonal" else null,
+                    type = if (example == selected) null else null,
                     size = "small"
                 ) { HyperText(example.label, maxLines = 1) }
             }

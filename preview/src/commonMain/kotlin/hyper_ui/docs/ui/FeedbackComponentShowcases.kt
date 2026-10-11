@@ -55,7 +55,7 @@ fun EmptyStateDemo() {
             title = "没有找到结果",
             description = if (descriptionVisible) "换一个关键词，或者清除筛选条件后重试。" else null,
             iconContent = { HyperIcon(HyperReferenceIcons.Search, null) },
-            actionContent = { HyperButton({ feedback = "已清除筛选" }, type = "tonal") { HyperText("清除筛选") } }
+            actionContent = { HyperButton(type = "tonal", onClick = { feedback = "已清除筛选" }) { HyperText("清除筛选") } }
         )
         HyperText(feedback, size = "small", color = HyperColors.secondaryText)
         PreviewSectionLabel("纯提示 · 无操作按钮")
@@ -78,7 +78,7 @@ fun DropdownMenuDemo() {
             HyperButton({ enabled = !enabled }) { HyperText(if (enabled) "禁用字段" else "启用字段") }
             HyperButton({ empty = !empty }) { HyperText(if (empty) "恢复选项" else "空列表") }
         }
-        HyperButton({ lastEnabled = !lastEnabled }, type = "tonal", size = "small") { HyperText("切换末项禁用态") }
+        HyperButton(type = "tonal", onClick = { lastEnabled = !lastEnabled }, size = "small") { HyperText("切换末项禁用态") }
         HyperDropdown(
             options = if (empty) emptyList() else listOf(
                 HyperOption("compact", "紧凑布局"), HyperOption("standard", "标准布局"),
@@ -99,7 +99,7 @@ fun ToastDemo() {
     var tone by remember { mutableStateOf(HyperToastTone.Success) }
     Column(Modifier.widthIn(max = 420.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(onClick = { message = "保存成功"; tone = HyperToastTone.Success; duration = 3000L; visible = true }, type = "filled") {
+            HyperButton(onClick = { message = "保存成功"; tone = HyperToastTone.Success; duration = 3000L; visible = true }, colorStyle = "primary", type = "filled") {
                 HyperText("成功")
             }
             HyperButton(onClick = { message = "请检查输入内容"; tone = HyperToastTone.Warning; duration = 3000L; visible = true }) { HyperText("警告") }
@@ -162,7 +162,7 @@ fun ProgressDemo() {
                 }
                 HyperButton(
                     onClick = { progress = (progress + 0.1f).coerceAtMost(1f) },
-                    type = "filled",
+                    colorStyle = "primary", type = "filled",
                 ) {
                     HyperText(text = "增加")
                 }
@@ -245,7 +245,7 @@ fun LevelCapsuleDemo() {
             }
             HyperButton(
                 onClick = { progress = (progress + 0.1f).coerceAtMost(1f) },
-                type = "filled",
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText("提高")
             }
@@ -288,7 +288,7 @@ fun BatteryIndicatorDemo() {
             }
             HyperButton(
                 onClick = { percentage = (percentage + 10).coerceAtMost(100) },
-                type = "filled",
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText("增加电量")
             }
@@ -328,7 +328,7 @@ fun HyperDialogDemo() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        HyperButton(onClick = { visible = true }, type = "filled") {
+        HyperButton(onClick = { visible = true }, colorStyle = "primary", type = "filled") {
             HyperText("显示 Dialog")
         }
         HyperText(
@@ -344,7 +344,7 @@ fun HyperDialogDemo() {
         onDismissRequest = { visible = false },
         title = "稳定输入",
         actionContent = {
-            HyperButton(onClick = { visible = false }, type = "filled") {
+            HyperButton(onClick = { visible = false }, colorStyle = "primary", type = "filled") {
                 HyperText("确定")
             }
         }
@@ -370,7 +370,7 @@ fun DialogDemo() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HyperButton(
-            type = "danger",
+            colorStyle = "danger", type = "filled",
             onClick = {
                 showLongContent = false
                 showDialog = true
@@ -435,7 +435,7 @@ fun DialogDemo() {
                 HyperText(text = "取消")
             }
             HyperButton(
-                type = "danger",
+                colorStyle = "danger", type = "filled",
                 onClick = {
                     resultText = "已确认删除"
                     showDialog = false
@@ -458,7 +458,7 @@ fun HyperPopoverDemo() {
         HyperPopover(
             visible = visible, onDismissRequest = { visible = false },
             anchorContent = {
-                HyperButton({ draft = savedNote; visible = !visible }, type = "filled") { HyperText("编辑备注") }
+                HyperButton({ draft = savedNote; visible = !visible }, colorStyle = "primary", type = "filled") { HyperText("编辑备注") }
             }
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -467,7 +467,7 @@ fun HyperPopoverDemo() {
                 if (longContent) repeat(12) { HyperText("补充说明 ${it + 1}", size = "small") }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     HyperButton({ visible = false }, size = "small") { HyperText("取消") }
-                    HyperButton({ savedNote = draft; visible = false }, size = "small", type = "filled") { HyperText("保存") }
+                    HyperButton({ savedNote = draft; visible = false }, size = "small", colorStyle = "primary", type = "filled") { HyperText("保存") }
                 }
             }
         }

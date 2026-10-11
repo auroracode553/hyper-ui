@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
@@ -44,10 +45,11 @@ fun HyperButton(
     enabled: Boolean = true,
     loading: Boolean = false,
     type: String? = null,
-    circle: Boolean = false,
+    color: Color = Color.Unspecified,
+    colorStyle: String? = null,
     size: String = "default",
-    colors: HyperButtonColors = HyperButtonDefaults.colors(type),
-    border: BorderStroke? = HyperButtonDefaults.border(type, enabled),
+    colors: HyperButtonColors = HyperButtonDefaults.colors(type, color = color, colorStyle = colorStyle),
+    border: BorderStroke? = HyperButtonDefaults.border(type, enabled, color = color, colorStyle = colorStyle),
     shape: Shape = HyperButtonDefaults.shape(size),
     contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(size),
     role: Role = Role.Button,
@@ -57,11 +59,13 @@ fun HyperButton(
 ) {
     requireHyperComponentSize(size)
     val resolvedHeight = HyperButtonDefaults.height(size)
-    require(type == null || type in setOf("primary", "success", "info", "warning", "danger")) {
+    require(type == null || type in setOf("filled", "tonal", "icon")) {
         "不支持的 HyperButton type: $type"
     }
-    // 语义颜色与圆形布局独立，图标按钮也可以使用任意语义类型。
-    val isIconType = circle
+    require(colorStyle == null || colorStyle in setOf("primary", "success", "info", "warning", "danger")) {
+        "不支持的 HyperButton colorStyle: $colorStyle"
+    }
+    val isIconType = type == "icon"
     val container = if (enabled) colors.containerColor else colors.disabledContainerColor
     val foreground = if (enabled) colors.contentColor else colors.disabledContentColor
     Row(
@@ -136,19 +140,22 @@ object HyperButtonDefaults {
         containerColor: Color = Color.Unspecified,
         contentColor: Color = Color.Unspecified,
         disabledContainerColor: Color = Color.Unspecified,
-        disabledContentColor: Color = Color.Unspecified
+        disabledContentColor: Color = Color.Unspecified,
+        color: Color = Color.Unspecified,
+        colorStyle: String? = null
     ): HyperButtonColors {
+        val tone = tone(color, colorStyle)
+        val hasTone = color != Color.Unspecified || colorStyle != null
         val fill = when (type) {
-            "primary" -> HyperColors.accent
-            "success" -> HyperColors.success
-            "info" -> HyperColors.info
-            "warning" -> HyperColors.warning
-            "danger" -> HyperColors.danger
+            "filled" -> tone
+            "tonal" -> if (hasTone) tone.copy(alpha = 0.12f) else hyperGlass.selection
+            "icon" -> hyperGlass.surface
             null -> hyperGlass.surfaceSubtle
             else -> error("不支持的 HyperButton type: $type")
         }
-        val foreground = if (type != null)
-            Color(1f, 1f, 1f, 1f) else HyperColors.primaryText
+        val foreground = if (type == "filled" && hasTone) {
+            if (tone.luminance() > 0.5f) HyperColors.primaryText else Color(1f, 1f, 1f, 1f)
+        } else if (hasTone) tone else HyperColors.primaryText
         return HyperButtonColors(
             resolveHyperContainerColor(containerColor, fill),
             resolveHyperContainerColor(contentColor, foreground),
@@ -157,18 +164,35 @@ object HyperButtonDefaults {
         )
     }
 
+    /** 自定义颜色优先于语义配色；省略两者采用默认白色表面（深色模式随主题）。 */
+    @Composable
+    internal fun tone(color: Color, colorStyle: String?): Color {
+        val preset = when (colorStyle) {
+            "primary" -> HyperColors.accent
+            "success" -> HyperColors.success
+            "info" -> HyperColors.info
+            "warning" -> HyperColors.warning
+            "danger" -> HyperColors.danger
+            null -> hyperGlass.surfaceStrong
+            else -> error("不支持的 HyperButton colorStyle: $colorStyle")
+        }
+        return resolveHyperContainerColor(color, preset)
+    }
+
     @Composable
     fun border(
         type: String? = null,
         enabled: Boolean = true,
-        color: Color = Color.Unspecified
+        color: Color = Color.Unspecified,
+        colorStyle: String? = null
     ): BorderStroke? {
         val fallback = when {
             !enabled -> HyperColors.divider.copy(alpha = 110 / 255f)
+            type == "filled" -> Color(1f, 1f, 1f, 45 / 255f)
+            color != Color.Unspecified || colorStyle != null -> tone(color, colorStyle).copy(alpha = 0.35f)
             type == null -> HyperColors.divider
-            else -> Color(1f, 1f, 1f, 45 / 255f)
+            else -> hyperGlass.edgeHighlight
         }
-        val resolved = resolveHyperContainerColor(color, fallback)
-        return if (resolved.alpha == 0f) null else BorderStroke(1.dp, resolved)
+        return if (fallback.alpha == 0f) null else BorderStroke(1.dp, fallback)
     }
 }

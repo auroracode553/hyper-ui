@@ -71,13 +71,13 @@ fun DrawerDemo() {
                     verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     HyperText("当前页面：$selected")
                     DrawerPositionSelector(position, { position = it })
-                    HyperButton({ padding = !padding }, type = "tonal") {
+                    HyperButton(type = "tonal", onClick = { padding = !padding }) {
                         HyperText(if (padding) "默认留白" else "自定义留白")
                     }
-                    HyperButton({ scroll = !scroll }, type = "tonal") {
+                    HyperButton(type = "tonal", onClick = { scroll = !scroll }) {
                         HyperText(if (scroll) "允许滚动" else "关闭滚动")
                     }
-                    HyperButton({ drawerOpen = true }, type = "filled") { HyperText("打开抽屉") }
+                    HyperButton({ drawerOpen = true }, colorStyle = "primary", type = "filled") { HyperText("打开抽屉") }
                 }
             }
         )
@@ -196,8 +196,8 @@ private fun DrawerPositionButton(
     HyperButton(
         onClick = onClick,
         modifier = Modifier.height(36.dp),
-        type = if (selected) "filled" else null
-    ) {
+        colorStyle = if (selected) "primary" else null
+    , type = "filled") {
         HyperText(
             text = text,
             fontSize = 13.sp
@@ -220,8 +220,8 @@ fun SlideActionMenuDemo() {
     var result by remember { mutableStateOf("拖动列表行或用按钮展开") }
     Column(Modifier.widthIn(max = 440.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ reveal = HyperSlideMenuReveal.Start }, type = "tonal") { HyperText("起始侧") }
-            HyperButton({ reveal = HyperSlideMenuReveal.End }, type = "tonal") { HyperText("结束侧") }
+            HyperButton(type = "tonal", onClick = { reveal = HyperSlideMenuReveal.Start }) { HyperText("起始侧") }
+            HyperButton(type = "tonal", onClick = { reveal = HyperSlideMenuReveal.End }) { HyperText("结束侧") }
             HyperButton({ enabled = !enabled }) { HyperText(if (enabled) "禁用" else "启用") }
         }
         HyperSlideMenu(reveal, { reveal = it }, enabled = enabled,

@@ -195,7 +195,7 @@ fun TextFieldDemo() {
         PreviewSectionLabel("多行与字数限制")
         HyperTextField(note, { note = it }, type = "textarea", size = size, rows = 3, maxlength = 80, showWordLimit = true,
             labelContent = { HyperText("多行输入") }, placeholderContent = { HyperText("请输入多行内容") })
-        HyperButton({ focusRequester.requestFocus() }, size = "small", type = "filled") { HyperText("查看聚焦") }
+        HyperButton({ focusRequester.requestFocus() }, size = "small", colorStyle = "primary", type = "filled") { HyperText("查看聚焦") }
     }
 }
 
@@ -252,7 +252,7 @@ fun SliderDemo() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             HyperText(text = "分段进度 ${steppedValue.toInt()}/5")
-            HyperButton(onClick = { showSegmentMarkers = !showSegmentMarkers }, type = "filled") {
+            HyperButton(onClick = { showSegmentMarkers = !showSegmentMarkers }, colorStyle = "primary", type = "filled") {
                 HyperText(if (showSegmentMarkers) "隐藏分段点" else "显示分段点")
             }
         }

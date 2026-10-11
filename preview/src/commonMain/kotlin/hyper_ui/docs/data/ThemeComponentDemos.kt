@@ -61,7 +61,7 @@ private fun ThemeMaterialDemo() {
                 HyperMaterial.values().forEach { option ->
                     HyperButton(
                         onClick = { material = option },
-                        type = if (option == material) "filled" else "tonal",
+                        colorStyle = if (option == material) "primary" else null, type = "filled",
                         size = "small"
                     ) { HyperText(option.label()) }
                 }
@@ -76,7 +76,7 @@ private fun ThemeMaterialDemo() {
                         modifier = Modifier.fillMaxWidth(),
                         placeholderContent = { HyperText("输入内容") }
                     )
-                    HyperButton(onClick = {}, type = "filled") { HyperText("主要操作") }
+                    HyperButton(onClick = {}, colorStyle = "primary", type = "filled") { HyperText("主要操作") }
                 }
             }
         }
