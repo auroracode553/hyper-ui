@@ -36,7 +36,8 @@ vitepress/.vitepress/           导航、主题和文档站配置
 - 组件页依次呈现用途、交互示例、最小调用、使用约定和公开 API。长签名、辅助配置可折叠，完整 Props 表不得删除；Markdown 是唯一正文，桌面 Preview 解析同一份内容并支持折叠。
 - 使用 `type` 描述渲染形态，使用 `size` 描述 `small/default/large` 尺寸。
 - 不把 Preview 的设备框、工具栏和加载状态写成组件 API。
-- Props 表格使用“参数、类型、必填、默认值、作用”五列；长内容在单元格中换行，表格内容不加反引号。表格必须与公开签名及源码同步，不写旧 API 或 Preview 专属属性。
+- Props 表格使用“参数、类型、必填、默认值、作用”五列；长内容在单元格中换行，表格内容不加反引号。表格必须与源码中的当前公开 API 同步，Preview 外壳的属性属于预览文档。
+- 文档只说明当前参数、默认值、约束和用法。API 修改时直接重写相关说明与示例。
 - 示例只展示最小调用；业务网络、数据库、权限、导航和 ViewModel 放在调用方。
 - 颜色示例使用 `rgba(...)` 或主题令牌，不写十六进制 `Color(0xFF...)`。
 
@@ -50,7 +51,7 @@ Wasm/Desktop 预览只用于浏览器或维护者操作真实组件。它们不�
 
 ```powershell
 git diff --check
-rg -n "旧参数|旧类型" library preview vitepress/docs
+python -B tools/sync-component-api-tables.py --check
 ```
 
 按仓库约束，不在本项目中执行打包、部署或发布命令。

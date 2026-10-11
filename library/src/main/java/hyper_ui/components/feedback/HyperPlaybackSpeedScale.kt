@@ -47,16 +47,16 @@ data class HyperPlaybackSpeedScaleColors(
  */
 @Composable
 fun HyperPlaybackSpeedScale(
-    selectedSpeed: Float,
+    value: Float,
     modifier: Modifier = Modifier,
-    speedOptions: List<Float> = HyperPlaybackSpeedScaleDefaults.SpeedOptions,
+    options: List<Float> = HyperPlaybackSpeedScaleDefaults.SpeedOptions,
     shape: Shape = HyperPlaybackSpeedScaleDefaults.Shape,
     colors: HyperPlaybackSpeedScaleColors = HyperPlaybackSpeedScaleDefaults.colors(),
-    leadingContent: (@Composable () -> Unit)? = null
+    leading: (@Composable () -> Unit)? = null
 ) {
-    val resolvedOptions = speedOptions.ifEmpty { HyperPlaybackSpeedScaleDefaults.SpeedOptions }
+    val resolvedOptions = options.ifEmpty { HyperPlaybackSpeedScaleDefaults.SpeedOptions }
     val selectedIndex = resolvedOptions.indices.minByOrNull { index ->
-        abs(resolvedOptions[index] - selectedSpeed)
+        abs(resolvedOptions[index] - value)
     } ?: 0
 
     Box(
@@ -81,22 +81,22 @@ fun HyperPlaybackSpeedScale(
             }
     ) {
         CompactSpeedScaleContent(
-            speedOptions = resolvedOptions,
+            options = resolvedOptions,
             selectedIndex = selectedIndex,
-            selectedSpeed = selectedSpeed,
+            value = value,
             colors = colors,
-            leadingContent = leadingContent
+            leading = leading
         )
     }
 }
 
 @Composable
 private fun CompactSpeedScaleContent(
-    speedOptions: List<Float>,
+    options: List<Float>,
     selectedIndex: Int,
-    selectedSpeed: Float,
+    value: Float,
     colors: HyperPlaybackSpeedScaleColors,
-    leadingContent: (@Composable () -> Unit)?
+    leading: (@Composable () -> Unit)?
 ) {
     BoxWithConstraints(
         modifier = Modifier
@@ -108,22 +108,22 @@ private fun CompactSpeedScaleContent(
         val thumbSize = HyperPlaybackSpeedScaleDefaults.TrackThumbSize
         val markerTravelWidth = (trackWidth - thumbSize).coerceAtLeast(0.dp)
 
-        speedOptions.forEachIndexed { index, speed ->
-            val isOnlyOption = speedOptions.size == 1
-            val fraction = if (speedOptions.size <= 1) {
+        options.forEachIndexed { index, speed ->
+            val isOnlyOption = options.size == 1
+            val fraction = if (options.size <= 1) {
                 0f
             } else {
-                index / speedOptions.lastIndex.toFloat()
+                index / options.lastIndex.toFloat()
             }
             val isEndpoint = !isOnlyOption &&
-                (index == 0 || index == speedOptions.lastIndex)
+                (index == 0 || index == options.lastIndex)
             val markerCenter = endpointAreaWidth + thumbSize * 0.5f +
                 markerTravelWidth * fraction
             val labelOffset = if (isOnlyOption) {
                 (maxWidth - HyperPlaybackSpeedScaleDefaults.LabelWidth) * 0.5f
             } else if (index == 0) {
                 0.dp
-            } else if (index == speedOptions.lastIndex) {
+            } else if (index == options.lastIndex) {
                 maxWidth - endpointAreaWidth
             } else {
                 markerCenter - HyperPlaybackSpeedScaleDefaults.LabelWidth * 0.5f
@@ -149,7 +149,7 @@ private fun CompactSpeedScaleContent(
         }
 
         SpeedTrack(
-            itemCount = speedOptions.size,
+            itemCount = options.size,
             selectedIndex = selectedIndex,
             colors = colors,
             modifier = Modifier
@@ -158,9 +158,9 @@ private fun CompactSpeedScaleContent(
         )
 
         CurrentSpeedValue(
-            selectedSpeed = selectedSpeed,
+            value = value,
             colors = colors,
-            leadingContent = leadingContent,
+            leading = leading,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .height(CurrentValueHeight)
@@ -220,9 +220,9 @@ private fun SpeedTrack(
 
 @Composable
 private fun CurrentSpeedValue(
-    selectedSpeed: Float,
+    value: Float,
     colors: HyperPlaybackSpeedScaleColors,
-    leadingContent: (@Composable () -> Unit)?,
+    leading: (@Composable () -> Unit)?,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -235,17 +235,17 @@ private fun CurrentSpeedValue(
             contentAlignment = Alignment.Center
         ) {
             CompositionLocalProvider(LocalHyperContentColor provides colors.valueColor) {
-                if (leadingContent == null) {
+                if (leading == null) {
                     HyperFastForwardIcon(
                         Modifier.size(HyperPlaybackSpeedScaleDefaults.LeadingIconSize)
                     )
                 } else {
-                    leadingContent()
+                    leading()
                 }
             }
         }
         HyperText(
-            text = "${formatHyperPlaybackSpeed(selectedSpeed)}x",
+            text = "${formatHyperPlaybackSpeed(value)}x",
             color = colors.valueColor,
             fontWeight = FontWeight.Bold,
             fontSize = 11.sp,
@@ -275,8 +275,8 @@ object HyperPlaybackSpeedScaleDefaults {
 
     fun closestSpeed(
         targetSpeed: Float,
-        speedOptions: List<Float> = SpeedOptions
-    ): Float = speedOptions.ifEmpty { SpeedOptions }.minBy { speed ->
+        options: List<Float> = SpeedOptions
+    ): Float = options.ifEmpty { SpeedOptions }.minBy { speed ->
         abs(speed - targetSpeed)
     }
 

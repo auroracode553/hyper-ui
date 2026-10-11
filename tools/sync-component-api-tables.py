@@ -23,25 +23,20 @@ DESCRIPTIONS = dict(
     line.split("|", 1)
     for line in """
 actionArrangement|操作区的排列方式。
-actionContent|操作按钮或操作区内容，由调用方提供。
 actionExtent|侧滑操作区的展开宽度。
 actionSpacing|导航操作项之间的间距。
 actions|导航栏操作项内容。
-alignment|弹出菜单相对于窗口的对齐方式。
 background|供玻璃表面采样的背景内容。
-bodyContent|对话框主体内容。
 border|容器边框配置。
 bottomSafeArea|是否为底部系统安全区留白。
 centerTitle|是否将标题在导航栏中居中。
 charging|当前是否正在充电。
-checked|由调用方持有的勾选状态。
 checkedColor|勾选时的控件颜色。
 checkedThumbColor|开启时滑块颜色。
 checkedTrackColor|开启时轨道颜色。
 checkmarkColor|勾选标记颜色。
 child|导航栏附加子内容。
 clearable|是否在有内容时显示清空操作。
-closeContent|关闭按钮的自定义内容。
 colorSize|单个颜色选项的尺寸。
 colors|组件各状态的颜色配置。
 containerPadding|容器内部留白。
@@ -50,32 +45,21 @@ contentDescription|无障碍内容描述。
 contentModifier|内部内容区域的布局修饰符。
 contentPadding|主体内容的内部留白。
 context|用于读取系统电量状态的 Android Context。
-currentSpeed|当前播放速度，由调用方持有。
-customActionLeadingContent|自定义速度操作的前置内容。
 defaultSetPadding|是否使用抽屉默认留白。
 defaultSpeed|重置操作使用的默认速度。
-description|空状态的说明文字。
 dismissOnBackPress|按返回键时是否请求关闭。
 dismissOnClickOutside|点击外部时是否请求关闭。
 dividerModifier|分隔线的布局修饰符。
 dividerVisible|是否显示行分隔线。
-drawerContent|抽屉中的内容。
 drawerContentModifier|抽屉内容区域的布局修饰符。
-drawerContentScrollEnabled|抽屉内容是否允许滚动。
 drawerModifier|抽屉面板的布局修饰符。
-durationMillis|提示自动消失前的持续时间，单位毫秒。
 elevation|容器阴影高度。
 enabled|是否允许用户交互。
 endActions|向左侧滑时露出的操作项。
-endContent|输入框末端的自定义内容。
 equalWidth|各分段是否等宽。
-expanded|菜单是否展开，由调用方持有。
 firstSectionTopSpacing|第一分组顶部的间距。
-floatingColors|悬浮样式的颜色配置。
 headerBottomSpacing|分组标题下方间距。
 headerContent|每个分组的标题内容。
-headlineContent|列表行主标题内容。
-hintLeadingContent|提示信息的前置内容。
 horizontalAlignment|容器内内容的水平对齐方式。
 horizontalArrangement|子项的水平排列方式。
 horizontalSpacing|颜色选项之间的水平间距。
@@ -89,66 +73,39 @@ itemContent|每个数据项的自定义内容。
 itemContentPadding|单个选项的内部留白。
 itemEnabled|判断单个选项是否可操作。
 itemKey|为列表项生成稳定键。
-itemLayout|标签栏单项的布局配置。
-itemSelected|判断标签栏单项是否选中。
 itemShape|单个选项的形状。
-itemSlotAlignment|标签栏内容 Slot 的对齐方式。
 items|由调用方提供的选项或列表数据。
 keyboardActions|软键盘动作回调。
 keyboardOptions|软键盘类型与输入配置。
 label|数值旁显示的标签文字。
-labelContent|输入框标签内容。
 labelTopSpacing|颜色名称与色块之间的间距。
-leadingContent|内容前方的自定义区域。
 loading|是否处于加载态；加载时阻止重复点击。
-maxlength|允许输入的最大字符数。
 message|提示消息文本。
 minimumTouchHeight|滑块可触摸区域的最小高度。
 modifier|组件外部尺寸、位置和间距修饰符。
 navBar|页面顶部导航栏内容。
 navBarSize|页面导航栏的尺寸档位。
-navigationContent|导航栏左侧导航内容。
-offset|弹出菜单相对对齐位置的偏移。
-onCheckedChange|勾选状态变化时通知调用方。
-onClick|用户点击时执行的回调。
-onCustomSpeedRequest|请求打开自定义速度设置。
-onDismissRequest|请求关闭时通知调用方更新可见状态。
 onDownload|用户触发下载时的回调。
-onItemClick|标签栏单项点击时的回调。
 onRetry|用户触发重试时的回调。
 onRevealChange|侧滑展开状态变化时通知调用方。
-onSelected|选中项变化时通知调用方。
-onSpeedChange|速度变化时通知调用方更新状态。
-onValueChange|值变化时通知调用方更新状态。
-onValueChangeFinished|用户结束滑动时的回调。
-onValueChangeStarted|用户开始滑动时的回调。
 open|抽屉是否打开，由调用方持有。
-options|可选颜色配置。
+options|可供选择的选项列表。
 padding|导航栏内部留白。
 panelModifier|播放速度面板的布局修饰符。
 percentage|电量百分比，范围为 0 至 100。
-placeholderContent|输入框占位内容。
-position|抽屉从哪一侧进入。
 progress|由调用方提供的进度值。
 readOnly|是否只展示当前值而禁止修改。
-resetContent|重置操作的自定义内容。
 reveal|侧滑展开状态，由调用方持有。
 role|组件的无障碍语义角色。
 rows|多行输入的显示行数。
 safeArea|是否避开顶部系统安全区。
 sectionKey|为分组生成稳定键。
-sectionSpacing|相邻分组之间的间距。
 sections|分组数据。
 segmentMarkerSize|分段刻度标记的尺寸。
 segmentValues|需要标出的分段数值。
 selected|由调用方持有的选中状态。
-selectedBorder|选中项的边框配置。
 selectedColor|选中时的控件颜色。
-selectedColors|选中项的颜色配置。
 selectedId|当前颜色选项 ID，由调用方持有。
-selectedItem|当前选中的数据项，由调用方持有。
-selectedSpeed|当前选中的播放速度。
-selectedType|选中项使用的按钮形态。
 shape|组件容器的形状。
 showPasswordToggle|密码类型是否显示显隐操作。
 showPercentage|是否显示电量百分比文字。
@@ -158,14 +115,10 @@ showWordLimit|是否显示字符数和上限。
 size|组件尺寸档位。
 slotSpacing|输入框各内容 Slot 之间的间距。
 spacing|导航栏各区域之间的间距。
-speedOptions|可选播放速度列表。
 startActions|向右侧滑时露出的操作项。
-startContent|输入框起始端的自定义内容。
 state|组件使用的状态对象，由调用方提供或记忆。
 steps|数值范围内的离散步数。
 strokeWidth|圆形进度条的描边宽度。
-subtitleContent|导航栏副标题内容。
-supportingContent|标题或输入框下方的辅助内容。
 text|提示文字。
 textStyle|输入文字的排版样式。
 texts|组件内置文案的配置。
@@ -173,24 +126,17 @@ thumbBorder|滑块手柄的边框配置。
 thumbShape|滑块手柄的形状。
 thumbSize|滑块手柄的尺寸。
 title|对话框或弹出层标题。
-titleContent|导航栏标题内容。
 titleSpacing|标题与其他区域的间距。
-tone|提示的语义色类型。
-topDivider|是否显示顶部边界线。
 trackBorder|进度轨道的边框配置。
 trackHeight|滑块轨道高度。
 trackShape|滑块轨道形状。
-trailingContent|内容末端的自定义区域。
 type|组件的视觉或布局形态。
 uncheckedBorderColor|未勾选时边框颜色。
 uncheckedColor|未勾选时的控件颜色。
 uncheckedThumbColor|关闭时滑块颜色。
 uncheckedTrackColor|关闭时轨道颜色。
-unselectedBorder|未选中项的边框配置。
 unselectedBorderColor|未选中时边框颜色。
 unselectedColor|未选中时的控件颜色。
-unselectedColors|未选中项的颜色配置。
-unselectedType|未选中项使用的按钮形态。
 value|由调用方持有的当前值。
 valueRange|可操作数值范围。
 verticalAlignment|子项的垂直对齐方式。
@@ -207,6 +153,11 @@ DESCRIPTIONS.update({
     "itemLabel": "每个导航项的文字。",
     "onPressed": "点击操作回调；为 null 时不能触发操作。",
     "onChanged": "用户修改值或选择项时通知调用方。",
+    "close": "关闭图标插槽。",
+    "hintLeading": "提示信息的前置图标插槽。",
+    "reset": "重置操作的图标插槽。",
+    "customLeading": "自定义速度操作的前置图标插槽。",
+    "onCustomPressed": "请求打开自定义速度设置。",
     "onClose": "请求关闭时通知调用方更新可见状态。",
     "onBackPressed": "点击返回操作时通知调用方。",
     "onMorePressed": "点击更多操作时通知调用方。",

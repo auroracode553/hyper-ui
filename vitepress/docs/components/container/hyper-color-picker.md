@@ -67,7 +67,7 @@ fun HyperColorPicker(
 | onChanged | (HyperColorOption) -&gt; Unit | 是 | — | 用户修改值或选择项时通知调用方。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | enabled | Boolean | 否 | true | 是否允许用户交互。 |
-| options | List&lt;HyperColorOption&gt; | 否 | HyperColorPickerDefaults.presetOptions | 可选颜色配置。 |
+| options | List&lt;HyperColorOption&gt; | 否 | HyperColorPickerDefaults.presetOptions | 可供选择的选项列表。 |
 | colorSize | Dp | 否 | HyperColorPickerDefaults.colorSize | 单个颜色选项的尺寸。 |
 | horizontalSpacing | Dp | 否 | HyperColorPickerDefaults.horizontalSpacing | 颜色选项之间的水平间距。 |
 | verticalSpacing | Dp | 否 | HyperColorPickerDefaults.verticalSpacing | 颜色选项之间的垂直间距。 |

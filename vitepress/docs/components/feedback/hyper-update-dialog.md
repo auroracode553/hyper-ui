@@ -166,4 +166,4 @@ data class HyperUpdateDownloadProgress(
 
 downloadProgress 在 downloadQueued / downloading 阶段优先于 progress；安装阶段只使用 progress。progressText 覆盖进度说明，总大小未知时不显示百分比或预计剩余时间。
 
-旧的状态封装、业务更新检查器和文案配置对象已删除。业务使用统一 status、数据模型、文案覆盖和回调 API。
+业务层提供 status、release、downloadProgress 和 progress，通过 title、message、primaryLabel 与 secondaryLabel 设置文案；检查、下载、安装和取消通过对应回调处理。

@@ -29,10 +29,10 @@ import hyper_ui.HyperPlaybackSpeedScaleDefaults
 
 @Composable
 fun PlaybackSpeedScaleDemo() {
-    var selectedSpeed by remember { mutableStateOf(2f) }
+    var value by remember { mutableStateOf(2f) }
     var useCustomColors by remember { mutableStateOf(false) }
-    val speedOptions = HyperPlaybackSpeedScaleDefaults.SpeedOptions
-    val selectedIndex = speedOptions.indexOf(selectedSpeed).coerceAtLeast(0)
+    val options = HyperPlaybackSpeedScaleDefaults.SpeedOptions
+    val selectedIndex = options.indexOf(value).coerceAtLeast(0)
     val scaleColors = if (useCustomColors) {
         HyperPlaybackSpeedScaleDefaults.colors(
             containerColor = Color(0.12f, 0.10f, 0.18f, 0.96f),
@@ -50,19 +50,19 @@ fun PlaybackSpeedScaleDemo() {
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         HyperPlaybackSpeedScale(
-            selectedSpeed = selectedSpeed,
+            value = value,
             colors = scaleColors
         )
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
                 enabled = selectedIndex > 0,
-                onPressed = { selectedSpeed = speedOptions[selectedIndex - 1] }
+                onPressed = { value = options[selectedIndex - 1] }
             ) {
                 HyperText("向左调速")
             }
             HyperButton(
-                enabled = selectedIndex < speedOptions.lastIndex,
-                onPressed = { selectedSpeed = speedOptions[selectedIndex + 1] },
+                enabled = selectedIndex < options.lastIndex,
+                onPressed = { value = options[selectedIndex + 1] },
                 colorStyle = "primary", type = "filled",
             ) {
                 HyperText("向右调速")
@@ -84,7 +84,7 @@ fun PlaybackSpeedScaleDemo() {
 
 @Composable
 fun PlaybackSpeedPanelDemo() {
-    var currentSpeed by remember { mutableStateOf(1f) }
+    var value by remember { mutableStateOf(1f) }
     var panelVisible by remember { mutableStateOf(true) }
     var useCustomColors by remember { mutableStateOf(false) }
     var feedback by remember { mutableStateOf("拖动滑块可实时更新速度") }
@@ -125,13 +125,13 @@ fun PlaybackSpeedPanelDemo() {
         }
         HyperPlaybackSpeedPanelOverlay(
             visible = panelVisible,
-            currentSpeed = currentSpeed,
-            onSpeedChange = { speed ->
-                currentSpeed = speed
+            value = value,
+            onChanged = { speed ->
+                value = speed
                 feedback = "当前 ${speed}x"
             },
-            onDismissRequest = { panelVisible = false },
-            onCustomSpeedRequest = { feedback = "已请求自定义速度" },
+            onClose = { panelVisible = false },
+            onCustomPressed = { feedback = "已请求自定义速度" },
             colors = panelColors
         )
     }

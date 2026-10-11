@@ -1,6 +1,6 @@
 # doc_ui_kit 样式对照
 
-本次参考源为 D:/my_project/flutter_project/doc_ui_kit/ui/lib/src/components 与同项目 theme。源码默认值是样式依据；Android 手机端目标为 320–430dp 竖屏。Desktop/Wasm 只用于文档 Preview。
+视觉基准为 D:/my_project/flutter_project/doc_ui_kit/ui/lib/src/components 与同项目 theme。源码默认值是样式依据；Android 手机端目标为 320–430dp 竖屏。Desktop/Wasm 用于文档 Preview。
 
 ## 同名组件参数
 
@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | HyperText | 12 / 14 / 18，行高 1.4 | size 三档；插槽继承局部排版 |
 | HyperIcon | 18 / 24 / 32，插槽图标另定 | size 三档，共享 Lucide 字体原始轮廓 |
-| HyperDivider | 1dp；虚线 4dp + 4dp | type、orientation、indent/endIndent/length |
+| HyperDivider | 1dp；虚线 4dp + 4dp | type、axis、indent/endIndent/length |
 | HyperButton | 高 32 / 38 / 44，radius 高度的一半 | 字号 12 / 13 / 14sp；默认标签图标 17dp、纯图标 20dp |
 | HyperTextField | radius 20；字号 14 / 16 / 18；padding 14×7 / 18×9 / 20×11 | 1dp 普通轮廓、1.5dp 聚焦；多行纵向 +3dp |
 | HyperCheckbox | 44dp 触摸、21dp 方框、radius 7、轮廓 1.5 | nullable 三态、勾 15dp、160ms 状态动画 |
@@ -37,7 +37,7 @@ HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 
 
 图标轮廓从参考 Preview 实际解析的 lucide_icons_flutter 3.1.24 默认字体提取，保留原始填充轮廓与 em 坐标；Android 与 Wasm 共用同一份 ImageVector。
 
-## API 迁移
+## API 约定
 
 | 组件 | 当前明确入口 |
 | --- | --- |
@@ -45,14 +45,16 @@ HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 
 | HyperDropdown | options: List&lt;HyperOption&lt;T&gt;&gt;，value，onChanged；临时 expanded 在组件内部 |
 | HyperPopover | visible、onClose、child、content；内容贴触发点定位 |
 | HyperTabs | tabs、selectedIndex、onChanged、scrollable；共享表面 |
-| HyperTabBar | type=single/multiple、itemLabel、selectedIndex、onChanged；单动作角标 badgeCount |
+| HyperTabBar | type=single/multiple、items、selectedIndex、onChanged；单动作角标 badgeCount |
 | HyperCheckbox | value: Boolean?、onChanged: (Boolean?)-&gt;Unit、tristate |
 | HyperText | size=small/default/large；局部插槽样式优先 |
 | HyperIcon | size=small/default/large；default 继承插槽尺寸 |
-| HyperSlider | 默认 0..100、showValue=true；删除旧中心点/光晕颜色配置 |
-| HyperUpdateDialog | Downloading/ReadyToInstall/Installing/Completed、mandatory、onInstall；业务执行由调用方承担 |
+| HyperSlider | value、onChanged、min=0、max=100、divisions=null、showValue=true；拖动起止回传数值 |
+| HyperUpdateDialog | status、release、downloadProgress、progress、mandatory 与操作回调；业务执行由调用方承担 |
+| HyperPlaybackSpeedPanel | value、onChanged、onClose、options、onCustomPressed；leading 等插槽提供图标 |
+| HyperPlaybackSpeedScale | value、options、leading；只展示速度刻度 |
 
-全部公开 API 在 hyper_ui 包；完整签名和参数默认值见 [组件索引](component-index.md)。原项目特有的电量、倍速、颜色选择、懒列表等组件继续使用现有 API，并跟随统一主题；参考项目没有这些同名组件，未虚构对应尺寸。
+全部公开 API 在 hyper_ui 包；完整签名和参数默认值见 [组件索引](component-index.md)。电量、倍速、颜色选择与懒列表等 Compose 专用组件遵循同一主题与命名约定，具体尺寸见各组件页。
 
 ## 文件职责
 
@@ -66,16 +68,12 @@ HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 
 - ComponentPreviewViewport 统一有限视口与滚动归属；PageListShowcases 为页面级列表提供剩余高度，PreviewSectionLabel 统一示例分组与操作行。
 - component-doc.css 负责文档层级、折叠源码与参数表排版；MarkdownDocument 让桌面 Preview 读取相同 Markdown 并呈现折叠内容。
 
-## 验收状态与手动说明
+## 视觉核对
 
-已按参考源码核对参数，并对 94 个 Kotlin 源文件、37 个 Preview 入口和 33 个共享图标进行静态检查：调用参数、项目内导入、文档签名、Preview ID、颜色格式、文件规模与差异格式均未发现问题。36 个组件页的 91 张完整五列 Props 表均保留，代码与折叠标签结构检查通过。
+两端在相同设备、密度、字号缩放、安全区与字体配置下核对外观。检查浅色和深色、三种材质、320–430dp 宽度，以及禁用、聚焦、错误、选中、加载、键盘展开、RTL 和长文本。
 
-复用使用者事先运行的文档服务与监听进程，在其发布新 Wasm 产物后进行浏览器验收：320/350/390/430dp 均为实际宽度、视口高 680px；普通列表和分段列表可滚动到最后一项并选中；菜单点击反馈与复选状态、输入框清空和前后缀共存均正常。参数表保持可见，源码可以展开。遵照 AGENTS.md，未主动启动项目运行、编译、打包、部署或依赖安装；已有监听进程的产物更新与主动执行构建分别记录。
-
-当前结论是源码参数、文档结构和上述浏览器交互检查通过，尚不能声明 Android 像素 100% 一致。Flutter 与 Compose 的字体度量、阴影和背景模糊后端不同，需要在相同 Android 设备、密度、字号缩放、安全区与字体配置下，分别截图核对。Kotlin 修改需要新的 Wasm 产物；文档热更新本身不能证明手机内的示例已更新，应以产物版本与实际交互为准。
-
-建议按浅/深色 × Solid/Soft/Clear，依次检查 320/360/390/430dp、禁用/聚焦/错误/选中/加载、键盘展开、RTL 与长文本。不附自动构建命令或启动脚本。
+组件预览使用当前源码生成的产物。修改文档正文只更新文档，组件画面由 Preview 产物提供；核对时确认产物版本。列表应能滚动到最后一项，输入框清空与前后缀可同时使用，完整参数表保持可见。
 
 ## 依赖
 
-本次未新增或安装依赖。继续使用仓库声明的 Compose foundation/ui/runtime/animation 与 Haze 1.7.1；调用方可选的 Lucide Android 图标资源依赖需自行安装。
+使用仓库声明的 Compose foundation/ui/runtime/animation 与 Haze；调用方可选的 Lucide Android 图标资源依赖由使用者准备，版本以构建配置为准。

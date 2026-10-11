@@ -26,13 +26,13 @@ Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义
 
 业务参数和回调保持同名。框架布局与宿主参数使用原生类型：Compose 的 Modifier、Composable、Dp、Float，与 Flutter 的 key、Widget、double、Duration；Flutter 的 controller 和 Navigator 弹层宿主、Compose 的受控 visible/open 与内容 DSL 按框架保留。组件特有参数以源码签名和完整参数表为准。
 
-旧名称直接删除，调用点、预览和文档同步迁移，不增加旧 API 别名。默认按钮省略 type 和 colorStyle，显示白色描边；显式 type 仅 filled、tonal、icon，colorStyle 为 primary、success、info、warning、danger。
+默认按钮省略 type 和 colorStyle，显示白色描边；显式 type 仅 filled、tonal、icon，colorStyle 为 primary、success、info、warning、danger。
 
 ## Flutter 参考设计与 Compose API
 
 默认视觉以 `D:/my_project/flutter_project/doc_ui_kit/ui` 的同名组件源码为准。默认材质为 `HyperMaterial.Solid`，同时提供 `Soft`、`Clear`；颜色、字号、行高、圆角、间距、图标和动效均按参考参数重构。按钮高度 32/38/44dp，输入框圆角 20dp，分段控件 40dp，Tabs 54dp，TabBar 56dp。完整对应值和验收边界见 [样式对照](vitepress/docs/style-reference.md)。
 
-此次 API 调整：`HyperDropdown` 使用 options/value/onChanged，`HyperPopover` 提供 child，`HyperTabBar.type` 使用 single/multiple，`HyperCheckbox.value` 为可空三态值。滑块的旧中心点/光晕颜色和更新弹窗旧布局的无效文案参数已删除。项目内调用与 Preview 已同步；接入方按各组件页迁移。
+`HyperDropdown` 使用 options/value/onChanged 管理选择；`HyperPopover` 的 child 提供触发器；`HyperTabBar.type` 为 single/multiple；`HyperCheckbox.value` 为可空三态值。更新弹窗通过 status、展示数据与操作回调接入业务服务。
 
 ```kotlin
 HyperThemeConfig {
@@ -229,9 +229,9 @@ HyperButton(type = "icon", onPressed = onSearch) {
 - 导航与操作：`HyperNavBar`（默认透明、固定顶部状态栏避让；通过 `type = custom/backOnly/titleOnly/backWithTitle/more/edit` 选择固定布局，`custom` 提供完整插槽；搭配 `HyperNavBarPage` 让正文滚到导航栏后方）、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperTabs`（横向分类）、`HyperTabBar`（文档页分别提供单动作与多标签交互预览）。
 - 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopover`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
 
-`HyperSectionedList` 固定使用 8dp 紧凑分段间距，不再暴露 `sectionSpacing` 参数或间距切换控件；选择状态仍由调用方管理。
+`HyperSectionedList` 固定使用 8dp 紧凑分段间距，选择状态由调用方管理。
 
-`HyperUpdateDialog` 的错误状态采用简洁布局，只保留错误原因、重试与关闭，不展示状态图标、大标题、当前版本框和操作区分隔线；文案配置已移除不再使用的 `errorTitle`。
+`HyperUpdateDialog` 的错误状态采用简洁布局，展示错误原因、重试与关闭。
 更新弹窗的关闭、取消和稍后再说省略 `type`，使用 `HyperButton` 默认描边样式；主操作显式使用 `type = "filled"` 和 `colorStyle = "primary"`。
 更新弹窗各状态标识块统一为 40dp、图标 20dp、环形进度 30dp；检查中隐藏当前版本，其他状态的版本信息直接排版，不嵌套版本卡片。
 按钮配色与显示形态独立：`type` 仅支持 `filled`、`tonal`、`icon`，省略时默认白色描边；`colorStyle` 支持 `primary`、`success`、`info`、`warning`、`danger`，自定义 `color` 优先于预设配色。按钮预览以 Flutter ButtonsExample 为基准，分组、文案、图标和 8/16dp 间距一致，保留单个禁用文字示例；手机外框、白色背景和 52dp 顶部留白同步，不添加额外状态栏、分组标题、开关或点击计数。库内组件和 Preview 均使用这些标准类型，并与 `D:/my_project/flutter_project/doc_ui_kit` 同步维护。

@@ -21,7 +21,7 @@ description: 通过拖动刻度选择播放速度，并将数值变化回传调�
 var temporarySpeed by remember { mutableStateOf(2f) }
 
 HyperPlaybackSpeedScale(
-    selectedSpeed = temporarySpeed,
+    value = temporarySpeed,
     modifier = Modifier.align(Alignment.Center)
 )
 ```
@@ -46,12 +46,12 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 ```kotlin
 @Composable
 fun HyperPlaybackSpeedScale(
-    selectedSpeed: Float,
+    value: Float,
     modifier: Modifier = Modifier,
-    speedOptions: List<Float> = HyperPlaybackSpeedScaleDefaults.SpeedOptions,
+    options: List<Float> = HyperPlaybackSpeedScaleDefaults.SpeedOptions,
     shape: Shape = HyperPlaybackSpeedScaleDefaults.Shape,
     colors: HyperPlaybackSpeedScaleColors = HyperPlaybackSpeedScaleDefaults.colors(),
-    leadingContent: (@Composable () -> Unit)? = null
+    leading: (@Composable () -> Unit)? = null
 )
 ```
 
@@ -59,9 +59,9 @@ fun HyperPlaybackSpeedScale(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| selectedSpeed | Float | 是 | — | 当前选中的播放速度。 |
+| value | Float | 是 | — | 由调用方持有的当前值。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| speedOptions | List&lt;Float&gt; | 否 | HyperPlaybackSpeedScaleDefaults.SpeedOptions | 可选播放速度列表。 |
+| options | List&lt;Float&gt; | 否 | HyperPlaybackSpeedScaleDefaults.SpeedOptions | 可供选择的选项列表。 |
 | shape | Shape | 否 | HyperPlaybackSpeedScaleDefaults.Shape | 组件容器的形状。 |
 | colors | HyperPlaybackSpeedScaleColors | 否 | HyperPlaybackSpeedScaleDefaults.colors() | 组件各状态的颜色配置。 |
-| leadingContent | (@Composable () -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
+| leading | (@Composable () -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |

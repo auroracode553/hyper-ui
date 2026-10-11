@@ -71,6 +71,6 @@ HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列�
 | [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 更新提示；统一小图标、版本直接排版、简洁错误反馈和描边次操作 |
 | [HyperBatteryState](components/tools/hyper-battery-state.md) | Android 电量状态读取 |
 
-统一材质、尺寸和 API 迁移见 [样式对照](style-reference.md)。
+统一材质、尺寸和 API 约定见 [样式对照](style-reference.md)。
 
 对应组件的参数命名、回调和默认语义遵循 两端统一 API。点击使用 onPressed，值变更使用 onChanged，关闭使用 onClose；平台布局与宿主差异见组件签名。

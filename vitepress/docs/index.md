@@ -38,7 +38,7 @@ HyperButton(
 ) { HyperText("保存") }
 ```
 
-默认 `HyperThemeConfig(material = HyperMaterial.Solid)`。同名组件的尺寸、材质和迁移规则见 [样式对照](style-reference.md)。Dropdown 的值由调用方管理，临时展开状态由组件维护。
+默认 `HyperThemeConfig(material = HyperMaterial.Solid)`。同名组件的尺寸、材质和 API 约定见 [样式对照](style-reference.md)。Dropdown 的值由调用方管理，临时展开状态由组件维护。
 
 ## API 约定
 

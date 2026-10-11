@@ -141,19 +141,19 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         code = """
             HyperPlaybackSpeedPanelOverlay(
                 visible = panelVisible,
-                currentSpeed = playbackSpeed,
-                onSpeedChange = { playbackSpeed = it },
-                onDismissRequest = { panelVisible = false },
-                onCustomSpeedRequest = ::openCustomSpeedDialog
+                value = playbackSpeed,
+                onChanged = { playbackSpeed = it },
+                onClose = { panelVisible = false },
+                onCustomPressed = ::openCustomSpeedDialog
             )
         """.trimIndent(),
         variants = listOf(
             DemoVariant("紧凑布局", "默认尺寸", "空间充足时约 468dp 宽、157dp 高"),
             DemoVariant("主题玻璃", "默认配色", "不跟随应用浅色/深色模式切换"),
-            DemoVariant("受控状态", "visible/currentSpeed", "调用方持有显示状态和实时速度"),
-            DemoVariant("预设档位", "speedOptions", "默认 0.25x、1x、2x、3x、4x"),
-            DemoVariant("自定义入口", "onCustomSpeedRequest", "仅分发事件，不承载输入业务"),
-            DemoVariant("Lucide 默认图标", "leadingContent 等", "Android 默认语义图标统一由 Lucide 提供，也可通过 Slot 替换"),
+            DemoVariant("受控状态", "visible/value", "调用方持有显示状态和实时速度"),
+            DemoVariant("预设档位", "options", "默认 0.25x、1x、2x、3x、4x"),
+            DemoVariant("自定义入口", "onCustomPressed", "仅分发事件，不承载输入业务"),
+            DemoVariant("Lucide 默认图标", "leading 等", "Android 默认语义图标统一由 Lucide 提供，也可通过 Slot 替换"),
             DemoVariant("自定义配色", "HyperPlaybackSpeedPanelDefaults.colors", "Preview 可切换容器与强调色")
         ),
         apiDocumentPaths = listOf("feedback/hyper-playback-speed-panel.md"),
@@ -166,8 +166,8 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         description = "播放器长按临时加速使用的紧凑型主题玻璃刻度，两端标签让出轨道上方空间。",
         code = """
             HyperPlaybackSpeedScale(
-                selectedSpeed = temporarySpeed,
-                leadingContent = {
+                value = temporarySpeed,
+                leading = {
                     HyperIcon(fastForwardIcon, contentDescription = null)
                 }
             )
@@ -175,9 +175,9 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("紧凑布局", "默认尺寸", "约 310dp 宽、59dp 高，两端档位位于轨道左右"),
             DemoVariant("默认档位", "SpeedOptions", "0.25x 到 4x 八档刻度"),
-            DemoVariant("当前速度", "selectedSpeed", "高亮最近的速度刻度"),
+            DemoVariant("当前速度", "value", "高亮最近的速度刻度"),
             DemoVariant("主题玻璃", "默认配色", "不跟随应用浅色/深色模式切换"),
-            DemoVariant("图标插槽", "leadingContent", "Android 默认使用 Lucide fast-forward，也可替换"),
+            DemoVariant("图标插槽", "leading", "Android 默认使用 Lucide fast-forward，也可替换"),
             DemoVariant("自定义配色", "HyperPlaybackSpeedScaleDefaults.colors", "容器、轨道、刻度与文案；不暴露硬边框")
         ),
         apiDocumentPaths = listOf("feedback/hyper-playback-speed-scale.md"),

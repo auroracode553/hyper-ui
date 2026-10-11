@@ -69,7 +69,7 @@ fun <T> HyperSegmentedControl(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| options | List&lt;T&gt; | 是 | — | 可选颜色配置。 |
+| options | List&lt;T&gt; | 是 | — | 可供选择的选项列表。 |
 | selectedValue | T | 是 | — | 当前选中项的值。 |
 | onChanged | (T) -&gt; Unit | 是 | — | 用户修改值或选择项时通知调用方。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |

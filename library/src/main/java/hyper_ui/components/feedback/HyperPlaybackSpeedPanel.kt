@@ -51,24 +51,24 @@ import kotlin.math.abs
 @Composable
 fun HyperPlaybackSpeedPanelOverlay(
     visible: Boolean,
-    currentSpeed: Float,
-    onSpeedChange: (Float) -> Unit,
-    onDismissRequest: () -> Unit,
-    onCustomSpeedRequest: (() -> Unit)? = null,
+    value: Float,
+    onChanged: (Float) -> Unit,
+    onClose: () -> Unit,
+    onCustomPressed: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     panelModifier: Modifier = Modifier,
     texts: HyperPlaybackSpeedPanelTexts = HyperPlaybackSpeedPanelTexts(),
     colors: HyperPlaybackSpeedPanelColors = HyperPlaybackSpeedPanelDefaults.colors(),
-    speedOptions: List<Float> = HyperPlaybackSpeedPanelDefaults.MajorSpeeds,
+    options: List<Float> = HyperPlaybackSpeedPanelDefaults.MajorSpeeds,
     valueRange: ClosedFloatingPointRange<Float> = HyperPlaybackSpeedPanelDefaults.SliderRange,
     steps: Int = HyperPlaybackSpeedPanelDefaults.SliderSteps,
     defaultSpeed: Float = HyperPlaybackSpeedPanelDefaults.DefaultSpeed,
     shape: Shape = HyperPlaybackSpeedPanelDefaults.Shape,
-    leadingContent: (@Composable BoxScope.() -> Unit)? = null,
-    closeContent: (@Composable BoxScope.() -> Unit)? = null,
-    hintLeadingContent: (@Composable BoxScope.() -> Unit)? = null,
-    resetContent: (@Composable BoxScope.() -> Unit)? = null,
-    customActionLeadingContent: (@Composable BoxScope.() -> Unit)? = null
+    leading: (@Composable BoxScope.() -> Unit)? = null,
+    close: (@Composable BoxScope.() -> Unit)? = null,
+    hintLeading: (@Composable BoxScope.() -> Unit)? = null,
+    reset: (@Composable BoxScope.() -> Unit)? = null,
+    customLeading: (@Composable BoxScope.() -> Unit)? = null
 ) {
     if (!visible) return
 
@@ -77,28 +77,28 @@ fun HyperPlaybackSpeedPanelOverlay(
             modifier = Modifier
                 .fillMaxSize()
                 .background(colors.scrimColor)
-                .hyperNoRippleClickable(onClick = onDismissRequest)
+                .hyperNoRippleClickable(onClick = onClose)
         )
         HyperPlaybackSpeedPanel(
-            currentSpeed = currentSpeed,
-            onSpeedChange = onSpeedChange,
-            onDismissRequest = onDismissRequest,
-            onCustomSpeedRequest = onCustomSpeedRequest,
+            value = value,
+            onChanged = onChanged,
+            onClose = onClose,
+            onCustomPressed = onCustomPressed,
             modifier = panelModifier
                 .align(Alignment.Center)
                 .padding(horizontal = HyperPlaybackSpeedPanelDefaults.OverlayHorizontalPadding),
             texts = texts,
             colors = colors,
-            speedOptions = speedOptions,
+            options = options,
             valueRange = valueRange,
             steps = steps,
             defaultSpeed = defaultSpeed,
             shape = shape,
-            leadingContent = leadingContent,
-            closeContent = closeContent,
-            hintLeadingContent = hintLeadingContent,
-            resetContent = resetContent,
-            customActionLeadingContent = customActionLeadingContent
+            leading = leading,
+            close = close,
+            hintLeading = hintLeading,
+            reset = reset,
+            customLeading = customLeading
         )
     }
 }
@@ -106,23 +106,23 @@ fun HyperPlaybackSpeedPanelOverlay(
 /** 主题玻璃的受控播放速度面板，可脱离覆盖层单独组合。 */
 @Composable
 fun HyperPlaybackSpeedPanel(
-    currentSpeed: Float,
-    onSpeedChange: (Float) -> Unit,
-    onDismissRequest: () -> Unit,
-    onCustomSpeedRequest: (() -> Unit)? = null,
+    value: Float,
+    onChanged: (Float) -> Unit,
+    onClose: () -> Unit,
+    onCustomPressed: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     texts: HyperPlaybackSpeedPanelTexts = HyperPlaybackSpeedPanelTexts(),
     colors: HyperPlaybackSpeedPanelColors = HyperPlaybackSpeedPanelDefaults.colors(),
-    speedOptions: List<Float> = HyperPlaybackSpeedPanelDefaults.MajorSpeeds,
+    options: List<Float> = HyperPlaybackSpeedPanelDefaults.MajorSpeeds,
     valueRange: ClosedFloatingPointRange<Float> = HyperPlaybackSpeedPanelDefaults.SliderRange,
     steps: Int = HyperPlaybackSpeedPanelDefaults.SliderSteps,
     defaultSpeed: Float = HyperPlaybackSpeedPanelDefaults.DefaultSpeed,
     shape: Shape = HyperPlaybackSpeedPanelDefaults.Shape,
-    leadingContent: (@Composable BoxScope.() -> Unit)? = null,
-    closeContent: (@Composable BoxScope.() -> Unit)? = null,
-    hintLeadingContent: (@Composable BoxScope.() -> Unit)? = null,
-    resetContent: (@Composable BoxScope.() -> Unit)? = null,
-    customActionLeadingContent: (@Composable BoxScope.() -> Unit)? = null
+    leading: (@Composable BoxScope.() -> Unit)? = null,
+    close: (@Composable BoxScope.() -> Unit)? = null,
+    hintLeading: (@Composable BoxScope.() -> Unit)? = null,
+    reset: (@Composable BoxScope.() -> Unit)? = null,
+    customLeading: (@Composable BoxScope.() -> Unit)? = null
 ) {
     require(valueRange.start.isFinite() && valueRange.endInclusive.isFinite()) {
         "valueRange 的起止值必须是有限数值"
@@ -132,8 +132,8 @@ fun HyperPlaybackSpeedPanel(
     }
     require(steps >= 0) { "steps 不能小于 0" }
 
-    val resolvedOptions = remember(speedOptions, valueRange) {
-        speedOptions
+    val resolvedOptions = remember(options, valueRange) {
+        options
             .asSequence()
             .filter { speed -> speed.isFinite() }
             .filter { speed -> speed in valueRange }
@@ -156,40 +156,40 @@ fun HyperPlaybackSpeedPanel(
             )
         ) {
             HyperPlaybackSpeedPanelHeader(
-                currentSpeed = currentSpeed,
+                value = value,
                 texts = texts,
                 colors = colors,
-                onDismissRequest = onDismissRequest,
-                leadingContent = leadingContent,
-                closeContent = closeContent
+                onClose = onClose,
+                leading = leading,
+                close = close
             )
             HyperPlaybackSpeedSlider(
-                currentSpeed = currentSpeed,
-                onSpeedChange = onSpeedChange,
+                value = value,
+                onChanged = onChanged,
                 valueRange = valueRange,
                 steps = steps,
-                speedOptions = resolvedOptions,
+                options = resolvedOptions,
                 texts = texts,
                 colors = colors
             )
             HyperPlaybackSpeedLabels(
-                currentSpeed = currentSpeed,
+                value = value,
                 valueRange = valueRange,
                 steps = steps,
-                speedOptions = resolvedOptions,
-                onSpeedChange = onSpeedChange,
+                options = resolvedOptions,
+                onChanged = onChanged,
                 colors = colors
             )
             HyperPlaybackSpeedPanelFooter(
-                currentSpeed = currentSpeed,
+                value = value,
                 defaultSpeed = defaultSpeed,
                 texts = texts,
                 colors = colors,
-                onResetRequest = { onSpeedChange(defaultSpeed) },
-                onCustomSpeedRequest = onCustomSpeedRequest,
-                hintLeadingContent = hintLeadingContent,
-                resetContent = resetContent,
-                customActionLeadingContent = customActionLeadingContent
+                onResetRequest = { onChanged(defaultSpeed) },
+                onCustomPressed = onCustomPressed,
+                hintLeading = hintLeading,
+                reset = reset,
+                customLeading = customLeading
             )
         }
     }
@@ -197,12 +197,12 @@ fun HyperPlaybackSpeedPanel(
 
 @Composable
 private fun HyperPlaybackSpeedPanelHeader(
-    currentSpeed: Float,
+    value: Float,
     texts: HyperPlaybackSpeedPanelTexts,
     colors: HyperPlaybackSpeedPanelColors,
-    onDismissRequest: () -> Unit,
-    leadingContent: (@Composable BoxScope.() -> Unit)?,
-    closeContent: (@Composable BoxScope.() -> Unit)?
+    onClose: () -> Unit,
+    leading: (@Composable BoxScope.() -> Unit)?,
+    close: (@Composable BoxScope.() -> Unit)?
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -217,10 +217,10 @@ private fun HyperPlaybackSpeedPanelHeader(
             contentAlignment = Alignment.Center
         ) {
             CompositionLocalProvider(LocalHyperContentColor provides colors.accentColor) {
-                if (leadingContent == null) {
+                if (leading == null) {
                     HyperGaugeIcon(Modifier.size(16.dp))
                 } else {
-                    leadingContent()
+                    leading()
                 }
             }
         }
@@ -241,7 +241,7 @@ private fun HyperPlaybackSpeedPanelHeader(
             contentAlignment = Alignment.Center
         ) {
             HyperText(
-                text = "${HyperPlaybackSpeedPanelDefaults.formatFixed(currentSpeed)}x",
+                text = "${HyperPlaybackSpeedPanelDefaults.formatFixed(value)}x",
                 color = colors.contentColor,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
@@ -250,7 +250,7 @@ private fun HyperPlaybackSpeedPanelHeader(
             )
         }
         HyperButton(
-            onPressed = onDismissRequest,
+            onPressed = onClose,
             type = "icon",
             size = "small",
             modifier = Modifier.semantics { contentDescription = texts.closeContentDescription },
@@ -260,10 +260,10 @@ private fun HyperPlaybackSpeedPanelHeader(
                 modifier = Modifier.size(18.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (closeContent == null) {
+                if (close == null) {
                     HyperCloseIcon(Modifier.size(15.dp))
                 } else {
-                    closeContent()
+                    close()
                 }
             }
         }
@@ -272,25 +272,25 @@ private fun HyperPlaybackSpeedPanelHeader(
 
 @Composable
 private fun HyperPlaybackSpeedSlider(
-    currentSpeed: Float,
-    onSpeedChange: (Float) -> Unit,
+    value: Float,
+    onChanged: (Float) -> Unit,
     valueRange: ClosedFloatingPointRange<Float>,
     steps: Int,
-    speedOptions: List<Float>,
+    options: List<Float>,
     texts: HyperPlaybackSpeedPanelTexts,
     colors: HyperPlaybackSpeedPanelColors
 ) {
     HyperSlider(
         showValue = false,
-        value = currentSpeed,
-        onChanged = onSpeedChange,
+        value = value,
+        onChanged = onChanged,
         modifier = Modifier.semantics {
             contentDescription = texts.sliderContentDescription
         },
         min = valueRange.start, max = valueRange.endInclusive,
         divisions = if (steps > 0) steps + 1 else null,
         showSegmentMarkers = true,
-        segmentValues = speedOptions,
+        segmentValues = options,
         minimumTouchHeight = HyperPlaybackSpeedPanelDefaults.SliderTouchHeight,
         trackHeight = HyperPlaybackSpeedPanelDefaults.SliderTrackHeight,
         thumbSize = HyperPlaybackSpeedPanelDefaults.SliderThumbSize,
@@ -306,11 +306,11 @@ private fun HyperPlaybackSpeedSlider(
 
 @Composable
 private fun HyperPlaybackSpeedLabels(
-    currentSpeed: Float,
+    value: Float,
     valueRange: ClosedFloatingPointRange<Float>,
     steps: Int,
-    speedOptions: List<Float>,
-    onSpeedChange: (Float) -> Unit,
+    options: List<Float>,
+    onChanged: (Float) -> Unit,
     colors: HyperPlaybackSpeedPanelColors
 ) {
     val selectionTolerance = (valueRange.endInclusive - valueRange.start) /
@@ -320,12 +320,12 @@ private fun HyperPlaybackSpeedLabels(
             .fillMaxWidth()
             .height(HyperPlaybackSpeedPanelDefaults.SpeedLabelHeight)
     ) {
-        speedOptions.forEach { speed ->
+        options.forEach { speed ->
             val fraction = (
                 (speed - valueRange.start) /
                     (valueRange.endInclusive - valueRange.start)
                 ).coerceIn(0f, 1f)
-            val selected = abs(currentSpeed - speed) < selectionTolerance
+            val selected = abs(value - speed) < selectionTolerance
             Box(
                 modifier = Modifier
                     .offset(
@@ -345,7 +345,7 @@ private fun HyperPlaybackSpeedLabels(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         role = Role.Button,
-                        onClick = { onSpeedChange(speed) }
+                        onClick = { onChanged(speed) }
                     ),
                 contentAlignment = Alignment.Center
             ) {
@@ -369,15 +369,15 @@ private fun HyperPlaybackSpeedLabels(
 
 @Composable
 private fun HyperPlaybackSpeedPanelFooter(
-    currentSpeed: Float,
+    value: Float,
     defaultSpeed: Float,
     texts: HyperPlaybackSpeedPanelTexts,
     colors: HyperPlaybackSpeedPanelColors,
     onResetRequest: () -> Unit,
-    onCustomSpeedRequest: (() -> Unit)?,
-    hintLeadingContent: (@Composable BoxScope.() -> Unit)?,
-    resetContent: (@Composable BoxScope.() -> Unit)?,
-    customActionLeadingContent: (@Composable BoxScope.() -> Unit)?
+    onCustomPressed: (() -> Unit)?,
+    hintLeading: (@Composable BoxScope.() -> Unit)?,
+    reset: (@Composable BoxScope.() -> Unit)?,
+    customLeading: (@Composable BoxScope.() -> Unit)?
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -390,10 +390,10 @@ private fun HyperPlaybackSpeedPanelFooter(
             CompositionLocalProvider(
                 LocalHyperContentColor provides colors.supportingContentColor
             ) {
-                if (hintLeadingContent == null) {
+                if (hintLeading == null) {
                     HyperHorizontalDragIcon()
                 } else {
-                    hintLeadingContent()
+                    hintLeading()
                 }
             }
         }
@@ -409,7 +409,7 @@ private fun HyperPlaybackSpeedPanelFooter(
         )
         HyperButton(
             onPressed = onResetRequest,
-            enabled = abs(currentSpeed - defaultSpeed) > 0.001f,
+            enabled = abs(value - defaultSpeed) > 0.001f,
             type = "icon",
             size = "small",
             modifier = Modifier
@@ -421,19 +421,19 @@ private fun HyperPlaybackSpeedPanelFooter(
                 modifier = Modifier.size(18.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (resetContent == null) {
+                if (reset == null) {
                     HyperResetIcon(Modifier.size(17.dp))
                 } else {
-                    resetContent()
+                    reset()
                 }
             }
         }
-        if (onCustomSpeedRequest != null) {
+        if (onCustomPressed != null) {
             HyperPlaybackSpeedCustomAction(
                 text = texts.customAction,
                 colors = colors,
-                onClick = onCustomSpeedRequest,
-                leadingContent = customActionLeadingContent
+                onClick = onCustomPressed,
+                leading = customLeading
             )
         }
     }
@@ -444,7 +444,7 @@ private fun HyperPlaybackSpeedCustomAction(
     text: String,
     colors: HyperPlaybackSpeedPanelColors,
     onClick: () -> Unit,
-    leadingContent: (@Composable BoxScope.() -> Unit)?
+    leading: (@Composable BoxScope.() -> Unit)?
 ) {
     Row(
         modifier = Modifier
@@ -466,10 +466,10 @@ private fun HyperPlaybackSpeedCustomAction(
             contentAlignment = Alignment.Center
         ) {
             CompositionLocalProvider(LocalHyperContentColor provides colors.accentColor) {
-                if (leadingContent == null) {
+                if (leading == null) {
                     HyperEditIcon()
                 } else {
-                    leadingContent()
+                    leading()
                 }
             }
         }
