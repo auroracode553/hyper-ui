@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,36 +39,28 @@ import hyper_ui.HyperTextField
 
 @Composable
 fun RadioDemo() {
-    var mode by remember { mutableStateOf("balanced") }
+    var mode by remember { mutableStateOf("system") }
+    val labels = remember {
+        linkedMapOf("system" to "跟随系统", "light" to "浅色", "dark" to "深色", "amoled" to "纯黑（Pro）")
+    }
 
-    FormControlGroup {
-        FormControlOption(
-            text = "均衡模式",
-            onClick = { mode = "balanced" }
-        ) {
+    // 与 Flutter 参考一致，直接展示库默认单选行，不额外叠加行间距。
+    Column {
+        HyperText("互斥单选", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        labels.forEach { (value, label) ->
             HyperRadio(
-                value = "balanced", groupValue = mode,
-                onChanged = { mode = "balanced" }
+                value = value, groupValue = mode, label = label,
+                onChanged = if (value == "amoled") null else { { selectedMode -> mode = selectedMode } }
             )
         }
-        FormControlOption(
-            text = "性能模式",
-            onClick = { mode = "performance" }
-        ) {
-            HyperRadio(
-                value = "performance", groupValue = mode,
-                onChanged = { mode = "performance" }
-            )
-        }
-        FormControlOption(
-            text = "禁用选项",
-            enabled = false
-        ) {
-            HyperRadio(
-                value = "disabled", groupValue = mode,
-                onChanged = null,
-                enabled = false
-            )
+        Spacer(Modifier.height(12.dp))
+        HyperText("当前值：$mode", size = "small")
+        Spacer(Modifier.height(20.dp))
+        HyperText("纯控件（无标签）", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            HyperRadio(value = "system", groupValue = mode, onChanged = { mode = it })
+            HyperRadio(value = "preview", groupValue = "preview")
+            HyperRadio(value = "disabled", groupValue = null, enabled = false)
         }
     }
 }

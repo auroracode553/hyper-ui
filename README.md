@@ -48,7 +48,8 @@ HyperThemeConfig {
 
 组件文档统一按用途、交互示例、最小调用、使用约定与公开 API 组织；长签名和辅助配置可展开查看，完整五列 Props 表始终保留。手机 Preview 提供 320/350/390/430dp 宽度与重置。页面级列表占满剩余视口并自行滚动，普通组件由宿主滚动；布局规则见 [交互预览](vitepress/docs/preview.md)。
 手机 Preview 的底部手势条悬浮覆盖在内容上，宿主不预留底部安全区，与 Flutter 参考预览一致。
-HyperListTile 预览直接展示条目和状态，不额外套 HyperCard；弹窗中的只读详情直接排版标签和值，不逐项包装卡片。
+HyperListTile 预览直接展示条目和状态，不额外套 HyperCard；弹窗中的只读详情使用 HyperListTile(type = "plain") 的标签与说明槽，不逐项包装卡片。
+HyperRadio 的标签行由整行处理点击，默认最小高度 46dp；放进列表行只展示时省略 onChanged，圆环占 21dp，不额外撑高行。无标签独立交互控件保留 44dp 触摸区。
 
 ## 先看结论
 

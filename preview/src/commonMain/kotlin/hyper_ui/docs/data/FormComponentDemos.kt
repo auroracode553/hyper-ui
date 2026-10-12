@@ -15,15 +15,17 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "radio",
         group = GROUP_FORM,
         title = "HyperRadio",
-        description = "单选按钮组件，选中状态由调用方维护。",
+        description = "互斥单选与禁用项；标签行统一承载点击，圆环不叠加独立触摸留白。",
         code = """
-            HyperRadio(value = "balanced", groupValue = selectedMode,
-                onChanged = { selectedMode = it })
+            HyperRadio(value = "system", groupValue = selectedMode,
+                label = "跟随系统", onChanged = { selectedMode = it })
         """.trimIndent(),
         variants = listOf(
             DemoVariant("选中", "value == groupValue", "21dp 圆环，选中环宽 6dp、内部 subtle 表面"),
             DemoVariant("未选中", "value != groupValue", "21dp 圆环，普通轮廓 1.5dp"),
-            DemoVariant("禁用", "enabled = false", "禁用实色状态")
+            DemoVariant("禁用", "onChanged = null", "标签行保留库默认高度，圆环只展示"),
+            DemoVariant("展示", "label = null / onChanged = null", "21dp 圆环不分配独立触摸区"),
+            DemoVariant("独立交互", "label = null / onChanged != null", "44dp 触摸区")
         ),
         apiDocumentPaths = listOf("form/hyper-radio.md"),
         content = { RadioDemo() }

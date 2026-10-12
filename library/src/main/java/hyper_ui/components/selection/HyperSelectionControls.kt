@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.DpOffset
 import hyper_ui.core.icon.HyperCheckIcon
 import hyper_ui.core.interaction.hyperNoRippleClickable
 import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.semantics.selected
@@ -159,10 +160,17 @@ fun <T> HyperRadio(
     label: String? = null
 ) {
     if (label != null) {
-        HyperListTile(type = "plain", modifier = modifier,
-            title = { HyperText(label) }, trailing = { HyperRadio(value = value, groupValue = groupValue, onChanged = onChanged, enabled = enabled, selectedColor = selectedColor, unselectedColor = unselectedColor, unselectedBorderColor = unselectedBorderColor, innerDotColor = innerDotColor) },
-            enabled = enabled && onChanged != null, showChevron = false,
-            onPressed = { onChanged?.invoke(value) })
+        HyperListTile(type = "plain", modifier = modifier
+            .hyperNoRippleClickable(enabled = enabled && onChanged != null, role = Role.RadioButton,
+                pressedScale = 0.992f, onClick = { onChanged?.invoke(value) })
+            .semantics { this.selected = value == groupValue },
+            title = { HyperText(label, style = LocalHyperTextStyle.current) },
+            // 标签行统一承载点击，尾随圆环只展示，避免重复触摸区撑高列表行。
+            trailing = { HyperRadio(value = value, groupValue = groupValue, onChanged = null,
+                modifier = Modifier.clearAndSetSemantics { }, enabled = enabled,
+                selectedColor = selectedColor, unselectedColor = unselectedColor,
+                unselectedBorderColor = unselectedBorderColor, innerDotColor = innerDotColor) },
+            enabled = enabled && onChanged != null, showChevron = false)
         return
     }
     val selected = value == groupValue
@@ -173,13 +181,15 @@ fun <T> HyperRadio(
     }
     val ring by animateColorAsState(targetRing, tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.SelectionCurve), label = "HyperRadioRing")
     val ringWidth by animateFloatAsState(if (selected) 6f else 1.5f, tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.SelectionCurve), label = "HyperRadioWidth")
+    // 只展示时按圆环的可视尺寸测量；独立交互时才保留完整触摸区。
+    val controlSize = if (onChanged == null) HyperRadioDefaults.OuterSize else HyperRadioDefaults.TouchTargetSize
     Box(
-        modifier.size(44.dp).then(if (onChanged != null) Modifier.hyperNoRippleClickable(
+        modifier.size(controlSize).then(if (onChanged != null) Modifier.hyperNoRippleClickable(
             enabled = enabled, role = Role.RadioButton, onClick = { onChanged(value) }
         ) else Modifier).semantics { this.selected = selected; if (!enabled || onChanged == null) disabled() },
         contentAlignment = Alignment.Center
     ) {
-        Box(Modifier.size(21.dp).clip(CircleShape)
+        Box(Modifier.size(HyperRadioDefaults.OuterSize).clip(CircleShape)
             .background(resolveHyperContainerColor(if (selected) innerDotColor else unselectedColor, hyperGlass.surfaceSubtle))
             .border(ringWidth.dp, ring, CircleShape))
     }
@@ -202,6 +212,7 @@ object HyperCheckboxDefaults {
     val CheckmarkSize = 15.dp
 }
 object HyperRadioDefaults {
+    val TouchTargetSize = 44.dp
     val OuterSize = 21.dp
     val InnerDotSize = 9.dp
     val BorderWidth = 1.5.dp

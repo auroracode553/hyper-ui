@@ -3,7 +3,7 @@
 所有组件从 `hyper_ui` 包导入。组件页按用途、交互示例、最小调用、使用约定和公开 API 组织。长签名与辅助配置可以展开查看，五列 Props 表完整保留；手机预览支持切换 320/350/390/430dp 宽度和重置。
 
 HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列表独自滚动；HyperMenuGroup 和 HyperListTile 按内容测量，由预览宿主负责整页滚动。
-HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读详情使用文字与普通布局，不逐项包装卡片。
+HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读详情使用 HyperListTile(type = "plain") 的文字插槽，不逐项包装卡片。
 手机预览的底部手势条悬浮覆盖在内容上，宿主不预留底部安全区，与 Flutter 参考预览一致。
 
 ## 基础
@@ -22,7 +22,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperTextField](components/form/hyper-text-field.md) | 文本、密码和多行输入 |
 | [HyperSwitch](components/form/hyper-switch.md) | 开关 |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选 |
-| [HyperRadio](components/form/hyper-radio.md) | 单选 |
+| [HyperRadio](components/form/hyper-radio.md) | 单选；标签行承载点击，展示圆环不叠加触摸留白 |
 | [HyperSegmentedControl](components/form/hyper-segmented-control.md) | 40dp 分段切换，选中底板平移 |
 | [HyperSlider](components/form/hyper-slider.md) | 6dp 轨道、20dp 手柄，连续或分段值调节 |
 

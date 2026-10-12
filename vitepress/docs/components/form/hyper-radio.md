@@ -29,11 +29,13 @@ HyperRadio(value = "option", groupValue = selectedValue, onChanged = { selectedV
 
 **样式约定**
 
-44dp 触摸区、21dp 圆环。选中为 6dp 品牌色环，未选中为 1.5dp 输入轮廓；内部保持 subtle 材质。
+圆环为 21dp。无标签且 onChanged 非 null 的独立控件占 44dp 触摸区；onChanged 为 null 的展示控件只占圆环尺寸。提供 label 时使用 plain 列表行，由整行承载点击，圆环不再叠加独立触摸留白；单行文字采用列表行默认排版与 46dp 最小高度。选中为 6dp 品牌色环，未选中为 1.5dp 输入轮廓；内部保持 subtle 材质。
 
 **状态归属**
 
 选中值由调用方持有；onChanged 为 null 时只展示。
+
+组合 HyperListTile 时，如点击由整行处理，leading/trailing 中的 HyperRadio 应省略 onChanged，让圆环只展示。无需在应用中覆盖控件大小或列表行内边距。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -73,4 +75,13 @@ fun <T> HyperRadio(
 | unselectedColor | Color | 否 | Color.Unspecified | 未选中时的控件颜色。 |
 | unselectedBorderColor | Color | 否 | Color.Unspecified | 未选中时边框颜色。 |
 | innerDotColor | Color | 否 | Color.Unspecified | 单选圆点的颜色。 |
-| label | String? | 否 | null | 数值旁显示的标签文字。 |
+| label | String? | 否 | null | 使用 plain 列表行展示标签，点击由整行处理。 |
+
+### HyperRadioDefaults
+
+| 属性 | 类型 | 值 | 用途 |
+| --- | --- | --- | --- |
+| TouchTargetSize | Dp | 44.dp | 无标签独立交互控件的触摸区。 |
+| OuterSize | Dp | 21.dp | 圆环及展示控件尺寸。 |
+| InnerDotSize | Dp | 9.dp | 选中圆环内部尺寸。 |
+| BorderWidth | Dp | 1.5.dp | 未选中轮廓宽度。 |
