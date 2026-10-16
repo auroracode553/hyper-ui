@@ -1,4 +1,4 @@
-/** 文件职责：提供透明顶部导航栏，视觉和布局对齐 Flutter HyNavBar。 */
+/** 文件职责：提供顶部透明、正文滚入时显示毛玻璃的导航栏。 */
 package hyper_ui
 
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.platform.LocalDensity
 
-/** 透明顶部导航栏。固定避让顶部状态栏，安全区位于内容高度之外，不绘制背景。 */
+/** 固定避让顶部状态栏；宿主传入滚动状态，组件统一处理背景采样和过渡。 */
 @Composable
 fun HyperNavBar(
     type: String = HyperNavBarDefaults.TypeCustom,
@@ -47,6 +47,7 @@ fun HyperNavBar(
     titleSpacing: Dp = HyperNavBarDefaults.TitleGap,
     actionSpacing: Dp = HyperNavBarDefaults.ActionGap,
     centerTitle: Boolean = false,
+    scrolledUnder: Boolean = false,
     onBackPressed: (() -> Unit)? = null,
     onMorePressed: (() -> Unit)? = null,
     onSavePressed: (() -> Unit)? = null,
@@ -76,7 +77,8 @@ fun HyperNavBar(
     require(trailing == null || actions.isEmpty()) { "trailing 与 actions 二选一" }
 
     val safeInsets = WindowInsets.statusBars.only(WindowInsetsSides.Top)
-    Column(modifier = modifier.windowInsetsPadding(safeInsets).zIndex(HyperNavBarDefaults.ZIndex)) {
+    HyperNavBarScrollSurface(scrolledUnder, modifier.zIndex(HyperNavBarDefaults.ZIndex)) {
+      Column(modifier = Modifier.windowInsetsPadding(safeInsets)) {
         Box(modifier = Modifier.fillMaxWidth().height(resolvedHeight).padding(padding)) {
             if (child != null) {
                 child.invoke(this)
@@ -126,6 +128,7 @@ fun HyperNavBar(
                 )
             }
         }
+      }
     }
 }
 
@@ -152,8 +155,7 @@ fun HyperNavBarPage(
         topInset + hyperComponentSize(navBarSize, 40.dp, HyperNavBarDefaults.Height, 52.dp)
     )
         .withAdditionalBottom(bottomInset)
-    Box(modifier.fillMaxSize()) {
-        content(resolvedPadding)
+    HyperBackdrop(modifier = modifier.fillMaxSize(), background = { content(resolvedPadding) }) {
         Box(Modifier.fillMaxWidth().zIndex(HyperNavBarDefaults.ZIndex)) { navBar() }
     }
 }

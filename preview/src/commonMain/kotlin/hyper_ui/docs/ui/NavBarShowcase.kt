@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import hyper_ui.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +57,8 @@ fun NavBarDemo() {
     }
     var example by remember { mutableStateOf(NavBarExample.Basic) }
     var actionMessage by remember { mutableStateOf("切换布局或点击顶部操作，查看导航反馈。") }
+    val scrollState = rememberLazyListState()
+    val scrolledUnder by remember { derivedStateOf { scrollState.canScrollBackward } }
 
     HyperNavBarPage(
         modifier = Modifier.fillMaxSize(),
@@ -64,6 +68,7 @@ fun NavBarDemo() {
                 // 正文占满屏幕，导航操作行独立避让预览模拟的状态栏。
                 modifier = Modifier.padding(top = PreviewTopSafeArea),
                 type = example.type,
+                scrolledUnder = scrolledUnder,
                 title = if (pageTitle == null) null else {
                     { HyperText(pageTitle, maxLines = 1) }
                 },
@@ -91,6 +96,7 @@ fun NavBarDemo() {
         bottomSafeArea = false
     ) { immersivePadding ->
         LazyColumn(
+            state = scrollState,
             modifier = Modifier.fillMaxSize().background(LocalDocsColorScheme.current.background),
             contentPadding = immersivePadding,
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -110,7 +116,7 @@ fun NavBarDemo() {
                         actionMessage = "已切换为「${selected.label}」"
                     }
                     HyperText(actionMessage, fontSize = 13.sp)
-                    HyperText("向上滚动，观察正文经过透明导航栏与状态栏。", fontSize = 12.sp)
+                    HyperText("向上滚动显示向下渐隐的毛玻璃，回到顶部恢复透明。", fontSize = 12.sp)
                 }
             }
             items(items = sections, key = { it }) { section ->
@@ -121,7 +127,7 @@ fun NavBarDemo() {
                     Column(Modifier.padding(4.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         HyperText("灵感 ${sections.indexOf(section) + 1}", fontSize = 12.sp, color = LocalDocsColorScheme.current.onSurfaceVariant)
                         HyperText(section, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                        HyperText("导航栏保持透明，内容沿同一个滚动视口连续向上移动。", fontSize = 13.sp)
+                        HyperText("模糊和底色向下淡出到透明，标题与按钮保持清晰。", fontSize = 13.sp)
                     }
                 }
             }

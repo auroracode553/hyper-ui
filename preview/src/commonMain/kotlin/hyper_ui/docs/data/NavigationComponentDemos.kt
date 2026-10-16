@@ -35,18 +35,20 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "nav-bar",
         group = GROUP_NAVIGATION,
         title = "HyperNavBar",
-        description = "固定透明导航操作层。type 覆盖仅返回、仅标题、返回与标题、更多操作和编辑返回，并提供 custom 插槽示例。",
+        description = "顶部透明，正文滚入时渐显毛玻璃。type 覆盖五种固定布局与 custom 插槽。",
         code = """
+            val scrollState = rememberLazyListState()
             HyperNavBarPage(
                 navBar = {
                     HyperNavBar(
                         type = HyperNavBarDefaults.TypeBackWithTitle,
+                        scrolledUnder = scrollState.canScrollBackward,
                         title = { HyperText("详情") },
                         onBackPressed = onBack
                     )
                 }
             ) { contentPadding ->
-                LazyColumn(contentPadding = contentPadding) { /* 正文 */ }
+                LazyColumn(state = scrollState, contentPadding = contentPadding) { /* 正文 */ }
             }
         """.trimIndent(),
         variants = listOf(
@@ -57,7 +59,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("编辑返回", "type = edit", "标题右侧显示保存操作"),
             DemoVariant("自定义", "type = custom", "使用 navigationContent / trailingContent 等插槽"),
             DemoVariant("操作反馈", "onBackClick / onMoreClick / onSaveClick", "返回、更多与保存均可点击，正文显示反馈"),
-            DemoVariant("透明表面", "默认样式", "导航栏不绘制背景、模糊、描边或阴影"),
+            DemoVariant("滚动材质", "scrolledUnder", "160ms 过渡、20dp 模糊；背景向下延伸 56dp 后透明，没有分隔线"),
             DemoVariant("默认尺寸", "size = default", "高度不包含顶部安全区"),
             DemoVariant("固定安全区", "库内自动处理", "始终避让顶部状态栏，不提供关闭开关"),
             DemoVariant("叠加页面", "HyperNavBarPage", "首屏净空属于滚动内容，正文可经过透明操作层")

@@ -1,10 +1,10 @@
 ---
-description: 透明页面导航栏，组织返回入口、标题、副标题和右侧操作。
+description: 顶部透明、正文滚入时渐显毛玻璃的页面导航栏。
 ---
 
 # HyperNavBar
 
-透明页面导航栏，组织返回入口、标题、副标题和右侧操作。
+顶部透明、正文滚入时渐显毛玻璃的页面导航栏，组织返回入口、标题、副标题和右侧操作。
 
 <p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
 
@@ -31,9 +31,26 @@ HyperNavBar(type = "backWithTitle", title = { HyperText("详情") }, onBackPress
 
 透明导航操作层默认 44dp，水平留白 16dp，标题 16sp/600、行高 1.2、字距 -0.2sp；副标题 11sp、间隔 2dp。固定按钮 38dp、图标 20dp。顶部状态栏另计安全区。
 
+scrolledUnder 为 true 时，组件用 160ms 过渡显示 20dp 背景模糊和主题表面色，覆盖顶部安全区并向导航下方延伸 56dp；蒙版将模糊采样与底色一起向下淡出至完全透明，不绘制底部分隔线。延伸区域不占位、不拦截触摸；为 false 时恢复透明。文字与按钮保持清晰，不参与背景采样。
+
 **状态归属**
 
 通过 HyperNavBarPage 组合滚动正文，避免重复计算顶部安全区。固定类型仅使用标题和对应回调；custom 接收插槽。
+
+滚动状态由页面管理：LazyColumn 使用 rememberLazyListState，根据 canScrollBackward 设置 scrolledUnder；反向列表使用 canScrollForward。HyperNavBarPage 负责把正文注册为背景采样源。独立使用 HyperNavBar 时需要由 HyperBackdrop 提供背景源；没有采样源时仍显示渐变着色，不模糊导航自身。
+
+```kotlin
+val scrollState = rememberLazyListState()
+HyperNavBarPage(navBar = {
+    HyperNavBar(
+        type = "titleOnly",
+        title = { HyperText("详情") },
+        scrolledUnder = scrollState.canScrollBackward
+    )
+}) { padding ->
+    LazyColumn(state = scrollState, contentPadding = padding) { /* 正文 */ }
+}
+```
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -56,6 +73,7 @@ fun HyperNavBar(
     titleSpacing: Dp = HyperNavBarDefaults.TitleGap,
     actionSpacing: Dp = HyperNavBarDefaults.ActionGap,
     centerTitle: Boolean = false,
+    scrolledUnder: Boolean = false,
     onBackPressed: (() -> Unit)? = null,
     onMorePressed: (() -> Unit)? = null,
     onSavePressed: (() -> Unit)? = null,
@@ -80,6 +98,7 @@ fun HyperNavBar(
 | titleSpacing | Dp | 否 | HyperNavBarDefaults.TitleGap | 标题与其他区域的间距。 |
 | actionSpacing | Dp | 否 | HyperNavBarDefaults.ActionGap | 导航操作项之间的间距。 |
 | centerTitle | Boolean | 否 | false | 是否将标题在导航栏中居中。 |
+| scrolledUnder | Boolean | 否 | false | 正文是否滚入导航区域，驱动透明与渐变毛玻璃的切换。 |
 | onBackPressed | (() -&gt; Unit)? | 否 | null | 点击返回操作时通知调用方。 |
 | onMorePressed | (() -&gt; Unit)? | 否 | null | 点击更多操作时通知调用方。 |
 | onSavePressed | (() -&gt; Unit)? | 否 | null | 点击保存操作时通知调用方。 |

@@ -32,7 +32,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos()) // button 预览对齐 Flutter ButtonsExample；禁用态保留单个示例。
     addAll(formComponentDemos()) // radio 标签行不叠加触摸留白，选项与 Flutter 参考一致。
     addAll(containerComponentDemos())
-    addAll(navigationComponentDemos())
+    addAll(navigationComponentDemos()) // nav-bar 展示 scrolledUnder 驱动的透明与向下渐隐过渡。
     addAll(listComponentDemos()) // list-tile 直接展示条目；sectioned_list 固定 8dp 紧凑间距。
     addAll(feedbackComponentDemos()) // dropdown/popover 共用紧凑宽度规则；update_dialog 对齐 Flutter 更新流程。
     addAll(themeComponentDemos())
