@@ -58,5 +58,6 @@ HyperButton(
 - [主题配置](theme.md)
 - [状态与架构边界](state-model.md)
 - [交互预览](preview.md)
+- [日期选择器](components/form/hyper-date-picker.md)：单日期月历与完整 LocalDate 参数表
 
 两端对应组件统一使用 onPressed、onChanged、onClose。按钮 type 控制形态，colorStyle 选择预设配色，color 覆盖预设；页签使用 selectedIndex。当前参数与默认值见完整组件 API 表格。

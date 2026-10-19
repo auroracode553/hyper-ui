@@ -12,6 +12,7 @@ import androidx.compose.ui.window.DialogWindowProvider
 internal fun HyperDialogHost(
     onDismissRequest: () -> Unit,
     dismissOnBackPress: Boolean,
+    edgeToEdge: Boolean = false,
     content: @Composable () -> Unit
 ) {
     Dialog(
@@ -20,7 +21,8 @@ internal fun HyperDialogHost(
             dismissOnBackPress = dismissOnBackPress,
             // 使用稳定的全宽宿主，避免 WRAP_CONTENT Window 首帧重新定位。
             dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = !edgeToEdge,
         )
     ) {
         val dialogWindow = (LocalView.current.parent as? DialogWindowProvider)?.window

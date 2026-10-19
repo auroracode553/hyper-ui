@@ -25,6 +25,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperRadio](components/form/hyper-radio.md) | 单选；标签行承载点击，展示圆环不叠加触摸留白 |
 | [HyperSegmentedControl](components/form/hyper-segmented-control.md) | 40dp 分段切换，选中底板平移 |
 | [HyperSlider](components/form/hyper-slider.md) | 6dp 轨道、20dp 手柄，连续或分段值调节 |
+| [HyperDatePicker](components/form/hyper-date-picker.md) | 底部单日期月历、月份选择与年份跳转；默认 1900–2100 年 |
 
 ## 容器
 

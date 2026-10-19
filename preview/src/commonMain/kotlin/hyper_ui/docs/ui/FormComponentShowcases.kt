@@ -5,6 +5,7 @@ import hyper_ui.LocalHyperContentColor
 import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +39,39 @@ import hyper_ui.HyperSlider
 import hyper_ui.HyperSliderDefaults
 import hyper_ui.HyperSwitch
 import hyper_ui.HyperTextField
+
+@Composable
+fun DatePickerDemo() {
+    var visible by remember { mutableStateOf(false) }
+    var date by remember { mutableStateOf<HyperCalendarDate?>(null) }
+    // Preview 模拟本机日期；Android 公开入口会读取 LocalDate.now()。
+    val today = HyperCalendarDate(2026, 10, 19)
+    Column {
+        HyperText("月历选择日期", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            HyperButton(onPressed = { visible = true }, type = "tonal") {
+                HyperIcon(HyperReferenceIcons.Calendar, null)
+                HyperText("选择日期")
+            }
+            val tone = HyperColors.secondaryText
+            HyperText(
+                date?.let { "${it.year}-${it.month.toString().padStart(2, '0')}-${it.day.toString().padStart(2, '0')}" } ?: "未选择",
+                modifier = Modifier.background(tone.copy(alpha = 31 / 255f).compositeOver(HyperTheme.glass.surfaceSubtle), RoundedCornerShape(50))
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                fontSize = 12.sp, lineHeight = 14.4.sp, fontWeight = FontWeight.SemiBold, color = tone,
+            )
+        }
+    }
+    HyperDatePickerSheet(
+        visible = visible,
+        onClose = { visible = false },
+        onChanged = { date = it },
+        initialDate = date ?: today,
+        firstDate = HyperCalendarDate(1900, 1, 1),
+        lastDate = HyperCalendarDate(2100, 12, 31),
+        today = today,
+    )
+}
 
 @Composable
 fun RadioDemo() {

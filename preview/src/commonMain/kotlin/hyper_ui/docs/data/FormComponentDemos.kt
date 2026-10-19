@@ -2,6 +2,7 @@
 package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.CheckboxDemo
+import hyper_ui.docs.ui.DatePickerDemo
 import hyper_ui.docs.ui.RadioDemo
 import hyper_ui.docs.ui.SegmentedDemo
 import hyper_ui.docs.ui.SliderDemo
@@ -11,6 +12,28 @@ import hyper_ui.docs.ui.TextFieldDemo
 private const val GROUP_FORM = "表单组件"
 
 internal fun formComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(
+        id = "date_picker",
+        group = GROUP_FORM,
+        title = "HyperDatePicker",
+        description = "与 Flutter 同样的底部玻璃面板、六行月历和月份/年份跳转；确定后提交单个日期。",
+        code = """
+            HyperDatePicker.date(
+                visible = visible,
+                onClose = { visible = false },
+                onChanged = { selectedDate = it },
+                initialDate = selectedDate ?: LocalDate.now()
+            )
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("日期", "initialDate", "36dp 选中圆形、42dp 日期行；今日描边"),
+            DemoVariant("月份与年份", "点击年月标题", "十二个月、前后一年和十年跳转"),
+            DemoVariant("边界", "firstDate / lastDate", "范围外日期、月份与翻页按钮禁用"),
+            DemoVariant("确认/取消", "onChanged / onClose", "确定后提交，遮罩或返回只取消")
+        ),
+        apiDocumentPaths = listOf("form/hyper-date-picker.md"),
+        content = { DatePickerDemo() }
+    ),
     ComponentDemo(
         id = "radio",
         group = GROUP_FORM,

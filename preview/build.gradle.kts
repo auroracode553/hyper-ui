@@ -56,6 +56,8 @@ kotlin {
             kotlin.exclude("**/HyperDialogHost.kt")
             // Android 与 Preview 的阴影后端使用不同单位，复用按钮但替换内部换算。
             kotlin.exclude("**/HyperButtonShadowRadius.kt")
+            // 日期入口使用 Android 的 LocalDate；Preview 直接复用内部月历和面板。
+            kotlin.exclude("**/HyperDatePicker.kt")
             dependencies {
                 // Preview 与正式组件复用同一动画和背景模糊实现。
                 implementation("org.jetbrains.compose.foundation:foundation:${libs.versions.composeMultiplatform.get()}")

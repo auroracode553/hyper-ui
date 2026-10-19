@@ -30,6 +30,8 @@ Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义
 
 ## Flutter 参考设计与 Compose API
 
+`HyperDatePicker.date` 对齐 `D:/my_project/flutter_project/flutter-hyper-ui/ui/lib/src/components/hyper_date_picker.dart` 的单日期模式和底部面板：30dp 圆角、16dp 内边距、42dp 日期行、36dp 选中圆、12 个月及年份跳转。公开日期类型为 Android 原生 `LocalDate`；默认范围为 1900-01-01 至 2100-12-31，临时选择在确定并关闭面板后提交。无新增依赖。完整签名、状态约定与交互示例见 [日期选择器](vitepress/docs/components/form/hyper-date-picker.md)。
+
 默认视觉以 `D:/my_project/flutter_project/doc_ui_kit/ui` 的同名组件源码为准。默认材质为 `HyperMaterial.Solid`，同时提供 `Soft`、`Clear`；颜色、字号、行高、圆角、间距、图标和动效均按参考参数重构。按钮高度 32/38/44dp，输入框圆角 20dp，分段控件 40dp，Tabs 54dp，TabBar 56dp。完整对应值和验收边界见 [样式对照](vitepress/docs/style-reference.md)。
 
 `HyperDropdown` 使用 options/value/onChanged 管理选择；width 省略时按文案自动取 160–240dp，菜单匹配字段宽度。`HyperPopover` 的 child 提供触发器，默认宽 180dp，width 可显式指定，maxWidth 只限制上限。`HyperTabBar.type` 为 single/multiple；`HyperCheckbox.value` 为可空三态值。更新弹窗通过 status、展示数据与操作回调接入业务服务。

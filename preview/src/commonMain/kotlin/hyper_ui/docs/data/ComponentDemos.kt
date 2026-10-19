@@ -30,7 +30,7 @@ data class ComponentDemo(
 /** 聚合稳定 Preview ID；分组示例同步参考展示结构，页面示例自行滚动，普通示例由统一视口滚动。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos()) // button 预览对齐 Flutter ButtonsExample；禁用态保留单个示例。
-    addAll(formComponentDemos()) // radio 标签行不叠加触摸留白，选项与 Flutter 参考一致。
+    addAll(formComponentDemos()) // date_picker 共用正式月历；radio 标签行不叠加触摸留白。
     addAll(containerComponentDemos())
     addAll(navigationComponentDemos()) // nav-bar 展示 scrolledUnder 驱动的透明与向下渐隐过渡。
     addAll(listComponentDemos()) // list-tile 直接展示条目；sectioned_list 固定 8dp 紧凑间距。
