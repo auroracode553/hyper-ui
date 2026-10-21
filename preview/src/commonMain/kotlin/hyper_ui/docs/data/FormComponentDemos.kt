@@ -3,6 +3,8 @@ package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.CheckboxDemo
 import hyper_ui.docs.ui.DatePickerDemo
+import hyper_ui.docs.ui.CalendarDayDemo
+import hyper_ui.docs.ui.CalendarMonthDemo
 import hyper_ui.docs.ui.RadioDemo
 import hyper_ui.docs.ui.SegmentedDemo
 import hyper_ui.docs.ui.SliderDemo
@@ -12,6 +14,28 @@ import hyper_ui.docs.ui.TextFieldDemo
 private const val GROUP_FORM = "表单组件"
 
 internal fun formComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(
+        id = "calendar_day", group = GROUP_FORM, title = "HyperCalendarDay",
+        description = "复用日期选择器外观的日期格，可展示辅助文字、角标及少量附属条目。",
+        code = """HyperCalendarDay(day = 21, selected = true, onPressed = { selectDate() })""",
+        variants = listOf(
+            DemoVariant("状态", "selected / today / enabled", "圆形选中、今日描边与禁用"),
+            DemoVariant("附加信息", "subtitle / badge / items", "辅助文字、角标、条目与溢出数量"),
+            DemoVariant("交互", "onPressed / onLongPressed / onItemsPressed", "日期、长按与条目区域点击")
+        ),
+        apiDocumentPaths = listOf("form/hyper-calendar-day.md"), content = { CalendarDayDemo() }
+    ),
+    ComponentDemo(
+        id = "calendar_month", group = GROUP_FORM, title = "HyperCalendarMonth",
+        description = "无卡片的受控六行月历，支持起始日、紧凑尺寸和只读合并绘制。",
+        code = """HyperCalendarMonth(month = month, selectedDate = selected, onChanged = { selected = it })""",
+        variants = listOf(
+            DemoVariant("起始日", "weekStart", "星期一为 1，星期日为 7"),
+            DemoVariant("尺寸", "size", "small/default/large"),
+            DemoVariant("只读", "readOnly", "整月合并绘制，不创建逐日期点击和动画节点")
+        ),
+        apiDocumentPaths = listOf("form/hyper-calendar-month.md"), content = { CalendarMonthDemo() }
+    ),
     ComponentDemo(
         id = "date_picker",
         group = GROUP_FORM,

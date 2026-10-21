@@ -13,9 +13,13 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperText](components/basic/hyper-text.md) | 12 / 14 / 18sp 文字 |
 | [HyperIcon](components/basic/hyper-icon.md) | 18 / 24 / 32dp 图标与插槽继承 |
 | [HyperDivider](components/basic/hyper-divider.md) | 实线、虚线和方向缩进 |
-| [HyperButton](components/basic/hyper-button.md) | 默认白色描边；type 控制 filled/tonal/icon，color/colorStyle 控制配色；预览分组与 Flutter 一致，禁用态保留单个示例 |
+| [HyperButton](components/basic/hyper-button.md) | 默认白色描边；type 控制 filled/icon，color/colorStyle 控制配色；预览分组与 Flutter 一致，禁用态保留单个示例 |
 
 ## 表单
+
+[HyperCalendarDay](components/form/hyper-calendar-day.md) 提供通用日期格、角标和轻量条目；[HyperCalendarMonth](components/form/hyper-calendar-month.md) 提供内嵌、紧凑与只读月历，与日期选择器共用实现。
+
+日期格最多保留三行条目，溢出数量单独占最后一行；内嵌月历的 emphasizedDays 允许宿主指定主题色日期。
 
 | 组件 | 用途 |
 | --- | --- |

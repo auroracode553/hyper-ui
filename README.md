@@ -1,5 +1,9 @@
 # HyperUI
 
+通用内嵌月历参见 [HyperCalendarMonth](vitepress/docs/components/form/hyper-calendar-month.md)；日期格和附属条目参见 [HyperCalendarDay](vitepress/docs/components/form/hyper-calendar-day.md)。与日期选择器共用原有圆形选中及今日描边，业务历法与日程留在调用方。
+
+emphasizedDays 使用既有主题色强调指定日期；条目最多三行，溢出数量单独占最后一行，可用 minimumHeight 的 itemRows 为条目预留高度。
+
 [![在线文档](https://img.shields.io/badge/%F0%9F%93%96-在线文档-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)](https://auroracode553.github.io/hyper-ui)
 
 > 面向 Android 手机竖屏的 Jetpack Compose UI 组件库，专注提供 HyperOS 风格的基础界面组件，不承载业务逻辑。
@@ -26,7 +30,7 @@ Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义
 
 业务参数和回调保持同名。框架布局与宿主参数使用原生类型：Compose 的 Modifier、Composable、Dp、Float，与 Flutter 的 key、Widget、double、Duration；Flutter 的 controller 和 Navigator 弹层宿主、Compose 的受控 visible/open 与内容 DSL 按框架保留。组件特有参数以源码签名和完整参数表为准。
 
-默认按钮省略 type 和 colorStyle，显示白色描边；显式 type 仅 filled、tonal、icon，colorStyle 为 primary、success、info、warning、danger。
+默认按钮省略 type 和 colorStyle，显示白色描边；显式 type 仅 filled、icon，colorStyle 为 primary、success、info、warning、danger。
 
 ## Flutter 参考设计与 Compose API
 
@@ -239,7 +243,7 @@ HyperButton(type = "icon", onPressed = onSearch) {
 更新弹窗的关闭、取消和稍后再说省略 `type`，使用 `HyperButton` 默认描边样式；主操作显式使用 `type = "filled"` 和 `colorStyle = "primary"`。
 更新弹窗各状态标识块统一为 40dp、图标 20dp、环形进度 30dp；检查中隐藏当前版本，其他状态的版本信息直接排版，不嵌套版本卡片。
 更新面板以 Flutter `HyperUpdateDialog` 源码为基准：最大宽 420dp、弹层安全区外间距 20dp、圆角 28dp、内容边距 24dp，正文滚动且底部按钮固定。文档与 Preview 共用组件面板，默认展示相同的“更新流程 / 状态预览”、2.7.3 → 2.8.0、2026.10.10、48.6 MB 和三条更新日志；状态标签与强制更新、总大小未知开关一致，关闭弹层后模拟下载继续。
-按钮配色与显示形态独立：`type` 仅支持 `filled`、`tonal`、`icon`，省略时默认白色描边；`colorStyle` 支持 `primary`、`success`、`info`、`warning`、`danger`，自定义 `color` 优先于预设配色。按钮预览以 Flutter ButtonsExample 为基准，分组、文案、图标和 8/16dp 间距一致，保留单个禁用文字示例；手机外框、白色背景和 52dp 顶部留白同步，不添加额外状态栏、分组标题、开关或点击计数。库内组件和 Preview 均使用这些标准类型，并与 `D:/my_project/flutter_project/doc_ui_kit` 同步维护。
+按钮配色与显示形态独立：`type` 仅支持 `filled`、`icon`，省略时默认白色描边；`colorStyle` 支持 `primary`、`success`、`info`、`warning`、`danger`，自定义 `color` 优先于预设配色。按钮预览以 Flutter ButtonsExample 为基准，分组、文案、图标和 8/16dp 间距一致，保留单个禁用文字示例；手机外框、白色背景和 52dp 顶部留白同步，不添加额外状态栏、分组标题、开关或点击计数。库内组件和 Preview 均使用这些标准类型，并与 `D:/my_project/flutter_project/doc_ui_kit` 同步维护。
 
 Preview 使用合并 Roboto 与 Noto Sans SC 的独立字体，避免 Wasm 中文回退失效并保持 Flutter 的拉丁字符宽度。生成工具位于 `preview/tools/generate-preview-font.py`，仅重新生成字体时需要 fontTools；正常构建直接使用已保存的字体，不需要 Python 或新依赖。Android 与 Preview 的按钮阴影分别由 `HyperButtonShadowRadius.kt` 与 `PreviewButtonShadowRadius.kt` 换算后端单位，公开按钮 API 不变。
 - Android 系统工具：`hyperToast`、`HyperBatteryState`、`readHyperBatteryState`、`rememberHyperBatteryState`。它们不进入 Preview 的跨平台编译链，真实调用仅限 Android。

@@ -53,7 +53,7 @@ fun EmptyStateDemo() {
             title = "没有找到结果",
             message = if (descriptionVisible) "换一个关键词，或者清除筛选条件后重试。" else null,
             icon = { HyperIcon(HyperReferenceIcons.Search, null) },
-            action = { HyperButton(type = "tonal", onPressed = { feedback = "已清除筛选" }) { HyperText("清除筛选") } }
+            action = { HyperButton(onPressed = { feedback = "已清除筛选" }) { HyperText("清除筛选") } }
         )
         HyperText(feedback, size = "small", color = HyperColors.secondaryText)
         PreviewSectionLabel("纯提示 · 无操作按钮")

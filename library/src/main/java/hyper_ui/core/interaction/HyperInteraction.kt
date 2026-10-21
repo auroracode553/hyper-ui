@@ -6,6 +6,7 @@ import hyper_ui.HyperMotionSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
@@ -29,6 +30,7 @@ internal fun Modifier.hyperNoRippleClickable(
     interactionSource: MutableInteractionSource? = null,
     onPressChanged: ((Boolean) -> Unit)? = null,
     pressedScale: Float = 0.975f,
+    onLongClick: (() -> Unit)? = null,
     onClick: () -> Unit
 ): Modifier = composed {
     val source = interactionSource ?: remember { MutableInteractionSource() }
@@ -59,5 +61,10 @@ internal fun Modifier.hyperNoRippleClickable(
                 currentOnPressChanged?.invoke(false)
             }
         }
-    }.clickable(interactionSource = source, indication = null, enabled = enabled, role = role, onClick = onClick)
+    }.then(if (onLongClick == null) {
+        Modifier.clickable(interactionSource = source, indication = null, enabled = enabled, role = role, onClick = onClick)
+    } else {
+        Modifier.combinedClickable(interactionSource = source, indication = null, enabled = enabled, role = role,
+            onLongClick = onLongClick, onClick = onClick)
+    })
 }

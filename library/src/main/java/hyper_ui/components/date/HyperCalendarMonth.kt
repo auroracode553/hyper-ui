@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
 @Composable
-internal fun HyperCalendarMonth(
+internal fun HyperCalendarPickerMonth(
     visible: Boolean,
     initialDate: HyperCalendarDate,
     firstDate: HyperCalendarDate,
@@ -114,7 +114,7 @@ private fun HyperCalendarMonths(
                         enabled = target.overlapsMonth(firstDate, lastDate),
                         modifier = Modifier.weight(1f),
                         size = "large",
-                        type = if (selected) "filled" else "tonal",
+                        type = if (selected) "filled" else null,
                         colorStyle = if (selected) "primary" else null,
                     ) { HyperText("${target.month} 月") }
                 }
@@ -132,51 +132,7 @@ private fun HyperCalendarDays(
     selectedDate: HyperCalendarDate,
     today: HyperCalendarDate,
     onChanged: (HyperCalendarDate) -> Unit,
-) {
-    Column {
-        Row {
-            listOf("一", "二", "三", "四", "五", "六", "日").forEach { day ->
-                Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                    HyperText(day, fontSize = 12.sp, lineHeight = 16.8.sp, color = HyperColors.secondaryText)
-                }
-            }
-        }
-        Spacer(Modifier.height(8.dp))
-        repeat(6) { row ->
-            Row {
-                repeat(7) { column ->
-                    val day = row * 7 + column - month.mondayColumn + 1
-                    if (day !in 1..month.daysInMonth) {
-                        Spacer(Modifier.weight(1f).height(42.dp))
-                    } else {
-                        val date = month.copy(day = day)
-                        val enabled = date in firstDate..lastDate
-                        val isSelected = date == selectedDate
-                        val fill = if (isSelected) HyperColors.accent else Color.Transparent
-                        val foreground = when {
-                            isSelected -> Color(1f, 1f, 1f, 1f)
-                            enabled -> HyperColors.primaryText
-                            else -> HyperColors.secondaryText.copy(alpha = 105 / 255f)
-                        }
-                        Box(
-                            Modifier.weight(1f).height(42.dp)
-                                .hyperNoRippleClickable(enabled = enabled, role = Role.Button, onClick = { onChanged(date) })
-                                .semantics { selected = isSelected },
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Box(
-                                Modifier.size(36.dp).background(fill, CircleShape).then(
-                                    if (date == today && enabled && !isSelected) Modifier.border(1.dp, HyperColors.accent, CircleShape)
-                                    else Modifier
-                                ),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                HyperText("$day", fontSize = 14.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium, color = foreground)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+) = HyperCalendarMonthContent(
+    month = month, firstDate = firstDate, lastDate = lastDate,
+    selectedDate = selectedDate, today = today, onChanged = onChanged,
+)

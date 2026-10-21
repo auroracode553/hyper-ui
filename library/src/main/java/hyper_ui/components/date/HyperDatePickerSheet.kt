@@ -100,7 +100,7 @@ internal fun HyperDatePickerSheet(
                     Spacer(Modifier.height(16.dp))
                     HyperText("选择日期", modifier = Modifier.fillMaxWidth(), fontSize = 18.sp, lineHeight = 25.2.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(16.dp))
-                    HyperCalendarMonth(
+                    HyperCalendarPickerMonth(
                         visible = visible,
                         initialDate = initial,
                         firstDate = firstDate,

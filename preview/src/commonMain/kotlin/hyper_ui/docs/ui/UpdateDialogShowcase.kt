@@ -41,10 +41,10 @@ fun UpdateDialogDemo() {
             HyperButton(onPressed = if (dialogOpen) null else ({ open() }), colorStyle = "primary", type = "filled") {
                 HyperText(if (controller.busy || controller.status == HyperUpdateStatus.readyToInstall) "查看更新进度" else "检查更新")
             }
-            HyperButton(onPressed = if (controller.busy || dialogOpen) null else ({ open(latest = true) }), type = "tonal") {
+            HyperButton(onPressed = if (controller.busy || dialogOpen) null else ({ open(latest = true) })) {
                 HyperText("已是最新")
             }
-            HyperButton(onPressed = if (controller.busy || dialogOpen) null else ({ open(fail = true) }), type = "tonal") {
+            HyperButton(onPressed = if (controller.busy || dialogOpen) null else ({ open(fail = true) })) {
                 HyperText("失败与重试")
             }
         }

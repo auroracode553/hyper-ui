@@ -71,10 +71,10 @@ fun DrawerDemo() {
                     verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     HyperText("当前页面：$selected")
                     DrawerPositionSelector(position, { position = it })
-                    HyperButton(type = "tonal", onPressed = { padding = !padding }) {
+                    HyperButton(onPressed = { padding = !padding }) {
                         HyperText(if (padding) "默认留白" else "自定义留白")
                     }
-                    HyperButton(type = "tonal", onPressed = { scroll = !scroll }) {
+                    HyperButton(onPressed = { scroll = !scroll }) {
                         HyperText(if (scroll) "允许滚动" else "关闭滚动")
                     }
                     HyperButton({ drawerOpen = true }, colorStyle = "primary", type = "filled") { HyperText("打开抽屉") }
@@ -207,8 +207,8 @@ fun SlideActionMenuDemo() {
     var result by remember { mutableStateOf("拖动列表行或用按钮展开") }
     Column(Modifier.widthIn(max = 440.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(type = "tonal", onPressed = { reveal = HyperSlideMenuReveal.Start }) { HyperText("起始侧") }
-            HyperButton(type = "tonal", onPressed = { reveal = HyperSlideMenuReveal.End }) { HyperText("结束侧") }
+            HyperButton(onPressed = { reveal = HyperSlideMenuReveal.Start }) { HyperText("起始侧") }
+            HyperButton(onPressed = { reveal = HyperSlideMenuReveal.End }) { HyperText("结束侧") }
             HyperButton({ enabled = !enabled }) { HyperText(if (enabled) "禁用" else "启用") }
         }
         HyperSlideMenu(reveal, { reveal = it }, enabled = enabled,

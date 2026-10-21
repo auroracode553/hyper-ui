@@ -59,7 +59,7 @@ fun HyperButton(
 ) {
     requireHyperComponentSize(size)
     val resolvedHeight = HyperButtonDefaults.height(size)
-    require(type == null || type in setOf("filled", "tonal", "icon")) {
+    require(type == null || type in setOf("filled", "icon")) {
         "不支持的 HyperButton type: $type"
     }
     require(colorStyle == null || colorStyle in setOf("primary", "success", "info", "warning", "danger")) {
@@ -149,7 +149,6 @@ object HyperButtonDefaults {
         val hasTone = color != Color.Unspecified || colorStyle != null
         val fill = when (type) {
             "filled" -> tone
-            "tonal" -> if (hasTone) tone.copy(alpha = 0.12f) else hyperGlass.selection
             "icon" -> hyperGlass.surface
             null -> hyperGlass.surfaceSubtle
             else -> error("不支持的 HyperButton type: $type")

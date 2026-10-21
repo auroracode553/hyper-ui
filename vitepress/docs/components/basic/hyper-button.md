@@ -22,7 +22,7 @@ import hyper_ui.*
 
 HyperButton(onPressed = onClose) { HyperText("关闭") }
 HyperButton(onPressed = onSave, type = "filled", colorStyle = "primary") { HyperText("保存") }
-HyperButton(onPressed = onConfirm, type = "tonal", colorStyle = "success") { HyperText("确认") }
+HyperButton(onPressed = onConfirm, colorStyle = "success") { HyperText("确认") }
 ```
 
 </details>
@@ -31,9 +31,9 @@ HyperButton(onPressed = onConfirm, type = "tonal", colorStyle = "success") { Hyp
 
 **样式约定**
 
-按钮 small/default/large 高度 32/38/44dp，圆角为高度一半。省略 type 时使用默认描边；显式类型仅支持 filled/tonal/icon。主操作使用 filled 与 colorStyle = primary，独立图标入口使用 icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
+按钮 small/default/large 高度 32/38/44dp，圆角为高度一半。省略 type 时使用默认描边；显式类型仅支持 filled/icon。主操作使用 filled 与 colorStyle = primary，独立图标入口使用 icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
 
-colorStyle 支持 primary/success/info/warning/danger；color 为自定义基色，优先于 colorStyle。两者都省略时为白色中性样式，深色模式随主题。配色不会改变 type；例如同一个 success 配色可用于默认描边、filled、tonal 或 icon。
+colorStyle 支持 primary/success/info/warning/danger；color 为自定义基色，优先于 colorStyle。两者都省略时为白色中性样式，深色模式随主题。配色不会改变 type；例如同一个 success 配色可用于默认描边、filled 或 icon。
 
 **状态归属**
 
@@ -82,7 +82,7 @@ fun HyperButton(
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | enabled | Boolean | 否 | true | 是否允许用户交互。 |
 | loading | Boolean | 否 | false | 是否处于加载态；加载时阻止重复点击。 |
-| type | String? | 否 | null | 组件的视觉或布局形态。 |
+| type | String? | 否 | null | 省略为白色描边；filled 为填充，icon 为圆形图标。 |
 | color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
 | colorStyle | String? | 否 | null | 预设语义配色；自定义 color 优先。 |
 | size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |

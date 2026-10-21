@@ -98,7 +98,7 @@ private fun PreviewToggle(
     label: String,
     onClick: () -> Unit
 ) {
-    HyperButton(type = "tonal",
+    HyperButton(type = null,
         onPressed = onClick,
         size = "small",
         contentPadding = HyperButtonDefaults.contentPadding("small")

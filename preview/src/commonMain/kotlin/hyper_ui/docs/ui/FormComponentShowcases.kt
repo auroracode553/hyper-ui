@@ -49,7 +49,7 @@ fun DatePickerDemo() {
     Column {
         HyperText("月历选择日期", size = "small", modifier = Modifier.padding(bottom = 8.dp))
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-            HyperButton(onPressed = { visible = true }, type = "tonal") {
+            HyperButton(onPressed = { visible = true }) {
                 HyperIcon(HyperReferenceIcons.Calendar, null)
                 HyperText("选择日期")
             }

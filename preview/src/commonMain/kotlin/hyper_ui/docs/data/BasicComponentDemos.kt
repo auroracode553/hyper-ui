@@ -35,7 +35,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("语义配色", "colorStyle", "primary/success/info/warning/danger，与显示类型独立"),
             DemoVariant("自定义颜色", "color", "优先于 colorStyle，作为显示类型使用的基色"),
             DemoVariant("处理中", "loading = true", "加载期间不可重复点击"),
-            DemoVariant("次级操作", "省略 type / type = tonal", "默认描边或柔色底面"),
+            DemoVariant("次级操作", "省略 type", "默认白色描边"),
             DemoVariant("危险操作", "type = filled / colorStyle = danger", "危险语义色"),
             DemoVariant("按压与取消", "pointer down / cancel", "按下立即开始 85ms 缩放和透明度过渡；释放或拖出后 180ms 恢复"),
             DemoVariant("禁用", "enabled = false", "保留单个禁用按钮示例，不重复展示外观相同的配色"),

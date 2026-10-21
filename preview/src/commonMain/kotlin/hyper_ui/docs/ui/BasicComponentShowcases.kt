@@ -54,7 +54,6 @@ fun ButtonDemo() {
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton({}, colorStyle = "success") { HyperText("默认描边") }
-            HyperButton({}, type = "tonal", colorStyle = "success") { HyperText("柔色") }
             HyperButton({}, type = "filled", colorStyle = "success") { HyperText("填充") }
             HyperButton({}, type = "icon", colorStyle = "success") { HyperIcon(HyperReferenceIcons.Check, "成功") }
             HyperButton({}, type = "filled", colorStyle = "danger", color = HyperColors.accent) { HyperText("自定义颜色优先") }
