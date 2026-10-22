@@ -20,6 +20,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         code = """HyperCalendarDay(day = 21, selected = true, onPressed = { selectDate() })""",
         variants = listOf(
             DemoVariant("状态", "selected / today / enabled", "圆形选中、今日描边与禁用"),
+            DemoVariant("范围", "inRange", "亮暗独立语义底色，与月历只读绘制一致"),
             DemoVariant("附加信息", "subtitle / badge / items", "辅助文字、角标、条目与溢出数量"),
             DemoVariant("交互", "onPressed / onLongPressed / onItemsPressed", "日期、长按与条目区域点击")
         ),
@@ -103,17 +104,20 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "checkbox",
         group = GROUP_FORM,
         title = "HyperCheckbox",
-        description = "使用 Lucide check 默认图标的复选框，支持选中、未选中和禁用状态。",
+        description = "无卡片的受控复选标签行，覆盖三态、禁用与无标签纯控件。",
         code = """
             HyperCheckbox(
                 value = checked,
-                onChanged = { value = it }
+                onChanged = { checked = it },
+                label = "同步到所有设备"
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("选中", "checked = true", "主题实色与 Lucide check 图标"),
-            DemoVariant("未选中", "checked = false", "21dp 圆环，普通轮廓 1.5dp"),
-            DemoVariant("禁用", "enabled = false", "禁用实色状态")
+            DemoVariant("标签行", "label", "plain 行承载点击，21dp 方框不叠加 44dp 触摸区，无卡片外观"),
+            DemoVariant("选中", "value = true", "主题实色与 Lucide check 图标"),
+            DemoVariant("未选中", "value = false", "21dp 方框，普通轮廓 1.5dp"),
+            DemoVariant("三态", "tristate = true", "false → true → null → false"),
+            DemoVariant("禁用", "onChanged = null", "保留选中与未选中展示")
         ),
         apiDocumentPaths = listOf("form/hyper-checkbox.md"),
         content = { CheckboxDemo() }
@@ -142,7 +146,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "switch",
         group = GROUP_FORM,
         title = "HyperSwitch",
-        description = "受控玻璃开关；关闭态使用清晰的中性轨道和细描边，预览覆盖开启、关闭与禁用状态。",
+        description = "受控开关直接使用无卡片标签行；关闭态保留中性轨道和细描边，覆盖开启、关闭与禁用状态。",
         code = """
             HyperSwitch(
                 value = enabled,

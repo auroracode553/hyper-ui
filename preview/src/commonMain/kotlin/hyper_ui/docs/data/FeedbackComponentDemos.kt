@@ -84,7 +84,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("语义色", "type", "成功、警告、错误、信息和默认样式"),
             DemoVariant("自适应宽度", "180..420dp", "短文案收缩，长文案最多三行"),
-            DemoVariant("操作区", "actionLabel / onAction / action", "可注入关闭或撤销按钮"),
+            DemoVariant("操作区", "actionLabel / onAction / action", "默认主题色文字，先请求关闭再回调；自定义插槽优先"),
             DemoVariant("时长", "duration", "组件到时请求调用方关闭"),
             DemoVariant("原生时长", "HyperToastDuration", "Android 原生短/长 Toast"),
             DemoVariant("字符串资源", "messageResource", "由 Context 读取本地化文本"),
@@ -247,7 +247,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "custom_popup",
         group = GROUP_FEEDBACK,
         title = "HyperPopover",
-        description = "内容浮层默认宽 180dp，复杂内容可通过 width 指定宽度；最大宽 280dp、高不超过窗口 40%。",
+        description = "内容浮层默认宽 180dp，复杂内容可通过 width 指定宽度；最大宽 280dp、高不超过窗口 40%，可由惰性列表自行滚动。",
         code = """
             HyperPopover(visible = visible, onClose = { visible = false }, child = {
                 HyperButton({ visible = !visible }) { HyperText("编辑备注") }
@@ -256,6 +256,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("锚定", "anchorContent", "6dp 间距与 12dp 安全边距"),
             DemoVariant("长内容", "content", "达到高度上限后滚动"),
+            DemoVariant("惰性列表", "scrollable", "关闭外层滚动，列表保留有限高度并按需创建内容"),
             DemoVariant("宽度", "width / maxWidth", "默认 180dp、显式示例 240dp；maxWidth 只作为上限"),
             DemoVariant("受控显隐", "visible", "外部点击请求关闭")
         ),

@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.font.FontWeight
+import hyper_ui.core.interaction.hyperNoRippleClickable
 import kotlinx.coroutines.delay
 
 
@@ -70,16 +73,27 @@ fun HyperToast(
             )
             .semantics { liveRegion = LiveRegionMode.Polite }
             .padding(start = 12.dp, top = 10.dp, end = 8.dp, bottom = 10.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
         CompositionLocalProvider(LocalHyperContentColor provides HyperColors.primaryText) {
             if (leading != null) leading() else HyperToastLeading(type, toneColor)
+            Spacer(Modifier.width(10.dp))
             HyperText(message, Modifier.weight(1f, fill = false),
                 style = HyperTheme.typography.bodyMedium.copy(fontSize = 14.sp, lineHeight = 18.9.sp, fontWeight = FontWeight.Medium),
                 maxLines = 3, overflow = TextOverflow.Ellipsis)
-            if (action != null) action.invoke(this)
-            else if (actionLabel != null) HyperButton(onPressed = onAction) { HyperText(actionLabel) }
+            if (action != null) {
+                Spacer(Modifier.width(10.dp))
+                action.invoke(this)
+            } else if (actionLabel != null && onAction != null) {
+                HyperText(actionLabel,
+                    modifier = Modifier.hyperNoRippleClickable(onClick = {
+                        onClose()
+                        onAction()
+                    }).padding(horizontal = 8.dp, vertical = 6.dp),
+                    color = toneColor, fontSize = 14.sp, lineHeight = 19.6.sp,
+                    fontWeight = FontWeight.SemiBold)
+            }
         }
     }
 }

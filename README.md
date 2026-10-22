@@ -1,6 +1,10 @@
 # HyperUI
 
+维护组件前必读 [UI 样式与功能实现基线](vitepress/docs/style-reference.md)：记录 Android 当前材质、尺寸、功能、状态及专用样式保留清单。已有样式默认保持不动，用途不明或可能影响交互的变化先向使用者确认，禁止批量替换。
+
 通用内嵌月历参见 [HyperCalendarMonth](vitepress/docs/components/form/hyper-calendar-month.md)；日期格和附属条目参见 [HyperCalendarDay](vitepress/docs/components/form/hyper-calendar-day.md)。与日期选择器共用原有圆形选中及今日描边，业务历法与日程留在调用方。
+
+日期格条目保持完整字高与紧凑留白；默认缩放下 large 预留三行的最小高度为 96dp，宿主通过 HyperCalendarDayDefaults.minimumHeight 计算。
 
 emphasizedDays 使用既有主题色强调指定日期；条目最多三行，溢出数量单独占最后一行，可用 minimumHeight 的 itemRows 为条目预留高度。
 
@@ -36,9 +40,15 @@ Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义
 
 `HyperDatePicker.date` 对齐 `D:/my_project/flutter_project/flutter-hyper-ui/ui/lib/src/components/hyper_date_picker.dart` 的单日期模式和底部面板：30dp 圆角、16dp 内边距、42dp 日期行、36dp 选中圆、12 个月及年份跳转。公开日期类型为 Android 原生 `LocalDate`；默认范围为 1900-01-01 至 2100-12-31，临时选择在确定并关闭面板后提交。无新增依赖。完整签名、状态约定与交互示例见 [日期选择器](vitepress/docs/components/form/hyper-date-picker.md)。
 
-默认视觉以 `D:/my_project/flutter_project/doc_ui_kit/ui` 的同名组件源码为准。默认材质为 `HyperMaterial.Solid`，同时提供 `Soft`、`Clear`；颜色、字号、行高、圆角、间距、图标和动效均按参考参数重构。按钮高度 32/38/44dp，输入框圆角 20dp，分段控件 40dp，Tabs 54dp，TabBar 56dp。完整对应值和验收边界见 [样式对照](vitepress/docs/style-reference.md)。
+默认视觉与 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 的同名组件对齐。默认材质为 `HyperMaterial.Solid`，同时提供 `Soft`、`Clear`；已有颜色、字号、行高、圆角、间距、图标和动效按当前基线维护，不因参考差异自动重写。按钮高度 32/38/44dp，输入框圆角 20dp，分段控件 40dp，Tabs 54dp，TabBar 56dp。完整规则见 [样式与功能实现基线](vitepress/docs/style-reference.md)。
 
-`HyperDropdown` 使用 options/value/onChanged 管理选择；width 省略时按文案自动取 160–240dp，菜单匹配字段宽度。`HyperPopover` 的 child 提供触发器，默认宽 180dp，width 可显式指定，maxWidth 只限制上限。`HyperTabBar.type` 为 single/multiple；`HyperCheckbox.value` 为可空三态值。更新弹窗通过 status、展示数据与操作回调接入业务服务。
+`HyperDropdown` 使用 options/value/onChanged 管理选择；width 省略时按文案自动取 160–240dp，菜单匹配字段宽度。`HyperPopover` 的 visible / onClose 由调用方控制，child 提供锚点并自行触发；默认宽 180dp，width 可显式指定，maxWidth 只限制上限。`HyperTabBar.type` 为 single/multiple，不提供整体或单项禁用状态；`HyperCheckbox.value` 为可空三态值。更新弹窗通过 status、展示数据与操作回调接入业务服务。
+
+`HyperCheckbox`、`HyperRadio`、`HyperSwitch` 的 label 使用 plain 行，不自动附带卡片背景、外框或阴影；基础预览直接展示控件与标签。
+
+`HyperNavBar` 的滚动背景覆盖状态栏，只有操作行避让顶部安全区。真机读取系统 Insets；文档预览注入模拟 Insets，导航与正文共用且只计算一次，与 Flutter 的背景及安全区层级一致。
+
+共有组件约定：按钮主体使用 content 插槽；Checkbox 标签行不叠加独立触摸区；Card 选中边框使用完整强调色；日期范围使用亮暗语义底色；ListTile 尾部间距 8dp；Tabs 仅在索引改变时回调；SlideMenu 携带释放速度吸附；Toast 默认文字操作先请求关闭再回调。
 
 ```kotlin
 HyperThemeConfig {
@@ -111,6 +121,8 @@ https://gitee.com/my_new_way/hyper_ui/blob/master/vitepress/docs/index.md
 ## 适用范围
 
 HyperUI 面向 Android Compose 项目，提供按钮、输入框、列表分组、设置项、弹窗、抽屉、加载进度条、可拖动进度滑块、顶部栏、底部导航等基础组件。
+
+`HyperDrawer` 是贴边全高的独立模态层；调用方持有 open 并响应 onClose，正文通过 content 提供，默认零内边距。默认从 start 侧展开，支持遮罩、系统返回键及横向滑动关闭，固定标题与页脚；完整 API 见[抽屉文档](vitepress/docs/components/navigation/hyper-drawer.md)。
 
 不适合的场景：
 
@@ -256,7 +268,7 @@ Preview 使用合并 Roboto 与 Noto Sans SC 的独立字体，避免 Wasm 中�
 - `value`、`groupValue`、`selectedIndex`、`visible`、`open` 等业务状态由调用方管理；Dropdown 内部维护临时展开状态。
 - 组件通过 `onChanged`、`onPressed`、`onClose` 等回调通知调用方。
 - 外部尺寸和间距由 `modifier` 控制；按钮等组件提供与参考设计对应的语义化尺寸参数，内部独立布局节点提供具名修饰符。
-- `HyperPopover` 为锚定触发点的内容浮层，默认宽 180dp，maxWidth = 280dp 仅限制上限；`width = 240.dp` 可为复杂内容保留更多空间。`HyperDropdown` 以最长选项或占位文字加 68dp 控件占位，默认限制在 160–240dp；宽表单用 width 显式设置，两端预览统一覆盖默认、220dp、长文案、禁用与空选项。
+- `HyperPopover` 为锚定触发点的内容浮层，默认宽 180dp，maxWidth = 280dp 仅限制上限；`width = 240.dp` 可为复杂内容保留更多空间。scrollable 默认 true，内容自带惰性列表时设为 false，保留原高度和安全区约束。`HyperDropdown` 以最长选项或占位文字加 68dp 控件占位，默认限制在 160–240dp；宽表单用 width 显式设置，两端预览统一覆盖默认、220dp、长文案、禁用与空选项。
 - `HyperDialog` 使用 Compose Dialog 的全尺寸根节点，面板宽度上限为 min(maxWidth, 实际窗口宽度 − 48dp)，两侧各保留 24dp；滚动正文与固定操作区分开，关闭由调用方维护 visible。
 - 业务状态由调用方持有；组件可以在状态变化时执行按压、弹出、拖动吸附等视觉过渡。
 

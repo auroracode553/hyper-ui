@@ -36,7 +36,7 @@ object HyperCalendarDayDefaults {
         val font = when (size) { "small" -> 10f; "large" -> 17f; else -> 14f }
         val base = when (size) { "small" -> 20f; "large" -> 48f; else -> 42f }
         val scale = LocalDensity.current.fontScale
-        return (maxOf(base, scale * font * 1.2f + (if (hasSubtitle) scale * 9 * 1.2f + 2 else 0f) + (if (size == "small") 6 else 12)) + itemRows * (scale * 10 * 1.2f + 8)).dp
+        return (maxOf(base, scale * font * 1.2f + (if (hasSubtitle) scale * 9 * 1.2f + 2 else 0f) + (if (size == "small") 6 else 12)) + itemRows * (scale * 10 * 1.2f + 4)).dp
     }
 }
 
@@ -79,7 +79,8 @@ fun HyperCalendarDay(
         else -> HyperColors.secondaryText
     }
     val font = when (size) { "small" -> 10f; "large" -> 17f; else -> 14f }
-    val labelHeight = (density.fontScale * 10 * 1.2f + 6).dp
+    // 保留完整字高与紧凑内边距，三行条目不额外撑高月盘。
+    val labelHeight = (density.fontScale * 10 * 1.2f + 2).dp
     val total = itemCount ?: items.size
     val pressable = if (onPressed != null || onLongPressed != null) {
         Modifier.hyperNoRippleClickable(
@@ -90,7 +91,7 @@ fun HyperCalendarDay(
     } else Modifier
     BoxWithConstraints(
         modifier.then(if (expanded) Modifier else Modifier.height(base))
-            .background(if (inRange) HyperColors.accent.copy(alpha = .12f) else Color.Transparent)
+            .background(if (inRange) HyperColors.selectionBackground else Color.Transparent)
             .then(pressable).clipToBounds(),
     ) {
         val height = if (constraints.hasBoundedHeight) maxHeight else base

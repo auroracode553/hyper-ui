@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
@@ -34,6 +35,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.platform.LocalDensity
+
+// 文档预览注入模拟系统 Insets，导航背景和正文净空共用同一个来源。
+internal val LocalHyperNavBarWindowInsets = staticCompositionLocalOf<WindowInsets?> { null }
+
+@Composable
+private fun navBarTopInsets(): WindowInsets =
+    (LocalHyperNavBarWindowInsets.current ?: WindowInsets.statusBars).only(WindowInsetsSides.Top)
 
 /** 固定避让顶部状态栏；宿主传入滚动状态，组件统一处理背景采样和过渡。 */
 @Composable
@@ -61,7 +69,7 @@ fun HyperNavBar(
     val resolvedHeight = hyperComponentSize(size, 40.dp, HyperNavBarDefaults.Height, 52.dp)
     require(spacing >= 0.dp && titleSpacing >= 0.dp && actionSpacing >= 0.dp) { "间距不能为负数" }
     require(type == HyperNavBarDefaults.TypeCustom ||
-        (child == null && leading == null && trailing == null && actions.isEmpty() && !centerTitle)) {
+        (child == null && subtitle == null && leading == null && trailing == null && actions.isEmpty() && !centerTitle)) {
         "固定类型 HyperNavBar 只接受标题内容与对应回调；需要完整插槽时使用 type = custom。"
     }
     require(type != HyperNavBarDefaults.TypeBackOnly || (title == null && subtitle == null)) {
@@ -76,7 +84,7 @@ fun HyperNavBar(
     }
     require(trailing == null || actions.isEmpty()) { "trailing 与 actions 二选一" }
 
-    val safeInsets = WindowInsets.statusBars.only(WindowInsetsSides.Top)
+    val safeInsets = navBarTopInsets()
     HyperNavBarScrollSurface(scrolledUnder, modifier.zIndex(HyperNavBarDefaults.ZIndex)) {
       Column(modifier = Modifier.windowInsetsPadding(safeInsets)) {
         Box(modifier = Modifier.fillMaxWidth().height(resolvedHeight).padding(padding)) {
@@ -144,8 +152,9 @@ fun HyperNavBarPage(
     content: @Composable BoxScope.(PaddingValues) -> Unit
 ) {
     val density = LocalDensity.current
+    val safeInsets = navBarTopInsets()
     val topInset = with(density) {
-        WindowInsets.statusBars.getTop(this).toDp()
+        safeInsets.getTop(this).toDp()
     }
     val bottomInset = if (bottomSafeArea) with(density) {
         // 键盘避让由页面宿主处理，避免与 imePadding 重复累加。

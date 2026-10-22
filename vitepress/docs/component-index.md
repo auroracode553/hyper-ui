@@ -1,5 +1,7 @@
 # 组件索引
 
+修改组件前必须阅读 [UI 样式与功能实现基线](style-reference.md)，核对已有专用样式、状态归属和平台差异。不得仅因“统一”替换当前布局或操作样式；拿不准时先向使用者确认。
+
 所有组件从 `hyper_ui` 包导入。组件页按用途、交互示例、最小调用、使用约定和公开 API 组织。长签名与辅助配置可以展开查看，五列 Props 表完整保留；手机预览支持切换 320/350/390/430dp 宽度和重置。
 
 HyperList 与 HyperSectionedList 使用整屏视口，顶部控件下方的列表独自滚动；HyperMenuGroup 和 HyperListTile 按内容测量，由预览宿主负责整页滚动。
@@ -19,17 +21,19 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 
 [HyperCalendarDay](components/form/hyper-calendar-day.md) 提供通用日期格、角标和轻量条目；[HyperCalendarMonth](components/form/hyper-calendar-month.md) 提供内嵌、紧凑与只读月历，与日期选择器共用实现。
 
-日期格最多保留三行条目，溢出数量单独占最后一行；内嵌月历的 emphasizedDays 允许宿主指定主题色日期。
+日期格最多保留三行条目，溢出数量单独占最后一行；紧凑留白保留完整文字行高，默认缩放下 large 预留三行需 96dp。内嵌月历的 emphasizedDays 允许宿主指定主题色日期。
 
 | 组件 | 用途 |
 | --- | --- |
 | [HyperTextField](components/form/hyper-text-field.md) | 文本、密码和多行输入 |
-| [HyperSwitch](components/form/hyper-switch.md) | 开关 |
-| [HyperCheckbox](components/form/hyper-checkbox.md) | 多选 |
+| [HyperSwitch](components/form/hyper-switch.md) | 开关；plain 标签行不附带卡片 |
+| [HyperCheckbox](components/form/hyper-checkbox.md) | 多选；plain 标签行不附带卡片 |
 | [HyperRadio](components/form/hyper-radio.md) | 单选；标签行承载点击，展示圆环不叠加触摸留白 |
 | [HyperSegmentedControl](components/form/hyper-segmented-control.md) | 40dp 分段切换，选中底板平移 |
 | [HyperSlider](components/form/hyper-slider.md) | 6dp 轨道、20dp 手柄，连续或分段值调节 |
 | [HyperDatePicker](components/form/hyper-date-picker.md) | 底部单日期月历、月份选择与年份跳转；默认 1900–2100 年 |
+
+共有组件的当前约定：HyperButton 主体插槽为 content；Checkbox 标签行只展示 21dp 方框；Card 选中边框使用完整强调色；日期格与只读月历共用范围底色；ListTile 尾部间距 8dp；Tabs 重复选中不回调；SlideMenu 携带释放速度吸附；Toast 默认文字操作先关闭再回调。
 
 ## 容器
 
@@ -43,9 +47,9 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 
 | 组件 | 用途 |
 | --- | --- |
-| [HyperNavBar](components/navigation/hyper-nav-bar.md) | 顶部透明，scrolledUnder 驱动向下渐隐的背景；固定顶部状态栏避让，type 提供固定布局与 custom 插槽 |
-| [HyperTabBar](components/navigation/hyper-tab-bar.md) | 56dp 导航；single 单动作与 multiple 多标签 |
-| [HyperDrawer](components/navigation/hyper-drawer.md) | 任务抽屉 |
+| [HyperNavBar](components/navigation/hyper-nav-bar.md) | 顶部透明，scrolledUnder 驱动覆盖状态栏并向下渐隐的背景；操作行避让安全区，type 提供固定布局与 custom 插槽 |
+| [HyperTabBar](components/navigation/hyper-tab-bar.md) | 56dp 导航；single 单动作与 multiple 多标签，不提供禁用状态 |
+| [HyperDrawer](components/navigation/hyper-drawer.md) | 贴边全高模态抽屉；固定标题／页脚，支持遮罩、返回键与滑动关闭 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表项侧滑操作 |
 | [HyperTabs](components/navigation/hyper-tabs.md) | 分类筛选 |
 
@@ -73,7 +77,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | 等级或数值胶囊 |
 | [HyperPlaybackSpeedPanel](components/feedback/hyper-playback-speed-panel.md) | 播放速度面板 |
 | [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 播放速度刻度 |
-| [HyperPopover](components/feedback/hyper-popover.md) | 默认宽 180dp 的锚点浮层，width 可显式指定、maxWidth 限制上限 |
+| [HyperPopover](components/feedback/hyper-popover.md) | visible / onClose 受控，child 自行触发；默认宽 180dp，width 可显式指定、maxWidth 限制上限；scrollable 可交由有界子列表滚动 |
 | [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 与 Flutter 共用视觉规则：420dp 最大宽、20dp 弹层外间距、28dp 圆角、24dp 内容边距；统一更新流程与状态预览 |
 | [HyperBatteryState](components/tools/hyper-battery-state.md) | Android 电量状态读取 |
 

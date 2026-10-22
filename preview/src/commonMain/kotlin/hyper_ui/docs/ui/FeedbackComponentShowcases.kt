@@ -6,6 +6,7 @@ import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -108,11 +109,7 @@ fun ToastDemo() {
         }
         Box(Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.BottomCenter) {
             HyperToast(visible, message, onClose = { visible = false }, duration = duration, type = type,
-                action = {
-                    HyperButton(onPressed = { visible = false }, size = "small") {
-                        HyperText("关闭")
-                    }
-                })
+                actionLabel = "关闭", onAction = {})
         }
         HyperText(if (visible) "显示中：${duration / 1000} 秒后关闭" else "提示已关闭", fontSize = 13.sp)
     }
@@ -470,11 +467,22 @@ fun HyperPopoverDemo() {
         Spacer(Modifier.height(12.dp))
         HyperText("选择结果：$selected")
         Spacer(Modifier.height(24.dp))
-        HyperPopover(visible = wideOpen, onClose = { wideOpen = false }, width = 240.dp, child = {
+        HyperPopover(visible = wideOpen, onClose = { wideOpen = false }, width = 240.dp,
+            scrollable = false, child = {
             HyperText("查看较宽内容", Modifier.clickable(
                 interactionSource = remember { MutableInteractionSource() }, indication = null
             ) { wideOpen = !wideOpen })
-        }) { HyperText("通过 width 为输入、说明等复杂内容保留更多空间。") }
+        }) {
+            HyperText("通过 width 为输入、说明等复杂内容保留更多空间。")
+            LazyColumn(Modifier.weight(1f, fill = false)) {
+                items(20) { index ->
+                    val label = "补充内容 ${index + 1}"
+                    HyperListTile(type = "plain", showChevron = false,
+                        title = { HyperText(label) },
+                        onPressed = { selected = label; wideOpen = false })
+                }
+            }
+        }
     }
 }
 

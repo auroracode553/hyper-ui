@@ -84,7 +84,7 @@ fun HyperListTile(
                 }
             }
             Column(Modifier.weight(1f).padding(start = if (hasLeading) 12.dp else 0.dp,
-                end = if (hasTrailing) 12.dp else 0.dp)) {
+                end = if (hasTrailing) 8.dp else 0.dp)) {
                 CompositionLocalProvider(LocalHyperContentColor provides if (enabled) colors.contentColor else colors.disabledContentColor,
                     LocalHyperTextStyle provides HyperListTileDefaults.HeadlineTextStyle) { title() }
                 if (subtitle != null) {

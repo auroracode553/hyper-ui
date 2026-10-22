@@ -1,9 +1,7 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/NavigationComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
 import hyper_ui.*
-import hyper_ui.docs.theme.LocalDocsColorScheme
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,13 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperTabBar
 import hyper_ui.HyperDrawer
-import hyper_ui.HyperDrawerHeader
-import hyper_ui.HyperDrawerItem
 import hyper_ui.HyperDrawerPlacement
 import hyper_ui.HyperTabs
 
@@ -43,44 +36,42 @@ private val DockedTabBarGestureClearance = 8.dp
 
 @Composable
 fun DrawerDemo() {
-    var drawerOpen by remember { mutableStateOf(false) }
-    var selected by remember { mutableStateOf("首页") }
-    var position by remember { mutableStateOf(HyperDrawerPlacement.end) }
-    var padding by remember { mutableStateOf(true) }
-    var scroll by remember { mutableStateOf(true) }
+    var open by remember { mutableStateOf(false) }
+    var placement by remember { mutableStateOf(HyperDrawerPlacement.end) }
+    var selected by remember { mutableStateOf("尚未选择") }
+    var favorites by remember { mutableStateOf(true) }
+    val filters = placement == HyperDrawerPlacement.start
     Box(Modifier.fillMaxSize()) {
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperText("右侧抽屉与返回值", size = "small")
+            HyperButton(onPressed = { placement = HyperDrawerPlacement.end; open = true }) { HyperText("打开抽屉") }
+            HyperText("返回结果：$selected", size = "small")
+            androidx.compose.foundation.layout.Spacer(Modifier.height(12.dp))
+            HyperText("左侧抽屉与固定底部操作区", size = "small")
+            HyperButton(onPressed = { placement = HyperDrawerPlacement.start; open = true }) { HyperText("左侧筛选") }
+        }
         HyperDrawer(
-            open = drawerOpen,
-            onClose = { drawerOpen = false },
-            placement = position,
-            title = "导航",
-            footer = { HyperText("固定页脚", size = "small") },
-            defaultSetPadding = padding,
-            scrollable = scroll,
-            child = {
-                HyperDrawerHeader(title = { HyperText("HyperUI") },
-                    subtitle = { HyperText("选择页面") })
-                listOf("首页", "通知", "设置", "关于").forEach { page ->
-                    HyperDrawerItem(selected = page == selected,
-                        onPressed = { selected = page; drawerOpen = false },
-                        title = { HyperText(page) })
-                }
-            },
-            content = {
-                Column(Modifier.fillMaxSize().background(HyperColors.pageBackground).padding(14.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    HyperText("当前页面：$selected")
-                    DrawerPositionSelector(position, { position = it })
-                    HyperButton(onPressed = { padding = !padding }) {
-                        HyperText(if (padding) "默认留白" else "自定义留白")
-                    }
-                    HyperButton(onPressed = { scroll = !scroll }) {
-                        HyperText(if (scroll) "允许滚动" else "关闭滚动")
-                    }
-                    HyperButton({ drawerOpen = true }, colorStyle = "primary", type = "filled") { HyperText("打开抽屉") }
+            open = open,
+            onClose = { open = false },
+            placement = placement,
+            width = if (filters) 300.dp else 320.dp,
+            title = if (filters) "筛选条件" else "选择工作空间",
+            footer = if (filters) {
+                { HyperButton(onPressed = { open = false }, modifier = Modifier.fillMaxWidth(),
+                    type = "filled", colorStyle = "primary") { HyperText("应用筛选") } }
+            } else null,
+        ) {
+            if (filters) {
+                HyperCheckbox(favorites, { favorites = it == true }, label = "仅显示收藏")
+                HyperCheckbox(false, label = "包含已归档")
+                HyperRadio("all", "all", label = "全部时间")
+            } else {
+                listOf("产品设计", "移动端", "文档站").forEach { workspace ->
+                    HyperListTile(title = { HyperText(workspace) },
+                        onPressed = { selected = workspace; open = false })
                 }
             }
-        )
+        }
     }
 }
 
@@ -108,7 +99,6 @@ fun MultipleTabBarDemo() { TabBarDemo(single = false) }
 @Composable
 private fun TabBarDemo(single: Boolean) {
     var selectedId by remember { mutableStateOf("home") }
-    var enabled by remember { mutableStateOf(true) }
     var count by remember { mutableStateOf(3) }
     val items = listOf(
         DemoNavItem("home", "首页", HyperReferenceIcons.Home),
@@ -117,10 +107,7 @@ private fun TabBarDemo(single: Boolean) {
         DemoNavItem("settings", "设置", HyperReferenceIcons.Settings)
     )
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({ enabled = !enabled }) { HyperText(if (enabled) "禁用" else "启用") }
-            if (single) HyperButton({ count = if (count == 0) 3 else 0 }) { HyperText("切换角标") }
-        }
+        if (single) HyperButton({ count = if (count == 0) 3 else 0 }) { HyperText("切换角标") }
         Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
             HyperText("当前页面：${items.first { it.id == selectedId }.label}")
         }
@@ -128,7 +115,6 @@ private fun TabBarDemo(single: Boolean) {
             items = if (single) listOf(items.first()) else items,
             onChanged = { selectedId = items[it].id; if (single) count++ },
             type = if (single) "single" else "multiple",
-            enabled = enabled,
             selectedIndex = if (single) 0 else items.indexOfFirst { it.id == selectedId },
             itemLabel = { it.label },
             badgeCount = count
@@ -139,64 +125,6 @@ private fun TabBarDemo(single: Boolean) {
             }
         }
     }
-}
-
-@Composable
-private fun DrawerBadge(content: @Composable () -> Unit) {
-    Box(
-        modifier = Modifier
-            .size(42.dp)
-            .clip(CircleShape)
-            .background(LocalDocsColorScheme.current.primaryContainer),
-        contentAlignment = Alignment.Center
-    ) {
-        content()
-    }
-}
-
-@Composable
-private fun DrawerPositionSelector(
-    selected: HyperDrawerPlacement,
-    onSelect: (HyperDrawerPlacement) -> Unit
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            DrawerPositionButton(
-                text = "起始侧",
-                selected = selected == HyperDrawerPlacement.start,
-                onClick = { onSelect(HyperDrawerPlacement.start) }
-            )
-            DrawerPositionButton(
-                text = "结束侧",
-                selected = selected == HyperDrawerPlacement.end,
-                onClick = { onSelect(HyperDrawerPlacement.end) }
-            )
-        }
-
-    }
-}
-
-@Composable
-private fun DrawerPositionButton(
-    text: String,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    HyperButton(
-        onPressed = onClick,
-        modifier = Modifier.height(36.dp),
-        colorStyle = if (selected) "primary" else null
-    , type = "filled") {
-        HyperText(
-            text = text,
-            fontSize = 13.sp
-        )
-    }
-}
-
-private fun HyperDrawerPlacement.label(): String = when (this) {
-    HyperDrawerPlacement.start -> "左侧"
-    HyperDrawerPlacement.end -> "右侧"
 }
 
 /** 侧滑操作与分类按钮分开演示，保留受控展开和禁用状态。 */

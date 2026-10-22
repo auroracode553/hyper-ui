@@ -31,6 +31,8 @@ HyperCheckbox(value, { value = it }, tristate = true)
 
 44dp 触摸区、21dp 可见方框、7dp 圆角、1.5dp 轮廓、15dp 勾或横线。
 
+提供 label 时使用 plain 标签行，不附带卡片背景、外框或阴影，保留整行点击。尾随方框只占 21dp，不叠加独立 44dp 触摸空间；普通标签行沿用 46dp 最小高度。组件预览直接展示默认标签行及纯控件，不额外包裹 HyperCard。
+
 **状态归属**
 
 value 为 Boolean?。两态必须非 null；三态按 false → true → null → false 循环。
@@ -73,4 +75,4 @@ fun HyperCheckbox(
 | uncheckedColor | Color | 否 | Color.Unspecified | 未勾选时的控件颜色。 |
 | uncheckedBorderColor | Color | 否 | Color.Unspecified | 未勾选时边框颜色。 |
 | checkmarkColor | Color | 否 | Color(1f, 1f, 1f, 1f) | 勾选标记颜色。 |
-| label | String? | 否 | null | 数值旁显示的标签文字。 |
+| label | String? | 否 | null | 无卡片的 plain 标签行，点击由整行处理。 |

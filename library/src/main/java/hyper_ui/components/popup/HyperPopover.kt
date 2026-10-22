@@ -10,7 +10,7 @@ import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/** visible 由调用方持有，anchorContent 负责触发动作与语义。 */
+/** visible 由调用方持有，child 提供锚点并自行处理触发动作。 */
 @Composable
 fun HyperPopover(
     visible: Boolean,
@@ -19,6 +19,7 @@ fun HyperPopover(
     modifier: Modifier = Modifier,
     maxWidth: Dp = 280.dp,
     width: Dp? = null,
+    scrollable: Boolean = true,
     content: @Composable ColumnScope.() -> Unit
 ) {
     require(maxWidth > 0.dp && maxWidth.value.isFinite()) { "maxWidth 必须为有限正数" }
@@ -29,6 +30,7 @@ fun HyperPopover(
     Box(modifier.onGloballyPositioned { anchor = it.boundsInWindow() }) {
         child()
         HyperAnchoredSurface(onClose, preferredWidth, Dp.Infinity, PaddingValues(14.dp),
-            anchorBounds = anchor, heightFraction = 0.4f, visible = visible, content = content)
+            anchorBounds = anchor, heightFraction = 0.4f, visible = visible,
+            scrollable = scrollable, content = content)
     }
 }

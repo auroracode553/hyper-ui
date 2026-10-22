@@ -7,7 +7,7 @@ aside: false
 hero:
   name: HyperUI
   text: Android 手机端 Compose UI
-  tagline: 参考 doc_ui_kit 的材质、尺寸与受控交互组件
+  tagline: 统一材质、尺寸与受控交互的 Android 手机端组件
   actions:
     - theme: brand
       text: 开始接入
@@ -53,6 +53,7 @@ HyperButton(
 
 ## 文档入口
 
+- [UI 样式与功能实现基线](style-reference.md)：维护组件前必读；已有样式保留，涉及用途不明的变化先确认
 - [接入与最小配置](getting-started.md)
 - [移动端规范](mobile-guidelines.md)
 - [主题配置](theme.md)

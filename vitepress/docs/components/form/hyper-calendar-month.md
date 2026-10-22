@@ -49,6 +49,8 @@ fun HyperCalendarMonth(
 
 原生日期使用 java.time.LocalDate，年份范围 1–9999。只读整月点击、月份分页、月盘收起和业务数据由宿主负责。
 
+日期区间内部的普通日期格与 readOnly 合并绘制使用同一范围底色：亮色 RGBA(239,246,255,1)、深色 RGBA(20,37,68,1)。
+
 ```kotlin
 HyperCalendarMonth(month = month, selectedDate = selected,
     weekStart = 7, onChanged = { selected = it })

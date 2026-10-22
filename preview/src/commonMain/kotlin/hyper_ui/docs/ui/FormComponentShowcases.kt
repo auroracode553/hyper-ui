@@ -4,14 +4,11 @@ import hyper_ui.*
 import hyper_ui.LocalHyperContentColor
 import hyper_ui.docs.theme.LocalDocsColorScheme
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -157,42 +154,27 @@ fun SegmentedDemo() {
 
 @Composable
 fun CheckboxDemo() {
-    var checkedA by remember { mutableStateOf(true) }
-    var checkedB by remember { mutableStateOf(false) }
+    var checked by remember { mutableStateOf<Boolean?>(true) }
     var triState by remember { mutableStateOf<Boolean?>(null) }
-
-    FormControlGroup {
-        FormControlOption(
-            text = "备选项 A",
-            onClick = { checkedA = !checkedA }
-        ) {
-            HyperCheckbox(
-                value = checkedA,
-                onChanged = { checkedA = it == true }
-            )
-        }
-        FormControlOption(
-            text = "备选项 B",
-            onClick = { checkedB = !checkedB }
-        ) {
-            HyperCheckbox(
-                value = checkedB,
-                onChanged = { checkedB = it == true }
-            )
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            HyperCheckbox(triState, { triState = it }, tristate = true)
-            HyperText("三态：${triState ?: "不确定"}")
-        }
-        FormControlOption(
-            text = "禁用选项",
-            enabled = false
-        ) {
-            HyperCheckbox(
-                value = true,
-                onChanged = {},
-                enabled = false
-            )
+    var standalone by remember { mutableStateOf(false) }
+    // 直接展示库默认标签行，与 Flutter 相同，不额外包卡片或自定义点击行。
+    Column {
+        HyperText("受控复选", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperCheckbox(checked, { checked = it }, label = "同步到所有设备")
+        Spacer(Modifier.height(20.dp))
+        HyperText("三态（全选 / 部分 / 空）", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperCheckbox(triState, { triState = it }, tristate = true, label = "已选择 2 / 4 项")
+        Spacer(Modifier.height(20.dp))
+        HyperText("禁用状态", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperCheckbox(false, label = "禁用 · 未选中")
+        Spacer(Modifier.height(12.dp))
+        HyperCheckbox(true, label = "禁用 · 已选中")
+        Spacer(Modifier.height(20.dp))
+        HyperText("纯控件（无标签）", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            HyperCheckbox(standalone, { standalone = it == true })
+            HyperCheckbox(true)
+            HyperCheckbox(false, tristate = true)
         }
     }
 }
@@ -236,24 +218,12 @@ fun SwitchDemo() {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(24.dp)) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
             HyperText("受控开关", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 12.sp)
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically) {
-                HyperText("接收消息通知", fontSize = 14.sp)
-                HyperSwitch(value = notifications, onChanged = { notifications = it })
-            }
+            HyperSwitch(value = notifications, onChanged = { notifications = it }, label = "接收消息通知")
         }
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
             HyperText("禁用状态", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 12.sp)
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically) {
-                HyperText("禁用 · 开启", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 14.sp)
-                HyperSwitch(value = true, onChanged = {}, enabled = false)
-            }
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically) {
-                HyperText("禁用 · 关闭", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 14.sp)
-                HyperSwitch(value = false, onChanged = {}, enabled = false)
-            }
+            HyperSwitch(value = true, label = "禁用 · 开启")
+            HyperSwitch(value = false, label = "禁用 · 关闭")
         }
     }
 }
@@ -348,50 +318,4 @@ private fun FieldSupporting(text: String) {
         fontSize = 12.sp,
         lineHeight = 16.sp
     )
-}
-
-@Composable
-private fun FormControlGroup(
-    content: @Composable () -> Unit
-) {
-    Column(
-        modifier = Modifier.widthIn(max = 360.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp),
-        content = { content() }
-    )
-}
-
-@Composable
-private fun FormControlOption(
-    text: String,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    onClick: (() -> Unit)? = null,
-    control: @Composable RowScope.() -> Unit
-) {
-    val clickModifier = if (onClick != null) {
-        Modifier.clickable(enabled = enabled, onClick = onClick)
-    } else {
-        Modifier
-    }
-    Row(
-        modifier = modifier.then(clickModifier),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            content = control
-        )
-        HyperText(
-            text = text,
-            color = if (enabled) {
-                LocalDocsColorScheme.current.onSurface
-            } else {
-                LocalDocsColorScheme.current.onSurfaceVariant
-            },
-            fontSize = 15.sp,
-            lineHeight = 20.sp
-        )
-    }
 }

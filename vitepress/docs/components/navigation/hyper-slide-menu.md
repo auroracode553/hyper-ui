@@ -31,7 +31,7 @@ HyperSlideMenu(reveal, { reveal = it }, endActions = listOf(HyperSlideAction("�
 
 **样式约定**
 
-列表侧滑动作每项 64dp；到达边界使用 0.32 橡皮筋阻力，释放阈值 35%，速度投影 0.09 秒；弹簧 stiffness 470/damping 42。
+列表侧滑动作每项 64dp；到达边界使用 0.32 橡皮筋阻力，释放阈值 35%，速度投影 0.09 秒；弹簧 stiffness 470/damping 42，携带释放速度开始吸附。
 
 **状态归属**
 
@@ -68,8 +68,8 @@ fun HyperSlideMenu(
 | reveal | HyperSlideMenuReveal | 是 | — | 侧滑展开状态，由调用方持有。 |
 | onRevealChange | (HyperSlideMenuReveal) -&gt; Unit | 是 | — | 侧滑展开状态变化时通知调用方。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| startActions | List&lt;HyperSlideAction&gt; | 否 | emptyList() | 向右侧滑时露出的操作项。 |
-| endActions | List&lt;HyperSlideAction&gt; | 否 | emptyList() | 向左侧滑时露出的操作项。 |
+| startActions | List&lt;HyperSlideAction&gt; | 否 | emptyList() | 逻辑起始侧操作，RTL 时自动镜像。 |
+| endActions | List&lt;HyperSlideAction&gt; | 否 | emptyList() | 逻辑结束侧操作，RTL 时自动镜像。 |
 | enabled | Boolean | 否 | true | 是否允许用户交互。 |
 | actionExtent | Dp | 否 | 64.dp | 侧滑操作区的展开宽度。 |
 | shape | Shape | 否 | RoundedCornerShape(18.dp) | 组件容器的形状。 |
@@ -94,7 +94,7 @@ data class HyperSlideAction(
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | label | String | 是 | — | 数值旁显示的标签文字。 |
-| onPressed | () -&gt; Unit | 是 | — | 点击操作回调；为 null 时不能触发操作。 |
+| onPressed | () -&gt; Unit | 是 | — | 先请求关闭侧滑区域，再执行操作回调。 |
 | color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
 | foregroundColor | Color | 否 | Color.Unspecified | 动作文字和图标颜色。 |
 | icon | (@Composable () -&gt; Unit)? | 否 | null | 图标或图标区域。 |

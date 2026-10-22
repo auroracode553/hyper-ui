@@ -27,6 +27,8 @@ HyperDropdown(listOf(HyperOption("all", "全部"), HyperOption("saved", "收藏"
 
 ## 使用约定
 
+菜单展开后将 enabled 设为 false 或将 onChanged 置为 null，会自动收起菜单。
+
 **样式约定**
 
 选择字段 subtle 材质 radius 16dp，最小高 48dp，padding 14×11dp。width 为 null 时，按最长选项或占位文字的测量宽度加 68dp（包含内边距、箭头与勾选占位），默认限制在 160–240dp，再服从父级可用宽度。宽度基于全部选项，改变选中值时不会跳宽；字段标题不参与宽度计算，长标题换行。

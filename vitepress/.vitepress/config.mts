@@ -57,7 +57,7 @@ export default defineConfig({
           { text: '接入与最小配置', link: '/getting-started' },
           { text: 'Android 手机端规范', link: '/mobile-guidelines' },
           { text: '主题配置', link: '/theme' },
-          { text: '参考样式对照', link: '/style-reference' },
+          { text: '样式与功能基线', link: '/style-reference' },
           { text: '组件索引', link: '/component-index' }
         ]
       },

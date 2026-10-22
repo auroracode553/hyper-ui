@@ -29,12 +29,12 @@ data class ComponentDemo(
 
 /** 聚合稳定 Preview ID；分组示例同步参考展示结构，页面示例自行滚动，普通示例由统一视口滚动。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
-    addAll(basicComponentDemos()) // button 预览对齐 Flutter ButtonsExample；禁用态保留单个示例。
-    addAll(formComponentDemos()) // calendar_day/calendar_month/date_picker 共用正式日期格与网格。
-    addAll(containerComponentDemos())
-    addAll(navigationComponentDemos()) // nav-bar 展示 scrolledUnder 驱动的透明与向下渐隐过渡。
+    addAll(basicComponentDemos()) // button 使用 content 主体插槽，默认外观与状态对齐 Flutter。
+    addAll(formComponentDemos()) // 日期共用正式网格；Checkbox/Radio/Switch 直接展示无卡片的默认标签行。
+    addAll(containerComponentDemos()) // card 保留选中表面和实色强调边框。
+    addAll(navigationComponentDemos()) // drawer 为贴边全高模态层，支持双侧展开、固定页脚与滑动关闭。
     addAll(listComponentDemos()) // list-tile 直接展示条目；sectioned_list 固定 8dp 紧凑间距。
-    addAll(feedbackComponentDemos()) // dropdown/popover 共用紧凑宽度规则；update_dialog 对齐 Flutter 更新流程。
+    addAll(feedbackComponentDemos()) // toast 默认文字操作先关闭再回调；update_dialog 共用更新状态。
     addAll(themeComponentDemos())
 }
 .map { demo ->

@@ -29,6 +29,8 @@ HyperRadio(value = "option", groupValue = selectedValue, onChanged = { selectedV
 
 **样式约定**
 
+标签行不附带卡片背景、描边或阴影，基础示例不额外包裹 HyperCard。
+
 圆环为 21dp。无标签且 onChanged 非 null 的独立控件占 44dp 触摸区；onChanged 为 null 的展示控件只占圆环尺寸。提供 label 时使用 plain 列表行，由整行承载点击，圆环不再叠加独立触摸留白；单行文字采用列表行默认排版与 46dp 最小高度。选中为 6dp 品牌色环，未选中为 1.5dp 输入轮廓；内部保持 subtle 材质。
 
 **状态归属**

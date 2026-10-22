@@ -16,12 +16,13 @@ fun CalendarDayDemo() {
         Row {
             listOf(7, 8, 9, 10).forEach { day ->
                 HyperCalendarDay(day, modifier = Modifier.weight(1f), today = day == 8,
-                    selected = selected == day, enabled = day != 10,
+                    selected = selected == day, enabled = day != 10, inRange = day == 7,
                     onPressed = { selected = day })
             }
         }
         Spacer(Modifier.height(16.dp))
-        HyperCalendarDay(11, modifier = Modifier.size(100.dp, 120.dp), size = "large", expanded = true,
+        HyperCalendarDay(11, modifier = Modifier.width(100.dp).height(
+            HyperCalendarDayDefaults.minimumHeight(size = "large", hasSubtitle = true, itemRows = 3)), size = "large", expanded = true,
             subtitle = "辅助说明", badge = "待", badgeColor = HyperColors.warning,
             items = listOf(HyperCalendarItem("预约确认"), HyperCalendarItem("资料提交")), itemCount = 4,
             onPressed = { feedback = "选择 11 日" }, onLongPressed = { feedback = "长按 11 日" },

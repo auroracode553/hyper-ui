@@ -42,6 +42,8 @@ type 为 multiple 或 single。multiple 高 56dp，单元格为 max(76dp, 最宽
 
 multiple 至少 2 项，single 恰好 1 项。itemLabel 必须与实际显示文字一致。320..430dp 内父约束优先；选中值由调用方管理。
 
+底栏不提供整体或单项禁用状态。single 点击时调用 onChanged(0)；multiple 点击或拖动松手时，仅在目标索引改变后调用 onChanged。
+
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
 ## 公开 API
@@ -59,8 +61,6 @@ fun <T> HyperTabBar(
     selectedIndex: Int,
     modifier: Modifier = Modifier,
     type: String = "multiple",
-    enabled: Boolean = true,
-    itemEnabled: (T) -> Boolean = { true },
     itemLabel: (T) -> String = { "" },
     badgeCount: Int = 0,
     safeArea: Boolean = true,
@@ -79,11 +79,21 @@ fun <T> HyperTabBar(
 | selectedIndex | Int | 是 | — | 当前选中项的索引，从 0 开始。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | type | String | 否 | &quot;multiple&quot; | 组件的视觉或布局形态。 |
-| enabled | Boolean | 否 | true | 是否允许用户交互。 |
-| itemEnabled | (T) -&gt; Boolean | 否 | { true } | 判断单个选项是否可操作。 |
 | itemLabel | (T) -&gt; String | 否 | { &quot;&quot; } | 每个导航项的文字。 |
 | badgeCount | Int | 否 | 0 | 单动作角标数量，0 隐藏，超过 99 显示 99+。 |
-| safeArea | Boolean | 否 | true | 是否避开顶部系统安全区。 |
+| safeArea | Boolean | 否 | true | 是否避开底部系统安全区。 |
 | margin | PaddingValues | 否 | if (type == &quot;single&quot;) PaddingValues(0.dp) else PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp) | 导航容器外部间距。 |
 | color | Color | 否 | HyperColors.accent | 自定义颜色，覆盖默认配色。 |
 | itemContent | @Composable HyperTabBarItemScope.(item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |
+
+### HyperTabBarItemScope
+
+itemContent 的接收者，仅由组件创建。
+
+```kotlin
+class HyperTabBarItemScope internal constructor(val selected: Boolean)
+```
+
+| 属性 | 类型 | 作用 |
+| --- | --- | --- |
+| selected | Boolean | 当前项是否选中；single 始终为 true。 |

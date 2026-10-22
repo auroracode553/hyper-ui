@@ -41,13 +41,14 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("禁用", "enabled = false", "保留单个禁用按钮示例，不重复展示外观相同的配色"),
             DemoVariant("尺寸", "size = small/default/large", "32/38/44dp 高度"),
             DemoVariant("图标按钮", "type = icon", "与普通按钮共用 type、size 和状态 API"),
-            DemoVariant("组合复用", "contentPadding / role", "供调用方通过插槽组合布局与语义")
+            DemoVariant("组合复用", "content / contentPadding / role", "主体通过 content 插槽组合，继承按钮颜色与排版")
         ),
         apiDocumentPaths = listOf("basic/hyper-button.md"),
         content = { ButtonDemo() }
     ),
     ComponentDemo("text", GROUP_BASIC, "HyperText", "12 / 14 / 18sp 参考字号，状态与强调色可交互切换。",
-        """HyperText("正文", size = "default")""", listOf(DemoVariant("字号", "size", "small/default/large")),
+        """HyperText("正文", size = "default")""", listOf(DemoVariant("字号", "size", "small/default/large"),
+            DemoVariant("截断", "maxLines / overflow", "有限行数默认省略号，显式 overflow 优先")),
         listOf("basic/hyper-text.md"), { TextDemo() }),
     ComponentDemo("icon", GROUP_BASIC, "HyperIcon", "参考版本 Lucide 字体轮廓与 18 / 24 / 32dp 图标尺寸。",
         """HyperIcon(icon = icon, contentDescription = "图标")""", listOf(DemoVariant("大小与颜色", "size / color", "插槽继承与显式覆盖")),

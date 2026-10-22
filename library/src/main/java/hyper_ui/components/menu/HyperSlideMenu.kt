@@ -79,14 +79,18 @@ fun HyperSlideMenu(
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     var offset by remember { mutableStateOf(0f) }
     var dragging by remember { mutableStateOf(false) }
+    var releaseVelocity by remember { mutableStateOf(0f) }
     LaunchedEffect(reveal, dragging, startExtent, endExtent, enabled) {
         if (!dragging) {
+            val initialVelocity = releaseVelocity
+            releaseVelocity = 0f
             val target = if (!enabled) 0f else when (reveal) {
                 HyperSlideMenuReveal.Closed -> 0f
                 HyperSlideMenuReveal.Start -> startExtent
                 HyperSlideMenuReveal.End -> -endExtent
             }
-            Animatable(offset).animateTo(target, spring(dampingRatio = 42f / (2f * kotlin.math.sqrt(470f)), stiffness = 470f)) {
+            Animatable(offset).animateTo(target, spring(dampingRatio = 42f / (2f * kotlin.math.sqrt(470f)), stiffness = 470f),
+                initialVelocity = initialVelocity) {
                 offset = value
             }
         }
@@ -122,7 +126,7 @@ fun HyperSlideMenu(
                     offset = bounded + overshoot * extentPx * 0.32f / (extentPx + 0.32f * kotlin.math.abs(overshoot))
                 },
                 orientation = Orientation.Horizontal, enabled = enabled, reverseDirection = rtl,
-                onDragStarted = { dragging = true },
+                onDragStarted = { releaseVelocity = 0f; dragging = true },
                 onDragStopped = { velocity ->
                     val projected = offset + velocity * 0.09f
                     val target = when {
@@ -130,6 +134,8 @@ fun HyperSlideMenu(
                         endExtent > 0f && projected < -endExtent * 0.35f -> HyperSlideMenuReveal.End
                         else -> HyperSlideMenuReveal.Closed
                     }
+                    // 目标投影与弹簧衔接共用释放速度，避免松手时突然停顿。
+                    releaseVelocity = velocity
                     onRevealChange(target)
                     dragging = false
                 }

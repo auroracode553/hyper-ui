@@ -31,6 +31,8 @@ HyperSwitch(value, { value = it })
 
 开关 52×32dp，圆形滑块实际可见 22dp，轨道轮廓 1dp；160ms selectionCurve。关闭色为 controlTrack 合成到 surfaceStrong，禁用合成到 surfaceSubtle。
 
+提供 label 时使用 plain 标签行，不附带卡片背景、外框或阴影；基础示例不额外包裹 HyperCard。
+
 **状态归属**
 
 value 由调用方持有；禁用时不派发回调。
@@ -71,4 +73,4 @@ fun HyperSwitch(
 | uncheckedTrackColor | Color | 否 | Color.Unspecified | 关闭时轨道颜色。 |
 | checkedThumbColor | Color | 否 | Color(1f, 1f, 1f, 1f) | 开启时滑块颜色。 |
 | uncheckedThumbColor | Color | 否 | Color.Unspecified | 关闭时滑块颜色。 |
-| label | String? | 否 | null | 数值旁显示的标签文字。 |
+| label | String? | 否 | null | 无卡片的 plain 标签行，标签与开关均可操作。 |

@@ -120,7 +120,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(id = "list-tile", group = GROUP_LIST, title = "HyperListTile",
         description = "直接展示 46dp 条目、34dp 图标块，auto/plain/glass、选中与禁用可操作，不额外包装卡片。",
         code = """HyperListTile(title = { HyperText("系统设置") }, onPressed = onOpen)""",
-        variants = listOf(DemoVariant("表面", "type / selected", "直接切换 auto/plain/glass 与选中状态，无额外卡片容器"),
+        variants = listOf(DemoVariant("表面", "type / selected", "直接切换 auto/plain/glass；leading 间距 12dp、trailing 间距 8dp，无额外卡片容器"),
             DemoVariant("文字", "supportingContent / metaContent", "14sp 主标题、12sp 描述、11sp 元信息")),
         apiDocumentPaths = listOf("list/hyper-list-tile.md"), content = { ListTileDemo() })
 

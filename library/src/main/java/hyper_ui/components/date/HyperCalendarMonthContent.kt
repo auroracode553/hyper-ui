@@ -58,6 +58,7 @@ internal fun HyperCalendarMonthContent(
             val measurer = rememberTextMeasurer()
             val direction = LocalLayoutDirection.current
             val primary = HyperColors.accent
+            val rangeBackground = HyperColors.selectionBackground
             val foreground = HyperColors.primaryText
             val muted = HyperColors.secondaryText.copy(alpha = 105 / 255f)
             val fontFamily = HyperTheme.typography.bodyLarge.fontFamily
@@ -73,7 +74,7 @@ internal fun HyperCalendarMonthContent(
                     val enabled = (firstDate == null || date >= firstDate) && (lastDate == null || date <= lastDate)
                     val active = date == selectedDate || date == endDate
                     if (selectedDate != null && endDate != null && date > selectedDate && date < endDate) {
-                        drawRect(primary.copy(alpha = .12f), center - Offset(width / 2, height / 2), Size(width, height))
+                        drawRect(rangeBackground, center - Offset(width / 2, height / 2), Size(width, height))
                     }
                     if (active) drawCircle(primary, radius, center)
                     else if (date == today && enabled) drawCircle(primary, radius, center, style = Stroke(1.dp.toPx()))

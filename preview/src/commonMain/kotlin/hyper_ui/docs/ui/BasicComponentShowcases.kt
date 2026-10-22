@@ -26,7 +26,7 @@ fun ButtonDemo() {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton({}, size = "small") { HyperText("小按钮") }
-            HyperButton({}) { HyperText("默认按钮") }
+            HyperButton(onPressed = {}, content = { HyperText("默认按钮") })
             HyperButton({}, size = "large") { HyperText("大按钮") }
             HyperButton({}, loading = true) { HyperText("处理中") }
         }
@@ -77,6 +77,7 @@ fun TextDemo() {
         HyperSegmentedControl(listOf("small", "default", "large"), size, { size = it }) { HyperText(it) }
         PreviewToggle("强调色", emphasis) { emphasis = it }
         HyperText("参考排版 · HyperUI", size = size, color = if (emphasis) HyperColors.accent else Color.Unspecified)
+        HyperText("maxLines: 1 时超长文本自动省略：统一文字层级让界面在不同密度下保持稳定节奏。", maxLines = 1)
         HyperText("small 12sp / default 14sp / large 18sp，行高均为字号的 1.4 倍。", size = "small")
     }
 }

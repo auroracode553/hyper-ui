@@ -1,5 +1,13 @@
 # AGENTS.md
 
+## 修改 UI 前必读
+
+- 修改 `library/src/main/java/hyper_ui/` 或 `preview/src/` 前，必须阅读 [UI 样式与功能实现基线](vitepress/docs/style-reference.md)，并核对目标源码、对应组件页和真实 Preview 示例。
+- 默认保留已有样式、尺寸、材质、状态展示、点击区域和回调时机。不得以“统一样式”“清理自定义”“复用基础组件”或“与另一端对齐”为由，批量替换控件、删除选中态或改变专用布局。
+- 按用户明确授权的范围修改；拿不准用途、可能影响外观或交互的地方，先列出位置、现状、修改影响和建议，找用户确认后再改，不自行猜测。参考项目的实现不是改动授权。
+- 调整获授权的样式或功能时，同步维护基线、组件文档和必要的两端预览；不得先擅自改实现，再通过改文档认可变化。源码与基线有冲突时先查明原因，不直接用其中一方覆盖另一方。
+- 文档中记录的专用样式和平台差异应当保留；Flutter 中存在但 Android 中尚未实现的组件，不得仅为补齐基线自动新增。
+
 ## 代码架构规范
 
 - 遵循单一职责原则，组件、工具、配置、业务逻辑分层隔离。
@@ -36,9 +44,9 @@
 
 ## 组件与 Preview 规范
 
-- 对应组件预览以 `D:/my_project/flutter_project/doc_ui_kit` 为视觉基准；手机外框、背景、安全区、分组顺序、文案、图标、尺寸、间距与展示状态保持一致，不添加仅 Compose 端存在的标题、控制项或计数。
+- 对应组件预览以 `D:/my_project/flutter_project/flutter-hyper-ui` 为视觉基准；手机外框、背景、安全区、分组顺序、文案、图标、尺寸、间距与展示状态保持一致，不添加仅 Compose 端存在的标题、控制项或计数。
 
-- 本项目与 `D:/my_project/flutter_project/doc_ui_kit` 的对应组件保持默认 UI 一致。修改默认布局、尺寸、按钮类型或状态展示规则时，同时更新另一端的实现、文档与预览示例；框架 API 差异不能导致默认视觉规则分叉。
+- 本项目与 `D:/my_project/flutter_project/flutter-hyper-ui` 的对应组件保持默认 UI 一致。修改默认布局、尺寸、按钮类型或状态展示规则时，同时更新另一端的实现、文档与预览示例；框架 API 差异不能导致默认视觉规则分叉。
 
 - UI 库中所有配置、组件、工具方法和可见功能，都必须在 `preview/` 中呈现。
 - 新增或修改组件时，必须同步更新 `preview/src/commonMain/kotlin/hyper_ui/docs/data/ComponentDemos.kt` 聚合入口和对应分组的 `*ComponentDemos.kt`。
@@ -60,6 +68,7 @@
 
 - 对应组件的业务参数、状态枚举、回调名称和默认语义必须保持一致；仅保留框架布局、宿主及原生类型差异。
 - 点击统一 onPressed，值变化统一 onChanged，关闭统一 onClose；页签采用 selectedIndex，单选采用 value/groupValue，插槽使用 title/subtitle/leading/trailing/actions/footer/child。
+- HyperButton 的主体插槽两端统一使用 content；不要改为 child，也不保留两套参数或别名。
 - type 表示形态；按钮预设颜色使用 colorStyle，自定义颜色使用 color，禁止恢复 ghost、outline 或把颜色写回按钮 type。
 - API 重构直接删除旧参数、旧类型和旧名称，更新所有调用方；禁止废弃别名、兼容入口和双轨实现。
 - 文档仅描述当前 API、默认值和使用方式，不保留迁移对照、旧写法或历史重构说明；同步两端实现、预览、README 和完整参数表。

@@ -29,7 +29,7 @@ HyperCard(title = { HyperText("标题") }, subtitle = { HyperText("说明") }) {
 
 **样式约定**
 
-卡片 regular 材质、24dp 圆角、12dp 内容间距。标题 14sp/600、副标题 13sp，头部与正文、页脚间距 12dp；selected 使用 strong 与强调色轮廓。
+卡片 regular 材质、24dp 圆角、12dp 内容间距。标题 14sp/600、副标题 13sp，头部与正文、页脚间距 12dp；selected 使用 strong 与不额外降低透明度的强调色轮廓。显式 border 覆盖仍有效。
 
 **状态归属**
 

@@ -29,7 +29,7 @@ HyperListTile(title = { HyperText("系统设置") }, subtitle = { HyperText("查
 
 **样式约定**
 
-type auto/plain/glass。plain 行最小 46dp，padding 14×8dp、radius 12dp；独立 glass 使用 radius 18dp、外 padding 4dp。标题 14sp/600，副标题 12sp、间距 3dp，meta 11sp、间距 4dp。leadingIcon 34dp 块、radius 11dp、icon 18dp。
+type auto/plain/glass。plain 行最小 46dp，padding 14×8dp、radius 12dp；独立 glass 使用 radius 18dp、外 padding 3dp。标题 14sp/600，副标题 12sp、间距 3dp，meta 11sp、间距 4dp。leadingIcon 34dp 块、radius 11dp、icon 18dp；leading 与正文间距 12dp，正文与 trailing 间距 8dp。
 
 **状态归属**
 

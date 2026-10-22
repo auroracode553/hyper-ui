@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import hyper_ui.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +54,14 @@ private enum class NavBarExample(
 
 @Composable
 fun NavBarDemo() {
+    // 模拟安全区位于导航背景内部，与真机及 Flutter 的层级一致。
+    CompositionLocalProvider(LocalHyperNavBarWindowInsets provides WindowInsets(top = PreviewTopSafeArea)) {
+        NavBarPageDemo()
+    }
+}
+
+@Composable
+private fun NavBarPageDemo() {
     val sections = remember {
         listOf("留一点空白", "光影与秩序", "日常里的灵感", "透明导航栏下的连续滚动")
     }
@@ -65,8 +75,6 @@ fun NavBarDemo() {
         navBar = {
             val pageTitle = example.title
             HyperNavBar(
-                // 正文占满屏幕，导航操作行独立避让预览模拟的状态栏。
-                modifier = Modifier.padding(top = PreviewTopSafeArea),
                 type = example.type,
                 scrolledUnder = scrolledUnder,
                 title = if (pageTitle == null) null else {
@@ -92,7 +100,7 @@ fun NavBarDemo() {
             )
         },
         navBarSize = "default",
-        contentPadding = PaddingValues(top = PreviewTopSafeArea, bottom = 24.dp),
+        contentPadding = PaddingValues(bottom = 24.dp),
         bottomSafeArea = false
     ) { immersivePadding ->
         LazyColumn(

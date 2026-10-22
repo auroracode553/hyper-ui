@@ -31,6 +31,8 @@ HyperText("正文", size = "default")
 
 small/default/large 字号 12/14/18sp，行高 1.4；large 使用粗体。default 继承所在按钮、列表或导航插槽的局部排版。
 
+设置有限 maxLines 时，未指定 overflow 默认显示省略号；未限制行数时默认裁切。显式 overflow 优先。
+
 **状态归属**
 
 显式 style、fontSize、fontWeight、lineHeight 会覆盖参考默认排版。
@@ -59,7 +61,7 @@ fun HyperText(
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
     lineHeight: TextUnit = TextUnit.Unspecified,
-    overflow: TextOverflow = TextOverflow.Clip,
+    overflow: TextOverflow? = null,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
@@ -84,7 +86,7 @@ fun HyperText(
 | textDecoration | TextDecoration? | 否 | null | 下划线、删除线等文字装饰。 |
 | textAlign | TextAlign? | 否 | null | 段落的水平对齐方式。 |
 | lineHeight | TextUnit | 否 | TextUnit.Unspecified | 显式行高；未指定时继承对应字号的行高。 |
-| overflow | TextOverflow | 否 | TextOverflow.Clip | 超出可见范围时的裁剪或省略策略。 |
+| overflow | TextOverflow? | 否 | null | 显式覆盖截断策略；省略时有限 maxLines 使用 Ellipsis，否则 Clip。 |
 | softWrap | Boolean | 否 | true | 是否允许自动换行。 |
 | maxLines | Int | 否 | Int.MAX_VALUE | 允许显示的最大行数。 |
 | minLines | Int | 否 | 1 | 最少占用的文本行数。 |

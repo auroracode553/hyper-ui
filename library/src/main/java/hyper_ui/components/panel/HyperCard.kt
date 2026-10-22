@@ -121,5 +121,5 @@ object HyperCardDefaults {
 
     @Composable
     fun border(color: Color = Color.Unspecified, selected: Boolean = false): BorderStroke =
-        BorderStroke(1.dp, resolveHyperContainerColor(color, if (selected) HyperColors.accent.copy(alpha = 90 / 255f) else hyperGlass.border))
+        BorderStroke(1.dp, resolveHyperContainerColor(color, if (selected) HyperColors.accent else hyperGlass.border))
 }

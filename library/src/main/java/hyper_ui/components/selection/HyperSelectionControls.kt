@@ -111,8 +111,9 @@ fun HyperCheckbox(
     label: String? = null
 ) {
     if (label != null) {
-        HyperListTile(modifier = modifier,
-            title = { HyperText(label) }, trailing = { HyperCheckbox(value = value, onChanged = onChanged, enabled = enabled, tristate = tristate, checkedColor = checkedColor, uncheckedColor = uncheckedColor, uncheckedBorderColor = uncheckedBorderColor, checkmarkColor = checkmarkColor) },
+        HyperListTile(type = "plain", modifier = modifier,
+            // 整行承载点击，尾随方框只展示，避免 44dp 独立触摸区撑高标签行。
+            title = { HyperText(label) }, trailing = { HyperCheckbox(value = value, modifier = Modifier.size(HyperCheckboxDefaults.BoxSize), enabled = enabled, tristate = tristate, checkedColor = checkedColor, uncheckedColor = uncheckedColor, uncheckedBorderColor = uncheckedBorderColor, checkmarkColor = checkmarkColor) },
             enabled = enabled && onChanged != null, showChevron = false,
             onPressed = { onChanged?.invoke(if (tristate) when (value) { true -> null; false -> true; null -> false } else value != true) })
         return

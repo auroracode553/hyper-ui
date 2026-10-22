@@ -27,6 +27,8 @@ HyperTextField(value, { value = it }, clearable = true, placeholder = { HyperTex
 
 ## 使用约定
 
+maxLength 和 showWordLimit 当前按 UTF-16 单元截断与计数；emoji 或组合字符可能占多单位。与 Flutter 用户可见字符分段的对齐作为独立专项处理。
+
 **样式约定**
 
 输入框圆角 20dp。small/default/large 字号 14/16/18sp、行高 1.3，横向 padding 14/18/20dp，纵向 7/9/11dp。textarea 上下各多 3dp。支持 text/search/password/textarea/email/url/number/tel。聚焦轮廓 1.5dp，普通 1dp。

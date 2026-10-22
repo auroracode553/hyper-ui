@@ -35,7 +35,7 @@ HyperTabs(tabs, selected, { selected = it }) { HyperText(it) }
 
 **状态归属**
 
-同一共享表面承载全部条目。选中值由调用方持有。
+同一共享表面承载全部条目。选中值由调用方持有；重复点击当前选中项不触发 onChanged。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 

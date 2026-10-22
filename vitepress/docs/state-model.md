@@ -2,6 +2,8 @@
 
 HyperUI 采用受控组件模型：调用方保存状态，组件根据参数渲染并通过回调报告用户操作。
 
+修改前同时阅读 [UI 样式与功能实现基线](style-reference.md)，按实际组件区分业务状态与内部临时交互状态，不为统一实现而改变已有状态归属。
+
 ## 状态归属
 
 | 状态 | 组件参数 | 调用方职责 |
@@ -43,5 +45,5 @@ fun NotificationSetting() {
 ## 弹层规则
 
 - `HyperDialog` 和 `HyperAlertDialog` 的显示状态由调用方控制。
-- `HyperDropdown`、`HyperPopover` 和 `HyperDrawer` 只渲染面板并触发关闭回调。
+- `HyperDropdown` 的 value 由调用方持有，临时 expanded 由组件内部维护；`HyperPopover` 的 visible 和 `HyperDrawer` 的 open 由调用方持有，组件通过 onClose 请求关闭。
 - 弹层内部可以组合表单和按钮，但网络、权限和导航仍放在调用方。

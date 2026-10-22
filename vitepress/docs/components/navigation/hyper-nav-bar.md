@@ -33,9 +33,11 @@ HyperNavBar(type = "backWithTitle", title = { HyperText("详情") }, onBackPress
 
 scrolledUnder 为 true 时，组件用 160ms 过渡显示 20dp 背景模糊和主题表面色，覆盖顶部安全区并向导航下方延伸 56dp；蒙版将模糊采样与底色一起向下淡出至完全透明，不绘制底部分隔线。延伸区域不占位、不拦截触摸；为 false 时恢复透明。文字与按钮保持清晰，不参与背景采样。
 
+顶部安全区位于背景层内部，只有操作行避让状态栏。Desktop/Wasm 预览通过内部作用域注入 52dp 模拟状态栏 Insets，导航栏与页面正文共用；不在整个导航外层添加顶部 Padding，正文也不重复增加模拟安全区。真机默认读取系统状态栏 Insets。
+
 **状态归属**
 
-通过 HyperNavBarPage 组合滚动正文，避免重复计算顶部安全区。固定类型仅使用标题和对应回调；custom 接收插槽。
+通过 HyperNavBarPage 组合滚动正文，避免重复计算顶部安全区。固定类型仅使用标题和对应回调，不接受 subtitle；副标题及其他插槽使用 custom。
 
 滚动状态由页面管理：LazyColumn 使用 rememberLazyListState，根据 canScrollBackward 设置 scrolledUnder；反向列表使用 canScrollForward。HyperNavBarPage 负责把正文注册为背景采样源。独立使用 HyperNavBar 时需要由 HyperBackdrop 提供背景源；没有采样源时仍显示渐变着色，不模糊导航自身。
 

@@ -34,7 +34,7 @@ fun HyperText(
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
     lineHeight: TextUnit = TextUnit.Unspecified,
-    overflow: TextOverflow = TextOverflow.Clip,
+    overflow: TextOverflow? = null,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
@@ -74,7 +74,7 @@ fun HyperText(
         modifier = modifier,
         style = mergedStyle,
         softWrap = softWrap,
-        overflow = overflow,
+        overflow = overflow ?: if (maxLines == Int.MAX_VALUE) TextOverflow.Clip else TextOverflow.Ellipsis,
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout

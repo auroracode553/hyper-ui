@@ -289,6 +289,11 @@ object HyperColors {
         @Composable @ReadOnlyComposable
         get() = lerp(accent, softContainer, 0.84f)
 
+    // 日期范围语义底色与 Flutter selectionBackground 一致，不跟随强调色透明混合。
+    internal val selectionBackground: Color
+        @Composable @ReadOnlyComposable
+        get() = if (isLight) rgba(239, 246, 255, 1f) else rgba(20, 37, 68, 1f)
+
     val panelBorder: BorderStroke
         @Composable @ReadOnlyComposable
         get() = BorderStroke(

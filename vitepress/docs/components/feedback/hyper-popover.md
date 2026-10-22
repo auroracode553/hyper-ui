@@ -37,7 +37,9 @@ Compose 与 Flutter 共用补充说明、文件夹操作和 240dp 较宽内容�
 
 **状态归属**
 
-visible 和正文状态由调用方持有；长内容滚动。标题和操作区由调用方在 content 内组合。
+visible 和正文状态由调用方持有；长内容滚动。child 只提供锚点，自行决定由按钮、字段操作或长按打开；onClose 请求调用方关闭，内容操作同样更新 visible。Flutter 使用相同状态归属和参数。标题和操作区由调用方在 content 内组合。
+
+scrollable 默认 true，由浮层处理普通内容滚动。嵌入 LazyColumn 等自行滚动的内容时设为 false，原有高度上限与安全区约束继续生效；固定标题后可使用 LazyColumn(Modifier.weight(1f, fill = false))，列表按可见范围创建条目。不要再套无高度约束的纵向滚动容器。240dp 较宽内容预览展示这一组合。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -57,6 +59,7 @@ fun HyperPopover(
     modifier: Modifier = Modifier,
     maxWidth: Dp = 280.dp,
     width: Dp? = null,
+    scrollable: Boolean = true,
     content: @Composable ColumnScope.() -> Unit
 )
 ```
@@ -71,4 +74,5 @@ fun HyperPopover(
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | maxWidth | Dp | 否 | 280.dp | 浮层宽度上限，不决定默认内容宽度。 |
 | width | Dp? | 否 | null | 期望内容宽度；省略时采用 180dp，显式值仍受 maxWidth 和窗口安全区约束。 |
+| scrollable | Boolean | 否 | true | 是否由浮层处理滚动；内容自带惰性列表时设为 false，保留高度及安全区约束。 |
 | content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |

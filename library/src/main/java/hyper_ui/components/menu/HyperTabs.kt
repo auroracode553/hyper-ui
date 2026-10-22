@@ -48,7 +48,7 @@ fun <T> HyperTabs(
             Box(Modifier.then(if (scrollable) Modifier.widthIn(min = 76.dp) else Modifier.weight(1f))
                 .fillMaxHeight()
                 .hyperNoRippleClickable(enabled = enabled, role = Role.Tab, pressedScale = 0.985f,
-                    onClick = { onChanged(index) })
+                    onClick = { if (index != selectedIndex) onChanged(index) })
                 .padding(2.dp).background(background, RoundedCornerShape(24.dp))
                 .semantics { this.selected = selected }
                 .padding(horizontal = if (scrollable) 16.dp else 4.dp), contentAlignment = Alignment.Center) {

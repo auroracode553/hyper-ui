@@ -31,6 +31,8 @@ HyperToast(visible, "保存成功", { visible = false }, type = "success")
 
 strong 材质，宽 180..420dp、radius 18dp，语义色 10/255 合成底面、105/255 描边。图标徽章 30dp、图标 17dp；文字 14sp/500、行高 1.35。默认 2000ms。
 
+actionLabel 与 onAction 同时提供时展示主题色文字操作，无按钮背景或描边；先请求 onClose，再执行 onAction。action 插槽优先，显式插槽自行处理业务与关闭。
+
 **状态归属**
 
 visible 由调用方持有。duration=0 不自动关闭；计时结束只请求关闭。type 支持 neutral/primary/success/info/warning/error。Android 原生 hyperToast 与 Compose 组件分别使用。
@@ -72,10 +74,10 @@ fun HyperToast(
 | duration | Long | 否 | 2000L | 自动关闭等待时长，单位毫秒；0 不自动关闭。 |
 | type | String | 否 | &quot;neutral&quot; | 组件的视觉或布局形态。 |
 | color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
-| actionLabel | String? | 否 | null | 操作按钮文案。 |
-| onAction | (() -&gt; Unit)? | 否 | null | 点击提示操作时执行的回调。 |
+| actionLabel | String? | 否 | null | 默认主题色文字操作的文案；须同时提供 onAction。 |
+| onAction | (() -&gt; Unit)? | 否 | null | 默认操作先请求 onClose，再执行此回调。 |
 | leading | (@Composable () -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
-| action | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 空状态操作内容。 |
+| action | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 自定义提示操作，优先于默认文字操作，关闭由插槽自行处理。 |
 
 ### hyperToast · 重载 1
 

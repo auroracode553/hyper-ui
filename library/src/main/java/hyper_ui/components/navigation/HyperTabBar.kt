@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
-class HyperTabBarItemScope internal constructor(val selected: Boolean, val enabled: Boolean)
+class HyperTabBarItemScope internal constructor(val selected: Boolean)
 
 /** 选择值由调用方持有；itemLabel 用于与参考实现相同的内容宽度测量。 */
 @Composable
@@ -34,8 +34,6 @@ fun <T> HyperTabBar(
     selectedIndex: Int,
     modifier: Modifier = Modifier,
     type: String = "multiple",
-    enabled: Boolean = true,
-    itemEnabled: (T) -> Boolean = { true },
     itemLabel: (T) -> String = { "" },
     badgeCount: Int = 0,
     safeArea: Boolean = true,
@@ -62,17 +60,16 @@ fun <T> HyperTabBar(
         easing = HyperMotionSpec.EaseOutCubic), label = "HyperTabBarSelection")
     val latestLogicalSelected by rememberUpdatedState(logicalSelected)
     val latestOnClick by rememberUpdatedState(onChanged)
-    val latestItemEnabled by rememberUpdatedState(itemEnabled)
     Box(modifier.then(if (safeArea) Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)) else Modifier)
         .padding(margin)) {
         if (type == "single") {
             val item = items.single()
             Box(Modifier.size(56.dp)
                 .hyperFrostedSurface(hyperGlass.surface, RoundedCornerShape(28.dp))
-                .hyperNoRippleClickable(enabled = enabled && itemEnabled(item), onClick = { onChanged(items.indexOf(item)) }),
+                .hyperNoRippleClickable(onClick = { onChanged(0) }),
                 contentAlignment = Alignment.Center) {
                 CompositionLocalProvider(LocalHyperContentColor provides color, LocalHyperIconSize provides 22.dp) {
-                    HyperTabBarItemScope(true, enabled && itemEnabled(item)).itemContent(item)
+                    HyperTabBarItemScope(true).itemContent(item)
                 }
             }
             if (badgeCount > 0) Box(Modifier.align(Alignment.TopEnd).offset(x = 5.dp, y = (-5).dp)
@@ -85,8 +82,7 @@ fun <T> HyperTabBar(
         } else {
             BoxWithConstraints(Modifier.width(itemWidth * items.size + 8.dp).height(height)
                 .hyperFrostedSurface(hyperGlass.surfaceStrong, RoundedCornerShape(height / 2), blur = hyperGlass.blurStrong)
-                .pointerInput(items, enabled, rtl) {
-                    if (!enabled) return@pointerInput
+                .pointerInput(items, rtl) {
                     fun visualIndex(x: Float): Int = ((x - 4.dp.toPx()) / (size.width - 8.dp.toPx()) * items.size)
                         .toInt().coerceIn(0, items.lastIndex)
                     detectHorizontalDragGestures(
@@ -96,7 +92,7 @@ fun <T> HyperTabBar(
                         onDragEnd = {
                             dragIndex?.let { visual ->
                                 val logical = if (rtl) items.lastIndex - visual else visual
-                                if (latestItemEnabled(items[logical]) && logical != latestLogicalSelected) latestOnClick(logical)
+                                if (logical != latestLogicalSelected) latestOnClick(logical)
                             }
                             dragIndex = null
                         }
@@ -109,17 +105,16 @@ fun <T> HyperTabBar(
                 Row(Modifier.fillMaxSize().padding(horizontal = 4.dp)) {
                     items.forEachIndexed { index, item ->
                         val selected = index == selectedIndex
-                        val active = enabled && itemEnabled(item)
                         Box(Modifier.weight(1f).fillMaxHeight()
-                            .hyperNoRippleClickable(enabled = active, role = Role.Tab, pressedScale = 1f,
+                            .hyperNoRippleClickable(role = Role.Tab, pressedScale = 1f,
                                 onClick = { if (index != selectedIndex) onChanged(index) })
                             .semantics { this.selected = selected }, contentAlignment = Alignment.Center) {
                             CompositionLocalProvider(
-                                LocalHyperContentColor provides when { !active -> HyperColors.secondaryText; selected -> color; else -> HyperColors.primaryText },
+                                LocalHyperContentColor provides if (selected) color else HyperColors.primaryText,
                                 LocalHyperTextStyle provides labelStyle.copy(lineHeight = 12.96.sp,
                                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium),
                                 LocalHyperIconSize provides 23.dp
-                            ) { HyperTabBarItemScope(selected, active).itemContent(item) }
+                            ) { HyperTabBarItemScope(selected).itemContent(item) }
                         }
                     }
                 }
