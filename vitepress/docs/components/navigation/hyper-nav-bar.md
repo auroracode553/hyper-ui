@@ -39,15 +39,16 @@ scrolledUnder 为 true 时，组件用 160ms 过渡显示 20dp 背景模糊和�
 
 通过 HyperNavBarPage 组合滚动正文，避免重复计算顶部安全区。固定类型仅使用标题和对应回调，不接受 subtitle；副标题及其他插槽使用 custom。
 
-滚动状态由页面管理：LazyColumn 使用 rememberLazyListState，根据 canScrollBackward 设置 scrolledUnder；反向列表使用 canScrollForward。HyperNavBarPage 负责把正文注册为背景采样源。独立使用 HyperNavBar 时需要由 HyperBackdrop 提供背景源；没有采样源时仍显示渐变着色，不模糊导航自身。
+滚动容器持有自身状态，把同一个 ScrollState、LazyListState 或 LazyGridState 交给 HyperNavBarPage.scrollState 即可。库内作用域观察真实的 canScrollBackward，反向布局设置 reverseLayout = true 后读取 canScrollForward；恢复位置、程序滚动、数据缩减和返回顶部都会同步。页面不再声明导航滚动布尔值、derivedStateOf 或手势监听，也不累计位移推测列表位置。HyperNavBar 自动读取作用域，不需要逐页传 scrolledUnder。
+
+HyperNavBarPage 注册正文采样源，并测量包含附加搜索/筛选行的实际导航区高度，将净空交给滚动内容。不要把 padding 放在滚动容器外。独立布局可用 HyperNavBarScrollScope 包住导航与正文，并由 HyperBackdrop 提供采样源；不接管或释放外部滚动状态。非 Compose 内容有自己的位置来源时，仍可显式使用 scrolledUnder。
 
 ```kotlin
 val scrollState = rememberLazyListState()
-HyperNavBarPage(navBar = {
+HyperNavBarPage(scrollState = scrollState, navBar = {
     HyperNavBar(
         type = "titleOnly",
-        title = { HyperText("详情") },
-        scrolledUnder = scrollState.canScrollBackward
+        title = { HyperText("详情") }
     )
 }) { padding ->
     LazyColumn(state = scrollState, contentPadding = padding) { /* 正文 */ }
@@ -100,7 +101,7 @@ fun HyperNavBar(
 | titleSpacing | Dp | 否 | HyperNavBarDefaults.TitleGap | 标题与其他区域的间距。 |
 | actionSpacing | Dp | 否 | HyperNavBarDefaults.ActionGap | 导航操作项之间的间距。 |
 | centerTitle | Boolean | 否 | false | 是否将标题在导航栏中居中。 |
-| scrolledUnder | Boolean | 否 | false | 正文是否滚入导航区域，驱动透明与渐变毛玻璃的切换。 |
+| scrolledUnder | Boolean | 否 | false | 默认使用库内滚动作用域；true 强制显示材质，无作用域时可手动控制。 |
 | onBackPressed | (() -&gt; Unit)? | 否 | null | 点击返回操作时通知调用方。 |
 | onMorePressed | (() -&gt; Unit)? | 否 | null | 点击更多操作时通知调用方。 |
 | onSavePressed | (() -&gt; Unit)? | 否 | null | 点击保存操作时通知调用方。 |
@@ -123,6 +124,8 @@ fun HyperNavBarPage(
     contentPadding: PaddingValues = PaddingValues(),
     navBarSize: String = "default",
     bottomSafeArea: Boolean = true,
+    scrollState: ScrollableState? = null,
+    reverseLayout: Boolean = false,
     content: @Composable BoxScope.(PaddingValues) -> Unit
 )
 ```
@@ -134,9 +137,28 @@ fun HyperNavBarPage(
 | navBar | @Composable () -&gt; Unit | 是 | — | 页面顶部导航栏内容。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | contentPadding | PaddingValues | 否 | PaddingValues() | 主体内容的内部留白。 |
-| navBarSize | String | 否 | &quot;default&quot; | 页面导航栏的尺寸档位。 |
+| navBarSize | String | 否 | &quot;default&quot; | 首次测量前采用的导航尺寸；布局后按实际导航区高度提供顶部净空。 |
 | bottomSafeArea | Boolean | 否 | true | 是否为底部系统安全区留白。 |
+| scrollState | ScrollableState? | 否 | null | 主滚动容器已有状态；库自动监听并供 Navbar 读取，支持 ScrollState、LazyListState、LazyGridState。 |
+| reverseLayout | Boolean | 否 | false | 反向主列表，改用 canScrollForward 判断内容是否经过导航。 |
 | content | @Composable BoxScope.(PaddingValues) -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |
+
+### HyperNavBarScrollScope
+
+```kotlin
+@Composable
+fun HyperNavBarScrollScope(
+    scrollState: ScrollableState,
+    reverseLayout: Boolean = false,
+    content: @Composable () -> Unit
+)
+```
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| scrollState | ScrollableState | 是 | — | 唯一主滚动状态，库内观察；不接管其生命周期。 |
+| reverseLayout | Boolean | 否 | false | 按反向列表读取滚动边界。 |
+| content | @Composable () -&gt; Unit | 是 | — | 导航与主滚动容器的共同父级内容；采样源由 HyperBackdrop 提供。 |
 
 ### HyperNavBarBackButton
 

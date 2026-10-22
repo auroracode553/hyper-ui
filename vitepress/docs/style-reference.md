@@ -61,7 +61,7 @@ HyperText 独立使用为 12 / 14 / 18sp、行高 1.4；default 可继承 LocalH
 
 浮层仍使用原有 surfaceShadows，按钮、输入、选择控件、提示和导航不批量换成内容卡片。Android 当前没有 HyperCollapse 对应实现，不为本次同步新增组件。
 
-HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐显；模糊和渐隐都限定在状态栏顶部至 Navbar 底部内，不再越界覆盖正文。HyperNavBarPage 注册采样源，顶部首屏净空放入滚动内容；没有采样内容时不能用实色底板伪装模糊。全面屏、底部避让与冻结既有 TabBar 布局的约束见[业务页面规范](mobile-guidelines.md)。
+HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐显；模糊和渐隐都限定在状态栏顶部至 Navbar 底部内，不再越界覆盖正文。HyperNavBarPage 注册采样源，顶部净空由库测量实际导航区高度，放入滚动内容；没有采样内容时不能用实色底板伪装模糊。全面屏、底部避让与冻结既有 TabBar 布局的约束见[业务页面规范](mobile-guidelines.md)。
 
 ## HyperButton 默认样式与复用规则
 
@@ -263,3 +263,5 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 ## 依赖
 
 使用仓库声明的 Compose foundation/ui/runtime/animation 与 Haze；调用方可选的 Lucide Android 图标资源依赖由使用者准备，版本以构建配置为准。
+
+导航滚动监听统一由 HyperNavBarPage.scrollState / HyperNavBarScrollScope 管理，Navbar 自动读取；消费页面不得重复声明导航专用 derivedStateOf、snapshotFlow 或 scrolledUnder 判断。库测量实际导航区高度，顶部净空放进滚动内容；主滚动状态保留在容器，嵌套列表不代替主状态。

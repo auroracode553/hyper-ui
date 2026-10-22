@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import hyper_ui.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -72,15 +71,12 @@ private fun NavBarPageDemo() {
     var example by remember { mutableStateOf(NavBarExample.Basic) }
     var actionMessage by remember { mutableStateOf("切换布局或点击顶部操作，查看导航反馈。") }
     val scrollState = rememberLazyListState()
-    val scrolledUnder by remember { derivedStateOf { scrollState.canScrollBackward } }
-
-    HyperNavBarPage(
+    HyperNavBarPage(scrollState = scrollState,
         modifier = Modifier.fillMaxSize(),
         navBar = {
             val pageTitle = example.title
             HyperNavBar(
                 type = example.type,
-                scrolledUnder = scrolledUnder,
                 title = if (pageTitle == null) null else {
                     { HyperText(pageTitle, maxLines = 1) }
                 },

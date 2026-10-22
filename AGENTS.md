@@ -5,7 +5,7 @@
 - 开始维护组件或开发页面前，优先阅读[应用接入与页面开发规则](vitepress/docs/mobile-guidelines.md)，再读[设计系统基线](vitepress/docs/style-reference.md)、组件 API 和真实 Preview。业务项目必须把使用模板合并到自身 AGENTS.md，依赖库的规则不会自动生效。
 - 应用在所有 Activity 的公共入口全局 enableEdgeToEdge，主题宿主统一透明状态栏、透明手势导航栏及亮暗图标。画布使用 pageBackground 覆盖系统栏，不逐页另画色块。
 - 禁止整页 systemBarsPadding/navigationBarsPadding 或固定安全区占位截短正文。必要控件或滚动末尾只避让一次；键盘继续通过页面宿主正常避让。
-- HyperNavBar 保留库内滚动模糊、采样和渐显/渐隐；材质范围由库内部限定在状态栏顶部至导航底部，不向正文越界绘制。页面使用 HyperNavBarPage 叠放导航与滚动视口，顶部净空属于滚动内容，禁止实色底板或业务裁切替代材质。
+- HyperNavBar 保留库内滚动模糊、采样和渐显/渐隐；材质范围由库内部限定在状态栏顶部至导航底部，不向正文越界绘制。页面使用 HyperNavBarPage(scrollState = 主滚动状态) 叠放导航与滚动视口，库内 HyperNavBarScrollScope 自动监听 ScrollState/LazyListState/LazyGridState，不在页面另写监听或 scrolledUnder 判断，顶部净空属于滚动内容，禁止实色底板或业务裁切替代材质。
 - HyperCard、HyperMenuGroup、独立 HyperListTile 和 HyperSlideMenu 共用内部 hyperCardSurface/ContentCard 深度角色：普通无边框、画布与卡片分层、统一柔和双层阴影。选中态保留强调边界，组内分隔线保留；浮层、输入和控件不套用内容卡片样式。
 - TabBar 保持原有悬浮布局，正文可绘制和滚动到后方，两侧响应正文手势。只有用户明确要求修改底栏布局，才能改变高度、占位、位置、边距、安全区、正文底部留白及滚动范围；配色、阴影或重构不构成授权。不加全宽不透明底板、重复安全区或固定底部占位。
 - 修改共用导航和表面时，交付前核对系统栏、正文视口、末尾余量、键盘和底栏实际布局；不得只凭 height 没变或编译通过断言界面一致。
@@ -83,3 +83,5 @@
 - type 表示形态；按钮预设颜色使用 colorStyle，自定义颜色使用 color，禁止恢复 ghost、outline 或把颜色写回按钮 type。
 - API 重构直接删除旧参数、旧类型和旧名称，更新所有调用方；禁止废弃别名、兼容入口和双轨实现。
 - 文档仅描述当前 API、默认值和使用方式，不保留迁移对照、旧写法或历史重构说明；同步两端实现、预览、README 和完整参数表。
+
+导航滚动监听统一由 HyperNavBarPage.scrollState / HyperNavBarScrollScope 管理，Navbar 自动读取；消费页面不得重复声明导航专用 derivedStateOf、snapshotFlow 或 scrolledUnder 判断。库测量实际导航区高度，顶部净空放进滚动内容；主滚动状态保留在容器，嵌套列表不代替主状态。

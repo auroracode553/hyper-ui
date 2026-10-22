@@ -71,12 +71,11 @@ fun AppHome() {
     var notificationsEnabled by remember { mutableStateOf(true) }
 
     val scrollState = rememberLazyListState()
-    HyperNavBarPage(
+    HyperNavBarPage(scrollState = scrollState,
         modifier = Modifier.fillMaxSize().background(HyperColors.pageBackground).imePadding(),
         contentPadding = PaddingValues(16.dp),
         navBar = {
-            HyperNavBar(title = { HyperText("设置") },
-                scrolledUnder = scrollState.canScrollBackward)
+            HyperNavBar(title = { HyperText("设置") })
         }
     ) { padding ->
       LazyColumn(state = scrollState, contentPadding = padding,

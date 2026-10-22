@@ -38,11 +38,10 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         description = "顶部透明，滚动毛玻璃在状态栏顶部至导航底部内渐隐，正文区域不被覆盖。type 覆盖固定布局与 custom 插槽。",
         code = """
             val scrollState = rememberLazyListState()
-            HyperNavBarPage(
+            HyperNavBarPage(scrollState = scrollState,
                 navBar = {
                     HyperNavBar(
                         type = HyperNavBarDefaults.TypeBackWithTitle,
-                        scrolledUnder = scrollState.canScrollBackward,
                         title = { HyperText("详情") },
                         onBackPressed = onBack
                     )

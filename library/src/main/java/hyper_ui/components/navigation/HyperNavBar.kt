@@ -2,6 +2,7 @@
 package hyper_ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -23,9 +24,14 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -85,7 +91,8 @@ fun HyperNavBar(
     require(trailing == null || actions.isEmpty()) { "trailing 与 actions 二选一" }
 
     val safeInsets = navBarTopInsets()
-    HyperNavBarScrollSurface(scrolledUnder, modifier.zIndex(HyperNavBarDefaults.ZIndex)) {
+    HyperNavBarScrollSurface(scrolledUnder || LocalHyperNavBarScrolledUnder.current,
+        modifier.zIndex(HyperNavBarDefaults.ZIndex)) {
       Column(modifier = Modifier.windowInsetsPadding(safeInsets)) {
         Box(modifier = Modifier.fillMaxWidth().height(resolvedHeight).padding(padding)) {
             if (child != null) {
@@ -149,9 +156,12 @@ fun HyperNavBarPage(
     contentPadding: PaddingValues = PaddingValues(),
     navBarSize: String = "default",
     bottomSafeArea: Boolean = true,
+    scrollState: ScrollableState? = null,
+    reverseLayout: Boolean = false,
     content: @Composable BoxScope.(PaddingValues) -> Unit
 ) {
     val density = LocalDensity.current
+    var measuredNavBarHeight by remember { mutableIntStateOf(0) }
     val safeInsets = navBarTopInsets()
     val topInset = with(density) {
         safeInsets.getTop(this).toDp()
@@ -161,12 +171,17 @@ fun HyperNavBarPage(
         WindowInsets.safeDrawing.exclude(WindowInsets.ime).getBottom(this).toDp()
     } else 0.dp
     val resolvedPadding = contentPadding.withAdditionalTop(
-        topInset + hyperComponentSize(navBarSize, 40.dp, HyperNavBarDefaults.Height, 52.dp)
+        if (measuredNavBarHeight > 0) with(density) { measuredNavBarHeight.toDp() }
+        else topInset + hyperComponentSize(navBarSize, 40.dp, HyperNavBarDefaults.Height, 52.dp)
     )
         .withAdditionalBottom(bottomInset)
-    HyperBackdrop(modifier = modifier.fillMaxSize(), background = { content(resolvedPadding) }) {
-        Box(Modifier.fillMaxWidth().zIndex(HyperNavBarDefaults.ZIndex)) { navBar() }
+    val page: @Composable () -> Unit = {
+        HyperBackdrop(modifier = modifier.fillMaxSize(), background = { content(resolvedPadding) }) {
+            Box(Modifier.fillMaxWidth().zIndex(HyperNavBarDefaults.ZIndex)
+                .onSizeChanged { measuredNavBarHeight = it.height }) { navBar() }
+        }
     }
+    if (scrollState != null) HyperNavBarScrollScope(scrollState, reverseLayout, page) else page()
 }
 
 @Composable
