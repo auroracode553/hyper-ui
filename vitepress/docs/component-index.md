@@ -85,3 +85,5 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 统一材质、尺寸和 API 约定见 [样式对照](style-reference.md)。
 
 对应组件的参数命名、回调和默认语义遵循 两端统一 API。点击使用 onPressed，值变更使用 onChanged，关闭使用 onClose；平台布局与宿主差异见组件签名。
+
+维护 UI 库和开发业务页面前，优先阅读[使用规则、全局全面屏与 AGENTS.md 模板](mobile-guidelines.md)和[设计系统基线](style-reference.md)。正文卡片统一无普通描边和双层柔阴影，选中轮廓保留；导航材质仅在状态栏顶部至 Navbar 底部内渐隐。既有悬浮 TabBar 的高度、占位与滚动范围不能因配色或卡片优化改变。

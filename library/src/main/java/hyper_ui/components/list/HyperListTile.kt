@@ -65,10 +65,10 @@ fun HyperListTile(
     val surface = if (plain) Modifier else Modifier
         .then(if (onPressed != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
             onClick = onPressed) else Modifier)
-        .hyperFrostedSurface(
+        .hyperCardSurface(
         if (selected) hyperGlass.surfaceStrong else hyperGlass.surface,
         RoundedCornerShape(18.dp),
-        border = if (selected) BorderStroke(1.dp, HyperColors.accent.copy(alpha = 90 / 255f)) else null
+        border = if (selected) BorderStroke(1.dp, HyperColors.accent) else null
     ).padding(3.dp)
     Column(modifier.fillMaxWidth().then(surface)) {
         Row(Modifier.fillMaxWidth().defaultMinSize(minHeight = 46.dp)

@@ -72,6 +72,7 @@ fun ColorPickerDemo() {
 
 @Composable
 fun PanelDemo() {
+    // 正文卡片共用柔和双层阴影；选中轮廓继续由组件维护。
     var selected by remember { mutableStateOf(true) }
     var feedback by remember { mutableStateOf("上次更新：今天 09:30") }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {

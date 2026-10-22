@@ -12,7 +12,7 @@ private const val GROUP_NAVIGATION = "导航组件"
 internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "slide_menu", group = GROUP_NAVIGATION, title = "HyperSlideMenu",
-        description = "列表侧滑操作，逻辑方向、速度投影和弹簧吸附。展开状态由调用方管理。",
+        description = "共用内容卡片表面的列表侧滑操作，保留逻辑方向、速度投影和弹簧吸附。展开状态由调用方管理。",
         code = """
             HyperSlideMenu(
                 reveal = reveal,
@@ -35,7 +35,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "nav-bar",
         group = GROUP_NAVIGATION,
         title = "HyperNavBar",
-        description = "顶部透明，正文滚入时渐显毛玻璃。type 覆盖五种固定布局与 custom 插槽。",
+        description = "顶部透明，滚动毛玻璃在状态栏顶部至导航底部内渐隐，正文区域不被覆盖。type 覆盖固定布局与 custom 插槽。",
         code = """
             val scrollState = rememberLazyListState()
             HyperNavBarPage(

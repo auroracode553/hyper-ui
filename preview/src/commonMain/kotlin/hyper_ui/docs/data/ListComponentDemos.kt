@@ -48,7 +48,7 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_menu_list",
         group = GROUP_LIST,
         title = "HyperMenuGroup",
-        description = "账户与应用偏好的分组菜单；展示静态设置入口、开关与复选状态。",
+        description = "账户与应用偏好的分组菜单；共用卡片表面和双层柔阴影，组内行不重复装饰。",
         code = """
             HyperMenuGroup(items = items) { item ->
                 HyperListTile(

@@ -83,3 +83,5 @@ src/main/java/hyper_ui/
 ## 图标依赖策略
 
 HyperUI 与 Preview 直接使用 com.composables:icons-lucide-cmp:2.2.1 的 Lucide 图标，不维护本地轮廓或别名表。HyperIcon 负责显示尺寸与颜色继承，组件图标插槽保持开放。业务代码直接使用 Lucide 时显式声明同一依赖，详见 [样式对照](../vitepress/docs/style-reference.md)。
+
+维护 UI 库和开发业务页面前，优先阅读[使用规则、全局全面屏与 AGENTS.md 模板](../vitepress/docs/mobile-guidelines.md)和[设计系统基线](../vitepress/docs/style-reference.md)。正文卡片统一无普通描边和双层柔阴影，选中轮廓保留；导航材质仅在状态栏顶部至 Navbar 底部内渐隐。既有悬浮 TabBar 的高度、占位与滚动范围不能因配色或卡片优化改变。

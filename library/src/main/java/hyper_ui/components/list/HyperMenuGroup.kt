@@ -51,7 +51,7 @@ fun <T> HyperMenuGroup(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .hyperFrostedSurface(
+            .hyperCardSurface(
                 containerColor = containerColor,
                 shape = shape
             )
@@ -107,7 +107,7 @@ fun HyperMenuGroup(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .hyperFrostedSurface(
+                .hyperCardSurface(
                     containerColor = containerColor,
                     shape = HyperMenuGroupDefaults.Shape
                 )

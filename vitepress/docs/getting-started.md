@@ -24,6 +24,28 @@ import hyper_ui.*
 
 ## 应用根节点
 
+开始前先读[页面开发规则与 AGENTS.md 模板](mobile-guidelines.md)及[设计系统基线](style-reference.md)。规则需要合并到业务仓库，不能依赖 UI 库的 AGENTS.md 自动生效。
+
+### 应用全局全面屏
+
+在所有 Activity 共用的入口开启全面屏，独立提醒或编辑入口同样继承该配置。页面不要反复切换窗口模式，也不要在整个正文外添加底部安全区。
+
+```kotlin
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
+
+abstract class AppActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+        window.isNavigationBarContrastEnforced = false
+    }
+}
+```
+
+enableEdgeToEdge 处理透明状态栏与手势导航栏。应用自行选择亮暗主题时，在共用窗口配置处同步 SystemBarStyle，保持系统图标可读；不要逐页绘制系统栏色块。表单宿主处理键盘避让，具体控件或滚动末尾处理一次必要的系统安全区。
+
 `HyperThemeConfig` 提供主题色、成功色、排版、形状、material 材质档位和玻璃令牌；默认 material = HyperMaterial.Solid。颜色使用 `rgba`，不要写十六进制 `Color(0xFF...)`。
 
 ```kotlin
@@ -48,24 +70,25 @@ fun AppHome() {
     var query by remember { mutableStateOf("") }
     var notificationsEnabled by remember { mutableStateOf(true) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        HyperNavBar(
-            title = { HyperText("设置") },
-            size = "default"
-        )
-        HyperTextField(
+    val scrollState = rememberLazyListState()
+    HyperNavBarPage(
+        modifier = Modifier.fillMaxSize().background(HyperColors.pageBackground).imePadding(),
+        contentPadding = PaddingValues(16.dp),
+        navBar = {
+            HyperNavBar(title = { HyperText("设置") },
+                scrolledUnder = scrollState.canScrollBackward)
+        }
+    ) { padding ->
+      LazyColumn(state = scrollState, contentPadding = padding,
+          verticalArrangement = Arrangement.spacedBy(12.dp)) {
+       item { HyperTextField(
             value = query,
             onChanged = { query = it },
             type = "text",
             size = "default",
             placeholder = { HyperText("搜索设置") }
-        )
-        HyperListTile(
+        ) }
+       item { HyperMenuGroup { HyperListTile(
             title = { HyperText("接收通知") },
             trailing = {
                 HyperSwitch(
@@ -73,7 +96,8 @@ fun AppHome() {
                     onChanged = { notificationsEnabled = it }
                 )
             }
-        )
+        ) } }
+      }
     }
 }
 ```

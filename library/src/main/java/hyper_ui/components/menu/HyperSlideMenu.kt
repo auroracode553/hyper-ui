@@ -95,7 +95,9 @@ fun HyperSlideMenu(
             }
         }
     }
-    Box(modifier.clip(shape).background(hyperGlass.controlTrack)
+    Box(modifier
+        .hyperSurfaceShadow(shape, hyperSurfaceDepthVisuals(HyperSurfaceDepthRole.ContentCard, 12.dp))
+        .clip(shape).background(hyperGlass.controlTrack)
         .semantics {
             if (enabled) customActions = buildList {
                 if (startActions.isNotEmpty()) add(CustomAccessibilityAction("展开起始侧操作") {
@@ -140,7 +142,7 @@ fun HyperSlideMenu(
                     dragging = false
                 }
             )
-            .hyperFrostedSurface(hyperGlass.surface, shape)) {
+            .hyperCardSurface(hyperGlass.surface, shape, elevation = 0.dp)) {
             CompositionLocalProvider(LocalHyperSurfacePresent provides true) { child() }
             if (!dragging && kotlin.math.abs(offset) > 1f) Box(Modifier.matchParentSize()
                 .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {

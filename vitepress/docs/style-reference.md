@@ -55,6 +55,14 @@ hyperNoRippleClickable 在 Initial 指针阶段观察按下，即使位于滚动
 
 HyperText 独立使用为 12 / 14 / 18sp、行高 1.4；default 可继承 LocalHyperTextStyle，因此按钮和其他插槽内会使用宿主字号。HyperIcon 的 default 继承 LocalHyperIconSize，small / large 为 18 / 32dp；显式 Modifier 尺寸也参与约束。不能为了“统一图标”删掉按钮内的局部尺寸。
 
+## 内容卡片与导航维护规则
+
+页面使用 pageBackground，实色卡片使用白色或深色 RGB 27/31/39；不要将画布覆盖成卡片色。HyperCard、HyperMenuGroup、独立卡片形态 HyperListTile、HyperSlideMenu 的内容表面统一复用内部 hyperCardSurface 和 HyperSurfaceDepthRole.ContentCard，普通状态无描边。双层阴影参数与 Flutter 一致：主题 shadow 的 75% alpha、radius 18dp、spread -4dp、向下 4dp；40% alpha、radius 4dp、spread -1dp、向下 1dp。选中态保留完整强调色边框，组内行共享容器和分隔线，不逐行叠加阴影。原有圆角、间距、回调和专用控件样式保留。
+
+浮层仍使用原有 surfaceShadows，按钮、输入、选择控件、提示和导航不批量换成内容卡片。Android 当前没有 HyperCollapse 对应实现，不为本次同步新增组件。
+
+HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐显；模糊和渐隐都限定在状态栏顶部至 Navbar 底部内，不再越界覆盖正文。HyperNavBarPage 注册采样源，顶部首屏净空放入滚动内容；没有采样内容时不能用实色底板伪装模糊。全面屏、底部避让与冻结既有 TabBar 布局的约束见[业务页面规范](mobile-guidelines.md)。
+
 ## HyperButton 默认样式与复用规则
 
 源码为 components/button/HyperButton.kt、HyperButtonSurface.kt；阴影后端换算由 HyperButtonShadowRadius.kt 负责，Preview 使用独立内部换算适配。

@@ -30,6 +30,7 @@ import hyper_ui.HyperSwitch
 
 @Composable
 fun HyperMenuGroupDemo() {
+    // 整组共享内容表面；行保留交互和分隔线，不叠加卡片阴影。
     var notifications by remember { mutableStateOf(true) }
     var sync by remember { mutableStateOf(false) }
     var feedback by remember { mutableStateOf("选择设置项查看反馈") }

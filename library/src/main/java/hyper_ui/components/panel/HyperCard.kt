@@ -61,7 +61,7 @@ fun HyperCard(
         modifier = modifier
             .fillMaxWidth()
             .then(if (onPressed != null) Modifier.hyperNoRippleClickable(onClick = onPressed) else Modifier)
-            .hyperFrostedSurface(
+            .hyperCardSurface(
                 containerColor = colors.containerColor,
                 shape = shape,
                 elevation = elevation,
@@ -120,6 +120,8 @@ object HyperCardDefaults {
     )
 
     @Composable
-    fun border(color: Color = Color.Unspecified, selected: Boolean = false): BorderStroke =
-        BorderStroke(1.dp, resolveHyperContainerColor(color, if (selected) HyperColors.accent else hyperGlass.border))
+    fun border(color: Color = Color.Unspecified, selected: Boolean = false): BorderStroke? =
+        if (selected || color != Color.Unspecified)
+            BorderStroke(1.dp, resolveHyperContainerColor(color, HyperColors.accent))
+        else null
 }

@@ -248,7 +248,7 @@ HyperIcon 继续负责插槽尺寸与颜色继承，图形由图标库提供；�
 - 主题与材质：`HyperThemeConfig`、`HyperTheme`、`HyperColors`、`HyperGlassTokens`、`HyperBackdrop`、`HyperSoftBackground`。
 - 基础与表单：`HyperText`、`HyperIcon`、`HyperDivider`、`HyperButton`（含 `type = "icon"`）、`HyperTextField`、`HyperSwitch`（清晰的关闭态中性轨道）、`HyperCheckbox`、`HyperRadio`、`HyperSegmentedControl`、`HyperSlider`。
 - 容器与列表：`HyperCard`、`HyperColorPicker`、`HyperList`、`HyperSectionedList`、`HyperMenuGroup`、`HyperListTile`。
-- 导航与操作：`HyperNavBar`（顶部透明；宿主传入 `scrolledUnder = true` 时用 160ms 过渡显示 20dp 毛玻璃，向下延伸 56dp 并渐隐至透明，没有分隔线，固定顶部状态栏避让；通过 `type = custom/backOnly/titleOnly/backWithTitle/more/edit` 选择固定布局，`custom` 提供完整插槽；搭配 `HyperNavBarPage` 让正文滚到导航栏后方并提供背景采样源）、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperTabs`（横向分类）、`HyperTabBar`（文档页分别提供单动作与多标签交互预览）。
+- 导航与操作：`HyperNavBar`（顶部透明；宿主传入 `scrolledUnder = true` 时用 160ms 过渡显示 20dp 毛玻璃，在状态栏顶部至导航底部内渐隐至透明，没有分隔线，固定顶部状态栏避让；通过 `type = custom/backOnly/titleOnly/backWithTitle/more/edit` 选择固定布局，`custom` 提供完整插槽；搭配 `HyperNavBarPage` 让正文滚到导航栏后方并提供背景采样源）、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperTabs`（横向分类）、`HyperTabBar`（文档页分别提供单动作与多标签交互预览）。
 - 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopover`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
 
 `HyperSectionedList` 固定使用 8dp 紧凑分段间距，选择状态由调用方管理。
@@ -403,3 +403,5 @@ npm run dev
 ```
 
 组件交互预览的职责、平台边界和维护方式见[交互预览](vitepress/docs/preview.md)与[文档维护规则](vitepress/docs/maintenance.md)。
+
+维护 UI 库和开发业务页面前，优先阅读[使用规则、全局全面屏与 AGENTS.md 模板](vitepress/docs/mobile-guidelines.md)和[设计系统基线](vitepress/docs/style-reference.md)。正文卡片统一无普通描边和双层柔阴影，选中轮廓保留；导航材质仅在状态栏顶部至 Navbar 底部内渐隐。既有悬浮 TabBar 的高度、占位与滚动范围不能因配色或卡片优化改变。

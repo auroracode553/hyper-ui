@@ -77,7 +77,7 @@ fun HyperCard(
 | colors | HyperCardColors | 否 | HyperCardDefaults.colors(selected = selected) | 组件各状态的颜色配置。 |
 | shape | Shape | 否 | HyperCardDefaults.Shape | 组件容器的形状。 |
 | elevation | Dp | 否 | HyperCardDefaults.Elevation | 容器阴影高度。 |
-| border | BorderStroke? | 否 | HyperCardDefaults.border(selected = selected) | 容器边框配置。 |
+| border | BorderStroke? | 否 | HyperCardDefaults.border(selected = selected) | 普通状态为 null；选中或显式指定颜色时显示边框。 |
 | verticalArrangement | Arrangement.Vertical | 否 | Arrangement.spacedBy(HyperCardDefaults.ContentSpacing) | 子项的垂直排列方式。 |
 | horizontalAlignment | Alignment.Horizontal | 否 | Alignment.Start | 容器内内容的水平对齐方式。 |
 | title | (@Composable () -&gt; Unit)? | 否 | null | 组件标题文字或内容。 |
@@ -106,7 +106,7 @@ fun HyperCard(
 
 ```kotlin
 @Composable
-    fun border(color: Color = Color.Unspecified, selected: Boolean = false): BorderStroke =
+    fun border(color: Color = Color.Unspecified, selected: Boolean = false): BorderStroke?
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
@@ -121,3 +121,7 @@ fun HyperCard(
 | containerColor | Color | 是 | — | 表面背景色；Color.Unspecified 使用组件的主题默认值。 |
 
 </details>
+
+## 共用内容表面
+
+本组件的正文表面复用内部 hyperCardSurface/ContentCard，与 HyperCard 共用无普通描边、画布色阶和双层柔阴影。圆角、间距及已有交互不变；选中态保留完整强调边界，组内行不重复装饰，分隔线继续保留。具体参数见[设计系统基线](../../style-reference.md#内容卡片与导航维护规则)。浮层、操作区和输入控件不使用此内容卡片规则。

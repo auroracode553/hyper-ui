@@ -62,3 +62,5 @@ HyperButton(
 - [日期选择器](components/form/hyper-date-picker.md)：单日期月历与完整 LocalDate 参数表
 
 两端对应组件统一使用 onPressed、onChanged、onClose。按钮 type 控制形态，colorStyle 选择预设配色，color 覆盖预设；页签使用 selectedIndex。当前参数与默认值见完整组件 API 表格。
+
+维护 UI 库和开发业务页面前，优先阅读[使用规则、全局全面屏与 AGENTS.md 模板](mobile-guidelines.md)和[设计系统基线](style-reference.md)。正文卡片统一无普通描边和双层柔阴影，选中轮廓保留；导航材质仅在状态栏顶部至 Navbar 底部内渐隐。既有悬浮 TabBar 的高度、占位与滚动范围不能因配色或卡片优化改变。

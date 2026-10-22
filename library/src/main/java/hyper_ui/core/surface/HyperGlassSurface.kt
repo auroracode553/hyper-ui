@@ -51,3 +51,14 @@ internal fun Modifier.hyperFrostedSurface(
     val depth = hyperSurfaceDepthVisuals(HyperSurfaceDepthRole.StructuralPanel, elevation)
     hyperGlassSurface(shape, HyperGlassSurfaceVisuals(containerColor, depth, blur ?: hyperGlass.blur), border)
 }
+
+/** 正文卡片共用无普通描边与柔和双层阴影；浮层、导航和控件不使用此入口。 */
+internal fun Modifier.hyperCardSurface(
+    containerColor: Color,
+    shape: Shape,
+    elevation: Dp = 12.dp,
+    border: BorderStroke? = null
+): Modifier = composed {
+    val depth = hyperSurfaceDepthVisuals(HyperSurfaceDepthRole.ContentCard, elevation)
+    hyperGlassSurface(shape, HyperGlassSurfaceVisuals(containerColor, depth, hyperGlass.blur), border)
+}

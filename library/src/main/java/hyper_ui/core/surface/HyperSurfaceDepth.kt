@@ -20,12 +20,14 @@ internal data class HyperSurfaceDepthVisuals(
     val strokeWidth: Dp,
     val elevation: Dp,
     val ambientShadowColor: Color,
-    val spotShadowColor: Color
+    val spotShadowColor: Color,
+    val contentCard: Boolean = false
 )
 
 internal enum class HyperSurfaceDepthRole {
     CompactControl,
     FloatingPanel,
+    ContentCard,
     StructuralPanel
 }
 
@@ -78,10 +80,14 @@ internal fun Modifier.hyperSurfaceShadow(
     if (visuals.elevation > 0.dp) {
         // 与 HyUiEffects.surfaceShadows 对齐：两层投影只用于玻璃容器。
         Modifier.dropShadow(shape, Shadow(
-            radius = 28.dp, spread = (-6).dp, offset = DpOffset(0.dp, 12.dp),
+            radius = if (visuals.contentCard) 18.dp else 28.dp,
+            spread = if (visuals.contentCard) (-4).dp else (-6).dp,
+            offset = DpOffset(0.dp, if (visuals.contentCard) 4.dp else 12.dp),
             color = visuals.spotShadowColor
         )).dropShadow(shape, Shadow(
-            radius = 8.dp, spread = (-3).dp, offset = DpOffset(0.dp, 3.dp),
+            radius = if (visuals.contentCard) 4.dp else 8.dp,
+            spread = if (visuals.contentCard) (-1).dp else (-3).dp,
+            offset = DpOffset(0.dp, if (visuals.contentCard) 1.dp else 3.dp),
             color = visuals.ambientShadowColor
         ))
     } else Modifier
@@ -109,6 +115,14 @@ internal fun hyperSurfaceDepthVisuals(
     state: HyperSurfaceDepthState = HyperSurfaceDepthState.Resting
 ): HyperSurfaceDepthVisuals {
     val enabled = state != HyperSurfaceDepthState.Disabled
+    if (role == HyperSurfaceDepthRole.ContentCard) return HyperSurfaceDepthVisuals(
+        strokeColor = Color.Transparent,
+        strokeWidth = 0.dp,
+        elevation = if (enabled) elevation else 0.dp,
+        ambientShadowColor = hyperGlass.shadow.copy(alpha = hyperGlass.shadow.alpha * 0.4f),
+        spotShadowColor = hyperGlass.shadow.copy(alpha = hyperGlass.shadow.alpha * 0.75f),
+        contentCard = true
+    )
     return hyperSurfaceDepthVisuals(
         strokeColor = if (enabled) hyperGlass.border else HyperColors.divider.copy(alpha = 110 / 255f),
         elevation = if (enabled) elevation else 0.dp,

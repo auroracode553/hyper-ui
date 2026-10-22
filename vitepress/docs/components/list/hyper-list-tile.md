@@ -133,3 +133,7 @@ fun minHeight(hasSupportingContent: Boolean): Dp
 | dividerColor | Color | 是 | — | 分隔线颜色。 |
 
 </details>
+
+## 共用内容表面
+
+本组件的正文表面复用内部 hyperCardSurface/ContentCard，与 HyperCard 共用无普通描边、画布色阶和双层柔阴影。圆角、间距及已有交互不变；选中态保留完整强调边界，组内行不重复装饰，分隔线继续保留。具体参数见[设计系统基线](../../style-reference.md#内容卡片与导航维护规则)。浮层、操作区和输入控件不使用此内容卡片规则。

@@ -65,6 +65,7 @@ fun NavBarDemo() {
 
 @Composable
 private fun NavBarPageDemo() {
+    // 正文经过导航后方，渐隐在导航自身底部结束，不覆盖下一行内容。
     val sections = remember {
         listOf("留一点空白", "光影与秩序", "日常里的灵感", "透明导航栏下的连续滚动")
     }

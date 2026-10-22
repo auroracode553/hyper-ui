@@ -136,6 +136,7 @@ private fun TabBarDemo(single: Boolean) {
 /** 侧滑操作与分类按钮分开演示，保留受控展开和禁用状态。 */
 @Composable
 fun SlideActionMenuDemo() {
+    // 内容采用共用卡片层级，侧滑操作区的布局与手势维持原样。
     var reveal by remember { mutableStateOf(HyperSlideMenuReveal.Closed) }
     var enabled by remember { mutableStateOf(true) }
     var result by remember { mutableStateOf("拖动列表行或用按钮展开") }
