@@ -1,5 +1,13 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/ListComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Bell
+import com.composables.icons.lucide.Check
+import com.composables.icons.lucide.Info
+import com.composables.icons.lucide.Lock
+import com.composables.icons.lucide.RefreshCw
+import com.composables.icons.lucide.Settings
 import hyper_ui.*
 
 import androidx.compose.foundation.layout.Arrangement
@@ -43,14 +51,14 @@ fun HyperMenuGroupDemo() {
         PreviewSectionLabel("通知与同步")
         HyperMenuGroup {
             HyperListTile(
-                leadingIcon = HyperReferenceIcons.Notifications,
+                leadingIcon = Lucide.Bell,
                 title = { HyperText("推送通知") },
                 subtitle = { HyperText("接收重要消息提醒") },
                 dividerVisible = true,
                 trailing = { HyperSwitch(notifications, { notifications = it }) }
             )
             HyperListTile(
-                leadingIcon = HyperReferenceIcons.Refresh,
+                leadingIcon = Lucide.RefreshCw,
                 title = { HyperText("自动同步") },
                 subtitle = { HyperText("网络可用时刷新数据") },
                 trailing = { HyperCheckbox(sync, { sync = it == true }) }
@@ -61,11 +69,11 @@ fun HyperMenuGroupDemo() {
 }
 
 private fun iconFor(item: String): ImageVector = when (item) {
-    "系统设置", "外观与显示" -> HyperReferenceIcons.Settings
-    "通知权限" -> HyperReferenceIcons.Notifications
-    "关于" -> HyperReferenceIcons.Info
-    "同步策略" -> HyperReferenceIcons.Check
-    else -> HyperReferenceIcons.Lock
+    "系统设置", "外观与显示" -> Lucide.Settings
+    "通知权限" -> Lucide.Bell
+    "关于" -> Lucide.Info
+    "同步策略" -> Lucide.Check
+    else -> Lucide.Lock
 }
 
 @Composable
@@ -79,7 +87,7 @@ fun ListTileDemo() {
         PreviewToggle("选中", selected) { selected = it }
         PreviewToggle("允许操作", enabled) { enabled = it }
         PreviewSectionLabel("基础 · 图标、标题、说明与元信息")
-        HyperListTile(type = type, selected = selected, enabled = enabled, leadingIcon = HyperReferenceIcons.Settings,
+        HyperListTile(type = type, selected = selected, enabled = enabled, leadingIcon = Lucide.Settings,
             title = { HyperText("系统设置") }, subtitle = { HyperText("查看配置与同步状态") },
             meta = { HyperText("刚刚更新") }, onPressed = { feedback = "已点击：$type" })
         PreviewSectionLabel("禁用状态")

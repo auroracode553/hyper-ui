@@ -1,6 +1,9 @@
 /** 文件职责：参考 HyperListTile 的自动表面、选中态、图标块与受控动作。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.ChevronRight
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -101,7 +104,7 @@ fun HyperListTile(
             if (hasTrailing) {
                 CompositionLocalProvider(LocalHyperContentColor provides colors.supportingColor,
                     LocalHyperTextStyle provides HyperListTileDefaults.TrailingTextStyle) {
-                    if (trailing != null) trailing() else HyperIcon(HyperReferenceIcons.ChevronRight,
+                    if (trailing != null) trailing() else HyperIcon(Lucide.ChevronRight,
                         null, Modifier.size(18.dp))
                 }
             }

@@ -1,6 +1,9 @@
 /** 文件职责：展示 HyperNavBar 的常见返回布局、操作反馈和沉浸滚动。 */
 package hyper_ui.docs.ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.House
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -116,7 +119,7 @@ private fun NavBarPageDemo() {
                         .padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    HyperIcon(HyperReferenceIcons.Home, "导航示例", Modifier.size(28.dp))
+                    HyperIcon(Lucide.House, "导航示例", Modifier.size(28.dp))
                     HyperText("常见顶部导航", fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     HyperText(example.explanation, fontSize = 14.sp)
                     NavBarExampleChoices(example) { selected ->

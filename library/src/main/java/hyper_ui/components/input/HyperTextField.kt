@@ -1,6 +1,11 @@
 /** 文件职责：在 hyper_ui 中负责承载 library/src/main/java/hyper_ui/components/input/HyperTextField 模块实现，并集中维护其依赖协作与核心逻辑。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Eye
+import com.composables.icons.lucide.EyeOff
+import com.composables.icons.lucide.X
+
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -240,11 +245,11 @@ private fun defaultEndContent(
     return {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (type == "password" && showPasswordToggle) {
-                HyperInputAffix(if (passwordVisible) HyperReferenceIcons.EyeOff else HyperReferenceIcons.Eye,
+                HyperInputAffix(if (passwordVisible) Lucide.EyeOff else Lucide.Eye,
                     if (passwordVisible) "隐藏密码" else "显示密码", canInteract, onTogglePassword)
             }
             if (clearable) {
-                HyperInputAffix(HyperReferenceIcons.Close, "清空", canInteract && value.isNotEmpty(), onClear,
+                HyperInputAffix(Lucide.X, "清空", canInteract && value.isNotEmpty(), onClear,
                     Modifier.alpha(if (canInteract && value.isNotEmpty()) 1f else 0f))
             }
         }

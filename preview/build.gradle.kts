@@ -62,7 +62,7 @@ kotlin {
             dependencies {
                 // Preview 与正式组件复用同一动画和背景模糊实现。
                 implementation("org.jetbrains.compose.foundation:foundation:${libs.versions.composeMultiplatform.get()}")
-                implementation("org.jetbrains.compose.material:material-icons-core:${libs.versions.composeMaterialIconsVersion.get()}")
+                implementation(libs.lucide.icons)
                 implementation("org.jetbrains.compose.components:components-resources:${libs.versions.composeMultiplatform.get()}")
                 implementation("org.jetbrains.compose.runtime:runtime:${libs.versions.composeMultiplatform.get()}")
                 implementation("org.jetbrains.compose.animation:animation-core:${libs.versions.composeMultiplatform.get()}")

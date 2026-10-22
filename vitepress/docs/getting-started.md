@@ -88,7 +88,7 @@ fun AppHome() {
 
 ## 图标
 
-库内语义图标使用 Lucide 字体原始轮廓生成的共享 ImageVector。调用方直接引用 Lucide 资源时，需要在自己的模块显式声明对应依赖；少量图标不要引入 `material-icons-extended`。
+库与 Preview 直接使用 com.composables:icons-lucide-cmp:2.2.1 的 Lucide 图标。调用方直接引用 Lucide 时，在业务模块显式声明同一依赖。通用图标不复制 SVG／字体路径，也不额外维护图标别名表。
 
 ## 不应依赖的目录
 

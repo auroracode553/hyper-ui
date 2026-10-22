@@ -1,5 +1,9 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/ContainerComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Ellipsis
+import com.composables.icons.lucide.Sparkles
 import hyper_ui.*
 import hyper_ui.docs.theme.LocalDocsColorScheme
 
@@ -75,8 +79,8 @@ fun PanelDemo() {
         HyperCard(
             title = { HyperText("本周专注") },
             subtitle = { HyperText("保持轻量、清晰的内容层级") },
-            leading = { HyperIcon(HyperReferenceIcons.Sparkles, null) },
-            actions = { HyperButton({ feedback = "已打开更多操作" }, type = "icon", size = "small") { HyperIcon(HyperReferenceIcons.More, "更多") } },
+            leading = { HyperIcon(Lucide.Sparkles, null) },
+            actions = { HyperButton({ feedback = "已打开更多操作" }, type = "icon", size = "small") { HyperIcon(Lucide.Ellipsis, "更多") } },
             footer = { HyperText(feedback, size = "small") }
         ) {
             HyperText("卡片组织内容与操作，业务状态由调用方持有。")

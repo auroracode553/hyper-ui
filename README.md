@@ -72,7 +72,7 @@ HyperRadio 的标签行由整行处理点击，默认最小高度 46dp；放进�
 - 调用方可以通过 Maven 坐标、源码模块或 AAR 引入 HyperUI。
 - 当前项目使用 AGP 9.4.0，Kotlin Android 支持由 AGP 内置，不再额外应用 `org.jetbrains.kotlin.android` 插件。
 - 当前库的 `minSdk` 为 `30`，调用方应用的 `minSdk` 不能低于 30。
-- HyperUI 内置语义图标共享参考项目 Lucide 3.1.24 字体的原始轮廓，Android 与 Preview 使用同一份 ImageVector；调用方可通过 slot 提供自己的图标。
+- HyperUI 和 Preview 直接引用 Lucide Compose 库图标，不在项目中复制路径；调用方可通过 slot 提供自己的图标。
 - AI 或新调用者应优先阅读 [vitepress/docs/index.md](vitepress/docs/index.md)，再按 [组件索引](vitepress/docs/component-index.md) 打开具体组件页。
 - `vitepress/docs/` 是权威 Markdown 文档，`vitepress/` 负责网页渲染，`preview/` 只负责文档交互预览。当前公开支持范围是 Android 手机端。
 - 手机端布局与交互约束见 [移动端规范](vitepress/docs/mobile-guidelines.md)。
@@ -115,7 +115,7 @@ https://gitee.com/my_new_way/hyper_ui/blob/master/vitepress/docs/index.md
 - HyperUI 公开 API 统一在 `hyper_ui` 包，可使用 `import hyper_ui.*`。
 - 使用前包裹 `HyperThemeConfig`。
 - 组件不持有业务状态，状态由调用方管理。
-- HyperUI 内部使用共享参考版本 Lucide 字体轮廓；调用方若要直接引用 `LucideR.drawable`，需自主声明对应 Android 图标依赖。
+- HyperUI 与 Preview 直接引用 Lucide Compose 图标库，不在项目中维护字体轮廓或 SVG 路径；业务代码直接使用 Lucide 时显式声明同一依赖。
 ```
 
 ## 适用范围
@@ -123,6 +123,8 @@ https://gitee.com/my_new_way/hyper_ui/blob/master/vitepress/docs/index.md
 HyperUI 面向 Android Compose 项目，提供按钮、输入框、列表分组、设置项、弹窗、抽屉、加载进度条、可拖动进度滑块、顶部栏、底部导航等基础组件。
 
 `HyperDrawer` 是贴边全高的独立模态层；调用方持有 open 并响应 onClose，正文通过 content 提供，默认零内边距。默认从 start 侧展开，支持遮罩、系统返回键及横向滑动关闭，固定标题与页脚；完整 API 见[抽屉文档](vitepress/docs/components/navigation/hyper-drawer.md)。
+
+底部菜单使用 [HyperActionSheet](vitepress/docs/components/feedback/hyper-action-sheet.md)，支持自定义正文或 HyperAction 操作列表；不使用侧边 HyperDrawer 承载底部菜单。
 
 不适合的场景：
 
@@ -212,13 +214,13 @@ fun App() {
 }
 ```
 
-## 推荐图标方案（Android）
+## 图标方案
 
-HyperUI 内置的勾选、充电、快进及播放速度面板语义图标统一使用 [Lucide Android](https://github.com/composablehorizons/compose-icons/tree/main/icons-lucide-android)；支持自定义的组件仍保留图标 slot。调用方若要在自己的代码中直接引用 Lucide 资源，也需要显式声明：
+HyperUI 内置图标与 Preview 直接使用 [Lucide Compose](https://github.com/composablehorizons/compose-icons/tree/main/icons-lucide-cmp)，保留组件原有图标插槽。调用方直接使用 Lucide 图标时声明：
 
 ```kotlin
 dependencies {
-    implementation("com.composables:icons-lucide-android:2.2.1")
+    implementation("com.composables:icons-lucide-cmp:2.2.1")
 }
 ```
 
@@ -226,20 +228,20 @@ dependencies {
 import androidx.compose.foundation.layout.size
 import hyper_ui.HyperIcon
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import com.composables.icons.lucide.R as LucideR
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Search
 import hyper_ui.*
 
 HyperButton(type = "icon", onPressed = onSearch) {
     HyperIcon(
-        icon = painterResource(LucideR.drawable.lucide_ic_search),
+        icon = Lucide.Search,
         contentDescription = "搜索",
         modifier = Modifier.size(HyperButtonDefaults.IconSize)
     )
 }
 ```
 
-调用方可选择上述 Android VectorDrawable 资源；库内默认图标使用共享的 Lucide 字体原始轮廓，避免 Android 与 Preview 图标不同。
+HyperIcon 继续负责插槽尺寸与颜色继承，图形由图标库提供；不复制字体轮廓、SVG 路径或添加图标别名表。
 
 ## 组件范围
 
@@ -283,7 +285,7 @@ HyperTextField(
     placeholder = { HyperText("搜索") },
     prefix = {
     HyperIcon(
-            icon = painterResource(LucideR.drawable.lucide_ic_search),
+            icon = Lucide.Search,
             contentDescription = null
         )
     }

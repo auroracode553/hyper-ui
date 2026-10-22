@@ -19,8 +19,10 @@ description: 统一图标大小和着色，在按钮、列表与导航插槽内�
 
 ```kotlin
 import hyper_ui.*
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Search
 
-HyperIcon(icon = icon, contentDescription = "搜索")
+HyperIcon(icon = Lucide.Search, contentDescription = "搜索")
 ```
 
 </details>
@@ -29,7 +31,7 @@ HyperIcon(icon = icon, contentDescription = "搜索")
 
 **样式约定**
 
-small/default/large 基准尺寸 18/24/32dp。default 在按钮、列表和导航插槽内继承对应组件的参考尺寸。Painter 与 ImageVector 两种重载。内置语义图标共享参考项目 Lucide 3.1.24 字体的原始轮廓。
+small/default/large 基准尺寸 18/24/32dp。default 在按钮、列表和导航插槽内继承对应组件的参考尺寸。Painter 与 ImageVector 两种重载。内置图标直接引用 com.composables:icons-lucide-cmp:2.2.1，不在项目内维护图标路径。
 
 **状态归属**
 

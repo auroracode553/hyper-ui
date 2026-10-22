@@ -1,6 +1,12 @@
 /** 文件职责：更新弹窗的标识、版本、更新摘要、进度和固定操作区。由 HyperUpdateDialog 组合。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.ArrowRight
+import com.composables.icons.lucide.Check
+import com.composables.icons.lucide.Download
+import com.composables.icons.lucide.X
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.background
@@ -29,7 +35,7 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
             HyperText("软件更新", Modifier.weight(1f), color = HyperColors.secondaryText,
                 fontSize = 12.sp, lineHeight = 16.8.sp, fontWeight = FontWeight.Medium)
             if (!locked && onClose != null) HyperButton(onClose, type = "icon", size = "small") {
-                HyperIcon(HyperReferenceIcons.Close, "关闭")
+                HyperIcon(Lucide.X, "关闭")
             }
         }
         Spacer(Modifier.height(20.dp))
@@ -64,7 +70,7 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
                 HyperText("本次更新", fontSize = 13.sp, lineHeight = 18.2.sp, fontWeight = FontWeight.SemiBold)
                 highlights.forEach { text ->
                     Row(Modifier.padding(top = 12.dp)) {
-                        HyperIcon(HyperReferenceIcons.Check, null, Modifier.padding(top = 3.dp).size(14.dp), color = HyperColors.accent)
+                        HyperIcon(Lucide.Check, null, Modifier.padding(top = 3.dp).size(14.dp), color = HyperColors.accent)
                         Spacer(Modifier.width(8.dp))
                         HyperText(text, Modifier.weight(1f), color = HyperColors.secondaryText, fontSize = 13.sp, lineHeight = 19.5.sp)
                     }
@@ -104,7 +110,7 @@ private fun HyperUpdateVersion(view: HyperUpdatePresentation, mandatory: Boolean
             if (!completed && view.version != null) HyperText("当前 ${view.version}",
                 color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 16.8.sp)
             if (view.release != null) {
-                if (!completed && view.version != null) HyperIcon(HyperReferenceIcons.ArrowForward, null,
+                if (!completed && view.version != null) HyperIcon(Lucide.ArrowRight, null,
                     Modifier.size(14.dp), color = HyperColors.secondaryText)
                 HyperUpdateBadge("${if (completed) "已更新至" else "新版本"} ${view.release.version}", view.color)
             }
@@ -134,7 +140,7 @@ private fun HyperUpdateProgressBadges(installing: Boolean) {
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         HyperUpdateBadge(if (installing) "下载完成" else "1 · 下载更新",
             if (installing) HyperColors.success else HyperColors.accent,
-            if (installing) HyperReferenceIcons.Check else HyperReferenceIcons.Download)
+            if (installing) Lucide.Check else Lucide.Download)
         HyperUpdateBadge("2 · 安装更新", if (installing) HyperColors.accent else HyperColors.secondaryText)
     }
 }

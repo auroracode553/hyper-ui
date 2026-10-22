@@ -71,6 +71,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperToast](components/feedback/hyper-toast.md) | 短暂反馈 |
 | [HyperProgress](components/feedback/hyper-progress.md) | 线性和圆形进度 |
 | [HyperDialog](components/feedback/hyper-dialog.md) | 按实际窗口保留两侧各 24dp、最大宽 420dp 的模态任务面板 |
+| [HyperActionSheet / HyperAction](components/feedback/hyper-action-sheet.md) | 底部自定义内容与操作列表，受控显隐、危险／禁用／选中项与取消操作 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 确认和危险操作 |
 | [HyperTooltip](components/feedback/hyper-tooltip.md) | 补充提示 |
 | [HyperBatteryIndicator](components/feedback/hyper-battery-indicator.md) | 电量显示 |

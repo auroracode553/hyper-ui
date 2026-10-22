@@ -2,6 +2,7 @@
 package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.DialogDemo
+import hyper_ui.docs.ui.ActionSheetDemo
 import hyper_ui.docs.ui.DropdownMenuDemo
 import hyper_ui.docs.ui.EmptyStateDemo
 import hyper_ui.docs.ui.HyperDialogDemo
@@ -18,6 +19,24 @@ import hyper_ui.docs.ui.UpdateDialogDemo
 private const val GROUP_FEEDBACK = "反馈组件"
 
 internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(
+        id = "action_sheet",
+        group = GROUP_FEEDBACK,
+        title = "HyperActionSheet / HyperAction",
+        description = "底部自定义内容与操作列表；最大高度 85%，支持危险项、禁用项、选中项与取消操作。",
+        code = """
+            HyperActionSheet(visible, onClose = { visible = false }, title = "分享项目") {
+                HyperListTile(title = { HyperText("复制链接") }, onPressed = onCopy)
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("自定义内容", "content", "圆角 30dp、内边距 16dp，整体滚动"),
+            DemoVariant("操作列表", "actions / onChanged", "选中、危险、禁用与取消按钮"),
+            DemoVariant("遮罩关闭", "dismissible", "false 时只禁止遮罩关闭，系统返回仍可关闭")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-action-sheet.md"),
+        content = { ActionSheetDemo() }
+    ),
     ComponentDemo(
         id = "empty_state",
         group = GROUP_FEEDBACK,

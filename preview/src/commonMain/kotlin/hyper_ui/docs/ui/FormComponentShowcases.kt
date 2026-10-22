@@ -1,5 +1,8 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/FormComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Calendar
 import hyper_ui.*
 import hyper_ui.LocalHyperContentColor
 import hyper_ui.docs.theme.LocalDocsColorScheme
@@ -47,7 +50,7 @@ fun DatePickerDemo() {
         HyperText("月历选择日期", size = "small", modifier = Modifier.padding(bottom = 8.dp))
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
             HyperButton(onPressed = { visible = true }) {
-                HyperIcon(HyperReferenceIcons.Calendar, null)
+                HyperIcon(Lucide.Calendar, null)
                 HyperText("选择日期")
             }
             val tone = HyperColors.secondaryText

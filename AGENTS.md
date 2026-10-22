@@ -63,6 +63,7 @@
 - VitePress 负责渲染 `vitepress/docs/` 中的 Markdown；不得维护第二份组件正文。
 - Wasm 只负责交互预览，不能作为 AI 推断 API 的事实来源。新增组件页时应通过 `WasmPreview` 引用对应 Preview ID。
 - HyperUI 公开 API 统一声明在 `hyper_ui` 包，示例可使用 `import hyper_ui.*`；`hyper_ui.core` 仅为 UI 库内部公共工具目录，调用方示例不要直接导入。
+- 通用图标直接引用 Lucide 图标库，HyperIcon 仅负责显示尺寸和颜色继承。禁止在项目内手写或复制 SVG／字体轮廓、ImageVector.Builder 图标路径，以及另建图标别名转接表；正式组件与 Preview 使用同一套库图标。
 
 ## 两端 API 一致性
 

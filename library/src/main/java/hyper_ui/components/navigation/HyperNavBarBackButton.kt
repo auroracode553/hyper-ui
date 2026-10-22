@@ -1,6 +1,10 @@
 /** 文件职责：提供导航栏常用的尖括号返回按钮与其矢量图标。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.ChevronLeft
+import com.composables.icons.lucide.Ellipsis
+
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,7 +25,7 @@ fun HyperNavBarBackButton(
         colors = HyperButtonDefaults.colors(null, containerColor = hyperGlass.surfaceStrong)
     ) {
         HyperIcon(
-            icon = HyperReferenceIcons.ChevronLeft,
+            icon = Lucide.ChevronLeft,
             contentDescription = null,
             modifier = Modifier.size(HyperButtonDefaults.IconSize)
         )
@@ -42,7 +46,7 @@ internal fun HyperNavBarMoreButton(
         colors = HyperButtonDefaults.colors(null, containerColor = hyperGlass.surfaceStrong)
     ) {
         HyperIcon(
-            icon = HyperReferenceIcons.More,
+            icon = Lucide.Ellipsis,
             contentDescription = null,
             modifier = Modifier.size(HyperButtonDefaults.IconSize)
         )

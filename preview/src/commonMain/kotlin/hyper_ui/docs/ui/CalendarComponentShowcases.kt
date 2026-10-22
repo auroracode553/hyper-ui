@@ -1,6 +1,10 @@
 /** 文件职责：通用日期格与内嵌月历的交互示例，两端展示同一组状态。 */
 package hyper_ui.docs.ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.ChevronLeft
+import com.composables.icons.lucide.ChevronRight
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -43,11 +47,11 @@ fun CalendarMonthDemo() {
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
             HyperButton(type = "icon", onPressed = { month.shiftMonth(-1)?.let { month = it } }) {
-                HyperIcon(HyperReferenceIcons.ChevronLeft, null)
+                HyperIcon(Lucide.ChevronLeft, null)
             }
             Box(Modifier.weight(1f), contentAlignment = Alignment.Center) { HyperText("${month.year} 年 ${month.month} 月") }
             HyperButton(type = "icon", onPressed = { month.shiftMonth(1)?.let { month = it } }) {
-                HyperIcon(HyperReferenceIcons.ChevronRight, null)
+                HyperIcon(Lucide.ChevronRight, null)
             }
         }
         Spacer(Modifier.height(12.dp))

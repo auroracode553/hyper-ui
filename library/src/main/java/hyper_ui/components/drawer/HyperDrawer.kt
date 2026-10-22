@@ -1,6 +1,9 @@
 /** 贴边全高的模态抽屉；业务内容与关闭状态由调用方提供。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.X
+
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -109,7 +112,7 @@ fun HyperDrawer(
                         HyperText(title, Modifier.weight(1f), fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                         HyperTooltip("关闭") {
                             HyperButton(onPressed = dismiss, type = "icon") {
-                                HyperIcon(HyperReferenceIcons.Close, null)
+                                HyperIcon(Lucide.X, null)
                             }
                         }
                     }

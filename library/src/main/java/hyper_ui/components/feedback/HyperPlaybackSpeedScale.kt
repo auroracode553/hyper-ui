@@ -1,6 +1,9 @@
 /** 文件职责：提供播放器长按临时倍速使用的柔性玻璃刻度反馈组件。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.FastForward
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -27,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import hyper_ui.core.icon.HyperFastForwardIcon
 import kotlin.math.abs
 
 @Immutable
@@ -236,7 +238,7 @@ private fun CurrentSpeedValue(
         ) {
             CompositionLocalProvider(LocalHyperContentColor provides colors.valueColor) {
                 if (leading == null) {
-                    HyperFastForwardIcon(
+                    HyperIcon(Lucide.FastForward, null,
                         Modifier.size(HyperPlaybackSpeedScaleDefaults.LeadingIconSize)
                     )
                 } else {

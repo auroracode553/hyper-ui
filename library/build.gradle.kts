@@ -37,7 +37,8 @@ dependencies {
     implementation("dev.chrisbanes.haze:haze:1.7.1")
     api("androidx.compose.ui:ui")
     api("androidx.compose.ui:ui-graphics")
-    implementation(libs.lucide.icons.android)
+    // 正式组件与 Preview 直接使用同一套 Lucide ImageVector，不在项目内复制路径。
+    implementation(libs.lucide.icons)
 }
 
 publishing {

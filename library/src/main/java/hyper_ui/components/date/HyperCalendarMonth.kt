@@ -1,6 +1,11 @@
 /** 文件职责：移植 Flutter HyperDatePicker 的月历、月份面板与年份跳转。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.ChevronDown
+import com.composables.icons.lucide.ChevronLeft
+import com.composables.icons.lucide.ChevronRight
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -53,14 +58,14 @@ internal fun HyperCalendarPickerMonth(
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
             HyperButton(onPressed = { previous?.let { month = it } }, enabled = available(previous), type = "icon", size = "small") {
-                HyperIcon(HyperReferenceIcons.ChevronLeft, "上个月")
+                HyperIcon(Lucide.ChevronLeft, "上个月")
             }
             HyperButton(onPressed = { choosingMonth = !choosingMonth }, modifier = Modifier.weight(1f)) {
                 HyperText("${month.year} 年 ${month.month} 月")
-                HyperIcon(HyperReferenceIcons.ChevronDown, null)
+                HyperIcon(Lucide.ChevronDown, null)
             }
             HyperButton(onPressed = { next?.let { month = it } }, enabled = available(next), type = "icon", size = "small") {
-                HyperIcon(HyperReferenceIcons.ChevronRight, "下个月")
+                HyperIcon(Lucide.ChevronRight, "下个月")
             }
         }
         Spacer(Modifier.height(12.dp))
@@ -95,11 +100,11 @@ private fun HyperCalendarMonths(
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             HyperButton(onPressed = { onYearChanged(changeYear(-10)) }, enabled = year - 10 >= firstDate.year, size = "small") { HyperText("−10 年") }
             HyperButton(onPressed = { onYearChanged(changeYear(-1)) }, enabled = year > firstDate.year, type = "icon", size = "small") {
-                HyperIcon(HyperReferenceIcons.ChevronLeft, "上一年")
+                HyperIcon(Lucide.ChevronLeft, "上一年")
             }
             HyperText("$year 年", fontWeight = FontWeight.Bold)
             HyperButton(onPressed = { onYearChanged(changeYear(1)) }, enabled = year < lastDate.year, type = "icon", size = "small") {
-                HyperIcon(HyperReferenceIcons.ChevronRight, "下一年")
+                HyperIcon(Lucide.ChevronRight, "下一年")
             }
             HyperButton(onPressed = { onYearChanged(changeYear(10)) }, enabled = year + 10 <= lastDate.year, size = "small") { HyperText("+10 年") }
         }

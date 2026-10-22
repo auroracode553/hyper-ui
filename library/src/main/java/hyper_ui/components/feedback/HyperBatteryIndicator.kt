@@ -1,6 +1,9 @@
 /** 文件职责：提供电量内显、充电图标外置的紧凑型系统电池指示器。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Zap
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +34,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import hyper_ui.core.icon.HyperChargingIcon
 
 @Immutable
 data class HyperBatteryIndicatorColors(
@@ -145,7 +147,7 @@ fun HyperBatteryIndicator(
             CompositionLocalProvider(
                 LocalHyperContentColor provides colors.chargingIconColor
             ) {
-                HyperChargingIcon(
+                HyperIcon(Lucide.Zap, null,
                     modifier = Modifier.size(
                         width = HyperBatteryIndicatorDefaults.ChargingIconWidth,
                         height = HyperBatteryIndicatorDefaults.ChargingIconHeight

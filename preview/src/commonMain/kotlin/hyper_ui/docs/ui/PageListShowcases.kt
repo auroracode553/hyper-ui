@@ -1,6 +1,12 @@
 /** 文件职责：页面级列表占用有限的剩余视口；外层宿主不再套垂直滚动或固定列表高度。 */
 package hyper_ui.docs.ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Bell
+import com.composables.icons.lucide.Lock
+import com.composables.icons.lucide.RefreshCw
+import com.composables.icons.lucide.Settings
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -42,10 +48,10 @@ fun HyperListDemo() {
                     selected = selected == item,
                     contentModifier = Modifier.padding(horizontal = 14.dp, vertical = if (comfortable) 14.dp else 8.dp),
                     leadingIcon = when (item) {
-                        "通知权限" -> HyperReferenceIcons.Notifications
-                        "同步策略", "数据备份" -> HyperReferenceIcons.Refresh
-                        "安全中心", "隐私权限" -> HyperReferenceIcons.Lock
-                        else -> HyperReferenceIcons.Settings
+                        "通知权限" -> Lucide.Bell
+                        "同步策略", "数据备份" -> Lucide.RefreshCw
+                        "安全中心", "隐私权限" -> Lucide.Lock
+                        else -> Lucide.Settings
                     },
                     title = { HyperText(item) },
                     subtitle = { HyperText(if (selected == item) "当前选中" else "点击查看配置") },
@@ -80,7 +86,7 @@ fun HyperSectionedListDemo() {
         ) { _, entry ->
             HyperListTile(
                 selected = selected == entry,
-                leadingIcon = HyperReferenceIcons.Lock,
+                leadingIcon = Lucide.Lock,
                 title = { HyperText(entry) },
                 subtitle = { HyperText(if (selected == entry) "已选中" else "点击切换选中状态") },
                 onPressed = { selected = if (selected == entry) null else entry },

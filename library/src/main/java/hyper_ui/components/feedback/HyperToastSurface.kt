@@ -1,6 +1,14 @@
 /** 文件职责：平台无关的受控玻璃 Toast；Android 原生 Toast 工具保留在 HyperToast.kt。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Bell
+import com.composables.icons.lucide.Check
+import com.composables.icons.lucide.CircleAlert
+import com.composables.icons.lucide.Info
+import com.composables.icons.lucide.Sparkles
+import com.composables.icons.lucide.X
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -104,13 +112,13 @@ private fun HyperToastLeading(type: String, color: Color) {
         contentAlignment = Alignment.Center) {
         CompositionLocalProvider(LocalHyperContentColor provides color) {
             HyperIcon(when (type) {
-                "success" -> HyperReferenceIcons.Check
-                "error" -> HyperReferenceIcons.Close
-                "neutral" -> HyperReferenceIcons.Notifications
-                "primary" -> HyperReferenceIcons.Sparkles
-                "info" -> HyperReferenceIcons.Info
-                "warning" -> HyperReferenceIcons.CircleAlert
-                else -> HyperReferenceIcons.Notifications
+                "success" -> Lucide.Check
+                "error" -> Lucide.X
+                "neutral" -> Lucide.Bell
+                "primary" -> Lucide.Sparkles
+                "info" -> Lucide.Info
+                "warning" -> Lucide.CircleAlert
+                else -> Lucide.Bell
             }, null, Modifier.size(17.dp))
         }
     }

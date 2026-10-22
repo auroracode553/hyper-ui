@@ -1,5 +1,9 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/FeedbackComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Info
+import com.composables.icons.lucide.Search
 import hyper_ui.*
 import hyper_ui.LocalHyperContentColor
 import hyper_ui.docs.theme.LocalDocsColorScheme
@@ -53,7 +57,7 @@ fun EmptyStateDemo() {
         HyperEmptyState(
             title = "没有找到结果",
             message = if (descriptionVisible) "换一个关键词，或者清除筛选条件后重试。" else null,
-            icon = { HyperIcon(HyperReferenceIcons.Search, null) },
+            icon = { HyperIcon(Lucide.Search, null) },
             action = { HyperButton(onPressed = { feedback = "已清除筛选" }) { HyperText("清除筛选") } }
         )
         HyperText(feedback, size = "small", color = HyperColors.secondaryText)
@@ -61,7 +65,7 @@ fun EmptyStateDemo() {
         HyperEmptyState(
             title = "这里还是空的",
             message = "创建第一个项目后，它会出现在这里。",
-            icon = { HyperIcon(HyperReferenceIcons.Info, null) }
+            icon = { HyperIcon(Lucide.Info, null) }
         )
     }
 }
@@ -213,7 +217,7 @@ fun LevelCapsuleDemo() {
             iconContent = if (showIcon) {
                 {
                     HyperIcon(
-                        icon = HyperReferenceIcons.Info,
+                        icon = Lucide.Info,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp)
                     )

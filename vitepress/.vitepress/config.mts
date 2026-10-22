@@ -124,6 +124,7 @@ export default defineConfig({
           { text: 'Tooltip', link: '/components/feedback/hyper-tooltip' },
           { text: 'Popover', link: '/components/feedback/hyper-popover' },
           { text: 'Dialog', link: '/components/feedback/hyper-dialog' },
+          { text: 'ActionSheet', link: '/components/feedback/hyper-action-sheet' },
           { text: 'AlertDialog', link: '/components/feedback/hyper-alert-dialog' },
           { text: 'UpdateDialog', link: '/components/feedback/hyper-update-dialog' }
         ]

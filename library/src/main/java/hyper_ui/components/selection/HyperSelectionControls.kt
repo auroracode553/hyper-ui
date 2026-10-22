@@ -1,6 +1,10 @@
 /** 文件职责：受控选择控件；可视尺寸来自 Flutter，触摸尺寸与语义独立。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Check
+import com.composables.icons.lucide.Minus
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -30,7 +34,6 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.DpOffset
-import hyper_ui.core.icon.HyperCheckIcon
 import hyper_ui.core.interaction.hyperNoRippleClickable
 import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -140,8 +143,8 @@ fun HyperCheckbox(
             .border(1.5.dp, border, shape), contentAlignment = Alignment.Center) {
             CompositionLocalProvider(LocalHyperContentColor provides checkmarkColor) {
                 val mark = Modifier.size(15.dp).graphicsLayer { alpha = markProgress; scaleX = 0.8f + 0.2f * markProgress; scaleY = scaleX }
-                if (value == null) HyperIcon(HyperReferenceIcons.Minus, null, mark)
-                else HyperCheckIcon(mark)
+                if (value == null) HyperIcon(Lucide.Minus, null, mark)
+                else HyperIcon(Lucide.Check, null, mark)
             }
         }
     }

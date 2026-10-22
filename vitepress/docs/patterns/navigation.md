@@ -3,7 +3,6 @@
 `HyperTabBar` 不依赖任何导航框架。贴底容器默认只使用 0.5dp 低对比度顶部发丝线分层，不使用阴影或整框描边；深色模式下容器和分隔线与当前页面同色，浅色模式保留轻量透明度。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp。需要完全自定义内容时使用完整 slot；需要统一处理点击与选中颜色时使用泛型 items 入口。
 
 ```kotlin
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import hyper_ui.HyperIcon
 import hyper_ui.HyperText
@@ -13,22 +12,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.res.painterResource
-import com.composables.icons.lucide.R as LucideR
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.House
+import com.composables.icons.lucide.Settings
 import hyper_ui.*
 
 data class AppDestination(
     val id: String,
     val label: String,
-    @DrawableRes val iconRes: Int
+    val icon: ImageVector
 )
 
 @Composable
 fun MainBottomBar(onDestinationSelected: (String) -> Unit) {
     var selectedId by remember { mutableStateOf("home") }
     val items = listOf(
-        AppDestination("home", "首页", LucideR.drawable.lucide_ic_house),
-        AppDestination("settings", "设置", LucideR.drawable.lucide_ic_settings)
+        AppDestination("home", "首页", Lucide.House),
+        AppDestination("settings", "设置", Lucide.Settings)
     )
 
     HyperTabBar(
@@ -42,7 +43,7 @@ fun MainBottomBar(onDestinationSelected: (String) -> Unit) {
     ) { item ->
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             HyperIcon(
-                icon = painterResource(item.iconRes),
+                icon = item.icon,
                 contentDescription = item.label
             )
             HyperText(item.label)

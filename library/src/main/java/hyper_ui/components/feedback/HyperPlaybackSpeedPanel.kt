@@ -1,6 +1,13 @@
 /** 文件职责：提供主题玻璃、受控且可直接覆盖在播放器上的播放速度设置面板。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Gauge
+import com.composables.icons.lucide.MoveHorizontal
+import com.composables.icons.lucide.Pencil
+import com.composables.icons.lucide.RotateCcw
+import com.composables.icons.lucide.X
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -38,11 +45,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
-import hyper_ui.core.icon.HyperCloseIcon
-import hyper_ui.core.icon.HyperEditIcon
-import hyper_ui.core.icon.HyperGaugeIcon
-import hyper_ui.core.icon.HyperHorizontalDragIcon
-import hyper_ui.core.icon.HyperResetIcon
 import kotlin.math.abs
 
 /**
@@ -218,7 +220,7 @@ private fun HyperPlaybackSpeedPanelHeader(
         ) {
             CompositionLocalProvider(LocalHyperContentColor provides colors.accentColor) {
                 if (leading == null) {
-                    HyperGaugeIcon(Modifier.size(16.dp))
+                    HyperIcon(Lucide.Gauge, null, Modifier.size(16.dp))
                 } else {
                     leading()
                 }
@@ -261,7 +263,7 @@ private fun HyperPlaybackSpeedPanelHeader(
                 contentAlignment = Alignment.Center
             ) {
                 if (close == null) {
-                    HyperCloseIcon(Modifier.size(15.dp))
+                    HyperIcon(Lucide.X, null, Modifier.size(15.dp))
                 } else {
                     close()
                 }
@@ -391,7 +393,7 @@ private fun HyperPlaybackSpeedPanelFooter(
                 LocalHyperContentColor provides colors.supportingContentColor
             ) {
                 if (hintLeading == null) {
-                    HyperHorizontalDragIcon()
+                    HyperIcon(Lucide.MoveHorizontal, null)
                 } else {
                     hintLeading()
                 }
@@ -422,7 +424,7 @@ private fun HyperPlaybackSpeedPanelFooter(
                 contentAlignment = Alignment.Center
             ) {
                 if (reset == null) {
-                    HyperResetIcon(Modifier.size(17.dp))
+                    HyperIcon(Lucide.RotateCcw, null, Modifier.size(17.dp))
                 } else {
                     reset()
                 }
@@ -467,7 +469,7 @@ private fun HyperPlaybackSpeedCustomAction(
         ) {
             CompositionLocalProvider(LocalHyperContentColor provides colors.accentColor) {
                 if (leading == null) {
-                    HyperEditIcon()
+                    HyperIcon(Lucide.Pencil, null)
                 } else {
                     leading()
                 }

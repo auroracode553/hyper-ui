@@ -34,7 +34,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(containerComponentDemos()) // card 保留选中表面和实色强调边框。
     addAll(navigationComponentDemos()) // drawer 为贴边全高模态层，支持双侧展开、固定页脚与滑动关闭。
     addAll(listComponentDemos()) // list-tile 直接展示条目；sectioned_list 固定 8dp 紧凑间距。
-    addAll(feedbackComponentDemos()) // toast 默认文字操作先关闭再回调；update_dialog 共用更新状态。
+    addAll(feedbackComponentDemos()) // action_sheet 对齐 Flutter；toast 文字操作先关闭再回调；update_dialog 共用更新状态。
     addAll(themeComponentDemos())
 }
 .map { demo ->

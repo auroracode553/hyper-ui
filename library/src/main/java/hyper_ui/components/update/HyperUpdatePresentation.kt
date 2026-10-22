@@ -1,5 +1,13 @@
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Check
+import com.composables.icons.lucide.CircleAlert
+import com.composables.icons.lucide.Download
+import com.composables.icons.lucide.PackageCheck
+import com.composables.icons.lucide.RefreshCw
+import com.composables.icons.lucide.Sparkles
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,12 +42,12 @@ internal fun hyperUpdatePresentation(
         HyperUpdateStatus.downloading, HyperUpdateStatus.installing)
     val downloading = status == HyperUpdateStatus.downloading || status == HyperUpdateStatus.downloadQueued
     val icon = when (status) {
-        HyperUpdateStatus.available -> HyperReferenceIcons.Sparkles
-        HyperUpdateStatus.downloadQueued, HyperUpdateStatus.downloading -> HyperReferenceIcons.Download
-        HyperUpdateStatus.readyToInstall, HyperUpdateStatus.installing -> HyperReferenceIcons.PackageCheck
-        HyperUpdateStatus.upToDate, HyperUpdateStatus.completed -> HyperReferenceIcons.Check
-        HyperUpdateStatus.error -> HyperReferenceIcons.CircleAlert
-        else -> HyperReferenceIcons.Refresh
+        HyperUpdateStatus.available -> Lucide.Sparkles
+        HyperUpdateStatus.downloadQueued, HyperUpdateStatus.downloading -> Lucide.Download
+        HyperUpdateStatus.readyToInstall, HyperUpdateStatus.installing -> Lucide.PackageCheck
+        HyperUpdateStatus.upToDate, HyperUpdateStatus.completed -> Lucide.Check
+        HyperUpdateStatus.error -> Lucide.CircleAlert
+        else -> Lucide.RefreshCw
     }
     val color = when (status) {
         HyperUpdateStatus.upToDate, HyperUpdateStatus.completed -> HyperColors.success
@@ -71,11 +79,11 @@ internal fun hyperUpdatePresentation(
         HyperUpdateStatus.error -> "请检查网络连接或稍后重试。"
     }
     val primary = when (status) {
-        HyperUpdateStatus.available -> HyperUpdateAction("立即更新", HyperReferenceIcons.Download, onDownload)
-        HyperUpdateStatus.readyToInstall -> HyperUpdateAction("立即安装", HyperReferenceIcons.PackageCheck, onInstall)
-        HyperUpdateStatus.completed -> HyperUpdateAction("开始使用", HyperReferenceIcons.Check, onClose)
-        HyperUpdateStatus.error -> HyperUpdateAction("重试", HyperReferenceIcons.Refresh, onRetry)
-        HyperUpdateStatus.upToDate -> HyperUpdateAction("再次检查", HyperReferenceIcons.Refresh, onCheck)
+        HyperUpdateStatus.available -> HyperUpdateAction("立即更新", Lucide.Download, onDownload)
+        HyperUpdateStatus.readyToInstall -> HyperUpdateAction("立即安装", Lucide.PackageCheck, onInstall)
+        HyperUpdateStatus.completed -> HyperUpdateAction("开始使用", Lucide.Check, onClose)
+        HyperUpdateStatus.error -> HyperUpdateAction("重试", Lucide.RefreshCw, onRetry)
+        HyperUpdateStatus.upToDate -> HyperUpdateAction("再次检查", Lucide.RefreshCw, onCheck)
         else -> null
     }?.let { it.copy(label = primaryLabel ?: it.label) }
     val secondary = if (locked) null else when (status) {

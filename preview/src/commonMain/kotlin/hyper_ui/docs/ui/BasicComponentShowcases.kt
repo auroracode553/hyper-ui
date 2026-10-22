@@ -1,5 +1,16 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/BasicComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Check
+import com.composables.icons.lucide.House
+import com.composables.icons.lucide.Info
+import com.composables.icons.lucide.Plus
+import com.composables.icons.lucide.RefreshCw
+import com.composables.icons.lucide.Search
+import com.composables.icons.lucide.Settings
+import com.composables.icons.lucide.Share2
+import com.composables.icons.lucide.Trash2
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -35,16 +46,16 @@ fun ButtonDemo() {
             HyperButton({}, type = "filled", colorStyle = "success") { HyperText("Success") }
             HyperButton({}, type = "filled", colorStyle = "info") { HyperText("Info") }
             HyperButton({}, type = "filled", colorStyle = "warning") { HyperText("Warning") }
-            HyperButton({}) { HyperIcon(HyperReferenceIcons.Share, null); HyperText("导出") }
-            HyperButton({}, type = "filled", colorStyle = "danger") { HyperIcon(HyperReferenceIcons.Delete, null); HyperText("Danger") }
-            HyperButton({}) { HyperIcon(HyperReferenceIcons.Settings, null); HyperText("带图标胶囊") }
+            HyperButton({}) { HyperIcon(Lucide.Share2, null); HyperText("导出") }
+            HyperButton({}, type = "filled", colorStyle = "danger") { HyperIcon(Lucide.Trash2, null); HyperText("Danger") }
+            HyperButton({}) { HyperIcon(Lucide.Settings, null); HyperText("带图标胶囊") }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({}, type = "icon") { HyperIcon(HyperReferenceIcons.Plus, "新建") }
-            HyperButton({}, type = "icon") { HyperIcon(HyperReferenceIcons.Refresh, "刷新") }
-            HyperButton({}, type = "icon") { HyperIcon(HyperReferenceIcons.Share, "分享") }
-            HyperButton({}, type = "icon", colorStyle = "danger") { HyperIcon(HyperReferenceIcons.Delete, "删除") }
-            HyperButton({}, type = "icon", loading = true) { HyperIcon(HyperReferenceIcons.Refresh, "加载中") }
+            HyperButton({}, type = "icon") { HyperIcon(Lucide.Plus, "新建") }
+            HyperButton({}, type = "icon") { HyperIcon(Lucide.RefreshCw, "刷新") }
+            HyperButton({}, type = "icon") { HyperIcon(Lucide.Share2, "分享") }
+            HyperButton({}, type = "icon", colorStyle = "danger") { HyperIcon(Lucide.Trash2, "删除") }
+            HyperButton({}, type = "icon", loading = true) { HyperIcon(Lucide.RefreshCw, "加载中") }
         }
         HyperButton({}, enabled = false) { HyperText("不可用") }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -55,7 +66,7 @@ fun ButtonDemo() {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton({}, colorStyle = "success") { HyperText("默认描边") }
             HyperButton({}, type = "filled", colorStyle = "success") { HyperText("填充") }
-            HyperButton({}, type = "icon", colorStyle = "success") { HyperIcon(HyperReferenceIcons.Check, "成功") }
+            HyperButton({}, type = "icon", colorStyle = "success") { HyperIcon(Lucide.Check, "成功") }
             HyperButton({}, type = "filled", colorStyle = "danger", color = HyperColors.accent) { HyperText("自定义颜色优先") }
         }
         HyperButton({}, Modifier.fillMaxWidth(), type = "filled", colorStyle = "primary") {
@@ -91,13 +102,13 @@ fun IconDemo() {
         PreviewToggle("品牌色", colored) { colored = it }
         PreviewSectionLabel("常用语义图标")
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            listOf(HyperReferenceIcons.Home, HyperReferenceIcons.Search, HyperReferenceIcons.Settings, HyperReferenceIcons.Check).forEach {
+            listOf(Lucide.House, Lucide.Search, Lucide.Settings, Lucide.Check).forEach {
                 HyperIcon(it, "图标示例", size = size, color = if (colored) HyperColors.accent else HyperColors.primaryText)
             }
         }
         PreviewSectionLabel("尺寸对照")
         Row(horizontalArrangement = Arrangement.spacedBy(18.dp)) {
-            listOf("small", "default", "large").forEach { HyperIcon(HyperReferenceIcons.Info, "尺寸 $it", size = it) }
+            listOf("small", "default", "large").forEach { HyperIcon(Lucide.Info, "尺寸 $it", size = it) }
         }
     }
 }

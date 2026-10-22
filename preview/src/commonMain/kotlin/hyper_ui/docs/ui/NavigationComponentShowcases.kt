@@ -1,5 +1,11 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/ui/NavigationComponentShowcases 可复用界面组件及交互封装。 */
 package hyper_ui.docs.ui
+
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Bell
+import com.composables.icons.lucide.House
+import com.composables.icons.lucide.Info
+import com.composables.icons.lucide.Settings
 import hyper_ui.*
 
 import androidx.compose.foundation.layout.Arrangement
@@ -101,10 +107,10 @@ private fun TabBarDemo(single: Boolean) {
     var selectedId by remember { mutableStateOf("home") }
     var count by remember { mutableStateOf(3) }
     val items = listOf(
-        DemoNavItem("home", "首页", HyperReferenceIcons.Home),
-        DemoNavItem("recent", "最近", HyperReferenceIcons.Info),
-        DemoNavItem("notice", "消息", HyperReferenceIcons.Notifications),
-        DemoNavItem("settings", "设置", HyperReferenceIcons.Settings)
+        DemoNavItem("home", "首页", Lucide.House),
+        DemoNavItem("recent", "最近", Lucide.Info),
+        DemoNavItem("notice", "消息", Lucide.Bell),
+        DemoNavItem("settings", "设置", Lucide.Settings)
     )
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (single) HyperButton({ count = if (count == 0) 3 else 0 }) { HyperText("切换角标") }

@@ -21,7 +21,11 @@ dependencyResolutionManagement {
 
     repositories {
         if (useTencentMirror) {
-            maven { url = uri("https://mirrors.cloud.tencent.com/nexus/repository/maven-public/") }
+            maven {
+                url = uri("https://mirrors.cloud.tencent.com/nexus/repository/maven-public/")
+                // Lucide 镜像元数据与 AAR 不同步，图标依赖从后面的 Maven Central 解析。
+                content { excludeGroup("com.composables") }
+            }
         }
         mavenCentral()
         google()

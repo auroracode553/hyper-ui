@@ -50,7 +50,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         """HyperText("正文", size = "default")""", listOf(DemoVariant("字号", "size", "small/default/large"),
             DemoVariant("截断", "maxLines / overflow", "有限行数默认省略号，显式 overflow 优先")),
         listOf("basic/hyper-text.md"), { TextDemo() }),
-    ComponentDemo("icon", GROUP_BASIC, "HyperIcon", "参考版本 Lucide 字体轮廓与 18 / 24 / 32dp 图标尺寸。",
+    ComponentDemo("icon", GROUP_BASIC, "HyperIcon", "直接使用 Lucide 图标库与 18 / 24 / 32dp 图标尺寸。",
         """HyperIcon(icon = icon, contentDescription = "图标")""", listOf(DemoVariant("大小与颜色", "size / color", "插槽继承与显式覆盖")),
         listOf("basic/hyper-icon.md"), { IconDemo() }),
     ComponentDemo("divider", GROUP_BASIC, "HyperDivider", "1dp 实线或 4dp / 4dp 虚线，支持横竖方向与缩进。",

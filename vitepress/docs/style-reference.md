@@ -85,7 +85,7 @@ HyperText 独立使用为 12 / 14 / 18sp、行高 1.4；default 可继承 LocalH
 | 组件 | 参考默认值 | Compose 对应 |
 | --- | --- | --- |
 | HyperText | 12 / 14 / 18，行高 1.4 | size 三档；插槽继承局部排版 |
-| HyperIcon | 18 / 24 / 32，插槽图标另定 | size 三档，共享 Lucide 字体原始轮廓 |
+| HyperIcon | 18 / 24 / 32，插槽图标另定 | size 三档，直接使用 Lucide 库图标 |
 | HyperDivider | 1dp；虚线 4dp + 4dp | type、axis、indent/endIndent/length |
 | HyperButton | 高 32 / 38 / 44，radius 高度的一半 | 字号 12 / 13 / 14sp；标签图标 16 / 17 / 18dp、纯图标 18 / 20 / 22dp |
 | HyperTextField | radius 20；字号 14 / 16 / 18；padding 14×7 / 18×9 / 20×11 | 1dp 普通轮廓、1.5dp 聚焦；多行纵向 +3dp |
@@ -105,6 +105,7 @@ HyperText 独立使用为 12 / 14 / 18sp、行高 1.4；default 可继承 LocalH
 | HyperTooltip | radius 12，padding 10×7，12sp/1.3 | 500ms 悬停/长按；焦点即时；125ms 0.97→1 缩放淡入 |
 | HyperDialog | min(maxWidth,实际窗口宽度-48)，maxWidth 420，窗口间距 24，radius 26，padding 18 | 标题 20/600、正文 10、操作区 18、操作间距 8 |
 | HyperDrawer | 贴边全高，默认宽 320，窄屏最大窗口宽减 56，正文默认零间距 | 实色背景，无外侧留白／圆角／描边／卡片阴影；280ms 从面板自身宽度之外平移，遮罩独立淡入 |
+| HyperActionSheet | 贴底全宽，圆角 30、内边距 16、最大高为键盘避让后可用高度的 85% | strong 材质，32×4 顶部指示条；250ms 淡入与 24dp 纵向平移；整体滚动，内部避让底部安全区 |
 | HyperSlideMenu | 每动作 64，边界阻力 0.32，释放阈值 35% | 0.09s 速度投影、stiffness 470/damping 42 |
 | HyperProgress | linear 4/6/12；circle 48/64/80、stroke 4/6/8 | showLabel=true；线性动画 1400ms、圆环 1100ms |
 | HyperEmptyState | 图标块 56、radius 24、图标 24、padding 20 | 标题 16/600、说明 13/1.45、间距 12/8/12 |
@@ -113,7 +114,7 @@ HyperText 独立使用为 12 / 14 / 18sp、行高 1.4；default 可继承 LocalH
 
 HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 控件按各自固定尺寸和隐式边框内边距处理。普通按压为 0.975 缩放、0.92 透明度，85ms 进入、180ms 恢复，曲线 Cubic(0.23,1,0.32,1)。模态弹窗为 250ms、0.96→1 缩放；锚定浮层为 180ms。主题令牌详见 [主题配置](theme.md)。
 
-图标轮廓从参考 Preview 实际解析的 lucide_icons_flutter 3.1.24 默认字体提取，保留原始填充轮廓与 em 坐标；Android 与 Wasm 共用同一份 ImageVector。
+Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Lucide 图标；Flutter 使用 lucide_icons_flutter。选择相同语义图标并保留宿主尺寸与颜色继承，不在项目中复制字体轮廓、SVG 路径或维护图标别名表。
 
 ## API 约定
 
@@ -122,6 +123,7 @@ HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 
 | HyperThemeConfig | material = HyperMaterial.Solid / Soft / Clear；glass 可显式覆盖 |
 | HyperDropdown | options: List&lt;HyperOption&lt;T&gt;&gt;，value，onChanged；临时 expanded 在组件内部 |
 | HyperPopover | visible、onClose、child、content；内容贴触发点定位 |
+| HyperActionSheet / HyperAction | visible 与 onClose 受控；自定义 content 或 actions / onChanged 二选一；dismissible 只控制遮罩关闭，返回键仍可关闭；操作先关闭再回传，取消仅关闭 |
 | HyperTabs | tabs、selectedIndex、onChanged、scrollable；共享表面 |
 | HyperTabBar | type=single/multiple、items、selectedIndex、onChanged；单动作角标 badgeCount |
 | HyperCheckbox | value: Boolean?、onChanged: (Boolean?)-&gt;Unit、tristate |
@@ -138,7 +140,7 @@ HyperGlass 的 DecoratedBox 边框只绘制，不增加布局尺寸。Container 
 
 - theme/HyperGlassTokens.kt 统一三档材质，theme/HyperStyle.kt 提供模式、语义色与排版。
 - core/interaction/HyperMotionSpec.kt 统一按压、选择和浮层的曲线与时长。
-- core/icon/HyperReferenceIcons.kt 共享参考版本 Lucide 字体轮廓，HyperIcon.kt 继承插槽尺寸。
+- core/icon/HyperIcon.kt 负责尺寸与颜色继承；组件直接引用 Lucide 库图标，不维护本地图形或转接表。
 - core/surface/ 提供玻璃、背景采样与阴影；边框和内容间距分开管理。
 - components/menu/HyperMenuSizing.kt 计算默认紧凑文字宽度；components/popup/HyperAnchoredSurface.kt 共用于 Dropdown、Popover，处理实际字段宽度、安全区、键盘和上下翻转。
 - components/update/HyperUpdatePresentation.kt 只映射显示数据，HyperUpdateContent.kt 组合正文与操作区，HyperUpdateLayout.kt 共用内嵌面板与模态宿主布局，HyperUpdateDialog.kt 承担受控入口。

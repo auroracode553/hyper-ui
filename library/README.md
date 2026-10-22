@@ -82,4 +82,4 @@ src/main/java/hyper_ui/
 
 ## 图标依赖策略
 
-HyperUI 内置语义图标使用 参考项目 Lucide 3.1.24 字体的共享原始轮廓，Android 与 Preview 采用同一份 ImageVector。调用方可通过 slot 提供图标；直接使用 LucideR 时自主声明图标依赖。样式与 API 迁移见 [样式对照](../vitepress/docs/style-reference.md)。
+HyperUI 与 Preview 直接使用 com.composables:icons-lucide-cmp:2.2.1 的 Lucide 图标，不维护本地轮廓或别名表。HyperIcon 负责显示尺寸与颜色继承，组件图标插槽保持开放。业务代码直接使用 Lucide 时显式声明同一依赖，详见 [样式对照](../vitepress/docs/style-reference.md)。

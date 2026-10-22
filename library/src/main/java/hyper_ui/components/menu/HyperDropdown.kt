@@ -1,6 +1,10 @@
 /** 文件职责：移植参考 HyperDropdown 的字段触发器、锚点菜单与受控选项。 */
 package hyper_ui
 
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Check
+import com.composables.icons.lucide.ChevronDown
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +21,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import hyper_ui.core.icon.HyperCheckIcon
 import hyper_ui.core.interaction.hyperNoRippleClickable
 
 @Immutable
@@ -63,7 +66,7 @@ fun <T> HyperDropdown(
                         fontSize = 14.sp, lineHeight = 18.2.sp, fontWeight = FontWeight.Medium,
                         maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Spacer(Modifier.width(10.dp))
-                    HyperIcon(HyperReferenceIcons.ChevronDown,
+                    HyperIcon(Lucide.ChevronDown,
                         null, Modifier.size(18.dp).graphicsLayer { rotationZ = rotation }, HyperColors.secondaryText)
                 }
                 // 菜单以字段最终测量宽度为准，显式父级约束与窄屏缩小时仍保持对齐。
@@ -76,7 +79,7 @@ fun <T> HyperDropdown(
                             showChevron = false, title = { HyperText(option.label, maxLines = 2, overflow = TextOverflow.Ellipsis) },
                             trailing = if (option.value == value) {
                                 { CompositionLocalProvider(LocalHyperContentColor provides HyperColors.accent) {
-                                    HyperCheckIcon(Modifier.size(18.dp))
+                                    HyperIcon(Lucide.Check, null, Modifier.size(18.dp))
                                 } }
                             } else null,
                             onPressed = { onChanged?.invoke(option.value); expanded = false })
