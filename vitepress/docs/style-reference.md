@@ -187,7 +187,7 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 | [HyperMenuGroup](components/list/hyper-menu-group.md) | components/list/HyperMenuGroup.kt | 外层单一表面，条目共享容器；items 入口负责分隔，自由内容入口由调用方组合；不嵌套逐行卡片 |
 | [HyperList](components/list/hyper-list.md) | components/list/HyperList.kt | 页面级 LazyColumn；state 可传入，modifier 与 contentModifier 管不同节点，contentPadding 随内容滚动；默认圆角 18dp、内边距 4dp |
 | [HyperSectionedList](components/list/hyper-sectioned-list.md) | components/list/HyperSectionedList.kt | 分组标题与数据行分别懒加载，调用方给稳定 key；跳过空分组，组间固定 8dp；组件管理组内首尾圆角和分割线 |
-| [HyperNavBar / HyperNavBarPage](components/navigation/hyper-nav-bar.md) | components/navigation/HyperNavBar.kt、HyperNavBarSurface.kt | 固定 type 与 custom 插槽校验互斥；安全区位于背景内部，背景从屏幕顶部覆盖状态栏，只有操作行避让；预览注入 52dp 模拟 Insets，导航与正文共用且只计一次；背景由 scrolledUnder 驱动，页面宿主叠放导航并传递 padding，不自行接管业务路由 |
+| [HyperNavBar / HyperNavBarPage](components/navigation/hyper-nav-bar.md) | components/navigation/HyperNavBar.kt、HyperNavBarSurface.kt、HyperNavBarScrollScope.kt | 固定 type 与 custom 插槽校验互斥；安全区位于背景内部，背景从屏幕顶部覆盖状态栏，只有操作行避让；预览注入 52dp 模拟 Insets，导航与正文共用且只计一次；库内观察主滚动状态并驱动背景，页面宿主叠放导航并传递 padding，不自行接管业务路由 |
 | [HyperTabs](components/navigation/hyper-tabs.md) | components/menu/HyperTabs.kt | tabs / selectedIndex / onChanged 受控；重复点击当前项不回调；scrollable 决定等宽或水平滚动，itemEnabled 控制项目；不内置 Flutter 的页面控制器 |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | components/navigation/HyperTabBar.kt | single / multiple；索引受控，拖动临时索引与松手提交分开；保留 itemLabel 测宽、底部安全区和 margin；单动作角标独立绘制；不提供整体或单项禁用状态，插槽只暴露 selected |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | components/menu/HyperSlideMenu.kt | reveal 为 Closed / Start / End，调用方响应 onRevealChange；内部持有拖动偏移，松手时速度投影与弹簧共用释放速度；操作区填满侧滑空间，危险和自定义色保留；先请求关闭再执行操作 |
