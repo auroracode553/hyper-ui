@@ -4,12 +4,14 @@ package hyper_ui
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.staticCompositionLocalOf
 
-internal val LocalHyperNavBarScrolledUnder = staticCompositionLocalOf { false }
+// 传递稳定的 State 引用，仅由 Navbar 读取值，避免滚动阈值变化使整页重组。
+internal val LocalHyperNavBarScrolledUnder = staticCompositionLocalOf<State<Boolean>?> { null }
 
 /**
  * 包住导航与主滚动容器的共同父级。支持 ScrollState、LazyListState 和 LazyGridState；
@@ -19,11 +21,14 @@ internal val LocalHyperNavBarScrolledUnder = staticCompositionLocalOf { false }
 fun HyperNavBarScrollScope(
     scrollState: ScrollableState,
     reverseLayout: Boolean = false,
+    active: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val scrolledUnder by remember(scrollState, reverseLayout) {
+    val activeState = rememberUpdatedState(active)
+    val scrolledUnder = remember(scrollState, reverseLayout) {
         derivedStateOf {
-            if (reverseLayout) scrollState.canScrollForward else scrollState.canScrollBackward
+            activeState.value &&
+                (if (reverseLayout) scrollState.canScrollForward else scrollState.canScrollBackward)
         }
     }
     CompositionLocalProvider(LocalHyperNavBarScrolledUnder provides scrolledUnder, content = content)

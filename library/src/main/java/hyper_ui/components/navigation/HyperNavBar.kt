@@ -91,7 +91,7 @@ fun HyperNavBar(
     require(trailing == null || actions.isEmpty()) { "trailing 与 actions 二选一" }
 
     val safeInsets = navBarTopInsets()
-    HyperNavBarScrollSurface(scrolledUnder || LocalHyperNavBarScrolledUnder.current,
+    HyperNavBarScrollSurface(scrolledUnder || (LocalHyperNavBarScrolledUnder.current?.value == true),
         modifier.zIndex(HyperNavBarDefaults.ZIndex)) {
       Column(modifier = Modifier.windowInsetsPadding(safeInsets)) {
         Box(modifier = Modifier.fillMaxWidth().height(resolvedHeight).padding(padding)) {
@@ -158,6 +158,7 @@ fun HyperNavBarPage(
     bottomSafeArea: Boolean = true,
     scrollState: ScrollableState? = null,
     reverseLayout: Boolean = false,
+    active: Boolean = true,
     content: @Composable BoxScope.(PaddingValues) -> Unit
 ) {
     val density = LocalDensity.current
@@ -181,7 +182,9 @@ fun HyperNavBarPage(
                 .onSizeChanged { measuredNavBarHeight = it.height }) { navBar() }
         }
     }
-    if (scrollState != null) HyperNavBarScrollScope(scrollState, reverseLayout, page) else page()
+    if (scrollState != null) {
+        HyperNavBarScrollScope(scrollState, reverseLayout, active, page)
+    } else page()
 }
 
 @Composable

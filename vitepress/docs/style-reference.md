@@ -63,6 +63,8 @@ HyperText 独立使用为 12 / 14 / 18sp、行高 1.4；default 可继承 LocalH
 
 HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐显；模糊和渐隐都限定在状态栏顶部至 Navbar 底部内，不再越界覆盖正文。HyperNavBarPage 注册采样源，顶部净空由库测量实际导航区高度，放入滚动内容；没有采样内容时不能用实色底板伪装模糊。全面屏、底部避让与冻结既有 TabBar 布局的约束见[业务页面规范](mobile-guidelines.md)。
 
+导航监听统一在 HyperNavBarScrollScope 内派生真实主滚动状态，作用域传递稳定 State，由 Navbar 读取值，不因阈值切换重组整页。active=false 用于隐藏页或主列表被空状态替代的场景；不改滚动位置，恢复后继续读取真实值。普通 Scaffold 只补作用域与同一状态绑定，保留原布局；不以 nestedScroll 位移、业务页面布尔缓存或次级视口替代真实状态。默认样式、导航测量、卡片阴影及 TabBar 布局保持原样。
+
 ## HyperButton 默认样式与复用规则
 
 源码为 components/button/HyperButton.kt、HyperButtonSurface.kt；阴影后端换算由 HyperButtonShadowRadius.kt 负责，Preview 使用独立内部换算适配。

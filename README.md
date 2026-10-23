@@ -48,6 +48,8 @@ Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义
 
 `HyperNavBar` 的滚动背景覆盖状态栏，只有操作行避让顶部安全区。真机读取系统 Insets；文档预览注入模拟 Insets，导航与正文共用且只计算一次，与 Flutter 的背景及安全区层级一致。
 
+导航的滚动感知统一由库内 HyperNavBarScrollScope 处理：覆盖式页面传入 HyperNavBarPage.scrollState，已有普通 Scaffold 只包装作用域并绑定同一个主状态，不重排布局。作用域传递稳定派生 State，仅 Navbar 读取；active=false 可停用隐藏页或空视口，保留滚动位置。页面不维护导航专用监听、布尔缓存或回调链，不因迁移改变 TabBar 或滚动范围。完整接口见 [导航组件](vitepress/docs/components/navigation/hyper-nav-bar.md)。
+
 共有组件约定：按钮主体使用 content 插槽；Checkbox 标签行不叠加独立触摸区；Card 选中边框使用完整强调色；日期范围使用亮暗语义底色；ListTile 尾部间距 8dp；Tabs 仅在索引改变时回调；SlideMenu 携带释放速度吸附；Toast 默认文字操作先请求关闭再回调。
 
 ```kotlin

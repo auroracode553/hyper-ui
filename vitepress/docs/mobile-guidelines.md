@@ -13,6 +13,7 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 - 不给整页叠加 systemBarsPadding/navigationBarsPadding 或固定安全区占位。具体控件或滚动末尾仅避让一次；表单宿主可使用 imePadding，避免与窗口调整重复计算键盘区域。
 - HyperNavBarPage 负责正文采样和覆盖式导航。将它返回的顶部净空放入 LazyColumn.contentPadding，不能在滚动容器外固定留空；模糊与渐隐在状态栏顶部至 Navbar 底部内结束，禁止实色底板或业务裁切替换效果。
 - 主滚动容器的状态传给 HyperNavBarPage.scrollState 后，库内 HyperNavBarScrollScope 自动监听并驱动 Navbar。页面不重复写 scrolledUnder 判断、derivedStateOf、snapshotFlow 或手势累计；程序滚动和位置恢复与手势滚动共用真实状态。导航区高度由库统一测量，页面不再单独监听尺寸计算净空。
+- 已有普通 Scaffold 或固定布局可只在共同父级接入 HyperNavBarScrollScope，不为接入监听改布局；同一个主 ScrollState/LazyListState/LazyGridState 交给库与容器。隐藏页或主列表被空状态替代时使用 active = false，库内负责派生判断与订阅，Navbar 单独读取稳定状态，不带动正文重组。弹窗、网页、传感器、分页和播放位置等业务监听保留。
 - 正文使用 HyperCard、HyperMenuGroup、HyperListTile 等公开组件，不复制内部 hyperCardSurface；组内行共享一次表面。普通卡片无描边，选中轮廓和组内分隔线保留。
 - 悬浮 TabBar 周围透明，正文绘制和滚动到其后方，不能用 Column 底部占位挤压正文。未经用户明确布局要求，不得调整既有底栏高度、位置、边距、安全区、末尾留白和滚动范围；不添加全宽底板或重复底部避让。
 
@@ -23,6 +24,7 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 - 新增或修改页面前，先读 HyperUI库根目录/vitepress/docs/mobile-guidelines.md 和 HyperUI库根目录/vitepress/docs/style-reference.md，再核对相关 API、源码与预览。
 - 标准控件与表面使用 hyper_ui 公开组件；导航使用 HyperNavBarPage/HyperNavBar，卡片使用 HyperCard/HyperMenuGroup，不复制内部绘制，不自写平行皮肤。
 - 把主滚动容器已有状态交给 HyperNavBarPage.scrollState，Navbar 自动读取库内监听。禁止逐页添加导航专用 derivedStateOf/snapshotFlow、scrolledUnder 判断或尺寸监听；首屏净空采用库测量的实际导航区高度。
+- 已有正式布局仅用 HyperNavBarScrollScope 绑定同一个主滚动状态，不改变原 Scaffold、padding、Insets、正文约束或底栏；隐藏页或主列表空状态通过 active 停用来源。不在页面自己维护导航布尔值，也不删除业务自身的监听。
 - 所有 Activity 在公共入口全局 enableEdgeToEdge；统一透明状态栏、手势导航栏与亮暗图标，pageBackground 贯穿屏幕。
 - 禁止整页底部安全区或固定占位裁短正文。控件或滚动末尾的必要避让只处理一次，键盘出现仍可缩小或滚动表单。
 - 顶部净空属于滚动内容，导航模糊由库在状态栏顶部至 Navbar 底部内绘制；不得向正文延伸，也不得添加实色底板或业务裁切遮住效果。

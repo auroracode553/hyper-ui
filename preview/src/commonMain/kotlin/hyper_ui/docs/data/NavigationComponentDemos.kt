@@ -58,7 +58,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("编辑返回", "type = edit", "标题右侧显示保存操作"),
             DemoVariant("自定义", "type = custom", "使用 leading / trailing / subtitle / child 等插槽"),
             DemoVariant("操作反馈", "onBackPressed / onMorePressed / onSavePressed", "返回、更多与保存均可点击，正文显示反馈"),
-            DemoVariant("滚动材质", "HyperNavBarPage.scrollState", "库内自动监听，160ms 过渡、20dp 模糊；渐隐在导航底部内结束，没有分隔线"),
+            DemoVariant("滚动材质", "HyperNavBarPage.scrollState / active", "库内观察真实主状态，仅导航读取派生值；非活动视口停用来源，160ms 过渡与20dp 模糊保持原样"),
             DemoVariant("默认尺寸", "size = default", "高度不包含顶部安全区"),
             DemoVariant("固定安全区", "库内自动处理", "背景覆盖状态栏，操作行在安全区下方；预览注入相同层级的模拟 Insets"),
             DemoVariant("叠加页面", "HyperNavBarPage", "首屏净空属于滚动内容，正文可经过透明操作层")

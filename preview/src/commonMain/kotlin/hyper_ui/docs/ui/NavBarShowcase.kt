@@ -70,8 +70,9 @@ private fun NavBarPageDemo() {
     }
     var example by remember { mutableStateOf(NavBarExample.Basic) }
     var actionMessage by remember { mutableStateOf("切换布局或点击顶部操作，查看导航反馈。") }
+    // 同一状态交给主列表和库；派生值只由导航读取，正文不维护监听。
     val scrollState = rememberLazyListState()
-    HyperNavBarPage(scrollState = scrollState,
+    HyperNavBarPage(scrollState = scrollState, active = sections.isNotEmpty(),
         modifier = Modifier.fillMaxSize(),
         navBar = {
             val pageTitle = example.title
