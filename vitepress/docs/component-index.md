@@ -48,7 +48,8 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | 组件 | 用途 |
 | --- | --- |
 | [HyperNavBar](components/navigation/hyper-nav-bar.md) | 库内观察同一主滚动状态，active 停用隐藏或空视口，仅导航读取派生值；背景在状态栏顶部至导航底部内渐隐，不改页面布局 |
-| [HyperTabBar](components/navigation/hyper-tab-bar.md) | 56dp 导航；single 单动作与 multiple 多标签，不提供禁用状态 |
+| [HyperTabBar](components/navigation/hyper-tab-bar.md) | 悬浮内容高 56dp，贴底总高 60dp；single / multiple、可重复动作与单项禁用 |
+| [HyperScaffold](components/navigation/hyper-scaffold.md) | 基础页面宿主；实际栏高、正文净空与悬浮操作，不依赖 Material |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 贴边全高模态抽屉；固定标题／页脚，支持遮罩、返回键与滑动关闭 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表项侧滑操作 |
 | [HyperTabs](components/navigation/hyper-tabs.md) | 分类筛选 |

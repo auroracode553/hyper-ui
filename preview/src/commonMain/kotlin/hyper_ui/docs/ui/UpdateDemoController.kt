@@ -37,7 +37,8 @@ internal class UpdateDemoController(private val scope: CoroutineScope) {
     val downloadProgress: HyperUpdateDownloadProgress get() = HyperUpdateDownloadProgress(
         downloadedBytes, totalBytes.takeUnless { unknownTotal }, bytesPerSecond)
 
-    fun setUnknownTotal(value: Boolean) { unknownTotal = value }
+    // 避免与属性生成的 JVM setter 同名，Desktop 预览与 Wasm 共用此入口。
+    fun updateUnknownTotal(value: Boolean) { unknownTotal = value }
 
     fun check(latest: Boolean = false, fail: Boolean = false) {
         if (busy) return

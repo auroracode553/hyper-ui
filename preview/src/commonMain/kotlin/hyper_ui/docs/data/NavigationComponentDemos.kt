@@ -6,6 +6,7 @@ import hyper_ui.docs.ui.DrawerDemo
 import hyper_ui.docs.ui.SlideMenuDemo
 import hyper_ui.docs.ui.SingleTabBarDemo
 import hyper_ui.docs.ui.MultipleTabBarDemo
+import hyper_ui.docs.ui.DockedTabBarDemo
 
 private const val GROUP_NAVIGATION = "导航组件"
 
@@ -150,5 +151,33 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
         content = { MultipleTabBarDemo() },
         fullScreenPreview = true
+    ),
+    ComponentDemo(
+        id = "tab-bar-docked", group = GROUP_NAVIGATION, title = "HyperTabBar · 非悬浮",
+        description = "全宽贴底，无胶囊或外间距；动作模式支持重复点击、禁用项且不响应拖动。",
+        code = """
+            HyperTabBar(items = actions, floating = false, selectedIndex = null,
+                itemEnabled = { it.enabled }, onChanged = onAction, itemLabel = { it.label }) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    HyperIcon(it.icon, null)
+                    HyperText(it.label)
+                }
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("非悬浮", "floating = false", "全宽平直表面，底部安全区由库处理"),
+            DemoVariant("重复动作", "selectedIndex = null", "不显示选中块，不响应拖动"),
+            DemoVariant("禁用项", "itemEnabled", "最近入口禁用，连续点击其他入口可观察计数")
+        ),
+        apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
+        content = { DockedTabBarDemo() }, fullScreenPreview = true
+    ),
+    ComponentDemo(
+        id = "scaffold", group = GROUP_NAVIGATION, title = "HyperScaffold",
+        description = "Compose 基础页面宿主，按实际栏高提供正文净空，不依赖 Material。",
+        code = "HyperScaffold(bottomBar = { BottomActions() }) { padding -> PageContent(padding) }",
+        variants = listOf(DemoVariant("页面插槽", "topBar / bottomBar / floatingActionButton", "统一画布与安全区")),
+        apiDocumentPaths = listOf("navigation/hyper-scaffold.md"),
+        content = { hyper_ui.docs.ui.ScaffoldDemo() }, fullScreenPreview = true
     )
 )

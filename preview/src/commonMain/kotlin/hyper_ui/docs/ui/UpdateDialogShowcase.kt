@@ -70,7 +70,7 @@ fun UpdateDialogDemo() {
         )
         HyperListTile(
             title = { HyperText("总大小未知") }, subtitle = { HyperText("保留下载量与速度，使用不定进度") },
-            trailing = { HyperSwitch(controller.unknownTotal, controller::setUnknownTotal) }
+            trailing = { HyperSwitch(controller.unknownTotal, controller::updateUnknownTotal) }
         )
         Spacer(Modifier.height(20.dp))
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {

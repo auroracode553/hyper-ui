@@ -97,7 +97,8 @@ export default defineConfig({
           { text: 'Drawer', link: '/components/navigation/hyper-drawer' },
           { text: 'SlideMenu', link: '/components/navigation/hyper-slide-menu' },
           { text: 'Tabs', link: '/components/navigation/hyper-tabs' },
-          { text: 'TabBar', link: '/components/navigation/hyper-tab-bar' }
+          { text: 'TabBar', link: '/components/navigation/hyper-tab-bar' },
+          { text: 'Scaffold', link: '/components/navigation/hyper-scaffold' }
         ]
       },
       {

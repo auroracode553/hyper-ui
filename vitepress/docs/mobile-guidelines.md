@@ -13,7 +13,7 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 - 不给整页叠加 systemBarsPadding/navigationBarsPadding 或固定安全区占位。具体控件或滚动末尾仅避让一次；表单宿主可使用 imePadding，避免与窗口调整重复计算键盘区域。
 - HyperNavBarPage 负责正文采样和覆盖式导航。将它返回的顶部净空放入 LazyColumn.contentPadding，不能在滚动容器外固定留空；模糊与渐隐在状态栏顶部至 Navbar 底部内结束，禁止实色底板或业务裁切替换效果。
 - 主滚动容器的状态传给 HyperNavBarPage.scrollState 后，库内 HyperNavBarScrollScope 自动监听并驱动 Navbar。页面不重复写 scrolledUnder 判断、derivedStateOf、snapshotFlow 或手势累计；程序滚动和位置恢复与手势滚动共用真实状态。导航区高度由库统一测量，页面不再单独监听尺寸计算净空。
-- 已有普通 Scaffold 或固定布局可只在共同父级接入 HyperNavBarScrollScope，不为接入监听改布局；同一个主 ScrollState/LazyListState/LazyGridState 交给库与容器。隐藏页或主列表被空状态替代时使用 active = false，库内负责派生判断与订阅，Navbar 单独读取稳定状态，不带动正文重组。弹窗、网页、传感器、分页和播放位置等业务监听保留。
+- 已有HyperScaffold 或固定布局可只在共同父级接入 HyperNavBarScrollScope，不为接入监听改布局；同一个主 ScrollState/LazyListState/LazyGridState 交给库与容器。隐藏页或主列表被空状态替代时使用 active = false，库内负责派生判断与订阅，Navbar 单独读取稳定状态，不带动正文重组。弹窗、网页、传感器、分页和播放位置等业务监听保留。
 - 正文使用 HyperCard、HyperMenuGroup、HyperListTile 等公开组件，不复制内部 hyperCardSurface；组内行共享一次表面。普通卡片无描边，选中轮廓和组内分隔线保留。
 - 悬浮 TabBar 周围透明，正文绘制和滚动到其后方，不能用 Column 底部占位挤压正文。未经用户明确布局要求，不得调整既有底栏高度、位置、边距、安全区、末尾留白和滚动范围；不添加全宽底板或重复底部避让。
 

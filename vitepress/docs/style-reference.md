@@ -63,7 +63,7 @@ HyperText 独立使用为 12 / 14 / 18sp、行高 1.4；default 可继承 LocalH
 
 HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐显；模糊和渐隐都限定在状态栏顶部至 Navbar 底部内，不再越界覆盖正文。HyperNavBarPage 注册采样源，顶部净空由库测量实际导航区高度，放入滚动内容；没有采样内容时不能用实色底板伪装模糊。全面屏、底部避让与冻结既有 TabBar 布局的约束见[业务页面规范](mobile-guidelines.md)。
 
-导航监听统一在 HyperNavBarScrollScope 内派生真实主滚动状态，作用域传递稳定 State，由 Navbar 读取值，不因阈值切换重组整页。active=false 用于隐藏页或主列表被空状态替代的场景；不改滚动位置，恢复后继续读取真实值。普通 Scaffold 只补作用域与同一状态绑定，保留原布局；不以 nestedScroll 位移、业务页面布尔缓存或次级视口替代真实状态。默认样式、导航测量、卡片阴影及 TabBar 布局保持原样。
+导航监听统一在 HyperNavBarScrollScope 内派生真实主滚动状态，作用域传递稳定 State，由 Navbar 读取值，不因阈值切换重组整页。active=false 用于隐藏页或主列表被空状态替代的场景；不改滚动位置，恢复后继续读取真实值。HyperScaffold 只补作用域与同一状态绑定，保留原布局；不以 nestedScroll 位移、业务页面布尔缓存或次级视口替代真实状态。默认样式、导航测量、卡片阴影及 TabBar 布局保持原样。
 
 ## HyperButton 默认样式与复用规则
 
@@ -105,7 +105,7 @@ HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐
 | HyperSlider | 44dp 触摸、6dp 轨道、20dp 滑块、2dp 轮廓 | 默认范围 0..100，showValue=true |
 | HyperSegmentedControl | radius 18，padding 4、条目 32，总高 40 | 13sp，选中 600、未选中 500，图标 16dp；等宽底板平移 260ms |
 | HyperTabs | radius 27，padding 3、条目 48，总高 54 | 单一共享表面，44dp 选中底面；滚动项目最小 76dp，选中背景 160ms，非滚动模式背景即时切换 |
-| HyperTabBar | 高 56，单元格最小 76，额外宽 8 | single / multiple；图标 22 / 23；指示器 160ms easeOutCubic |
+| HyperTabBar | 悬浮内容高 56；贴底总高 60，包含底部安全区且内容区至少 40 | single / multiple；图标 22 / 23；指示器 160ms easeOutCubic；大字体与高导航区按内容增长 |
 | HyperNavBar | 高 44，水平 padding 16，标题 16/600 | 透明操作层，标题字距 -0.2sp、副标题 11sp、安全区另计 |
 | HyperListTile | plain 最小 46，padding 14×8；外层 glass padding 3 | auto/plain/glass，标题 14/600、说明 12、meta 11，图标块 34 |
 | HyperMenuGroup | radius 18，padding 4，分隔缩进 14 | items 入口自动分隔；自由内容入口显式组合分隔 |
@@ -191,7 +191,8 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 | [HyperSectionedList](components/list/hyper-sectioned-list.md) | components/list/HyperSectionedList.kt | 分组标题与数据行分别懒加载，调用方给稳定 key；跳过空分组，组间固定 8dp；组件管理组内首尾圆角和分割线 |
 | [HyperNavBar / HyperNavBarPage](components/navigation/hyper-nav-bar.md) | components/navigation/HyperNavBar.kt、HyperNavBarSurface.kt、HyperNavBarScrollScope.kt | 固定 type 与 custom 插槽校验互斥；安全区位于背景内部，背景从屏幕顶部覆盖状态栏，只有操作行避让；预览注入 52dp 模拟 Insets，导航与正文共用且只计一次；库内观察主滚动状态并驱动背景，页面宿主叠放导航并传递 padding，不自行接管业务路由 |
 | [HyperTabs](components/navigation/hyper-tabs.md) | components/menu/HyperTabs.kt | tabs / selectedIndex / onChanged 受控；重复点击当前项不回调；scrollable 决定等宽或水平滚动，itemEnabled 控制项目；不内置 Flutter 的页面控制器 |
-| [HyperTabBar](components/navigation/hyper-tab-bar.md) | components/navigation/HyperTabBar.kt | single / multiple；索引受控，拖动临时索引与松手提交分开；保留 itemLabel 测宽、底部安全区和 margin；单动作角标独立绘制；不提供整体或单项禁用状态，插槽只暴露 selected |
+| [HyperTabBar](components/navigation/hyper-tab-bar.md) | components/navigation/HyperTabBar.kt | single / multiple；floating 默认 true 保留原悬浮样式，false 为零默认外间距的全宽贴底平直表面；selectedIndex=null 为无选中块、可重复点击且不响应拖动的动作模式；itemEnabled 控制单项禁用。选择模式仍按拖动预览、松手提交，保留标签测宽与安全区 |
+| [HyperScaffold](components/navigation/hyper-scaffold.md) | components/navigation/HyperScaffold.kt | 使用 Compose 基础布局承载页面、上下栏和悬浮操作；正文消费实际测量净空，不依赖 Material，也不接管业务滚动或导航监听 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | components/menu/HyperSlideMenu.kt | reveal 为 Closed / Start / End，调用方响应 onRevealChange；内部持有拖动偏移，松手时速度投影与弹簧共用释放速度；操作区填满侧滑空间，危险和自定义色保留；先请求关闭再执行操作 |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | components/drawer/HyperDrawer.kt | 独立模态层，open 与 onClose 受控；默认 start，RTL 换边；正文 content、内边距 contentPadding 默认零；安全区／键盘避让在背景内；标题页脚固定；懒列表设 scrollable=false；滑动超过宽度 30% 或速度达 400dp/s 请求关闭，否则 180ms 复位；遮罩、返回键与滑动分别控制 |
 

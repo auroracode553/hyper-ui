@@ -37,9 +37,6 @@ private data class DemoNavItem(
     val icon: androidx.compose.ui.graphics.vector.ImageVector
 )
 
-/** 贴底预览只在标签下方留出与手机手势条之间的可见间距。 */
-private val DockedTabBarGestureClearance = 8.dp
-
 @Composable
 fun DrawerDemo() {
     var open by remember { mutableStateOf(false) }
@@ -103,9 +100,29 @@ fun SingleTabBarDemo() { TabBarDemo(single = true) }
 fun MultipleTabBarDemo() { TabBarDemo(single = false) }
 
 @Composable
-private fun TabBarDemo(single: Boolean) {
+fun DockedTabBarDemo() { TabBarDemo(single = false, floating = false, actions = true) }
+
+@Composable
+fun ScaffoldDemo() {
+    var selected by remember { mutableStateOf(0) }
+    HyperScaffold(
+        topBar = { HyperNavBar(type = HyperNavBarDefaults.TypeTitleOnly, title = { HyperText("页面布局") }) },
+        bottomBar = {
+            HyperTabBar(items = listOf("首页", "设置"), selectedIndex = selected, onChanged = { selected = it },
+                floating = false, itemLabel = { it }) { HyperText(it) }
+        },
+        floatingActionButton = { HyperButton(onPressed = { selected = 0 }, type = "filled") { HyperText("返回首页") } }
+    ) { padding ->
+        Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
+            HyperText(if (selected == 0) "首页正文" else "设置正文")
+        }
+    }
+}
+
+@Composable
+private fun TabBarDemo(single: Boolean, floating: Boolean = true, actions: Boolean = false) {
     var selectedId by remember { mutableStateOf("home") }
-    var count by remember { mutableStateOf(3) }
+    var count by remember { mutableStateOf(if (actions) 0 else 3) }
     val items = listOf(
         DemoNavItem("home", "首页", Lucide.House),
         DemoNavItem("recent", "最近", Lucide.Info),
@@ -115,13 +132,15 @@ private fun TabBarDemo(single: Boolean) {
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (single) HyperButton({ count = if (count == 0) 3 else 0 }) { HyperText("切换角标") }
         Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-            HyperText("当前页面：${items.first { it.id == selectedId }.label}")
+            HyperText(if (actions) "最近动作：${items.first { it.id == selectedId }.label} · $count 次" else "当前页面：${items.first { it.id == selectedId }.label}")
         }
         HyperTabBar(
             items = if (single) listOf(items.first()) else items,
-            onChanged = { selectedId = items[it].id; if (single) count++ },
+            onChanged = { selectedId = items[it].id; if (single || actions) count++ },
             type = if (single) "single" else "multiple",
-            selectedIndex = if (single) 0 else items.indexOfFirst { it.id == selectedId },
+            selectedIndex = if (actions) null else if (single) 0 else items.indexOfFirst { it.id == selectedId },
+            floating = floating,
+            itemEnabled = { !actions || it.id != "recent" },
             itemLabel = { it.label },
             badgeCount = count
         ) { item ->
