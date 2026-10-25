@@ -421,3 +421,9 @@ npm run dev
 维护 UI 库和开发业务页面前，优先阅读[使用规则、全局全面屏与 AGENTS.md 模板](vitepress/docs/mobile-guidelines.md)和[设计系统基线](vitepress/docs/style-reference.md)。正文卡片统一无普通描边和双层柔阴影，选中轮廓保留；导航材质仅在状态栏顶部至 Navbar 底部内渐隐。既有悬浮 TabBar 的高度、占位与滚动范围不能因配色或卡片优化改变。
 
 导航滚动监听统一由 HyperNavBarPage.scrollState / HyperNavBarScrollScope 管理，Navbar 自动读取；消费页面不得重复声明导航专用 derivedStateOf、snapshotFlow 或 scrolledUnder 判断。库测量实际导航区高度，顶部净空放进滚动内容；主滚动状态保留在容器，嵌套列表不代替主状态。
+
+## Android 构建性能
+
+`library/gradle.properties` 与消费应用使用相同的本地并行和缓存策略：最多 16 个 Gradle worker，独立任务按依赖图并行，开启守护进程、增量编译与构建缓存。Gradle 和 Kotlin 的堆上限分别为 4GB、3GB，针对当前 16 线程、约 32GB 内存的构建机配置；可按其他构建机资源覆盖。
+
+复合构建引用同一份 library 输出时，多个应用逐个构建，库任务在输入不变时复用产物；不并发启动多个工程争用同一输出目录。性能配置不跳过正式包签名、混淆或校验。
