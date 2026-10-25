@@ -93,12 +93,23 @@ HyperUpdateHost(updates)
 | 关闭窗口 | 只隐藏视图，保留任务与下载记录 |
 | 取消下载 | 删除对应系统下载任务，恢复可下载状态 |
 | 工具关闭 | 释放观察、HTTP 与线程，系统任务和持久记录保留 |
+| 本应用升级完成 | 核对实际已安装版本码，删除已安装版本对应的系统下载任务和 APK |
 
 仅这三个检查入口，不增加前台周期检查、联网恢复检查、后台作业或额外前台服务。自动请求发起前占用一次额度，失败同样计次且不立即重试；用满 2 次后跳过后续自动请求，直到原窗口满 1 小时。窗口和次数持久化，关闭应用或切换前后台不会重置。自动失败不额外弹窗，更新入口保留失败状态和手动重试；已有下载继续复用。手动检查不占自动额度。同版本选择稍后后 24 小时内不自动重复提醒，手动入口仍可用。
 
 下载进度来自 DownloadManager：前台约每 700 毫秒观察字节量，提供速度及可计算的剩余时间；未知总量显示不定进度。重建页面或进程后通过真实下载 ID 恢复。每个工具持有一个串行工作线程，空闲 10 秒回收，队列容量 8；检查、启动下载和观察不会重复并发。
 
 点击立即安装时通过系统安装器确认；未允许该应用安装未知来源时打开系统授权页，返回后再次点击安装。不替用户确认安装，也不把安装器已打开当作升级完成。库 Manifest 声明 INTERNET 与 REQUEST_INSTALL_PACKAGES，业务项目不再重复封装安装流程。
+
+## 安装完成后的 APK 清理
+
+库 Manifest 自动合并非导出的 HyperUpdateInstallReceiver，只接收系统的 [MY_PACKAGE_REPLACED](https://developer.android.com/reference/android/content/Intent#ACTION_MY_PACKAGE_REPLACED) 自身更新完成通知。它在有明确结束时间的工作线程上执行清理，不创建常驻服务、不发起网络检查。工具下次初始化也调用同一清理入口，补做系统通知未及时执行的清理。
+
+清理前使用 PackageManager 读取本应用真实已安装 versionCode，只有记录中的目标版本码不高于实际已安装值时，才按保存的下载 ID 调用 [DownloadManager.remove](https://developer.android.com/reference/android/app/DownloadManager#remove(long...))，删除对应任务及 APK。安装器刚打开、用户取消、安装失败、只授权未知来源时，版本未升级，不会删除等待安装的包。
+
+记录存储在本应用私有偏好中，不包含发布凭据。已下载旧包被较新索引替代时，保存其下载 ID 和目标版本码；以后安装到该版本或更高版本时一并清理。删除失败保留记录，后续启动重试；重复通知和文件已被用户移除都允许重复处理。不会扫描公共 Downloads 目录，也不会删除用户手动下载或其他应用的文件。此前已经丢失下载 ID 的历史文件不做目录扫描清理。
+
+入口和恢复逻辑位于 tools/update/android/HyperUpdateController.kt，记录与清理位于 HyperUpdateDownloadRecords.kt，系统通知入口位于 HyperUpdateInstallReceiver.kt；这些 Android 实现不进入 Wasm/Desktop，Preview 仅模拟安装完成后的文件状态。
 
 ## 公开 API
 

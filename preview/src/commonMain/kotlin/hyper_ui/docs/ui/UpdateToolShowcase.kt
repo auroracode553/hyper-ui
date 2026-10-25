@@ -18,8 +18,16 @@ fun UpdateToolDemo() {
     var automaticChecks by remember { mutableStateOf(0) }
     var fail by remember { mutableStateOf(false) }
     var visible by remember { mutableStateOf(false) }
+    var savedApk by remember { mutableStateOf(false) }
     var message by remember { mutableStateOf("本页为交互模拟，不发起真实更新或安装。") }
     DisposableEffect(flow) { onDispose { pending?.cancel(); flow.dispose() } }
+    LaunchedEffect(flow.status) {
+        if (flow.status == HyperUpdateStatus.readyToInstall) savedApk = true
+        if (flow.status == HyperUpdateStatus.completed && savedApk) {
+            savedApk = false
+            message = "模拟已安装版本确认成功，已清理工具记录的 APK。"
+        }
+    }
     fun check(wait: Long, manual: Boolean) {
         pending?.cancel()
         message = if (wait > 0) "等待稳定 ${wait / 1000} 秒后判断本小时剩余额度。" else "手动检查不占自动额度，已有任务则复用。"
@@ -50,6 +58,12 @@ fun UpdateToolDemo() {
         }
         HyperListTile(title = { HyperText("下载总大小未知") },
             trailing = { HyperSwitch(flow.unknownTotal, flow::updateUnknownTotal) })
+        HyperText(if (savedApk) "安装包已保留，等待安装成功后清理。" else "当前没有等待清理的安装包。", size = "small")
+        if (flow.status == HyperUpdateStatus.readyToInstall) {
+            HyperButton(onPressed = { visible = false; message = "模拟取消安装，安装包继续保留。" }) {
+                HyperText("模拟取消安装")
+            }
+        }
         if (flow.status == HyperUpdateStatus.downloading) HyperText(flow.downloadProgress.sizeLabel, size = "small")
     }
     if (visible) HyperUpdateDialog(status = flow.status, currentVersion = flow.currentVersion,

@@ -27,7 +27,7 @@ Android 手机端目标为 320–430dp 竖屏；Desktop/Wasm 仅用于文档 Pre
 | core/text/、core/icon/ | HyperText、HyperIcon、共享 Lucide 轮廓及图标桥接；保留插槽继承规则 |
 | components/ | 受控组件及组合；通过参数与回调接入业务，不添加网络、数据库或权限申请 |
 | tools/system/ | Android 电池状态读取及生命周期订阅；平台工具与展示组件分开 |
-| tools/update/ | 独立 APK 静态索引检查、系统下载与安装工具；默认每小时窗口最多自动检查 2 次，失败计次，手动不占额度；不定义业务资源通道，不改变弹窗视觉 |
+| tools/update/ | 独立 APK 静态索引检查、系统下载、安装与成功后定向清理工具；默认每小时窗口最多自动检查 2 次，失败计次，手动不占额度；不定义业务资源通道，不改变弹窗视觉 |
 | preview/src/commonMain/kotlin/hyper_ui/docs/data/ | ComponentDemos 与分组元数据、文档路径、Preview ID |
 | preview/src/commonMain/kotlin/hyper_ui/docs/ui/ | 交互示例、手机外框、有限视口及页面级滚动宿主；模拟业务留在示例 |
 | vitepress/docs/ | 唯一 Markdown 正文；组件页保留真实签名和完整五列参数表 |

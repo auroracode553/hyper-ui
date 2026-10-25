@@ -24,7 +24,8 @@ class HyperUpdateController(context: Context, val configuration: HyperUpdateConf
     private val worker = hyperUpdateExecutor("app-update")
     private val http = HyperUpdateHttpClient()
     private val releases = HyperUpdateRepository(configuration, http)
-    private val downloads = HyperUpdateDownload(context, releases)
+    private val downloadRecords = HyperUpdateDownloadRecords(context)
+    private val downloads = HyperUpdateDownload(context, releases, downloadRecords)
     private var closed = false
     private var checking by mutableStateOf(false)
     private var restoring by mutableStateOf(true)
@@ -54,6 +55,8 @@ class HyperUpdateController(context: Context, val configuration: HyperUpdateConf
 
     init {
         worker.execute {
+            runCatching { downloadRecords.cleanupInstalled() }
+                .onFailure { Log.w("HyperUpdate", "安装包清理未完成，保留记录待重试", it) }
             val result = runCatching { downloads.restore() }
             main.post {
                 if (closed) return@post
@@ -65,7 +68,7 @@ class HyperUpdateController(context: Context, val configuration: HyperUpdateConf
                         state = releaseState(HyperUpdateStatus.downloadQueued)
                         if (foreground) pollDownload()
                     } else {
-                        if (stored != null) forgetDownload()
+                        // 已安装旧包由清理入口负责，失败时保留 ID，不能只清除记录。
                         if (dialogVisible) check(manual = true)
                     }
                 }, onFailure = {
@@ -96,7 +99,11 @@ class HyperUpdateController(context: Context, val configuration: HyperUpdateConf
         release = null
         state = HyperUpdateState(HyperUpdateStatus.checking)
         worker.execute {
-            val result = runCatching { releases.latest() }
+            val result = runCatching {
+                releases.latest().also { latest ->
+                    if (prepared != null && latest.versionCode > prepared.versionCode) downloadRecords.retireCurrent()
+                }
+            }
             main.post {
                 if (closed) return@post
                 checking = false
@@ -107,7 +114,7 @@ class HyperUpdateController(context: Context, val configuration: HyperUpdateConf
                         state = releaseState(HyperUpdateStatus.readyToInstall)
                     } else {
                         // 已完成的旧包不能阻断新检查；索引指向哪个最新完整版本，就直接提供该版本。
-                        if (downloadId != null) forgetDownload()
+                        if (downloadId != null && prepared == null) forgetDownload()
                         downloadId = null
                         downloadComplete = false
                         release = latest.takeIf { it.versionCode > currentVersionCode }
@@ -259,7 +266,7 @@ class HyperUpdateController(context: Context, val configuration: HyperUpdateConf
         notes = release?.notes.orEmpty(), totalBytes = release?.size)
 
     private fun forgetDownload() {
-        worker.execute { runCatching { downloads.forget() }.onFailure { Log.w("HyperUpdate", "清理下载记录失败", it) } }
+        worker.execute { runCatching { downloadRecords.forget() }.onFailure { Log.w("HyperUpdate", "清理下载记录失败", it) } }
     }
 
     private fun fail(error: Throwable) {

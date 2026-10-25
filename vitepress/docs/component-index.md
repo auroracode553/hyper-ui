@@ -94,5 +94,5 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 
 | 工具 | 用途 |
 | --- | --- |
-| [检查更新](components/tools/hyper-update.md) | APK 静态 latest.json、系统下载、进度恢复与安装；自动检查默认每小时窗口最多 2 次，额度可选覆盖 |
+| [检查更新](components/tools/hyper-update.md) | APK 静态 latest.json、系统下载、进度恢复、安装后清理；自动检查默认每小时窗口最多 2 次 |
 | [HyperBatteryState](components/tools/hyper-battery-state.md) | Android 电量状态读取 |

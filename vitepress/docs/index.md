@@ -67,4 +67,4 @@ HyperButton(
 
 导航滚动监听统一由 HyperNavBarPage.scrollState / HyperNavBarScrollScope 管理，Navbar 自动读取；消费页面不得重复声明导航专用 derivedStateOf、snapshotFlow 或 scrolledUnder 判断。库测量实际导航区高度，顶部净空放进滚动内容；主滚动状态保留在容器，嵌套列表不代替主状态。
 
-Android 应用统一更新能力见[工具 → 检查更新](components/tools/hyper-update.md)：静态最新索引、发布配置注入、下载进度与系统安装；自动检查默认每小时窗口最多 2 次，应用无需传额度，业务资源不进入 APK 工具配置。
+Android 应用统一更新能力见[工具 → 检查更新](components/tools/hyper-update.md)：静态最新索引、发布配置注入、下载进度、系统安装与安装成功后的 APK 清理；自动检查默认每小时窗口最多 2 次，应用无需传额度，业务资源不进入 APK 工具配置。

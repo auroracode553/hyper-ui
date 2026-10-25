@@ -6,20 +6,21 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.provider.Settings
-import org.json.JSONObject
 
 internal data class HyperUpdateDownloadSnapshot(val status: Int, val reason: Int, val downloaded: Long, val total: Long)
 internal data class HyperStoredUpdateDownload(val id: Long, val release: HyperUpdateInfo)
 
 /** 系统下载与持久记录共用一个入口；关闭界面或退出进程不会取消系统任务。 */
-internal class HyperUpdateDownload(context: Context, private val releases: HyperUpdateRepository) {
+internal class HyperUpdateDownload(
+    context: Context,
+    private val releases: HyperUpdateRepository,
+    private val records: HyperUpdateDownloadRecords,
+) {
     private val context = context.applicationContext
     private val downloads = this.context.getSystemService(DownloadManager::class.java)
-    private val preferences = this.context.getSharedPreferences("app_update_download", Context.MODE_PRIVATE)
 
     fun restore(): HyperStoredUpdateDownload? {
-        val raw = preferences.getString("task", null) ?: return null
-        val task = JSONObject(raw)
+        val task = records.current() ?: return null
         val id = task.getLong("id")
         require(id > 0) { "更新下载任务编号无效" }
         return HyperStoredUpdateDownload(id, releases.parse(task.getJSONObject("release")))
@@ -38,8 +39,7 @@ internal class HyperUpdateDownload(context: Context, private val releases: Hyper
         }
         val id = downloads.enqueue(request)
         try {
-            val task = JSONObject().put("id", id).put("release", release.toJson())
-            check(preferences.edit().putString("task", task.toString()).commit()) { "无法保存更新下载记录" }
+            records.save(id, release.toJson())
         } catch (error: Exception) {
             downloads.remove(id)
             throw error
@@ -58,8 +58,7 @@ internal class HyperUpdateDownload(context: Context, private val releases: Hyper
         }
     }
 
-    fun cancel(id: Long) { downloads.remove(id); forget() }
-    fun forget() { check(preferences.edit().remove("task").commit()) { "无法清除更新下载记录" } }
+    fun cancel(id: Long) { downloads.remove(id); records.forget() }
     fun isAvailable(id: Long): Boolean = downloads.getUriForDownloadedFile(id) != null
 
     fun install(id: Long): Boolean {

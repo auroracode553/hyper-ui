@@ -17,6 +17,7 @@ internal fun toolsComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("额度", "库默认 1 小时 2 次", "应用不用传；失败也计次，手动不占自动额度，可选配置覆盖"),
             DemoVariant("版本", "latest.json / versionCode", "直接提供最新完整版本，旧下载完成后仍可重新查最新"),
             DemoVariant("下载", "DownloadManager", "真实字节、速度、剩余时间；关闭继续，取消才终止"),
+            DemoVariant("清理", "安装完成后删除 APK", "收到自身更新通知或下次启动时核对真实版本；取消或失败保留包，只删除工具记录的下载"),
             DemoVariant("平台", "Android-only", "Preview 仅模拟流程，真实调用见 Android 示例")
         ), apiDocumentPaths = listOf("tools/hyper-update.md"), content = { UpdateToolDemo() })
 )
