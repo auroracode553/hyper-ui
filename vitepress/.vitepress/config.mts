@@ -121,13 +121,19 @@ export default defineConfig({
           { text: 'PlaybackSpeedPanel', link: '/components/feedback/hyper-playback-speed-panel' },
           { text: 'PlaybackSpeedScale', link: '/components/feedback/hyper-playback-speed-scale' },
           { text: 'BatteryIndicator', link: '/components/feedback/hyper-battery-indicator' },
-          { text: 'BatteryState', link: '/components/tools/hyper-battery-state' },
           { text: 'Tooltip', link: '/components/feedback/hyper-tooltip' },
           { text: 'Popover', link: '/components/feedback/hyper-popover' },
           { text: 'Dialog', link: '/components/feedback/hyper-dialog' },
           { text: 'ActionSheet', link: '/components/feedback/hyper-action-sheet' },
           { text: 'AlertDialog', link: '/components/feedback/hyper-alert-dialog' },
           { text: 'UpdateDialog', link: '/components/feedback/hyper-update-dialog' }
+        ]
+      },
+      {
+        text: '工具',
+        items: [
+          { text: '检查更新', link: '/components/tools/hyper-update' },
+          { text: '电量状态', link: '/components/tools/hyper-battery-state' }
         ]
       },
       {

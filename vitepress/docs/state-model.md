@@ -47,3 +47,7 @@ fun NotificationSetting() {
 - `HyperDialog` 和 `HyperAlertDialog` 的显示状态由调用方控制。
 - `HyperDropdown` 的 value 由调用方持有，临时 expanded 由组件内部维护；`HyperPopover` 的 visible 和 `HyperDrawer` 的 open 由调用方持有，组件通过 onClose 请求关闭。
 - 弹层内部可以组合表单和按钮，但网络、权限和导航仍放在调用方。
+
+## 独立 APK 更新工具
+
+[检查更新](components/tools/hyper-update.md) 位于 tools/update，按用户授权持有通用 APK 更新任务及系统下载状态，展示仍由受控 HyperUpdateDialog 完成。公开仓库和索引配置由调用方注入；不接收发布 Token，不包含业务资源 channels、资源目录协议、模型/词库校验或 Web 资源切换。业务资源配置与安装事务保留在所属应用。

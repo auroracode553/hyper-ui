@@ -63,7 +63,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperMenuGroup](components/list/hyper-menu-group.md) | 菜单和设置入口 |
 | [HyperListTile](components/list/hyper-list-tile.md) | 设置行和列表行 |
 
-## 反馈与工具
+## 反馈
 
 | 组件 | 用途 |
 | --- | --- |
@@ -81,7 +81,6 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperPlaybackSpeedScale](components/feedback/hyper-playback-speed-scale.md) | 播放速度刻度 |
 | [HyperPopover](components/feedback/hyper-popover.md) | visible / onClose 受控，child 自行触发；默认宽 180dp，width 可显式指定、maxWidth 限制上限；scrollable 可交由有界子列表滚动 |
 | [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 与 Flutter 共用视觉规则：420dp 最大宽、20dp 弹层外间距、28dp 圆角、24dp 内容边距；统一更新流程与状态预览 |
-| [HyperBatteryState](components/tools/hyper-battery-state.md) | Android 电量状态读取 |
 
 统一材质、尺寸和 API 约定见 [样式对照](style-reference.md)。
 
@@ -90,3 +89,10 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 维护 UI 库和开发业务页面前，优先阅读[使用规则、全局全面屏与 AGENTS.md 模板](mobile-guidelines.md)和[设计系统基线](style-reference.md)。正文卡片统一无普通描边和双层柔阴影，选中轮廓保留；导航材质仅在状态栏顶部至 Navbar 底部内渐隐。既有悬浮 TabBar 的高度、占位与滚动范围不能因配色或卡片优化改变。
 
 导航滚动监听统一由 HyperNavBarPage.scrollState / HyperNavBarScrollScope 管理，Navbar 自动读取；消费页面不得重复声明导航专用 derivedStateOf、snapshotFlow 或 scrolledUnder 判断。库测量实际导航区高度，顶部净空放进滚动内容；主滚动状态保留在容器，嵌套列表不代替主状态。
+
+## 工具
+
+| 工具 | 用途 |
+| --- | --- |
+| [检查更新](components/tools/hyper-update.md) | APK 静态 latest.json、系统下载、真实进度、恢复与安装；公开配置来自 publish-config.json |
+| [HyperBatteryState](components/tools/hyper-battery-state.md) | Android 电量状态读取 |

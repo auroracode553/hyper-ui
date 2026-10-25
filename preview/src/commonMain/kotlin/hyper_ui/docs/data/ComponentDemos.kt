@@ -35,6 +35,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(navigationComponentDemos()) // Navbar 自动监听；TabBar 覆盖悬浮、贴底、重复动作与禁用项。
     addAll(listComponentDemos()) // list-tile 直接展示条目；sectioned_list 固定 8dp 紧凑间距。
     addAll(feedbackComponentDemos()) // action_sheet 对齐 Flutter；toast 文字操作先关闭再回调；update_dialog 共用更新状态。
+    addAll(toolsComponentDemos()) // Android 更新工具只在 Preview 模拟流程，不引入平台网络或下载。
     addAll(themeComponentDemos())
 }
 .map { demo ->

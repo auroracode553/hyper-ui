@@ -1,0 +1,35 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+// 配置约定，不注册构建、运行或发布任务。调用方只需在 Android 插件之后 apply。
+def configFile = project.findProperty('hyperUpdateConfigFile') ?: rootProject.file('publish-config.json')
+def configText = providers.fileContents(layout.file(providers.provider { file(configFile) })).asText.get()
+def config = new JsonSlurper().parseText(configText)
+if (config.provider != 'gitee') throw new GradleException('APK 静态更新仅支持 gitee provider')
+def update = config.update
+if (!(update instanceof Map)) throw new GradleException('publish-config.json 缺少 update 配置')
+if (!(config.repository instanceof String) || !(config.repository ==~ /[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+/)) {
+    throw new GradleException('repository 必须为 owner/repository')
+}
+if (!(update.branch instanceof String) || !(update.indexFile instanceof String) ||
+        !update.checkIntervalMinutes?.toString()?.isInteger() || update.checkIntervalMinutes < 1 || update.checkIntervalMinutes > 525600) {
+    throw new GradleException('update 必须配置 branch、indexFile 和正整数 checkIntervalMinutes')
+}
+def release = config.release
+def code = release?.versionCode?.toString()?.isInteger() ? release.versionCode.toString().toInteger() : 0
+if (code < 1 || !(release.versionName instanceof String) || release.versionName.trim().isEmpty()) {
+    throw new GradleException('release 必须配置有效的 versionName 和正整数 versionCode')
+}
+def notesFile = rootProject.file(config.changelog?.path ?: 'changelog.md')
+if (project.hasProperty('hyperUpdateConfigFile')) notesFile = new File(file(configFile).parentFile, config.changelog?.path ?: 'changelog.md')
+def notes = notesFile.isFile() ? providers.fileContents(layout.file(providers.provider { notesFile })).asText.get() : ''
+def publicConfig = [repository: config.repository, update: [branch: update.branch,
+    indexFile: update.indexFile, checkIntervalMinutes: update.checkIntervalMinutes], currentNotes: notes]
+android {
+    buildFeatures { buildConfig = true }
+    defaultConfig {
+        versionName = release.versionName
+        versionCode = code
+        buildConfigField 'String', 'HYPER_UPDATE_CONFIG', JsonOutput.toJson(JsonOutput.toJson(publicConfig))
+    }
+}

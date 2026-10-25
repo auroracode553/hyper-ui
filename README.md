@@ -10,7 +10,7 @@ emphasizedDays 使用既有主题色强调指定日期；条目最多三行，�
 
 [![在线文档](https://img.shields.io/badge/%F0%9F%93%96-在线文档-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)](https://auroracode553.github.io/hyper-ui)
 
-> 面向 Android 手机竖屏的 Jetpack Compose UI 组件库，专注提供 HyperOS 风格的基础界面组件，不承载业务逻辑。
+> 面向 Android 手机竖屏的 Jetpack Compose UI 组件库，提供 HyperOS 风格的受控界面组件与独立 Android 工具；应用业务留在调用方。
 
 **源码仓库**: `git@gitee.com:my_new_way/hyper_ui.git`
 
@@ -132,7 +132,13 @@ HyperUI 面向 Android Compose 项目，提供按钮、输入框、列表分组�
 
 - 传统 View XML 项目直接使用。
 - 非 Android 目标直接依赖 AAR。
-- 把业务状态、网络请求、数据库逻辑放进 UI 组件库。
+- 把项目业务状态、资源格式、数据库逻辑或专属网络协议放入展示组件。APK 更新由独立 tools/update 模块按公开配置执行。
+
+## 工具：检查更新
+
+[`tools/update/`](library/src/main/java/hyper_ui/tools/update/) 集中提供 APK 静态索引检查、系统下载、真实进度、任务恢复与系统安装，公开入口为 `rememberHyperUpdateController`、`HyperUpdateController` 和 `HyperUpdateHost`。只读取项目 `publish-config.json` 中的 repository 与 update 公开字段；构建约定位于 `gradle/hyper-update.gradle`，发布凭据不进入客户端。
+
+完整配置、API、边界和交互预览见[工具 → 检查更新](vitepress/docs/components/tools/hyper-update.md)。本工具只处理 APK，既不定义资源 channels，也不维护词库、模型、Web 资源的地址、格式、校验或启用流程；这些业务保持在各项目。
 
 ## 接入方式
 
@@ -348,7 +354,7 @@ preview/src/commonMain/kotlin/hyper_ui/docs/data/*ComponentDemos.kt
 preview/src/commonMain/kotlin/hyper_ui/docs/ui/*ComponentShowcases.kt
 ```
 
-`ComponentDemos.kt` 只保留聚合入口和 `ComponentDemo` 数据结构；具体组件文档项按 `基础组件`、`表单组件`、`容器组件`、`导航组件`、`列表组件`、`反馈组件` 拆在对应的 `*ComponentDemos.kt` 文件中。新增、删除或重命名公开组件时，必须同步更新同一分组的 data 文件、`*ComponentShowcases.kt`、`vitepress/docs/components/` 对应页面、[组件索引](vitepress/docs/component-index.md)、VitePress 侧栏和 README。
+`ComponentDemos.kt` 只保留聚合入口和 `ComponentDemo` 数据结构；具体组件文档项按 `基础组件`、`表单组件`、`容器组件`、`导航组件`、`列表组件`、`反馈组件`、`工具` 拆在对应的 `*ComponentDemos.kt` 文件中。新增、删除或重命名公开组件时，必须同步更新同一分组的 data 文件、`*ComponentShowcases.kt`、`vitepress/docs/components/` 对应页面、[组件索引](vitepress/docs/component-index.md)、VitePress 侧栏和 README。
 
 ## VitePress 文档站
 
