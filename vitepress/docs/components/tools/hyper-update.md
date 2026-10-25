@@ -18,14 +18,15 @@ description: 从发布配置读取公开静态索引，统一检查、系统下�
   "release": { "versionName": "1.5.0", "versionCode": 6 },
   "update": {
     "branch": "main",
-    "indexFile": "latest.json",
-    "checkIntervalMinutes": 360
+    "indexFile": "latest.json"
   },
   "changelog": { "path": "changelog.md" }
 }
 ```
 
 这是公开更新字段示意；发布器需要的 provider、authentication、artifact 等配置仍按发布器完整格式保留。客户端不读取或打包 authentication。
+
+应用默认不填写自动检查策略，统一使用工具内的「1 小时窗口最多 2 次」。窗口从首次自动请求起计，满 1 小时后在下次正常触发时恢复额度。仅有特殊需求时，在 update 中增加可选的 autoCheckWindowMinutes（1 到 525600 的整数分钟）、autoCheckLimit（正整数）覆盖；Kotlin 调用也可通过 HyperUpdateConfig 的对应参数覆盖。构建约定和发布器只透传显式配置，不维护另一份默认值。
 
 在应用模块的 `build.gradle.kts` 末尾应用库提供的配置约定。它只解析配置与注入 BuildConfig，不注册运行、构建或发布任务：
 
@@ -85,15 +86,15 @@ HyperUpdateHost(updates)
 
 | 场景 | 行为 |
 | --- | --- |
-| 页面首次呈现 | 约 5 秒后检查首次或已到期的更新 |
-| 应用返回前台 | 稳定约 2 秒后检查是否到期 |
-| 手动 check | 绕过间隔；已有检查或正在下载时复用并打开窗口 |
+| 页面首次呈现 | 约 5 秒后判断自动额度，默认本小时窗口未满 2 次才发请求 |
+| 应用返回前台 | 稳定约 2 秒后判断自动额度，用满则不发请求 |
+| 手动 check | 不受自动额度限制，也不占自动次数；已有任务则复用并打开窗口 |
 | 进入后台 | 移除待检查回调、停止进度观察，系统下载继续 |
 | 关闭窗口 | 只隐藏视图，保留任务与下载记录 |
 | 取消下载 | 删除对应系统下载任务，恢复可下载状态 |
 | 工具关闭 | 释放观察、HTTP 与线程，系统任务和持久记录保留 |
 
-仅这三个检查入口，不增加前台周期检查、联网恢复检查、后台作业或额外前台服务。成功时间独立持久化，失败不算成功；连续自动尝试至少间隔 1 分钟。同版本选择稍后后 24 小时内不自动重复提醒，手动入口仍可用。
+仅这三个检查入口，不增加前台周期检查、联网恢复检查、后台作业或额外前台服务。自动请求发起前占用一次额度，失败同样计次且不立即重试；用满 2 次后跳过后续自动请求，直到原窗口满 1 小时。窗口和次数持久化，关闭应用或切换前后台不会重置。自动失败不额外弹窗，更新入口保留失败状态和手动重试；已有下载继续复用。手动检查不占自动额度。同版本选择稍后后 24 小时内不自动重复提醒，手动入口仍可用。
 
 下载进度来自 DownloadManager：前台约每 700 毫秒观察字节量，提供速度及可计算的剩余时间；未知总量显示不定进度。重建页面或进程后通过真实下载 ID 恢复。每个工具持有一个串行工作线程，空闲 10 秒回收，队列容量 8；检查、启动下载和观察不会重复并发。
 
@@ -106,7 +107,8 @@ data class HyperUpdateConfig(
     val repository: String,
     val branch: String,
     val indexFile: String,
-    val checkIntervalMs: Long = 21600000,
+    val autoCheckWindowMs: Long = HyperUpdateCheckHistory.DEFAULT_WINDOW_MS,
+    val autoCheckLimit: Int = HyperUpdateCheckHistory.DEFAULT_MAX_CHECKS,
     val currentNotes: String = ""
 ) {
     val indexUrl: String
@@ -125,7 +127,10 @@ data class HyperUpdateConfig(
 | repository | String | 是 | — | owner/repository；主通道复用发布仓库 |
 | branch | String | 是 | — | 仓库索引分支 |
 | indexFile | String | 是 | — | 仓库内 JSON 路径 |
-| checkIntervalMs | Long | 否 | 21600000 | 成功检查间隔，至少 60000 毫秒 |
+| autoCheckWindowMs | Long | 否 | 3600000 | 自动检查计数窗口，至少 60000 毫秒 |
+| autoCheckLimit | Int | 否 | 2 | 每个窗口最多自动请求次数，失败也计次 |
+| update.autoCheckWindowMinutes | Int | 否 | 省略时使用库默认 60 分钟 | JSON 中的可选窗口覆盖，默认应用不传 |
+| update.autoCheckLimit | Int | 否 | 省略时使用库默认 2 | JSON 中的可选次数覆盖，默认应用不传 |
 | currentNotes | String | 否 | 空字符串 | 当前安装版本随包提供的更新说明 |
 | configurationJson | String | 是 | — | 配置约定注入的公开 JSON |
 | configuration | HyperUpdateConfig | 是 | — | 自行构造的公开配置，与 JSON 重载二选一 |
@@ -191,10 +196,13 @@ class HyperUpdateHttpClient(allowLocalHttp: Boolean = false) : AutoCloseable {
         onProgress: (Long, Double?) -> Unit)
     override fun close()
 }
-class HyperUpdateCheckHistory(context: Context, key: String, intervalMs: Long) {
-    fun isDue(): Boolean
-    fun started()
-    fun succeeded()
+class HyperUpdateCheckHistory(context: Context, key: String,
+    windowMs: Long = DEFAULT_WINDOW_MS, maxChecks: Int = DEFAULT_MAX_CHECKS) {
+    companion object {
+        const val DEFAULT_WINDOW_MS: Long = 3600000
+        const val DEFAULT_MAX_CHECKS: Int = 2
+    }
+    fun tryStartAutomaticCheck(): Boolean
 }
 class HyperUpdateCheckSchedule(main: Handler, check: () -> Unit) : AutoCloseable {
     fun pageReady()
@@ -215,10 +223,13 @@ data class HyperUpdateVersion(val value: String) : Comparable<HyperUpdateVersion
 | onProgress | (Long, Double?) -> Unit | 是 | — | 已下载量及可计算速度，最多约每 500 毫秒回调，结束补发 |
 | context | Context | 是 | — | 工具只保留应用上下文或应用偏好 |
 | key | String | 是 | — | 明确通道名，记录彼此隔离 |
-| intervalMs | Long | 是 | — | 该资源通道的成功检查间隔 |
+| windowMs | Long | 否 | DEFAULT_WINDOW_MS（3600000） | 正数计数窗口，从首次自动请求起计 |
+| maxChecks | Int | 否 | DEFAULT_MAX_CHECKS（2） | 每个窗口的自动请求上限，必须为正数 |
 | main | Handler | 是 | — | 主线程调度器 |
 | check | () -> Unit | 是 | — | 到期判断及实际检查入口，不在调度器中自动轮询 |
 | visible | Boolean | 是 | — | 真实前后台状态 |
 | value | String | 是 | — | 三段式语义化版本，可带 v、预发行与构建标记 |
 
 HTTP 工具单实例供单个串行通道使用，索引最多读取有限字节，下载不超过声明上限。close 会中断所属 HTTP，不影响其他实例、页面或市场流。资源签名、文件安全与安装事务由资源业务继续执行。
+
+DEFAULT_WINDOW_MS 与 DEFAULT_MAX_CHECKS 是默认策略的唯一常量，应用无需传入。自动请求即将发起时调用 tryStartAutomaticCheck：有额度时计次并返回 true，用满时返回 false；它不发网络请求。手动检查不调用此方法。

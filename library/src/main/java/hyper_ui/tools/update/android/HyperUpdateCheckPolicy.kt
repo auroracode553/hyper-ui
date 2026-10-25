@@ -7,18 +7,30 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 /** 按实际更新通道保存小字段；设备时间回拨不会导致永久跳过检查。 */
-class HyperUpdateCheckHistory(context: Context, private val key: String, private val intervalMs: Long) {
-    private val preferences = context.getSharedPreferences("hyper_update_checks", Context.MODE_PRIVATE)
-    fun isDue(): Boolean {
-        val now = System.currentTimeMillis()
-        fun elapsed(field: String, interval: Long): Boolean {
-            val previous = preferences.getLong("${key}_$field", 0)
-            return previous <= 0 || now < previous || now - previous >= interval
-        }
-        return elapsed("success", intervalMs) && elapsed("attempt", 60_000L)
+class HyperUpdateCheckHistory(
+    context: Context,
+    private val key: String,
+    private val windowMs: Long = DEFAULT_WINDOW_MS,
+    private val maxChecks: Int = DEFAULT_MAX_CHECKS,
+) {
+    companion object {
+        const val DEFAULT_WINDOW_MS: Long = 60 * 60_000L
+        const val DEFAULT_MAX_CHECKS: Int = 2
     }
-    fun started() { preferences.edit().putLong("${key}_attempt", System.currentTimeMillis()).apply() }
-    fun succeeded() { preferences.edit().putLong("${key}_success", System.currentTimeMillis()).apply() }
+
+    init { require(windowMs > 0 && maxChecks > 0) { "自动检查窗口和次数必须为正数" } }
+    private val preferences = context.getSharedPreferences("hyper_update_checks", Context.MODE_PRIVATE)
+    fun tryStartAutomaticCheck(): Boolean {
+        val now = System.currentTimeMillis()
+        val previous = preferences.getLong("${key}_window_started_at", 0)
+        val inWindow = previous > 0 && now >= previous && now - previous < windowMs
+        val count = if (inWindow) preferences.getInt("${key}_window_count", 0).coerceAtLeast(0) else 0
+        if (count >= maxChecks) return false
+        // 发起前占用一次额度，失败不归还；切换前后台和重启进程不重置窗口。
+        preferences.edit().putLong("${key}_window_started_at", if (inWindow) previous else now)
+            .putInt("${key}_window_count", count + 1).apply()
+        return true
+    }
     internal fun dismissApp(code: Int) {
         preferences.edit().putInt("${key}_dismissed_version", code)
             .putLong("${key}_dismissed_at", System.currentTimeMillis()).apply()

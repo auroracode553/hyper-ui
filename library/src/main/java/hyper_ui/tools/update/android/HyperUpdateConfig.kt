@@ -7,7 +7,8 @@ data class HyperUpdateConfig(
     val repository: String,
     val branch: String,
     val indexFile: String,
-    val checkIntervalMs: Long = 6 * 60 * 60_000L,
+    val autoCheckWindowMs: Long = HyperUpdateCheckHistory.DEFAULT_WINDOW_MS,
+    val autoCheckLimit: Int = HyperUpdateCheckHistory.DEFAULT_MAX_CHECKS,
     val currentNotes: String = "",
 ) {
     init {
@@ -16,7 +17,7 @@ data class HyperUpdateConfig(
         require(indexFile.endsWith(".json") && indexFile.split('/').all {
             it.matches(Regex("[A-Za-z0-9_-][A-Za-z0-9._-]*"))
         }) { "更新索引路径无效" }
-        require(checkIntervalMs >= 60_000L) { "自动检查间隔至少为 1 分钟" }
+        require(autoCheckWindowMs >= 60_000L && autoCheckLimit > 0) { "自动检查窗口至少为 1 分钟，次数必须为正数" }
     }
 
     val indexUrl: String get() = "https://gitee.com/$repository/raw/$branch/$indexFile"
@@ -25,10 +26,15 @@ data class HyperUpdateConfig(
         fun fromJson(json: String): HyperUpdateConfig {
             val root = JSONObject(json)
             val update = root.getJSONObject("update")
-            val minutes = update.getLong("checkIntervalMinutes")
-            require(minutes in 1..525600) { "检查间隔超出有效范围" }
+            val windowMs = if (update.has("autoCheckWindowMinutes")) {
+                val minutes = update.getLong("autoCheckWindowMinutes")
+                require(minutes in 1..525600) { "检查窗口超出有效范围" }
+                minutes * 60_000L
+            } else HyperUpdateCheckHistory.DEFAULT_WINDOW_MS
+            val limit = if (update.has("autoCheckLimit")) update.getInt("autoCheckLimit")
+                else HyperUpdateCheckHistory.DEFAULT_MAX_CHECKS
             return HyperUpdateConfig(root.getString("repository"),
-                update.getString("branch"), update.getString("indexFile"), minutes * 60_000L, root.optString("currentNotes"))
+                update.getString("branch"), update.getString("indexFile"), windowMs, limit, root.optString("currentNotes"))
         }
     }
 }

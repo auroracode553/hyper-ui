@@ -15,26 +15,33 @@ fun UpdateToolDemo() {
     val scope = rememberCoroutineScope()
     val flow = remember(scope) { UpdateDemoController(scope) }
     var pending by remember { mutableStateOf<Job?>(null) }
-    var due by remember { mutableStateOf(true) }
+    var automaticChecks by remember { mutableStateOf(0) }
+    var fail by remember { mutableStateOf(false) }
     var visible by remember { mutableStateOf(false) }
     var message by remember { mutableStateOf("本页为交互模拟，不发起真实更新或安装。") }
     DisposableEffect(flow) { onDispose { pending?.cancel(); flow.dispose() } }
     fun check(wait: Long, manual: Boolean) {
         pending?.cancel()
-        if (!manual && !due) { message = "尚未到检查间隔，自动检查跳过。"; return }
-        message = if (wait > 0) "等待稳定 ${wait / 1000} 秒后检查…" else "手动检查复用现有流程。"
+        message = if (wait > 0) "等待稳定 ${wait / 1000} 秒后判断本小时剩余额度。" else "手动检查不占自动额度，已有任务则复用。"
         pending = scope.launch {
             delay(wait)
-            flow.check()
-            due = false
+            if (!manual && automaticChecks >= 2) { message = "本小时自动检查已满 2 次，不发请求。"; return@launch }
+            val reused = flow.busy
+            flow.check(fail = fail)
+            if (!reused && !manual) automaticChecks += 1
+            message = if (reused) "已复用当前检查或下载。" else "已发起检查；自动检查无论成败都计数，手动不占额度。"
             visible = true
         }
     }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         HyperText("统一检查、下载与安装工具")
         HyperText(message, size = "small")
-        HyperListTile(title = { HyperText("自动检查已到期") },
-            trailing = { HyperSwitch(due, { due = it }) })
+        HyperText("默认 1 小时内最多自动检查 2 次，已用 $automaticChecks / 2", size = "small")
+        HyperButton(onPressed = { automaticChecks = 0; message = "已模拟原窗口满 1 小时，自动额度恢复。" }) {
+            HyperText("模拟一小时窗口到期")
+        }
+        HyperListTile(title = { HyperText("模拟检查失败") },
+            trailing = { HyperSwitch(fail, { fail = it }) })
         HyperButton(onPressed = { check(5000, false) }) { HyperText("模拟冷启动 · 5 秒") }
         HyperButton(onPressed = { check(2000, false) }) { HyperText("模拟恢复前台 · 2 秒") }
         HyperButton(onPressed = { check(0, true) }) { HyperText("手动检查 / 查看进度") }

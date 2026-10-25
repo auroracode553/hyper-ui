@@ -138,6 +138,8 @@ HyperUI 面向 Android Compose 项目，提供按钮、输入框、列表分组�
 
 [`tools/update/`](library/src/main/java/hyper_ui/tools/update/) 集中提供 APK 静态索引检查、系统下载、真实进度、任务恢复与系统安装，公开入口为 `rememberHyperUpdateController`、`HyperUpdateController` 和 `HyperUpdateHost`。只读取项目 `publish-config.json` 中的 repository 与 update 公开字段；构建约定位于 `gradle/hyper-update.gradle`，发布凭据不进入客户端。
 
+默认自动检查额度由库统一设为每小时窗口最多 2 次，应用不必传入；冷启动约 5 秒、恢复前台约 2 秒后只判断是否有额度，失败也计次。手动检查不占自动额度并复用在途任务；特殊需求可选配置覆盖。
+
 完整配置、API、边界和交互预览见[工具 → 检查更新](vitepress/docs/components/tools/hyper-update.md)。本工具只处理 APK，既不定义资源 channels，也不维护词库、模型、Web 资源的地址、格式、校验或启用流程；这些业务保持在各项目。
 
 ## 接入方式

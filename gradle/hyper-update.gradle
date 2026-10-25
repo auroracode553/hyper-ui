@@ -11,9 +11,16 @@ if (!(update instanceof Map)) throw new GradleException('publish-config.json 缺
 if (!(config.repository instanceof String) || !(config.repository ==~ /[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+/)) {
     throw new GradleException('repository 必须为 owner/repository')
 }
-if (!(update.branch instanceof String) || !(update.indexFile instanceof String) ||
-        !update.checkIntervalMinutes?.toString()?.isInteger() || update.checkIntervalMinutes < 1 || update.checkIntervalMinutes > 525600) {
-    throw new GradleException('update 必须配置 branch、indexFile 和正整数 checkIntervalMinutes')
+if (!(update.branch instanceof String) || !(update.indexFile instanceof String)) {
+    throw new GradleException('update 必须配置 branch 和 indexFile')
+}
+if (update.containsKey('autoCheckWindowMinutes') &&
+        (!update.autoCheckWindowMinutes?.toString()?.isInteger() || update.autoCheckWindowMinutes < 1 || update.autoCheckWindowMinutes > 525600)) {
+    throw new GradleException('可选的 update.autoCheckWindowMinutes 必须为 1 到 525600 的整数')
+}
+if (update.containsKey('autoCheckLimit') &&
+        (!update.autoCheckLimit?.toString()?.isInteger() || update.autoCheckLimit < 1 || update.autoCheckLimit > Integer.MAX_VALUE)) {
+    throw new GradleException('可选的 update.autoCheckLimit 必须为有效正整数')
 }
 def release = config.release
 def code = release?.versionCode?.toString()?.isInteger() ? release.versionCode.toString().toInteger() : 0
@@ -23,8 +30,11 @@ if (code < 1 || !(release.versionName instanceof String) || release.versionName.
 def notesFile = rootProject.file(config.changelog?.path ?: 'changelog.md')
 if (project.hasProperty('hyperUpdateConfigFile')) notesFile = new File(file(configFile).parentFile, config.changelog?.path ?: 'changelog.md')
 def notes = notesFile.isFile() ? providers.fileContents(layout.file(providers.provider { notesFile })).asText.get() : ''
-def publicConfig = [repository: config.repository, update: [branch: update.branch,
-    indexFile: update.indexFile, checkIntervalMinutes: update.checkIntervalMinutes], currentNotes: notes]
+def publicUpdate = [branch: update.branch, indexFile: update.indexFile]
+// 缺省值只由运行时工具维护，构建约定不再注入另一份默认间隔。
+if (update.containsKey('autoCheckWindowMinutes')) publicUpdate.autoCheckWindowMinutes = update.autoCheckWindowMinutes
+if (update.containsKey('autoCheckLimit')) publicUpdate.autoCheckLimit = update.autoCheckLimit
+def publicConfig = [repository: config.repository, update: publicUpdate, currentNotes: notes]
 android {
     buildFeatures { buildConfig = true }
     defaultConfig {

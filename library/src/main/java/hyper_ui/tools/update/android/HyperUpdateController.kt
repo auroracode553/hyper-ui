@@ -17,7 +17,8 @@ class HyperUpdateController(context: Context, val configuration: HyperUpdateConf
     val currentVersionName: String = installedPackage.versionName ?: error("应用缺少 versionName")
     val currentVersionCode: Long = installedPackage.longVersionCode
     private val history = HyperUpdateCheckHistory(context,
-        "apk:${configuration.repository}:${configuration.branch}:${configuration.indexFile}", configuration.checkIntervalMs)
+        "apk:${configuration.repository}:${configuration.branch}:${configuration.indexFile}",
+        configuration.autoCheckWindowMs, configuration.autoCheckLimit)
     private val main = Handler(Looper.getMainLooper())
     private val schedule = HyperUpdateCheckSchedule(main) { check(manual = false) }
     private val worker = hyperUpdateExecutor("app-update")
@@ -88,12 +89,11 @@ class HyperUpdateController(context: Context, val configuration: HyperUpdateConf
             return
         }
         if (busy) return
-        if (!manual && !history.isDue()) return
+        if (!manual && !history.tryStartAutomaticCheck()) return
         val prepared = release?.takeIf { downloadComplete && downloadId != null }
         checking = true
         retryCheck = true
         release = null
-        history.started()
         state = HyperUpdateState(HyperUpdateStatus.checking)
         worker.execute {
             val result = runCatching { releases.latest() }
@@ -101,7 +101,6 @@ class HyperUpdateController(context: Context, val configuration: HyperUpdateConf
                 if (closed) return@post
                 checking = false
                 result.fold(onSuccess = { latest ->
-                    history.succeeded()
                     retryCheck = false
                     if (prepared != null && latest.versionCode <= prepared.versionCode) {
                         release = prepared
