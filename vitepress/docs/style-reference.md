@@ -1,5 +1,9 @@
 # UI 样式与功能实现基线
 
+## 全面屏与系统安全区
+
+Android Activity 统一使用 enableHyperEdgeToEdge()，根主题 useSystemSafeArea 默认为 false。HyperTheme.systemSafeAreaInsets 为组件的唯一系统安全区来源，默认返回零；Navbar、Scaffold、TabBar、浮层、抽屉和更新窗口均不预留系统栏或挖孔安全区。键盘 Insets、业务组件高度和控件本身的间距继续保留。下文旧版关于状态栏/底部安全区的尺寸说明以此规则为准。
+
 本文依据当前 library/src/main/java/hyper_ui/ 实现整理，基线日期为 2026-10-21，复用本页已有的样式对照作为持续维护入口。对应 Flutter 仓库为 D:/my_project/flutter_project/flutter-hyper-ui，维护时同时参考其 vitepress/guide/design-system.md；以各端实际源码核对功能，不能把另一端 API 直接当成本端已有实现。
 
 Android 手机端目标为 320–430dp 竖屏；Desktop/Wasm 仅用于文档 Preview。本文记录默认视觉、功能行为和修改边界，完整公开签名与参数表仍见[组件索引](component-index.md)中的各组件页，不用本文替代。

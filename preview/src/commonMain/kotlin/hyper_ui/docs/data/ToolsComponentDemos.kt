@@ -3,6 +3,23 @@ package hyper_ui.docs.data
 import hyper_ui.docs.ui.UpdateToolDemo
 
 internal fun toolsComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(
+        id = "edge_to_edge_tool", group = "工具", title = "统一全面屏",
+        description = "Activity 入口关闭系统栏留白，根主题统一控制组件安全区；预览只模拟布局。",
+        code = """
+            enableHyperEdgeToEdge()
+            setContent {
+                HyperThemeConfig(useSystemSafeArea = false) { AppContent() }
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("Android 入口", "enableHyperEdgeToEdge()", "透明系统栏、显示缺口绘制，关闭系统对比度底板"),
+            DemoVariant("全局默认", "useSystemSafeArea = false", "Navbar、Scaffold、TabBar 与浮层不增加系统安全区"),
+            DemoVariant("输入", "IME 独立保留", "键盘避让与系统栏安全区分开处理")
+        ),
+        apiDocumentPaths = listOf("tools/hyper-edge-to-edge.md"),
+        content = { ThemeMaterialDemo() }
+    ),
     ComponentDemo(id = "update_tool", group = "工具", title = "检查更新",
         description = "Android 静态 latest.json 检查、系统下载、真实进度和安装；此处只模拟交互，不访问 Gitee。",
         code = """

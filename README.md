@@ -427,3 +427,7 @@ npm run dev
 `library/gradle.properties` 与消费应用使用相同的本地并行和缓存策略：最多 16 个 Gradle worker，独立任务按依赖图并行，开启守护进程、增量编译与构建缓存。Gradle 和 Kotlin 的堆上限分别为 4GB、3GB，针对当前 16 线程、约 32GB 内存的构建机配置；可按其他构建机资源覆盖。
 
 复合构建引用同一份 library 输出时，多个应用逐个构建，库任务在输入不变时复用产物；不并发启动多个工程争用同一输出目录。性能配置不跳过正式包签名、混淆或校验。
+# 统一全面屏入口
+
+所有 Android Activity 在设置内容前调用 enableHyperEdgeToEdge()；根 HyperThemeConfig.useSystemSafeArea 默认 false。组件通过 HyperTheme.systemSafeAreaInsets 共用零系统安全区，IME 独立避让。API 与 Preview 见 [全面屏窗口](vitepress/docs/components/tools/hyper-edge-to-edge.md)。
+

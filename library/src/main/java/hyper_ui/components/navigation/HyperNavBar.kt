@@ -13,13 +13,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -47,7 +44,8 @@ internal val LocalHyperNavBarWindowInsets = staticCompositionLocalOf<WindowInset
 
 @Composable
 private fun navBarTopInsets(): WindowInsets =
-    (LocalHyperNavBarWindowInsets.current ?: WindowInsets.statusBars).only(WindowInsetsSides.Top)
+    (if (LocalHyperUseSystemSafeArea.current) LocalHyperNavBarWindowInsets.current ?: HyperTheme.systemSafeAreaInsets
+        else WindowInsets(0, 0, 0, 0)).only(WindowInsetsSides.Top)
 
 /** 固定避让顶部状态栏；宿主传入滚动状态，组件统一处理背景采样和过渡。 */
 @Composable
@@ -169,7 +167,7 @@ fun HyperNavBarPage(
     }
     val bottomInset = if (bottomSafeArea) with(density) {
         // 键盘避让由页面宿主处理，避免与 imePadding 重复累加。
-        WindowInsets.safeDrawing.exclude(WindowInsets.ime).getBottom(this).toDp()
+        HyperTheme.systemSafeAreaInsets.getBottom(this).toDp()
     } else 0.dp
     val resolvedPadding = contentPadding.withAdditionalTop(
         if (measuredNavBarHeight > 0) with(density) { measuredNavBarHeight.toDp() }

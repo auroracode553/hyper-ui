@@ -4,6 +4,9 @@ package hyper_ui.docs.data
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +22,8 @@ import hyper_ui.HyperTextField
 import hyper_ui.HyperTheme
 import hyper_ui.HyperThemeConfig
 import hyper_ui.HyperMaterial
+import hyper_ui.HyperNavBar
+import hyper_ui.HyperNavBarPage
 import hyper_ui.docs.theme.docsGlassTokens
 
 private const val GROUP_THEME = "主题配置"
@@ -28,7 +33,7 @@ internal fun themeComponentDemos(): List<ComponentDemo> = listOf(
         id = "theme-material",
         group = GROUP_THEME,
         title = "主题材质",
-        description = "切换实色、柔和与清透材质，观察同一组控件的表面层级。",
+        description = "切换材质与全局系统安全区，观察同一组控件和页面的布局。",
         code = """
             HyperThemeConfig(
                 material = HyperMaterial.Solid
@@ -46,17 +51,27 @@ internal fun themeComponentDemos(): List<ComponentDemo> = listOf(
 )
 
 @Composable
-private fun ThemeMaterialDemo() {
+internal fun ThemeMaterialDemo() {
     var material by remember { mutableStateOf(HyperMaterial.Solid) }
+    var useSystemSafeArea by remember { mutableStateOf(false) }
     HyperThemeConfig(
         themeColor = HyperTheme.colors.themeColor,
         darkTheme = HyperTheme.isDark,
         typography = HyperTheme.typography,
         shapes = HyperTheme.shapes,
         material = material,
-        glass = docsGlassTokens(HyperTheme.isDark, material)
+        glass = docsGlassTokens(HyperTheme.isDark, material),
+        useSystemSafeArea = useSystemSafeArea
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            HyperButton(onPressed = { useSystemSafeArea = !useSystemSafeArea }) {
+                HyperText(if (useSystemSafeArea) "系统安全区：开启" else "系统安全区：关闭（默认全面屏）")
+            }
+            Box(Modifier.fillMaxWidth().height(180.dp)) {
+                HyperNavBarPage(navBar = { HyperNavBar(title = { HyperText("全面屏页面") }) }) { padding ->
+                    HyperText("正文仅避让实际导航组件高度", modifier = Modifier.padding(padding))
+                }
+            }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 HyperMaterial.values().forEach { option ->
                     HyperButton(

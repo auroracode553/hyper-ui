@@ -146,6 +146,7 @@ fun HyperThemeConfig(
     shapes: HyperShapes = HyperStyleDefaults.Shapes,
     material: HyperMaterial = HyperMaterial.Solid,
     glass: HyperGlassTokens = HyperGlassTokens.forMaterial(darkTheme, material),
+    useSystemSafeArea: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val defaultContentColor = if (darkTheme) {
@@ -159,6 +160,7 @@ fun HyperThemeConfig(
             successColor = successColor
         ),
         LocalHyperIsDark provides darkTheme,
+        LocalHyperUseSystemSafeArea provides useSystemSafeArea,
         LocalHyperTypography provides typography,
         LocalHyperShapes provides shapes,
         LocalHyperGlass provides glass,

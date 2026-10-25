@@ -29,7 +29,7 @@ HyperScaffold(bottomBar = { BottomActions() }) { contentPadding ->
 fun HyperScaffold(
     modifier: Modifier = Modifier,
     containerColor: Color = HyperColors.pageBackground,
-    contentWindowInsets: WindowInsets = WindowInsets.systemBars.union(WindowInsets.displayCutout),
+    contentWindowInsets: WindowInsets = HyperTheme.systemSafeAreaInsets,
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},

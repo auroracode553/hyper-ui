@@ -1,0 +1,4 @@
+<resources>
+    <!-- 启动画布使用页面底色，避免 DeviceDefault 的纯黑窗口先闪现。 -->
+    <color name="hyper_page_background">#111318</color>
+</resources>

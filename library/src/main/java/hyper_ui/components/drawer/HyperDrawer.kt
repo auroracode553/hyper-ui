@@ -101,7 +101,7 @@ fun HyperDrawer(
                         }
                     }
                 )
-                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .windowInsetsPadding(HyperTheme.systemSafeAreaInsets)
             ) {
                 CompositionLocalProvider(LocalHyperSurfacePresent provides true,
                     LocalHyperContentColor provides HyperColors.primaryText) {

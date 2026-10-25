@@ -52,6 +52,8 @@ kotlin {
             kotlin.exclude("**/HyperToast.kt")
             // Android 电池状态读取由跨平台 Preview 使用交互模拟展示，避免引入 Android 编译链。
             kotlin.exclude("**/HyperBatteryState.kt")
+            // Activity 全面屏入口仅属于 Android；预览通过主题安全区开关演示布局。
+            kotlin.exclude("**/HyperEdgeToEdge.kt")
             // 更新工具的 HTTP、系统下载和生命周期只面向 Android；文档提供交互模拟。
             kotlin.exclude("**/tools/update/android/**")
             // Android Dialog 窗口动画配置由跨平台 Preview 使用同包宿主替代。

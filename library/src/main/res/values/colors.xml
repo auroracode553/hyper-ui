@@ -1,0 +1,4 @@
+<resources>
+    <!-- Compose 建立前的窗口画布，与 HyperColors.pageBackground 的日间语义色保持一致。 -->
+    <color name="hyper_page_background">#F1F3F7</color>
+</resources>

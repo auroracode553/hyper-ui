@@ -22,7 +22,7 @@ internal fun HyperDialogHost(
             // 使用稳定的全宽宿主，避免 WRAP_CONTENT Window 首帧重新定位。
             dismissOnClickOutside = false,
             usePlatformDefaultWidth = false,
-            decorFitsSystemWindows = !edgeToEdge,
+            decorFitsSystemWindows = LocalHyperUseSystemSafeArea.current && !edgeToEdge,
         )
     ) {
         val dialogWindow = (LocalView.current.parent as? DialogWindowProvider)?.window

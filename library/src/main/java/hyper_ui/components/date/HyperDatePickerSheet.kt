@@ -88,7 +88,7 @@ internal fun HyperDatePickerSheet(
                             }
                         }
                     }
-                    .padding(16.dp).navigationBarsPadding().verticalScroll(rememberScrollState()),
+                    .padding(16.dp).verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 CompositionLocalProvider(

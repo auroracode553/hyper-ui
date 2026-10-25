@@ -65,7 +65,7 @@ fun HyperActionSheet(
                     }
                 }
                 .padding(16.dp)
-                .windowInsetsPadding(WindowInsets.safeDrawing.only(
+                .windowInsetsPadding(HyperTheme.systemSafeAreaInsets.only(
                     WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom))
                 .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.Start

@@ -37,7 +37,7 @@ fun <T> HyperTabBar(
     type: String = "multiple",
     itemLabel: (T) -> String = { "" },
     badgeCount: Int = 0,
-    safeArea: Boolean = true,
+    safeArea: Boolean = false,
     floating: Boolean = true,
     margin: PaddingValues = if (!floating || type == "single") PaddingValues(0.dp) else PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp),
     color: Color = HyperColors.accent,
@@ -55,7 +55,8 @@ fun <T> HyperTabBar(
     val itemWidth = items.maxOf { item ->
         with(density) { textMeasurer.measure(itemLabel(item), labelStyle).size.width.toDp() } + 32.dp
     }.coerceAtLeast(76.dp)
-    val bottomInset = if (safeArea) WindowInsets.safeDrawing.asPaddingValues().calculateBottomPadding() else 0.dp
+    val safeInsets = HyperTheme.systemSafeAreaInsets
+    val bottomInset = if (safeArea) safeInsets.asPaddingValues().calculateBottomPadding() else 0.dp
     // 贴底沿用原 55+5dp 的总尺寸，安全区计入其中；大字体或三键导航才按内容需要增长。
     val height = if (floating) {
         maxOf(56.dp, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
@@ -73,7 +74,7 @@ fun <T> HyperTabBar(
     val latestItemEnabled by rememberUpdatedState(itemEnabled)
     // 贴底表面连同底部安全区由库绘制，调用方不再叠加底板或二次避让。
     Box(modifier.then(if (floating) Modifier else Modifier.fillMaxWidth().background(HyperColors.pageBackground))
-        .then(if (safeArea) Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)) else Modifier)
+        .then(if (safeArea) Modifier.windowInsetsPadding(safeInsets.only(WindowInsetsSides.Bottom)) else Modifier)
         .padding(margin)) {
         if (type == "single") {
             val item = items.single()

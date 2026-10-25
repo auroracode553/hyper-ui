@@ -37,7 +37,7 @@ internal fun HyperAnchoredSurface(
     var origin by remember { mutableStateOf(TransformOrigin(0.5f, 0f)) }
     val density = LocalDensity.current
     val direction = LocalLayoutDirection.current
-    val safe = WindowInsets.safeDrawing.exclude(WindowInsets.ime)
+    val safe = HyperTheme.systemSafeAreaInsets
     val ime = WindowInsets.ime
     val inset = with(density) { 12.dp.roundToPx() }
     val left = safe.getLeft(density, direction) + inset

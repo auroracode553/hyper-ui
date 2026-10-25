@@ -1,5 +1,7 @@
 # 组件索引
 
+Android 窗口统一使用 [全面屏入口](components/tools/hyper-edge-to-edge.md)。HyperThemeConfig.useSystemSafeArea 默认 false，所有组件共用全局策略，IME 输入避让独立保留。
+
 修改组件前必须阅读 [UI 样式与功能实现基线](style-reference.md)，核对已有专用样式、状态归属和平台差异。不得仅因“统一”替换当前布局或操作样式；拿不准时先向使用者确认。
 
 所有组件从 `hyper_ui` 包导入。组件页按用途、交互示例、最小调用、使用约定和公开 API 组织。长签名与辅助配置可以展开查看，五列 Props 表完整保留；手机预览支持切换 320/350/390/430dp 宽度和重置。

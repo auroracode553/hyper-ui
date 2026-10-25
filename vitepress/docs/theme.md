@@ -28,6 +28,7 @@ fun HyperThemeConfig(
     shapes: HyperShapes = HyperStyleDefaults.Shapes,
     material: HyperMaterial = HyperMaterial.Solid,
     glass: HyperGlassTokens = HyperGlassTokens.forMaterial(darkTheme, material),
+    useSystemSafeArea: Boolean = false,
     content: @Composable () -> Unit
 )
 ```
@@ -42,6 +43,9 @@ fun HyperThemeConfig(
 | material | HyperMaterial | 否 | HyperMaterial.Solid | Solid、Soft、Clear 三档材质 |
 | glass | HyperGlassTokens | 否 | HyperGlassTokens.forMaterial(darkTheme, material) | 材质令牌，显式传入优先 |
 | content | @Composable () -&gt; Unit | 是 | — | 使用该主题的子树 |
+| useSystemSafeArea | Boolean | 否 | false | 全局系统安全区；默认全面屏，不补状态栏、手势条及显示缺口留白，键盘避让独立保留 |
+
+Android Activity 在 setContent 前统一调用 [enableHyperEdgeToEdge()](components/tools/hyper-edge-to-edge.md)。组件通过 HyperTheme.systemSafeAreaInsets 读取主题策略，默认返回零 Insets；页面不得再重复添加系统栏 padding。
 
 ## 材质档位
 

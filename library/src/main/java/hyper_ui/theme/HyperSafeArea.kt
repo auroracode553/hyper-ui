@@ -1,0 +1,16 @@
+/** 全局系统安全区策略：默认全面屏，键盘 Insets 独立保留给输入宿主。 */
+package hyper_ui
+
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
+
+internal val LocalHyperUseSystemSafeArea = staticCompositionLocalOf { false }
+
+val HyperTheme.systemSafeAreaInsets: WindowInsets
+    @Composable get() = if (LocalHyperUseSystemSafeArea.current) {
+        WindowInsets.safeDrawing.exclude(WindowInsets.ime)
+    } else WindowInsets(0, 0, 0, 0)

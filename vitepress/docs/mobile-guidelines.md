@@ -1,5 +1,9 @@
 # Android 手机端规范
 
+## 全局全面屏约定
+
+所有应用 Activity 统一调用 enableHyperEdgeToEdge()，根 HyperThemeConfig.useSystemSafeArea = false（默认值）。组件和页面不补系统状态栏、底部手势条或显示缺口的安全区；既有正文仅按实际 Navbar/TabBar 高度布局，IME 仍由输入宿主避让。下文旧条款中关于系统安全区的保留要求以本条为准。
+
 HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和交互反馈以手机竖屏为基准；Preview 的 Desktop/Wasm 运行方式只服务于文档验收。
 
 ## AI 与开发者首读顺序
