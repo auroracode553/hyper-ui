@@ -1,5 +1,7 @@
 # UI 样式与功能实现基线
 
+普通设置菜单统一使用 HyperMenuGroup(title = ...) + HyperListTile 的默认样式；独立标题使用 HyperSectionTitle，与菜单组标题共用 14sp Bold 排版。页面留白由调用方使用 HyperSpacing（水平 14dp、垂直 12dp、组间 16dp）提供一次。不要另以 HyperCard 包装菜单行、覆写标题字号或手画设置开关；必要业务预览与功能绘制独立保留。
+
 三选项主题弹窗统一使用 HyperThemeModeDialog：跟随系统、浅色、深色；36dp 最小行高、4dp 垂直内边距、无额外行间距，沿用 21dp 单选圆环。普通 HyperRadio 标签行与设置菜单的默认高度保持独立。
 
 ## 全面屏与系统安全区

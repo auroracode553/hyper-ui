@@ -31,6 +31,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperSwitch](components/form/hyper-switch.md) | 开关；plain 标签行不附带卡片 |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选；plain 标签行不附带卡片 |
 | [HyperRadio](components/form/hyper-radio.md) | 单选；标签行承载点击，展示圆环不叠加触摸留白 |
+| [HyperSectionTitle](components/list/hyper-section-title.md) | 与菜单分组共用的 14sp Bold 标题，无默认外边距 |
 | [HyperThemeModeDialog](components/feedback/hyper-theme-mode-dialog.md) | 跟随系统、浅色、深色；36dp 紧凑选项，选择后请求关闭 |
 | [HyperSegmentedControl](components/form/hyper-segmented-control.md) | 40dp 分段切换，选中底板平移 |
 | [HyperSlider](components/form/hyper-slider.md) | 6dp 轨道、20dp 手柄，连续或分段值调节 |

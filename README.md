@@ -1,5 +1,7 @@
 # HyperUI
 
+设置页面使用 HyperMenuGroup(title = ...) 与 HyperListTile 的默认排版及卡片留白；独立标题使用 [HyperSectionTitle](vitepress/docs/components/list/hyper-section-title.md)，不在应用中覆写菜单字号或另用 HyperCard 包装设置行。页面水平、垂直和组间留白分别读取 HyperSpacing.PageHorizontal / PageVertical / SectionVertical（14 / 12 / 16dp）。
+
 维护组件前必读 [UI 样式与功能实现基线](vitepress/docs/style-reference.md)：记录 Android 当前材质、尺寸、功能、状态及专用样式保留清单。已有样式默认保持不动，用途不明或可能影响交互的变化先向使用者确认，禁止批量替换。
 
 通用内嵌月历参见 [HyperCalendarMonth](vitepress/docs/components/form/hyper-calendar-month.md)；日期格和附属条目参见 [HyperCalendarDay](vitepress/docs/components/form/hyper-calendar-day.md)。与日期选择器共用原有圆形选中及今日描边，业务历法与日程留在调用方。

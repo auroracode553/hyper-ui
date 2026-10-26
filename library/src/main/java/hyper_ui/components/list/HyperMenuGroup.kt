@@ -120,6 +120,7 @@ fun HyperMenuGroup(
 }
 
 object HyperMenuGroupDefaults {
+    val TitleSpacing = 8.dp
     val Shape: Shape = RoundedCornerShape(MenuListCornerRadius)
     /** 卡片内边距与页面外边距职责独立；组内行不再重复添加水平留白。 */
     val ContentPadding = PaddingValues(horizontal = HyperSpacing.PageHorizontal, vertical = 4.dp)
@@ -143,9 +144,8 @@ internal fun menuListItemShape(
 @Composable
 private fun HyperMenuGroupHeading(title: String?, subtitle: String?, child: @Composable () -> Unit) {
     if (title == null && subtitle == null) { child(); return }
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        if (title != null) HyperText(title,
-            fontSize = 14.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+    Column(verticalArrangement = Arrangement.spacedBy(HyperMenuGroupDefaults.TitleSpacing)) {
+        if (title != null) HyperSectionTitle(title)
         child()
         if (subtitle != null) HyperText(subtitle,
             color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 16.2.sp)

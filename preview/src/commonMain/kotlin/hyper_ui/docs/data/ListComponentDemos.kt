@@ -5,10 +5,17 @@ import hyper_ui.docs.ui.ListTileDemo
 import hyper_ui.docs.ui.HyperMenuGroupDemo
 import hyper_ui.docs.ui.HyperListDemo
 import hyper_ui.docs.ui.HyperSectionedListDemo
+import hyper_ui.docs.ui.SectionTitleDemo
 
 private const val GROUP_LIST = "列表组件"
 
 internal fun listComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(id = "section-title", group = GROUP_LIST, title = "HyperSectionTitle",
+        description = "独立标题与菜单组标题共用默认排版，页面使用统一间距。",
+        code = """HyperSectionTitle("通用设置")""",
+        variants = listOf(DemoVariant("默认", "text / modifier", "14sp Bold，无默认外边距"),
+            DemoVariant("设置布局", "HyperSpacing", "页面 14dp 水平、12dp 垂直、16dp 组间")),
+        apiDocumentPaths = listOf("list/hyper-section-title.md"), content = { SectionTitleDemo() }),
     ComponentDemo(
         id = "hyper_list",
         group = GROUP_LIST,

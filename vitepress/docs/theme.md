@@ -153,12 +153,16 @@ fun rgba(red: Int, green: Int, blue: Int, alpha: Float = 1f): Color
 ```kotlin
 object HyperSpacing {
     val PageHorizontal: Dp = 14.dp
+    val PageVertical: Dp = 12.dp
+    val SectionVertical: Dp = 16.dp
 }
 ```
 
 | 属性 | 类型 | 默认值 | 作用 |
 | --- | --- | --- | --- |
 | PageHorizontal | Dp | 14.dp | 页面内容、搜索与列表共用的水平留白；调用方在父容器或 contentPadding 中使用一次。 |
+| PageVertical | Dp | 12.dp | 设置页正文首尾留白，不含导航或系统安全区。 |
+| SectionVertical | Dp | 16.dp | 相邻完整设置分组之间的间距。 |
 
 ```kotlin
 HyperList(contentPadding = PaddingValues(horizontal = HyperSpacing.PageHorizontal)) {

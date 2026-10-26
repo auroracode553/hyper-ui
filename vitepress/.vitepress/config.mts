@@ -77,6 +77,7 @@ export default defineConfig({
           { text: 'Switch', link: '/components/form/hyper-switch' },
           { text: 'Checkbox', link: '/components/form/hyper-checkbox' },
           { text: 'Radio', link: '/components/form/hyper-radio' },
+          { text: 'SectionTitle', link: '/components/list/hyper-section-title' },
           { text: 'SegmentedControl', link: '/components/form/hyper-segmented-control' },
           { text: 'Slider', link: '/components/form/hyper-slider' },
           { text: 'DatePicker', link: '/components/form/hyper-date-picker' }
