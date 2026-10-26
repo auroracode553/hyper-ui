@@ -41,6 +41,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 
 | 组件 | 用途 |
 | --- | --- |
+| [HyperSafeArea](components/container/hyper-safe-area.md) | 按需顶部／底部保护，竖屏底部统一最小 20dp、嵌套不重复 |
 | [HyperBackdrop](components/container/hyper-backdrop.md) | 玻璃背景采样 |
 | [HyperCard](components/container/hyper-card.md) | 结构化内容容器 |
 | [HyperColorPicker](components/container/hyper-color-picker.md) | 颜色选择 |

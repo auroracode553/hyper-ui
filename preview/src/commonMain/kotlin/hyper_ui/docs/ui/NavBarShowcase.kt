@@ -57,7 +57,7 @@ private enum class NavBarExample(
 @Composable
 fun NavBarDemo() {
     // 模拟安全区位于导航背景内部，与真机及 Flutter 的层级一致。
-    CompositionLocalProvider(LocalHyperNavBarWindowInsets provides WindowInsets(top = PreviewTopSafeArea)) {
+    CompositionLocalProvider(LocalHyperSafeAreaWindowInsets provides WindowInsets(top = PreviewTopSafeArea)) {
         NavBarPageDemo()
     }
 }

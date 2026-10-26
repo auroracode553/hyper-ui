@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.width
@@ -25,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
@@ -39,12 +36,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.platform.LocalDensity
 
-// 文档预览注入模拟系统 Insets，导航背景和正文净空共用同一个来源。
-internal val LocalHyperNavBarWindowInsets = staticCompositionLocalOf<WindowInsets?> { null }
-
 @Composable
 private fun navBarTopInsets(): WindowInsets =
-    (LocalHyperNavBarWindowInsets.current ?: HyperTheme.topBarInsets).only(WindowInsetsSides.Top)
+    HyperTheme.topBarInsets
 
 /** 固定避让顶部状态栏；宿主传入滚动状态，组件统一处理背景采样和过渡。 */
 @Composable

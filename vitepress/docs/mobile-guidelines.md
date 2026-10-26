@@ -75,3 +75,5 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 - [主题配置](theme.md)
 - [组件索引](component-index.md)
 - [状态与架构边界](state-model.md)
+
+按需安全区统一使用 HyperSafeArea（Top / Bottom）。根画布继续全面屏；竖屏底部取导航区／缺口与库内最小 20dp 的最大值，横屏只保留实际系统区，同侧嵌套只消费一次。输入法只扩展自身面板底部，不处理宿主 IME Insets；页面不得自行复制安全区高度。

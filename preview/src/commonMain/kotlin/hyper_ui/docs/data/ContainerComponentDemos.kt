@@ -5,10 +5,19 @@ import hyper_ui.docs.theme.LocalDocsColorScheme
 
 import hyper_ui.docs.ui.ColorPickerDemo
 import hyper_ui.docs.ui.PanelDemo
+import hyper_ui.docs.ui.SafeAreaDemo
 
 private const val GROUP_CONTAINER = "容器组件"
 
 internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(
+        id = "safe-area", group = GROUP_CONTAINER, title = "HyperSafeArea",
+        description = "按需保护顶部或底部内容，统一底部最小 20dp，并避免嵌套重复留白。",
+        code = "HyperSafeArea { BottomControls() }",
+        variants = listOf(DemoVariant("方向", "edge = Top / Bottom", "背景保持全面屏；只保护内容"),
+            DemoVariant("嵌套", "同侧消费一次", "系统区与最小留白均不叠加")),
+        apiDocumentPaths = listOf("container/hyper-safe-area.md"), content = { SafeAreaDemo() }
+    ),
     ComponentDemo(
         id = "glass_material", group = GROUP_CONTAINER, title = "HyperBackdrop / HyperGlassTokens",
         description = "背景采样与 Solid、Soft、Clear 三档材质；观察 subtle、regular、strong 表面层级。",

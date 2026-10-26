@@ -146,5 +146,6 @@ fun <T> HyperTabBar(
 object HyperTabBarDefaults {
     val Height = 56.dp
     /** 组件视觉间距，与根布局系统安全区独立；并排入口由共同的 Row 只消费一次。 */
-    val FloatingMargin = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 20.dp)
+    val FloatingMargin = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp,
+        bottom = HyperSafeAreaDefaults.MinimumBottomSpacing)
 }

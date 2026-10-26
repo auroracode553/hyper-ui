@@ -85,6 +85,7 @@ export default defineConfig({
       {
         text: '容器组件',
         items: [
+          { text: 'SafeArea', link: '/components/container/hyper-safe-area' },
           { text: 'Backdrop', link: '/components/container/hyper-backdrop' },
           { text: 'Card', link: '/components/container/hyper-card' },
           { text: 'ColorPicker', link: '/components/container/hyper-color-picker' }
