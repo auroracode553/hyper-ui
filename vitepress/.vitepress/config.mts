@@ -127,6 +127,7 @@ export default defineConfig({
           { text: 'Dialog', link: '/components/feedback/hyper-dialog' },
           { text: 'ActionSheet', link: '/components/feedback/hyper-action-sheet' },
           { text: 'AlertDialog', link: '/components/feedback/hyper-alert-dialog' },
+          { text: 'ThemeModeDialog', link: '/components/feedback/hyper-theme-mode-dialog' },
           { text: 'UpdateDialog', link: '/components/feedback/hyper-update-dialog' }
         ]
       },
