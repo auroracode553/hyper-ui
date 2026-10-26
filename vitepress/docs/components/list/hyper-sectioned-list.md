@@ -1,10 +1,10 @@
 ---
-description: 按日期或分类组织页面数据，标题与数据行独立懒加载，自动管理组内圆角与分隔线。
+description: 按日期或分类组织页面数据，标题与数据行独立懒加载，使用无卡片平铺行并自动管理组内分隔线。
 ---
 
 # HyperSectionedList
 
-按日期或分类组织页面数据，标题与数据行独立懒加载，自动管理组内圆角与分隔线。分组之间固定使用 8dp 紧凑间距，不提供间距切换或 sectionSpacing 参数。
+按日期或分类组织页面数据，标题与数据行独立懒加载，使用无卡片平铺行并自动管理组内分隔线。分组之间固定使用 8dp 紧凑间距，不提供间距切换或 sectionSpacing 参数。
 
 <p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
 
@@ -40,7 +40,7 @@ HyperSectionedList(
 
 **滚动布局**
 
-列表需要有限高度。页面正文使用 Modifier.fillMaxSize()；顶部控件与列表组合时，列表使用 Modifier.weight(1f) 占满剩余视口，不使用固定 340dp 高度或外层 verticalScroll。默认左右留白 16dp，由列表统一提供，外层无需再次添加。分组和条目 key 必须在整个列表中唯一。选择状态由调用方持有。
+列表需要有限高度。页面正文使用 Modifier.fillMaxSize()；顶部控件与列表组合时，列表使用 Modifier.weight(1f) 占满剩余视口，不使用固定 340dp 高度或外层 verticalScroll。默认水平留白 0dp，由调用方通过 contentPadding = PaddingValues(horizontal = HyperSpacing.PageHorizontal) 或页面容器统一提供一次。分组和条目 key 必须在整个列表中唯一。选择状态由调用方持有。列表不绘制卡片背景、阴影或分组圆角；配色仅包含 headerContentColor 与 dividerColor。
 
 **约束**
 
@@ -67,9 +67,7 @@ fun <S, T> HyperSectionedList(
     contentPadding: PaddingValues = HyperSectionedListDefaults.ContentPadding,
     firstSectionTopSpacing: Dp = HyperSectionedListDefaults.FirstSectionTopSpacing,
     headerBottomSpacing: Dp = HyperSectionedListDefaults.HeaderBottomSpacing,
-    dividerModifier: Modifier = Modifier.padding(
-        start = HyperSectionedListDefaults.DividerInset
-    ),
+    dividerModifier: Modifier = Modifier,
     colors: HyperSectionedListColors = HyperSectionedListDefaults.colors(),
     headerContent: @Composable (section: S) -> Unit,
     itemContent: @Composable (section: S, item: T) -> Unit
@@ -89,7 +87,7 @@ fun <S, T> HyperSectionedList(
 | contentPadding | PaddingValues | 否 | HyperSectionedListDefaults.ContentPadding | 主体内容的内部留白。 |
 | firstSectionTopSpacing | Dp | 否 | HyperSectionedListDefaults.FirstSectionTopSpacing | 第一分组顶部的间距。 |
 | headerBottomSpacing | Dp | 否 | HyperSectionedListDefaults.HeaderBottomSpacing | 分组标题下方间距。 |
-| dividerModifier | Modifier | 否 | Modifier.padding( start = HyperSectionedListDefaults.DividerInset ) | 分隔线的布局修饰符。 |
+| dividerModifier | Modifier | 否 | Modifier | 分隔线的布局修饰符，默认无缩进。 |
 | colors | HyperSectionedListColors | 否 | HyperSectionedListDefaults.colors() | 组件各状态的颜色配置。 |
 | headerContent | @Composable (section: S) -&gt; Unit | 是 | — | 每个分组的标题内容。 |
 | itemContent | @Composable (section: S, item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |

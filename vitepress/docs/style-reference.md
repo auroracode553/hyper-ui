@@ -1,5 +1,7 @@
 # UI 样式与功能实现基线
 
+三选项主题弹窗统一使用 HyperThemeModeDialog：跟随系统、浅色、深色；36dp 最小行高、4dp 垂直内边距、无额外行间距，沿用 21dp 单选圆环。普通 HyperRadio 标签行与设置菜单的默认高度保持独立。
+
 ## 全面屏与系统安全区
 
 Android Activity 统一使用 enableHyperEdgeToEdge()，根主题 useSystemSafeArea 默认为 false。HyperTheme.systemSafeAreaInsets 为组件的唯一系统安全区来源，默认返回零；Scaffold、TabBar 不增加根系统安全区。Navbar 和自定义固定顶栏独立保护顶部交互区域一次；HyperNavBarPage 将测量净空放进滚动正文，页面背景和滚动视口保持全屏。键盘 Insets、业务组件高度和控件本身的间距继续保留。下文旧版关于状态栏/底部安全区的尺寸说明以此规则为准。
@@ -112,7 +114,7 @@ HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐
 | HyperTabs | radius 27，padding 3、条目 48，总高 54 | 单一共享表面，44dp 选中底面；滚动项目最小 76dp，选中背景 160ms，非滚动模式背景即时切换 |
 | HyperTabBar | single / multiple / 贴底默认内容高 56；悬浮顶部间距 8、底部间距 20 | single / multiple；图标 22 / 23；指示器 160ms easeOutCubic；大字体仅由库按内容扩展 |
 | HyperNavBar | 高 44，水平 padding 16，标题 16/600 | 透明操作层，标题字距 -0.2sp、副标题 11sp、安全区另计 |
-| HyperListTile | plain 最小 46，padding 14×8；外层 glass padding 3 | auto/plain/glass，标题 14/600、说明 12、meta 11，图标块 34 |
+| HyperListTile | plain 最小 46，水平留白 0、垂直 8；外层 glass 仅垂直留白 3 | auto/plain/glass，标题 14/600、说明 12、meta 11，图标块 34 |
 | HyperMenuGroup | radius 18，padding 4，分隔缩进 14 | items 入口自动分隔；自由内容入口显式组合分隔 |
 | HyperCard | radius 24，padding 12，头/正文/页脚间距 12 | 标题 14/600，副标题 13，selected strong 与强调轮廓 |
 | HyperDropdown | 字段 minHeight 48，radius 16，padding 14×11；自动宽度 clamp(最长文案 + 68,160,240) | width 可显式指定，菜单匹配字段实际宽度；radius 18、padding 5、默认最大高 320 |
@@ -192,8 +194,8 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 | [HyperCard](components/container/hyper-card.md) | components/panel/HyperCard.kt | title / subtitle / leading / actions / footer / child 插槽；selected 使用较实表面与原始强调色边框，不额外降低边框透明度；显式 border 可覆盖；点击可选 |
 | [HyperListTile](components/list/hyper-list-tile.md) | components/list/HyperListTile.kt | auto / plain / glass；根据已有表面作用域决定是否绘制外壳；选中、禁用、尾箭头和分隔线各自处理；图标块为独立视觉，不当成按钮 |
 | [HyperMenuGroup](components/list/hyper-menu-group.md) | components/list/HyperMenuGroup.kt | 外层单一表面，条目共享容器；items 入口负责分隔，自由内容入口由调用方组合；不嵌套逐行卡片 |
-| [HyperList](components/list/hyper-list.md) | components/list/HyperList.kt | 页面级 LazyColumn；state 可传入，modifier 与 contentModifier 管不同节点，contentPadding 随内容滚动；默认圆角 18dp、内边距 4dp |
-| [HyperSectionedList](components/list/hyper-sectioned-list.md) | components/list/HyperSectionedList.kt | 分组标题与数据行分别懒加载，调用方给稳定 key；跳过空分组，组间固定 8dp；组件管理组内首尾圆角和分割线 |
+| [HyperList](components/list/hyper-list.md) | components/list/HyperList.kt | 页面级 LazyColumn；state 可传入，modifier 与 contentModifier 管不同节点，contentPadding 随内容滚动；无卡片表面，默认内边距 0dp，auto 行使用 plain |
+| [HyperSectionedList](components/list/hyper-sectioned-list.md) | components/list/HyperSectionedList.kt | 分组标题与数据行分别懒加载，调用方给稳定 key；跳过空分组，组间固定 8dp；无卡片平铺行，组件管理组内分割线 |
 | [HyperNavBar / HyperNavBarPage](components/navigation/hyper-nav-bar.md) | components/navigation/HyperNavBar.kt、HyperNavBarSurface.kt、HyperNavBarScrollScope.kt | 固定 type 与 custom 插槽校验互斥；安全区位于背景内部，背景从屏幕顶部覆盖状态栏，只有操作行避让；预览注入 52dp 模拟 Insets，导航与正文共用且只计一次；库内观察主滚动状态并驱动背景，页面宿主叠放导航并传递 padding，不自行接管业务路由 |
 | [HyperTabs](components/navigation/hyper-tabs.md) | components/menu/HyperTabs.kt | tabs / selectedIndex / onChanged 受控；重复点击当前项不回调；scrollable 决定等宽或水平滚动，itemEnabled 控制项目；不内置 Flutter 的页面控制器 |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | components/navigation/HyperTabBar.kt | single / multiple；floating 默认 true 保留原悬浮样式，false 为零默认外间距的全宽贴底平直表面；selectedIndex=null 为无选中块、可重复点击且不响应拖动的动作模式；itemEnabled 控制单项禁用。选择模式仍按拖动预览、松手提交，保留标签测宽与安全区 |
@@ -277,3 +279,10 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp，字体扩展仅在组件内处理。业务页面不覆写高度；并排入口在共同 Row 中布局，正文采用宿主实际测量的底部净空。
 
 按需安全区统一使用 HyperSafeArea（Top / Bottom）。根画布继续全面屏；竖屏底部取导航区／缺口与库内最小 20dp 的最大值，横屏只保留实际系统区，同侧嵌套只消费一次。输入法只扩展自身面板底部，不处理宿主 IME Insets；页面不得自行复制安全区高度。
+
+
+页面数据列表：`HyperList` 与 `HyperSectionedList` 使用无卡片的简约平铺样式，不绘制卡片背景、阴影或分组圆角；保留分隔线与行选中反馈。设置菜单的 `HyperMenuGroup` 和独立 `HyperListTile` 表面规则保持独立。
+
+列表水平留白归调用方：HyperList、HyperSectionedList 与 plain 行默认不添加水平外边距；HyperMenuGroup 和独立 glass 行保留卡片内部留白；页面通过 HyperSpacing.PageHorizontal（14dp）统一提供一次。组件保留垂直触控留白、内容间距和选中反馈。
+
+卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。

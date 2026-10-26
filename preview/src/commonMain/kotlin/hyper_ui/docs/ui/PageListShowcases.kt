@@ -20,33 +20,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import hyper_ui.*
 
 @Composable
 fun HyperListDemo() {
     val items = remember { listOf("系统设置", "通知权限", "同步策略", "安全中心", "账户资料", "登录设备", "隐私权限", "数据备份", "帮助与反馈", "关于应用") }
-    var rounded by remember { mutableStateOf(true) }
+    var pageInset by remember { mutableStateOf(true) }
     var comfortable by remember { mutableStateOf(false) }
     var padded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf<String?>(null) }
-    Column(Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(Modifier.fillMaxSize().padding(horizontal = if (pageInset) HyperSpacing.PageHorizontal else 0.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Column(Modifier.fillMaxWidth()) {
-            PreviewToggle("圆角容器", rounded) { rounded = it }
+            PreviewToggle("调用方页面留白 14dp", pageInset) { pageInset = it }
             PreviewToggle("宽松行间距", comfortable) { comfortable = it }
             PreviewToggle("滚动内容留白", padded) { padded = it }
         }
         // weight 保留有限高度，LazyColumn 独自负责剩余空间的滚动。
         HyperList(
             modifier = Modifier.weight(1f),
-            contentPadding = if (padded) PaddingValues(horizontal = 4.dp, vertical = 24.dp) else HyperListDefaults.ContentPadding,
-            shape = if (rounded) HyperListDefaults.Shape else RectangleShape
+            contentPadding = if (padded) PaddingValues(vertical = 24.dp) else HyperListDefaults.ContentPadding
         ) {
             itemsIndexed(items, key = { _, item -> item }, contentType = { _, _ -> "setting" }) { index, item ->
                 HyperListTile(
                     selected = selected == item,
-                    contentModifier = Modifier.padding(horizontal = 14.dp, vertical = if (comfortable) 14.dp else 8.dp),
+                    contentModifier = Modifier.padding(vertical = if (comfortable) 14.dp else 8.dp),
                     leadingIcon = when (item) {
                         "通知权限" -> Lucide.Bell
                         "同步策略", "数据备份" -> Lucide.RefreshCw
@@ -75,7 +73,8 @@ fun HyperSectionedListDemo() {
         )
     }
     var selected by remember { mutableStateOf<String?>(null) }
-    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    // Preview 作为调用方显式提供一次页面水平留白。
+    Column(Modifier.fillMaxSize().padding(horizontal = HyperSpacing.PageHorizontal), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         HyperSectionedList(
             modifier = Modifier.weight(1f),
             sections = groups,

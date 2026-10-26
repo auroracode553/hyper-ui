@@ -1,4 +1,4 @@
-/** 文件职责：提供按标题分段、逐项懒加载并自动管理组内圆角和分割线的页面列表。 */
+/** 文件职责：提供按标题分段、逐项懒加载并自动管理组内分割线的页面列表。 */
 package hyper_ui
 
 import androidx.compose.foundation.layout.Box
@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -25,14 +23,13 @@ import androidx.compose.ui.unit.sp
 @Immutable
 data class HyperSectionedListColors(
     val headerContentColor: Color,
-    val itemContainerColor: Color,
     val dividerColor: Color
 )
 
 /**
  * 页面级分段懒列表。
  *
- * 日期等分段标题与数据行保持独立懒加载；组件负责每组卡片背景、首尾圆角和分割线，
+ * 日期等分段标题与数据行保持独立懒加载；组件负责无卡片平铺行与组内分割线，
  * 分组之间固定使用 8dp 紧凑间距，调用方只负责分组数据、稳定 key、标题和单行内容。
  */
 @Composable
@@ -46,15 +43,11 @@ fun <S, T> HyperSectionedList(
     contentPadding: PaddingValues = HyperSectionedListDefaults.ContentPadding,
     firstSectionTopSpacing: Dp = HyperSectionedListDefaults.FirstSectionTopSpacing,
     headerBottomSpacing: Dp = HyperSectionedListDefaults.HeaderBottomSpacing,
-    dividerModifier: Modifier = Modifier.padding(
-        start = HyperSectionedListDefaults.DividerInset
-    ),
+    dividerModifier: Modifier = Modifier,
     colors: HyperSectionedListColors = HyperSectionedListDefaults.colors(),
     headerContent: @Composable (section: S) -> Unit,
     itemContent: @Composable (section: S, item: T) -> Unit
 ) {
-    val pageBackground = HyperColors.pageBackground
-    val itemContainerColor = resolveHyperContainerColor(colors.itemContainerColor, hyperGlass.surface)
     val headerContentColor = resolveHyperContainerColor(colors.headerContentColor, HyperColors.secondaryText)
     val dividerColor = resolveHyperContainerColor(colors.dividerColor, HyperColors.divider)
 
@@ -103,7 +96,6 @@ fun <S, T> HyperSectionedList(
                     HyperSectionedListItemContainer(
                         itemIndex = itemIndex,
                         lastItemIndex = sectionItems.lastIndex,
-                        containerColor = itemContainerColor,
                         dividerColor = dividerColor,
                         dividerModifier = dividerModifier
                     ) {
@@ -118,9 +110,8 @@ fun <S, T> HyperSectionedList(
 object HyperSectionedListDefaults {
     val FirstSectionTopSpacing = 0.dp
     val HeaderBottomSpacing = 8.dp
-    val DividerInset = HyperListTileDefaults.DividerInset
-    /** 分段列表默认提供左右 16.dp 内容留白，子项（HyperListTile 等）无需重复设置水平 padding。 */
-    val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
+    /** 分组标题和数据行共用调用方传入的页面留白，库不添加水平缩进。 */
+    val ContentPadding: PaddingValues = PaddingValues(0.dp)
 
     val HeaderTextStyle: TextStyle
         @Composable get() = HyperTheme.typography.titleSmall.copy(
@@ -132,13 +123,10 @@ object HyperSectionedListDefaults {
     @Composable
     fun colors(
         headerContentColor: Color = Color.Unspecified,
-        itemContainerColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
     ): HyperSectionedListColors {
-        val resolvedItemContainerColor = resolveHyperContainerColor(itemContainerColor, hyperGlass.surface)
         return HyperSectionedListColors(
             headerContentColor = resolveHyperContainerColor(headerContentColor, HyperColors.secondaryText),
-            itemContainerColor = resolvedItemContainerColor,
             dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
         )
     }
@@ -148,24 +136,18 @@ object HyperSectionedListDefaults {
 private fun HyperSectionedListItemContainer(
     itemIndex: Int,
     lastItemIndex: Int,
-    containerColor: Color,
     dividerColor: Color,
     dividerModifier: Modifier,
     content: @Composable () -> Unit
 ) {
     val isLastItem = itemIndex == lastItemIndex
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .hyperFrostedSurface(
-                containerColor = containerColor,
-                shape = sectionItemShape(itemIndex, lastItemIndex)
-            )
+        modifier = Modifier.fillMaxWidth()
     ) {
         CompositionLocalProvider(
-            // 分段容器统一绘制分割线，避免行组件重复绘制或越过组内圆角边界。
+            // 分段容器统一绘制分割线，避免行组件重复绘制。
             LocalHyperListTileDividerSuppressed provides true,
-            LocalHyperListTileContainerColor provides containerColor,
+            LocalHyperListTileContainerColor provides Color.Transparent,
             content = content
         )
         if (!isLastItem) {
@@ -174,26 +156,6 @@ private fun HyperSectionedListItemContainer(
                 color = dividerColor
             )
         }
-    }
-}
-
-private fun sectionItemShape(itemIndex: Int, lastItemIndex: Int): Shape {
-    val radius = 18.dp
-    return when {
-        lastItemIndex == 0 -> RoundedCornerShape(radius)
-        itemIndex == 0 -> RoundedCornerShape(
-            topStart = radius,
-            topEnd = radius,
-            bottomEnd = 0.dp,
-            bottomStart = 0.dp
-        )
-        itemIndex == lastItemIndex -> RoundedCornerShape(
-            topStart = 0.dp,
-            topEnd = 0.dp,
-            bottomEnd = radius,
-            bottomStart = radius
-        )
-        else -> RoundedCornerShape(0.dp)
     }
 }
 

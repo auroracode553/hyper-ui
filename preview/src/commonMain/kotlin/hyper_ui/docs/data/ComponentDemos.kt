@@ -33,10 +33,10 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(formComponentDemos()) // 日期共用正式网格；Checkbox/Radio/Switch 直接展示无卡片的默认标签行。
     addAll(containerComponentDemos()) // 按需安全区共用顶部几何和底部最小留白； 内容表面共用无普通边框与双层阴影，选中强调边界保留。
     addAll(navigationComponentDemos()) // Navbar 自动监听；TabBar 共用默认高度，覆盖悬浮、贴底、并排操作、重复动作与禁用项。
-    addAll(listComponentDemos()) // list-tile 直接展示条目；sectioned_list 固定 8dp 紧凑间距。
+    addAll(listComponentDemos()) // HyperSpacing.PageHorizontal 在列表预览可切换；水平留白统一归调用方；页面列表无卡片，保留分隔线与 8dp 分段间距。
     addAll(feedbackComponentDemos()) // action_sheet 对齐 Flutter；toast 文字操作先关闭再回调；update_dialog 共用更新状态。
     addAll(toolsComponentDemos()) // Android 更新工具只在 Preview 模拟流程，不引入平台网络或下载。
-    addAll(themeComponentDemos()) // 材质与全局系统安全区；Android Activity 全面屏入口见组件文档。
+    addAll(themeComponentDemos()) // 共用三选项主题弹窗、材质与全局系统安全区；全面屏入口见组件文档。
 }
 .map { demo ->
     if (demo.useReferencePreview) {

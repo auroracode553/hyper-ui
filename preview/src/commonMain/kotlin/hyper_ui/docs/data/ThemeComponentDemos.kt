@@ -25,10 +25,28 @@ import hyper_ui.HyperMaterial
 import hyper_ui.HyperNavBar
 import hyper_ui.HyperNavBarPage
 import hyper_ui.docs.theme.docsGlassTokens
+import hyper_ui.docs.ui.ThemeModeDialogDemo
 
 private const val GROUP_THEME = "主题配置"
 
 internal fun themeComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(
+        id = "theme-mode-dialog",
+        group = GROUP_THEME,
+        title = "HyperThemeModeDialog",
+        description = "跟随系统、浅色、深色三选项；36dp 紧凑行，选中后请求关闭。",
+        code = """
+            HyperThemeModeDialog(visible = visible, value = darkTheme,
+                onChanged = { darkTheme = it }, onClose = { visible = false })
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("跟随系统", "value = null", "由应用解析系统明暗"),
+            DemoVariant("浅色 / 深色", "value = false / true", "统一选项与圆环，保留当前值"),
+            DemoVariant("关闭", "onClose", "选中、遮罩或返回请求关闭；取消不修改值")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-theme-mode-dialog.md"),
+        content = { ThemeModeDialogDemo() }
+    ),
     ComponentDemo(
         id = "theme-material",
         group = GROUP_THEME,

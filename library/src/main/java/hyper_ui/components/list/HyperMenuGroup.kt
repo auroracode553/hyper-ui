@@ -59,7 +59,7 @@ fun <T> HyperMenuGroup(
         verticalArrangement = verticalArrangement
     ) {
         items.forEachIndexed { index, item ->
-            if (index > 0) HyperDivider(Modifier.padding(horizontal = 14.dp))
+            if (index > 0) HyperDivider()
             val isFirst = index == 0
             val isLast = index == items.lastIndex
             Box(
@@ -121,8 +121,8 @@ fun HyperMenuGroup(
 
 object HyperMenuGroupDefaults {
     val Shape: Shape = RoundedCornerShape(MenuListCornerRadius)
-    /** 参考菜单容器统一 padding 4dp，边框仅绘制。 */
-    val ContentPadding = PaddingValues(4.dp)
+    /** 卡片内边距与页面外边距职责独立；组内行不再重复添加水平留白。 */
+    val ContentPadding = PaddingValues(horizontal = HyperSpacing.PageHorizontal, vertical = 4.dp)
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperMenuGroupColors = HyperMenuGroupColors(
@@ -144,10 +144,10 @@ internal fun menuListItemShape(
 private fun HyperMenuGroupHeading(title: String?, subtitle: String?, child: @Composable () -> Unit) {
     if (title == null && subtitle == null) { child(); return }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        if (title != null) HyperText(title, Modifier.padding(start = 8.dp),
+        if (title != null) HyperText(title,
             fontSize = 14.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
         child()
-        if (subtitle != null) HyperText(subtitle, Modifier.padding(horizontal = 8.dp),
+        if (subtitle != null) HyperText(subtitle,
             color = HyperColors.secondaryText, fontSize = 12.sp, lineHeight = 16.2.sp)
     }
 }

@@ -69,6 +69,8 @@ HyperThemeConfig {
 HyperListTile 预览直接展示条目和状态，不额外套 HyperCard；弹窗中的只读详情使用 HyperListTile(type = "plain") 的标签与说明槽，不逐项包装卡片。
 HyperRadio 的标签行由整行处理点击，默认最小高度 46dp；放进列表行只展示时省略 onChanged，圆环占 21dp，不额外撑高行。无标签独立交互控件保留 44dp 触摸区。
 
+三选项主题设置使用 [HyperThemeModeDialog](vitepress/docs/components/feedback/hyper-theme-mode-dialog.md)：选项最小行高 36dp、上下内边距 4dp，选择后请求关闭。value 为 null / false / true，分别表示跟随系统 / 浅色 / 深色；应用负责保存并应用主题。
+
 ## 先看结论
 
 - 调用方可以通过 Maven 坐标、源码模块或 AAR 引入 HyperUI。
@@ -437,3 +439,12 @@ npm run dev
 TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp，字体扩展仅在组件内处理。业务页面不覆写高度；并排入口在共同 Row 中布局，正文采用宿主实际测量的底部净空。
 
 按需安全区统一使用 HyperSafeArea（Top / Bottom）。根画布继续全面屏；竖屏底部取导航区／缺口与库内最小 20dp 的最大值，横屏只保留实际系统区，同侧嵌套只消费一次。输入法只扩展自身面板底部，不处理宿主 IME Insets；页面不得自行复制安全区高度。
+
+
+页面数据列表：`HyperList` 与 `HyperSectionedList` 使用无卡片的简约平铺样式，不绘制卡片背景、阴影或分组圆角；保留分隔线与行选中反馈。设置菜单的 `HyperMenuGroup` 和独立 `HyperListTile` 表面规则保持独立。
+
+列表水平留白归调用方：HyperList、HyperSectionedList 与 plain 行默认不添加水平外边距；HyperMenuGroup 和独立 glass 行保留卡片内部留白；页面通过 HyperSpacing.PageHorizontal（14dp）统一提供一次。组件保留垂直触控留白、内容间距和选中反馈。
+
+共用页面尺寸参见 [HyperSpacing API](vitepress/docs/theme.md#hyperspacing-api)，调用方直接使用 HyperSpacing.PageHorizontal，不在各项目维护副本。
+
+卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。

@@ -31,7 +31,7 @@ HyperMenuGroup(items = settings) { item ->
 
 **样式约定**
 
-regular 玻璃 radius 18dp，padding 4dp。泛型 items 入口自动在项之间绘制两侧缩进 14dp 的分隔线。
+regular 玻璃 radius 18dp，卡片内部水平 padding 为 HyperSpacing.PageHorizontal（14dp）、垂直 4dp。组内 plain 行不重复添加水平留白；页面外边距由调用方单独提供。泛型 items 入口自动在项之间绘制无缩进分隔线。
 
 菜单组按内容测量高度；页面滚动由调用方容器承担，较多数据使用 HyperList。
 
@@ -130,3 +130,5 @@ fun HyperMenuGroup(
 ## 共用内容表面
 
 本组件的正文表面复用内部 hyperCardSurface/ContentCard，与 HyperCard 共用无普通描边、画布色阶和双层柔阴影。圆角、间距及已有交互不变；选中态保留完整强调边界，组内行不重复装饰，分隔线继续保留。具体参数见[设计系统基线](../../style-reference.md#内容卡片与导航维护规则)。浮层、操作区和输入控件不使用此内容卡片规则。
+
+卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。

@@ -39,7 +39,7 @@ HyperList(modifier = Modifier.fillMaxSize()) {
 
 **滚动布局**
 
-列表需要有限高度。页面正文使用 Modifier.fillMaxSize()；控件与列表纵向组合时，在有限高度的 Column 内给列表 Modifier.weight(1f)。外层不要再嵌套 verticalScroll。默认 18dp 圆角、内容 4dp 留白，子项自行管理 14dp 横向内边距。
+列表需要有限高度。页面正文使用 Modifier.fillMaxSize()；控件与列表纵向组合时，在有限高度的 Column 内给列表 Modifier.weight(1f)。外层不要再嵌套 verticalScroll。列表不绘制卡片背景、阴影、圆角或边框。默认内容留白为 0dp，页面通过 contentPadding = PaddingValues(horizontal = HyperSpacing.PageHorizontal) 提供水平留白；子项默认水平内边距为 0dp，页面只需提供一次留白，auto 行在列表中采用 plain 样式。
 
 **约束**
 
@@ -62,9 +62,6 @@ fun HyperList(
     state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = HyperListDefaults.ContentPadding,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
-    shape: Shape = HyperListDefaults.Shape,
-    border: BorderStroke? = null,
-    colors: HyperListColors = HyperListDefaults.colors(),
     content: LazyListScope.() -> Unit
 )
 ```
@@ -78,7 +75,4 @@ fun HyperList(
 | state | LazyListState | 否 | rememberLazyListState() | 组件使用的状态对象，由调用方提供或记忆。 |
 | contentPadding | PaddingValues | 否 | HyperListDefaults.ContentPadding | 主体内容的内部留白。 |
 | verticalArrangement | Arrangement.Vertical | 否 | Arrangement.spacedBy(0.dp) | 子项的垂直排列方式。 |
-| shape | Shape | 否 | HyperListDefaults.Shape | 组件容器的形状。 |
-| border | BorderStroke? | 否 | null | 容器边框配置。 |
-| colors | HyperListColors | 否 | HyperListDefaults.colors() | 组件各状态的颜色配置。 |
 | content | LazyListScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |

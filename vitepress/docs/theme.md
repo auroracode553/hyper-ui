@@ -144,3 +144,30 @@ fun rgba(red: Int, green: Int, blue: Int, alpha: Float = 1f): Color
 具体默认尺寸见 [样式对照](style-reference.md)；组件签名见 [组件索引](component-index.md)。
 
 全面屏顶部布局：根系统安全区开关不影响顶部操作保护。标准 HyperNavBar 自动处理，自定义固定顶栏使用 Compose 窗口布局；正文首屏净空放在滚动内容内部，背景与滚动视口可覆盖状态栏。
+
+
+## HyperSpacing API
+
+公开包名为 hyper_ui。共用布局值不持有状态，也不会自动向组件插入边距。
+
+```kotlin
+object HyperSpacing {
+    val PageHorizontal: Dp = 14.dp
+}
+```
+
+| 属性 | 类型 | 默认值 | 作用 |
+| --- | --- | --- | --- |
+| PageHorizontal | Dp | 14.dp | 页面内容、搜索与列表共用的水平留白；调用方在父容器或 contentPadding 中使用一次。 |
+
+```kotlin
+HyperList(contentPadding = PaddingValues(horizontal = HyperSpacing.PageHorizontal)) {
+    items(entries, key = { it.id }) { entry ->
+        HyperListTile(title = { HyperText(entry.title) })
+    }
+}
+```
+
+页面列表与 plain 行默认水平留白为 0dp，卡片内边距独立保留，不需要每个应用再定义相同数值。输入框内部文本间距、图标与文字间距以及垂直触控空间仍由各组件负责。示例与可操作的留白开关见 [HyperList](components/list/hyper-list.md)。
+
+卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。

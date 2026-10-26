@@ -36,8 +36,8 @@ internal val LocalHyperListTileContainerColor = staticCompositionLocalOf { Color
 fun HyperListTile(
     title: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
-    contentModifier: Modifier = Modifier.padding(HyperListTileDefaults.ContentPadding),
-    dividerModifier: Modifier = Modifier.padding(horizontal = 14.dp),
+    contentModifier: Modifier? = null,
+    dividerModifier: Modifier = Modifier,
     type: String = "auto",
     selected: Boolean = false,
     enabled: Boolean = true,
@@ -69,13 +69,16 @@ fun HyperListTile(
         if (selected) hyperGlass.surfaceStrong else hyperGlass.surface,
         RoundedCornerShape(18.dp),
         border = if (selected) BorderStroke(1.dp, HyperColors.accent) else null
-    ).padding(3.dp)
+    ).padding(vertical = 3.dp)
     Column(modifier.fillMaxWidth().then(surface)) {
         Row(Modifier.fillMaxWidth().defaultMinSize(minHeight = 46.dp)
             .then(if (plain && onPressed != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
                 pressedScale = 0.992f, onClick = onPressed) else Modifier)
             .background(selectedBackground, rowShape)
-            .then(contentModifier), verticalAlignment = Alignment.CenterVertically) {
+            // 平铺行共享页面/父卡片的留白；独立卡片必须保留内容到卡片边缘的间距。
+            .then(contentModifier ?: Modifier.padding(
+                if (plain) HyperListTileDefaults.ContentPadding else HyperListTileDefaults.CardContentPadding
+            )), verticalAlignment = Alignment.CenterVertically) {
             if (hasLeading) {
                 CompositionLocalProvider(LocalHyperContentColor provides if (enabled) colors.contentColor else colors.disabledContentColor,
                     LocalHyperIconSize provides 18.dp) {
@@ -125,8 +128,9 @@ object HyperListTileDefaults {
     val SupportingMinHeight = 46.dp
     val ContentGap = 12.dp
     val TextGap = 3.dp
-    val ContentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
-    val DividerInset = 14.dp
+    // 水平留白由调用方的页面或容器提供，避免标题、搜索与列表行重复缩进。
+    val ContentPadding = PaddingValues(vertical = 8.dp)
+    val CardContentPadding = PaddingValues(horizontal = HyperSpacing.PageHorizontal, vertical = 8.dp)
     val DividerHeight = 1.dp
     fun minHeight(hasSupportingContent: Boolean): Dp = 46.dp
     val LeadingTextStyle: TextStyle

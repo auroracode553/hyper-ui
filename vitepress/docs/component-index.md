@@ -31,6 +31,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperSwitch](components/form/hyper-switch.md) | 开关；plain 标签行不附带卡片 |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选；plain 标签行不附带卡片 |
 | [HyperRadio](components/form/hyper-radio.md) | 单选；标签行承载点击，展示圆环不叠加触摸留白 |
+| [HyperThemeModeDialog](components/feedback/hyper-theme-mode-dialog.md) | 跟随系统、浅色、深色；36dp 紧凑选项，选择后请求关闭 |
 | [HyperSegmentedControl](components/form/hyper-segmented-control.md) | 40dp 分段切换，选中底板平移 |
 | [HyperSlider](components/form/hyper-slider.md) | 6dp 轨道、20dp 手柄，连续或分段值调节 |
 | [HyperDatePicker](components/form/hyper-date-picker.md) | 底部单日期月历、月份选择与年份跳转；默认 1900–2100 年 |
@@ -103,3 +104,12 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 全面屏顶部布局：根系统安全区开关不影响顶部操作保护。标准 HyperNavBar 自动处理，自定义固定顶栏使用 Compose 窗口布局；正文首屏净空放在滚动内容内部，背景与滚动视口可覆盖状态栏。
 
 TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp，字体扩展仅在组件内处理。业务页面不覆写高度；并排入口在共同 Row 中布局，正文采用宿主实际测量的底部净空。
+
+
+页面数据列表：`HyperList` 与 `HyperSectionedList` 使用无卡片的简约平铺样式，不绘制卡片背景、阴影或分组圆角；保留分隔线与行选中反馈。设置菜单的 `HyperMenuGroup` 和独立 `HyperListTile` 表面规则保持独立。
+
+列表水平留白归调用方：HyperList、HyperSectionedList 与 plain 行默认不添加水平外边距；HyperMenuGroup 和独立 glass 行保留卡片内部留白；页面通过 HyperSpacing.PageHorizontal（14dp）统一提供一次。组件保留垂直触控留白、内容间距和选中反馈。
+
+共用页面尺寸：[HyperSpacing.PageHorizontal（14dp）](theme.md#hyperspacing-api)，由页面显式使用，列表与行不自动叠加。
+
+卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。

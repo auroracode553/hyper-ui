@@ -30,7 +30,7 @@ import hyper_ui.HyperSwitch
 
 @Composable
 fun HyperMenuGroupDemo() {
-    // 整组共享内容表面；行保留交互和分隔线，不叠加卡片阴影。
+    // 页面外边距由 Preview 宿主提供；菜单保留卡片内边距，组内行不再重复缩进。
     var notifications by remember { mutableStateOf(true) }
     var sync by remember { mutableStateOf(false) }
     var feedback by remember { mutableStateOf("选择设置项查看反馈") }
