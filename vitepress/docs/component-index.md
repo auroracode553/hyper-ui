@@ -50,7 +50,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | 组件 | 用途 |
 | --- | --- |
 | [HyperNavBar](components/navigation/hyper-nav-bar.md) | 库内观察同一主滚动状态，active 停用隐藏或空视口，仅导航读取派生值；背景在状态栏顶部至导航底部内渐隐，不改页面布局 |
-| [HyperTabBar](components/navigation/hyper-tab-bar.md) | 悬浮内容高 56dp，贴底总高 60dp；single / multiple、可重复动作与单项禁用 |
+| [HyperTabBar](components/navigation/hyper-tab-bar.md) | single / multiple / 贴底统一默认内容高 56dp；single / multiple、可重复动作与单项禁用 |
 | [HyperScaffold](components/navigation/hyper-scaffold.md) | 基础页面宿主；实际栏高、正文净空与悬浮操作，不依赖 Material |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 贴边全高模态抽屉；固定标题／页脚，支持遮罩、返回键与滑动关闭 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表项侧滑操作 |
@@ -98,3 +98,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | --- | --- |
 | [检查更新](components/tools/hyper-update.md) | APK 静态 latest.json、系统下载、进度恢复、安装后清理；自动检查默认每小时窗口最多 2 次 |
 | [HyperBatteryState](components/tools/hyper-battery-state.md) | Android 电量状态读取 |
+
+全面屏顶部布局：根系统安全区开关不影响顶部操作保护。标准 HyperNavBar 自动处理，自定义固定顶栏使用 Compose 窗口布局；正文首屏净空放在滚动内容内部，背景与滚动视口可覆盖状态栏。
+
+TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp，字体扩展仅在组件内处理。业务页面不覆写高度；并排入口在共同 Row 中布局，正文采用宿主实际测量的底部净空。

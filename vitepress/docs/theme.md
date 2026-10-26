@@ -45,7 +45,7 @@ fun HyperThemeConfig(
 | content | @Composable () -&gt; Unit | 是 | — | 使用该主题的子树 |
 | useSystemSafeArea | Boolean | 否 | false | 全局系统安全区；默认全面屏，不补状态栏、手势条及显示缺口留白，键盘避让独立保留 |
 
-Android Activity 在 setContent 前统一调用 [enableHyperEdgeToEdge()](components/tools/hyper-edge-to-edge.md)。组件通过 HyperTheme.systemSafeAreaInsets 读取主题策略，默认返回零 Insets；页面不得再重复添加系统栏 padding。
+Android Activity 在 setContent 前统一调用 [enableHyperEdgeToEdge()](components/tools/hyper-edge-to-edge.md)。组件通过 HyperTheme.systemSafeAreaInsets 读取主题策略，默认返回零 Insets；页面不得再重复添加根系统栏 padding；顶部交互保护使用 HyperNavBar 和固定顶部操作容器，不受此开关影响。
 
 ## 材质档位
 
@@ -142,3 +142,5 @@ fun rgba(red: Int, green: Int, blue: Int, alpha: Float = 1f): Color
 调用方持有模式、品牌和材质。HyperTheme 的 material、glass、colors、typography、shapes、isDark 为当前 Composition 的只读属性；HyperColors 的语义色也仅能在 Composable 中读取，不能缓存为全局变量。公开产品支持 Android 手机 320–430dp 竖屏，Desktop/Wasm 仅用于预览。
 
 具体默认尺寸见 [样式对照](style-reference.md)；组件签名见 [组件索引](component-index.md)。
+
+全面屏顶部布局：根系统安全区开关不影响顶部操作保护。标准 HyperNavBar 自动处理，自定义固定顶栏使用 Compose 窗口布局；正文首屏净空放在滚动内容内部，背景与滚动视口可覆盖状态栏。

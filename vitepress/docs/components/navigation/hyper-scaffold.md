@@ -41,8 +41,10 @@ fun HyperScaffold(
 | --- | --- | --- | --- | --- |
 | modifier | Modifier | 否 | Modifier | 页面布局约束与外部修饰。 |
 | containerColor | Color | 否 | HyperColors.pageBackground | 贯穿页面的画布颜色。 |
-| contentWindowInsets | WindowInsets | 否 | 系统栏与显示缺口的并集 | 没有相应上下栏时的正文安全区。 |
+| contentWindowInsets | WindowInsets | 否 | HyperTheme.systemSafeAreaInsets（默认零） | 根布局可选系统安全区；顶部操作保护由导航负责。 |
 | topBar | Composable () -> Unit | 否 | 空 | 顶部内容，自行处理顶部安全区。 |
 | bottomBar | Composable () -> Unit | 否 | 空 | 底部内容，自行处理底部安全区。 |
 | floatingActionButton | Composable () -> Unit | 否 | 空 | 逻辑末端的悬浮动作插槽。 |
 | content | Composable (PaddingValues) -> Unit | 是 | — | 正文及实际测量得到的净空。 |
+
+根 contentWindowInsets 默认读取 HyperTheme.systemSafeAreaInsets（默认零）。顶部操作使用 HyperNavBar 或现有顶部操作容器 保护一次；不在 Scaffold 根内容另加安全区。覆盖式滚动正文使用 HyperNavBarPage 的测量净空。

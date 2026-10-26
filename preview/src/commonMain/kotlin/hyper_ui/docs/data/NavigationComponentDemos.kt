@@ -6,6 +6,7 @@ import hyper_ui.docs.ui.DrawerDemo
 import hyper_ui.docs.ui.SlideMenuDemo
 import hyper_ui.docs.ui.SingleTabBarDemo
 import hyper_ui.docs.ui.MultipleTabBarDemo
+import hyper_ui.docs.ui.TrailingActionTabBarDemo
 import hyper_ui.docs.ui.DockedTabBarDemo
 
 private const val GROUP_NAVIGATION = "导航组件"
@@ -153,8 +154,22 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         fullScreenPreview = true
     ),
     ComponentDemo(
+        id = "tab-bar-trailing", group = GROUP_NAVIGATION, title = "HyperTabBar · 右侧操作",
+        description = "主导航与右侧独立操作均使用库内默认 56dp 高度，点击右侧入口可重复触发。",
+        code = """
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                HyperTabBar(items = tabs, selectedIndex = index, onChanged = onTab) { HyperText(it) }
+                HyperTabBar(items = listOf("打开"), type = "single", selectedIndex = null,
+                    onChanged = { onOpen() }) { HyperIcon(openIcon, "打开") }
+            }
+        """.trimIndent(),
+        variants = listOf(DemoVariant("默认高度", "type = single/multiple", "56dp，高度不由调用方覆盖")),
+        apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
+        content = { TrailingActionTabBarDemo() }, fullScreenPreview = true
+    ),
+    ComponentDemo(
         id = "tab-bar-docked", group = GROUP_NAVIGATION, title = "HyperTabBar · 非悬浮",
-        description = "全宽贴底，无胶囊或外间距；动作模式支持重复点击、禁用项且不响应拖动。",
+        description = "默认高 56dp，全宽贴底，无胶囊或外间距；动作模式支持重复点击、禁用项且不响应拖动。",
         code = """
             HyperTabBar(items = actions, floating = false, selectedIndex = null,
                 itemEnabled = { it.enabled }, onChanged = onAction, itemLabel = { it.label }) {

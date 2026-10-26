@@ -44,8 +44,7 @@ internal val LocalHyperNavBarWindowInsets = staticCompositionLocalOf<WindowInset
 
 @Composable
 private fun navBarTopInsets(): WindowInsets =
-    (if (LocalHyperUseSystemSafeArea.current) LocalHyperNavBarWindowInsets.current ?: HyperTheme.systemSafeAreaInsets
-        else WindowInsets(0, 0, 0, 0)).only(WindowInsetsSides.Top)
+    (LocalHyperNavBarWindowInsets.current ?: HyperTheme.topBarInsets).only(WindowInsetsSides.Top)
 
 /** 固定避让顶部状态栏；宿主传入滚动状态，组件统一处理背景采样和过渡。 */
 @Composable

@@ -2,7 +2,7 @@
 
 ## 全面屏与系统安全区
 
-Android Activity 统一使用 enableHyperEdgeToEdge()，根主题 useSystemSafeArea 默认为 false。HyperTheme.systemSafeAreaInsets 为组件的唯一系统安全区来源，默认返回零；Navbar、Scaffold、TabBar、浮层、抽屉和更新窗口均不预留系统栏或挖孔安全区。键盘 Insets、业务组件高度和控件本身的间距继续保留。下文旧版关于状态栏/底部安全区的尺寸说明以此规则为准。
+Android Activity 统一使用 enableHyperEdgeToEdge()，根主题 useSystemSafeArea 默认为 false。HyperTheme.systemSafeAreaInsets 为组件的唯一系统安全区来源，默认返回零；Scaffold、TabBar 不增加根系统安全区。Navbar 和自定义固定顶栏独立保护顶部交互区域一次；HyperNavBarPage 将测量净空放进滚动正文，页面背景和滚动视口保持全屏。键盘 Insets、业务组件高度和控件本身的间距继续保留。下文旧版关于状态栏/底部安全区的尺寸说明以此规则为准。
 
 本文依据当前 library/src/main/java/hyper_ui/ 实现整理，基线日期为 2026-10-21，复用本页已有的样式对照作为持续维护入口。对应 Flutter 仓库为 D:/my_project/flutter_project/flutter-hyper-ui，维护时同时参考其 vitepress/guide/design-system.md；以各端实际源码核对功能，不能把另一端 API 直接当成本端已有实现。
 
@@ -110,7 +110,7 @@ HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐
 | HyperSlider | 44dp 触摸、6dp 轨道、20dp 滑块、2dp 轮廓 | 默认范围 0..100，showValue=true |
 | HyperSegmentedControl | radius 18，padding 4、条目 32，总高 40 | 13sp，选中 600、未选中 500，图标 16dp；等宽底板平移 260ms |
 | HyperTabs | radius 27，padding 3、条目 48，总高 54 | 单一共享表面，44dp 选中底面；滚动项目最小 76dp，选中背景 160ms，非滚动模式背景即时切换 |
-| HyperTabBar | 悬浮内容高 56；贴底总高 60，包含底部安全区且内容区至少 40 | single / multiple；图标 22 / 23；指示器 160ms easeOutCubic；大字体与高导航区按内容增长 |
+| HyperTabBar | single / multiple / 贴底默认内容高 56；悬浮顶部间距 8、底部间距 20 | single / multiple；图标 22 / 23；指示器 160ms easeOutCubic；大字体仅由库按内容扩展 |
 | HyperNavBar | 高 44，水平 padding 16，标题 16/600 | 透明操作层，标题字距 -0.2sp、副标题 11sp、安全区另计 |
 | HyperListTile | plain 最小 46，padding 14×8；外层 glass padding 3 | auto/plain/glass，标题 14/600、说明 12、meta 11，图标块 34 |
 | HyperMenuGroup | radius 18，padding 4，分隔缩进 14 | items 入口自动分隔；自由内容入口显式组合分隔 |
@@ -273,3 +273,5 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 使用仓库声明的 Compose foundation/ui/runtime/animation 与 Haze；调用方可选的 Lucide Android 图标资源依赖由使用者准备，版本以构建配置为准。
 
 导航滚动监听统一由 HyperNavBarPage.scrollState / HyperNavBarScrollScope 管理，Navbar 自动读取；消费页面不得重复声明导航专用 derivedStateOf、snapshotFlow 或 scrolledUnder 判断。库测量实际导航区高度，顶部净空放进滚动内容；主滚动状态保留在容器，嵌套列表不代替主状态。
+
+TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp，字体扩展仅在组件内处理。业务页面不覆写高度；并排入口在共同 Row 中布局，正文采用宿主实际测量的底部净空。

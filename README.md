@@ -304,7 +304,7 @@ HyperTextField(
 )
 ```
 
-HyperTabBar 默认保留悬浮样式；`floating = false` 使用库内全宽非悬浮底栏，总高默认 60dp 并包含底部安全区。浏览器类动作入口传 `selectedIndex = null`，允许重复点击并禁用横向拖动，通过 `itemEnabled` 控制各项可用性；参见 [TabBar API](vitepress/docs/components/navigation/hyper-tab-bar.md)。页面布局由 [HyperScaffold](vitepress/docs/components/navigation/hyper-scaffold.md) 统一承载，不需要 Material 页面宿主。
+HyperTabBar 默认保留悬浮样式；`floating = false` 使用库内全宽非悬浮底栏，默认内容高 56dp，默认不增加底部系统安全区。浏览器类动作入口传 `selectedIndex = null`，允许重复点击并禁用横向拖动，通过 `itemEnabled` 控制各项可用性；参见 [TabBar API](vitepress/docs/components/navigation/hyper-tab-bar.md)。页面布局由 [HyperScaffold](vitepress/docs/components/navigation/hyper-scaffold.md) 统一承载，不需要 Material 页面宿主。
 
 ## 文档与交互预览架构
 
@@ -431,3 +431,7 @@ npm run dev
 
 所有 Android Activity 在设置内容前调用 enableHyperEdgeToEdge()；根 HyperThemeConfig.useSystemSafeArea 默认 false。组件通过 HyperTheme.systemSafeAreaInsets 共用零系统安全区，IME 独立避让。API 与 Preview 见 [全面屏窗口](vitepress/docs/components/tools/hyper-edge-to-edge.md)。
 
+
+全面屏顶部布局：HyperNavBar 自动保护顶部操作区，自定义固定顶栏使用 Compose 窗口布局；HyperNavBarPage 的正文净空必须放进滚动内容。
+
+TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp，字体扩展仅在组件内处理。业务页面不覆写高度；并排入口在共同 Row 中布局，正文采用宿主实际测量的底部净空。

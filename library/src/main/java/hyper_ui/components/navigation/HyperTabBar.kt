@@ -39,7 +39,7 @@ fun <T> HyperTabBar(
     badgeCount: Int = 0,
     safeArea: Boolean = false,
     floating: Boolean = true,
-    margin: PaddingValues = if (!floating || type == "single") PaddingValues(0.dp) else PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp),
+    margin: PaddingValues = if (!floating || type == "single") PaddingValues(0.dp) else HyperTabBarDefaults.FloatingMargin,
     color: Color = HyperColors.accent,
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
@@ -56,13 +56,8 @@ fun <T> HyperTabBar(
         with(density) { textMeasurer.measure(itemLabel(item), labelStyle).size.width.toDp() } + 32.dp
     }.coerceAtLeast(76.dp)
     val safeInsets = HyperTheme.systemSafeAreaInsets
-    val bottomInset = if (safeArea) safeInsets.asPaddingValues().calculateBottomPadding() else 0.dp
-    // 贴底沿用原 55+5dp 的总尺寸，安全区计入其中；大字体或三键导航才按内容需要增长。
-    val height = if (floating) {
-        maxOf(56.dp, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
-    } else {
-        maxOf(HyperTabBarDefaults.DockedHeight - bottomInset, 40.dp, with(density) { 12.sp.toDp() } * 1.08f + 26.dp)
-    }
+    // 单动作、悬浮和贴底共用 FastBuy 的默认高度；仅库内按字体放大扩展，页面不覆写尺寸。
+    val height = maxOf(HyperTabBarDefaults.Height, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     var dragIndex by remember(items.size, selectedIndex == null, floating) { mutableStateOf<Int?>(null) }
     val logicalSelected = selectedIndex
@@ -79,12 +74,13 @@ fun <T> HyperTabBar(
         if (type == "single") {
             val item = items.single()
             val enabled = itemEnabled(item)
-            Box(Modifier.size(56.dp)
-                .hyperFrostedSurface(hyperGlass.surface, RoundedCornerShape(28.dp))
+            Box(Modifier.size(height)
+                .hyperFrostedSurface(hyperGlass.surface, RoundedCornerShape(height / 2))
                 .alpha(if (enabled) 1f else 0.4f)
                 .hyperNoRippleClickable(enabled = enabled, onClick = { onChanged(0) }),
                 contentAlignment = Alignment.Center) {
-                CompositionLocalProvider(LocalHyperContentColor provides color, LocalHyperIconSize provides 22.dp) {
+                CompositionLocalProvider(LocalHyperContentColor provides color, LocalHyperIconSize provides 22.dp,
+                    LocalHyperTextStyle provides labelStyle.copy(lineHeight = 12.96.sp)) {
                     HyperTabBarItemScope(true).itemContent(item)
                 }
             }
@@ -149,6 +145,6 @@ fun <T> HyperTabBar(
 
 object HyperTabBarDefaults {
     val Height = 56.dp
-    /** 非悬浮总高度包含底部安全区，不由消费页再次叠加。 */
-    val DockedHeight = 60.dp
+    /** 组件视觉间距，与根布局系统安全区独立；并排入口由共同的 Row 只消费一次。 */
+    val FloatingMargin = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 20.dp)
 }

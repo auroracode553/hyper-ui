@@ -38,9 +38,9 @@ HyperTabBar(items, selectedIndex = selectedIndex, onChanged = { selectedIndex = 
 
 **样式约定**
 
-type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬浮胶囊：multiple 高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 20dp、top 8dp。floating=false 仅用于 multiple，默认零外间距，全宽平直页面表面，无胶囊、圆角或浮层阴影，底部安全区位于表面内部。图标 23dp、文字 12sp、间距 1dp。single 保留 56dp 圆形玻璃、22dp 图标、16dp 角标。
+type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬浮胶囊：multiple 高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 20dp、top 8dp、bottom 20dp。floating=false 仅用于 multiple，默认零外间距，全宽平直页面表面，无胶囊、圆角或浮层阴影，底部安全区位于表面内部。图标 23dp、文字 12sp、间距 1dp。single 保留 56dp 圆形玻璃、22dp 图标、16dp 角标。
 
-非悬浮形态直接放入 HyperScaffold.bottomBar，默认总高度 60dp，底部安全区计入其中；操作区至少 40dp，大字体或较高的三键导航区才按需增加总高度。不要再额外叠加系统底部 inset、固定留白或业务 height。悬浮内容区仍至少 56dp，宿主仍让正文经过底栏后方。
+非悬浮形态直接放入 HyperScaffold.bottomBar，单动作、悬浮多项和非悬浮均采用 FastBuy 同款默认内容高度 56dp；大字体扩展只由库处理，安全区与外边距不计入内容高度。不要再额外叠加系统底部 inset、固定留白或业务 height。悬浮内容区仍至少 56dp，宿主仍让正文经过底栏后方。
 
 **状态归属**
 
@@ -69,9 +69,9 @@ fun <T> HyperTabBar(
     type: String = "multiple",
     itemLabel: (T) -> String = { "" },
     badgeCount: Int = 0,
-    safeArea: Boolean = true,
+    safeArea: Boolean = false,
     floating: Boolean = true,
-    margin: PaddingValues = if (!floating || type == "single") PaddingValues(0.dp) else PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp),
+    margin: PaddingValues = if (!floating || type == "single") PaddingValues(0.dp) else HyperTabBarDefaults.FloatingMargin,
     color: Color = HyperColors.accent,
     itemEnabled: (T) -> Boolean = { true },
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
@@ -89,9 +89,9 @@ fun <T> HyperTabBar(
 | type | String | 否 | &quot;multiple&quot; | 组件的视觉或布局形态。 |
 | itemLabel | (T) -&gt; String | 否 | { &quot;&quot; } | 每个导航项的文字。 |
 | badgeCount | Int | 否 | 0 | 单动作角标数量，0 隐藏，超过 99 显示 99+。 |
-| safeArea | Boolean | 否 | true | 是否避开底部系统安全区。 |
+| safeArea | Boolean | 否 | false | 是否避开底部系统安全区。 |
 | floating | Boolean | 否 | true | true 为悬浮胶囊；false 为全宽非悬浮 multiple 底栏。 |
-| margin | PaddingValues | 否 | 非悬浮与 single 为零；悬浮 multiple 为 start/end 20dp、top 8dp | 导航容器外部间距。 |
+| margin | PaddingValues | 否 | 非悬浮与 single 为零；悬浮 multiple 为 start/end 20dp、top 8dp、bottom 20dp | 导航容器外部间距。 |
 | color | Color | 否 | HyperColors.accent | 自定义颜色，覆盖默认配色。 |
 | itemEnabled | (T) -&gt; Boolean | 否 | { true } | 每项是否可交互，禁用项透明度为 0.4。 |
 | itemContent | @Composable HyperTabBarItemScope.(item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |
@@ -107,3 +107,27 @@ class HyperTabBarItemScope internal constructor(val selected: Boolean)
 | 属性 | 类型 | 作用 |
 | --- | --- | --- |
 | selected | Boolean | 当前项是否选中；single 始终为 true。 |
+
+## 统一高度与并排操作
+
+业务调用不得给 HyperTabBar 或它的包裹容器设置 height、requiredHeight、size 等限制高度的修饰符。宽度、页面位置与组合间距由宿主控制。以 FastBuy 主导航为尺寸基准，single / multiple / floating=false 共同采用默认高度；同一 Row 的并排入口自然等高。
+
+<WasmPreview demo="tab-bar-trailing" title="主导航与右侧操作使用默认高度" />
+
+```kotlin
+Row(Modifier.padding(HyperTabBarDefaults.FloatingMargin),
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
+    verticalAlignment = Alignment.CenterVertically) {
+    HyperTabBar(items = tabs, selectedIndex = index, onChanged = onTab,
+        margin = PaddingValues(0.dp)) { HyperText(it) }
+    HyperTabBar(items = listOf("打开"), type = "single", selectedIndex = null,
+        onChanged = { onOpen() }) { HyperIcon(openIcon, "打开") }
+}
+```
+
+| 默认值 | 类型 | 必填 | 值 | 用途 |
+| --- | --- | --- | --- | --- |
+| HyperTabBarDefaults.Height | Dp | 否 | 56dp | 默认内容高度；字体扩展由组件内部负责 |
+| HyperTabBarDefaults.FloatingMargin | PaddingValues | 否 | start/end 20dp，top 8dp、bottom 20dp | 独立悬浮导航默认外边距；并排布局由共同 Row 消费一次 |
+
+正文末尾余量优先消费 HyperScaffold 测量的 bottom padding，不能用另一套手写底栏高度。

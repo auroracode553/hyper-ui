@@ -2,6 +2,7 @@
 package hyper_ui.docs.ui
 
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.FolderOpen
 import com.composables.icons.lucide.Bell
 import com.composables.icons.lucide.House
 import com.composables.icons.lucide.Info
@@ -98,6 +99,37 @@ fun SingleTabBarDemo() { TabBarDemo(single = true) }
 
 @Composable
 fun MultipleTabBarDemo() { TabBarDemo(single = false) }
+
+@Composable
+fun TrailingActionTabBarDemo() {
+    var selected by remember { mutableStateOf(0) }
+    var actionCount by remember { mutableStateOf(0) }
+    val labels = listOf("最近", "列表")
+    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+            HyperText("当前：${labels[selected]} · 打开 $actionCount 次")
+        }
+        Row(Modifier.fillMaxWidth().padding(HyperTabBarDefaults.FloatingMargin),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically) {
+            HyperTabBar(items = labels, selectedIndex = selected, onChanged = { selected = it },
+                modifier = Modifier.weight(1f, fill = false), itemLabel = { it },
+                margin = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    HyperIcon(if (it == labels.first()) Lucide.Info else Lucide.House, it)
+                    HyperText(it)
+                }
+            }
+            HyperTabBar(items = listOf("打开"), type = "single", selectedIndex = null,
+                onChanged = { actionCount++ }, itemLabel = { it }) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    HyperIcon(Lucide.FolderOpen, it)
+                    HyperText(it)
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun DockedTabBarDemo() { TabBarDemo(single = false, floating = false, actions = true) }

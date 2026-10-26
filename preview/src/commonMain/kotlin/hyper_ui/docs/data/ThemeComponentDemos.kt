@@ -69,7 +69,7 @@ internal fun ThemeMaterialDemo() {
             }
             Box(Modifier.fillMaxWidth().height(180.dp)) {
                 HyperNavBarPage(navBar = { HyperNavBar(title = { HyperText("全面屏页面") }) }) { padding ->
-                    HyperText("正文仅避让实际导航组件高度", modifier = Modifier.padding(padding))
+                    HyperText("首屏避让导航与状态栏，上滑时正文进入导航后方", modifier = Modifier.padding(padding))
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

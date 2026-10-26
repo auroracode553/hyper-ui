@@ -201,3 +201,7 @@ fun HyperNavBarBackButton(
 | onPressed | (() -&gt; Unit)? | 否 | null | 点击操作回调；为 null 时不能触发操作。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | contentDescription | String | 否 | &quot;返回&quot; | 无障碍内容描述。 |
+
+## 顶部布局
+
+根主题 useSystemSafeArea=false 不取消顶部交互保护。标准 HyperNavBar 内部读取窗口 Insets；自定义固定顶栏直接使用 Compose 的 windowInsetsPadding(HyperTheme.topBarInsets)，只作用于操作区，不给整页增加留白。HyperNavBarPage 的首屏净空应放进滚动内容。

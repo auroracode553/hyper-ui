@@ -22,7 +22,7 @@ fun Activity.enableHyperEdgeToEdge()
 | --- | --- | --- | --- | --- |
 | 接收者 | Activity | 是 | — | 当前应用 Activity；不修改输入法宿主或其他应用窗口 |
 
-HyperThemeConfig.useSystemSafeArea 默认为 false。导航、页面宿主、TabBar、弹窗、抽屉与更新浮层不增加系统栏或挖孔安全区；正文仍按真实业务上下栏高度布局。键盘 Insets 独立保留，不用系统安全区模拟键盘避让。调用方不要再添加 statusBarsPadding、navigationBarsPadding 或网页 CSS 的系统安全区留白。
+HyperThemeConfig.useSystemSafeArea 默认为 false，根 Scaffold 与 TabBar 不留系统安全区。HyperNavBar 仍保护顶部交互区一次；自定义固定操作栏使用 Compose 窗口布局。正文视口保持全屏，HyperNavBarPage 测量的首屏顶部净空放入滚动内容，随上滑滚出。键盘 Insets 独立保留。禁止整页重复叠加系统栏 Padding。
 
 <WasmPreview demo="theme-material" title="全局安全区布局开关" />
 
