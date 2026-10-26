@@ -6,6 +6,12 @@ description: 设置页式分组菜单，适合少量入口、开关和选择项�
 
 设置页式分组菜单，适合少量入口、开关和选择项。
 
+分组标题与 HyperSectionTitle 共用默认排版（14sp Bold），标题到卡片间距使用 HyperMenuGroupDefaults.TitleSpacing（8dp）。普通设置行直接放入本组件，不另以 HyperCard 包装，不在调用方覆写菜单字号或行内 padding。
+
+| Defaults 属性 | 类型 | 默认值 | 用途 |
+| --- | --- | --- | --- |
+| TitleSpacing | Dp | 8.dp | 标题、卡片与分组副标题之间的默认间距。 |
+
 <p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
 
 ## 交互示例
