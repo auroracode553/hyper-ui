@@ -3,6 +3,8 @@ package hyper_ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.SideEffect
+import android.view.WindowInsetsController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -12,7 +14,6 @@ import androidx.compose.ui.window.DialogWindowProvider
 internal fun HyperDialogHost(
     onDismissRequest: () -> Unit,
     dismissOnBackPress: Boolean,
-    edgeToEdge: Boolean = false,
     content: @Composable () -> Unit
 ) {
     Dialog(
@@ -22,12 +23,23 @@ internal fun HyperDialogHost(
             // 使用稳定的全宽宿主，避免 WRAP_CONTENT Window 首帧重新定位。
             dismissOnClickOutside = false,
             usePlatformDefaultWidth = false,
-            decorFitsSystemWindows = LocalHyperUseSystemSafeArea.current && !edgeToEdge,
+            // 模态遮罩始终占满窗口；安全区只约束面板内容，不裁短根画布。
+            decorFitsSystemWindows = false,
         )
     ) {
-        val dialogWindow = (LocalView.current.parent as? DialogWindowProvider)?.window
+        val view = LocalView.current
+        val dialogWindow = (view.parent as? DialogWindowProvider)?.window
+        val darkTheme = HyperTheme.isDark
         // 遮罩由 Compose 绘制，以便 Android 和 Preview 共用令牌和退出进度。
-        androidx.compose.runtime.SideEffect { dialogWindow?.setDimAmount(0f) }
+        SideEffect {
+            dialogWindow?.let { window ->
+                window.enableHyperEdgeToEdge()
+                window.setDimAmount(0f)
+                val lightBars = WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS or
+                    WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                window.insetsController?.setSystemBarsAppearance(if (darkTheme) 0 else lightBars, lightBars)
+            }
+        }
         remember(dialogWindow) {
             // 这里必须同步设置非零的空动画样式：0 会允许 PhoneWindow 回退到系统/厂商主题。
             dialogWindow?.setWindowAnimations(R.style.HyperDialogNoWindowAnimation)

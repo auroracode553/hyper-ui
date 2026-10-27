@@ -330,7 +330,7 @@ fun HyperDialogDemo() {
             HyperText("显示 Dialog")
         }
         HyperText(
-            text = "面板按实际窗口宽度减去两侧各 24dp，保持居中；最大宽度 420dp。",
+            text = "遮罩铺满窗口与上下系统栏；面板单独避让系统栏与键盘，两侧各留 24dp，最大宽度 420dp。",
             color = LocalDocsColorScheme.current.onSurfaceVariant,
             fontSize = 13.sp,
             textAlign = TextAlign.Center

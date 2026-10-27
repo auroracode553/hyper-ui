@@ -9,7 +9,6 @@ import androidx.compose.ui.window.DialogProperties
 internal fun HyperDialogHost(
     onDismissRequest: () -> Unit,
     dismissOnBackPress: Boolean,
-    @Suppress("UNUSED_PARAMETER") edgeToEdge: Boolean = false,
     content: @Composable () -> Unit
 ) {
     Dialog(

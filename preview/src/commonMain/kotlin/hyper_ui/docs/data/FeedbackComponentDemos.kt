@@ -252,10 +252,10 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("Dialog 宿主", "Compose Dialog", "usePlatformDefaultWidth = false"),
+            DemoVariant("Dialog 宿主", "Compose Dialog", "全屏透明窗口；遮罩覆盖上下系统栏，不受根安全区开关裁短"),
             DemoVariant("稳定根节点", "fillMaxSize", "面板始终在固定窗口内居中"),
             DemoVariant("手机宽度", "maxWidth", "窗口 350dp 时面板不超过 302dp；显式上限仍服从窗口留白"),
-            DemoVariant("稳定输入", "HyperTextField", "输入重组只更新面板内容"),
+            DemoVariant("稳定输入", "HyperTextField", "面板单独避让系统栏与 IME；输入重组只更新面板内容"),
             DemoVariant("外部关闭", "dismissOnClickOutside", "由背景命中层控制"),
             DemoVariant("操作区", "actions", "固定底部按钮 slot")
         ),

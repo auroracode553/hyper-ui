@@ -36,7 +36,7 @@ fun HyperActionSheet(
     if (!visible && progress == 0f) return
     val dismiss = { if (visible) currentOnClose() }
     val glass = hyperGlass
-    HyperDialogHost(onDismissRequest = dismiss, dismissOnBackPress = visible, edgeToEdge = true) {
+    HyperDialogHost(onDismissRequest = dismiss, dismissOnBackPress = visible) {
         BoxWithConstraints(Modifier.fillMaxSize().imePadding()) {
             Box(Modifier.fillMaxSize()
                 .background(glass.scrim.copy(alpha = glass.scrim.alpha * progress))

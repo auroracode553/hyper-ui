@@ -60,7 +60,7 @@ fun HyperDrawer(
     val density = LocalDensity.current
     val dismiss = { if (open) close() }
     HyperDialogHost(onDismissRequest = dismiss,
-        dismissOnBackPress = open && dismissOnBackPress, edgeToEdge = true) {
+        dismissOnBackPress = open && dismissOnBackPress) {
         BoxWithConstraints(modifier.fillMaxSize()) {
             val drawerWidth = minOf(width, (maxWidth - 56.dp).coerceAtLeast(0.dp))
             val widthPx = with(density) { drawerWidth.toPx() }

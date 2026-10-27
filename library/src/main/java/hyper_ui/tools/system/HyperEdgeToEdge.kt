@@ -4,17 +4,23 @@ package hyper_ui
 import android.app.Activity
 import android.graphics.Color
 import android.view.WindowManager
+import android.view.Window
 
-@Suppress("DEPRECATION")
 fun Activity.enableHyperEdgeToEdge() {
+    window.enableHyperEdgeToEdge()
+}
+
+/** Activity 与 Dialog 共用窗口配置，避免弹窗回退到平台系统栏底色或对比度蒙层。 */
+@Suppress("DEPRECATION")
+internal fun Window.enableHyperEdgeToEdge() {
     // 库最低 API 30：直接关闭 decor 适配，允许内容覆盖系统栏及显示缺口。
-    window.setDecorFitsSystemWindows(false)
-    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-    window.statusBarColor = Color.TRANSPARENT
-    window.navigationBarColor = Color.TRANSPARENT
-    window.isStatusBarContrastEnforced = false
-    window.isNavigationBarContrastEnforced = false
-    window.attributes = window.attributes.apply {
+    setDecorFitsSystemWindows(false)
+    addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+    statusBarColor = Color.TRANSPARENT
+    navigationBarColor = Color.TRANSPARENT
+    isStatusBarContrastEnforced = false
+    isNavigationBarContrastEnforced = false
+    attributes = attributes.apply {
         layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
     }
 }

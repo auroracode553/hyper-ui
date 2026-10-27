@@ -287,7 +287,7 @@ Preview 使用合并 Roboto 与 Noto Sans SC 的独立字体，避免 Wasm 中�
 - 组件通过 `onChanged`、`onPressed`、`onClose` 等回调通知调用方。
 - 外部尺寸和间距由 `modifier` 控制；按钮等组件提供与参考设计对应的语义化尺寸参数，内部独立布局节点提供具名修饰符。
 - `HyperPopover` 为锚定触发点的内容浮层，默认宽 180dp，maxWidth = 280dp 仅限制上限；`width = 240.dp` 可为复杂内容保留更多空间。scrollable 默认 true，内容自带惰性列表时设为 false，保留原高度和安全区约束。`HyperDropdown` 以最长选项或占位文字加 68dp 控件占位，默认限制在 160–240dp；宽表单用 width 显式设置，两端预览统一覆盖默认、220dp、长文案、禁用与空选项。
-- `HyperDialog` 使用 Compose Dialog 的全尺寸根节点，面板宽度上限为 min(maxWidth, 实际窗口宽度 − 48dp)，两侧各保留 24dp；滚动正文与固定操作区分开，关闭由调用方维护 visible。
+- `HyperDialog` 使用全面屏透明窗口，遮罩覆盖状态栏与手势区，不随根主题安全区开关裁短；仅面板内容避让系统栏与 IME。面板最大宽 420dp、两侧留白 24dp；滚动正文与固定操作区分开，关闭由调用方维护 visible。
 - 业务状态由调用方持有；组件可以在状态变化时执行按压、弹出、拖动吸附等视觉过渡。
 
 示例：

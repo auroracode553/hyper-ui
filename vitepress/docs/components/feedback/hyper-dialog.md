@@ -4,6 +4,8 @@ description: 模态内容容器，提供标题、正文、操作区和受控关�
 
 # HyperDialog
 
+Android 弹窗窗口固定全面屏透明，遮罩始终覆盖状态栏、正文与手势区，不跟随 HyperThemeConfig.useSystemSafeArea 裁短。系统栏图标跟随应用实际主题；原生 dim 为零，遮罩颜色、透明度和进退动画仍由库内令牌控制。只有内容面板避让系统栏与 IME，长表单保持滚动及固定操作区。
+
 模态内容容器，提供标题、正文、操作区和受控关闭。
 
 <p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>

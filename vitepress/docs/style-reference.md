@@ -6,6 +6,8 @@
 
 ## 全面屏与系统安全区
 
+模态宿主的窗口固定全面屏透明，与根主题的安全区开关独立；遮罩覆盖上下系统栏，禁止为弹窗根画布增加安全区 padding。居中面板在遮罩内部单独避让系统栏与 IME，系统栏图标跟随实际明暗主题。Activity 和 Dialog 共用窗口透明与系统对比度配置，保留 Compose 遮罩令牌和动画。
+
 Android Activity 统一使用 enableHyperEdgeToEdge()，根主题 useSystemSafeArea 默认为 false。HyperTheme.systemSafeAreaInsets 为组件的唯一系统安全区来源，默认返回零；Scaffold、TabBar 不增加根系统安全区。Navbar 和自定义固定顶栏独立保护顶部交互区域一次；HyperNavBarPage 将测量净空放进滚动正文，页面背景和滚动视口保持全屏。键盘 Insets、业务组件高度和控件本身的间距继续保留。下文旧版关于状态栏/底部安全区的尺寸说明以此规则为准。
 
 本文依据当前 library/src/main/java/hyper_ui/ 实现整理，基线日期为 2026-10-21，复用本页已有的样式对照作为持续维护入口。对应 Flutter 仓库为 D:/my_project/flutter_project/flutter-hyper-ui，维护时同时参考其 vitepress/guide/design-system.md；以各端实际源码核对功能，不能把另一端 API 直接当成本端已有实现。

@@ -34,7 +34,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(containerComponentDemos()) // 按需安全区共用顶部几何和底部最小留白； 内容表面共用无普通边框与双层阴影，选中强调边界保留。
     addAll(navigationComponentDemos()) // Navbar 自动监听；TabBar 共用默认高度，覆盖悬浮、贴底、并排操作、重复动作与禁用项。
     addAll(listComponentDemos()) // 分组标题与设置菜单共用样式；HyperSpacing 由页面消费一次；页面列表无卡片。
-    addAll(feedbackComponentDemos()) // action_sheet 对齐 Flutter；toast 文字操作先关闭再回调；update_dialog 共用更新状态。
+    addAll(feedbackComponentDemos()) // 模态遮罩全屏，面板独立避让系统栏与键盘；toast 文字操作先关闭再回调。
     addAll(toolsComponentDemos()) // Android 更新工具只在 Preview 模拟流程，不引入平台网络或下载。
     addAll(themeComponentDemos()) // 共用三选项主题弹窗、材质与全局系统安全区；全面屏入口见组件文档。
 }

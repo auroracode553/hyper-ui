@@ -12,6 +12,12 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -79,40 +85,48 @@ fun HyperDialog(
                 )
             }
 
-            // 必须读取宿主宽度；同名公开参数 maxWidth 只是面板上限，不能充当窗口尺寸。
-            val availableWidth = (this.maxWidth - HyperDialogWindowPadding * 2)
-                .coerceAtLeast(0.dp)
-            val availableHeight = (this.maxHeight - HyperDialogWindowPadding * 2)
-                .coerceAtLeast(0.dp)
-            val resolvedMaxWidth = dialogMaxWidth.coerceAtMost(availableWidth)
-            val resolvedMinWidth = HyperDialogDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
+            // 遮罩留在全屏根层；只有面板避让系统栏与 IME，长表单仍可滚动。
+            BoxWithConstraints(
+                modifier = Modifier.fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.safeDrawing.exclude(WindowInsets.ime))
+                    .imePadding(),
+                contentAlignment = Alignment.Center
+            ) {
+                // 必须读取宿主宽度；同名公开参数 maxWidth 只是面板上限，不能充当窗口尺寸。
+                val availableWidth = (this.maxWidth - HyperDialogWindowPadding * 2)
+                    .coerceAtLeast(0.dp)
+                val availableHeight = (this.maxHeight - HyperDialogWindowPadding * 2)
+                    .coerceAtLeast(0.dp)
+                val resolvedMaxWidth = dialogMaxWidth.coerceAtMost(availableWidth)
+                val resolvedMinWidth = HyperDialogDefaults.MinWidth.coerceAtMost(resolvedMaxWidth)
 
-            HyperFloatingPanel(
-                title = title,
-                modifier = modifier
-                    .hyperOverlayMotion(transitionProgress, beginScale = 0.96f)
-                    .widthIn(
-                        min = resolvedMinWidth,
-                        max = resolvedMaxWidth
-                    )
-                    .heightIn(max = availableHeight)
-                    // 注册面板命中区域，但不消费事件，避免空白处点击穿透到关闭层。
-                    .pointerInput(Unit) {
-                        awaitPointerEventScope {
-                            while (true) awaitPointerEvent()
-                        }
-                    },
-                shape = shape,
-                containerColor = containerColor,
-                border = border,
-                contentPadding = contentPadding,
-                horizontalAlignment = horizontalAlignment,
-                verticalArrangement = verticalArrangement,
-                actionArrangement = actionArrangement,
-                showScrollIndicator = showScrollIndicator,
-                actions = actions,
-                content = content
-            )
+                HyperFloatingPanel(
+                    title = title,
+                    modifier = modifier
+                        .hyperOverlayMotion(transitionProgress, beginScale = 0.96f)
+                        .widthIn(
+                            min = resolvedMinWidth,
+                            max = resolvedMaxWidth
+                        )
+                        .heightIn(max = availableHeight)
+                        // 注册面板命中区域，但不消费事件，避免空白处点击穿透到关闭层。
+                        .pointerInput(Unit) {
+                            awaitPointerEventScope {
+                                while (true) awaitPointerEvent()
+                            }
+                        },
+                    shape = shape,
+                    containerColor = containerColor,
+                    border = border,
+                    contentPadding = contentPadding,
+                    horizontalAlignment = horizontalAlignment,
+                    verticalArrangement = verticalArrangement,
+                    actionArrangement = actionArrangement,
+                    showScrollIndicator = showScrollIndicator,
+                    actions = actions,
+                    content = content
+                )
+            }
         }
     }
 }

@@ -69,7 +69,7 @@ internal fun HyperDatePickerSheet(
     if (!visible && progress == 0f) return
     val glass = hyperGlass
     val dismiss = { if (visible) { result = null; currentOnClose() } }
-    HyperDialogHost(onDismissRequest = dismiss, dismissOnBackPress = visible, edgeToEdge = true) {
+    HyperDialogHost(onDismissRequest = dismiss, dismissOnBackPress = visible) {
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize().background(glass.scrim.copy(alpha = glass.scrim.alpha * progress)),
             contentAlignment = Alignment.BottomCenter,
