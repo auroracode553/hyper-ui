@@ -79,8 +79,8 @@ private fun iconFor(item: String): ImageVector = when (item) {
 
 @Composable
 fun ListTileDemo() {
-    var type by remember { mutableStateOf("auto") }
-    var selected by remember { mutableStateOf(false) }
+    var type by remember { mutableStateOf("plain") }
+    var selected by remember { mutableStateOf(true) }
     var enabled by remember { mutableStateOf(true) }
     var feedback by remember { mutableStateOf("等待操作") }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {

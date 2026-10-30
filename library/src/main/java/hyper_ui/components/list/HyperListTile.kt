@@ -53,8 +53,9 @@ fun HyperListTile(
     trailing: (@Composable RowScope.() -> Unit)? = null
 ) {
     require(type in setOf("auto", "plain", "glass")) { "type 必须为 auto、plain 或 glass" }
-    val plain = type == "plain" || (type == "auto" &&
-        (LocalHyperSurfacePresent.current || LocalHyperListTileContainerColor.current != Color.Unspecified))
+    val hasParentSurface = LocalHyperSurfacePresent.current ||
+        LocalHyperListTileContainerColor.current != Color.Unspecified
+    val plain = type == "plain" || (type == "auto" && hasParentSurface)
     val rowShape = RoundedCornerShape(if (plain) 12.dp else 15.dp)
     val selectedBackground by androidx.compose.animation.animateColorAsState(
         if (selected) hyperGlass.selection else Color.Transparent,
@@ -75,9 +76,10 @@ fun HyperListTile(
             .then(if (plain && onPressed != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
                 pressedScale = 0.992f, onClick = onPressed) else Modifier)
             .background(selectedBackground, rowShape)
-            // 平铺行共享页面/父卡片的留白；独立卡片必须保留内容到卡片边缘的间距。
+            // 仅复用父表面时共享其留白，独立平铺行仍保护选中背景内的内容。
             .then(contentModifier ?: Modifier.padding(
-                if (plain) HyperListTileDefaults.ContentPadding else HyperListTileDefaults.CardContentPadding
+                if (plain && hasParentSurface) HyperListTileDefaults.ContentPadding
+                else HyperListTileDefaults.CardContentPadding
             )), verticalAlignment = Alignment.CenterVertically) {
             if (hasLeading) {
                 CompositionLocalProvider(LocalHyperContentColor provides if (enabled) colors.contentColor else colors.disabledContentColor,
@@ -128,7 +130,7 @@ object HyperListTileDefaults {
     val SupportingMinHeight = 46.dp
     val ContentGap = 12.dp
     val TextGap = 3.dp
-    // 水平留白由调用方的页面或容器提供，避免标题、搜索与列表行重复缩进。
+    // 父表面已有留白时仅保留行内垂直留白；独立条目使用 CardContentPadding。
     val ContentPadding = PaddingValues(vertical = 8.dp)
     val CardContentPadding = PaddingValues(horizontal = HyperSpacing.PageHorizontal, vertical = 8.dp)
     val DividerHeight = 1.dp

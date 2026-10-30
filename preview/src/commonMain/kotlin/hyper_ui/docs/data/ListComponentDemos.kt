@@ -129,9 +129,9 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
         fullScreenPreview = true
     ),
     ComponentDemo(id = "list-tile", group = GROUP_LIST, title = "HyperListTile",
-        description = "直接展示 46dp 条目、34dp 图标块，auto/plain/glass、选中与禁用可操作，水平留白由调用方管理。",
+        description = "直接展示 46dp 条目、34dp 图标块，auto/plain/glass、选中与禁用可操作，独立行保留 14dp 行内留白。",
         code = """HyperListTile(title = { HyperText("系统设置") }, onPressed = onOpen)""",
-        variants = listOf(DemoVariant("表面", "type / selected", "直接切换 auto/plain/glass；plain 无水平留白、glass 保留卡片内边距，leading 间距 12dp、trailing 间距 8dp"),
+        variants = listOf(DemoVariant("表面", "type / selected", "独立 plain/glass 行水平内边距 14dp，复用父表面时共享留白；leading 间距 12dp、trailing 间距 8dp"),
             DemoVariant("文字", "supportingContent / metaContent", "14sp 主标题、12sp 描述、11sp 元信息")),
         apiDocumentPaths = listOf("list/hyper-list-tile.md"), content = { ListTileDemo() })
 

@@ -113,10 +113,10 @@ HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐
 | HyperSwitch | 52×32，padding 4 + Container 边框 1 | 实际滑块 22dp，160ms selectionCurve |
 | HyperSlider | 44dp 触摸、6dp 轨道、20dp 滑块、2dp 轮廓 | 默认范围 0..100，showValue=true |
 | HyperTabs | radius 18，padding 4、条目 32，总高 40 | 13sp，选中 600、未选中 500，图标 16dp；等宽底板平移 260ms |
-| HyperFilterBar | 最小高 32dp，项内边距 12×6dp，项间距 6dp | 单项选中胶囊、透明周围区域；横向滚动，13sp 文字随字体缩放自然撑高 |
+| HyperFilterBar | 最小高 32dp，项内边距 12×6dp，项间距 6dp | 浅底与 1dp 弱边线；选中 8% 主题色底、18% 主题色细线与主题色文字；无阴影，横向滚动，13sp 文字随字体缩放自然撑高 |
 | HyperTabBar | single / multiple / 贴底默认内容高 56；悬浮顶部间距 8、底部间距 20 | single / multiple；图标 22 / 23；指示器 160ms easeOutCubic；大字体仅由库按内容扩展 |
 | HyperNavBar | 高 44，水平 padding 16，标题 16/600 | 透明操作层，标题字距 -0.2sp、副标题 11sp、安全区另计 |
-| HyperListTile | plain 最小 46，水平留白 0、垂直 8；外层 glass 仅垂直留白 3 | auto/plain/glass，标题 14/600、说明 12、meta 11，图标块 34 |
+| HyperListTile | 最小 46，独立 plain/glass 水平留白 14、复用父表面时 0，垂直 8；外层 glass 仅垂直留白 3 | auto/plain/glass，标题 14/600、说明 12、meta 11，图标块 34 |
 | HyperMenuGroup | radius 18，padding 4，分隔缩进 14 | items 入口自动分隔；自由内容入口显式组合分隔 |
 | HyperCard | radius 24，padding 12，头/正文/页脚间距 12 | 标题 14/600，副标题 13，selected strong 与强调轮廓 |
 | HyperDropdown | 字段 minHeight 48，radius 16，padding 14×11；自动宽度 clamp(最长文案 + 68,160,240) | width 可显式指定，菜单匹配字段实际宽度；radius 18、padding 5、默认最大高 320 |
@@ -239,7 +239,8 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 | HyperPlaybackSpeedPanel 的 panelButtonColors | 关闭／重置按钮使用内容色 alpha 0.10 背景，禁用为 0.05；前景随面板配色 | 现有面板专用覆盖；不是已获授权清理的灰底，调整前确认 |
 | HyperPlaybackSpeedPanel 的标签与自定义入口 | 速度标签、预设刻度、提示和插槽单独组合 | 空间、点击及数值输入规则属于倍速面板，不改为一组默认按钮 |
 | HyperListTile 的 leading 图标块 | 34dp、圆角 11、强调色浅底 | 列表视觉与按钮交互不同，不因圆角背景删除或替换为按钮 |
-| HyperTabs / HyperFilterBar | 共享表面、项目背景、选中状态与项目禁用 | 是选择控件核心视觉，不删 selection 底板，不增加逐项按钮描边 |
+| HyperTabs | 共享表面、项目背景、选中状态与项目禁用 | 保留共享 selection 底板，不增加逐项按钮描边 |
+| HyperFilterBar | 单项浅底、1dp 弱边线，选中淡主题色，整栏周围透明 | 普通项保持可点击轮廓，不增加阴影、厚重描边或整条底板 |
 | HyperTabBar single 与 badgeCount | 56dp 自绘入口、22dp 图标及独立计数角标 | 底栏自身管理 margin、安全区和尺寸，不替换为默认 HyperButton |
 | HyperCalendarDay 的选中圆、角标和条目 | 日期专用圆形状态、紧凑文字和溢出行 | 需要保持日期网格与最小行高，不自动换成普通按钮或其他徽标 |
 | HyperColorPicker 的色块和选中环 | 圆形预设色块、强调环、下方标签 | 颜色就是控件内容，不能按普通按钮配色清理 |
@@ -285,6 +286,6 @@ TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认�
 
 页面数据列表：`HyperList` 与 `HyperSectionedList` 使用无卡片的简约平铺样式，不绘制卡片背景、阴影或分组圆角；保留分隔线与行选中反馈。设置菜单的 `HyperMenuGroup` 和独立 `HyperListTile` 表面规则保持独立。
 
-列表水平留白归调用方：HyperList、HyperSectionedList 与 plain 行默认不添加水平外边距；HyperMenuGroup 和独立 glass 行保留卡片内部留白；页面通过 HyperSpacing.PageHorizontal（14dp）统一提供一次。组件保留垂直触控留白、内容间距和选中反馈。
+页面水平外边距由调用方通过 HyperSpacing.PageHorizontal（14dp）统一提供。HyperList、HyperSectionedList 不额外增加页面缩进；独立 plain 与 glass 行保留左右各 14dp 行内留白，复用 MenuGroup 或已有父表面的 plain 行共享父级留白，不重复叠加。组件保留垂直触控留白、内容间距和选中反馈。
 
 卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。

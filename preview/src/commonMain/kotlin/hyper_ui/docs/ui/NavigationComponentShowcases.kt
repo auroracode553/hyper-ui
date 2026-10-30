@@ -92,6 +92,7 @@ fun FilterBarDemo() {
         HyperFilterBar(categories, selected, { selected = it }, enabled = enabled,
             itemEnabled = { it != "演示文稿" }) { HyperText(it, maxLines = 1) }
         HyperText("当前选中：${categories[selected]}")
+        HyperText("点击分类切换，左右滑动查看更多", color = HyperColors.secondaryText)
     }
 }
 

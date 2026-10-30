@@ -29,9 +29,9 @@ HyperListTile(title = { HyperText("系统设置") }, subtitle = { HyperText("查
 
 **样式约定**
 
-type auto/plain/glass。plain 行最小 46dp，plain 水平留白 0dp、垂直留白 8dp、radius 12dp；独立 glass 使用 radius 18dp、卡片内部水平 14dp、垂直 8dp，表面装饰垂直留白 3dp。标题 14sp/600，副标题 12sp、间距 3dp，meta 11sp、间距 4dp。leadingIcon 34dp 块、radius 11dp、icon 18dp；leading 与正文间距 12dp，正文与 trailing 间距 8dp。
+type auto/plain/glass。plain 行最小 46dp，独立使用时水平留白 14dp，复用父表面时水平留白 0dp；垂直留白 8dp、radius 12dp。独立 glass 使用 radius 18dp、卡片内部水平 14dp、垂直 8dp，表面装饰垂直留白 3dp。标题 14sp/600，副标题 12sp、间距 3dp，meta 11sp、间距 4dp。leadingIcon 34dp 块、radius 11dp、icon 18dp；leading 与正文间距 12dp，正文与 trailing 间距 8dp。
 
-页面水平留白由调用方通过 HyperSpacing.PageHorizontal（14dp）统一设置；列表行和分隔线默认不增加水平缩进，标题、搜索框和列表内容可以共享同一对齐线。
+页面水平外边距由调用方通过 HyperSpacing.PageHorizontal（14dp）统一设置；独立行的行内留白保护内容与选中背景的边界，组内行和分隔线共享父容器的留白。
 
 **状态归属**
 
@@ -77,7 +77,7 @@ fun HyperListTile(
 | --- | --- | --- | --- | --- |
 | title | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件标题文字或内容。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| contentModifier | Modifier? | 否 | null | 自定义内容布局；null 时 plain 行仅垂直 8dp，独立卡片水平 HyperSpacing.PageHorizontal、垂直 8dp。 |
+| contentModifier | Modifier? | 否 | null | 自定义内容布局；null 时独立 plain/glass 行水平 14dp，复用父表面的 plain 行水平 0dp；垂直均为 8dp。 |
 | dividerModifier | Modifier | 否 | Modifier | 分隔线的布局修饰符，默认无缩进。 |
 | type | String | 否 | &quot;auto&quot; | 组件的视觉或布局形态。 |
 | selected | Boolean | 否 | false | 由调用方持有的选中状态。 |
@@ -140,4 +140,4 @@ fun minHeight(hasSupportingContent: Boolean): Dp
 
 本组件的正文表面复用内部 hyperCardSurface/ContentCard，与 HyperCard 共用无普通描边、画布色阶和双层柔阴影。圆角、间距及已有交互不变；选中态保留完整强调边界，组内行不重复装饰，分隔线继续保留。具体参数见[设计系统基线](../../style-reference.md#内容卡片与导航维护规则)。浮层、操作区和输入控件不使用此内容卡片规则。
 
-卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。
+内容边界：页面外边距与行内留白不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 plain/glass 行保留水平 14dp 行内留白；仅复用父表面的 plain 行共享父级已有留白。

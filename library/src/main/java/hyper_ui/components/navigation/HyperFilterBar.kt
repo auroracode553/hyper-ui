@@ -4,6 +4,7 @@ package hyper_ui
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,7 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,22 +61,32 @@ fun <T> HyperFilterBar(
         itemsIndexed(items) { index, item ->
             val selected = index == selectedIndex
             val actualEnabled = enabled && itemEnabled(item)
+            val shape = RoundedCornerShape(percent = 50)
+            val accent = HyperColors.accent
+            val divider = HyperColors.divider
             val background by animateColorAsState(
-                if (selected) hyperGlass.selection else Color.Transparent,
+                if (selected) accent.copy(alpha = 0.08f).compositeOver(hyperGlass.surfaceSubtle)
+                else hyperGlass.surfaceSubtle,
                 tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.EaseOutCubic),
                 label = "HyperFilterBarSelection",
+            )
+            val outline by animateColorAsState(
+                if (selected) accent.copy(alpha = 0.18f) else divider.copy(alpha = divider.alpha * 0.55f),
+                tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.EaseOutCubic),
+                label = "HyperFilterBarOutline",
             )
             Box(
                 Modifier.defaultMinSize(minWidth = 48.dp, minHeight = HyperFilterBarDefaults.MinHeight)
                     .alpha(if (actualEnabled) 1f else 0.4f)
-                    .background(background, RoundedCornerShape(percent = 50))
+                    .background(background, shape)
+                    .border(1.dp, outline, shape)
                     .hyperNoRippleClickable(enabled = actualEnabled,
                         onClick = { if (index != selectedIndex) onChanged(index) })
                     .padding(HyperFilterBarDefaults.ItemPadding),
                 contentAlignment = Alignment.Center,
             ) {
                 CompositionLocalProvider(
-                    LocalHyperContentColor provides if (selected) HyperColors.primaryText else HyperColors.secondaryText,
+                    LocalHyperContentColor provides if (selected) accent else HyperColors.secondaryText,
                     LocalHyperTextStyle provides HyperTheme.typography.bodyMedium.copy(fontSize = 13.sp,
                         lineHeight = 18.2.sp, fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium),
                     LocalHyperIconSize provides 16.dp,

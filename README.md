@@ -445,7 +445,7 @@ TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认�
 
 页面数据列表：`HyperList` 与 `HyperSectionedList` 使用无卡片的简约平铺样式，不绘制卡片背景、阴影或分组圆角；保留分隔线与行选中反馈。设置菜单的 `HyperMenuGroup` 和独立 `HyperListTile` 表面规则保持独立。
 
-列表水平留白归调用方：HyperList、HyperSectionedList 与 plain 行默认不添加水平外边距；HyperMenuGroup 和独立 glass 行保留卡片内部留白；页面通过 HyperSpacing.PageHorizontal（14dp）统一提供一次。组件保留垂直触控留白、内容间距和选中反馈。
+页面水平外边距由调用方通过 HyperSpacing.PageHorizontal（14dp）统一提供。HyperList、HyperSectionedList 不额外增加页面缩进；独立 plain 与 glass 行保留左右各 14dp 行内留白，复用 MenuGroup 或已有父表面的 plain 行共享父级留白，不重复叠加。组件保留垂直触控留白、内容间距和选中反馈。
 
 共用页面尺寸参见 [HyperSpacing API](vitepress/docs/theme.md#hyperspacing-api)，调用方直接使用 HyperSpacing.PageHorizontal，不在各项目维护副本。
 
@@ -453,4 +453,4 @@ TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认�
 
 页面宿主与滚动内容的全面屏组合见[业务页面规范](vitepress/docs/mobile-guidelines.md)：状态栏与悬浮 TabBar 不建立固定高度占位，HyperScaffold 的实测上下净空只进入滚动内容，正文视口保持全屏。
 
-分段切换使用 [HyperTabs](vitepress/docs/components/navigation/hyper-tabs.md)，可左右滑动的分类筛选使用 [HyperFilterBar](vitepress/docs/components/navigation/hyper-filter-bar.md)。两者均为受控组件。
+分段切换使用 [HyperTabs](vitepress/docs/components/navigation/hyper-tabs.md)，可左右滑动的分类筛选使用 [HyperFilterBar](vitepress/docs/components/navigation/hyper-filter-bar.md)。两者均为受控组件。HyperFilterBar 普通项有浅底和细弱边线，选中项使用淡主题色底与主题色文字，不加阴影。
