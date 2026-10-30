@@ -10,6 +10,7 @@ import com.composables.icons.lucide.Settings
 import hyper_ui.*
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,14 +27,74 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperTabBar
 import hyper_ui.HyperDrawer
 import hyper_ui.HyperDrawerPlacement
 import hyper_ui.HyperTabs
+import kotlinx.coroutines.launch
+
+/** 独立材质与 Navbar 使用同一滚动作用域；净空由真实覆盖层尺寸交给滚动内容。 */
+@Composable
+fun ScrollGradientDemo() {
+    val scrollState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+    val density = LocalDensity.current
+    var topClearance by remember { mutableStateOf(0.dp) }
+    var forceVisible by remember { mutableStateOf(false) }
+    HyperNavBarScrollScope(scrollState) {
+        HyperBackdrop(modifier = Modifier.fillMaxSize(), background = {
+            LazyColumn(
+                state = scrollState,
+                modifier = Modifier.fillMaxSize().background(HyperColors.pageBackground),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = topClearance + 12.dp, bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        HyperText("向上滚动观察渐显，回到顶部恢复透明。")
+                        HyperText("渐变不采样正文，前景操作保持清晰。")
+                        HyperButton(onPressed = { forceVisible = !forceVisible }) {
+                            HyperText(if (forceVisible) "恢复自动感知" else "固定显示材质")
+                        }
+                    }
+                }
+                items(20) { index ->
+                    HyperCard(modifier = Modifier.fillMaxWidth()) {
+                        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            HyperText("灵感 ${index + 1}")
+                            HyperText("让内容自然流动，前景操作保持清晰。")
+                        }
+                    }
+                }
+            }
+        }) {
+            HyperScrollGradient(
+                scrolledUnder = forceVisible,
+                modifier = Modifier.fillMaxWidth().onSizeChanged {
+                    topClearance = with(density) { it.height.toDp() }
+                }
+            ) {
+                Row(
+                    Modifier.fillMaxWidth().padding(top = PreviewTopSafeArea).height(44.dp).padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    HyperText("滚动渐变")
+                    HyperButton(onPressed = { coroutineScope.launch { scrollState.animateScrollToItem(0) } }) {
+                        HyperText("回到顶部")
+                    }
+                }
+            }
+        }
+    }
+}
 
 private data class DemoNavItem(
     val id: String,
@@ -142,7 +203,7 @@ fun ScaffoldDemo() {
     val listState = rememberLazyListState()
     HyperNavBarScrollScope(listState) {
         HyperScaffold(
-            topBar = { HyperNavBar(type = HyperNavBarDefaults.TypeTitleOnly, title = { HyperText("页面布局") }) },
+            topBar = { HyperNavBar(layout = HyperNavBarDefaults.LayoutTitleOnly, title = { HyperText("页面布局") }) },
             bottomBar = {
                 HyperTabBar(items = listOf("首页", "设置"), selectedIndex = selected, onChanged = { selected = it },
                     itemLabel = { it }) { HyperText(it) }

@@ -72,7 +72,8 @@ HyperText 独立使用为 14sp、行高 1.4；继承 LocalHyperTextStyle，因�
 
 浮层仍使用原有 surfaceShadows，按钮、输入、选择控件、提示和导航不批量换成内容卡片。Android 当前没有 HyperCollapse 对应实现，不为本次同步新增组件。
 
-HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐显；模糊和渐隐都限定在状态栏顶部至 Navbar 底部内，不再越界覆盖正文。HyperNavBarPage 注册采样源，顶部净空由库测量实际导航区高度，放入滚动内容；没有采样内容时不能用实色底板伪装模糊。全面屏、底部避让与冻结既有 TabBar 布局的约束见[业务页面规范](mobile-guidelines.md)。
+HyperNavBar 与 HyperScrollGradient 只绘制主题画布色的滚动渐变，不调用 Haze / BackdropFilter，不录制或采样正文。160ms easeOutCubic 渐显，渐变在自身底部内结束；standard 保留 44dp 操作行及真实顶部 Insets，simple 仅真实顶部 Insets，不生成标题或操作行。HyperNavBarPage 测量实际导航高度，将净空交给滚动内容。
+
 
 导航监听统一在 HyperNavBarScrollScope 内派生真实主滚动状态，作用域传递稳定 State，由 Navbar 读取值，不因阈值切换重组整页。active=false 用于隐藏页或主列表被空状态替代的场景；不改滚动位置，恢复后继续读取真实值。HyperScaffold 只补作用域与同一状态绑定，保留原布局；不以 nestedScroll 位移、业务页面布尔缓存或次级视口替代真实状态。默认样式、导航测量、卡片阴影及 TabBar 布局保持原样。
 
@@ -198,7 +199,7 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 | [HyperMenuGroup](components/list/hyper-menu-group.md) | components/list/HyperMenuGroup.kt | 外层单一表面，条目共享容器；items 入口负责分隔，自由内容入口由调用方组合；不嵌套逐行卡片 |
 | [HyperList](components/list/hyper-list.md) | components/list/HyperList.kt | 页面级 LazyColumn；state 可传入，modifier 与 contentModifier 管不同节点，contentPadding 随内容滚动；无卡片表面，默认内边距 0dp，auto 行使用 plain |
 | [HyperSectionedList](components/list/hyper-sectioned-list.md) | components/list/HyperSectionedList.kt | 分组标题与数据行分别懒加载，调用方给稳定 key；跳过空分组，组间固定 8dp；无卡片平铺行，组件管理组内分割线 |
-| [HyperNavBar / HyperNavBarPage](components/navigation/hyper-nav-bar.md) | components/navigation/HyperNavBar.kt、HyperNavBarSurface.kt、HyperNavBarScrollScope.kt | 固定 type 与 custom 插槽校验互斥；安全区位于背景内部，背景从屏幕顶部覆盖状态栏，只有操作行避让；预览注入 52dp 模拟 Insets，导航与正文共用且只计一次；库内观察主滚动状态并驱动背景，页面宿主叠放导航并传递 padding，不自行接管业务路由 |
+| [HyperNavBar / HyperNavBarPage](components/navigation/hyper-nav-bar.md) | components/navigation/HyperNavBar.kt、HyperScrollGradient.kt、HyperNavBarScrollScope.kt | standard 的固定 layout 与 custom 插槽校验互斥；安全区位于背景内部，背景从屏幕顶部覆盖状态栏，只有操作行避让；预览注入 52dp 模拟 Insets，导航与正文共用且只计一次；库内观察主滚动状态并驱动背景，页面宿主叠放导航并传递 padding，不自行接管业务路由 |
 | [HyperFilterBar](components/navigation/hyper-filter-bar.md) | components/navigation/HyperFilterBar.kt | items / selectedIndex / onChanged 受控；横向滚动与选中项可见性由库管理，重复点击不回调，支持整栏和单项禁用 |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | components/navigation/HyperTabBar.kt | single / multiple；floating 默认 true 保留原悬浮样式，false 为零默认外间距的全宽贴底平直表面；selectedIndex=null 为无选中块、可重复点击且不响应拖动的动作模式；itemEnabled 控制单项禁用。选择模式仍按拖动预览、松手提交，保留标签测宽与安全区 |
 | [HyperScaffold](components/navigation/hyper-scaffold.md) | components/navigation/HyperScaffold.kt | 使用 Compose 基础布局承载页面、上下栏和悬浮操作；正文消费实际测量净空，不依赖 Material，也不接管业务滚动或导航监听 |

@@ -96,6 +96,7 @@ export default defineConfig({
         text: '导航组件',
         items: [
           { text: 'NavBar', link: '/components/navigation/hyper-nav-bar' },
+          { text: 'ScrollGradient', link: '/components/navigation/hyper-scroll-gradient' },
           { text: 'Drawer', link: '/components/navigation/hyper-drawer' },
           { text: 'SlideMenu', link: '/components/navigation/hyper-slide-menu' },
           { text: 'Tabs', link: '/components/navigation/hyper-tabs' },

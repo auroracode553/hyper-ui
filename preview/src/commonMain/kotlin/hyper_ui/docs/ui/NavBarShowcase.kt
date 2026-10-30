@@ -46,12 +46,12 @@ private enum class NavBarExample(
     val type: String,
     val title: String?
 ) {
-    Basic("基础返回", "只显示尖括号返回按钮", HyperNavBarDefaults.TypeBackOnly, null),
-    TitleOnly("仅标题", "只显示页面标题，不显示返回按钮", HyperNavBarDefaults.TypeTitleOnly, "今日灵感"),
-    BackWithTitle("返回与标题", "返回图标旁显示页面标题", HyperNavBarDefaults.TypeBackWithTitle, "今日灵感"),
-    More("更多操作", "返回、页面标题与更多操作", HyperNavBarDefaults.TypeMore, "消息"),
-    Edit("编辑返回", "返回、页面标题与保存操作", HyperNavBarDefaults.TypeEdit, "编辑资料"),
-    Custom("自定义", "自定义插槽与分享操作", HyperNavBarDefaults.TypeCustom, "创作空间")
+    Basic("基础返回", "只显示尖括号返回按钮", HyperNavBarDefaults.LayoutBackOnly, null),
+    TitleOnly("仅标题", "只显示页面标题，不显示返回按钮", HyperNavBarDefaults.LayoutTitleOnly, "今日灵感"),
+    BackWithTitle("返回与标题", "返回图标旁显示页面标题", HyperNavBarDefaults.LayoutBackWithTitle, "今日灵感"),
+    More("更多操作", "返回、页面标题与更多操作", HyperNavBarDefaults.LayoutMore, "消息"),
+    Edit("编辑返回", "返回、页面标题与保存操作", HyperNavBarDefaults.LayoutEdit, "编辑资料"),
+    Custom("自定义", "自定义插槽与分享操作", HyperNavBarDefaults.LayoutCustom, "创作空间")
 }
 
 @Composable
@@ -68,6 +68,7 @@ private fun NavBarPageDemo() {
     val sections = remember {
         listOf("留一点空白", "光影与秩序", "日常里的灵感", "透明导航栏下的连续滚动")
     }
+    var simple by remember { mutableStateOf(false) }
     var example by remember { mutableStateOf(NavBarExample.Basic) }
     var actionMessage by remember { mutableStateOf("切换布局或点击顶部操作，查看导航反馈。") }
     // 同一状态交给主列表和库；派生值只由导航读取，正文不维护监听。
@@ -76,8 +77,8 @@ private fun NavBarPageDemo() {
         modifier = Modifier.fillMaxSize(),
         navBar = {
             val pageTitle = example.title
-            HyperNavBar(
-                type = example.type,
+            if (simple) HyperNavBar(type = "simple") else HyperNavBar(
+                layout = example.type,
                 title = if (pageTitle == null) null else {
                     { HyperText(pageTitle, maxLines = 1) }
                 },
@@ -119,12 +120,16 @@ private fun NavBarPageDemo() {
                     HyperIcon(Lucide.House, "导航示例", Modifier.size(28.dp))
                     HyperText("常见顶部导航", fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     HyperText(example.explanation, fontSize = 14.sp)
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        HyperButton(onPressed = { simple = false }) { HyperText("标准导航") }
+                        HyperButton(onPressed = { simple = true }) { HyperText("简约导航") }
+                    }
                     NavBarExampleChoices(example) { selected ->
                         example = selected
                         actionMessage = "已切换为「${selected.label}」"
                     }
                     HyperText(actionMessage, fontSize = 13.sp)
-                    HyperText("向上滚动显示向下渐隐的毛玻璃，回到顶部恢复透明。", fontSize = 12.sp)
+                    HyperText("向上滚动显示向下渐隐的渐变，回到顶部恢复透明。", fontSize = 12.sp)
                 }
             }
             items(items = sections, key = { it }) { section ->

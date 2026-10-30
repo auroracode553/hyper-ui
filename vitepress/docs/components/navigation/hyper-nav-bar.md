@@ -1,16 +1,28 @@
 ---
-description: 顶部透明、正文滚入时渐显毛玻璃的页面导航栏。
+description: 顶部透明、正文滚入时渐显渐变的页面导航栏。
 ---
 
 # HyperNavBar
 
-顶部透明、正文滚入时渐显毛玻璃的页面导航栏，组织返回入口、标题、副标题和右侧操作。
+顶部透明、正文滚入时渐显渐变的页面导航栏，组织返回入口、标题、副标题和右侧操作。
 
 <p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>
 
 ## 交互示例
 
 <WasmPreview demo="nav-bar" title="HyperNavBar 交互预览" />
+
+## 导航形态
+
+- type = "standard"：默认形态，保留 44dp 操作行、标题、返回和操作插槽；layout 选择 custom / backOnly / titleOnly / backWithTitle / more / edit。
+- type = "simple"：只覆盖 HyperTheme.topBarInsets 的真实状态栏/挖孔高度，不生成操作行，不接受标题、操作回调或非默认 layout。
+
+```kotlin
+HyperNavBar(type = "simple", scrolledUnder = hostScrolledUnder)
+HyperNavBar(type = "standard", layout = "backWithTitle", title = { HyperText("详情") })
+```
+
+simple 同样应放在全屏正文上方；首屏顶部避让属于滚动内容，不用固定 Spacer 或视口外 padding。两种形态都只做滚动渐变，不做背景模糊。
 
 ## 使用方式
 
@@ -20,7 +32,7 @@ description: 顶部透明、正文滚入时渐显毛玻璃的页面导航栏。
 ```kotlin
 import hyper_ui.*
 
-HyperNavBar(type = "backWithTitle", title = { HyperText("详情") }, onBackPressed = onBack)
+HyperNavBar(layout = "backWithTitle", title = { HyperText("详情") }, onBackPressed = onBack)
 ```
 
 </details>
@@ -31,9 +43,11 @@ HyperNavBar(type = "backWithTitle", title = { HyperText("详情") }, onBackPress
 
 透明导航操作层默认 44dp，水平留白 16dp，标题 16sp/600、行高 1.2、字距 -0.2sp；副标题 11sp、间隔 2dp。固定按钮 38dp、图标 20dp。顶部状态栏另计安全区。
 
-正文滚入导航后方时，组件用 160ms 过渡显示 20dp 背景模糊和主题 pageBackground 画布色，范围为状态栏顶部至导航底部；蒙版将模糊采样与底色一起向下淡出至完全透明，不绘制底部分隔线。材质层不占位、不拦截触摸，导航底部之外不绘制；回到顶部时恢复透明。文字与按钮保持清晰，不参与背景采样。
+正文滚入时以 160ms easeOutCubic 渐显 pageBackground 向下渐隐的渐变，返回顶部恢复透明。standard 范围为状态栏顶部至操作行底部；simple 只覆盖真实状态栏/挖孔高度。两者均不采样正文、不调用 Haze、不做像素模糊，不绘制分隔线；前景保持清晰，纯背景层透传正文手势。
 
 顶部安全区位于背景层内部，只有操作行避让状态栏。Desktop/Wasm 预览通过内部作用域注入 52dp 模拟状态栏 Insets，导航栏与页面正文共用；不在整个导航外层添加顶部 Padding，正文也不重复增加模拟安全区。真机默认读取系统状态栏 Insets。
+
+背景实现复用 [HyperScrollGradient](hyper-scroll-gradient.md)，只绘制渐变，无采样或模糊分支。
 
 **状态归属**
 
@@ -45,13 +59,13 @@ HyperNavBar(type = "backWithTitle", title = { HyperText("详情") }, onBackPress
 
 已有普通 Scaffold、固定搜索区或其他正式布局只需用 HyperNavBarScrollScope 包住导航与主视口的共同父级，不改它的 Scaffold、正文约束、padding、Insets、physics 或底栏。Compose 以主容器真实状态显式绑定，不扫描后代，也不由页面累加滚动手势。覆盖式页面继续使用已有 HyperNavBarPage；不能借监听整理转换页面布局或改变滚动范围。
 
-HyperNavBarPage 注册正文采样源，并测量包含附加搜索/筛选行的实际导航区高度，将净空交给滚动内容。不要把 padding 放在滚动容器外。独立布局可用 HyperNavBarScrollScope 包住导航与正文，并由 HyperBackdrop 提供采样源；不接管或释放外部滚动状态。非 Compose 内容有自己的位置来源时，仍可显式使用 scrolledUnder。
+HyperNavBarPage 叠放全屏正文与导航，测量包括附加搜索/筛选行的实际导航高度，将净空交给滚动内容。不要把 padding 放在视口外。已有布局可只用 HyperNavBarScrollScope 绑定主状态；不接管或释放该状态，不需要 HyperBackdrop。非 Compose 内容可显式传 scrolledUnder。
 
 ```kotlin
 val scrollState = rememberLazyListState()
 HyperNavBarPage(scrollState = scrollState, navBar = {
     HyperNavBar(
-        type = "titleOnly",
+        layout = "titleOnly",
         title = { HyperText("详情") }
     )
 }) { padding ->
@@ -71,7 +85,8 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 ```kotlin
 @Composable
 fun HyperNavBar(
-    type: String = HyperNavBarDefaults.TypeCustom,
+    type: String = HyperNavBarDefaults.TypeStandard,
+    layout: String = HyperNavBarDefaults.LayoutCustom,
     title: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier,
     padding: PaddingValues = HyperNavBarDefaults.ContentPadding,
@@ -95,7 +110,8 @@ fun HyperNavBar(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| type | String | 否 | HyperNavBarDefaults.TypeCustom | 组件的视觉或布局形态。 |
+| type | String | 否 | HyperNavBarDefaults.TypeStandard | standard 显示标准操作行；simple 只适配真实状态栏/挖孔，不生成标题、操作或 44dp 工具栏。 |
+| layout | String | 否 | HyperNavBarDefaults.LayoutCustom | 组件的视觉或布局形态。 |
 | title | (@Composable () -&gt; Unit)? | 否 | null | 组件标题文字或内容。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | padding | PaddingValues | 否 | HyperNavBarDefaults.ContentPadding | 导航栏内部留白。 |
@@ -162,7 +178,7 @@ fun HyperNavBarScrollScope(
 | scrollState | ScrollableState | 是 | — | 唯一主滚动状态，库内观察；不接管其生命周期。 |
 | reverseLayout | Boolean | 否 | false | 按反向列表读取滚动边界。 |
 | active | Boolean | 否 | true | 只采用活动主视口的真实状态；暂停来源不改变控制器、布局或滚动范围。 |
-| content | @Composable () -&gt; Unit | 是 | — | 导航与主滚动容器的共同父级内容；采样源由 HyperBackdrop 提供。 |
+| content | @Composable () -&gt; Unit | 是 | — | 导航与主滚动容器的共同父级内容；不需要正文采样源。 |
 
 ```kotlin
 val listState = rememberLazyListState()

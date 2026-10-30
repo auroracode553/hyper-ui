@@ -4,6 +4,7 @@ package hyper_ui.docs.data
 import hyper_ui.docs.ui.FilterBarDemo
 
 import hyper_ui.docs.ui.NavBarDemo
+import hyper_ui.docs.ui.ScrollGradientDemo
 import hyper_ui.docs.ui.DrawerDemo
 import hyper_ui.docs.ui.SingleTabBarDemo
 import hyper_ui.docs.ui.MultipleTabBarDemo
@@ -13,6 +14,26 @@ import hyper_ui.docs.ui.DockedTabBarDemo
 private const val GROUP_NAVIGATION = "导航组件"
 
 internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(
+        id = "scroll-gradient", group = GROUP_NAVIGATION, title = "HyperScrollGradient",
+        description = "可独立组合的滚动渐隐材质，不增加栏高或安全区，不采样正文。",
+        code = """
+            HyperNavBarScrollScope(scrollState) {
+                Box {
+                    /* 主滚动正文 */
+                    HyperScrollGradient(modifier = Modifier.fillMaxWidth()) { /* 清晰的前景操作 */ }
+                }
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("自动感知", "HyperNavBarScrollScope", "共用主滚动状态，160ms 渐显"),
+            DemoVariant("受控显示", "scrolledUnder = true", "强制显示；默认跟随库内作用域"),
+            DemoVariant("覆盖范围", "modifier / child", "调用方决定实际尺寸，组件不增加安全区或永久占位")
+        ),
+        apiDocumentPaths = listOf("navigation/hyper-scroll-gradient.md"),
+        content = { ScrollGradientDemo() },
+        fullScreenPreview = true, fillsTopSafeArea = true
+    ),
     ComponentDemo(
         id = "slide_menu", group = GROUP_NAVIGATION, title = "HyperSlideMenu",
         description = "共用内容卡片表面的列表侧滑操作，保留逻辑方向、速度投影和弹簧吸附。展开状态由调用方管理。",
@@ -38,13 +59,13 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "nav-bar",
         group = GROUP_NAVIGATION,
         title = "HyperNavBar",
-        description = "顶部透明，滚动毛玻璃在状态栏顶部至导航底部内渐隐，正文区域不被覆盖。type 覆盖固定布局与 custom 插槽。",
+        description = "standard 显示导航操作区，simple 仅保护状态栏与挖孔；两种形态共用滚动渐变，不采样正文。",
         code = """
             val scrollState = rememberLazyListState()
             HyperNavBarPage(scrollState = scrollState,
                 navBar = {
                     HyperNavBar(
-                        type = HyperNavBarDefaults.TypeBackWithTitle,
+                        layout = HyperNavBarDefaults.LayoutBackWithTitle,
                         title = { HyperText("详情") },
                         onBackPressed = onBack
                     )
@@ -54,14 +75,16 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("基础返回", "type = backOnly", "只显示返回按钮"),
-            DemoVariant("仅标题", "type = titleOnly", "不显示返回按钮"),
-            DemoVariant("返回与标题", "type = backWithTitle", "返回图标与页面标题相邻显示"),
-            DemoVariant("更多操作", "type = more", "右侧显示更多按钮"),
-            DemoVariant("编辑返回", "type = edit", "标题右侧显示保存操作"),
-            DemoVariant("自定义", "type = custom", "使用 leading / trailing / subtitle / child 等插槽"),
+            DemoVariant("简约", "type = simple", "仅真实状态栏/挖孔高度，无标题或操作行"),
+            DemoVariant("标准", "type = standard", "保留 44dp 操作行、标题与返回/操作插槽"),
+            DemoVariant("基础返回", "layout = backOnly", "只显示返回按钮"),
+            DemoVariant("仅标题", "layout = titleOnly", "不显示返回按钮"),
+            DemoVariant("返回与标题", "layout = backWithTitle", "返回图标与页面标题相邻显示"),
+            DemoVariant("更多操作", "layout = more", "右侧显示更多按钮"),
+            DemoVariant("编辑返回", "layout = edit", "标题右侧显示保存操作"),
+            DemoVariant("自定义", "layout = custom", "使用 leading / trailing / subtitle / child 等插槽"),
             DemoVariant("操作反馈", "onBackPressed / onMorePressed / onSavePressed", "返回、更多与保存均可点击，正文显示反馈"),
-            DemoVariant("滚动材质", "HyperNavBarPage.scrollState / active", "库内观察真实主状态，仅导航读取派生值；非活动视口停用来源，160ms 过渡与20dp 模糊保持原样"),
+            DemoVariant("滚动材质", "HyperNavBarPage.scrollState / active", "库内观察真实主状态，仅导航读取派生值；非活动视口停用来源，160ms 渐变过渡，不采样正文"),
             DemoVariant("统一规格", "Height = 44.dp", "高度不包含顶部安全区"),
             DemoVariant("固定安全区", "库内自动处理", "背景覆盖状态栏，操作行在安全区下方；预览注入相同层级的模拟 Insets"),
             DemoVariant("叠加页面", "HyperNavBarPage", "首屏净空属于滚动内容，正文可经过透明操作层")

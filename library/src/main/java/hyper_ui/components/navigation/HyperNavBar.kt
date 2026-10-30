@@ -1,4 +1,4 @@
-/** 文件职责：提供顶部透明、正文滚入时显示毛玻璃的导航栏。 */
+/** 文件职责：提供顶部透明、正文滚入时显示渐变的导航栏。 */
 package hyper_ui
 
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -26,8 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -40,10 +39,11 @@ import androidx.compose.ui.platform.LocalDensity
 private fun navBarTopInsets(): WindowInsets =
     HyperTheme.topBarInsets
 
-/** 固定避让顶部状态栏；宿主传入滚动状态，组件统一处理背景采样和过渡。 */
+/** 固定避让顶部状态栏；宿主传入滚动状态，组件统一处理渐变和过渡。 */
 @Composable
 fun HyperNavBar(
-    type: String = HyperNavBarDefaults.TypeCustom,
+    type: String = HyperNavBarDefaults.TypeStandard,
+    layout: String = HyperNavBarDefaults.LayoutCustom,
     title: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier,
     padding: PaddingValues = HyperNavBarDefaults.ContentPadding,
@@ -62,17 +62,29 @@ fun HyperNavBar(
     child: (@Composable BoxScope.() -> Unit)? = null
 ) {
     require(type in HyperNavBarDefaults.Types) { "不支持的 HyperNavBar type: $type" }
+    if (type == HyperNavBarDefaults.TypeSimple) {
+        require(layout == HyperNavBarDefaults.LayoutCustom && title == null && subtitle == null &&
+            leading == null && trailing == null && actions.isEmpty() && child == null &&
+            onBackPressed == null && onMorePressed == null && onSavePressed == null && !centerTitle) {
+            "simple 仅绘制状态栏渐变，不接受标题、操作或内容布局。"
+        }
+        HyperScrollGradient(scrolledUnder = scrolledUnder,
+            modifier = modifier.zIndex(HyperNavBarDefaults.ZIndex).fillMaxWidth()
+                .windowInsetsTopHeight(navBarTopInsets()))
+        return
+    }
+    require(layout in HyperNavBarDefaults.Layouts) { "不支持的 HyperNavBar layout: $layout" }
     val resolvedHeight = HyperNavBarDefaults.Height
     require(spacing >= 0.dp && titleSpacing >= 0.dp && actionSpacing >= 0.dp) { "间距不能为负数" }
-    require(type == HyperNavBarDefaults.TypeCustom ||
+    require(layout == HyperNavBarDefaults.LayoutCustom ||
         (child == null && subtitle == null && leading == null && trailing == null && actions.isEmpty() && !centerTitle)) {
-        "固定类型 HyperNavBar 只接受标题内容与对应回调；需要完整插槽时使用 type = custom。"
+        "固定类型 HyperNavBar 只接受标题内容与对应回调；需要完整插槽时使用 layout = custom。"
     }
-    require(type != HyperNavBarDefaults.TypeBackOnly || (title == null && subtitle == null)) {
+    require(layout != HyperNavBarDefaults.LayoutBackOnly || (title == null && subtitle == null)) {
         "backOnly 类型不接受标题内容。"
     }
-    require(type == HyperNavBarDefaults.TypeCustom ||
-        type == HyperNavBarDefaults.TypeBackOnly || title != null) {
+    require(layout == HyperNavBarDefaults.LayoutCustom ||
+        layout == HyperNavBarDefaults.LayoutBackOnly || title != null) {
         "此 HyperNavBar 固定类型必须提供标题内容。"
     }
     require(child == null || (title == null && subtitle == null && leading == null && trailing == null && actions.isEmpty())) {
@@ -81,13 +93,13 @@ fun HyperNavBar(
     require(trailing == null || actions.isEmpty()) { "trailing 与 actions 二选一" }
 
     val safeInsets = navBarTopInsets()
-    HyperNavBarScrollSurface(scrolledUnder || (LocalHyperNavBarScrolledUnder.current?.value == true),
-        modifier.zIndex(HyperNavBarDefaults.ZIndex)) {
+    HyperScrollGradient(scrolledUnder = scrolledUnder,
+        modifier = modifier.zIndex(HyperNavBarDefaults.ZIndex)) {
       Column(modifier = Modifier.windowInsetsPadding(safeInsets)) {
         Box(modifier = Modifier.fillMaxWidth().height(resolvedHeight).padding(padding)) {
             if (child != null) {
                 child.invoke(this)
-            } else if (type == HyperNavBarDefaults.TypeCustom) {
+            } else if (layout == HyperNavBarDefaults.LayoutCustom) {
                 HyperNavBarSlots(
                     title = title,
                     subtitle = subtitle,
@@ -99,26 +111,26 @@ fun HyperNavBar(
                 )
             } else {
                 HyperNavBarSlots(
-                    title = when (type) {
-                        HyperNavBarDefaults.TypeTitleOnly,
-                        HyperNavBarDefaults.TypeBackWithTitle,
-                        HyperNavBarDefaults.TypeMore,
-                        HyperNavBarDefaults.TypeEdit -> title
+                    title = when (layout) {
+                        HyperNavBarDefaults.LayoutTitleOnly,
+                        HyperNavBarDefaults.LayoutBackWithTitle,
+                        HyperNavBarDefaults.LayoutMore,
+                        HyperNavBarDefaults.LayoutEdit -> title
                         else -> null
                     },
-                    subtitle = when (type) {
-                        HyperNavBarDefaults.TypeTitleOnly,
-                        HyperNavBarDefaults.TypeBackWithTitle,
-                        HyperNavBarDefaults.TypeMore,
-                        HyperNavBarDefaults.TypeEdit -> subtitle
+                    subtitle = when (layout) {
+                        HyperNavBarDefaults.LayoutTitleOnly,
+                        HyperNavBarDefaults.LayoutBackWithTitle,
+                        HyperNavBarDefaults.LayoutMore,
+                        HyperNavBarDefaults.LayoutEdit -> subtitle
                         else -> null
                     },
-                    leading = if (type == HyperNavBarDefaults.TypeTitleOnly) null else {
+                    leading = if (layout == HyperNavBarDefaults.LayoutTitleOnly) null else {
                         { HyperNavBarBackButton(onPressed = onBackPressed) }
                     },
-                    trailing = when (type) {
-                        HyperNavBarDefaults.TypeMore -> { { HyperNavBarMoreButton(onClick = onMorePressed) } }
-                        HyperNavBarDefaults.TypeEdit -> {
+                    trailing = when (layout) {
+                        HyperNavBarDefaults.LayoutMore -> { { HyperNavBarMoreButton(onClick = onMorePressed) } }
+                        HyperNavBarDefaults.LayoutEdit -> {
                             {
                                 HyperButton(onPressed = onSavePressed) {
                                     HyperText("保存")
@@ -151,7 +163,7 @@ fun HyperNavBarPage(
     content: @Composable BoxScope.(PaddingValues) -> Unit
 ) {
     val density = LocalDensity.current
-    var measuredNavBarHeight by remember { mutableIntStateOf(0) }
+    var measuredNavBarHeight by remember { mutableIntStateOf(-1) }
     val safeInsets = navBarTopInsets()
     val topInset = with(density) {
         safeInsets.getTop(this).toDp()
@@ -161,12 +173,13 @@ fun HyperNavBarPage(
         HyperTheme.systemSafeAreaInsets.getBottom(this).toDp()
     } else 0.dp
     val resolvedPadding = contentPadding.withAdditionalTop(
-        if (measuredNavBarHeight > 0) with(density) { measuredNavBarHeight.toDp() }
-        else topInset + HyperNavBarDefaults.Height
+        if (measuredNavBarHeight >= 0) with(density) { measuredNavBarHeight.toDp() }
+        else topInset
     )
         .withAdditionalBottom(bottomInset)
     val page: @Composable () -> Unit = {
-        HyperBackdrop(modifier = modifier.fillMaxSize(), background = { content(resolvedPadding) }) {
+        Box(modifier.fillMaxSize()) {
+            content(resolvedPadding)
             Box(Modifier.fillMaxWidth().zIndex(HyperNavBarDefaults.ZIndex)
                 .onSizeChanged { measuredNavBarHeight = it.height }) { navBar() }
         }
@@ -232,7 +245,7 @@ private fun HyperNavBarTitle(
     ) {
         title?.let {
             CompositionLocalProvider(LocalHyperTextStyle provides HyperNavBarDefaults.TitleTextStyle) {
-                Box(Modifier.semantics { heading() }) { it() }
+                it()
             }
         }
         subtitle?.let {
@@ -271,13 +284,16 @@ private fun PaddingValues.withAdditionalBottom(additionalBottom: Dp): PaddingVal
 }
 
 object HyperNavBarDefaults {
-    const val TypeCustom = "custom"
-    const val TypeBackOnly = "backOnly"
-    const val TypeTitleOnly = "titleOnly"
-    const val TypeBackWithTitle = "backWithTitle"
-    const val TypeMore = "more"
-    const val TypeEdit = "edit"
-    val Types = setOf(TypeCustom, TypeBackOnly, TypeTitleOnly, TypeBackWithTitle, TypeMore, TypeEdit)
+    const val TypeStandard = "standard"
+    const val TypeSimple = "simple"
+    val Types = setOf(TypeStandard, TypeSimple)
+    const val LayoutCustom = "custom"
+    const val LayoutBackOnly = "backOnly"
+    const val LayoutTitleOnly = "titleOnly"
+    const val LayoutBackWithTitle = "backWithTitle"
+    const val LayoutMore = "more"
+    const val LayoutEdit = "edit"
+    val Layouts = setOf(LayoutCustom, LayoutBackOnly, LayoutTitleOnly, LayoutBackWithTitle, LayoutMore, LayoutEdit)
     val Height = 44.dp
     val ContentGap = 8.dp
     val TitleGap = 2.dp

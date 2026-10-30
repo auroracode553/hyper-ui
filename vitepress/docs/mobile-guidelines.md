@@ -1,5 +1,7 @@
 # Android 手机端规范
 
+独立顶部渐变使用 [HyperScrollGradient](components/navigation/hyper-scroll-gradient.md)，Navbar 共用同一实现和主滚动作用域，不采样正文。HyperNavBar.type 仅区分 standard（标准操作行）和 simple（真实状态栏/挖孔，无标题与操作行）；standard 的内容布局由 layout 选择。首屏净空只进入滚动内容，不增加永久占位。
+
 ## 全局全面屏约定
 
 所有应用 Activity 统一调用 enableHyperEdgeToEdge()，根 HyperThemeConfig.useSystemSafeArea = false（默认值）。根布局不补系统安全区；HyperNavBar 的顶部操作区仍避让可见状态栏与挖孔一次，正文首屏净空位于滚动内容内部，可随上滑进入状态栏。自定义固定顶栏使用 Compose 窗口布局，IME 仍由输入宿主避让。上下净空只属于滚动内容，禁止固定 Spacer、视口外栏高 padding、扣减窗口高度或裁切。悬浮 TabBar 通过覆盖布局显示，末尾净空使用整个栏及边距的实测遮挡量，禁止以默认栏高或固定 dp 估算占位。下文有关保留旧布局的要求不能用于保留会截短视口的占位。
@@ -15,7 +17,7 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 - 所有 Activity 通过应用共用入口调用 enableEdgeToEdge，统一透明状态栏、手势导航栏和随主题变化的系统图标；HyperThemeConfig 只提供主题，不配置 Activity 窗口。
 - 页面画布使用 HyperColors.pageBackground 全屏绘制，内容卡片保持独立表面和柔和双层阴影，不将画布改成卡片色。
 - 不给整页叠加 systemBarsPadding/navigationBarsPadding 或固定安全区占位。具体控件或滚动末尾仅避让一次；表单宿主可使用 imePadding，避免与窗口调整重复计算键盘区域。
-- HyperNavBarPage 负责正文采样和覆盖式导航。将它返回的顶部净空放入 LazyColumn.contentPadding，不能在滚动容器外固定留空；模糊与渐隐在状态栏顶部至 Navbar 底部内结束，禁止实色底板或业务裁切替换效果。
+- HyperNavBarPage 负责全屏正文和覆盖式导航。将它返回的顶部净空放入 LazyColumn.contentPadding，不能在滚动容器外固定留空；渐变与渐隐在状态栏顶部至 Navbar 底部内结束，禁止实色底板或业务裁切替换效果。
 - 主滚动容器的状态传给 HyperNavBarPage.scrollState 后，库内 HyperNavBarScrollScope 自动监听并驱动 Navbar。页面不重复写 scrolledUnder 判断、derivedStateOf、snapshotFlow 或手势累计；程序滚动和位置恢复与手势滚动共用真实状态。导航区高度由库统一测量，页面不再单独监听尺寸计算净空。
 - 已有HyperScaffold 或固定布局可只在共同父级接入 HyperNavBarScrollScope，不为接入监听改布局；同一个主 ScrollState/LazyListState/LazyGridState 交给库与容器。隐藏页或主列表被空状态替代时使用 active = false，库内负责派生判断与订阅，Navbar 单独读取稳定状态，不带动正文重组。弹窗、网页、传感器、分页和播放位置等业务监听保留。
 - 正文使用 HyperCard、HyperMenuGroup、HyperListTile 等公开组件，不复制内部 hyperCardSurface；组内行共享一次表面。普通卡片无描边，选中轮廓和组内分隔线保留。
@@ -31,10 +33,10 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 - 已有正式布局仅用 HyperNavBarScrollScope 绑定同一个主滚动状态，不改变原 Scaffold、padding、Insets、正文约束或底栏；隐藏页或主列表空状态通过 active 停用来源。不在页面自己维护导航布尔值，也不删除业务自身的监听。
 - 所有 Activity 在公共入口全局 enableEdgeToEdge；统一透明状态栏、手势导航栏与亮暗图标，pageBackground 贯穿屏幕。
 - 禁止以固定高度、Spacer、滚动视口外 padding、扣减窗口高度或裁切占用状态栏与悬浮 TabBar 区域；不能把 HyperScaffold 返回的栏高直接放在滚动容器外。首末净空只进入 contentPadding 或 verticalScroll(...).padding(...) 内部，底栏净空使用宿主实测遮挡量。控件必要避让只处理一次，保留 IME 避让。
-- 顶部净空属于滚动内容，导航模糊由库在状态栏顶部至 Navbar 底部内绘制；不得向正文延伸，也不得添加实色底板或业务裁切遮住效果。
+- 顶部净空属于滚动内容，导航渐变由库在状态栏顶部至 Navbar 底部内绘制；不得向正文延伸，也不得添加实色底板或业务裁切遮住效果。
 - 内容卡片沿用无普通边框、底色分层和统一双层阴影，保留选中态与组内分隔线；输入、浮层和导航保留各自专用材质。
 - TabBar 保持原有悬浮布局与透明周围区域，正文可滚到后方。只有明确的底栏布局要求才允许改变高度、占位、位置、margin、padding、安全区、末尾留白和滚动范围；样式优化不构成授权。
-- 完成后核对整个页面链路，确认顶部/底部画布、导航模糊、卡片、键盘和正文滚动，遵守业务项目对编译与验证的限制；未做真机核对时明确说明。
+- 完成后核对整个页面链路，确认顶部/底部画布、导航渐变、卡片、键盘和正文滚动，遵守业务项目对编译与验证的限制；未做真机核对时明确说明。
 ```
 
 ## 布局边界

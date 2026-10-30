@@ -32,7 +32,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos()) // button 使用 content 主体插槽，默认外观与状态对齐 Flutter。
     addAll(formComponentDemos()) // 日期共用正式网格；Checkbox/Radio/Switch 直接展示无卡片的默认标签行。
     addAll(containerComponentDemos()) // 按需安全区共用顶部几何和底部最小留白； 内容表面共用无普通边框与双层阴影，选中强调边界保留。
-    addAll(navigationComponentDemos()) // Tabs 展示固定分段，FilterBar 展示浅底细线分类按钮；TabBar 覆盖悬浮与贴底等状态。
+    addAll(navigationComponentDemos()) // 独立滚动渐变与 Navbar 共用实现；Tabs / FilterBar / TabBar 展示导航状态。
     addAll(listComponentDemos()) // 分组标题与设置菜单共用样式；HyperSpacing 由页面消费一次；页面列表无卡片。
     addAll(feedbackComponentDemos()) // 模态遮罩全屏，面板独立避让系统栏与键盘；toast 文字操作先关闭再回调。
     addAll(toolsComponentDemos()) // Android 更新工具只在 Preview 模拟流程，不引入平台网络或下载。

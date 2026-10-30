@@ -51,6 +51,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 
 | 组件 | 用途 |
 | --- | --- |
+| [HyperScrollGradient](components/navigation/hyper-scroll-gradient.md) | 独立滚动渐变，与 Navbar 共用实现；不采样背景，不增加安全区或栏高 |
 | [HyperNavBar](components/navigation/hyper-nav-bar.md) | 库内观察同一主滚动状态，active 停用隐藏或空视口，仅导航读取派生值；背景在状态栏顶部至导航底部内渐隐，不改页面布局 |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | single / multiple / 贴底统一默认内容高 56dp；single / multiple、可重复动作与单项禁用 |
 | [HyperScaffold](components/navigation/hyper-scaffold.md) | 基础页面宿主；实际栏高、正文净空与悬浮操作，不依赖 Material |

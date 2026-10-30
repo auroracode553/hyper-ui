@@ -50,6 +50,8 @@ Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义
 
 `HyperNavBar` 的滚动背景覆盖状态栏，只有操作行避让顶部安全区。真机读取系统 Insets；文档预览注入模拟 Insets，导航与正文共用且只计算一次，与 Flutter 的背景及安全区层级一致。
 
+独立顶部渐变使用 [HyperScrollGradient](vitepress/docs/components/navigation/hyper-scroll-gradient.md)，Navbar 共用同一实现和主滚动作用域，不采样正文。HyperNavBar.type 仅区分 standard（标准操作行）和 simple（真实状态栏/挖孔，无标题与操作行）；standard 的内容布局由 layout 选择。首屏净空只进入滚动内容，不增加永久占位。
+
 导航的滚动感知统一由库内 HyperNavBarScrollScope 处理：覆盖式页面传入 HyperNavBarPage.scrollState，已有HyperScaffold 只包装作用域并绑定同一个主状态，不重排布局。作用域传递稳定派生 State，仅 Navbar 读取；active=false 可停用隐藏页或空视口，保留滚动位置。页面不维护导航专用监听、布尔缓存或回调链，不因迁移改变 TabBar 或滚动范围。完整接口见 [导航组件](vitepress/docs/components/navigation/hyper-nav-bar.md)。
 
 共有组件约定：按钮主体使用 content 插槽；Checkbox 标签行不叠加独立触摸区；Card 选中边框使用完整强调色；日期范围使用亮暗语义底色；ListTile 尾部间距 8dp；Tabs 仅在索引改变时回调；SlideMenu 携带释放速度吸附；Toast 默认文字操作先请求关闭再回调。
@@ -264,7 +266,7 @@ HyperIcon 继续负责插槽尺寸与颜色继承，图形由图标库提供；�
 - 主题与材质：`HyperThemeConfig`、`HyperTheme`、`HyperColors`、`HyperGlassTokens`、`HyperBackdrop`、`HyperSoftBackground`。
 - 基础与表单：`HyperText`、`HyperIcon`、`HyperDivider`、`HyperButton`（含 `type = "icon"`）、`HyperTextField`、`HyperSwitch`（清晰的关闭态中性轨道）、`HyperCheckbox`、`HyperRadio`、`HyperTabs`、`HyperSlider`。
 - 容器与列表：`HyperCard`、`HyperColorPicker`、`HyperList`、`HyperSectionedList`、`HyperMenuGroup`、`HyperListTile`。
-- 导航与操作：`HyperNavBar`（顶部透明；宿主通过 `scrollState` 自动监听正文位置，滚入时用 160ms 过渡显示 20dp 毛玻璃，在状态栏顶部至导航底部内渐隐至透明，没有分隔线，固定顶部状态栏避让；通过 `type = custom/backOnly/titleOnly/backWithTitle/more/edit` 选择固定布局，`custom` 提供完整插槽；搭配 `HyperNavBarPage` 让正文滚到导航栏后方并提供背景采样源）、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperFilterBar`（横向分类）、`HyperTabBar`（文档页分别提供单动作与多标签交互预览）。
+- 导航与操作：`HyperNavBar`（顶部透明；宿主通过 `scrollState` 自动监听正文位置，滚入时用 160ms 过渡显示主题渐变，在状态栏顶部至导航底部内渐隐至透明，没有分隔线，固定顶部状态栏避让；通过 `layout = custom/backOnly/titleOnly/backWithTitle/more/edit` 选择固定布局，`custom` 提供完整插槽；搭配 `HyperNavBarPage` 让正文滚到导航栏后方并提供全屏正文宿主）、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperFilterBar`（横向分类）、`HyperTabBar`（文档页分别提供单动作与多标签交互预览）。
 - 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopover`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
 
 `HyperSectionedList` 固定使用 8dp 紧凑分段间距，选择状态由调用方管理。
