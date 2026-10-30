@@ -57,14 +57,14 @@ internal fun HyperCalendarPickerMonth(
     val next = month.shiftMonth(1)
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            HyperButton(onPressed = { previous?.let { month = it } }, enabled = available(previous), type = "icon", size = "small") {
+            HyperButton(onPressed = { previous?.let { month = it } }, enabled = available(previous), type = "icon") {
                 HyperIcon(Lucide.ChevronLeft, "上个月")
             }
             HyperButton(onPressed = { choosingMonth = !choosingMonth }, modifier = Modifier.weight(1f)) {
                 HyperText("${month.year} 年 ${month.month} 月")
                 HyperIcon(Lucide.ChevronDown, null)
             }
-            HyperButton(onPressed = { next?.let { month = it } }, enabled = available(next), type = "icon", size = "small") {
+            HyperButton(onPressed = { next?.let { month = it } }, enabled = available(next), type = "icon") {
                 HyperIcon(Lucide.ChevronRight, "下个月")
             }
         }
@@ -98,15 +98,15 @@ private fun HyperCalendarMonths(
     val year = month.year
     Column {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            HyperButton(onPressed = { onYearChanged(changeYear(-10)) }, enabled = year - 10 >= firstDate.year, size = "small") { HyperText("−10 年") }
-            HyperButton(onPressed = { onYearChanged(changeYear(-1)) }, enabled = year > firstDate.year, type = "icon", size = "small") {
+            HyperButton(onPressed = { onYearChanged(changeYear(-10)) }, enabled = year - 10 >= firstDate.year) { HyperText("−10 年") }
+            HyperButton(onPressed = { onYearChanged(changeYear(-1)) }, enabled = year > firstDate.year, type = "icon") {
                 HyperIcon(Lucide.ChevronLeft, "上一年")
             }
             HyperText("$year 年", fontWeight = FontWeight.Bold)
-            HyperButton(onPressed = { onYearChanged(changeYear(1)) }, enabled = year < lastDate.year, type = "icon", size = "small") {
+            HyperButton(onPressed = { onYearChanged(changeYear(1)) }, enabled = year < lastDate.year, type = "icon") {
                 HyperIcon(Lucide.ChevronRight, "下一年")
             }
-            HyperButton(onPressed = { onYearChanged(changeYear(10)) }, enabled = year + 10 <= lastDate.year, size = "small") { HyperText("+10 年") }
+            HyperButton(onPressed = { onYearChanged(changeYear(10)) }, enabled = year + 10 <= lastDate.year) { HyperText("+10 年") }
         }
         Spacer(Modifier.height(12.dp))
         repeat(4) { row ->
@@ -118,7 +118,6 @@ private fun HyperCalendarMonths(
                         onPressed = { onChanged(target) },
                         enabled = target.overlapsMonth(firstDate, lastDate),
                         modifier = Modifier.weight(1f),
-                        size = "large",
                         type = if (selected) "filled" else null,
                         colorStyle = if (selected) "primary" else null,
                     ) { HyperText("${target.month} 月") }

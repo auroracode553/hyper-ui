@@ -47,18 +47,16 @@ fun HyperButton(
     type: String? = null,
     color: Color = Color.Unspecified,
     colorStyle: String? = null,
-    size: String = "default",
     colors: HyperButtonColors = HyperButtonDefaults.colors(type, color = color, colorStyle = colorStyle),
     border: BorderStroke? = HyperButtonDefaults.border(type, enabled && onPressed != null, color = color, colorStyle = colorStyle),
-    shape: Shape = HyperButtonDefaults.shape(size),
-    contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(size),
+    shape: Shape = HyperButtonDefaults.shape(),
+    contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(),
     role: Role = Role.Button,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     content: @Composable RowScope.() -> Unit
 ) {
-    requireHyperComponentSize(size)
-    val resolvedHeight = HyperButtonDefaults.height(size)
+    val resolvedHeight = HyperButtonDefaults.height()
     require(type == null || type in setOf("filled", "icon")) {
         "不支持的 HyperButton type: $type"
     }
@@ -89,14 +87,14 @@ fun HyperButton(
     ) {
         CompositionLocalProvider(
             LocalHyperContentColor provides foreground,
-            LocalHyperTextStyle provides HyperButtonDefaults.textStyle(size),
-            LocalHyperIconSize provides HyperButtonDefaults.iconSize(size, isIconType)
+            LocalHyperTextStyle provides HyperButtonDefaults.textStyle(),
+            LocalHyperIconSize provides HyperButtonDefaults.iconSize(isIconType)
         ) {
             if (loading) HyperProgress(
                 type = "circular",
                 showLabel = false,
                 modifier = Modifier.size(if (isIconType)
-                    (HyperButtonDefaults.iconSize(size, iconOnly = true) - 2.dp).coerceAtLeast(12.dp) else 16.dp),
+                    (HyperButtonDefaults.iconSize(iconOnly = true) - 2.dp).coerceAtLeast(12.dp) else 16.dp),
                 strokeWidth = 2.dp,
                 colors = HyperProgressDefaults.colors(hyperGlass.controlTrack, foreground)
             )
@@ -112,28 +110,19 @@ object HyperButtonDefaults {
     val ContentPadding = PaddingValues(horizontal = 14.dp)
     val Shape: Shape = RoundedCornerShape(percent = 50)
 
-    fun shape(size: String = "default"): Shape = RoundedCornerShape(height(size) / 2)
+    fun shape(): Shape = RoundedCornerShape(height() / 2)
 
-    fun iconSize(size: String = "default", iconOnly: Boolean = false): Dp {
-        val difference = height(size).value - 38f
-        return (if (iconOnly) 20f + difference / 3f else 17f + difference / 6f).dp
-    }
+    fun iconSize(iconOnly: Boolean = false): Dp = if (iconOnly) 20.dp else 17.dp
 
-    fun height(size: String = "default"): Dp =
-        hyperComponentSize(size, small = 32.dp, normal = MinHeight, large = 44.dp)
+    fun height(): Dp = MinHeight
 
-    fun contentPadding(size: String = "default"): PaddingValues {
-        val height = height(size)
-        return PaddingValues(horizontal = (14 + (height.value - 38) * 2 / 3).coerceAtLeast(0f).dp)
-    }
+    fun contentPadding(): PaddingValues = ContentPadding
 
     @Composable
-    fun textStyle(size: String = "default"): TextStyle {
-        val height = height(size)
-        val fontSize = (13 + (height.value - 38) / 6).coerceAtLeast(1f)
-        return HyperTheme.typography.labelLarge.copy(fontSize = fontSize.sp, lineHeight = (fontSize * 1.2f).sp,
-            fontWeight = FontWeight.SemiBold, letterSpacing = 0.05.sp)
-    }
+    fun textStyle(): TextStyle = HyperTheme.typography.labelLarge.copy(
+        fontSize = 13.sp, lineHeight = 15.6.sp,
+        fontWeight = FontWeight.SemiBold, letterSpacing = 0.05.sp,
+    )
 
     @Composable
     fun colors(

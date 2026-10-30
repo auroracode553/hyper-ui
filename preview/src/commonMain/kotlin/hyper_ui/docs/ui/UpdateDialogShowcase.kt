@@ -35,7 +35,7 @@ fun UpdateDialogDemo() {
     }
 
     Column(Modifier.fillMaxWidth()) {
-        HyperText("更新流程", size = "small")
+        HyperText("更新流程")
         Spacer(Modifier.height(8.dp))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton(onPressed = if (dialogOpen) null else ({ open() }), colorStyle = "primary", type = "filled") {
@@ -52,11 +52,11 @@ fun UpdateDialogDemo() {
             Spacer(Modifier.height(12.dp))
             HyperProgress(controller.downloadProgress.fraction)
             Spacer(Modifier.height(8.dp))
-            HyperText(controller.downloadProgress.sizeLabel, size = "small")
+            HyperText(controller.downloadProgress.sizeLabel)
         }
         Spacer(Modifier.height(20.dp))
-        HyperText("状态预览", size = "small")
-        HyperText("检查中隐藏版本；其他版本信息不套卡片。标识块 40、图标 20、加载环 30；错误仅保留原因与操作，次操作使用默认描边按钮。", size = "small")
+        HyperText("状态预览")
+        HyperText("检查中隐藏版本；其他版本信息不套卡片。标识块 40、图标 20、加载环 30；错误仅保留原因与操作，次操作使用默认描边按钮。")
         Spacer(Modifier.height(8.dp))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperUpdateStatus.entries.forEach { status ->
@@ -79,7 +79,7 @@ fun UpdateDialogDemo() {
             }
         }
         Spacer(Modifier.height(12.dp))
-        HyperText("示例任务由页面持有。关闭弹窗后下载继续，重新打开可查看进度；取消按钮终止下载。", size = "small")
+        HyperText("示例任务由页面持有。关闭弹窗后下载继续，重新打开可查看进度；取消按钮终止下载。")
     }
     if (dialogOpen) UpdatePreviewDialog(controller, mandatory, onClose = { dialogOpen = false })
 }

@@ -30,13 +30,12 @@ data class HyperCalendarItem(val label: String, val color: Color = Color.Unspeci
 
 object HyperCalendarDayDefaults {
     @Composable
-    fun minimumHeight(size: String = "default", hasSubtitle: Boolean = false, itemRows: Int = 0): Dp {
-        requireHyperComponentSize(size)
+    fun minimumHeight(hasSubtitle: Boolean = false, itemRows: Int = 0): Dp {
         require(itemRows in 0..3)
-        val font = when (size) { "small" -> 10f; "large" -> 17f; else -> 14f }
-        val base = when (size) { "small" -> 20f; "large" -> 48f; else -> 42f }
+        val font = 14f
+        val base = 42f
         val scale = LocalDensity.current.fontScale
-        return (maxOf(base, scale * font * 1.2f + (if (hasSubtitle) scale * 9 * 1.2f + 2 else 0f) + (if (size == "small") 6 else 12)) + itemRows * (scale * 10 * 1.2f + 4)).dp
+        return (maxOf(base, scale * font * 1.2f + (if (hasSubtitle) scale * 9 * 1.2f + 2 else 0f) + 12) + itemRows * (scale * 10 * 1.2f + 4)).dp
     }
 }
 
@@ -50,7 +49,6 @@ fun HyperCalendarDay(
     adjacent: Boolean = false,
     emphasized: Boolean = false,
     inRange: Boolean = false,
-    size: String = "default",
     expanded: Boolean = false,
     subtitle: String? = null,
     subtitleColor: Color = Color.Unspecified,
@@ -64,7 +62,7 @@ fun HyperCalendarDay(
 ) {
     require(day in 1..31)
     require(itemCount == null || itemCount >= items.size)
-    val base = HyperCalendarDayDefaults.minimumHeight(size, subtitle != null)
+    val base = HyperCalendarDayDefaults.minimumHeight(hasSubtitle = subtitle != null)
     val density = LocalDensity.current
     val foreground = when {
         selected -> Color(1f, 1f, 1f, 1f)
@@ -78,7 +76,7 @@ fun HyperCalendarDay(
         subtitleColor != Color.Unspecified -> subtitleColor
         else -> HyperColors.secondaryText
     }
-    val font = when (size) { "small" -> 10f; "large" -> 17f; else -> 14f }
+    val font = 14f
     // 保留完整字高与紧凑内边距，三行条目不额外撑高月盘。
     val labelHeight = (density.fontScale * 10 * 1.2f + 2).dp
     val total = itemCount ?: items.size

@@ -1,6 +1,10 @@
-## 最新统一全面屏规则
+## 全面屏与悬浮栏约束
 
-- 遵循上级 Android-project/AGENTS.md：Activity 使用 enableHyperEdgeToEdge()，HyperThemeConfig.useSystemSafeArea = false；根画布和滚动视口不加系统安全区；HyperNavBar 和固定顶部操作容器 统一保护顶部操作区一次，首屏正文净空放在滚动内容内部，上滑可进入状态栏；保留 IME 避让和业务组件高度。此前保留系统安全区的条款以本条为准。
+- Activity 使用 `enableHyperEdgeToEdge()`，根 `HyperThemeConfig.useSystemSafeArea = false`。根画布、滚动视口和 WebView 保持全屏，正文可滚入顶部状态栏与底部 TabBar 后方。
+- 禁止用固定高度、`Spacer`、根布局系统栏 padding、滚动容器外的栏高 padding、扣减屏幕高度或裁切，为状态栏、导航栏、悬浮 TabBar 建立永久占位；禁止把悬浮栏放进 `Column` 挤占正文。不得把 `HyperScaffold` 返回的上下净空直接用于滚动视口的 `Modifier.padding`。
+- 顶部操作区由 `HyperNavBar` 或局部操作容器根据真实窗口 Insets 保护一次。首屏顶部净空与末尾底部净空只进入 `LazyColumn` / `LazyGrid` 的 `contentPadding` 或 `verticalScroll(...).padding(...)` 内部，随正文滚动；不能在视口外固定留空。
+- 悬浮 TabBar 使用覆盖布局，周围透明并透传正文手势。需要末尾避让时使用宿主实测遮挡量，禁止用默认栏高、硬编码 dp 或状态栏高度估算永久占位。Web 宿主传入的安全区与遮挡量同样只用于网页滚动内容及局部操作区，不能缩短网页滚动视口。
+- 保留按钮、导航控件、输入法面板、视频画面和编辑器等业务组件自身所需尺寸与 IME 避让；本限制针对系统栏与悬浮栏占位，不要求删除正常控件高度。修改后从布局与滚动链路核对，不能只凭高度值未变或编译成功判定正常。
 
 # AGENTS.md
 
@@ -91,3 +95,8 @@
 导航滚动监听统一由 HyperNavBarPage.scrollState / HyperNavBarScrollScope 管理，Navbar 自动读取；消费页面不得重复声明导航专用 derivedStateOf、snapshotFlow 或 scrolledUnder 判断。库测量实际导航区高度，顶部净空放进滚动内容；主滚动状态保留在容器，嵌套列表不代替主状态。
 
 作用域提供稳定派生 State，只由 Navbar 读取值，避免阈值切换带动整个正文重组。普通 HyperScaffold 或固定布局通过 HyperNavBarScrollScope 绑定同一主状态，不改原布局；active 用于隐藏页或空主视口，不修改滚动位置。不得用页面布尔缓存、手势累计、弹窗列表或播放器位置替代主状态；业务监听按职责保留。用户明确要求仅改源码、由本人测试时，不自动执行静态分析、构建、安装、运行或测试，不生成测试与辅助脚本。
+
+## 组件规格与分类筛选
+
+- 每类组件只提供一套默认规格，禁止新增或恢复 small/default/large 等尺寸档位及兼容参数。文字、图标继续继承宿主样式，必要的业务布局与字体缩放独立保留。
+- HyperTabs 用于固定分段切换，使用 tabs / selectedIndex / onChanged；可左右滑动的分类筛选使用紧凑 HyperFilterBar。禁止恢复整条 54dp 分类胶囊或旧分段组件名称，不保留废弃别名与兼容壳。

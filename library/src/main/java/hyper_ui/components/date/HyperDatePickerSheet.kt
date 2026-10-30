@@ -113,8 +113,7 @@ internal fun HyperDatePickerSheet(
                     HyperButton(
                         onPressed = { result = selection; currentOnClose() },
                         enabled = visible,
-                        modifier = Modifier.fillMaxWidth(),
-                        size = "large", type = "filled", colorStyle = "primary",
+                        modifier = Modifier.fillMaxWidth(), type = "filled", colorStyle = "primary",
                     ) { HyperText("确定") }
                 }
             }

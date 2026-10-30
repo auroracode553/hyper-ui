@@ -100,8 +100,7 @@ private fun PreviewToggle(
 ) {
     HyperButton(type = null,
         onPressed = onClick,
-        size = "small",
-        contentPadding = HyperButtonDefaults.contentPadding("small")
+        contentPadding = HyperButtonDefaults.contentPadding()
     ) { HyperText(label, maxLines = 1) }
 }
 

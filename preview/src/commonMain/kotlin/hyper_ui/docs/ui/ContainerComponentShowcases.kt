@@ -81,8 +81,8 @@ fun PanelDemo() {
             title = { HyperText("本周专注") },
             subtitle = { HyperText("保持轻量、清晰的内容层级") },
             leading = { HyperIcon(Lucide.Sparkles, null) },
-            actions = { HyperButton({ feedback = "已打开更多操作" }, type = "icon", size = "small") { HyperIcon(Lucide.Ellipsis, "更多") } },
-            footer = { HyperText(feedback, size = "small") }
+            actions = { HyperButton({ feedback = "已打开更多操作" }, type = "icon") { HyperIcon(Lucide.Ellipsis, "更多") } },
+            footer = { HyperText(feedback) }
         ) {
             HyperText("卡片组织内容与操作，业务状态由调用方持有。")
         }

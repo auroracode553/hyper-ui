@@ -74,7 +74,6 @@ fun HyperNavBar(
     type: String = HyperNavBarDefaults.TypeCustom,
     title: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier,
-    size: String = "default",
     padding: PaddingValues = HyperNavBarDefaults.ContentPadding,
     spacing: Dp = HyperNavBarDefaults.ContentGap,
     titleSpacing: Dp = HyperNavBarDefaults.TitleGap,
@@ -99,7 +98,6 @@ fun HyperNavBar(
 | type | String | 否 | HyperNavBarDefaults.TypeCustom | 组件的视觉或布局形态。 |
 | title | (@Composable () -&gt; Unit)? | 否 | null | 组件标题文字或内容。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 | padding | PaddingValues | 否 | HyperNavBarDefaults.ContentPadding | 导航栏内部留白。 |
 | spacing | Dp | 否 | HyperNavBarDefaults.ContentGap | 导航栏各区域之间的间距。 |
 | titleSpacing | Dp | 否 | HyperNavBarDefaults.TitleGap | 标题与其他区域的间距。 |
@@ -126,7 +124,6 @@ fun HyperNavBarPage(
     navBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    navBarSize: String = "default",
     bottomSafeArea: Boolean = true,
     scrollState: ScrollableState? = null,
     reverseLayout: Boolean = false,
@@ -142,7 +139,6 @@ fun HyperNavBarPage(
 | navBar | @Composable () -&gt; Unit | 是 | — | 页面顶部导航栏内容。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | contentPadding | PaddingValues | 否 | PaddingValues() | 主体内容的内部留白。 |
-| navBarSize | String | 否 | &quot;default&quot; | 首次测量前采用的导航尺寸；布局后按实际导航区高度提供顶部净空。 |
 | bottomSafeArea | Boolean | 否 | true | 是否为底部系统安全区留白。 |
 | scrollState | ScrollableState? | 否 | null | 主滚动容器已有状态；库自动监听并供 Navbar 读取，支持 ScrollState、LazyListState、LazyGridState。 |
 | reverseLayout | Boolean | 否 | false | 反向主列表，改用 canScrollForward 判断内容是否经过导航。 |
@@ -171,9 +167,9 @@ fun HyperNavBarScrollScope(
 ```kotlin
 val listState = rememberLazyListState()
 HyperNavBarScrollScope(scrollState = listState, active = items.isNotEmpty()) {
-    // 保留原页面全部参数，只给主列表绑定同一个 listState。
-    Scaffold(topBar = { HyperNavBar(title = { HyperText("下载") }) }) { padding ->
-        LazyColumn(state = listState, modifier = Modifier.padding(padding)) {
+    // 同一主状态交给导航作用域与列表，净空只进入列表内容。
+    HyperScaffold(topBar = { HyperNavBar(title = { HyperText("下载") }) }) { padding ->
+        LazyColumn(state = listState, modifier = Modifier.fillMaxSize(), contentPadding = padding) {
             items(items) { item -> HyperText(item.title) }
         }
     }

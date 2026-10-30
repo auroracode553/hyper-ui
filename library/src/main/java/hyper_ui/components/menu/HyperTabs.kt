@@ -1,65 +1,159 @@
-/** 文件职责：参考 HyperTabs 的共享胶囊、等宽/滚动标签与受控选中状态。 */
+/** 文件职责：提供单一规格的分段页签及其选中、禁用视觉状态。 */
 package hyper_ui
 
 import androidx.compose.foundation.background
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.getValue
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import hyper_ui.core.interaction.hyperNoRippleClickable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.selected
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import hyper_ui.core.interaction.hyperNoRippleClickable
 
-class HyperTabsItemScope internal constructor(val selected: Boolean, val enabled: Boolean)
+@Immutable
+data class HyperTabsColors(
+    val containerColor: Color,
+    val selectedItemColor: Color,
+    val unselectedItemColor: Color,
+    val selectedContentColor: Color,
+    val unselectedContentColor: Color,
+    val disabledContentColor: Color
+)
 
+class HyperTabsItemScope internal constructor(
+    val selected: Boolean,
+    val enabled: Boolean
+)
+
+/**
+ * 等宽分段控制器。
+ *
+ * 组件仅渲染分段、状态与点击边界；选中项及业务内容由调用方持有。
+ */
 @Composable
 fun <T> HyperTabs(
     tabs: List<T>,
     selectedIndex: Int,
     onChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    scrollable: Boolean = false,
+    enabled: Boolean = true,
     itemEnabled: (T) -> Boolean = { true },
+    equalWidth: Boolean = true,
+    shape: Shape = HyperTabsDefaults.Shape,
+    itemShape: Shape = HyperTabsDefaults.ItemShape,
+    colors: HyperTabsColors = HyperTabsDefaults.colors(),
+    containerPadding: PaddingValues = HyperTabsDefaults.ContainerPadding,
+    itemContentPadding: PaddingValues = HyperTabsDefaults.ItemContentPadding,
     itemContent: @Composable HyperTabsItemScope.(item: T) -> Unit
 ) {
+    val curve = HyperMotionSpec.SelectionCurve
     require(selectedIndex in tabs.indices) { "selectedIndex 超出 tabs 范围" }
-    val shape = RoundedCornerShape(27.dp)
-    Row(modifier.fillMaxWidth().height(HyperTabsDefaults.Height)
-        .hyperFrostedSurface(hyperGlass.surfaceSubtle, shape, elevation = 0.dp)
-        .padding(3.dp)
-        .then(if (scrollable) Modifier.horizontalScroll(rememberScrollState()) else Modifier)) {
-        tabs.forEachIndexed { index, item ->
-            val selected = index == selectedIndex
-            val enabled = itemEnabled(item)
-            val background by androidx.compose.animation.animateColorAsState(
-                if (selected) hyperGlass.selection else Color.Transparent,
-                androidx.compose.animation.core.tween(if (scrollable) HyperMotionSpec.StateDuration else 0,
-                    easing = HyperMotionSpec.EaseOutCubic),
-                label = "HyperTabsBackground")
-            Box(Modifier.then(if (scrollable) Modifier.widthIn(min = 76.dp) else Modifier.weight(1f))
-                .fillMaxHeight()
-                .hyperNoRippleClickable(enabled = enabled, role = Role.Tab, pressedScale = 0.985f,
-                    onClick = { if (index != selectedIndex) onChanged(index) })
-                .padding(2.dp).background(background, RoundedCornerShape(24.dp))
-                .semantics { this.selected = selected }
-                .padding(horizontal = if (scrollable) 16.dp else 4.dp), contentAlignment = Alignment.Center) {
-                CompositionLocalProvider(
-                    LocalHyperContentColor provides if (selected) HyperColors.primaryText else HyperColors.secondaryText,
-                    LocalHyperTextStyle provides LocalHyperTextStyle.current.copy(
-                        fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium)
-                ) { HyperTabsItemScope(selected, enabled).itemContent(item) }
+    val visualIndex = if (LocalLayoutDirection.current == LayoutDirection.Rtl)
+        tabs.lastIndex - selectedIndex else selectedIndex
+    val selectionPosition by animateFloatAsState(visualIndex.toFloat(), tween(HyperMotionSpec.SelectionDuration, easing = curve),
+        label = "HyperTabsPosition")
+    BoxWithConstraints(
+        modifier = modifier
+            .then(if (equalWidth) Modifier.fillMaxWidth() else Modifier)
+            .height(HyperTabsDefaults.Height)
+            .hyperGlassSurface(shape, hyperGlassSurfaceVisuals(colors.containerColor,
+                HyperTabsDefaults.ContainerElevation, blur = hyperGlass.blur))
+            .padding(containerPadding)
+    ) {
+        if (equalWidth && tabs.isNotEmpty() && selectedIndex >= 0) {
+            val cellWidth = maxWidth / tabs.size
+            Box(Modifier.absoluteOffset(x = cellWidth * selectionPosition)
+                .width(cellWidth).fillMaxHeight().background(colors.selectedItemColor, itemShape))
+        }
+        Row(Modifier.fillMaxHeight().then(if (equalWidth) Modifier.fillMaxWidth() else Modifier)) {
+            tabs.forEachIndexed { index, item ->
+                val selected = index == selectedIndex
+                val actualEnabled = enabled && itemEnabled(item)
+                val itemBackground by animateColorAsState(
+                    if (!equalWidth && selected) colors.selectedItemColor else colors.unselectedItemColor,
+                    tween(HyperMotionSpec.StateDuration, easing = curve), label = "HyperTabsItemBackground")
+                Box(Modifier.then(if (equalWidth) Modifier.weight(1f) else Modifier).fillMaxHeight()
+                    .hyperNoRippleClickable(enabled = actualEnabled, role = Role.Tab, onClick = { if (index != selectedIndex) onChanged(index) })
+                    .background(itemBackground, itemShape).padding(itemContentPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    androidx.compose.runtime.CompositionLocalProvider(
+                        LocalHyperContentColor provides when {
+                            selected -> colors.selectedContentColor
+                            actualEnabled -> colors.unselectedContentColor
+                            else -> colors.disabledContentColor
+                        },
+                        LocalHyperTextStyle provides HyperTheme.typography.bodyMedium.copy(fontSize = 13.sp,
+                            lineHeight = 18.2.sp, fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium),
+                        LocalHyperIconSize provides 16.dp
+                    ) { HyperTabsItemScope(selected, actualEnabled).itemContent(item) }
+                }
             }
         }
     }
 }
 
-object HyperTabsDefaults { val Height = 54.dp }
+object HyperTabsDefaults {
+    val Height = 40.dp
+    val ContainerElevation = 0.dp
+    val ContainerPadding = PaddingValues(4.dp)
+    val ItemContentPadding = PaddingValues(horizontal = 12.dp)
+    val ItemContentSpacing = 8.dp
+    val Shape: Shape = RoundedCornerShape(18.dp)
+    val ItemShape: Shape = RoundedCornerShape(16.dp)
+
+    @Composable
+    fun colors(
+        containerColor: Color = Color.Unspecified,
+        selectedItemColor: Color = Color.Unspecified,
+        unselectedItemColor: Color = Color.Unspecified,
+        selectedContentColor: Color = Color.Unspecified,
+        unselectedContentColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified
+    ): HyperTabsColors {
+        val resolvedContainerColor = resolveHyperContainerColor(
+            containerColor,
+            hyperGlass.surfaceSubtle
+        )
+        val resolvedSelectedItemColor = resolveHyperContainerColor(
+            selectedItemColor,
+            hyperGlass.selection
+        )
+
+        return HyperTabsColors(
+            containerColor = resolvedContainerColor,
+            selectedItemColor = resolvedSelectedItemColor,
+            unselectedItemColor = resolveHyperContainerColor(unselectedItemColor, Color.Transparent),
+            selectedContentColor = resolveHyperContainerColor(
+                selectedContentColor,
+                HyperColors.primaryText
+            ),
+            unselectedContentColor = resolveHyperContainerColor(unselectedContentColor, HyperColors.primaryText),
+            disabledContentColor = resolveHyperContainerColor(
+                disabledContentColor,
+                HyperColors.secondaryText
+            )
+        )
+    }
+}

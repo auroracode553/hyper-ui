@@ -34,7 +34,7 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             HyperText("软件更新", Modifier.weight(1f), color = HyperColors.secondaryText,
                 fontSize = 12.sp, lineHeight = 16.8.sp, fontWeight = FontWeight.Medium)
-            if (!locked && onClose != null) HyperButton(onClose, type = "icon", size = "small") {
+            if (!locked && onClose != null) HyperButton(onClose, type = "icon") {
                 HyperIcon(Lucide.X, "关闭")
             }
         }

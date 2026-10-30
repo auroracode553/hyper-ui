@@ -51,10 +51,9 @@ fun HyperProgress(
     value: Float? = null,
     modifier: Modifier = Modifier,
     type: String = "linear",
-    size: String = "default",
     showLabel: Boolean = true,
     shape: Shape = HyperProgressDefaults.LinearShape,
-    strokeWidth: Dp = HyperProgressDefaults.strokeWidth(size),
+    strokeWidth: Dp = HyperProgressDefaults.CircularStrokeWidth,
     color: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
     colors: HyperProgressColors = HyperProgressDefaults.colors(trackColor = backgroundColor, indicatorColor = color),
@@ -69,10 +68,9 @@ fun HyperProgress(
 | value | Float? | 否 | null | 由调用方持有的当前值。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | type | String | 否 | &quot;linear&quot; | 组件的视觉或布局形态。 |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 | showLabel | Boolean | 否 | true | 确定进度时是否显示百分比。 |
 | shape | Shape | 否 | HyperProgressDefaults.LinearShape | 组件容器的形状。 |
-| strokeWidth | Dp | 否 | HyperProgressDefaults.strokeWidth(size) | 圆形进度条的描边宽度。 |
+| strokeWidth | Dp | 否 | HyperProgressDefaults.CircularStrokeWidth | 圆形进度条的描边宽度。 |
 | color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
 | backgroundColor | Color | 否 | Color.Unspecified | 背景轨道颜色。 |
 | colors | HyperProgressColors | 否 | HyperProgressDefaults.colors(trackColor = backgroundColor, indicatorColor = color) | 组件各状态的颜色配置。 |
@@ -84,12 +82,12 @@ fun HyperProgress(
 **HyperProgressDefaults.strokeWidth**
 
 ```kotlin
-fun strokeWidth(size: String = "default"): Dp
+val CircularStrokeWidth: Dp = 6.dp
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
+| — | — | — | — | 无参数，采用组件统一规格。 |
 
 **HyperProgressDefaults.colors**
 

@@ -22,7 +22,6 @@ fun HyperCalendarMonth(
     firstDate: LocalDate? = null,
     lastDate: LocalDate? = null,
     weekStart: Int = 1,
-    size: String = "default",
     showWeekdays: Boolean = true,
     readOnly: Boolean = false,
     expanded: Boolean = false,
@@ -40,7 +39,6 @@ fun HyperCalendarMonth(
 | firstDate | LocalDate? | 否 | null | 最早可选日期 |
 | lastDate | LocalDate? | 否 | null | 最晚可选日期 |
 | weekStart | Int | 否 | 1 | 周一为 1、周日为 7 |
-| size | String | 否 | default | small、default、large |
 | showWeekdays | Boolean | 否 | true | 星期表头 |
 | readOnly | Boolean | 否 | false | 只读合并绘制，不触发点击 |
 | expanded | Boolean | 否 | false | 填充宿主有限高度并平分六行 |
@@ -54,6 +52,5 @@ fun HyperCalendarMonth(
 ```kotlin
 HyperCalendarMonth(month = month, selectedDate = selected,
     weekStart = 7, onChanged = { selected = it })
-HyperCalendarMonth(month = month, modifier = Modifier.height(120.dp),
-    size = "small", readOnly = true, expanded = true, showWeekdays = false)
+HyperCalendarMonth(month = month, modifier = Modifier.height(120.dp), readOnly = true, expanded = true, showWeekdays = false)
 ```

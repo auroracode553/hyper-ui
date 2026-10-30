@@ -84,7 +84,6 @@ fun AppHome() {
             value = query,
             onChanged = { query = it },
             type = "text",
-            size = "default",
             placeholder = { HyperText("搜索设置") }
         ) }
        item { HyperMenuGroup { HyperListTile(
@@ -104,7 +103,7 @@ fun AppHome() {
 ## API 选择顺序
 
 1. 先用 `type` 选择组件形态。
-2. 再用 `size` 选择 `small`、`default` 或 `large`。
+2. 各组件采用一套默认规格，不设置 size 档位；页面布局通过 Modifier 组合。
 3. 外部宽度和间距使用 `modifier`。
 4. 业务状态通过参数和回调注入。
 5. 只有组件页明确列出的 Slot 才能注入内容。

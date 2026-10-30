@@ -15,8 +15,8 @@ import hyper_ui.HyperText
 @Composable
 internal fun PreviewSectionLabel(title: String, description: String? = null) {
     Column(Modifier.fillMaxWidth()) {
-        HyperText(title, size = "small", color = HyperColors.secondaryText, fontWeight = FontWeight.Medium)
-        if (description != null) HyperText(description, size = "small", color = HyperColors.secondaryText)
+        HyperText(title, color = HyperColors.secondaryText, fontWeight = FontWeight.Medium)
+        if (description != null) HyperText(description, color = HyperColors.secondaryText)
     }
 }
 

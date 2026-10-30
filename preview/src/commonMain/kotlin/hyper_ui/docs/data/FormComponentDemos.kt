@@ -6,7 +6,6 @@ import hyper_ui.docs.ui.DatePickerDemo
 import hyper_ui.docs.ui.CalendarDayDemo
 import hyper_ui.docs.ui.CalendarMonthDemo
 import hyper_ui.docs.ui.RadioDemo
-import hyper_ui.docs.ui.SegmentedDemo
 import hyper_ui.docs.ui.SliderDemo
 import hyper_ui.docs.ui.SwitchDemo
 import hyper_ui.docs.ui.TextFieldDemo
@@ -79,28 +78,6 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         content = { RadioDemo() }
     ),
     ComponentDemo(
-        id = "segmented",
-        group = GROUP_FORM,
-        title = "HyperSegmentedControl",
-        description = "默认总高 40dp 的等宽或内容宽度分段控制器；共用轨道、选中底板与受控标签插槽。",
-        code = """
-            HyperSegmentedControl(
-                options = periods,
-                selectedValue = selectedPeriod,
-                onChanged = { selectedPeriod = it }
-            ) { period ->
-                HyperText(period.label)
-            }
-        """.trimIndent(),
-        variants = listOf(
-            DemoVariant("默认尺寸", "Height = 40.dp", "32dp 分段与 4dp 轨道留白；等宽底板平移 260ms"),
-            DemoVariant("禁用项", "itemEnabled", "单独禁用指定分段"),
-            DemoVariant("自定义颜色", "HyperSegmentedControlDefaults.colors", "覆盖选中项和内容色")
-        ),
-        apiDocumentPaths = listOf("form/hyper-segmented-control.md"),
-        content = { SegmentedDemo() }
-    ),
-    ComponentDemo(
         id = "checkbox",
         group = GROUP_FORM,
         title = "HyperCheckbox",
@@ -128,7 +105,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         title = "HyperTextField",
         description = "分组呈现基础清空、密码显隐、金额前后缀和多行计数；尺寸、禁用、只读与错误状态可操作。",
         code = """
-            HyperTextField(value, { value = it }, clearable = true, size = "default",
+            HyperTextField(value, { value = it }, clearable = true,
                 placeholder = { HyperText("请输入内容") })
             HyperTextField(password, { password = it }, type = "password", showPasswordToggle = true)
         """.trimIndent(),

@@ -60,7 +60,7 @@ fun EmptyStateDemo() {
             icon = { HyperIcon(Lucide.Search, null) },
             action = { HyperButton(onPressed = { feedback = "已清除筛选" }) { HyperText("清除筛选") } }
         )
-        HyperText(feedback, size = "small", color = HyperColors.secondaryText)
+        HyperText(feedback, color = HyperColors.secondaryText)
         PreviewSectionLabel("纯提示 · 无操作按钮")
         HyperEmptyState(
             title = "这里还是空的",
@@ -146,12 +146,12 @@ fun ProgressDemo() {
                 )
             }
             HyperProgress(type = "linear", value = progress)
-            HyperProgress(type = "linear", value = progress, size = "small")
+            HyperProgress(type = "linear", value = progress)
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HyperProgress(type = "circular", value = progress, size = "small")
+                HyperProgress(type = "circular", value = progress)
                 HyperProgress(type = "circular", value = null)
                 HyperButton(
                     onPressed = { progress = (progress - 0.1f).coerceAtLeast(0f) }

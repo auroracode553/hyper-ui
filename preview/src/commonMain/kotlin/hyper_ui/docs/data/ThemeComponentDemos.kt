@@ -94,8 +94,7 @@ internal fun ThemeMaterialDemo() {
                 HyperMaterial.values().forEach { option ->
                     HyperButton(
                         onPressed = { material = option },
-                        colorStyle = if (option == material) "primary" else null, type = "filled",
-                        size = "small"
+                        colorStyle = if (option == material) "primary" else null, type = "filled"
                     ) { HyperText(option.label()) }
                 }
             }

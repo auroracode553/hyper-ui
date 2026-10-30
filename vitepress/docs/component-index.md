@@ -23,7 +23,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 
 [HyperCalendarDay](components/form/hyper-calendar-day.md) 提供通用日期格、角标和轻量条目；[HyperCalendarMonth](components/form/hyper-calendar-month.md) 提供内嵌、紧凑与只读月历，与日期选择器共用实现。
 
-日期格最多保留三行条目，溢出数量单独占最后一行；紧凑留白保留完整文字行高，默认缩放下 large 预留三行需 96dp。内嵌月历的 emphasizedDays 允许宿主指定主题色日期。
+日期格最多保留三行条目，溢出数量单独占最后一行；紧凑留白保留完整文字行高，默认规格按实际文字行高预留条目容量。内嵌月历的 emphasizedDays 允许宿主指定主题色日期。
 
 | 组件 | 用途 |
 | --- | --- |
@@ -33,7 +33,6 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperRadio](components/form/hyper-radio.md) | 单选；标签行承载点击，展示圆环不叠加触摸留白 |
 | [HyperSectionTitle](components/list/hyper-section-title.md) | 与菜单分组共用的 14sp Bold 标题，无默认外边距 |
 | [HyperThemeModeDialog](components/feedback/hyper-theme-mode-dialog.md) | 跟随系统、浅色、深色；36dp 紧凑选项，选择后请求关闭 |
-| [HyperSegmentedControl](components/form/hyper-segmented-control.md) | 40dp 分段切换，选中底板平移 |
 | [HyperSlider](components/form/hyper-slider.md) | 6dp 轨道、20dp 手柄，连续或分段值调节 |
 | [HyperDatePicker](components/form/hyper-date-picker.md) | 底部单日期月历、月份选择与年份跳转；默认 1900–2100 年 |
 
@@ -57,7 +56,8 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperScaffold](components/navigation/hyper-scaffold.md) | 基础页面宿主；实际栏高、正文净空与悬浮操作，不依赖 Material |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 贴边全高模态抽屉；固定标题／页脚，支持遮罩、返回键与滑动关闭 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表项侧滑操作 |
-| [HyperTabs](components/navigation/hyper-tabs.md) | 分类筛选 |
+| [HyperTabs](components/navigation/hyper-tabs.md) | 40dp 分段切换，选中底板平移 |
+| [HyperFilterBar](components/navigation/hyper-filter-bar.md) | 最小 32dp 的横向分类筛选 |
 
 ## 列表
 
@@ -114,3 +114,5 @@ TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认�
 共用页面尺寸：[HyperSpacing.PageHorizontal（14dp）](theme.md#hyperspacing-api)，由页面显式使用，列表与行不自动叠加。
 
 卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。
+
+HyperScaffold / HyperNavBarPage 的净空仅用于滚动内容内部，禁止用固定栏高或视口外 padding 截短正文；悬浮 TabBar 覆盖全屏内容。用法见[页面宿主](components/navigation/hyper-scaffold.md)与[业务页面规范](mobile-guidelines.md)。

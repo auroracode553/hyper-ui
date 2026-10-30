@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 fun HyperText(
     text: String,
     modifier: Modifier = Modifier,
-    size: String = "default",
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
@@ -41,12 +40,7 @@ fun HyperText(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle? = null
 ) {
-    requireHyperComponentSize(size)
-    val resolvedStyle = style ?: when (size) {
-        "large" -> HyperTheme.typography.bodyLarge.copy(fontSize = 18.sp, lineHeight = 25.2.sp, fontWeight = FontWeight.Bold)
-        "small" -> HyperTheme.typography.bodySmall.copy(fontSize = 12.sp, lineHeight = 16.8.sp, color = HyperColors.secondaryText)
-        else -> LocalHyperTextStyle.current
-    }
+    val resolvedStyle = style ?: LocalHyperTextStyle.current
     val resolvedColor = when {
         color != Color.Unspecified -> color
         resolvedStyle.color != Color.Unspecified -> resolvedStyle.color

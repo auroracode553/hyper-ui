@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,11 +50,11 @@ fun DrawerDemo() {
     val filters = placement == HyperDrawerPlacement.start
     Box(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperText("右侧抽屉与返回值", size = "small")
+            HyperText("右侧抽屉与返回值")
             HyperButton(onPressed = { placement = HyperDrawerPlacement.end; open = true }) { HyperText("打开抽屉") }
-            HyperText("返回结果：$selected", size = "small")
+            HyperText("返回结果：$selected")
             androidx.compose.foundation.layout.Spacer(Modifier.height(12.dp))
-            HyperText("左侧抽屉与固定底部操作区", size = "small")
+            HyperText("左侧抽屉与固定底部操作区")
             HyperButton(onPressed = { placement = HyperDrawerPlacement.start; open = true }) { HyperText("左侧筛选") }
         }
         HyperDrawer(
@@ -80,17 +83,15 @@ fun DrawerDemo() {
 }
 
 @Composable
-fun SlideMenuDemo() {
-    val categories = listOf("全部", "恶意网址", "广告", "恶意跳转", "打开应用")
-    var selected by remember { mutableStateOf("全部") }
-    var scrollable by remember { mutableStateOf(false) }
+fun FilterBarDemo() {
+    val categories = listOf("全部", "PDF", "Word", "文本", "Markdown", "表格", "演示文稿")
+    var selected by remember { mutableStateOf(0) }
+    var enabled by remember { mutableStateOf(true) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperButton({ scrollable = !scrollable }) {
-            HyperText(if (scrollable) "切换等宽" else "切换滚动")
-        }
-        HyperTabs(categories, categories.indexOf(selected), { selected = categories[it] }, scrollable = scrollable,
-            itemEnabled = { it != "打开应用" }) { HyperText(it, maxLines = 1) }
-        HyperText("当前选中：$selected", size = "small")
+        HyperSwitch(value = enabled, onChanged = { enabled = it }, label = "允许筛选")
+        HyperFilterBar(categories, selected, { selected = it }, enabled = enabled,
+            itemEnabled = { it != "演示文稿" }) { HyperText(it, maxLines = 1) }
+        HyperText("当前选中：${categories[selected]}")
     }
 }
 
@@ -137,16 +138,28 @@ fun DockedTabBarDemo() { TabBarDemo(single = false, floating = false, actions = 
 @Composable
 fun ScaffoldDemo() {
     var selected by remember { mutableStateOf(0) }
-    HyperScaffold(
-        topBar = { HyperNavBar(type = HyperNavBarDefaults.TypeTitleOnly, title = { HyperText("页面布局") }) },
-        bottomBar = {
-            HyperTabBar(items = listOf("首页", "设置"), selectedIndex = selected, onChanged = { selected = it },
-                floating = false, itemLabel = { it }) { HyperText(it) }
-        },
-        floatingActionButton = { HyperButton(onPressed = { selected = 0 }, type = "filled") { HyperText("返回首页") } }
-    ) { padding ->
-        Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-            HyperText(if (selected == 0) "首页正文" else "设置正文")
+    val listState = rememberLazyListState()
+    HyperNavBarScrollScope(listState) {
+        HyperScaffold(
+            topBar = { HyperNavBar(type = HyperNavBarDefaults.TypeTitleOnly, title = { HyperText("页面布局") }) },
+            bottomBar = {
+                HyperTabBar(items = listOf("首页", "设置"), selectedIndex = selected, onChanged = { selected = it },
+                    itemLabel = { it }) { HyperText(it) }
+            },
+            floatingActionButton = { HyperButton(onPressed = { selected = 0 }, type = "filled") { HyperText("返回首页") } }
+        ) { padding ->
+            // 上下净空跟随列表滚动，示例也不能把栏高 padding 放到视口外。
+            LazyColumn(state = listState, modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(start = 14.dp, end = 14.dp,
+                    top = padding.calculateTopPadding() + 12.dp,
+                    bottom = padding.calculateBottomPadding() + 12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                items(30) { index ->
+                    HyperCard(modifier = Modifier.fillMaxWidth()) {
+                        HyperText("${if (selected == 0) "首页正文" else "设置正文"} · ${index + 1}")
+                    }
+                }
+            }
         }
     }
 }

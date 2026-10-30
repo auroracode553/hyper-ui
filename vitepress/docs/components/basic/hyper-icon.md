@@ -31,7 +31,7 @@ HyperIcon(icon = Lucide.Search, contentDescription = "搜索")
 
 **样式约定**
 
-small/default/large 基准尺寸 18/24/32dp。default 在按钮、列表和导航插槽内继承对应组件的参考尺寸。Painter 与 ImageVector 两种重载。内置图标直接引用 com.composables:icons-lucide-cmp:2.2.1，不在项目内维护图标路径。
+独立使用的基准尺寸为 24dp，在按钮、列表和导航插槽内继承对应组件的图标尺寸，不提供尺寸档位。Painter 与 ImageVector 两种重载。内置图标直接引用 com.composables:icons-lucide-cmp:2.2.1，不在项目内维护图标路径。
 
 **状态归属**
 
@@ -53,7 +53,6 @@ fun HyperIcon(
     contentDescription: String?,
     modifier: Modifier = Modifier,
     color: Color = LocalHyperContentColor.current,
-    size: String = "default"
 )
 ```
 
@@ -65,7 +64,6 @@ fun HyperIcon(
 | contentDescription | String? | 是 | — | 无障碍内容描述。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | color | Color | 否 | LocalHyperContentColor.current | 自定义颜色，覆盖默认配色。 |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 
 ### HyperIcon · 重载 2
 
@@ -79,7 +77,6 @@ fun HyperIcon(
     contentDescription: String?,
     modifier: Modifier = Modifier,
     color: Color = LocalHyperContentColor.current,
-    size: String = "default"
 )
 ```
 
@@ -91,4 +88,3 @@ fun HyperIcon(
 | contentDescription | String? | 是 | — | 无障碍内容描述。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | color | Color | 否 | LocalHyperContentColor.current | 自定义颜色，覆盖默认配色。 |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |

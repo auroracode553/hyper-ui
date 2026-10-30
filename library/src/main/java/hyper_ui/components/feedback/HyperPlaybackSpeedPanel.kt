@@ -254,7 +254,6 @@ private fun HyperPlaybackSpeedPanelHeader(
         HyperButton(
             onPressed = onClose,
             type = "icon",
-            size = "small",
             modifier = Modifier.semantics { contentDescription = texts.closeContentDescription },
             colors = panelButtonColors(colors)
         ) {
@@ -413,7 +412,6 @@ private fun HyperPlaybackSpeedPanelFooter(
             onPressed = onResetRequest,
             enabled = abs(value - defaultSpeed) > 0.001f,
             type = "icon",
-            size = "small",
             modifier = Modifier
                 .padding(horizontal = 5.dp)
                 .semantics { contentDescription = texts.resetContentDescription },

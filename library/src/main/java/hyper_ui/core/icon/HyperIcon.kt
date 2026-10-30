@@ -25,13 +25,11 @@ fun HyperIcon(
     contentDescription: String?,
     modifier: Modifier = Modifier,
     color: Color = LocalHyperContentColor.current,
-    size: String = "default"
 ) {
-    requireHyperComponentSize(size)
     Image(
         painter = icon,
         contentDescription = contentDescription,
-        modifier = modifier.size(if (size == "default") LocalHyperIconSize.current else hyperComponentSize(size, 18.dp, 24.dp, 32.dp)),
+        modifier = modifier.size(LocalHyperIconSize.current),
         colorFilter = if (color != Color.Unspecified) ColorFilter.tint(color) else null
     )
 }
@@ -43,13 +41,11 @@ fun HyperIcon(
     contentDescription: String?,
     modifier: Modifier = Modifier,
     color: Color = LocalHyperContentColor.current,
-    size: String = "default"
 ) {
     HyperIcon(
         icon = rememberVectorPainter(icon),
         contentDescription = contentDescription,
         modifier = modifier,
         color = color,
-        size = size
     )
 }

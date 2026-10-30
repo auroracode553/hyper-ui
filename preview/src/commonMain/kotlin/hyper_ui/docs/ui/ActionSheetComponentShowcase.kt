@@ -19,13 +19,13 @@ import hyper_ui.*
 fun ActionSheetDemo() {
     var active by remember { mutableStateOf<String?>(null) }
     Column {
-        HyperText("自定义内容", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("自定义内容", modifier = Modifier.padding(bottom = 8.dp))
         HyperButton(onPressed = { active = "custom" }) { HyperText("打开底部弹层") }
         Spacer(Modifier.height(20.dp))
-        HyperText("操作列表", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("操作列表", modifier = Modifier.padding(bottom = 8.dp))
         HyperButton(onPressed = { active = "actions" }) { HyperText("打开操作菜单") }
         Spacer(Modifier.height(20.dp))
-        HyperText("强制操作（dismissible: false）", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("强制操作（dismissible: false）", modifier = Modifier.padding(bottom = 8.dp))
         HyperButton(onPressed = { active = "required" }) { HyperText("打开强制阅读弹层") }
     }
     HyperActionSheet(active == "custom", { active = null }, title = "分享项目") {

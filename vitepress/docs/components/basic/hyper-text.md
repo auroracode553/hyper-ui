@@ -20,7 +20,7 @@ description: 统一正文、辅助文字和强调文字的字号、行高与颜�
 ```kotlin
 import hyper_ui.*
 
-HyperText("正文", size = "default")
+HyperText("正文")
 ```
 
 </details>
@@ -29,7 +29,7 @@ HyperText("正文", size = "default")
 
 **样式约定**
 
-small/default/large 字号 12/14/18sp，行高 1.4；large 使用粗体。default 继承所在按钮、列表或导航插槽的局部排版。
+独立使用为 14sp、行高 1.4；在按钮、列表与导航插槽中继承局部排版。颜色、字重与显式 TextStyle 仍可按用途配置，不提供尺寸档位。
 
 设置有限 maxLines 时，未指定 overflow 默认显示省略号；未限制行数时默认裁切。显式 overflow 优先。
 
@@ -51,7 +51,6 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 fun HyperText(
     text: String,
     modifier: Modifier = Modifier,
-    size: String = "default",
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
@@ -76,7 +75,6 @@ fun HyperText(
 | --- | --- | --- | --- | --- |
 | text | String | 是 | — | 提示文字。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 | color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
 | fontSize | TextUnit | 否 | TextUnit.Unspecified | 显式字号；未指定时继承组件或插槽排版。 |
 | fontStyle | FontStyle? | 否 | null | 文字样式，例如斜体。 |

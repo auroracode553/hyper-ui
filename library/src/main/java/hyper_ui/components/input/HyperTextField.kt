@@ -56,7 +56,6 @@ fun HyperTextField(
     modifier: Modifier = Modifier,
     inputModifier: Modifier = Modifier,
     type: String = "text",
-    size: String = "default",
     rows: Int = HyperTextFieldDefaults.TextareaRows,
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -67,7 +66,7 @@ fun HyperTextField(
     showWordLimit: Boolean = false,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
-    textStyle: TextStyle = HyperTextFieldDefaults.textStyle(size),
+    textStyle: TextStyle = HyperTextFieldDefaults.textStyle(),
     keyboardOptions: KeyboardOptions = HyperTextFieldDefaults.keyboardOptions(type),
     keyboardActions: KeyboardActions = KeyboardActions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -81,7 +80,6 @@ fun HyperTextField(
 ) {
     val effectiveReadOnly = readOnly || onChanged == null
     require(rows > 0) { "rows 必须大于 0" }
-    requireHyperComponentSize(size)
     require(type in setOf("text", "search", "password", "textarea", "email", "url", "number", "tel")) {
         "不支持的 HyperTextField type: $type"
     }
@@ -176,7 +174,7 @@ fun HyperTextField(
                             shape = shape,
                             visuals = visuals.surface
                         )
-                        .padding(HyperTextFieldDefaults.contentPadding(size, !singleLine)),
+                        .padding(HyperTextFieldDefaults.contentPadding(!singleLine)),
                     verticalAlignment = verticalAlignment
                 ) {
                     if (prefix != null) {
@@ -262,15 +260,15 @@ object HyperTextFieldDefaults {
     val MinHeight = 38.8.dp
     val Shape: Shape = RoundedCornerShape(20.dp)
     val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 18.dp, vertical = 9.dp)
-    fun contentPadding(size: String = "default", multiline: Boolean = false): androidx.compose.foundation.layout.PaddingValues =
+    fun contentPadding(multiline: Boolean = false): androidx.compose.foundation.layout.PaddingValues =
         androidx.compose.foundation.layout.PaddingValues(
-            horizontal = hyperComponentSize(size, 14.dp, 18.dp, 20.dp),
-            vertical = hyperComponentSize(size, 7.dp, 9.dp, 11.dp) + if (multiline) 3.dp else 0.dp
+            horizontal = 18.dp,
+            vertical = 9.dp + if (multiline) 3.dp else 0.dp
         )
 
     @Composable
-    fun textStyle(size: String = "default"): TextStyle {
-        val fontSize = hyperComponentSize(size, 14.dp, 16.dp, 18.dp).value
+    fun textStyle(): TextStyle {
+        val fontSize = 16f
         return HyperTheme.typography.bodyMedium.copy(fontSize = fontSize.sp, lineHeight = (fontSize * 1.3f).sp)
     }
 

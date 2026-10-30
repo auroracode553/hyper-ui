@@ -8,7 +8,7 @@
 
 模态宿主的窗口固定全面屏透明，与根主题的安全区开关独立；遮罩覆盖上下系统栏，禁止为弹窗根画布增加安全区 padding。居中面板在遮罩内部单独避让系统栏与 IME，系统栏图标跟随实际明暗主题。Activity 和 Dialog 共用窗口透明与系统对比度配置，保留 Compose 遮罩令牌和动画。
 
-Android Activity 统一使用 enableHyperEdgeToEdge()，根主题 useSystemSafeArea 默认为 false。HyperTheme.systemSafeAreaInsets 为组件的唯一系统安全区来源，默认返回零；Scaffold、TabBar 不增加根系统安全区。Navbar 和自定义固定顶栏独立保护顶部交互区域一次；HyperNavBarPage 将测量净空放进滚动正文，页面背景和滚动视口保持全屏。键盘 Insets、业务组件高度和控件本身的间距继续保留。下文旧版关于状态栏/底部安全区的尺寸说明以此规则为准。
+Android Activity 统一使用 enableHyperEdgeToEdge()，根主题 useSystemSafeArea 默认为 false。HyperTheme.systemSafeAreaInsets 为组件的唯一系统安全区来源，默认返回零；Scaffold、TabBar 不增加根系统安全区。Navbar 和自定义固定顶栏独立保护顶部交互区域一次；HyperNavBarPage 将测量净空放进滚动正文，页面背景和滚动视口保持全屏。首末净空必须位于滚动内容内部；禁止固定系统栏/悬浮栏占位、滚动视口外栏高 padding、扣减窗口高度或裁切。底部遮挡量按宿主实测整个栏及边距的高度提供，不以默认栏高或固定 dp 估算。键盘 Insets、业务组件高度和控件本身的间距继续保留。
 
 本文依据当前 library/src/main/java/hyper_ui/ 实现整理，基线日期为 2026-10-21，复用本页已有的样式对照作为持续维护入口。对应 Flutter 仓库为 D:/my_project/flutter_project/flutter-hyper-ui，维护时同时参考其 vitepress/guide/design-system.md；以各端实际源码核对功能，不能把另一端 API 直接当成本端已有实现。
 
@@ -64,7 +64,7 @@ HyperThemeConfig 默认跟随系统亮暗，material 为 HyperMaterial.Solid。H
 
 hyperNoRippleClickable 在 Initial 指针阶段观察按下，即使位于滚动容器中也立即反馈；业务点击仍由 clickable / combinedClickable 处理。不能仅保留视觉动画而删掉点击、取消和长按生命周期。不要把 Flutter 特有的实现分支写成本端已经具备的机制。
 
-HyperText 独立使用为 12 / 14 / 18sp、行高 1.4；default 可继承 LocalHyperTextStyle，因此按钮和其他插槽内会使用宿主字号。HyperIcon 的 default 继承 LocalHyperIconSize，small / large 为 18 / 32dp；显式 Modifier 尺寸也参与约束。不能为了“统一图标”删掉按钮内的局部尺寸。
+HyperText 独立使用为 14sp、行高 1.4；继承 LocalHyperTextStyle，因此按钮和其他插槽内会使用宿主字号。HyperIcon 继承 LocalHyperIconSize，独立基准为 24dp；显式 Modifier 尺寸也参与约束。不能为了“统一图标”删掉按钮内的局部尺寸。
 
 ## 内容卡片与导航维护规则
 
@@ -93,11 +93,9 @@ HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐
 | 内容与尺寸 | content 为 RowScope 插槽，继承局部文字／图标大小；默认按内容收缩，Modifier 控制宿主布局 |
 | 自定义入口 | colors、border、shape、contentPadding 是当前公开能力；不因整理删除这些参数或替调用方决定布局 |
 
-| size | 高度 | 最小文字按钮宽度 | 默认水平内边距 | 字号 | 纯图标 | 标签图标 |
+| 统一规格 | 高度 | 最小文字按钮宽度 | 默认水平内边距 | 字号 | 纯图标 | 标签图标 |
 | --- | --- | --- | --- | --- | --- | --- |
-| small | 32dp | 53dp | 10dp | 12sp | 18dp | 16dp |
-| default | 38dp | 68dp | 14dp | 13sp | 20dp | 17dp |
-| large | 44dp | 83dp | 18dp | 14sp | 22dp | 18dp |
+| 按钮 | 38dp | 68dp | 14dp | 13sp | 20dp | 17dp |
 
 表中水平内边距为 Defaults 的 contentPadding；非图标按钮当前还会追加 1dp 内容留白，图标按钮忽略文字按钮内边距。圆角为高度的一半。取消／关闭等普通操作沿用默认按钮，主操作按既有用途显式 filled 与 primary，危险操作按既有用途使用 danger；不得批量把业务配色清空。
 
@@ -105,17 +103,17 @@ HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐
 
 | 组件 | 参考默认值 | Compose 对应 |
 | --- | --- | --- |
-| HyperText | 12 / 14 / 18，行高 1.4 | size 三档；插槽继承局部排版 |
-| HyperIcon | 18 / 24 / 32，插槽图标另定 | size 三档，直接使用 Lucide 库图标 |
+| HyperText | 独立使用 14sp，行高 1.4 | 继承局部排版，不提供尺寸档位 |
+| HyperIcon | 独立使用 24dp，插槽图标另定 | 继承局部图标尺寸，使用 Lucide 库图标 |
 | HyperDivider | 1dp；虚线 4dp + 4dp | type、axis、indent/endIndent/length |
-| HyperButton | 高 32 / 38 / 44，radius 高度的一半 | 字号 12 / 13 / 14sp；标签图标 16 / 17 / 18dp、纯图标 18 / 20 / 22dp |
-| HyperTextField | radius 20；字号 14 / 16 / 18；padding 14×7 / 18×9 / 20×11 | 1dp 普通轮廓、1.5dp 聚焦；多行纵向 +3dp |
+| HyperButton | 高 38dp，radius 19dp | 字号 13sp；标签图标 17dp、纯图标 20dp |
+| HyperTextField | radius 20；字号 16sp；padding 18×9dp | 1dp 普通轮廓、1.5dp 聚焦；多行纵向 +3dp |
 | HyperCheckbox | 44dp 触摸、21dp 方框、radius 7、轮廓 1.5 | nullable 三态、勾 15dp、160ms 状态动画 |
 | HyperRadio | 独立交互 44dp 触摸、展示 21dp 圆环、轮廓 1.5 / 6 | 标签行最小 46dp，不叠加触摸留白；160ms 选中颜色和环宽动画 |
 | HyperSwitch | 52×32，padding 4 + Container 边框 1 | 实际滑块 22dp，160ms selectionCurve |
 | HyperSlider | 44dp 触摸、6dp 轨道、20dp 滑块、2dp 轮廓 | 默认范围 0..100，showValue=true |
-| HyperSegmentedControl | radius 18，padding 4、条目 32，总高 40 | 13sp，选中 600、未选中 500，图标 16dp；等宽底板平移 260ms |
-| HyperTabs | radius 27，padding 3、条目 48，总高 54 | 单一共享表面，44dp 选中底面；滚动项目最小 76dp，选中背景 160ms，非滚动模式背景即时切换 |
+| HyperTabs | radius 18，padding 4、条目 32，总高 40 | 13sp，选中 600、未选中 500，图标 16dp；等宽底板平移 260ms |
+| HyperFilterBar | 最小高 32dp，项内边距 12×6dp，项间距 6dp | 单项选中胶囊、透明周围区域；横向滚动，13sp 文字随字体缩放自然撑高 |
 | HyperTabBar | single / multiple / 贴底默认内容高 56；悬浮顶部间距 8、底部间距 20 | single / multiple；图标 22 / 23；指示器 160ms easeOutCubic；大字体仅由库按内容扩展 |
 | HyperNavBar | 高 44，水平 padding 16，标题 16/600 | 透明操作层，标题字距 -0.2sp、副标题 11sp、安全区另计 |
 | HyperListTile | plain 最小 46，水平留白 0、垂直 8；外层 glass 仅垂直留白 3 | auto/plain/glass，标题 14/600、说明 12、meta 11，图标块 34 |
@@ -128,7 +126,7 @@ HyperNavBar 以 pageBackground 着色，滚动后显示 20dp 采样与 160ms 渐
 | HyperDrawer | 贴边全高，默认宽 320，窄屏最大窗口宽减 56，正文默认零间距 | 实色背景，无外侧留白／圆角／描边／卡片阴影；280ms 从面板自身宽度之外平移，遮罩独立淡入 |
 | HyperActionSheet | 贴底全宽，圆角 30、内边距 16、最大高为键盘避让后可用高度的 85% | strong 材质，32×4 顶部指示条；250ms 淡入与 24dp 纵向平移；整体滚动，内部避让底部安全区 |
 | HyperSlideMenu | 每动作 64，边界阻力 0.32，释放阈值 35% | 0.09s 速度投影、stiffness 470/damping 42 |
-| HyperProgress | linear 4/6/12；circle 48/64/80、stroke 4/6/8 | showLabel=true；线性动画 1400ms、圆环 1100ms |
+| HyperProgress | linear 6dp；circle 64dp、stroke 6dp | showLabel=true；线性动画 1400ms、圆环 1100ms |
 | HyperEmptyState | 图标块 56、radius 24、图标 24、padding 20 | 标题 16/600、说明 13/1.45、间距 12/8/12 |
 | HyperToast | minWidth 180/maxWidth 420，radius 18，padding 12/10/8/10 | 30dp 图标块、17dp 图标、14sp/500/1.35、默认 2000ms |
 | HyperUpdateDialog | maxWidth 420，模态安全区外间距 20，radius 28，padding 24，非错误状态标识块 40、图标 20、环形进度 30 | 标题 24/1.2、说明 14/1.55、进度 28/1.2；其余文字按主题 1.4 行高随字号换算。检查中隐藏版本；错误仅保留原因、重试与关闭 |
@@ -145,11 +143,11 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 | HyperDropdown | options: List&lt;HyperOption&lt;T&gt;&gt;，value，onChanged；临时 expanded 在组件内部 |
 | HyperPopover | visible、onClose、child、content；内容贴触发点定位 |
 | HyperActionSheet / HyperAction | visible 与 onClose 受控；自定义 content 或 actions / onChanged 二选一；dismissible 只控制遮罩关闭，返回键仍可关闭；操作先关闭再回传，取消仅关闭 |
-| HyperTabs | tabs、selectedIndex、onChanged、scrollable；共享表面 |
+| HyperTabs | tabs、selectedIndex、onChanged、equalWidth；共享分段表面 |
 | HyperTabBar | type=single/multiple、items、selectedIndex、onChanged；单动作角标 badgeCount |
 | HyperCheckbox | value: Boolean?、onChanged: (Boolean?)-&gt;Unit、tristate |
-| HyperText | size=small/default/large；局部插槽样式优先 |
-| HyperIcon | size=small/default/large；default 继承插槽尺寸 |
+| HyperText | 统一规格；局部插槽样式优先 |
+| HyperIcon | 统一规格；继承插槽尺寸 |
 | HyperSlider | value、onChanged、min=0、max=100、divisions=null、showValue=true；拖动起止回传数值 |
 | HyperUpdateDialog | status、release、downloadProgress、progress、mandatory 与操作回调；业务执行由调用方承担 |
 | HyperPlaybackSpeedPanel | value、onChanged、onClose、options、onCustomPressed；leading 等插槽提供图标 |
@@ -184,7 +182,7 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 | [HyperTextField](components/form/hyper-text-field.md) | components/input/ | value 受控，onChanged 为空或 readOnly 时只读；保留 BasicTextField、键盘类型、错误、聚焦、密码切换、清空、maxLength 和字数限制；操作区复用 HyperInputAffix |
 | [HyperSwitch / HyperCheckbox / HyperRadio](components/form/hyper-checkbox.md) | components/selection/HyperSelectionControls.kt | value / groupValue 由调用方维护；Checkbox 支持 nullable 三态；plain 标签行承载点击，无卡片外观；Checkbox 尾随方框只占 21dp，无标签仍保留 44dp；基础示例不包 HyperCard |
 | [HyperSlider](components/form/hyper-slider.md) | components/progress/HyperSlider.kt | value 受控，默认范围 0–100；divisions 管吸附，showSegmentMarkers / segmentValues 管刻度，二者独立；readOnly 保持正常外观并停止修改，保留起止回调和 RTL |
-| [HyperSegmentedControl](components/form/hyper-segmented-control.md) | components/selection/HyperSegmentedControl.kt | selectedValue 受控；整组与单项禁用分开；equalWidth 默认 true，共享选中块，非等宽按项目绘制状态；不替换为一排普通按钮 |
+| [HyperTabs](components/navigation/hyper-tabs.md) | components/menu/HyperTabs.kt | selectedIndex 受控；整组与单项禁用分开；equalWidth 默认 true，共享选中块，非等宽按项目绘制状态；不替换为一排普通按钮 |
 | [HyperDatePicker.date](components/form/hyper-date-picker.md) | components/date/HyperDatePicker.kt、HyperDatePickerSheet.kt | Android 日期为 LocalDate；默认 1900-01-01 至 2100-12-31；临时选中在面板内，确定先 onClose，退出完成再 onChanged；取消不提交；当前仅公开单日期入口 |
 | [HyperCalendarDay / HyperCalendarItem](components/form/hyper-calendar-day.md) | components/date/HyperCalendarDay.kt | 选中圆、今日描边、范围、相邻及禁用态；辅助字、角标、最多三行条目，溢出数量独占最后一行；minimumHeight 按字体缩放和预留行数计算 |
 | [HyperCalendarMonth](components/form/hyper-calendar-month.md) | components/date/HyperCalendar.kt、HyperCalendarMonthContent.kt | Android LocalDate 包装平台无关网格；固定六行七列、默认周一；选中和范围由调用方提供；readOnly 用 Canvas 合并绘制并保留视觉；月历面板另由 HyperCalendarMonth.kt 管理翻月／选月 |
@@ -201,7 +199,7 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 | [HyperList](components/list/hyper-list.md) | components/list/HyperList.kt | 页面级 LazyColumn；state 可传入，modifier 与 contentModifier 管不同节点，contentPadding 随内容滚动；无卡片表面，默认内边距 0dp，auto 行使用 plain |
 | [HyperSectionedList](components/list/hyper-sectioned-list.md) | components/list/HyperSectionedList.kt | 分组标题与数据行分别懒加载，调用方给稳定 key；跳过空分组，组间固定 8dp；无卡片平铺行，组件管理组内分割线 |
 | [HyperNavBar / HyperNavBarPage](components/navigation/hyper-nav-bar.md) | components/navigation/HyperNavBar.kt、HyperNavBarSurface.kt、HyperNavBarScrollScope.kt | 固定 type 与 custom 插槽校验互斥；安全区位于背景内部，背景从屏幕顶部覆盖状态栏，只有操作行避让；预览注入 52dp 模拟 Insets，导航与正文共用且只计一次；库内观察主滚动状态并驱动背景，页面宿主叠放导航并传递 padding，不自行接管业务路由 |
-| [HyperTabs](components/navigation/hyper-tabs.md) | components/menu/HyperTabs.kt | tabs / selectedIndex / onChanged 受控；重复点击当前项不回调；scrollable 决定等宽或水平滚动，itemEnabled 控制项目；不内置 Flutter 的页面控制器 |
+| [HyperFilterBar](components/navigation/hyper-filter-bar.md) | components/navigation/HyperFilterBar.kt | items / selectedIndex / onChanged 受控；横向滚动与选中项可见性由库管理，重复点击不回调，支持整栏和单项禁用 |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | components/navigation/HyperTabBar.kt | single / multiple；floating 默认 true 保留原悬浮样式，false 为零默认外间距的全宽贴底平直表面；selectedIndex=null 为无选中块、可重复点击且不响应拖动的动作模式；itemEnabled 控制单项禁用。选择模式仍按拖动预览、松手提交，保留标签测宽与安全区 |
 | [HyperScaffold](components/navigation/hyper-scaffold.md) | components/navigation/HyperScaffold.kt | 使用 Compose 基础布局承载页面、上下栏和悬浮操作；正文消费实际测量净空，不依赖 Material，也不接管业务滚动或导航监听 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | components/menu/HyperSlideMenu.kt | reveal 为 Closed / Start / End，调用方响应 onRevealChange；内部持有拖动偏移，松手时速度投影与弹簧共用释放速度；操作区填满侧滑空间，危险和自定义色保留；先请求关闭再执行操作 |
@@ -237,11 +235,11 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 | 位置 | 当前专用实现 | 保留原因与修改边界 |
 | --- | --- | --- |
 | HyperNavBarBackButton / HyperNavBarMoreButton | type=icon，colors 使用 surfaceStrong 背景 | 用于固定导航外观；用户已明确保留对应专用背景，不能批量清空 colors |
-| HyperInputAffix | 30dp 点击区、18dp 次级色图标、Tooltip | 输入框内的清空／密码可见性操作；改为 32dp 默认图标按钮会改变尺寸、背景和输入布局 |
+| HyperInputAffix | 30dp 点击区、18dp 次级色图标、Tooltip | 输入框内的清空／密码可见性操作；改为 38dp 默认图标按钮会改变尺寸、背景和输入布局 |
 | HyperPlaybackSpeedPanel 的 panelButtonColors | 关闭／重置按钮使用内容色 alpha 0.10 背景，禁用为 0.05；前景随面板配色 | 现有面板专用覆盖；不是已获授权清理的灰底，调整前确认 |
 | HyperPlaybackSpeedPanel 的标签与自定义入口 | 速度标签、预设刻度、提示和插槽单独组合 | 空间、点击及数值输入规则属于倍速面板，不改为一组默认按钮 |
 | HyperListTile 的 leading 图标块 | 34dp、圆角 11、强调色浅底 | 列表视觉与按钮交互不同，不因圆角背景删除或替换为按钮 |
-| HyperTabs / HyperSegmentedControl | 共享表面、项目背景、选中状态与项目禁用 | 是选择控件核心视觉，不删 selection 底板，不增加逐项按钮描边 |
+| HyperTabs / HyperFilterBar | 共享表面、项目背景、选中状态与项目禁用 | 是选择控件核心视觉，不删 selection 底板，不增加逐项按钮描边 |
 | HyperTabBar single 与 badgeCount | 56dp 自绘入口、22dp 图标及独立计数角标 | 底栏自身管理 margin、安全区和尺寸，不替换为默认 HyperButton |
 | HyperCalendarDay 的选中圆、角标和条目 | 日期专用圆形状态、紧凑文字和溢出行 | 需要保持日期网格与最小行高，不自动换成普通按钮或其他徽标 |
 | HyperColorPicker 的色块和选中环 | 圆形预设色块、强调环、下方标签 | 颜色就是控件内容，不能按普通按钮配色清理 |

@@ -46,10 +46,9 @@ fun HyperProgress(
     value: Float? = null,
     modifier: Modifier = Modifier,
     type: String = "linear",
-    size: String = "default",
     showLabel: Boolean = true,
     shape: Shape = HyperProgressDefaults.LinearShape,
-    strokeWidth: Dp = HyperProgressDefaults.strokeWidth(size),
+    strokeWidth: Dp = HyperProgressDefaults.CircularStrokeWidth,
     color: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
     colors: HyperProgressColors = HyperProgressDefaults.colors(trackColor = backgroundColor, indicatorColor = color),
@@ -59,11 +58,10 @@ fun HyperProgress(
         "不支持的 HyperProgress type: $type"
     }
     if (type == "circular") {
-        Box(modifier = modifier.size(hyperComponentSize(size, 48.dp, 64.dp, 80.dp)), contentAlignment = Alignment.Center) {
+        Box(modifier = modifier.size(HyperProgressDefaults.CircularSize), contentAlignment = Alignment.Center) {
         HyperCircularProgress(
             progress = value,
             modifier = Modifier.matchParentSize(),
-            size = size,
             strokeWidth = strokeWidth,
             colors = colors
         )
@@ -75,7 +73,6 @@ fun HyperProgress(
         HyperLinearProgress(
             progress = value,
             modifier = Modifier.weight(1f),
-            size = size,
             shape = shape,
             colors = colors,
             trackBorder = trackBorder
@@ -90,12 +87,11 @@ fun HyperProgress(
 private fun HyperLinearProgress(
     progress: Float? = null,
     modifier: Modifier = Modifier,
-    size: String = "default",
     shape: Shape = HyperProgressDefaults.LinearShape,
     colors: HyperProgressColors = HyperProgressDefaults.colors(),
     trackBorder: BorderStroke? = null
 ) {
-    val resolvedHeight = hyperComponentSize(size, 4.dp, HyperProgressDefaults.LinearHeight, 12.dp)
+    val resolvedHeight = HyperProgressDefaults.LinearHeight
     val coercedProgress = progress?.takeIf { it.isFinite() }?.coerceIn(0f, 1f)
     val displayedProgress by animateFloatAsState(coercedProgress ?: 0f,
         tween(220, easing = HyperMotionSpec.EaseOutCubic), label = "HyperProgressValue")
@@ -141,11 +137,10 @@ private fun HyperLinearProgress(
 private fun HyperCircularProgress(
     progress: Float? = null,
     modifier: Modifier = Modifier,
-    size: String = "default",
     strokeWidth: Dp = HyperProgressDefaults.CircularStrokeWidth,
     colors: HyperProgressColors = HyperProgressDefaults.colors()
 ) {
-    val resolvedSize = hyperComponentSize(size, 48.dp, HyperProgressDefaults.CircularSize, 80.dp)
+    val resolvedSize = HyperProgressDefaults.CircularSize
     val coercedProgress = progress?.takeIf { it.isFinite() }?.coerceIn(0f, 1f)
     val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
@@ -217,7 +212,6 @@ object HyperProgressDefaults {
     val LinearShape: Shape = RoundedCornerShape(percent = 50)
     val CircularSize = 64.dp
     val CircularStrokeWidth = 6.dp
-    fun strokeWidth(size: String = "default"): Dp = hyperComponentSize(size, 4.dp, 6.dp, 8.dp)
     const val IndeterminateSegmentFraction = 0.32f
     const val CircularIndeterminateSweepFraction = 0.72f
 

@@ -33,8 +33,7 @@ import hyper_ui.*
 
 HyperButton(
     onPressed = onSave,
-    colorStyle = "primary", type = "filled",
-    size = "default"
+    colorStyle = "primary", type = "filled"
 ) { HyperText("保存") }
 ```
 
@@ -45,7 +44,6 @@ HyperButton(
 | 参数 | 用途 |
 | --- | --- |
 | `type` | 组件形态或视觉层级 |
-| `size` | `small`、`default`、`large` |
 | `modifier` | 页面中的尺寸、间距和位置 |
 | 状态参数 | `value`、`groupValue`、`selectedIndex`、`visible`、`value` 由调用方持有 |
 

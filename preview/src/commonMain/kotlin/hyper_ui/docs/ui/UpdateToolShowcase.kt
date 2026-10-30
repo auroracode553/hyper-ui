@@ -43,8 +43,8 @@ fun UpdateToolDemo() {
     }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         HyperText("统一检查、下载与安装工具")
-        HyperText(message, size = "small")
-        HyperText("默认 1 小时内最多自动检查 2 次，已用 $automaticChecks / 2", size = "small")
+        HyperText(message)
+        HyperText("默认 1 小时内最多自动检查 2 次，已用 $automaticChecks / 2")
         HyperButton(onPressed = { automaticChecks = 0; message = "已模拟原窗口满 1 小时，自动额度恢复。" }) {
             HyperText("模拟一小时窗口到期")
         }
@@ -58,13 +58,13 @@ fun UpdateToolDemo() {
         }
         HyperListTile(title = { HyperText("下载总大小未知") },
             trailing = { HyperSwitch(flow.unknownTotal, flow::updateUnknownTotal) })
-        HyperText(if (savedApk) "安装包已保留，等待安装成功后清理。" else "当前没有等待清理的安装包。", size = "small")
+        HyperText(if (savedApk) "安装包已保留，等待安装成功后清理。" else "当前没有等待清理的安装包。")
         if (flow.status == HyperUpdateStatus.readyToInstall) {
             HyperButton(onPressed = { visible = false; message = "模拟取消安装，安装包继续保留。" }) {
                 HyperText("模拟取消安装")
             }
         }
-        if (flow.status == HyperUpdateStatus.downloading) HyperText(flow.downloadProgress.sizeLabel, size = "small")
+        if (flow.status == HyperUpdateStatus.downloading) HyperText(flow.downloadProgress.sizeLabel)
     }
     if (visible) HyperUpdateDialog(status = flow.status, currentVersion = flow.currentVersion,
         release = flow.release, progress = flow.installProgress, downloadProgress = flow.downloadProgress,

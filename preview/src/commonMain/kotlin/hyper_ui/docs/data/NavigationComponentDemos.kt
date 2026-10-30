@@ -1,9 +1,10 @@
 /** 文件职责：在 hyper_ui 中负责提供 preview/src/commonMain/kotlin/hyper_ui/docs/data/NavigationComponentDemos 可复用界面组件及交互封装。 */
 package hyper_ui.docs.data
 
+import hyper_ui.docs.ui.FilterBarDemo
+
 import hyper_ui.docs.ui.NavBarDemo
 import hyper_ui.docs.ui.DrawerDemo
-import hyper_ui.docs.ui.SlideMenuDemo
 import hyper_ui.docs.ui.SingleTabBarDemo
 import hyper_ui.docs.ui.MultipleTabBarDemo
 import hyper_ui.docs.ui.TrailingActionTabBarDemo
@@ -61,7 +62,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("自定义", "type = custom", "使用 leading / trailing / subtitle / child 等插槽"),
             DemoVariant("操作反馈", "onBackPressed / onMorePressed / onSavePressed", "返回、更多与保存均可点击，正文显示反馈"),
             DemoVariant("滚动材质", "HyperNavBarPage.scrollState / active", "库内观察真实主状态，仅导航读取派生值；非活动视口停用来源，160ms 过渡与20dp 模糊保持原样"),
-            DemoVariant("默认尺寸", "size = default", "高度不包含顶部安全区"),
+            DemoVariant("统一规格", "Height = 44.dp", "高度不包含顶部安全区"),
             DemoVariant("固定安全区", "库内自动处理", "背景覆盖状态栏，操作行在安全区下方；预览注入相同层级的模拟 Insets"),
             DemoVariant("叠加页面", "HyperNavBarPage", "首屏净空属于滚动内容，正文可经过透明操作层")
         ),
@@ -96,20 +97,34 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tabs",
         group = GROUP_NAVIGATION,
         title = "HyperTabs",
-        description = "共享的 54dp 分类胶囊，选中底面使用材质 selection；支持等宽与横向滚动。",
+        description = "默认总高 40dp 的等宽或内容宽度分段控制器；共用轨道、选中底板与受控标签插槽。",
         code = """
-            HyperTabs(tabs = categories, selectedIndex = categories.indexOf(selected), onChanged = { selected = categories[it] }, scrollable = false) {
-                HyperText(it)
+            HyperTabs(
+                tabs = periods,
+                selectedIndex = periods.indexOf(selectedPeriod),
+                onChanged = { selectedPeriod = periods[it] }
+            ) { period ->
+                HyperText(period.label)
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("等宽", "scrollable = false", "统一共享表面"),
-            DemoVariant("滚动", "scrollable = true", "每项最小 76dp"),
-            DemoVariant("选中", "selectedIndex", "44dp 指示底面；重复点击当前项不回调"),
-            DemoVariant("禁用项", "itemEnabled", "阻止选中回调")
+            DemoVariant("默认尺寸", "Height = 40.dp", "32dp 分段与 4dp 轨道留白；等宽底板平移 260ms"),
+            DemoVariant("禁用项", "itemEnabled", "单独禁用指定分段"),
+            DemoVariant("自定义颜色", "HyperTabsDefaults.colors", "覆盖选中项和内容色")
         ),
         apiDocumentPaths = listOf("navigation/hyper-tabs.md"),
-        content = { SlideMenuDemo() }
+        content = { hyper_ui.docs.ui.TabsDemo() }
+    ),
+    ComponentDemo(
+        id = "filter-bar", group = GROUP_NAVIGATION, title = "HyperFilterBar",
+        description = "单一紧凑规格的横向分类筛选栏，最小高度 32dp，标签按内容宽度排列。",
+        code = "HyperFilterBar(items = categories, selectedIndex = selected, onChanged = { selected = it }) { HyperText(it) }",
+        variants = listOf(
+            DemoVariant("横向滚动", "items / selectedIndex", "超出宽度可左右滑动，外部切换时显示选中项"),
+            DemoVariant("禁用", "enabled / itemEnabled", "支持整栏及单项禁用")
+        ),
+        apiDocumentPaths = listOf("navigation/hyper-filter-bar.md"),
+        content = { FilterBarDemo() }
     ),
     ComponentDemo(
         id = "tab-bar-single",
@@ -190,7 +205,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "scaffold", group = GROUP_NAVIGATION, title = "HyperScaffold",
         description = "Compose 基础页面宿主，按实际栏高提供正文净空，不依赖 Material。",
-        code = "HyperScaffold(bottomBar = { BottomActions() }) { padding -> PageContent(padding) }",
+        code = "HyperScaffold(bottomBar = { BottomActions() }) { padding -> LazyColumn(contentPadding = padding) { /* 正文 */ } }",
         variants = listOf(DemoVariant("页面插槽", "topBar / bottomBar / floatingActionButton", "统一画布与安全区")),
         apiDocumentPaths = listOf("navigation/hyper-scaffold.md"),
         content = { hyper_ui.docs.ui.ScaffoldDemo() }, fullScreenPreview = true

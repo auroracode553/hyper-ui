@@ -39,7 +39,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("危险操作", "type = filled / colorStyle = danger", "危险语义色"),
             DemoVariant("按压与取消", "pointer down / cancel", "按下立即开始 85ms 缩放和透明度过渡；释放或拖出后 180ms 恢复"),
             DemoVariant("禁用", "enabled = false", "保留单个禁用按钮示例，不重复展示外观相同的配色"),
-            DemoVariant("尺寸", "size = small/default/large", "32/38/44dp 高度"),
+            DemoVariant("统一规格", "38dp", "按钮不提供尺寸档位"),
             DemoVariant("图标按钮", "type = icon", "与普通按钮共用 type、size 和状态 API"),
             DemoVariant("组合复用", "content / contentPadding / role", "主体通过 content 插槽组合，继承按钮颜色与排版")
         ),
@@ -47,7 +47,7 @@ internal fun basicComponentDemos(): List<ComponentDemo> = listOf(
         content = { ButtonDemo() }
     ),
     ComponentDemo("text", GROUP_BASIC, "HyperText", "12 / 14 / 18sp 参考字号，状态与强调色可交互切换。",
-        """HyperText("正文", size = "default")""", listOf(DemoVariant("字号", "size", "small/default/large"),
+        """HyperText("正文")""", listOf(DemoVariant("字号", "size", "small/default/large"),
             DemoVariant("截断", "maxLines / overflow", "有限行数默认省略号，显式 overflow 优先")),
         listOf("basic/hyper-text.md"), { TextDemo() }),
     ComponentDemo("icon", GROUP_BASIC, "HyperIcon", "直接使用 Lucide 图标库与 18 / 24 / 32dp 图标尺寸。",

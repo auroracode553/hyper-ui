@@ -119,7 +119,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         description = "参考线性与圆形进度的三档尺寸，标签、归一化进度及不确定动画。",
         code = """
             HyperProgress(value = progress, showLabel = true)
-            HyperProgress(value = null, type = "circular", size = "small", showLabel = false)
+            HyperProgress(value = null, type = "circular", showLabel = false)
         """.trimIndent(),
         variants = listOf(
             DemoVariant("线性尺寸", "size", "4 / 6 / 12dp"),

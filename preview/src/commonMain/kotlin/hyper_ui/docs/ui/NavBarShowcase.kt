@@ -93,14 +93,13 @@ private fun NavBarPageDemo() {
                 } else null,
                 trailing = if (example == NavBarExample.Custom) {
                     {
-                        HyperButton(onPressed = { actionMessage = "已点击分享" }, size = "small") {
+                        HyperButton(onPressed = { actionMessage = "已点击分享" }) {
                             HyperText("分享")
                         }
                     }
                 } else null
             )
         },
-        navBarSize = "default",
         contentPadding = PaddingValues(bottom = 24.dp),
         bottomSafeArea = false
     ) { immersivePadding ->
@@ -152,8 +151,7 @@ private fun NavBarExampleChoices(selected: NavBarExample, onSelect: (NavBarExamp
                 HyperButton(
                     onPressed = { onSelect(example) },
                     modifier = Modifier.weight(1f),
-                    type = if (example == selected) null else null,
-                    size = "small"
+                    type = if (example == selected) null else null
                 ) { HyperText(example.label, maxLines = 1) }
             }
         }

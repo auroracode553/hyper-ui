@@ -23,6 +23,6 @@ internal fun HyperTooltipDemo() {
             enabled = enabled, hoverDelay = delayMillis) {
             HyperButton({ clicks += 1 }) { HyperText("悬停或长按查看") }
         }
-        HyperText("点击次数：$clicks；提示保留子控件点击，键盘焦点即时显示。", size = "small")
+        HyperText("点击次数：$clicks；提示保留子控件点击，键盘焦点即时显示。")
     }
 }

@@ -36,9 +36,7 @@ fun ButtonDemo() {
     // 与 Flutter ButtonsExample 保持相同分组、顺序、文案、状态及 8/16dp 间距。
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({}, size = "small") { HyperText("小按钮") }
             HyperButton(onPressed = {}, content = { HyperText("默认按钮") })
-            HyperButton({}, size = "large") { HyperText("大按钮") }
             HyperButton({}, loading = true) { HyperText("处理中") }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -77,38 +75,26 @@ fun ButtonDemo() {
 
 @Composable
 fun TextDemo() {
-    var size by remember { mutableStateOf("default") }
     var emphasis by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        PreviewSectionLabel("文字尺寸")
-        HyperText("Large 大号文字", size = "large")
-        HyperText("Default 默认文字")
-        HyperText("Small 辅助文字", size = "small")
-        PreviewSectionLabel("颜色与可操作状态")
-        HyperSegmentedControl(listOf("small", "default", "large"), size, { size = it }) { HyperText(it) }
+        PreviewSectionLabel("统一文字规格")
+        HyperText("默认文字 · 继承宿主排版")
         PreviewToggle("强调色", emphasis) { emphasis = it }
-        HyperText("参考排版 · HyperUI", size = size, color = if (emphasis) HyperColors.accent else Color.Unspecified)
+        HyperText("参考排版 · HyperUI", color = if (emphasis) HyperColors.accent else Color.Unspecified)
         HyperText("maxLines: 1 时超长文本自动省略：统一文字层级让界面在不同密度下保持稳定节奏。", maxLines = 1)
-        HyperText("small 12sp / default 14sp / large 18sp，行高均为字号的 1.4 倍。", size = "small")
     }
 }
 
 @Composable
 fun IconDemo() {
-    var size by remember { mutableStateOf("default") }
     var colored by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperSegmentedControl(listOf("small", "default", "large"), size, { size = it }) { HyperText(it) }
         PreviewToggle("品牌色", colored) { colored = it }
-        PreviewSectionLabel("常用语义图标")
+        PreviewSectionLabel("统一图标规格")
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             listOf(Lucide.House, Lucide.Search, Lucide.Settings, Lucide.Check).forEach {
-                HyperIcon(it, "图标示例", size = size, color = if (colored) HyperColors.accent else HyperColors.primaryText)
+                HyperIcon(it, "图标示例", color = if (colored) HyperColors.accent else HyperColors.primaryText)
             }
-        }
-        PreviewSectionLabel("尺寸对照")
-        Row(horizontalArrangement = Arrangement.spacedBy(18.dp)) {
-            listOf("small", "default", "large").forEach { HyperIcon(Lucide.Info, "尺寸 $it", size = it) }
         }
     }
 }

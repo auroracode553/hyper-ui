@@ -46,7 +46,6 @@ fun HyperNavBar(
     type: String = HyperNavBarDefaults.TypeCustom,
     title: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier,
-    size: String = "default",
     padding: PaddingValues = HyperNavBarDefaults.ContentPadding,
     spacing: Dp = HyperNavBarDefaults.ContentGap,
     titleSpacing: Dp = HyperNavBarDefaults.TitleGap,
@@ -63,7 +62,7 @@ fun HyperNavBar(
     child: (@Composable BoxScope.() -> Unit)? = null
 ) {
     require(type in HyperNavBarDefaults.Types) { "不支持的 HyperNavBar type: $type" }
-    val resolvedHeight = hyperComponentSize(size, 40.dp, HyperNavBarDefaults.Height, 52.dp)
+    val resolvedHeight = HyperNavBarDefaults.Height
     require(spacing >= 0.dp && titleSpacing >= 0.dp && actionSpacing >= 0.dp) { "间距不能为负数" }
     require(type == HyperNavBarDefaults.TypeCustom ||
         (child == null && subtitle == null && leading == null && trailing == null && actions.isEmpty() && !centerTitle)) {
@@ -121,7 +120,7 @@ fun HyperNavBar(
                         HyperNavBarDefaults.TypeMore -> { { HyperNavBarMoreButton(onClick = onMorePressed) } }
                         HyperNavBarDefaults.TypeEdit -> {
                             {
-                                HyperButton(onPressed = onSavePressed, size = "small") {
+                                HyperButton(onPressed = onSavePressed) {
                                     HyperText("保存")
                                 }
                             }
@@ -145,7 +144,6 @@ fun HyperNavBarPage(
     navBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    navBarSize: String = "default",
     bottomSafeArea: Boolean = true,
     scrollState: ScrollableState? = null,
     reverseLayout: Boolean = false,
@@ -164,7 +162,7 @@ fun HyperNavBarPage(
     } else 0.dp
     val resolvedPadding = contentPadding.withAdditionalTop(
         if (measuredNavBarHeight > 0) with(density) { measuredNavBarHeight.toDp() }
-        else topInset + hyperComponentSize(navBarSize, 40.dp, HyperNavBarDefaults.Height, 52.dp)
+        else topInset + HyperNavBarDefaults.Height
     )
         .withAdditionalBottom(bottomInset)
     val page: @Composable () -> Unit = {

@@ -65,7 +65,7 @@ fun HyperMenuGroupDemo() {
                 trailing = { HyperCheckbox(sync, { sync = it == true }) }
             )
         }
-        HyperText(feedback, size = "small", color = HyperColors.secondaryText)
+        HyperText(feedback, color = HyperColors.secondaryText)
     }
 }
 
@@ -84,7 +84,7 @@ fun ListTileDemo() {
     var enabled by remember { mutableStateOf(true) }
     var feedback by remember { mutableStateOf("等待操作") }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperSegmentedControl(listOf("auto", "plain", "glass"), type, { type = it }) { HyperText(it) }
+        HyperTabs(listOf("auto", "plain", "glass"), listOf("auto", "plain", "glass").indexOf(type), { type = listOf("auto", "plain", "glass")[it] }) { HyperText(it) }
         PreviewToggle("选中", selected) { selected = it }
         PreviewToggle("允许操作", enabled) { enabled = it }
         PreviewSectionLabel("基础 · 图标、标题、说明与元信息")
@@ -93,6 +93,6 @@ fun ListTileDemo() {
             meta = { HyperText("刚刚更新") }, onPressed = { feedback = "已点击：$type" })
         PreviewSectionLabel("禁用状态")
         HyperListTile(title = { HyperText("不可用项目") }, enabled = false, onPressed = {})
-        HyperText(feedback, size = "small")
+        HyperText(feedback)
     }
 }

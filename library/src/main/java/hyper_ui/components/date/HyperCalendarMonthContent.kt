@@ -30,7 +30,6 @@ internal fun HyperCalendarMonthContent(
     lastDate: HyperCalendarDate? = null,
     today: HyperCalendarDate,
     weekStart: Int = 1,
-    size: String = "default",
     showWeekdays: Boolean = true,
     readOnly: Boolean = false,
     expanded: Boolean = false,
@@ -40,7 +39,7 @@ internal fun HyperCalendarMonthContent(
     require(weekStart in 1..7)
     val start = month.monthStart
     val offset = (start.mondayColumn - weekStart + 1 + 7) % 7
-    val rowHeight = HyperCalendarDayDefaults.minimumHeight(size)
+    val rowHeight = HyperCalendarDayDefaults.minimumHeight()
     Column(modifier) {
         if (showWeekdays) {
             Row {
@@ -80,7 +79,7 @@ internal fun HyperCalendarMonthContent(
                     else if (date == today && enabled) drawCircle(primary, radius, center, style = Stroke(1.dp.toPx()))
                     val text = measurer.measure("${index + 1}", style = TextStyle(
                         fontFamily = fontFamily,
-                        fontSize = (when (size) { "small" -> 10; "large" -> 17; else -> 14 }).sp,
+                        fontSize = 14.sp,
                         color = when {
                             active -> Color(1f, 1f, 1f, 1f)
                             !enabled -> muted
@@ -101,7 +100,7 @@ internal fun HyperCalendarMonthContent(
                         else {
                             val date = start.copy(day = day)
                             HyperCalendarDay(day, modifier = Modifier.weight(1f).fillMaxHeight(),
-                                size = size, expanded = true,
+                                expanded = true,
                                 selected = date == selectedDate || date == endDate,
                                 today = date == today,
                                 emphasized = day in emphasizedDays,

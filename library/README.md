@@ -61,7 +61,7 @@ src/main/java/hyper_ui/
 └── components/        # 公开组件（按功能分组）
     ├── button/
     ├── input/
-    ├── selection/        # HyperRadio / HyperSegmentedControl 等选择控件
+    ├── selection/        # HyperRadio / HyperCheckbox 等选择控件
     ├── panel/
     ├── list/
     ├── menu/             # HyperDropdown / HyperSlideMenu

@@ -8,11 +8,11 @@ description: 共用日期选择器外观的通用日期格
 
 <WasmPreview demo="calendar_day" title="日期格与附加信息" />
 
-默认日期行高 42dp、选中圆形直径 36dp，沿用 HyperDatePicker 的实色选中与今日描边。small 用于紧凑展示，large 可承载辅助文字。组件不计算历法、节日或业务日程。
+默认日期行高 42dp、选中圆形直径 36dp，沿用 HyperDatePicker 的实色选中与今日描边。仅提供一套日期格规格，辅助文字和附属条目按内容计算所需高度。组件不计算历法、节日或业务日程。
 
 inRange 使用独立的范围底色：亮色 RGBA(239,246,255,1)，深色 RGBA(20,37,68,1)，不随强调色叠加透明度。月历普通和只读绘制共用同一底色。
 
-附属条目保持 10sp 文字、1.2 行高，垂直内边距合计 2dp、行间距 2dp；默认文字缩放下 large 加三行条目的最小高度为 96dp。宿主使用 minimumHeight 计算，不自行复制尺寸。
+附属条目保持 10sp 文字、1.2 行高，垂直内边距合计 2dp、行间距 2dp；默认文字缩放下三行条目所需高度由 minimumHeight 统一计算。宿主使用 minimumHeight 计算，不自行复制尺寸。
 
 ## 公开 API
 
@@ -27,7 +27,6 @@ fun HyperCalendarDay(
     adjacent: Boolean = false,
     emphasized: Boolean = false,
     inRange: Boolean = false,
-    size: String = "default",
     expanded: Boolean = false,
     subtitle: String? = null,
     subtitleColor: Color = Color.Unspecified,
@@ -51,7 +50,6 @@ fun HyperCalendarDay(
 | adjacent | Boolean | 否 | false | 跨月弱化 |
 | emphasized | Boolean | 否 | false | 主题色数字 |
 | inRange | Boolean | 否 | false | 区间中间背景 |
-| size | String | 否 | default | small、default、large |
 | expanded | Boolean | 否 | false | 填充宿主有限高度 |
 | subtitle | String? | 否 | null | 日期辅助文字 |
 | subtitleColor | Color | 否 | Color.Unspecified | 默认主题次要文字色 |
@@ -80,18 +78,16 @@ data class HyperCalendarItem(val label: String, val color: Color = Color.Unspeci
 
 ```kotlin
 @Composable
-fun HyperCalendarDayDefaults.minimumHeight(size: String = "default", hasSubtitle: Boolean = false, itemRows: Int = 0): Dp
+fun HyperCalendarDayDefaults.minimumHeight(hasSubtitle: Boolean = false, itemRows: Int = 0): Dp
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | default | 日期格尺寸 |
 | hasSubtitle | Boolean | 否 | false | 是否为辅助文字预留高度 |
 | itemRows | Int | 否 | 0 | 为 0–3 行条目预留高度，包含溢出数量行 |
 
 ```kotlin
-HyperCalendarDay(21, modifier = Modifier.size(80.dp, 120.dp),
-    size = "large", expanded = true, subtitle = "辅助说明",
+HyperCalendarDay(21, modifier = Modifier.size(80.dp, 120.dp), expanded = true, subtitle = "辅助说明",
     items = listOf(HyperCalendarItem("预约确认")), itemCount = 3,
     onPressed = selectDate, onItemsPressed = openItems)
 ```

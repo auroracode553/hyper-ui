@@ -31,7 +31,7 @@ maxLength 和 showWordLimit 当前按 UTF-16 单元截断与计数；emoji 或�
 
 **样式约定**
 
-输入框圆角 20dp。small/default/large 字号 14/16/18sp、行高 1.3，横向 padding 14/18/20dp，纵向 7/9/11dp。textarea 上下各多 3dp。支持 text/search/password/textarea/email/url/number/tel。聚焦轮廓 1.5dp，普通 1dp。
+输入框圆角 20dp。字号统一为 16sp、行高 1.3，横向 padding 18dp，纵向 9dp。textarea 上下各多 3dp。支持 text/search/password/textarea/email/url/number/tel。聚焦轮廓 1.5dp，普通 1dp。
 
 Preview 使用参考项目的外部标签分组；已经有外部标题时无需重复传入 label。金额示例保留标签插槽，并同时展示前后缀与内置清空操作。
 
@@ -56,7 +56,6 @@ fun HyperTextField(
     modifier: Modifier = Modifier,
     inputModifier: Modifier = Modifier,
     type: String = "text",
-    size: String = "default",
     rows: Int = HyperTextFieldDefaults.TextareaRows,
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -67,7 +66,7 @@ fun HyperTextField(
     showWordLimit: Boolean = false,
     shape: Shape = HyperTextFieldDefaults.Shape,
     colors: HyperTextFieldColors = HyperTextFieldDefaults.colors(),
-    textStyle: TextStyle = HyperTextFieldDefaults.textStyle(size),
+    textStyle: TextStyle = HyperTextFieldDefaults.textStyle(),
     keyboardOptions: KeyboardOptions = HyperTextFieldDefaults.keyboardOptions(type),
     keyboardActions: KeyboardActions = KeyboardActions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -90,7 +89,6 @@ fun HyperTextField(
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | inputModifier | Modifier | 否 | Modifier | 输入控件自身的布局和交互修饰符。 |
 | type | String | 否 | &quot;text&quot; | 组件的视觉或布局形态。 |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 | rows | Int | 否 | HyperTextFieldDefaults.TextareaRows | 多行输入的显示行数。 |
 | enabled | Boolean | 否 | true | 是否允许用户交互。 |
 | readOnly | Boolean | 否 | false | 是否只展示当前值而禁止修改。 |
@@ -101,7 +99,7 @@ fun HyperTextField(
 | showWordLimit | Boolean | 否 | false | 是否显示字符数和上限。 |
 | shape | Shape | 否 | HyperTextFieldDefaults.Shape | 组件容器的形状。 |
 | colors | HyperTextFieldColors | 否 | HyperTextFieldDefaults.colors() | 组件各状态的颜色配置。 |
-| textStyle | TextStyle | 否 | HyperTextFieldDefaults.textStyle(size) | 输入文字的排版样式。 |
+| textStyle | TextStyle | 否 | HyperTextFieldDefaults.textStyle() | 输入文字的排版样式。 |
 | keyboardOptions | KeyboardOptions | 否 | HyperTextFieldDefaults.keyboardOptions(type) | 软键盘类型与输入配置。 |
 | keyboardActions | KeyboardActions | 否 | KeyboardActions() | 软键盘动作回调。 |
 | visualTransformation | VisualTransformation | 否 | VisualTransformation.None | 输入文字的视觉变换方式。 |
@@ -119,24 +117,23 @@ fun HyperTextField(
 **HyperTextFieldDefaults.contentPadding**
 
 ```kotlin
-fun contentPadding(size: String = "default", multiline: Boolean = false): androidx.compose.foundation.layout.PaddingValues =
+fun contentPadding(multiline: Boolean = false): androidx.compose.foundation.layout.PaddingValues =
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 | multiline | Boolean | 否 | false | 是否按多行输入增加纵向留白。 |
 
 **HyperTextFieldDefaults.textStyle**
 
 ```kotlin
 @Composable
-    fun textStyle(size: String = "default"): TextStyle
+    fun textStyle(): TextStyle
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
+| — | — | — | — | 无参数，采用组件统一规格。 |
 
 **HyperTextFieldDefaults.keyboardOptions**
 

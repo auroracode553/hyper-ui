@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperCheckbox
 import hyper_ui.HyperRadio
-import hyper_ui.HyperSegmentedControl
-import hyper_ui.HyperSegmentedControlDefaults
+import hyper_ui.HyperTabs
+import hyper_ui.HyperTabsDefaults
 import hyper_ui.HyperSlider
 import hyper_ui.HyperSliderDefaults
 import hyper_ui.HyperSwitch
@@ -47,7 +47,7 @@ fun DatePickerDemo() {
     // Preview 模拟本机日期；Android 公开入口会读取 LocalDate.now()。
     val today = HyperCalendarDate(2026, 10, 19)
     Column {
-        HyperText("月历选择日期", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("月历选择日期", modifier = Modifier.padding(bottom = 8.dp))
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
             HyperButton(onPressed = { visible = true }) {
                 HyperIcon(Lucide.Calendar, null)
@@ -82,7 +82,7 @@ fun RadioDemo() {
 
     // 与 Flutter 参考一致，直接展示库默认单选行，不额外叠加行间距。
     Column {
-        HyperText("互斥单选", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("互斥单选", modifier = Modifier.padding(bottom = 8.dp))
         labels.forEach { (value, label) ->
             HyperRadio(
                 value = value, groupValue = mode, label = label,
@@ -90,9 +90,9 @@ fun RadioDemo() {
             )
         }
         Spacer(Modifier.height(12.dp))
-        HyperText("当前值：$mode", size = "small")
+        HyperText("当前值：$mode")
         Spacer(Modifier.height(20.dp))
-        HyperText("纯控件（无标签）", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("纯控件（无标签）", modifier = Modifier.padding(bottom = 8.dp))
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             HyperRadio(value = "system", groupValue = mode, onChanged = { mode = it })
             HyperRadio(value = "preview", groupValue = "preview")
@@ -102,7 +102,7 @@ fun RadioDemo() {
 }
 
 @Composable
-fun SegmentedDemo() {
+fun TabsDemo() {
     val periods = remember { listOf("日", "周", "月", "年") }
     var selectedPeriod by remember { mutableStateOf("年") }
     var equalWidth by remember { mutableStateOf(true) }
@@ -116,11 +116,11 @@ fun SegmentedDemo() {
         HyperButton({ equalWidth = !equalWidth }) {
             HyperText(if (equalWidth) "等宽分段" else "内容宽度分段")
         }
-        HyperSegmentedControl(
+        HyperTabs(
             equalWidth = equalWidth,
-            options = periods,
-            selectedValue = selectedPeriod,
-            onChanged = { selectedPeriod = it }
+            tabs = periods,
+            selectedIndex = periods.indexOf(selectedPeriod),
+            onChanged = { selectedPeriod = periods[it] }
         ) { period ->
             HyperText(
                 text = period,
@@ -135,12 +135,12 @@ fun SegmentedDemo() {
             fontSize = 13.sp
         )
 
-        HyperSegmentedControl(
-            options = modes,
-            selectedValue = selectedMode,
-            onChanged = { selectedMode = it },
+        HyperTabs(
+            tabs = modes,
+            selectedIndex = modes.indexOf(selectedMode),
+            onChanged = { selectedMode = modes[it] },
             itemEnabled = { it != "停用" },
-            colors = HyperSegmentedControlDefaults.colors(
+            colors = HyperTabsDefaults.colors(
                 selectedItemColor = Color(0.03f, 0.76f, 0.38f, 1f),
                 selectedContentColor = Color(1f, 1f, 1f, 1f)
             )
@@ -162,18 +162,18 @@ fun CheckboxDemo() {
     var standalone by remember { mutableStateOf(false) }
     // 直接展示库默认标签行，与 Flutter 相同，不额外包卡片或自定义点击行。
     Column {
-        HyperText("受控复选", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("受控复选", modifier = Modifier.padding(bottom = 8.dp))
         HyperCheckbox(checked, { checked = it }, label = "同步到所有设备")
         Spacer(Modifier.height(20.dp))
-        HyperText("三态（全选 / 部分 / 空）", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("三态（全选 / 部分 / 空）", modifier = Modifier.padding(bottom = 8.dp))
         HyperCheckbox(triState, { triState = it }, tristate = true, label = "已选择 2 / 4 项")
         Spacer(Modifier.height(20.dp))
-        HyperText("禁用状态", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("禁用状态", modifier = Modifier.padding(bottom = 8.dp))
         HyperCheckbox(false, label = "禁用 · 未选中")
         Spacer(Modifier.height(12.dp))
         HyperCheckbox(true, label = "禁用 · 已选中")
         Spacer(Modifier.height(20.dp))
-        HyperText("纯控件（无标签）", size = "small", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("纯控件（无标签）", modifier = Modifier.padding(bottom = 8.dp))
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             HyperCheckbox(standalone, { standalone = it == true })
             HyperCheckbox(true)
@@ -188,30 +188,28 @@ fun TextFieldDemo() {
     var password by remember { mutableStateOf("password") }
     var amount by remember { mutableStateOf("128") }
     var note by remember { mutableStateOf("") }
-    var size by remember { mutableStateOf("default") }
     var enabled by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf(false) }
     var readOnly by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperSegmentedControl(listOf("small", "default", "large"), size, { size = it }) { HyperText(it) }
         PreviewToggle("允许输入", enabled) { enabled = it }
         PreviewToggle("错误状态", error) { error = it }
         PreviewToggle("只读", readOnly) { readOnly = it }
         PreviewSectionLabel("基础输入与清空")
-        HyperTextField(value, { value = it }, size = size, clearable = true, enabled = enabled, isError = error, readOnly = readOnly,
+        HyperTextField(value, { value = it }, clearable = true, enabled = enabled, isError = error, readOnly = readOnly,
             inputModifier = Modifier.focusRequester(focusRequester),
             placeholder = { HyperText("请输入内容") })
         PreviewSectionLabel("密码显隐")
-        HyperTextField(password, { password = it }, type = "password", size = size, showPasswordToggle = true,
+        HyperTextField(password, { password = it }, type = "password", showPasswordToggle = true,
             placeholder = { HyperText("请输入密码") })
         PreviewSectionLabel("前后缀插槽")
-        HyperTextField(amount, { amount = it }, type = "number", size = size, clearable = true,
+        HyperTextField(amount, { amount = it }, type = "number", clearable = true,
             label = { HyperText("金额") }, prefix = { HyperText("¥") }, suffix = { HyperText("元") })
         PreviewSectionLabel("多行与字数限制")
-        HyperTextField(note, { note = it }, type = "textarea", size = size, rows = 3, maxLength = 80, showWordLimit = true,
+        HyperTextField(note, { note = it }, type = "textarea", rows = 3, maxLength = 80, showWordLimit = true,
             label = { HyperText("多行输入") }, placeholder = { HyperText("请输入多行内容") })
-        HyperButton({ focusRequester.requestFocus() }, size = "small", colorStyle = "primary", type = "filled") { HyperText("查看聚焦") }
+        HyperButton({ focusRequester.requestFocus() }, colorStyle = "primary", type = "filled") { HyperText("查看聚焦") }
     }
 }
 

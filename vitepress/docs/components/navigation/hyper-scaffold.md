@@ -14,11 +14,13 @@ Compose 基础布局实现的页面宿主。统一页面画布、上下栏、正
 
 ```kotlin
 HyperScaffold(bottomBar = { BottomActions() }) { contentPadding ->
-    Box(Modifier.fillMaxSize().padding(contentPadding)) { PageContent() }
+    LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = contentPadding) {
+        items(rows) { row -> RowContent(row) }
+    }
 }
 ```
 
-正文自行消费 contentPadding，宿主不重复添加正文 padding。上栏与下栏按真实测量高度参与净空；缺少对应栏时提供系统安全区。下栏自身应处理安全区，例如 HyperTabBar(safeArea=true)。悬浮操作位于下栏或系统安全区上方，距逻辑末端和底部各 16dp。
+正文视口保持全屏，contentPadding 只用于 LazyColumn/LazyGrid 的内容内边距；普通滚动列使用 verticalScroll(scrollState).padding(contentPadding)。禁止在滚动容器外设置 Modifier.padding(contentPadding)、固定高度占位或扣减视口高度。上栏与下栏按真实测量高度参与净空；缺少对应栏时提供系统安全区。默认 useSystemSafeArea=false，不为整页补系统安全区；局部控件按需避让一次。悬浮 HyperTabBar 覆盖正文、周围透明，末尾净空采用宿主对整个栏及外边距的实测高度，不能以默认栏高估算。悬浮操作位于下栏或系统安全区上方，距逻辑末端和底部各 16dp。
 
 宿主需要有界的页面宽高；不管理路由、滚动位置或业务状态。Flutter 使用其框架页面宿主，此处是 Android Compose 的基础布局能力。
 

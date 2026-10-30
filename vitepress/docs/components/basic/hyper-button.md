@@ -31,7 +31,7 @@ HyperButton(onPressed = onConfirm, colorStyle = "success") { HyperText("确认")
 
 **样式约定**
 
-按钮 small/default/large 高度 32/38/44dp，圆角为高度一半。省略 type 时使用默认描边；显式类型仅支持 filled/icon。主操作使用 filled 与 colorStyle = primary，独立图标入口使用 icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
+按钮统一高度 38dp，圆角为高度一半。省略 type 时使用默认描边；显式类型仅支持 filled/icon。主操作使用 filled 与 colorStyle = primary，独立图标入口使用 icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
 
 colorStyle 支持 primary/success/info/warning/danger；color 为自定义基色，优先于 colorStyle。两者都省略时为白色中性样式，深色模式随主题。配色不会改变 type；例如同一个 success 配色可用于默认描边、filled 或 icon。
 
@@ -62,11 +62,10 @@ fun HyperButton(
     type: String? = null,
     color: Color = Color.Unspecified,
     colorStyle: String? = null,
-    size: String = "default",
     colors: HyperButtonColors = HyperButtonDefaults.colors(type, color = color, colorStyle = colorStyle),
     border: BorderStroke? = HyperButtonDefaults.border(type, enabled && onPressed != null, color = color, colorStyle = colorStyle),
-    shape: Shape = HyperButtonDefaults.shape(size),
-    contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(size),
+    shape: Shape = HyperButtonDefaults.shape(),
+    contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(),
     role: Role = Role.Button,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
@@ -85,11 +84,10 @@ fun HyperButton(
 | type | String? | 否 | null | 省略为白色描边；filled 为填充，icon 为圆形图标。 |
 | color | Color | 否 | Color.Unspecified | 自定义颜色，覆盖默认配色。 |
 | colorStyle | String? | 否 | null | 预设语义配色；自定义 color 优先。 |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 | colors | HyperButtonColors | 否 | HyperButtonDefaults.colors(type, color = color, colorStyle = colorStyle) | 组件各状态的颜色配置。 |
 | border | BorderStroke? | 否 | HyperButtonDefaults.border(type, enabled &amp;&amp; onPressed != null, color = color, colorStyle = colorStyle) | 容器边框配置。 |
-| shape | Shape | 否 | HyperButtonDefaults.shape(size) | 组件容器的形状。 |
-| contentPadding | PaddingValues | 否 | HyperButtonDefaults.contentPadding(size) | 主体内容的内部留白。 |
+| shape | Shape | 否 | HyperButtonDefaults.shape() | 组件容器的形状。 |
+| contentPadding | PaddingValues | 否 | HyperButtonDefaults.contentPadding() | 主体内容的内部留白。 |
 | role | Role | 否 | Role.Button | 组件的无障碍语义角色。 |
 | horizontalArrangement | Arrangement.Horizontal | 否 | Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally) | 子项的水平排列方式。 |
 | verticalAlignment | Alignment.Vertical | 否 | Alignment.CenterVertically | 子项的垂直对齐方式。 |
@@ -101,54 +99,53 @@ fun HyperButton(
 **HyperButtonDefaults.shape**
 
 ```kotlin
-fun shape(size: String = "default"): Shape
+fun shape(): Shape
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
+| — | — | — | — | 无参数，采用组件统一规格。 |
 
 **HyperButtonDefaults.iconSize**
 
 ```kotlin
-fun iconSize(size: String = "default", iconOnly: Boolean = false): Dp
+fun iconSize(iconOnly: Boolean = false): Dp
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
 | iconOnly | Boolean | 否 | false | 是否只显示图标。 |
 
 **HyperButtonDefaults.height**
 
 ```kotlin
-fun height(size: String = "default"): Dp =
+fun height(): Dp
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
+| — | — | — | — | 无参数，采用组件统一规格。 |
 
 **HyperButtonDefaults.contentPadding**
 
 ```kotlin
-fun contentPadding(size: String = "default"): PaddingValues
+fun contentPadding(): PaddingValues
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
+| — | — | — | — | 无参数，采用组件统一规格。 |
 
 **HyperButtonDefaults.textStyle**
 
 ```kotlin
 @Composable
-    fun textStyle(size: String = "default"): TextStyle
+    fun textStyle(): TextStyle
 ```
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| size | String | 否 | &quot;default&quot; | 组件尺寸档位。 |
+| — | — | — | — | 无参数，采用组件统一规格。 |
 
 **HyperButtonDefaults.colors**
 

@@ -2,7 +2,7 @@
 
 ## 全局全面屏约定
 
-所有应用 Activity 统一调用 enableHyperEdgeToEdge()，根 HyperThemeConfig.useSystemSafeArea = false（默认值）。根布局不补系统安全区；HyperNavBar 的顶部操作区仍避让可见状态栏与挖孔一次，正文首屏净空位于滚动内容内部，可随上滑进入状态栏。自定义固定顶栏使用 Compose 窗口布局，IME 仍由输入宿主避让。下文旧条款中关于系统安全区的保留要求以本条为准。
+所有应用 Activity 统一调用 enableHyperEdgeToEdge()，根 HyperThemeConfig.useSystemSafeArea = false（默认值）。根布局不补系统安全区；HyperNavBar 的顶部操作区仍避让可见状态栏与挖孔一次，正文首屏净空位于滚动内容内部，可随上滑进入状态栏。自定义固定顶栏使用 Compose 窗口布局，IME 仍由输入宿主避让。上下净空只属于滚动内容，禁止固定 Spacer、视口外栏高 padding、扣减窗口高度或裁切。悬浮 TabBar 通过覆盖布局显示，末尾净空使用整个栏及边距的实测遮挡量，禁止以默认栏高或固定 dp 估算占位。下文有关保留旧布局的要求不能用于保留会截短视口的占位。
 
 HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和交互反馈以手机竖屏为基准；Preview 的 Desktop/Wasm 运行方式只服务于文档验收。
 
@@ -30,7 +30,7 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 - 把主滚动容器已有状态交给 HyperNavBarPage.scrollState，Navbar 自动读取库内监听。禁止逐页添加导航专用 derivedStateOf/snapshotFlow、scrolledUnder 判断或尺寸监听；首屏净空采用库测量的实际导航区高度。
 - 已有正式布局仅用 HyperNavBarScrollScope 绑定同一个主滚动状态，不改变原 Scaffold、padding、Insets、正文约束或底栏；隐藏页或主列表空状态通过 active 停用来源。不在页面自己维护导航布尔值，也不删除业务自身的监听。
 - 所有 Activity 在公共入口全局 enableEdgeToEdge；统一透明状态栏、手势导航栏与亮暗图标，pageBackground 贯穿屏幕。
-- 禁止整页底部安全区或固定占位裁短正文。控件或滚动末尾的必要避让只处理一次，键盘出现仍可缩小或滚动表单。
+- 禁止以固定高度、Spacer、滚动视口外 padding、扣减窗口高度或裁切占用状态栏与悬浮 TabBar 区域；不能把 HyperScaffold 返回的栏高直接放在滚动容器外。首末净空只进入 contentPadding 或 verticalScroll(...).padding(...) 内部，底栏净空使用宿主实测遮挡量。控件必要避让只处理一次，保留 IME 避让。
 - 顶部净空属于滚动内容，导航模糊由库在状态栏顶部至 Navbar 底部内绘制；不得向正文延伸，也不得添加实色底板或业务裁切遮住效果。
 - 内容卡片沿用无普通边框、底色分层和统一双层阴影，保留选中态与组内分隔线；输入、浮层和导航保留各自专用材质。
 - TabBar 保持原有悬浮布局与透明周围区域，正文可滚到后方。只有明确的底栏布局要求才允许改变高度、占位、位置、margin、padding、安全区、末尾留白和滚动范围；样式优化不构成授权。
@@ -45,17 +45,11 @@ HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和�
 - 不在组件库中加入平板双栏、桌面多栏或横屏专用参数。
 - `HyperNavBar` 固定避让顶部状态栏；`HyperNavBarPage` 将首屏顶部净空与默认底部避让交给滚动内容，页面宿主不要重复添加顶部安全区。页面背景和滚动视口仍可覆盖系统栏区域。
 
-## 尺寸词汇
+## 组件规格
 
-基础组件统一使用：
+每类组件只保留一套默认规格，不提供 small/default/large 或其他尺寸档位，不通过兼容参数恢复它们。按钮高 38dp、输入框字号 16sp、导航操作行高 44dp、分段 HyperTabs 高 40dp；分类筛选使用最小高度 32dp 的 HyperFilterBar。文字和图标继承宿主排版，业务布局继续通过 Modifier 组合。
 
-| 值 | 用途 |
-| --- | --- |
-| `small` | 紧凑工具、次要操作、窄屏表单 |
-| `default` | 手机页面中的常规控件，默认值 |
-| `large` | 主要入口、媒体操作和需要更强视觉层级的控件 |
-
-`type` 只表示同一组件内的渲染形态，例如按钮的 `filled` 或输入框的 `textarea`；按钮配色通过独立的 `colorStyle` 与 `color` 控制；`size` 只改变组件的视觉尺度。外部宽度不要通过新增 `width` API 解决，使用 `Modifier.fillMaxWidth()`、`widthIn()` 或父布局约束。
+HyperTabs 用于少量固定分段，HyperFilterBar 用于可左右滑动的分类筛选；不恢复整条 54dp 分类胶囊。组件本身的最小尺寸不构成系统栏或悬浮栏占位。
 
 ## 触控与反馈
 
