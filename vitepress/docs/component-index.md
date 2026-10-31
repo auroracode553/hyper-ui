@@ -76,6 +76,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | [HyperEmptyState](components/feedback/hyper-empty-state.md) | 空数据或无结果 |
 | [HyperDropdown](components/feedback/hyper-dropdown.md) | 48dp 选择字段，默认文案宽度 160–240dp，选项菜单跟随字段 |
 | [HyperToast](components/feedback/hyper-toast.md) | 短暂反馈 |
+| [HyperLoading / HyperLoadingType](components/feedback/hyper-loading.md) | 默认随机与十款原生动画，固定 2× 节奏 |
 | [HyperProgress](components/feedback/hyper-progress.md) | 线性和圆形进度 |
 | [HyperDialog](components/feedback/hyper-dialog.md) | 全屏遮罩覆盖系统栏；面板独立避让系统栏与键盘，两侧各 24dp、最大宽 420dp |
 | [HyperActionSheet / HyperAction](components/feedback/hyper-action-sheet.md) | 底部自定义内容与操作列表，受控显隐、危险／禁用／选中项与取消操作 |

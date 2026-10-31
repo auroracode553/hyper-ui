@@ -12,6 +12,7 @@ import hyper_ui.docs.ui.LevelCapsuleDemo
 import hyper_ui.docs.ui.BatteryIndicatorDemo
 import hyper_ui.docs.ui.PlaybackSpeedPanelDemo
 import hyper_ui.docs.ui.PlaybackSpeedScaleDemo
+import hyper_ui.docs.ui.LoadingDemo
 import hyper_ui.docs.ui.ProgressDemo
 import hyper_ui.docs.ui.ToastDemo
 import hyper_ui.docs.ui.UpdateDialogDemo
@@ -19,6 +20,16 @@ import hyper_ui.docs.ui.UpdateDialogDemo
 private const val GROUP_FEEDBACK = "反馈组件"
 
 internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(
+        id = "loading", group = GROUP_FEEDBACK, title = "HyperLoading / HyperLoadingType",
+        description = "默认随机与十款原生动画，固定 2× 节奏。",
+        code = """HyperLoading(type = HyperLoadingType.wovenSignal, label = "加载中")""",
+        variants = listOf(
+            DemoVariant("形态", "type", "默认随机，type 指定十款原生加载动画"),
+            DemoVariant("文字", "label", "可选加载说明，固定 2× 节奏与原始配色")
+        ),
+        apiDocumentPaths = listOf("feedback/hyper-loading.md"), content = { LoadingDemo() }
+    ),
     ComponentDemo(
         id = "action_sheet",
         group = GROUP_FEEDBACK,

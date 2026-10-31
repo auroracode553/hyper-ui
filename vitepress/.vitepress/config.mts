@@ -119,6 +119,7 @@ export default defineConfig({
           { text: 'EmptyState', link: '/components/feedback/hyper-empty-state' },
           { text: 'Dropdown', link: '/components/feedback/hyper-dropdown' },
           { text: 'Toast', link: '/components/feedback/hyper-toast' },
+          { text: 'Loading', link: '/components/feedback/hyper-loading' },
           { text: 'Progress', link: '/components/feedback/hyper-progress' },
           { text: 'LevelCapsule', link: '/components/feedback/hyper-level-capsule' },
           { text: 'PlaybackSpeedPanel', link: '/components/feedback/hyper-playback-speed-panel' },

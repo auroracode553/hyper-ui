@@ -216,6 +216,7 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 | [HyperDialog](components/feedback/hyper-dialog.md) | components/dialog/HyperDialog.kt、HyperDialogHost.kt | visible 与 onClose 受控；返回键和点击外部关闭分别配置；共享 HyperFloatingPanel，宽高根据实际窗口收敛，保留滚动指示和 actions 插槽 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | components/dialog/HyperAlertDialog.kt | 基于 HyperDialog 组合标题、正文与操作插槽；不自动附加业务按钮或提交表单 |
 | [HyperToast / hyperToast](components/feedback/hyper-toast.md) | components/feedback/HyperToastSurface.kt、HyperToast.kt | Compose 提示 visible 受控，默认 2000ms 后请求 onClose，duration=0 不自动关闭；actionLabel 与 onAction 同时提供才显示主题色文字操作，先请求关闭再回调；action 插槽优先并自行关闭；Android hyperToast 为原生文本／资源提示 |
+| [HyperLoading / HyperLoadingType](components/feedback/hyper-loading.md) | components/loading/HyperLoading.kt、core/loading/ | type 默认 null，实例随机选一款且重组保持稳定；显式 type 固定样式；十款原生平面动画各自固定规格与原始配色，固定 2× 节奏；系统 MotionDurationScale=0 静止 |
 | [HyperProgress](components/feedback/hyper-progress.md) | components/progress/HyperProgress.kt | linear / circular，自绘轨道／圆环；value=null 是不定进度，不伪造百分比；显示文字、尺寸与颜色由现有参数控制 |
 | [HyperEmptyState](components/feedback/hyper-empty-state.md) | components/feedback/HyperEmptyState.kt | 图标、标题、说明和 action 插槽；只负责空态展示，不请求业务数据或自动生成重试行为 |
 | [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | components/progress/HyperLevelCapsule.kt | 默认 52×156dp 的竖向比例反馈，progress 收敛至 0–1；保留图标与 label；自身不处理音量／亮度服务或手势 |

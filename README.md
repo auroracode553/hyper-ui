@@ -267,7 +267,7 @@ HyperIcon 继续负责插槽尺寸与颜色继承，图形由图标库提供；�
 - 基础与表单：`HyperText`、`HyperIcon`、`HyperDivider`、`HyperButton`（含 `type = "icon"`）、`HyperTextField`、`HyperSwitch`（清晰的关闭态中性轨道）、`HyperCheckbox`、`HyperRadio`、`HyperTabs`、`HyperSlider`。
 - 容器与列表：`HyperCard`、`HyperColorPicker`、`HyperList`、`HyperSectionedList`、`HyperMenuGroup`、`HyperListTile`。
 - 导航与操作：`HyperNavBar`（顶部透明；宿主通过 `scrollState` 自动监听正文位置，滚入时用 160ms 过渡显示主题渐变，在状态栏顶部至导航底部内渐隐至透明，没有分隔线，固定顶部状态栏避让；通过 `layout = custom/backOnly/titleOnly/backWithTitle/more/edit` 选择固定布局，`custom` 提供完整插槽；搭配 `HyperNavBarPage` 让正文滚到导航栏后方并提供全屏正文宿主）、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperFilterBar`（横向分类）、`HyperTabBar`（文档页分别提供单动作与多标签交互预览）。
-- 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopover`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、进度和播放速度组件。
+- 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopover`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、`HyperLoading`（type 选择十款原生动画，默认随机，固定 2× 节奏）、进度和播放速度组件。
 
 `HyperSectionedList` 固定使用 8dp 紧凑分段间距，选择状态由调用方管理。
 
