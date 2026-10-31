@@ -38,9 +38,9 @@ HyperTabBar(items, selectedIndex = selectedIndex, onChanged = { selectedIndex = 
 
 **样式约定**
 
-type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬浮胶囊：multiple 高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 20dp、top 8dp、bottom 20dp。floating=false 仅用于 multiple，默认零外间距，全宽平直页面表面，无胶囊、圆角或浮层阴影，底部安全区位于表面内部。图标 23dp、文字 12sp、间距 1dp。single 保留 56dp 圆形玻璃、22dp 图标、16dp 角标。
+type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬浮胶囊：multiple 默认高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 20dp、top 8dp、bottom 20dp。floating=false 仅用于 multiple，默认零外间距，全宽平直页面表面，无胶囊、圆角或浮层阴影，底部安全区位于表面内部。图标 23dp、文字 12sp、间距 1dp。single 使用固定直径 48dp 的圆形玻璃、22dp 图标、16dp 角标。
 
-非悬浮形态直接放入 HyperScaffold.bottomBar，单动作、悬浮多项和非悬浮均采用 FastBuy 同款默认内容高度 56dp；大字体扩展只由库处理，安全区与外边距不计入内容高度。不要再额外叠加系统底部 inset、固定留白或业务 height。悬浮内容区仍至少 56dp，宿主仍让正文经过底栏后方。
+非悬浮形态直接放入 HyperScaffold.bottomBar；悬浮和贴底多项按钮组均以 56dp 为默认内容高度，仅按钮组按标签字体在库内扩展。single 独立入口固定为 48dp，不随按钮组高度或标签字体放大。安全区与外边距不计入内容尺寸，不再额外叠加系统底部 inset、固定留白或业务 height；宿主让正文经过底栏后方。
 
 **状态归属**
 
@@ -85,8 +85,8 @@ fun <T> HyperTabBar(
 | items | List&lt;T&gt; | 是 | — | 由调用方提供的选项或列表数据。 |
 | onChanged | (Int) -&gt; Unit | 是 | — | 用户修改值或选择项时通知调用方。 |
 | selectedIndex | Int? | 是 | — | 当前选中索引；null 为可重复点击的动作模式。 |
-| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| type | String | 否 | &quot;multiple&quot; | 组件的视觉或布局形态。 |
+| modifier | Modifier | 否 | Modifier | 外部宽度、位置和间距；高度与直径由库管理。 |
+| type | String | 否 | &quot;multiple&quot; | multiple 为默认高 56dp 的多项按钮组；single 为固定直径 48dp 的独立圆形入口。 |
 | itemLabel | (T) -&gt; String | 否 | { &quot;&quot; } | 每个导航项的文字。 |
 | badgeCount | Int | 否 | 0 | 单动作角标数量，0 隐藏，超过 99 显示 99+。 |
 | safeArea | Boolean | 否 | false | 是否避开底部系统安全区。 |
@@ -108,11 +108,11 @@ class HyperTabBarItemScope internal constructor(val selected: Boolean)
 | --- | --- | --- |
 | selected | Boolean | 当前项是否选中；single 始终为 true。 |
 
-## 统一高度与并排操作
+## 默认尺寸与并排操作
 
-业务调用不得给 HyperTabBar 或它的包裹容器设置 height、requiredHeight、size 等限制高度的修饰符。宽度、页面位置与组合间距由宿主控制。以 FastBuy 主导航为尺寸基准，single / multiple / floating=false 共同采用默认高度；同一 Row 的并排入口自然等高。
+业务调用不得给 HyperTabBar 或它的包裹容器设置 height、requiredHeight、size 等限制高度的修饰符，也不能通过缩放替代库默认规格。single 必须保持库内固定的 48dp 直径，multiple 按钮组默认高 56dp；禁止为“并排等高”将独立入口扩大为 56dp。宽度、页面位置与组合间距由宿主控制，同一 Row 使用 Alignment.CenterVertically，保留两种形态的尺寸差异。
 
-<WasmPreview demo="tab-bar-trailing" title="主导航与右侧操作使用默认高度" />
+<WasmPreview demo="tab-bar-trailing" title="56dp 主导航与 48dp 独立操作居中并排" />
 
 ```kotlin
 Row(Modifier.padding(HyperTabBarDefaults.FloatingMargin),
@@ -127,7 +127,8 @@ Row(Modifier.padding(HyperTabBarDefaults.FloatingMargin),
 
 | 默认值 | 类型 | 必填 | 值 | 用途 |
 | --- | --- | --- | --- | --- |
-| HyperTabBarDefaults.Height | Dp | 否 | 56dp | 默认内容高度；字体扩展由组件内部负责 |
+| HyperTabBarDefaults.SingleDiameter | Dp | 否 | 48dp | single 独立入口的固定直径，不与按钮组等高 |
+| HyperTabBarDefaults.Height | Dp | 否 | 56dp | multiple 悬浮 / 贴底按钮组默认内容高度；字体扩展由组件内部负责 |
 | HyperTabBarDefaults.FloatingMargin | PaddingValues | 否 | start/end 20dp，top 8dp、bottom 20dp | 独立悬浮导航默认外边距；并排布局由共同 Row 消费一次 |
 
 正文末尾余量优先消费 HyperScaffold 测量的 bottom padding，不能用另一套手写底栏高度。

@@ -1,6 +1,6 @@
 # 底部导航
 
-`HyperTabBar` 不依赖任何导航框架。贴底容器默认只使用 0.5dp 低对比度顶部发丝线分层，不使用阴影或整框描边；深色模式下容器和分隔线与当前页面同色，浅色模式保留轻量透明度。组件使用 55dp 标签操作区和 5dp 轻量底部留白，默认总高度为 60dp。需要完全自定义内容时使用完整 slot；需要统一处理点击与选中颜色时使用泛型 items 入口。
+`HyperTabBar` 不依赖导航框架，通过泛型 items 与 itemContent 提供内容。single 独立圆形动作入口固定直径 48dp，multiple 按钮组默认内容高度 56dp，仅按钮组按标签字体在库内扩展；并排时垂直居中，不由业务层覆写尺寸。multiple 默认采用悬浮胶囊，floating=false 为全宽平直贴底表面；正文保持全屏，末尾避让使用宿主实测净空。完整参数及示例见 [HyperTabBar](../components/navigation/hyper-tab-bar.md)。
 
 ```kotlin
 import androidx.compose.foundation.layout.Column

@@ -154,14 +154,14 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tab-bar-single",
         group = GROUP_NAVIGATION,
         title = "HyperTabBar · 单动作",
-        description = "56dp 单动作玻璃按钮，点击触发操作并更新角标。",
+        description = "固定直径 48dp 的单动作玻璃按钮，点击触发操作并更新角标。",
         code = """
             HyperTabBar(items = listOf(action), type = "single", selectedIndex = 0, onChanged = { onAction() }, badgeCount = 3) {
                 HyperIcon(it.icon, it.label)
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("单动作", "type = single", "56dp 方形容器，圆角 28dp"),
+            DemoVariant("单动作", "type = single", "48dp 圆形容器，圆角 24dp"),
             DemoVariant("角标", "badgeCount", "16dp 角标，最大显示 99+")
         ),
         apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
@@ -194,7 +194,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
     ),
     ComponentDemo(
         id = "tab-bar-trailing", group = GROUP_NAVIGATION, title = "HyperTabBar · 右侧操作",
-        description = "主导航与右侧独立操作均使用库内默认 56dp 高度，点击右侧入口可重复触发。",
+        description = "56dp 主导航与 48dp 独立操作垂直居中，点击右侧入口可重复触发。",
         code = """
             Row(verticalAlignment = Alignment.CenterVertically) {
                 HyperTabBar(items = tabs, selectedIndex = index, onChanged = onTab) { HyperText(it) }
@@ -202,7 +202,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
                     onChanged = { onOpen() }) { HyperIcon(openIcon, "打开") }
             }
         """.trimIndent(),
-        variants = listOf(DemoVariant("默认高度", "type = single/multiple", "56dp，高度不由调用方覆盖")),
+        variants = listOf(DemoVariant("默认尺寸", "type = single/multiple", "single 固定直径 48dp，multiple 默认高 56dp，不由调用方覆盖")),
         apiDocumentPaths = listOf("navigation/hyper-tab-bar.md"),
         content = { TrailingActionTabBarDemo() }, fullScreenPreview = true
     ),

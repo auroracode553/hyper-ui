@@ -56,8 +56,9 @@ fun <T> HyperTabBar(
         with(density) { textMeasurer.measure(itemLabel(item), labelStyle).size.width.toDp() } + 32.dp
     }.coerceAtLeast(76.dp)
     val safeInsets = HyperTheme.systemSafeAreaInsets
-    // 单动作、悬浮和贴底共用 FastBuy 的默认高度；仅库内按字体放大扩展，页面不覆写尺寸。
-    val height = maxOf(HyperTabBarDefaults.Height, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
+    // 单动作固定为 48dp 圆形入口；只有多项按钮组按标签字体扩展默认高度。
+    val height = if (type == "single") HyperTabBarDefaults.SingleDiameter else
+        maxOf(HyperTabBarDefaults.Height, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     var dragIndex by remember(items.size, selectedIndex == null, floating) { mutableStateOf<Int?>(null) }
     val logicalSelected = selectedIndex
@@ -144,6 +145,9 @@ fun <T> HyperTabBar(
 }
 
 object HyperTabBarDefaults {
+    /** 单独动作入口的固定直径，不与多项按钮组等高。 */
+    val SingleDiameter = 48.dp
+    /** 悬浮和贴底多项按钮组的默认内容高度，组件内可随字体扩展。 */
     val Height = 56.dp
     /** 组件视觉间距，与根布局系统安全区独立；并排入口由共同的 Row 只消费一次。 */
     val FloatingMargin = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp,

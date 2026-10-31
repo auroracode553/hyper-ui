@@ -53,7 +53,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 | --- | --- |
 | [HyperScrollGradient](components/navigation/hyper-scroll-gradient.md) | 独立滚动渐变，与 Navbar 共用实现；不采样背景，不增加安全区或栏高 |
 | [HyperNavBar](components/navigation/hyper-nav-bar.md) | 库内观察同一主滚动状态，active 停用隐藏或空视口，仅导航读取派生值；背景在状态栏顶部至导航底部内渐隐，不改页面布局 |
-| [HyperTabBar](components/navigation/hyper-tab-bar.md) | single / multiple / 贴底统一默认内容高 56dp；single / multiple、可重复动作与单项禁用 |
+| [HyperTabBar](components/navigation/hyper-tab-bar.md) | single 固定直径 48dp；multiple 悬浮 / 贴底按钮组默认高 56dp；支持可重复动作与单项禁用 |
 | [HyperScaffold](components/navigation/hyper-scaffold.md) | 基础页面宿主；实际栏高、正文净空与悬浮操作，不依赖 Material |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | 贴边全高模态抽屉；固定标题／页脚，支持遮罩、返回键与滑动关闭 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表项侧滑操作 |
@@ -106,7 +106,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 
 全面屏顶部布局：根系统安全区开关不影响顶部操作保护。标准 HyperNavBar 自动处理，自定义固定顶栏使用 Compose 窗口布局；正文首屏净空放在滚动内容内部，背景与滚动视口可覆盖状态栏。
 
-TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp，字体扩展仅在组件内处理。业务页面不覆写高度；并排入口在共同 Row 中布局，正文采用宿主实际测量的底部净空。
+TabBar 尺寸由库按形态管理：single 独立入口固定直径 48dp，multiple 悬浮 / 贴底按钮组默认高 56dp，仅按钮组按标签字体在库内扩展。并排时在共同 Row 中垂直居中，禁止为等高将 single 改为 56dp，也不在业务层覆写尺寸或缩放。悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp；正文采用宿主实测底部净空。
 
 
 页面数据列表：`HyperList` 与 `HyperSectionedList` 使用无卡片的简约平铺样式，不绘制卡片背景、阴影或分组圆角；保留分隔线与行选中反馈。设置菜单的 `HyperMenuGroup` 和独立 `HyperListTile` 表面规则保持独立。

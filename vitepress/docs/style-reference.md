@@ -115,7 +115,7 @@ HyperNavBar 与 HyperScrollGradient 只绘制主题画布色的滚动渐变，�
 | HyperSlider | 44dp 触摸、6dp 轨道、20dp 滑块、2dp 轮廓 | 默认范围 0..100，showValue=true |
 | HyperTabs | radius 18，padding 4、条目 32，总高 40 | 13sp，选中 600、未选中 500，图标 16dp；等宽底板平移 260ms |
 | HyperFilterBar | 最小高 32dp，项内边距 12×6dp，项间距 6dp | 浅底与 1dp 弱边线；选中 8% 主题色底、18% 主题色细线与主题色文字；无阴影，横向滚动，13sp 文字随字体缩放自然撑高 |
-| HyperTabBar | single / multiple / 贴底默认内容高 56；悬浮顶部间距 8、底部间距 20 | single / multiple；图标 22 / 23；指示器 160ms easeOutCubic；大字体仅由库按内容扩展 |
+| HyperTabBar | single 固定直径 48；multiple 悬浮 / 贴底默认内容高 56；悬浮顶部间距 8、底部间距 20 | single / multiple 图标 22 / 23；指示器 160ms easeOutCubic；只有多项按钮组按标签字体扩展高度 |
 | HyperNavBar | 高 44，水平 padding 16，标题 16/600 | 透明操作层，标题字距 -0.2sp、副标题 11sp、安全区另计 |
 | HyperListTile | 最小 46，独立 plain/glass 水平留白 14、复用父表面时 0，垂直 8；外层 glass 仅垂直留白 3 | auto/plain/glass，标题 14/600、说明 12、meta 11，图标块 34 |
 | HyperMenuGroup | radius 18，padding 4，分隔缩进 14 | items 入口自动分隔；自由内容入口显式组合分隔 |
@@ -243,7 +243,7 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 | HyperListTile 的 leading 图标块 | 34dp、圆角 11、强调色浅底 | 列表视觉与按钮交互不同，不因圆角背景删除或替换为按钮 |
 | HyperTabs | 共享表面、项目背景、选中状态与项目禁用 | 保留共享 selection 底板，不增加逐项按钮描边 |
 | HyperFilterBar | 单项浅底、1dp 弱边线，选中淡主题色，整栏周围透明 | 普通项保持可点击轮廓，不增加阴影、厚重描边或整条底板 |
-| HyperTabBar single 与 badgeCount | 56dp 自绘入口、22dp 图标及独立计数角标 | 底栏自身管理 margin、安全区和尺寸，不替换为默认 HyperButton |
+| HyperTabBar single 与 badgeCount | 固定直径 48dp 自绘入口、22dp 图标及独立计数角标 | 库内管理尺寸、margin 与安全区；与 56dp 按钮组并排时居中，禁止改成等高入口或替换为默认 HyperButton |
 | HyperCalendarDay 的选中圆、角标和条目 | 日期专用圆形状态、紧凑文字和溢出行 | 需要保持日期网格与最小行高，不自动换成普通按钮或其他徽标 |
 | HyperColorPicker 的色块和选中环 | 圆形预设色块、强调环、下方标签 | 颜色就是控件内容，不能按普通按钮配色清理 |
 | HyperSlideMenu 的操作区 | 全高操作背景、文字／图标和危险色 | 必须填满侧滑宽高；胶囊按钮会改变露出区域与手势目标 |
@@ -281,7 +281,7 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 
 导航滚动监听统一由 HyperNavBarPage.scrollState / HyperNavBarScrollScope 管理，Navbar 自动读取；消费页面不得重复声明导航专用 derivedStateOf、snapshotFlow 或 scrolledUnder 判断。库测量实际导航区高度，顶部净空放进滚动内容；主滚动状态保留在容器，嵌套列表不代替主状态。
 
-TabBar 尺寸由库统一管理：默认内容高度 56dp，悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp，字体扩展仅在组件内处理。业务页面不覆写高度；并排入口在共同 Row 中布局，正文采用宿主实际测量的底部净空。
+TabBar 尺寸由库按形态管理：`type = "single"` 是固定直径 48dp 的独立圆形动作入口；`type = "multiple"` 的按钮组（悬浮或贴底）默认内容高度 56dp，只有按钮组按标签字体在库内扩展高度。单独入口必须比按钮组小，禁止为“统一高度”将 single 改成 56dp，也禁止业务页面通过 size、height 或缩放实现 48dp。并排时放在共同 Row 中垂直居中，保留各自默认尺寸；悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp。正文采用宿主实测底部净空，不按上述默认尺寸估算占位。
 
 按需安全区统一使用 HyperSafeArea（Top / Bottom）。根画布继续全面屏；竖屏底部取导航区／缺口与库内最小 20dp 的最大值，横屏只保留实际系统区，同侧嵌套只消费一次。输入法只扩展自身面板底部，不处理宿主 IME Insets；页面不得自行复制安全区高度。
 

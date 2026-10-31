@@ -172,6 +172,7 @@ fun TrailingActionTabBarDemo() {
         Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
             HyperText("当前：${labels[selected]} · 打开 $actionCount 次")
         }
+        // 48dp 单动作与 56dp 按钮组各用库默认规格，并排居中，不覆写尺寸。
         Row(Modifier.fillMaxWidth().padding(HyperTabBarDefaults.FloatingMargin),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically) {
