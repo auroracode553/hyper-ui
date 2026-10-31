@@ -33,6 +33,8 @@ HyperText("正文")
 
 设置有限 maxLines 时，未指定 overflow 默认显示省略号；未限制行数时默认裁切。显式 overflow 优先。
 
+不需要文本布局结果时，`onTextLayout` 保持默认 null；需要布局信息时显式传入回调，回调时机由 BasicText 管理。
+
 **状态归属**
 
 显式 style、fontSize、fontWeight、lineHeight 会覆盖参考默认排版。
@@ -64,7 +66,7 @@ fun HyperText(
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
-    onTextLayout: (TextLayoutResult) -> Unit = {},
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     style: TextStyle? = null
 )
 ```
@@ -88,5 +90,5 @@ fun HyperText(
 | softWrap | Boolean | 否 | true | 是否允许自动换行。 |
 | maxLines | Int | 否 | Int.MAX_VALUE | 允许显示的最大行数。 |
 | minLines | Int | 否 | 1 | 最少占用的文本行数。 |
-| onTextLayout | (TextLayoutResult) -&gt; Unit | 否 | {} | 获取测量后的文本布局结果。 |
+| onTextLayout | ((TextLayoutResult) -&gt; Unit)? | 否 | null | 按需获取文本布局结果；不观察布局时保留 null，使用普通字符串布局路径。 |
 | style | TextStyle? | 否 | null | 显式文本样式；null 继承当前插槽或字号排版。 |

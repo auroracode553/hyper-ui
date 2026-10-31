@@ -64,7 +64,7 @@ HyperThemeConfig 默认跟随系统亮暗，material 为 HyperMaterial.Solid。H
 
 hyperNoRippleClickable 在 Initial 指针阶段观察按下，即使位于滚动容器中也立即反馈；业务点击仍由 clickable / combinedClickable 处理。不能仅保留视觉动画而删掉点击、取消和长按生命周期。不要把 Flutter 特有的实现分支写成本端已经具备的机制。
 
-HyperText 独立使用为 14sp、行高 1.4；继承 LocalHyperTextStyle，因此按钮和其他插槽内会使用宿主字号。HyperIcon 继承 LocalHyperIconSize，独立基准为 24dp；显式 Modifier 尺寸也参与约束。不能为了“统一图标”删掉按钮内的局部尺寸。
+HyperText 的 onTextLayout 默认 null，仅显式观察时创建完整文本布局结果，默认样式与回调时机仍由现有排版和 BasicText 管理。HyperText 独立使用为 14sp、行高 1.4；继承 LocalHyperTextStyle，因此按钮和其他插槽内会使用宿主字号。HyperIcon 继承 LocalHyperIconSize，独立基准为 24dp；显式 Modifier 尺寸也参与约束。不能为了“统一图标”删掉按钮内的局部尺寸。
 
 ## 内容卡片与导航维护规则
 

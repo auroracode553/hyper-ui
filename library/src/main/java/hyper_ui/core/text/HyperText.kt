@@ -37,7 +37,7 @@ fun HyperText(
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
-    onTextLayout: (TextLayoutResult) -> Unit = {},
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     style: TextStyle? = null
 ) {
     val resolvedStyle = style ?: LocalHyperTextStyle.current
@@ -63,6 +63,7 @@ fun HyperText(
             lineHeight = lineHeight
         )
     )
+    // 无布局观察时保留 BasicText 的普通字符串快路径；显式回调仍取得完整布局结果。
     BasicText(
         text = text,
         modifier = modifier,

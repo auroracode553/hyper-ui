@@ -216,6 +216,8 @@ dependencies {
 
 如果只使用裸 AAR，需要调用方自行补齐 Compose 基础依赖；推荐优先使用 Maven 方式，让 Gradle 读取 POM 中的依赖信息。
 
+HyperText 默认不注册文本布局回调；`onTextLayout = null` 保留普通字符串布局路径，需要测量结果时再传入回调，字体、截断和插槽继承规则保持一致。
+
 ## 最小使用示例
 
 ```kotlin

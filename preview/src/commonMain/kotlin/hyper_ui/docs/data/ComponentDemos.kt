@@ -29,7 +29,7 @@ data class ComponentDemo(
 
 /** 聚合稳定 Preview ID；分组示例同步参考展示结构，页面示例自行滚动，普通示例由统一视口滚动。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
-    addAll(basicComponentDemos()) // button 使用 content 主体插槽，默认外观与状态对齐 Flutter。
+    addAll(basicComponentDemos()) // HyperText 按需观察布局，默认保留普通字符串路径； button 使用 content 主体插槽，默认外观与状态对齐 Flutter。
     addAll(formComponentDemos()) // 日期共用正式网格；Checkbox/Radio/Switch 直接展示无卡片的默认标签行。
     addAll(containerComponentDemos()) // 按需安全区共用顶部几何和底部最小留白； 内容表面共用无普通边框与双层阴影，选中强调边界保留。
     addAll(navigationComponentDemos()) // 独立滚动渐变与 Navbar 共用实现；TabBar 展示 48dp 单动作与 56dp 按钮组。

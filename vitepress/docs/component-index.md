@@ -14,7 +14,7 @@ HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读�
 
 | 组件 | 用途 |
 | --- | --- |
-| [HyperText](components/basic/hyper-text.md) | 12 / 14 / 18sp 文字 |
+| [HyperText](components/basic/hyper-text.md) | 继承宿主排版，按需观察布局结果 |
 | [HyperIcon](components/basic/hyper-icon.md) | 18 / 24 / 32dp 图标与插槽继承 |
 | [HyperDivider](components/basic/hyper-divider.md) | 实线、虚线和方向缩进 |
 | [HyperButton](components/basic/hyper-button.md) | 默认白色描边；type 控制 filled/icon，color/colorStyle 控制配色；预览分组与 Flutter 一致，禁用态保留单个示例 |
