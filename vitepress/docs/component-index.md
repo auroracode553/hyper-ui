@@ -29,7 +29,7 @@ HyperButton 的默认、filled、icon 统一使用内部共用玻璃样式与按
 
 | 组件 | 用途 |
 | --- | --- |
-| [HyperTextField](components/form/hyper-text-field.md) | 文本、密码和多行输入 |
+| [HyperTextField](components/form/hyper-text-field.md) | 16dp 圆角矩形的文本、密码和多行输入 |
 | [HyperSwitch](components/form/hyper-switch.md) | 52×32dp 开关、28dp 静止玻璃滑块；与 Button 共用玻璃轨道，弹性扩张、速度形变、Ambient 和拖动吸附，plain 标签行不附带卡片 |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选；plain 标签行不附带卡片 |
 | [HyperRadio](components/form/hyper-radio.md) | 单选；标签行承载点击，展示圆环不叠加触摸留白 |
@@ -88,7 +88,7 @@ HyperButton 的默认、filled、icon 统一使用内部共用玻璃样式与按
 | [HyperSpeedPanel](components/feedback/hyper-speed-panel.md) | 播放速度面板 |
 | [HyperSpeedScale](components/feedback/hyper-speed-scale.md) | 播放速度刻度 |
 | [HyperPopover](components/feedback/hyper-popover.md) | visible / onClose 受控，child 自行触发；默认宽 180dp，width 可显式指定、maxWidth 限制上限；scrollable 可交由有界子列表滚动 |
-| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 与 Flutter 共用视觉规则：420dp 最大宽、20dp 弹层外间距、28dp 圆角、24dp 内容边距；统一更新流程与状态预览 |
+| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 与 Flutter 共用视觉规则：420dp 最大宽、20dp 弹层外间距、216dp 圆角、24dp 内容边距；统一更新流程与状态预览 |
 
 统一材质、尺寸和 API 约定见 [样式对照](style-reference.md)。
 

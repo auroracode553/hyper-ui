@@ -20,7 +20,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -258,7 +257,8 @@ object HyperTextFieldDefaults {
     /** 无附加插槽时的默认字号行高与内边距总和；实际高度由内容测量。 */
     // 参考字体行高 20.8dp + 上下各 9dp；轮廓不增加布局尺寸。
     val MinHeight = 38.8.dp
-    val Shape: Shape = RoundedCornerShape(20.dp)
+    /** 单行与多行共用的字段轮廓，不随输入高度扩展为胶囊。 */
+    val Shape: Shape = HyperStyleDefaults.Shapes.small
     val ContentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 18.dp, vertical = 9.dp)
     fun contentPadding(multiline: Boolean = false): androidx.compose.foundation.layout.PaddingValues =
         androidx.compose.foundation.layout.PaddingValues(

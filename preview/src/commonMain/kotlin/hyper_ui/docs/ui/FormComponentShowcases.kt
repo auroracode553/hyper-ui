@@ -184,6 +184,7 @@ fun CheckboxDemo() {
 
 @Composable
 fun TextFieldDemo() {
+    // 所有字段使用库内默认 16dp 圆角，覆盖单行、多行及可切换状态。
     var value by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("password") }
     var amount by remember { mutableStateOf("128") }

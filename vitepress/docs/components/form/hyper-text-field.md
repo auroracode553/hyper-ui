@@ -31,7 +31,7 @@ maxLength 和 showWordLimit 当前按 UTF-16 单元截断与计数；emoji 或�
 
 **样式约定**
 
-输入框圆角 20dp。字号统一为 16sp、行高 1.3，横向 padding 18dp，纵向 9dp。textarea 上下各多 3dp。支持 text/search/password/textarea/email/url/number/tel。聚焦轮廓 1.5dp，普通 1dp。
+输入框默认使用 16dp 圆角矩形，单行和 textarea 共用同一轮廓，圆角不随行数或状态变化。圆角沿用库内 small 圆角令牌，与选择和下拉字段保持同一轮廓体系。字号统一为 16sp、行高 1.3，横向 padding 18dp，纵向 9dp。textarea 上下各多 3dp。支持 text/search/password/textarea/email/url/number/tel。聚焦轮廓 1.5dp，普通 1dp。
 
 Preview 使用参考项目的外部标签分组；已经有外部标题时无需重复传入 label。金额示例保留标签插槽，并同时展示前后缀与内置清空操作。
 

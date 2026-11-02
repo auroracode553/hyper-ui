@@ -30,7 +30,7 @@ data class ComponentDemo(
 /** 聚合稳定 Preview ID；分组示例同步参考展示结构，页面示例自行滚动，普通示例由统一视口滚动。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos()) // Button 使用完整文字行框与共用玻璃样式，示例覆盖中英文、图文及加载态中心线。
-    addAll(formComponentDemos()) // Checkbox/Radio/DatePicker 复用分层玻璃与原有状态；Switch 为 52×32dp/28dp、内侧 2dp，核对弹性、速度形变、拖动与 Ambient；Slider 保留 20dp。
+    addAll(formComponentDemos()) // TextField 单行与多行共用 16dp 圆角；Checkbox/Radio/DatePicker 复用分层玻璃与原有状态；Switch 为 52×32dp/28dp、内侧 2dp，核对弹性、速度形变、拖动与 Ambient；Slider 保留 20dp。
     addAll(containerComponentDemos()) // HyperColorPicker 展示连续调色板，HyperBackground 提供静态渐变；按需安全区与内容表面的展示规则保持一致。
     addAll(navigationComponentDemos()) // Tabs 使用玻璃轨道与位置弹簧，Drawer 保留贴边全高；TabBar 支持 2–5 项、左右 12dp 留白，48dp/56dp 规格保持不变，展示固定玻璃、整栏按压舒展、镜片回弹、拖动回正与松手提交。
     addAll(listComponentDemos()) // HyperGroupedList 与设置菜单共用标题样式；HyperSpacing 由页面消费一次；页面列表无卡片。

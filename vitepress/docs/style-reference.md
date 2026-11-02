@@ -118,7 +118,7 @@ HyperNavBar 与 HyperScrollGradient 只绘制主题画布色的滚动渐变，�
 | HyperIcon | 独立使用 24dp，插槽图标另定 | 继承局部图标尺寸，使用 Lucide 库图标 |
 | HyperDivider | 1dp；虚线 4dp + 4dp | type、axis、indent/endIndent/length |
 | HyperButton | 高 38dp，radius 19dp | 字号 13sp；标签图标 17dp、纯图标 20dp |
-| HyperTextField | radius 20；字号 16sp；padding 18×9dp | 1dp 普通轮廓、1.5dp 聚焦；多行纵向 +3dp |
+| HyperTextField | 单行与多行均为 radius 16dp 的圆角矩形；字号 16sp；padding 18×9dp | 圆角不随行数或状态变化；1dp 普通轮廓、1.5dp 聚焦；多行纵向 +3dp |
 | HyperCheckbox | 44dp 触摸、21dp 方框、radius 7、轮廓 1.5 | nullable 三态、勾 15dp、160ms 状态动画 |
 | HyperRadio | 独立交互 44dp 触摸、展示 21dp 圆环、轮廓 1.5 / 6 | 标签行最小 46dp，不叠加触摸留白；160ms 选中颜色和环宽动画 |
 | HyperSwitch | 52×32、无边框、内侧偏移 2；静止滑块 28dp、行程 20dp | 主题色/中性玻璃轨道，复用 Button 表面；1.5 倍双轴弹性、速度形变与 Ambient；拖动松手提交 |

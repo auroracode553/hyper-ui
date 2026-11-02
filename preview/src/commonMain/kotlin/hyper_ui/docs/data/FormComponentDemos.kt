@@ -106,14 +106,14 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "text_field",
         group = GROUP_FORM,
         title = "HyperTextField",
-        description = "分组呈现基础清空、密码显隐、金额前后缀和多行计数；尺寸、禁用、只读与错误状态可操作。",
+        description = "16dp 圆角输入框，分组呈现基础清空、密码显隐、金额前后缀和多行计数；聚焦、禁用、只读与错误状态可操作。",
         code = """
             HyperTextField(value, { value = it }, clearable = true,
                 placeholder = { HyperText("请输入内容") })
             HyperTextField(password, { password = it }, type = "password", showPasswordToggle = true)
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("尺寸", "size", "14/16/18sp；圆角 20dp，padding 按档位联动"),
+            DemoVariant("默认规格", "HyperTextFieldDefaults.Shape / textStyle", "单行与多行均为 16dp 圆角，16sp 字号，padding 18×9dp；多行纵向 +3dp"),
             DemoVariant("聚焦", "inputModifier / interactionSource", "即时 1.5dp 主题描边，无额外阴影"),
             DemoVariant("状态", "enabled / readOnly / isError", "禁用、只读与错误可切换"),
             DemoVariant("内置操作", "clearable / showPasswordToggle", "30dp 控件、18dp Lucide 图标"),
