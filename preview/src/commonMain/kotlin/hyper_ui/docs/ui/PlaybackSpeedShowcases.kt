@@ -22,26 +22,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.HyperButton
-import hyper_ui.HyperPlaybackSpeedPanelDefaults
-import hyper_ui.HyperPlaybackSpeedPanelOverlay
-import hyper_ui.HyperPlaybackSpeedScale
-import hyper_ui.HyperPlaybackSpeedScaleDefaults
+import hyper_ui.HyperSpeedPanelDefaults
+import hyper_ui.HyperSpeedPanelOverlay
+import hyper_ui.HyperSpeedScale
+import hyper_ui.HyperSpeedScaleDefaults
 
 @Composable
 fun PlaybackSpeedScaleDemo() {
     var value by remember { mutableStateOf(2f) }
     var useCustomColors by remember { mutableStateOf(false) }
-    val options = HyperPlaybackSpeedScaleDefaults.SpeedOptions
+    val options = HyperSpeedScaleDefaults.SpeedOptions
     val selectedIndex = options.indexOf(value).coerceAtLeast(0)
     val scaleColors = if (useCustomColors) {
-        HyperPlaybackSpeedScaleDefaults.colors(
+        HyperSpeedScaleDefaults.colors(
             containerColor = Color(0.12f, 0.10f, 0.18f, 0.96f),
             activeTrackColor = Color(0.62f, 0.48f, 1f, 0.88f),
             selectedTickColor = Color(0.78f, 0.70f, 1f, 1f),
             selectedLabelColor = Color(0.78f, 0.70f, 1f, 1f)
         )
     } else {
-        HyperPlaybackSpeedScaleDefaults.colors()
+        HyperSpeedScaleDefaults.colors()
     }
 
     Column(
@@ -49,7 +49,7 @@ fun PlaybackSpeedScaleDemo() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        HyperPlaybackSpeedScale(
+        HyperSpeedScale(
             value = value,
             colors = scaleColors
         )
@@ -89,12 +89,12 @@ fun PlaybackSpeedPanelDemo() {
     var useCustomColors by remember { mutableStateOf(false) }
     var feedback by remember { mutableStateOf("拖动滑块可实时更新速度") }
     val panelColors = if (useCustomColors) {
-        HyperPlaybackSpeedPanelDefaults.colors(
+        HyperSpeedPanelDefaults.colors(
             containerColor = Color(0.12f, 0.10f, 0.18f, 0.96f),
             accentColor = Color(0.62f, 0.48f, 1f, 1f)
         )
     } else {
-        HyperPlaybackSpeedPanelDefaults.colors()
+        HyperSpeedPanelDefaults.colors()
     }
 
     Box(
@@ -123,7 +123,7 @@ fun PlaybackSpeedPanelDemo() {
                 fontSize = 13.sp
             )
         }
-        HyperPlaybackSpeedPanelOverlay(
+        HyperSpeedPanelOverlay(
             visible = panelVisible,
             value = value,
             onChanged = { speed ->

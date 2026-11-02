@@ -2,7 +2,7 @@
 description: 显示电量与充电状态，支持百分比文字和自定义配色。
 ---
 
-# HyperBatteryIndicator
+# HyperBattery
 
 显示电量与充电状态，支持百分比文字和自定义配色。
 
@@ -10,7 +10,7 @@ description: 显示电量与充电状态，支持百分比文字和自定义配�
 
 ## 交互示例
 
-<WasmPreview demo="battery_indicator" title="HyperBatteryIndicator 交互预览" />
+<WasmPreview demo="battery_indicator" title="HyperBattery 交互预览" />
 
 ## 使用方式
 
@@ -21,7 +21,7 @@ description: 显示电量与充电状态，支持百分比文字和自定义配�
 val batteryState by rememberHyperBatteryState()
 
 if (batteryState.isAvailable) {
-    HyperBatteryIndicator(
+    HyperBattery(
         percentage = batteryState.percentage,
         charging = batteryState.isCharging,
         contentDescription = "电量 ${batteryState.percentage}%"
@@ -41,21 +41,21 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 
 ## 公开 API
 
-### HyperBatteryIndicator
+### HyperBattery
 
 <details class="component-doc__details">
 <summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
-fun HyperBatteryIndicator(
+fun HyperBattery(
     percentage: Int,
     charging: Boolean,
     modifier: Modifier = Modifier,
     showPercentage: Boolean = true,
     contentDescription: String? = null,
-    shape: Shape = HyperBatteryIndicatorDefaults.Shape,
-    colors: HyperBatteryIndicatorColors = HyperBatteryIndicatorDefaults.colors()
+    shape: Shape = HyperBatteryDefaults.Shape,
+    colors: HyperBatteryColors = HyperBatteryDefaults.colors()
 )
 ```
 
@@ -68,5 +68,5 @@ fun HyperBatteryIndicator(
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | showPercentage | Boolean | 否 | true | 是否显示电量百分比文字。 |
 | contentDescription | String? | 否 | null | 无障碍内容描述。 |
-| shape | Shape | 否 | HyperBatteryIndicatorDefaults.Shape | 组件容器的形状。 |
-| colors | HyperBatteryIndicatorColors | 否 | HyperBatteryIndicatorDefaults.colors() | 组件各状态的颜色配置。 |
+| shape | Shape | 否 | HyperBatteryDefaults.Shape | 组件容器的形状。 |
+| colors | HyperBatteryColors | 否 | HyperBatteryDefaults.colors() | 组件各状态的颜色配置。 |

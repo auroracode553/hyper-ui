@@ -128,8 +128,7 @@ data class HyperShapes(
 
 private val LocalHyperTypography = staticCompositionLocalOf { HyperTypography() }
 private val LocalHyperShapes = staticCompositionLocalOf { HyperShapes() }
-private val LocalHyperGlass = staticCompositionLocalOf { HyperGlassTokens.forMaterial(false, HyperMaterial.Solid) }
-private val LocalHyperMaterial = staticCompositionLocalOf { HyperMaterial.Solid }
+private val LocalHyperSurfaces = staticCompositionLocalOf { HyperSurfaceTokens.light() }
 
 /** 全局内容色：替代 系统内容色。 */
 val LocalHyperContentColor = staticCompositionLocalOf { HyperStyleDefaults.LightPrimaryText }
@@ -144,8 +143,6 @@ fun HyperThemeConfig(
     darkTheme: Boolean = isSystemInDarkTheme(),
     typography: HyperTypography = HyperStyleDefaults.Typography,
     shapes: HyperShapes = HyperStyleDefaults.Shapes,
-    material: HyperMaterial = HyperMaterial.Solid,
-    glass: HyperGlassTokens = HyperGlassTokens.forMaterial(darkTheme, material),
     useSystemSafeArea: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -163,8 +160,7 @@ fun HyperThemeConfig(
         LocalHyperUseSystemSafeArea provides useSystemSafeArea,
         LocalHyperTypography provides typography,
         LocalHyperShapes provides shapes,
-        LocalHyperGlass provides glass,
-        LocalHyperMaterial provides material,
+        LocalHyperSurfaces provides if (darkTheme) HyperSurfaceTokens.dark() else HyperSurfaceTokens.light(),
         LocalHyperContentColor provides defaultContentColor,
         LocalHyperTextStyle provides typography.bodyMedium.copy(lineHeight = 19.6.sp),
         content = content
@@ -172,13 +168,9 @@ fun HyperThemeConfig(
 }
 
 object HyperTheme {
-    val material: HyperMaterial
+    internal val surfaces: HyperSurfaceTokens
         @Composable @ReadOnlyComposable
-        get() = LocalHyperMaterial.current
-
-    val glass: HyperGlassTokens
-        @Composable @ReadOnlyComposable
-        get() = LocalHyperGlass.current
+        get() = LocalHyperSurfaces.current
 
     val colors: HyperThemeColors
         @Composable @ReadOnlyComposable
@@ -257,7 +249,7 @@ object HyperColors {
 
     val fieldContainer: Color
         @Composable @ReadOnlyComposable
-        get() = hyperGlass.surfaceSubtle
+        get() = hyperSurfaces.surfaceSubtle
 
     val elevatedContainer: Color
         @Composable @ReadOnlyComposable
@@ -265,7 +257,7 @@ object HyperColors {
 
     val disabledContainer: Color
         @Composable @ReadOnlyComposable
-        get() = hyperGlass.controlTrack
+        get() = hyperSurfaces.controlTrack
 
     val primaryText: Color
         @Composable @ReadOnlyComposable

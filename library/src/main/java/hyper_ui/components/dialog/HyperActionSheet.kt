@@ -35,7 +35,7 @@ fun HyperActionSheet(
     val currentOnClose by rememberUpdatedState(onClose)
     if (!visible && progress == 0f) return
     val dismiss = { if (visible) currentOnClose() }
-    val glass = hyperGlass
+    val glass = hyperSurfaces
     HyperDialogHost(onDismissRequest = dismiss, dismissOnBackPress = visible) {
         BoxWithConstraints(Modifier.fillMaxSize().imePadding()) {
             Box(Modifier.fillMaxSize()
@@ -52,8 +52,7 @@ fun HyperActionSheet(
                 .hyperFrostedSurface(
                     containerColor = glass.surfaceStrong,
                     shape = RoundedCornerShape(30.dp),
-                    border = BorderStroke(1.dp, glass.border),
-                    blur = glass.blurStrong
+                    border = BorderStroke(1.dp, glass.border)
                 )
                 .pointerInput(visible) {
                     // 注册整块面板命中；退出期间阻止操作正文，背景仍保持模态。

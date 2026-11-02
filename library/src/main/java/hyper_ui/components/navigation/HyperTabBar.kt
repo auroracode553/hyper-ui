@@ -2,7 +2,7 @@
 package hyper_ui
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hyper_ui.core.interaction.hyperNoRippleClickable
+import kotlin.math.roundToInt
 
 class HyperTabBarItemScope internal constructor(val selected: Boolean)
 
@@ -60,11 +61,14 @@ fun <T> HyperTabBar(
     val height = if (type == "single") HyperTabBarDefaults.SingleDiameter else
         maxOf(HyperTabBarDefaults.Height, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-    var dragIndex by remember(items.size, selectedIndex == null, floating) { mutableStateOf<Int?>(null) }
+    var dragPosition by remember(items.size, selectedIndex == null, floating, rtl) { mutableStateOf<Float?>(null) }
+    var pressed by remember { mutableStateOf(false) }
+    val pressProgress = animateFloatAsState(if (pressed) 1f else 0f,
+        spring(dampingRatio = 1f, stiffness = 1000f), label = "HyperTabBarGlassPress")
     val logicalSelected = selectedIndex
-    val visualSelectedIndex = dragIndex ?: logicalSelected?.let { if (rtl) items.lastIndex - it else it } ?: 0
-    val position by animateFloatAsState(visualSelectedIndex.toFloat(), tween(HyperMotionSpec.StateDuration,
-        easing = HyperMotionSpec.EaseOutCubic), label = "HyperTabBarSelection")
+    val visualSelectedIndex = dragPosition ?: logicalSelected?.let { if (rtl) items.lastIndex - it else it }?.toFloat() ?: 0f
+    val position by animateFloatAsState(visualSelectedIndex, spring(dampingRatio = 1f, stiffness = 1000f),
+        label = "HyperTabBarSelection")
     val latestLogicalSelected by rememberUpdatedState(logicalSelected)
     val latestOnClick by rememberUpdatedState(onChanged)
     val latestItemEnabled by rememberUpdatedState(itemEnabled)
@@ -76,7 +80,9 @@ fun <T> HyperTabBar(
             val item = items.single()
             val enabled = itemEnabled(item)
             Box(Modifier.size(height)
-                .hyperFrostedSurface(hyperGlass.surface, RoundedCornerShape(height / 2))
+                .hyperObservePress(enabled) { pressed = it }
+                .hyperControlSurface(RoundedCornerShape(height / 2), HyperControlSurfaceRole.Navigation,
+                    progress = { pressProgress.value })
                 .alpha(if (enabled) 1f else 0.4f)
                 .hyperNoRippleClickable(enabled = enabled, onClick = { onChanged(0) }),
                 contentAlignment = Alignment.Center) {
@@ -93,52 +99,64 @@ fun <T> HyperTabBar(
                     fontSize = 10.sp, lineHeight = 10.sp, fontWeight = FontWeight.SemiBold)
             }
         } else {
+            val panelSource = rememberHyperGlassSource()
+            val labelsSource = rememberHyperGlassSource()
             val surfaceModifier = if (floating) {
                 Modifier.width(itemWidth * items.size + 8.dp)
-                    .hyperFrostedSurface(hyperGlass.surfaceStrong, RoundedCornerShape(height / 2), blur = hyperGlass.blurStrong)
             } else Modifier.fillMaxWidth()
             val inset = if (floating) 4.dp else 0.dp
             BoxWithConstraints(surfaceModifier.height(height)
+                .hyperObservePress { pressed = it }
                 .pointerInput(items, rtl, floating, selectedIndex == null) {
                     // 动作模式没有选中项，不将横向滑动转换为后退、菜单等业务操作。
                     if (selectedIndex == null) return@pointerInput
-                    fun visualIndex(x: Float): Int = ((x - inset.toPx()) / (size.width - inset.toPx() * 2).coerceAtLeast(1f) * items.size)
-                        .toInt().coerceIn(0, items.lastIndex)
+                    fun previewPosition(x: Float) {
+                        val next = ((x - inset.toPx()) / (size.width - inset.toPx() * 2).coerceAtLeast(1f)
+                            * items.size - 0.5f).coerceIn(0f, items.lastIndex.toFloat())
+                        val visual = next.roundToInt()
+                        val logical = if (rtl) items.lastIndex - visual else visual
+                        if (latestItemEnabled(items[logical])) dragPosition = next
+                    }
                     detectHorizontalDragGestures(
-                        onDragStart = { dragIndex = visualIndex(it.x) },
-                        onHorizontalDrag = { change, _ -> dragIndex = visualIndex(change.position.x); change.consume() },
-                        onDragCancel = { dragIndex = null },
+                        onDragStart = { previewPosition(it.x) },
+                        onHorizontalDrag = { change, _ -> previewPosition(change.position.x); change.consume() },
+                        onDragCancel = { dragPosition = null },
                         onDragEnd = {
-                            dragIndex?.let { visual ->
+                            dragPosition?.roundToInt()?.let { visual ->
                                 val logical = if (rtl) items.lastIndex - visual else visual
                                 if (logical != latestLogicalSelected && latestItemEnabled(items[logical])) latestOnClick(logical)
                             }
-                            dragIndex = null
+                            dragPosition = null
                         }
                     )
                 }) {
                 val cellWidth = (maxWidth - inset * 2) / items.size
-                if (selectedIndex != null) Box(Modifier.absoluteOffset(x = inset + 1.dp + cellWidth * position, y = 4.dp)
-                    .width((cellWidth - 2.dp).coerceAtLeast(0.dp)).height(height - 8.dp)
-                    .background(hyperGlass.selection, RoundedCornerShape(height / 2)))
-                Row(Modifier.fillMaxSize().padding(horizontal = inset)) {
-                    items.forEachIndexed { index, item ->
-                        val selected = index == selectedIndex
-                        val enabled = itemEnabled(item)
-                        Box(Modifier.weight(1f).fillMaxHeight()
-                            .alpha(if (enabled) 1f else 0.4f)
-                            .hyperNoRippleClickable(enabled = enabled, role = if (selectedIndex == null) Role.Button else Role.Tab, pressedScale = 1f,
-                                onClick = { if (index != selectedIndex) onChanged(index) })
-                            .then(if (selectedIndex == null) Modifier else Modifier.semantics { this.selected = selected }), contentAlignment = Alignment.Center) {
-                            CompositionLocalProvider(
-                                LocalHyperContentColor provides if (selected) color else HyperColors.primaryText,
-                                LocalHyperTextStyle provides labelStyle.copy(lineHeight = 12.96.sp,
-                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium),
-                                LocalHyperIconSize provides 23.dp
-                            ) { HyperTabBarItemScope(selected).itemContent(item) }
+                Box(Modifier.fillMaxSize().hyperGlassSource(panelSource)
+                    .then(if (floating) Modifier.hyperControlSurface(RoundedCornerShape(height / 2),
+                        HyperControlSurfaceRole.Navigation) else Modifier)) {
+                    Row(Modifier.fillMaxSize().hyperGlassSource(labelsSource, tint = color).padding(horizontal = inset)) {
+                        items.forEachIndexed { index, item ->
+                            val selected = index == selectedIndex
+                            val enabled = itemEnabled(item)
+                            Box(Modifier.weight(1f).fillMaxHeight()
+                                .alpha(if (enabled) 1f else 0.4f)
+                                .hyperNoRippleClickable(enabled = enabled, role = if (selectedIndex == null) Role.Button else Role.Tab, pressedScale = 1f,
+                                    onClick = { if (index != selectedIndex) onChanged(index) })
+                                .then(if (selectedIndex == null) Modifier else Modifier.semantics { this.selected = selected }), contentAlignment = Alignment.Center) {
+                                CompositionLocalProvider(
+                                    LocalHyperContentColor provides if (selected) color else HyperColors.primaryText,
+                                    LocalHyperTextStyle provides labelStyle.copy(lineHeight = 12.96.sp,
+                                        fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium),
+                                    LocalHyperIconSize provides 23.dp
+                                ) { HyperTabBarItemScope(selected).itemContent(item) }
+                            }
                         }
                     }
                 }
+                if (selectedIndex != null) Box(Modifier.absoluteOffset(x = inset + 1.dp + cellWidth * position, y = 4.dp)
+                    .width((cellWidth - 2.dp).coerceAtLeast(0.dp)).height(height - 8.dp)
+                    .hyperControlSurface(RoundedCornerShape(height / 2), HyperControlSurfaceRole.Selection,
+                        progress = { pressProgress.value }, sources = listOf(panelSource, labelsSource)))
             }
         }
     }

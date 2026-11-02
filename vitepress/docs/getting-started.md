@@ -46,7 +46,7 @@ abstract class AppActivity : ComponentActivity() {
 
 enableEdgeToEdge 处理透明状态栏与手势导航栏。应用自行选择亮暗主题时，在共用窗口配置处同步 SystemBarStyle，保持系统图标可读；不要逐页绘制系统栏色块。表单宿主处理键盘避让，具体控件或滚动末尾处理一次必要的系统安全区。
 
-`HyperThemeConfig` 提供主题色、成功色、排版、形状、material 材质档位和玻璃令牌；默认 material = HyperMaterial.Solid。颜色使用 `rgba`，不要写十六进制 `Color(0xFF...)`。
+`HyperThemeConfig` 提供主题色、成功色、深浅色、排版、形状与系统安全区策略，普通组件使用实色表面；TabBar、Slider、Switch、Dialog 固定使用组件内玻璃。颜色使用 `rgba`，不要写十六进制 `Color(0xFF...)`。
 
 ```kotlin
 @Composable
@@ -117,3 +117,118 @@ fun AppHome() {
 - `preview/`：文档交互示例和预览宿主，不是应用依赖。
 - `vitepress/`：文档站源码，不参与应用编译。
 - `hyper_ui.core`：组件内部工具包，不作为调用方 API。
+
+
+## 基础外观与安全区
+
+普通组件表面固定为实色，TabBar、Slider、Switch、Dialog 使用组件内固定玻璃。颜色、字体、形状与明暗模式由基础主题宿主提供。
+
+## HyperThemeConfig API / Props
+
+```kotlin
+@Composable
+fun HyperThemeConfig(
+    themeColor: Color = HyperStyleDefaults.DefaultThemeColor,
+    successColor: Color = HyperStyleDefaults.SuccessColor,
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    typography: HyperTypography = HyperStyleDefaults.Typography,
+    shapes: HyperShapes = HyperStyleDefaults.Shapes,
+    useSystemSafeArea: Boolean = false,
+    content: @Composable () -> Unit
+)
+```
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| themeColor | Color | 否 | HyperStyleDefaults.DefaultThemeColor | 品牌色 rgba(71, 111, 232) |
+| successColor | Color | 否 | HyperStyleDefaults.SuccessColor | 成功色 rgba(34, 197, 94) |
+| darkTheme | Boolean | 否 | isSystemInDarkTheme() | 浅/深色模式，默认跟随系统 |
+| typography | HyperTypography | 否 | HyperStyleDefaults.Typography | 主题字体与排版 |
+| shapes | HyperShapes | 否 | HyperStyleDefaults.Shapes | 通用形状；组件的专用圆角见各组件页 |
+| content | @Composable () -&gt; Unit | 是 | — | 使用该主题的子树 |
+| useSystemSafeArea | Boolean | 否 | false | 全局系统安全区；默认全面屏，不补状态栏、手势条及显示缺口留白，键盘避让独立保留 |
+
+Android Activity 在 setContent 前统一调用 [enableHyperEdgeToEdge()](components/tools/hyper-edge-to-edge.md)。组件通过 HyperTheme.systemSafeAreaInsets 读取主题策略，默认返回零 Insets；页面不得再重复添加根系统栏 padding；顶部交互保护使用 HyperNavBar 和固定顶部操作容器，不受此开关影响。
+
+
+## HyperTypography 配置 Props
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| headlineSmall | TextStyle | 否 | Default 字体，Medium，24sp / 32sp | 大标题 |
+| bodyLarge | TextStyle | 否 | Default 字体，Normal，16sp / 24sp，字距 0sp | 较大正文 |
+| bodyMedium | TextStyle | 否 | Default 字体，Normal，14sp / 20sp，字距 0sp | 正文基础样式 |
+| bodySmall | TextStyle | 否 | Default 字体，Normal，12sp / 16sp，字距 0sp | 辅助文字 |
+| titleLarge | TextStyle | 否 | Default 字体，Medium，22sp / 28sp，字距 0sp | 大标题基础 |
+| titleMedium | TextStyle | 否 | Default 字体，Medium，16sp / 24sp，字距 0sp | 标题基础 |
+| titleSmall | TextStyle | 否 | Default 字体，Medium，14sp / 20sp，字距 0sp | 小标题基础 |
+| labelLarge | TextStyle | 否 | Default 字体，Medium，14sp / 20sp，字距 0sp | 操作标签基础 |
+| labelMedium | TextStyle | 否 | Default 字体，Medium，12sp / 16sp，字距 0sp | 中标签基础 |
+| labelSmall | TextStyle | 否 | Default 字体，Medium，11sp / 16sp，字距 0sp | 小标签基础 |
+
+各组件会在基础字体族上应用参考字号和行高。主题默认 HyperText 正文为 14sp、19.6sp 行高。
+
+## HyperShapes 与 HyperThemeColors 配置 Props
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| extraSmall | Shape | 否 | RoundedCornerShape(7.dp) | 最小圆角 |
+| small | Shape | 否 | RoundedCornerShape(16.dp) | 小圆角 |
+| medium | Shape | 否 | RoundedCornerShape(24.dp) | 中圆角 |
+| large | Shape | 否 | RoundedCornerShape(28.dp) | 大圆角 |
+| themeColor | Color | 否 | HyperStyleDefaults.DefaultThemeColor | HyperThemeColors 品牌色 |
+| successColor | Color | 否 | HyperStyleDefaults.SuccessColor | HyperThemeColors 成功色 |
+
+## rgba API / Props
+
+```kotlin
+fun rgba(red: Int, green: Int, blue: Int, alpha: Float = 1f): Color
+```
+
+| 参数 | 类型 | 必填 | 默认值 | 作用 |
+| --- | --- | --- | --- | --- |
+| red | Int | 是 | — | 红分量，限制到 0..255 |
+| green | Int | 是 | — | 绿分量，限制到 0..255 |
+| blue | Int | 是 | — | 蓝分量，限制到 0..255 |
+| alpha | Float | 否 | 1f | 透明度，限制到 0..1 |
+
+也可用 Color(red, green, blue, alpha) 四个 Float 分量构造；禁止十六进制颜色构造。
+
+## 状态归属与平台
+
+调用方持有深浅色模式和品牌色。HyperTheme 的 colors、typography、shapes、isDark 为当前 Composition 的只读属性；HyperColors 的语义色也仅能在 Composable 中读取，不能缓存为全局变量。公开产品支持 Android 手机 320–430dp 竖屏，Desktop/Wasm 仅用于预览。
+
+具体默认尺寸见 [样式对照](style-reference.md)；组件签名见 [组件索引](component-index.md)。
+
+全面屏顶部布局：根系统安全区开关不影响顶部操作保护。标准 HyperNavBar 自动处理，自定义固定顶栏使用 Compose 窗口布局；正文首屏净空放在滚动内容内部，背景与滚动视口可覆盖状态栏。
+
+
+## HyperSpacing API
+
+公开包名为 hyper_ui。共用布局值不持有状态，也不会自动向组件插入边距。
+
+```kotlin
+object HyperSpacing {
+    val PageHorizontal: Dp = 14.dp
+    val PageVertical: Dp = 12.dp
+    val SectionVertical: Dp = 16.dp
+}
+```
+
+| 属性 | 类型 | 默认值 | 作用 |
+| --- | --- | --- | --- |
+| PageHorizontal | Dp | 14.dp | 页面内容、搜索与列表共用的水平留白；调用方在父容器或 contentPadding 中使用一次。 |
+| PageVertical | Dp | 12.dp | 设置页正文首尾留白，不含导航或系统安全区。 |
+| SectionVertical | Dp | 16.dp | 相邻完整设置分组之间的间距。 |
+
+```kotlin
+HyperList(contentPadding = PaddingValues(horizontal = HyperSpacing.PageHorizontal)) {
+    items(entries, key = { it.id }) { entry ->
+        HyperListTile(title = { HyperText(entry.title) })
+    }
+}
+```
+
+页面列表与 plain 行默认水平留白为 0dp，卡片内边距独立保留，不需要每个应用再定义相同数值。输入框内部文本间距、图标与文字间距以及垂直触控空间仍由各组件负责。示例与可操作的留白开关见 [HyperList](components/list/hyper-list.md)。
+
+卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。

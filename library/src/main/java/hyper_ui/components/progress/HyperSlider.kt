@@ -1,6 +1,9 @@
 /** 文件职责：提供支持连续、等距吸附与可配置分段标记的受控滑块。 */
 package hyper_ui
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -15,8 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absolutePadding
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -85,7 +86,7 @@ fun HyperSlider(
     thumbShape: Shape = HyperSliderDefaults.ThumbShape,
     colors: HyperSliderColors = HyperSliderDefaults.colors(),
     trackBorder: BorderStroke? = null,
-    thumbBorder: BorderStroke? = HyperSliderDefaults.thumbBorder()
+    thumbBorder: BorderStroke? = null
 ) {
     val valueRange = min..max
     val divisionCount = divisions ?: 0
@@ -105,6 +106,9 @@ fun HyperSlider(
     val currentOnValueChangeStarted by rememberUpdatedState(onChangeStart)
     val currentOnValueChangeFinished by rememberUpdatedState(onChangeEnd)
     var isDragging by remember { mutableStateOf(false) }
+    var pressed by remember { mutableStateOf(false) }
+    val pressProgress = animateFloatAsState(if (pressed) 1f else 0f,
+        spring(dampingRatio = 1f, stiffness = 1000f), label = "HyperSliderGlassPress")
     var interactionValue by remember { mutableStateOf(value) }
     fun dispatchValue(next: Float) { interactionValue = next; currentOnValueChange?.invoke(next) }
 
@@ -114,7 +118,9 @@ fun HyperSlider(
         valueRange.start
     }
     androidx.compose.runtime.SideEffect { if (!isDragging) interactionValue = coercedValue }
-    val valueFraction = valueToFraction(coercedValue, valueRange)
+    val animatedFraction by animateFloatAsState(valueToFraction(coercedValue, valueRange),
+        spring(dampingRatio = 1f, stiffness = 1000f), label = "HyperSliderPosition")
+    val valueFraction = if (isDragging) valueToFraction(coercedValue, valueRange) else animatedFraction
     val markerValues = remember(showSegmentMarkers, segmentValues, valueRange, divisionCount) {
         resolveSegmentMarkerValues(
             showSegmentMarkers = showSegmentMarkers,
@@ -209,6 +215,7 @@ fun HyperSlider(
             BoxWithConstraints(
                 modifier = Modifier.weight(1f)
                     .height(maxOf(minimumTouchHeight, thumbSize))
+                    .hyperObservePress(interactionEnabled) { pressed = it }
                     .then(interactionModifier)
                     .semantics {
                         if (!enabled) disabled()
@@ -223,7 +230,9 @@ fun HyperSlider(
                 contentAlignment = Alignment.CenterStart
             ) {
                 val availableTrackWidth = maxWidth
-                Box(Modifier.align(Alignment.Center).width(availableTrackWidth).height(trackHeight)
+                val trackSource = rememberHyperGlassSource()
+                val thumbSources = listOfNotNull(LocalHyperGlassSource.current) + trackSource
+                Box(Modifier.align(Alignment.Center).hyperGlassSource(trackSource).width(availableTrackWidth).height(trackHeight)
                     .hyperSurface(resolvedTrackColor, trackShape, border = trackBorder)) {
                     Box(Modifier.fillMaxHeight().fillMaxWidth(valueFraction)
                         .hyperSurface(resolvedActiveTrackColor, trackShape))
@@ -238,8 +247,10 @@ fun HyperSlider(
                 Box(Modifier.offset(x = (availableTrackWidth * valueFraction - thumbSize / 2)
                     .coerceIn(0.dp, (availableTrackWidth - thumbSize).coerceAtLeast(0.dp)))
                     .size(thumbSize)
-                    .dropShadow(thumbShape, Shadow(radius = 5.dp, color = hyperGlass.shadow))
-                    .hyperSurface(resolvedThumbColor, thumbShape, border = thumbBorder))
+                    .then(if (enabled) Modifier.hyperControlSurface(thumbShape, HyperControlSurfaceRole.Thumb,
+                        progress = { pressProgress.value }, containerColor = resolvedThumbColor,
+                        border = thumbBorder, sources = thumbSources)
+                    else Modifier.hyperSurface(resolvedThumbColor, thumbShape, border = thumbBorder)))
             }
         }
         if (showValue) HyperText(coercedValue.roundToInt().toString(),
@@ -270,7 +281,7 @@ object HyperSliderDefaults {
         val resolvedActiveTrackColor = resolveHyperContainerColor(activeTrackColor, accent)
         val defaultMarkerColor = HyperColors.primaryText.copy(alpha = 0.56f)
         return HyperSliderColors(
-            trackColor = resolveHyperContainerColor(trackColor, hyperGlass.controlTrack),
+            trackColor = resolveHyperContainerColor(trackColor, hyperSurfaces.controlTrack),
             activeTrackColor = resolvedActiveTrackColor,
             segmentMarkerColor = resolveHyperContainerColor(
                 segmentMarkerColor,
@@ -278,7 +289,7 @@ object HyperSliderDefaults {
             ),
             thumbColor = resolveHyperContainerColor(
                 thumbColor,
-                HyperColors.cardContainer
+                hyperControlContainer(HyperControlSurfaceRole.Thumb)
             ),
             disabledTrackColor = resolveHyperContainerColor(
                 disabledTrackColor,

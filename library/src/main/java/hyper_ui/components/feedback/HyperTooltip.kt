@@ -98,7 +98,7 @@ fun HyperTooltip(
                 modifier = Modifier
                     .hyperOverlayMotion(progress, beginScale = 0.97f)
                     .widthIn(max = maxWidth)
-                    .hyperFrostedSurface(hyperGlass.surfaceStrong, RoundedCornerShape(12.dp), blur = hyperGlass.blurStrong)
+                    .hyperFrostedSurface(hyperSurfaces.surfaceStrong, RoundedCornerShape(12.dp))
                     .padding(horizontal = 10.dp, vertical = 7.dp),
                 color = HyperColors.primaryText,
                 style = HyperTheme.typography.bodySmall.copy(fontSize = 12.sp, lineHeight = 15.6.sp),

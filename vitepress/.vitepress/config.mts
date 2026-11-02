@@ -56,7 +56,6 @@ export default defineConfig({
         items: [
           { text: '接入与最小配置', link: '/getting-started' },
           { text: 'Android 手机端规范', link: '/mobile-guidelines' },
-          { text: '主题配置', link: '/theme' },
           { text: '样式与功能基线', link: '/style-reference' },
           { text: '组件索引', link: '/component-index' }
         ]
@@ -108,7 +107,7 @@ export default defineConfig({
         text: '列表组件',
         items: [
           { text: 'List', link: '/components/list/hyper-list' },
-          { text: 'SectionedList', link: '/components/list/hyper-sectioned-list' },
+          { text: 'GroupedList', link: '/components/list/hyper-grouped-list' },
           { text: 'MenuGroup', link: '/components/list/hyper-menu-group' },
           { text: 'ListTile', link: '/components/list/hyper-list-tile' }
         ]
@@ -130,7 +129,7 @@ export default defineConfig({
           { text: 'Dialog', link: '/components/feedback/hyper-dialog' },
           { text: 'ActionSheet', link: '/components/feedback/hyper-action-sheet' },
           { text: 'AlertDialog', link: '/components/feedback/hyper-alert-dialog' },
-          { text: 'ThemeModeDialog', link: '/components/feedback/hyper-theme-mode-dialog' },
+          { text: 'ThemeDialog', link: '/components/feedback/hyper-theme-dialog' },
           { text: 'UpdateDialog', link: '/components/feedback/hyper-update-dialog' }
         ]
       },

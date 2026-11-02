@@ -2,7 +2,7 @@
 description: 组合倍速选择与快捷操作，播放行为由调用方执行。
 ---
 
-# HyperPlaybackSpeedPanel
+# HyperSpeedPanel
 
 组合倍速选择与快捷操作，播放行为由调用方执行。
 
@@ -10,7 +10,7 @@ description: 组合倍速选择与快捷操作，播放行为由调用方执行�
 
 ## 交互示例
 
-<WasmPreview demo="playback_speed_panel" title="HyperPlaybackSpeedPanel 交互预览" />
+<WasmPreview demo="playback_speed_panel" title="HyperSpeedPanel 交互预览" />
 
 ## 使用方式
 
@@ -21,13 +21,13 @@ description: 组合倍速选择与快捷操作，播放行为由调用方执行�
 var panelVisible by remember { mutableStateOf(false) }
 var playbackSpeed by remember { mutableStateOf(1f) }
 
-HyperPlaybackSpeedPanelOverlay(
+HyperSpeedPanelOverlay(
     visible = panelVisible,
     value = playbackSpeed,
     onChanged = { speed -> playbackSpeed = speed },
     onClose = { panelVisible = false },
     onCustomPressed = { customDialogVisible = true },
-    texts = HyperPlaybackSpeedPanelTexts(
+    texts = HyperSpeedPanelTexts(
         title = stringResource(R.string.playback_speed),
         customAction = stringResource(R.string.custom)
     )
@@ -46,14 +46,14 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 
 ## 公开 API
 
-### HyperPlaybackSpeedPanel
+### HyperSpeedPanel
 
 <details class="component-doc__details">
 <summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
-fun HyperPlaybackSpeedPanelOverlay(
+fun HyperSpeedPanelOverlay(
     visible: Boolean,
     value: Float,
     onChanged: (Float) -> Unit,
@@ -61,13 +61,13 @@ fun HyperPlaybackSpeedPanelOverlay(
     onCustomPressed: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     panelModifier: Modifier = Modifier,
-    texts: HyperPlaybackSpeedPanelTexts = HyperPlaybackSpeedPanelTexts(),
-    colors: HyperPlaybackSpeedPanelColors = HyperPlaybackSpeedPanelDefaults.colors(),
-    options: List<Float> = HyperPlaybackSpeedPanelDefaults.MajorSpeeds,
-    valueRange: ClosedFloatingPointRange<Float> = HyperPlaybackSpeedPanelDefaults.SliderRange,
-    steps: Int = HyperPlaybackSpeedPanelDefaults.SliderSteps,
-    defaultSpeed: Float = HyperPlaybackSpeedPanelDefaults.DefaultSpeed,
-    shape: Shape = HyperPlaybackSpeedPanelDefaults.Shape,
+    texts: HyperSpeedPanelTexts = HyperSpeedPanelTexts(),
+    colors: HyperSpeedPanelColors = HyperSpeedPanelDefaults.colors(),
+    options: List<Float> = HyperSpeedPanelDefaults.MajorSpeeds,
+    valueRange: ClosedFloatingPointRange<Float> = HyperSpeedPanelDefaults.SliderRange,
+    steps: Int = HyperSpeedPanelDefaults.SliderSteps,
+    defaultSpeed: Float = HyperSpeedPanelDefaults.DefaultSpeed,
+    shape: Shape = HyperSpeedPanelDefaults.Shape,
     leading: (@Composable BoxScope.() -> Unit)? = null,
     close: (@Composable BoxScope.() -> Unit)? = null,
     hintLeading: (@Composable BoxScope.() -> Unit)? = null,
@@ -76,19 +76,19 @@ fun HyperPlaybackSpeedPanelOverlay(
 )
 
 @Composable
-fun HyperPlaybackSpeedPanel(
+fun HyperSpeedPanel(
     value: Float,
     onChanged: (Float) -> Unit,
     onClose: () -> Unit,
     onCustomPressed: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
-    texts: HyperPlaybackSpeedPanelTexts = HyperPlaybackSpeedPanelTexts(),
-    colors: HyperPlaybackSpeedPanelColors = HyperPlaybackSpeedPanelDefaults.colors(),
-    options: List<Float> = HyperPlaybackSpeedPanelDefaults.MajorSpeeds,
-    valueRange: ClosedFloatingPointRange<Float> = HyperPlaybackSpeedPanelDefaults.SliderRange,
-    steps: Int = HyperPlaybackSpeedPanelDefaults.SliderSteps,
-    defaultSpeed: Float = HyperPlaybackSpeedPanelDefaults.DefaultSpeed,
-    shape: Shape = HyperPlaybackSpeedPanelDefaults.Shape,
+    texts: HyperSpeedPanelTexts = HyperSpeedPanelTexts(),
+    colors: HyperSpeedPanelColors = HyperSpeedPanelDefaults.colors(),
+    options: List<Float> = HyperSpeedPanelDefaults.MajorSpeeds,
+    valueRange: ClosedFloatingPointRange<Float> = HyperSpeedPanelDefaults.SliderRange,
+    steps: Int = HyperSpeedPanelDefaults.SliderSteps,
+    defaultSpeed: Float = HyperSpeedPanelDefaults.DefaultSpeed,
+    shape: Shape = HyperSpeedPanelDefaults.Shape,
     leading: (@Composable BoxScope.() -> Unit)? = null,
     close: (@Composable BoxScope.() -> Unit)? = null,
     hintLeading: (@Composable BoxScope.() -> Unit)? = null,
@@ -99,7 +99,7 @@ fun HyperPlaybackSpeedPanel(
 
 </details>
 
-### HyperPlaybackSpeedPanelOverlay
+### HyperSpeedPanelOverlay
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -110,20 +110,20 @@ fun HyperPlaybackSpeedPanel(
 | onCustomPressed | (() -&gt; Unit)? | 否 | null | 请求打开自定义速度设置。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | panelModifier | Modifier | 否 | Modifier | 播放速度面板的布局修饰符。 |
-| texts | HyperPlaybackSpeedPanelTexts | 否 | HyperPlaybackSpeedPanelTexts() | 组件内置文案的配置。 |
-| colors | HyperPlaybackSpeedPanelColors | 否 | HyperPlaybackSpeedPanelDefaults.colors() | 组件各状态的颜色配置。 |
-| options | List&lt;Float&gt; | 否 | HyperPlaybackSpeedPanelDefaults.MajorSpeeds | 可供选择的选项列表。 |
-| valueRange | ClosedFloatingPointRange&lt;Float&gt; | 否 | HyperPlaybackSpeedPanelDefaults.SliderRange | 可操作数值范围。 |
-| steps | Int | 否 | HyperPlaybackSpeedPanelDefaults.SliderSteps | 数值范围内的离散步数。 |
-| defaultSpeed | Float | 否 | HyperPlaybackSpeedPanelDefaults.DefaultSpeed | 重置操作使用的默认速度。 |
-| shape | Shape | 否 | HyperPlaybackSpeedPanelDefaults.Shape | 组件容器的形状。 |
+| texts | HyperSpeedPanelTexts | 否 | HyperSpeedPanelTexts() | 组件内置文案的配置。 |
+| colors | HyperSpeedPanelColors | 否 | HyperSpeedPanelDefaults.colors() | 组件各状态的颜色配置。 |
+| options | List&lt;Float&gt; | 否 | HyperSpeedPanelDefaults.MajorSpeeds | 可供选择的选项列表。 |
+| valueRange | ClosedFloatingPointRange&lt;Float&gt; | 否 | HyperSpeedPanelDefaults.SliderRange | 可操作数值范围。 |
+| steps | Int | 否 | HyperSpeedPanelDefaults.SliderSteps | 数值范围内的离散步数。 |
+| defaultSpeed | Float | 否 | HyperSpeedPanelDefaults.DefaultSpeed | 重置操作使用的默认速度。 |
+| shape | Shape | 否 | HyperSpeedPanelDefaults.Shape | 组件容器的形状。 |
 | leading | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
 | close | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 关闭图标插槽。 |
 | hintLeading | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 提示信息的前置图标插槽。 |
 | reset | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 重置操作的图标插槽。 |
 | customLeading | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 自定义速度操作的前置图标插槽。 |
 
-### HyperPlaybackSpeedPanel
+### HyperSpeedPanel
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -132,13 +132,13 @@ fun HyperPlaybackSpeedPanel(
 | onClose | () -&gt; Unit | 是 | — | 请求关闭时通知调用方更新可见状态。 |
 | onCustomPressed | (() -&gt; Unit)? | 否 | null | 请求打开自定义速度设置。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
-| texts | HyperPlaybackSpeedPanelTexts | 否 | HyperPlaybackSpeedPanelTexts() | 组件内置文案的配置。 |
-| colors | HyperPlaybackSpeedPanelColors | 否 | HyperPlaybackSpeedPanelDefaults.colors() | 组件各状态的颜色配置。 |
-| options | List&lt;Float&gt; | 否 | HyperPlaybackSpeedPanelDefaults.MajorSpeeds | 可供选择的选项列表。 |
-| valueRange | ClosedFloatingPointRange&lt;Float&gt; | 否 | HyperPlaybackSpeedPanelDefaults.SliderRange | 可操作数值范围。 |
-| steps | Int | 否 | HyperPlaybackSpeedPanelDefaults.SliderSteps | 数值范围内的离散步数。 |
-| defaultSpeed | Float | 否 | HyperPlaybackSpeedPanelDefaults.DefaultSpeed | 重置操作使用的默认速度。 |
-| shape | Shape | 否 | HyperPlaybackSpeedPanelDefaults.Shape | 组件容器的形状。 |
+| texts | HyperSpeedPanelTexts | 否 | HyperSpeedPanelTexts() | 组件内置文案的配置。 |
+| colors | HyperSpeedPanelColors | 否 | HyperSpeedPanelDefaults.colors() | 组件各状态的颜色配置。 |
+| options | List&lt;Float&gt; | 否 | HyperSpeedPanelDefaults.MajorSpeeds | 可供选择的选项列表。 |
+| valueRange | ClosedFloatingPointRange&lt;Float&gt; | 否 | HyperSpeedPanelDefaults.SliderRange | 可操作数值范围。 |
+| steps | Int | 否 | HyperSpeedPanelDefaults.SliderSteps | 数值范围内的离散步数。 |
+| defaultSpeed | Float | 否 | HyperSpeedPanelDefaults.DefaultSpeed | 重置操作使用的默认速度。 |
+| shape | Shape | 否 | HyperSpeedPanelDefaults.Shape | 组件容器的形状。 |
 | leading | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 内容前方的自定义区域。 |
 | close | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 关闭图标插槽。 |
 | hintLeading | (@Composable BoxScope.() -&gt; Unit)? | 否 | null | 提示信息的前置图标插槽。 |

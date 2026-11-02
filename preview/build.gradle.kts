@@ -62,6 +62,8 @@ kotlin {
             kotlin.exclude("**/HyperDialogHost.kt")
             // Android 与 Preview 的阴影后端使用不同单位，复用按钮但替换内部换算。
             kotlin.exclude("**/HyperButtonShadowRadius.kt")
+            // Android RuntimeShader 后端由 Preview 的 Skia 实现替换，共用本地折射算法。
+            kotlin.exclude("**/HyperGlassShader.android.kt")
             // 日期入口使用 Android 的 LocalDate；Preview 直接复用内部月历和面板。
             kotlin.exclude("**/HyperDatePicker.kt")
             kotlin.exclude("**/HyperCalendar.kt")
@@ -72,7 +74,6 @@ kotlin {
                 implementation("org.jetbrains.compose.components:components-resources:${libs.versions.composeMultiplatform.get()}")
                 implementation("org.jetbrains.compose.runtime:runtime:${libs.versions.composeMultiplatform.get()}")
                 implementation("org.jetbrains.compose.animation:animation-core:${libs.versions.composeMultiplatform.get()}")
-                implementation("dev.chrisbanes.haze:haze:1.7.1")
                 implementation("org.jetbrains.compose.ui:ui:${libs.versions.composeMultiplatform.get()}")
             }
         }

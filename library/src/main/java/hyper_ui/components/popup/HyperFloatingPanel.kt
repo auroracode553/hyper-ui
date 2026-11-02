@@ -1,4 +1,4 @@
-/** 文件职责：复用 HyperPopover 与 HyperDialog 的实色面板、滚动正文和操作区布局。 */
+/** 文件职责：共享浮层的滚动正文和固定操作区，材质由各入口选择。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -46,6 +46,7 @@ internal fun HyperFloatingPanel(
     actionArrangement: Arrangement.Horizontal,
     showScrollIndicator: Boolean,
     actions: (@Composable RowScope.() -> Unit)?,
+    dialogSurface: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val resolvedTitle = title?.trim()?.takeIf(String::isNotEmpty)
@@ -53,12 +54,12 @@ internal fun HyperFloatingPanel(
 
     Column(
         modifier = modifier
-            .hyperFrostedSurface(
+            .then(if (dialogSurface) Modifier.hyperControlSurface(shape, HyperControlSurfaceRole.Dialog,
+                containerColor = containerColor, border = border) else Modifier.hyperFrostedSurface(
                 containerColor = containerColor,
                 shape = shape,
-                border = border,
-                blur = hyperGlass.blurStrong
-            )
+                border = border
+            ))
             .padding(contentPadding),
         horizontalAlignment = horizontalAlignment,
         verticalArrangement = Arrangement.spacedBy(0.dp)

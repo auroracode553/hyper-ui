@@ -4,7 +4,7 @@ package hyper_ui.docs.data
 import hyper_ui.docs.ui.ListTileDemo
 import hyper_ui.docs.ui.HyperMenuGroupDemo
 import hyper_ui.docs.ui.HyperListDemo
-import hyper_ui.docs.ui.HyperSectionedListDemo
+import hyper_ui.docs.ui.HyperGroupedListDemo
 import hyper_ui.docs.ui.SectionTitleDemo
 
 private const val GROUP_LIST = "列表组件"
@@ -97,10 +97,10 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "hyper_sectioned_list",
         group = GROUP_LIST,
-        title = "HyperSectionedList",
+        title = "HyperGroupedList",
         description = "日期、历史等动态数据使用的分段懒列表，固定 8dp 紧凑分段间距，使用平铺行并自动处理组内分割线。",
         code = """
-            HyperSectionedList(
+            HyperGroupedList(
                 sections = groups,
                 items = { group -> group.entries },
                 sectionKey = { group -> "section-${'$'}{group.id}" },
@@ -122,10 +122,10 @@ internal fun listComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("整屏滚动", "fullScreenPreview + Modifier.weight(1f)", "列表占满视口，滚动到最后一组")
         ),
         apiDocumentPaths = listOf(
-            "list/hyper-sectioned-list.md",
+            "list/hyper-grouped-list.md",
             "list/hyper-list-tile.md"
         ),
-        content = { HyperSectionedListDemo() },
+        content = { HyperGroupedListDemo() },
         fullScreenPreview = true
     ),
     ComponentDemo(id = "list-tile", group = GROUP_LIST, title = "HyperListTile",

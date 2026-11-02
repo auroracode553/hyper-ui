@@ -306,8 +306,8 @@ object HyperTextFieldDefaults {
         val resolvedContentColor = resolveHyperContainerColor(contentColor, HyperColors.primaryText)
         val resolvedPlaceholderColor = resolveHyperContainerColor(placeholderColor, HyperColors.secondaryText)
         val resolvedErrorColor = resolveHyperContainerColor(errorColor, HyperColors.danger)
-        val defaultContainerColor = hyperGlass.surfaceSubtle
-        val defaultDisabledContainerColor = hyperGlass.controlTrack
+        val defaultContainerColor = hyperSurfaces.surfaceSubtle
+        val defaultDisabledContainerColor = hyperSurfaces.controlTrack
 
         return HyperTextFieldColors(
             containerColor = resolveHyperContainerColor(containerColor, defaultContainerColor),

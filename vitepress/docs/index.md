@@ -37,7 +37,7 @@ HyperButton(
 ) { HyperText("保存") }
 ```
 
-默认 `HyperThemeConfig(material = HyperMaterial.Solid)`。同名组件的尺寸、材质和 API 约定见 [样式对照](style-reference.md)。Dropdown 的值由调用方管理，临时展开状态由组件维护。
+默认 `HyperThemeConfig()`。同名组件的尺寸、材质和 API 约定见 [样式对照](style-reference.md)。Dropdown 的值由调用方管理，临时展开状态由组件维护。
 
 ## API 约定
 
@@ -54,7 +54,7 @@ HyperButton(
 - [UI 样式与功能实现基线](style-reference.md)：维护组件前必读；已有样式保留，涉及用途不明的变化先确认
 - [接入与最小配置](getting-started.md)
 - [移动端规范](mobile-guidelines.md)
-- [主题配置](theme.md)
+- [主题配置](getting-started.md)
 - [状态与架构边界](state-model.md)
 - [交互预览](preview.md)
 - [日期选择器](components/form/hyper-date-picker.md)：单日期月历与完整 LocalDate 参数表

@@ -67,7 +67,7 @@ internal fun HyperDatePickerSheet(
         }
     }
     if (!visible && progress == 0f) return
-    val glass = hyperGlass
+    val glass = hyperSurfaces
     val dismiss = { if (visible) { result = null; currentOnClose() } }
     HyperDialogHost(onDismissRequest = dismiss, dismissOnBackPress = visible) {
         BoxWithConstraints(
@@ -78,7 +78,7 @@ internal fun HyperDatePickerSheet(
             Column(
                 modifier = Modifier.fillMaxWidth().heightIn(max = maxHeight * 0.85f)
                     .graphicsLayer { alpha = progress; translationY = 24.dp.toPx() * (1f - progress) }
-                    .hyperFrostedSurface(glass.surfaceStrong, RoundedCornerShape(30.dp), border = BorderStroke(1.dp, glass.border), blur = glass.blurStrong)
+                    .hyperFrostedSurface(glass.surfaceStrong, RoundedCornerShape(30.dp), border = BorderStroke(1.dp, glass.border))
                     // 面板空白区域参与命中测试，避免穿透至遮罩。
                     .pointerInput(visible) {
                         awaitPointerEventScope {

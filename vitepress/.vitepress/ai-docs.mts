@@ -22,7 +22,6 @@ type AiDocsConfig = Pick<UserConfig, 'buildEnd' | 'sitemap' | 'transformHead'>
 const PRIMARY_DOCUMENTS = [
   'index.md',
   'getting-started.md',
-  'theme.md',
   'state-model.md',
   'component-index.md'
 ]

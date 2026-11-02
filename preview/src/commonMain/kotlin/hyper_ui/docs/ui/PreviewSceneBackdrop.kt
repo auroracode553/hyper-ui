@@ -11,7 +11,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperBackdrop
-import hyper_ui.HyperSoftBackground
+import hyper_ui.HyperBackground
 import hyper_ui.docs.LocalThemeColor
 
 /** 预览手机的顶部状态栏安全区。 */
@@ -20,22 +20,23 @@ internal val PreviewTopSafeArea = 52.dp
 @Composable
 internal fun PreviewSceneBackdrop(
     modifier: Modifier = Modifier,
+    glassScene: Boolean = false,
     content: @Composable BoxScope.() -> Unit
 ) {
     val settings = LocalThemeColor.current
     HyperBackdrop(
         modifier = modifier,
         background = {
-            if (settings.patternedBackground) {
-                HyperSoftBackground(Modifier.matchParentSize())
+            if (settings.patternedBackground || glassScene) {
+                HyperBackground(Modifier.matchParentSize())
                 Canvas(Modifier.matchParentSize()) {
                     repeat(12) { index ->
                         drawCircle(
                             color = settings.color.copy(alpha = 0.3f),
-                            radius = 30.dp.toPx(),
+                            radius = 42.dp.toPx(),
                             center = Offset(
                                 size.width * index / 11f,
-                                size.height * (index % 3 + 1) / 4f
+                                size.height * ((index % 4 + 0.5f) / 4f)
                             )
                         )
                     }

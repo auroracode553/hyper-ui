@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
@@ -33,40 +31,15 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ColorPickerDemo() {
-    var selectedColorId by remember { mutableStateOf("ocean_blue") }
-    var pickerEnabled by remember { mutableStateOf(true) }
-    val currentOption = remember(selectedColorId) {
-        HyperColorPickerDefaults.presetOptions.find { it.id == selectedColorId }
-            ?: HyperColorPickerDefaults.presetOptions.first()
-    }
-
-    Column(
-        modifier = Modifier.widthIn(max = 400.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        HyperButton({ pickerEnabled = !pickerEnabled }) { HyperText(if (pickerEnabled) "禁用颜色选择" else "启用颜色选择") }
-        HyperColorPicker(
-            enabled = pickerEnabled,
-            selectedId = selectedColorId,
-            onChanged = { option -> selectedColorId = option.id }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(CircleShape)
-                    .background(currentOption.color)
-            )
-            HyperText(
-                text = "当前选择：${currentOption.label}",
-                fontSize = 14.sp,
-                color = LocalDocsColorScheme.current.onSurface
-            )
+    var color by remember { mutableStateOf(Color(0.25f, 0.47f, 1f, 1f)) }
+    var enabled by remember { mutableStateOf(true) }
+    Column(Modifier.widthIn(max = 400.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        HyperColorPicker(value = color, onChanged = { color = it }, enabled = enabled)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HyperButton({ enabled = !enabled }) { HyperText(if (enabled) "禁用调色板" else "启用调色板") }
+            HyperButton({ color = Color(0.25f, 0.47f, 1f, 1f) }) { HyperText("重置") }
         }
+        HyperText("拖动渐变区域调整饱和度与明度，拖动彩虹条调整色相。")
     }
 }
 
@@ -119,33 +92,11 @@ private fun ContainerIconBadge(
     }
 }
 
-/** 材质令牌可注入；使用已有主题方向，避免在预览中误重置深色模式。 */
+/** 表面只提供实色，预览保留内容与浮层的层级。 */
 @Composable
 fun GlassMaterialDemo() {
-    val surfaceAlpha = HyperTheme.glass.surface.alpha
-    var opacity by remember(surfaceAlpha) { mutableStateOf(surfaceAlpha) }
-    val glass = HyperTheme.glass.copy(surface = HyperTheme.glass.surface.copy(alpha = opacity))
-    HyperThemeConfig(
-        themeColor = HyperTheme.colors.themeColor,
-        darkTheme = HyperTheme.isDark,
-        typography = HyperTheme.typography,
-        shapes = HyperTheme.shapes,
-        material = HyperTheme.material,
-        glass = glass
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            PreviewSectionLabel("同一材质的表面层级")
-            listOf(
-                "Subtle · 小面积和辅助表面" to glass.surfaceSubtle,
-                "Regular · 常规内容表面" to glass.surface,
-                "Prominent · 浮层和模态表面" to glass.surfaceStrong,
-                "Solid · 不透明内容表面" to HyperColors.cardContainer
-            ).forEach { (label, surface) ->
-                HyperCard(colors = HyperCardDefaults.colors(surface), elevation = 8.dp) {
-                    HyperText(label, fontSize = 13.sp)
-                }
-            }
-            HyperSlider(opacity, { opacity = it }, min = 0.1f, max = 1f)
-        }
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        HyperCard { HyperText("实色内容表面") }
+        HyperText("颜色、阴影与选中状态由组件管理。")
     }
 }

@@ -21,7 +21,7 @@ Android 电池状态读取工具；浏览器 Preview 使用可交互模拟。
 val batteryState by rememberHyperBatteryState()
 
 if (batteryState.isAvailable) {
-    HyperBatteryIndicator(
+    HyperBattery(
         percentage = batteryState.percentage,
         charging = batteryState.isCharging
     )

@@ -16,7 +16,7 @@ import hyper_ui.core.interaction.hyperNoRippleClickable
 
 /** 三选项主题弹窗。null 跟随系统，false 浅色，true 深色；保存和应用主题由调用方负责。 */
 @Composable
-fun HyperThemeModeDialog(
+fun HyperThemeDialog(
     visible: Boolean,
     value: Boolean?,
     onChanged: (Boolean?) -> Unit,

@@ -8,6 +8,7 @@ import com.composables.icons.lucide.Minus
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -16,12 +17,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +35,8 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.DpOffset
@@ -54,48 +60,82 @@ fun HyperSwitch(
     uncheckedThumbColor: Color = Color.Unspecified,
     label: String? = null
 ) {
+    val active = enabled && onChanged != null
+    var rowPressed by remember { mutableStateOf(false) }
+    val colors = HyperSwitchVisualColors(checkedTrackColor, uncheckedTrackColor, checkedThumbColor, uncheckedThumbColor)
+    val control: @Composable (Modifier) -> Unit = { controlModifier ->
+        HyperSwitchControl(value, onChanged, controlModifier, active, colors, rowPressed)
+    }
     if (label != null) {
-        HyperListTile(type = "plain", modifier = modifier,
-            title = { HyperText(label) }, trailing = { HyperSwitch(value = value, onChanged = onChanged, enabled = enabled, checkedTrackColor = checkedTrackColor, uncheckedTrackColor = uncheckedTrackColor, checkedThumbColor = checkedThumbColor, uncheckedThumbColor = uncheckedThumbColor) },
-            enabled = enabled && onChanged != null, showChevron = false,
+        HyperListTile(type = "plain", modifier = modifier.hyperObservePress(active) { rowPressed = it },
+            title = { HyperText(label) }, trailing = { control(Modifier) },
+            enabled = active, showChevron = false,
             onPressed = { onChanged?.invoke(!value) })
         return
     }
-    val active = enabled && onChanged != null
-    val curve = HyperMotionSpec.SelectionCurve
-    val progress by animateFloatAsState(if (value) 1f else 0f, tween(HyperMotionSpec.StateDuration, easing = curve), label = "HyperSwitch")
-    val targetTrack = when {
-        value -> resolveHyperContainerColor(checkedTrackColor, HyperColors.accent)
-            .let { if (active) it else it.copy(alpha = 90 / 255f) }
-        else -> resolveHyperContainerColor(uncheckedTrackColor,
-            hyperGlass.controlTrack.compositeOver(if (active) hyperGlass.surfaceStrong else hyperGlass.surfaceSubtle))
-    }
-    val track by animateColorAsState(targetTrack, tween(HyperMotionSpec.StateDuration, easing = curve), label = "HyperSwitchTrack")
-    val targetThumb = when {
-        value -> checkedThumbColor
-        else -> resolveHyperContainerColor(uncheckedThumbColor, HyperColors.cardContainer)
-    }
-    val thumb by animateColorAsState(targetThumb, tween(HyperMotionSpec.StateDuration, easing = curve), label = "HyperSwitchThumb")
+    control(modifier)
+}
+
+/** 保留公开接口的配色覆盖，材质与位置动画集中在开关内部。 */
+private data class HyperSwitchVisualColors(
+    val checkedTrack: Color,
+    val uncheckedTrack: Color,
+    val checkedThumb: Color,
+    val uncheckedThumb: Color
+)
+
+@Composable
+private fun HyperSwitchControl(
+    value: Boolean,
+    onChanged: ((Boolean) -> Unit)?,
+    modifier: Modifier,
+    active: Boolean,
+    colors: HyperSwitchVisualColors,
+    rowPressed: Boolean
+) {
+    val source = remember { MutableInteractionSource() }
+    val interactionPressed by source.collectIsPressedAsState()
+    var pointerPressed by remember { mutableStateOf(false) }
+    val pressed = active && (rowPressed || pointerPressed || interactionPressed)
+    val pressProgress = animateFloatAsState(if (pressed) 1f else 0f,
+        spring(dampingRatio = 1f, stiffness = 1000f), label = "HyperSwitchGlassPress")
+    val progress by animateFloatAsState(if (value) 1f else 0f,
+        spring(dampingRatio = 1f, stiffness = 1000f), label = "HyperSwitchPosition")
+    val checkedTrack = resolveHyperContainerColor(colors.checkedTrack, HyperColors.accent)
+        .let { if (active) it else it.copy(alpha = 90 / 255f) }
+    val uncheckedTrack = resolveHyperContainerColor(colors.uncheckedTrack,
+        hyperSurfaces.controlTrack.compositeOver(if (active) hyperSurfaces.surfaceStrong else hyperSurfaces.surfaceSubtle))
+    val track = lerp(uncheckedTrack, checkedTrack, progress.coerceIn(0f, 1f))
+    val defaultUncheckedThumb = Color(1f, 1f, 1f, 1f)
+    val thumb = lerp(resolveHyperContainerColor(colors.uncheckedThumb, defaultUncheckedThumb),
+        resolveHyperContainerColor(colors.checkedThumb, Color(1f, 1f, 1f, 1f)), progress.coerceIn(0f, 1f))
+    val trackSource = rememberHyperGlassSource()
+    val thumbSources = listOfNotNull(LocalHyperGlassSource.current) + trackSource
     val outline = when {
         value -> Color.Transparent
-        else -> hyperGlass.border
+        else -> hyperSurfaces.border
     }
-    val source = remember { MutableInteractionSource() }
     Box(
         modifier.size(52.dp, 32.dp)
-            .hyperNoRippleClickable(enabled && onChanged != null, Role.Switch, source, onClick = { onChanged?.invoke(!value) })
+            .hyperNoRippleClickable(active, Role.Switch, source,
+                onPressChanged = { pointerPressed = it }, onClick = { onChanged?.invoke(!value) })
             .semantics { toggleableState = if (value) ToggleableState.On else ToggleableState.Off; if (!active) disabled() },
         contentAlignment = Alignment.Center
     ) {
-        Box(Modifier.width(HyperSwitchDefaults.TrackWidth).height(HyperSwitchDefaults.TrackHeight)
-            .background(track, CircleShape).border(HyperSwitchDefaults.TrackBorderWidth, outline, CircleShape)) {
-            // 固定滑块尺寸与 4dp 内边距，让关闭态留出清晰的轨道边缘；逻辑方向自动适配 RTL。
+        Box(Modifier.width(HyperSwitchDefaults.TrackWidth).height(HyperSwitchDefaults.TrackHeight)) {
+            // 只录制轨道，避免滑块采样自身；所有几何尺寸与逻辑方向保持原样。
+            Box(Modifier.matchParentSize().hyperGlassSource(trackSource)
+                .background(track, CircleShape).border(HyperSwitchDefaults.TrackBorderWidth, outline, CircleShape))
             Box(Modifier.align(Alignment.CenterStart)
                 .offset(x = HyperSwitchDefaults.TrackPadding + 20.dp * progress)
                 .size(HyperSwitchDefaults.ThumbSize)
-                .dropShadow(CircleShape, Shadow(radius = 3.dp, offset = DpOffset(0.dp, 1.dp),
-                    color = hyperGlass.shadow.copy(alpha = hyperGlass.shadow.alpha * if (active) 1f else 0.5f)))
-                .clip(CircleShape).background(thumb))
+                .then(if (active) Modifier.hyperControlSurface(CircleShape, HyperControlSurfaceRole.SwitchThumb,
+                    progress = { pressProgress.value }, containerColor = thumb, sources = thumbSources,
+                    sampleScale = { sample -> if (sample === trackSource)
+                        Offset(2f / 3f + pressProgress.value / 12f, 0.75f * pressProgress.value) else Offset(1f, 1f) })
+                else Modifier.dropShadow(CircleShape, Shadow(radius = 3.dp, offset = DpOffset(0.dp, 1.dp),
+                    color = hyperSurfaces.shadow.copy(alpha = hyperSurfaces.shadow.alpha * if (active) 1f else 0.5f)))
+                    .clip(CircleShape).background(thumb)))
         }
     }
 }
@@ -124,7 +164,7 @@ fun HyperCheckbox(
     require(tristate || value != null) { "value = null 需要 tristate = true" }
     val selected = value == true || (tristate && value == null)
     val selectedColor = resolveHyperContainerColor(checkedColor, HyperColors.accent)
-    val fill by animateColorAsState(if (selected) selectedColor else resolveHyperContainerColor(uncheckedColor, hyperGlass.surfaceSubtle),
+    val fill by animateColorAsState(if (selected) selectedColor else resolveHyperContainerColor(uncheckedColor, hyperSurfaces.surfaceSubtle),
         tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.SelectionCurve), label = "HyperCheckboxFill")
     val border by animateColorAsState(if (selected) selectedColor else resolveHyperContainerColor(uncheckedBorderColor, HyperColors.fieldBorder),
         tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.SelectionCurve), label = "HyperCheckboxBorder")
@@ -194,7 +234,7 @@ fun <T> HyperRadio(
         contentAlignment = Alignment.Center
     ) {
         Box(Modifier.size(HyperRadioDefaults.OuterSize).clip(CircleShape)
-            .background(resolveHyperContainerColor(if (selected) innerDotColor else unselectedColor, hyperGlass.surfaceSubtle))
+            .background(resolveHyperContainerColor(if (selected) innerDotColor else unselectedColor, hyperSurfaces.surfaceSubtle))
             .border(ringWidth.dp, ring, CircleShape))
     }
 }

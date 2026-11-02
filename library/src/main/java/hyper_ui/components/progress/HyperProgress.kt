@@ -95,7 +95,7 @@ private fun HyperLinearProgress(
     val coercedProgress = progress?.takeIf { it.isFinite() }?.coerceIn(0f, 1f)
     val displayedProgress by animateFloatAsState(coercedProgress ?: 0f,
         tween(220, easing = HyperMotionSpec.EaseOutCubic), label = "HyperProgressValue")
-    val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
+    val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperSurfaces.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
     val semanticsInfo = if (coercedProgress == null) {
         ProgressBarRangeInfo.Indeterminate
@@ -142,7 +142,7 @@ private fun HyperCircularProgress(
 ) {
     val resolvedSize = HyperProgressDefaults.CircularSize
     val coercedProgress = progress?.takeIf { it.isFinite() }?.coerceIn(0f, 1f)
-    val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperGlass.controlTrack)
+    val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperSurfaces.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
     val rotation = if (coercedProgress == null) hyperIndeterminatePhase(1100) * 360f else 0f
     val displayedProgress = coercedProgress
@@ -220,7 +220,7 @@ object HyperProgressDefaults {
         trackColor: Color = Color.Unspecified,
         indicatorColor: Color = Color.Unspecified
     ): HyperProgressColors {
-        val resolvedTrackColor = resolveHyperContainerColor(trackColor, hyperGlass.controlTrack)
+        val resolvedTrackColor = resolveHyperContainerColor(trackColor, hyperSurfaces.controlTrack)
         return HyperProgressColors(
             trackColor = resolvedTrackColor,
             indicatorColor = resolveHyperContainerColor(indicatorColor, HyperColors.accent)
@@ -230,7 +230,7 @@ object HyperProgressDefaults {
     @Composable
     fun linearTrackBorder(color: Color = Color.Unspecified): BorderStroke = hyperSolidPanelBorder(
         color = color,
-        backgroundColor = hyperGlass.controlTrack
+        backgroundColor = hyperSurfaces.controlTrack
     )
 }
 

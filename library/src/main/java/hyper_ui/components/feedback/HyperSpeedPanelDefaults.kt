@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 @Immutable
-data class HyperPlaybackSpeedPanelTexts(
+data class HyperSpeedPanelTexts(
     val title: String = "播放速度",
     val realtimeHint: String = "拖动调节 · 实时生效",
     val customAction: String = "自定义",
@@ -21,7 +21,7 @@ data class HyperPlaybackSpeedPanelTexts(
 )
 
 @Immutable
-data class HyperPlaybackSpeedPanelColors(
+data class HyperSpeedPanelColors(
     val scrimColor: Color,
     val containerColor: Color,
     val panelBorderColor: Color,
@@ -32,7 +32,7 @@ data class HyperPlaybackSpeedPanelColors(
     val segmentMarkerColor: Color
 )
 
-object HyperPlaybackSpeedPanelDefaults {
+object HyperSpeedPanelDefaults {
     const val SliderMinimum = 0.25f
     const val SliderMaximum = 4f
     const val SliderStep = 0.05f
@@ -67,20 +67,20 @@ object HyperPlaybackSpeedPanelDefaults {
         accentColor: Color = Color.Unspecified,
         trackColor: Color = Color.Unspecified,
         segmentMarkerColor: Color = Color.Unspecified
-    ): HyperPlaybackSpeedPanelColors {
+    ): HyperSpeedPanelColors {
         val resolvedContentColor = resolveHyperContainerColor(
             contentColor,
             HyperColors.primaryText
         )
-        return HyperPlaybackSpeedPanelColors(
+        return HyperSpeedPanelColors(
             scrimColor = resolveHyperContainerColor(
                 scrimColor,
-                hyperGlass.scrim
+                hyperSurfaces.scrim
             ),
-            containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surfaceStrong),
+            containerColor = resolveHyperContainerColor(containerColor, hyperSurfaces.surfaceStrong),
             panelBorderColor = resolveHyperContainerColor(
                 panelBorderColor,
-                hyperGlass.border
+                hyperSurfaces.border
             ),
             contentColor = resolvedContentColor,
             supportingContentColor = resolveHyperContainerColor(
@@ -90,7 +90,7 @@ object HyperPlaybackSpeedPanelDefaults {
             accentColor = resolveHyperContainerColor(accentColor, HyperColors.accent),
             trackColor = resolveHyperContainerColor(
                 trackColor,
-                hyperGlass.controlTrack
+                hyperSurfaces.controlTrack
             ),
             segmentMarkerColor = resolveHyperContainerColor(
                 segmentMarkerColor,

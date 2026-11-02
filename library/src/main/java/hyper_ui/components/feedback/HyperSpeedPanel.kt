@@ -51,7 +51,7 @@ import kotlin.math.abs
  * 播放速度覆盖层。业务速度与显示状态均由调用方持有，组件只处理主题玻璃布局与点击分发。
  */
 @Composable
-fun HyperPlaybackSpeedPanelOverlay(
+fun HyperSpeedPanelOverlay(
     visible: Boolean,
     value: Float,
     onChanged: (Float) -> Unit,
@@ -59,13 +59,13 @@ fun HyperPlaybackSpeedPanelOverlay(
     onCustomPressed: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     panelModifier: Modifier = Modifier,
-    texts: HyperPlaybackSpeedPanelTexts = HyperPlaybackSpeedPanelTexts(),
-    colors: HyperPlaybackSpeedPanelColors = HyperPlaybackSpeedPanelDefaults.colors(),
-    options: List<Float> = HyperPlaybackSpeedPanelDefaults.MajorSpeeds,
-    valueRange: ClosedFloatingPointRange<Float> = HyperPlaybackSpeedPanelDefaults.SliderRange,
-    steps: Int = HyperPlaybackSpeedPanelDefaults.SliderSteps,
-    defaultSpeed: Float = HyperPlaybackSpeedPanelDefaults.DefaultSpeed,
-    shape: Shape = HyperPlaybackSpeedPanelDefaults.Shape,
+    texts: HyperSpeedPanelTexts = HyperSpeedPanelTexts(),
+    colors: HyperSpeedPanelColors = HyperSpeedPanelDefaults.colors(),
+    options: List<Float> = HyperSpeedPanelDefaults.MajorSpeeds,
+    valueRange: ClosedFloatingPointRange<Float> = HyperSpeedPanelDefaults.SliderRange,
+    steps: Int = HyperSpeedPanelDefaults.SliderSteps,
+    defaultSpeed: Float = HyperSpeedPanelDefaults.DefaultSpeed,
+    shape: Shape = HyperSpeedPanelDefaults.Shape,
     leading: (@Composable BoxScope.() -> Unit)? = null,
     close: (@Composable BoxScope.() -> Unit)? = null,
     hintLeading: (@Composable BoxScope.() -> Unit)? = null,
@@ -81,14 +81,14 @@ fun HyperPlaybackSpeedPanelOverlay(
                 .background(colors.scrimColor)
                 .hyperNoRippleClickable(onClick = onClose)
         )
-        HyperPlaybackSpeedPanel(
+        HyperSpeedPanel(
             value = value,
             onChanged = onChanged,
             onClose = onClose,
             onCustomPressed = onCustomPressed,
             modifier = panelModifier
                 .align(Alignment.Center)
-                .padding(horizontal = HyperPlaybackSpeedPanelDefaults.OverlayHorizontalPadding),
+                .padding(horizontal = HyperSpeedPanelDefaults.OverlayHorizontalPadding),
             texts = texts,
             colors = colors,
             options = options,
@@ -107,19 +107,19 @@ fun HyperPlaybackSpeedPanelOverlay(
 
 /** 主题玻璃的受控播放速度面板，可脱离覆盖层单独组合。 */
 @Composable
-fun HyperPlaybackSpeedPanel(
+fun HyperSpeedPanel(
     value: Float,
     onChanged: (Float) -> Unit,
     onClose: () -> Unit,
     onCustomPressed: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
-    texts: HyperPlaybackSpeedPanelTexts = HyperPlaybackSpeedPanelTexts(),
-    colors: HyperPlaybackSpeedPanelColors = HyperPlaybackSpeedPanelDefaults.colors(),
-    options: List<Float> = HyperPlaybackSpeedPanelDefaults.MajorSpeeds,
-    valueRange: ClosedFloatingPointRange<Float> = HyperPlaybackSpeedPanelDefaults.SliderRange,
-    steps: Int = HyperPlaybackSpeedPanelDefaults.SliderSteps,
-    defaultSpeed: Float = HyperPlaybackSpeedPanelDefaults.DefaultSpeed,
-    shape: Shape = HyperPlaybackSpeedPanelDefaults.Shape,
+    texts: HyperSpeedPanelTexts = HyperSpeedPanelTexts(),
+    colors: HyperSpeedPanelColors = HyperSpeedPanelDefaults.colors(),
+    options: List<Float> = HyperSpeedPanelDefaults.MajorSpeeds,
+    valueRange: ClosedFloatingPointRange<Float> = HyperSpeedPanelDefaults.SliderRange,
+    steps: Int = HyperSpeedPanelDefaults.SliderSteps,
+    defaultSpeed: Float = HyperSpeedPanelDefaults.DefaultSpeed,
+    shape: Shape = HyperSpeedPanelDefaults.Shape,
     leading: (@Composable BoxScope.() -> Unit)? = null,
     close: (@Composable BoxScope.() -> Unit)? = null,
     hintLeading: (@Composable BoxScope.() -> Unit)? = null,
@@ -145,19 +145,19 @@ fun HyperPlaybackSpeedPanel(
             .ifEmpty { listOf(valueRange.start, valueRange.endInclusive) }
     }
 
-    HyperPlaybackSpeedPanelTheme(colors) {
+    HyperSpeedPanelTheme(colors) {
         Column(
             modifier = modifier
-                .widthIn(max = HyperPlaybackSpeedPanelDefaults.MaxWidth)
-                .fillMaxWidth(HyperPlaybackSpeedPanelDefaults.WidthFraction)
-                .hyperFrostedSurface(colors.containerColor, shape, blur = hyperGlass.blurStrong,
+                .widthIn(max = HyperSpeedPanelDefaults.MaxWidth)
+                .fillMaxWidth(HyperSpeedPanelDefaults.WidthFraction)
+                .hyperFrostedSurface(colors.containerColor, shape,
                     border = androidx.compose.foundation.BorderStroke(1.dp, colors.panelBorderColor))
-                .padding(HyperPlaybackSpeedPanelDefaults.ContentPadding),
+                .padding(HyperSpeedPanelDefaults.ContentPadding),
             verticalArrangement = Arrangement.spacedBy(
-                HyperPlaybackSpeedPanelDefaults.ContentSpacing
+                HyperSpeedPanelDefaults.ContentSpacing
             )
         ) {
-            HyperPlaybackSpeedPanelHeader(
+            HyperSpeedPanelHeader(
                 value = value,
                 texts = texts,
                 colors = colors,
@@ -182,7 +182,7 @@ fun HyperPlaybackSpeedPanel(
                 onChanged = onChanged,
                 colors = colors
             )
-            HyperPlaybackSpeedPanelFooter(
+            HyperSpeedPanelFooter(
                 value = value,
                 defaultSpeed = defaultSpeed,
                 texts = texts,
@@ -198,10 +198,10 @@ fun HyperPlaybackSpeedPanel(
 }
 
 @Composable
-private fun HyperPlaybackSpeedPanelHeader(
+private fun HyperSpeedPanelHeader(
     value: Float,
-    texts: HyperPlaybackSpeedPanelTexts,
-    colors: HyperPlaybackSpeedPanelColors,
+    texts: HyperSpeedPanelTexts,
+    colors: HyperSpeedPanelColors,
     onClose: () -> Unit,
     leading: (@Composable BoxScope.() -> Unit)?,
     close: (@Composable BoxScope.() -> Unit)?
@@ -243,7 +243,7 @@ private fun HyperPlaybackSpeedPanelHeader(
             contentAlignment = Alignment.Center
         ) {
             HyperText(
-                text = "${HyperPlaybackSpeedPanelDefaults.formatFixed(value)}x",
+                text = "${HyperSpeedPanelDefaults.formatFixed(value)}x",
                 color = colors.contentColor,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
@@ -278,8 +278,8 @@ private fun HyperPlaybackSpeedSlider(
     valueRange: ClosedFloatingPointRange<Float>,
     steps: Int,
     options: List<Float>,
-    texts: HyperPlaybackSpeedPanelTexts,
-    colors: HyperPlaybackSpeedPanelColors
+    texts: HyperSpeedPanelTexts,
+    colors: HyperSpeedPanelColors
 ) {
     HyperSlider(
         showValue = false,
@@ -292,10 +292,10 @@ private fun HyperPlaybackSpeedSlider(
         divisions = if (steps > 0) steps + 1 else null,
         showSegmentMarkers = true,
         segmentValues = options,
-        minimumTouchHeight = HyperPlaybackSpeedPanelDefaults.SliderTouchHeight,
-        trackHeight = HyperPlaybackSpeedPanelDefaults.SliderTrackHeight,
-        thumbSize = HyperPlaybackSpeedPanelDefaults.SliderThumbSize,
-        segmentMarkerSize = HyperPlaybackSpeedPanelDefaults.SliderMarkerSize,
+        minimumTouchHeight = HyperSpeedPanelDefaults.SliderTouchHeight,
+        trackHeight = HyperSpeedPanelDefaults.SliderTrackHeight,
+        thumbSize = HyperSpeedPanelDefaults.SliderThumbSize,
+        segmentMarkerSize = HyperSpeedPanelDefaults.SliderMarkerSize,
         colors = HyperSliderDefaults.colors(
             trackColor = colors.trackColor,
             activeTrackColor = colors.accentColor,
@@ -312,14 +312,14 @@ private fun HyperPlaybackSpeedLabels(
     steps: Int,
     options: List<Float>,
     onChanged: (Float) -> Unit,
-    colors: HyperPlaybackSpeedPanelColors
+    colors: HyperSpeedPanelColors
 ) {
     val selectionTolerance = (valueRange.endInclusive - valueRange.start) /
         (steps + 1).coerceAtLeast(1) / 2f
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
-            .height(HyperPlaybackSpeedPanelDefaults.SpeedLabelHeight)
+            .height(HyperSpeedPanelDefaults.SpeedLabelHeight)
     ) {
         options.forEach { speed ->
             val fraction = (
@@ -330,10 +330,10 @@ private fun HyperPlaybackSpeedLabels(
             Box(
                 modifier = Modifier
                     .offset(
-                        x = (maxWidth - HyperPlaybackSpeedPanelDefaults.SpeedLabelWidth) * fraction
+                        x = (maxWidth - HyperSpeedPanelDefaults.SpeedLabelWidth) * fraction
                     )
-                    .width(HyperPlaybackSpeedPanelDefaults.SpeedLabelWidth)
-                    .height(HyperPlaybackSpeedPanelDefaults.SpeedLabelHeight)
+                    .width(HyperSpeedPanelDefaults.SpeedLabelWidth)
+                    .height(HyperSpeedPanelDefaults.SpeedLabelHeight)
                     .clip(RoundedCornerShape(percent = 50))
                     .background(
                         if (selected) {
@@ -351,7 +351,7 @@ private fun HyperPlaybackSpeedLabels(
                 contentAlignment = Alignment.Center
             ) {
                 HyperText(
-                    text = "${HyperPlaybackSpeedPanelDefaults.formatCompact(speed)}x",
+                    text = "${HyperSpeedPanelDefaults.formatCompact(speed)}x",
                     color = if (selected) {
                         colors.accentColor
                     } else {
@@ -369,11 +369,11 @@ private fun HyperPlaybackSpeedLabels(
 }
 
 @Composable
-private fun HyperPlaybackSpeedPanelFooter(
+private fun HyperSpeedPanelFooter(
     value: Float,
     defaultSpeed: Float,
-    texts: HyperPlaybackSpeedPanelTexts,
-    colors: HyperPlaybackSpeedPanelColors,
+    texts: HyperSpeedPanelTexts,
+    colors: HyperSpeedPanelColors,
     onResetRequest: () -> Unit,
     onCustomPressed: (() -> Unit)?,
     hintLeading: (@Composable BoxScope.() -> Unit)?,
@@ -442,7 +442,7 @@ private fun HyperPlaybackSpeedPanelFooter(
 @Composable
 private fun HyperPlaybackSpeedCustomAction(
     text: String,
-    colors: HyperPlaybackSpeedPanelColors,
+    colors: HyperSpeedPanelColors,
     onClick: () -> Unit,
     leading: (@Composable BoxScope.() -> Unit)?
 ) {
@@ -486,7 +486,7 @@ private fun HyperPlaybackSpeedCustomAction(
 
 @Composable
 private fun panelButtonColors(
-    colors: HyperPlaybackSpeedPanelColors
+    colors: HyperSpeedPanelColors
 ): HyperButtonColors = HyperButtonDefaults.colors(
     containerColor = colors.contentColor.copy(alpha = 0.10f),
     contentColor = colors.contentColor,
@@ -495,8 +495,8 @@ private fun panelButtonColors(
 )
 
 @Composable
-private fun HyperPlaybackSpeedPanelTheme(
-    colors: HyperPlaybackSpeedPanelColors,
+private fun HyperSpeedPanelTheme(
+    colors: HyperSpeedPanelColors,
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(

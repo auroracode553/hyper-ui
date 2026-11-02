@@ -119,14 +119,14 @@ internal fun hyperSurfaceDepthVisuals(
         strokeColor = Color.Transparent,
         strokeWidth = 0.dp,
         elevation = if (enabled) elevation else 0.dp,
-        ambientShadowColor = hyperGlass.shadow.copy(alpha = hyperGlass.shadow.alpha * 0.4f),
-        spotShadowColor = hyperGlass.shadow.copy(alpha = hyperGlass.shadow.alpha * 0.75f),
+        ambientShadowColor = hyperSurfaces.shadow.copy(alpha = hyperSurfaces.shadow.alpha * 0.4f),
+        spotShadowColor = hyperSurfaces.shadow.copy(alpha = hyperSurfaces.shadow.alpha * 0.75f),
         contentCard = true
     )
     return hyperSurfaceDepthVisuals(
-        strokeColor = if (enabled) hyperGlass.border else HyperColors.divider.copy(alpha = 110 / 255f),
+        strokeColor = if (enabled) hyperSurfaces.border else HyperColors.divider.copy(alpha = 110 / 255f),
         elevation = if (enabled) elevation else 0.dp,
-        ambientShadowColor = hyperGlass.shadow.copy(alpha = hyperGlass.shadow.alpha * 0.42f),
-        spotShadowColor = hyperGlass.shadow
+        ambientShadowColor = hyperSurfaces.shadow.copy(alpha = hyperSurfaces.shadow.alpha * 0.42f),
+        spotShadowColor = hyperSurfaces.shadow
     )
 }

@@ -66,7 +66,7 @@ fun HyperDrawer(
             val widthPx = with(density) { drawerWidth.toPx() }
             val velocityThreshold = with(density) { 400.dp.toPx() }
             val visibility = if (widthPx == 0f) 0f else progress * (1f - drag.value / widthPx).coerceIn(0f, 1f)
-            val scrim = hyperGlass.scrim
+            val scrim = hyperSurfaces.scrim
             Box(Modifier.fillMaxSize()
                 .background(scrim.copy(alpha = scrim.alpha * visibility))
                 .pointerInput(open, dismissOnClickOutside) {

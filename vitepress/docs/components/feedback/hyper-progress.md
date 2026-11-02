@@ -10,7 +10,7 @@ description: 展示确定或不定进度，提供线性与圆环两种形态。
 
 ## 交互示例
 
-<WasmPreview demo="value" title="HyperProgress 交互预览" />
+<WasmPreview demo="progress" title="HyperProgress 交互预览" />
 
 ## 使用方式
 

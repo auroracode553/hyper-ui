@@ -7,8 +7,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
-import hyper_ui.HyperGlassTokens
-import hyper_ui.HyperMaterial
 import hyper_ui.HyperThemeConfig
 import hyper_ui.LocalHyperContentColor
 import hyper_ui.LocalHyperTextStyle
@@ -23,9 +21,7 @@ internal val DocsPreviewBackground = rgba(241, 243, 247, 1f)
 
 internal val DefaultDocsThemeColor = rgba(71, 111, 232, 1f)
 
-internal fun docsGlassTokens(darkTheme: Boolean, material: HyperMaterial): HyperGlassTokens {
-    return HyperGlassTokens.forMaterial(darkTheme, material)
-}
+
 
 // 文档浅色主题的固定语义色，替代原 系统浅色语义色 的对应槽位。
 internal val DocsOnBackground = rgba(28, 28, 30, 1f)
@@ -122,7 +118,6 @@ internal fun Color.darken(ratio: Float): Color {
 fun HyperDocsTheme(
     themeColor: Color = DefaultDocsThemeColor,
     darkTheme: Boolean = isSystemInDarkTheme(),
-    material: HyperMaterial = HyperMaterial.Solid,
     patternedBackground: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -160,9 +155,7 @@ fun HyperDocsTheme(
     HyperThemeConfig(
         themeColor = themeColor,
         darkTheme = darkTheme,
-        typography = docsTypography(),
-        material = material,
-        glass = docsGlassTokens(darkTheme, material)
+        typography = docsTypography()
     ) {
         CompositionLocalProvider(
             LocalDocsColorScheme provides scheme,

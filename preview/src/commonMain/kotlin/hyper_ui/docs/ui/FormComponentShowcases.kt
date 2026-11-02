@@ -56,7 +56,7 @@ fun DatePickerDemo() {
             val tone = HyperColors.secondaryText
             HyperText(
                 date?.let { "${it.year}-${it.month.toString().padStart(2, '0')}-${it.day.toString().padStart(2, '0')}" } ?: "未选择",
-                modifier = Modifier.background(tone.copy(alpha = 31 / 255f).compositeOver(HyperTheme.glass.surfaceSubtle), RoundedCornerShape(50))
+                modifier = Modifier.background(tone.copy(alpha = 31 / 255f).compositeOver(HyperTheme.surfaces.surfaceSubtle), RoundedCornerShape(50))
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 fontSize = 12.sp, lineHeight = 14.4.sp, fontWeight = FontWeight.SemiBold, color = tone,
             )
@@ -216,6 +216,7 @@ fun TextFieldDemo() {
 @Composable
 fun SwitchDemo() {
     var notifications by remember { mutableStateOf(true) }
+    var standalone by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(24.dp)) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
             HyperText("受控开关", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 12.sp)
@@ -226,11 +227,19 @@ fun SwitchDemo() {
             HyperSwitch(value = true, label = "禁用 · 开启")
             HyperSwitch(value = false, label = "禁用 · 关闭")
         }
+        Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            HyperText("纯控件（无标签）", color = LocalDocsColorScheme.current.onSurfaceVariant, fontSize = 12.sp)
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                HyperSwitch(value = standalone, onChanged = { standalone = it })
+                HyperSwitch(value = true)
+            }
+        }
     }
 }
 
 @Composable
 fun SliderDemo() {
+    // 按压高光反馈、分段吸附与只读／禁用继续使用正式组件，不另做预览动画。
     var continuousValue by remember { mutableStateOf(42f) }
     var steppedValue by remember { mutableStateOf(2f) }
     var showSegmentMarkers by remember { mutableStateOf(true) }

@@ -24,6 +24,6 @@ fun Activity.enableHyperEdgeToEdge()
 
 HyperThemeConfig.useSystemSafeArea 默认为 false，根 Scaffold 与 TabBar 不留系统安全区。HyperNavBar 仍保护顶部交互区一次；自定义固定操作栏使用 Compose 窗口布局。正文视口保持全屏，HyperNavBarPage 测量的首屏顶部净空放入滚动内容，随上滑滚出。键盘 Insets 独立保留。禁止整页重复叠加系统栏 Padding。
 
-<WasmPreview demo="theme-material" title="全局安全区布局开关" />
+<WasmPreview demo="edge_to_edge_tool" title="全局安全区布局开关" />
 
 Preview 只模拟布局策略，Activity API 仅在 Android 正式应用中调用。

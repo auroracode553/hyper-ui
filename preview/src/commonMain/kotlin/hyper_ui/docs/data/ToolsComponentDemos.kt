@@ -18,7 +18,7 @@ internal fun toolsComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("输入", "IME 独立保留", "键盘避让与系统栏安全区分开处理")
         ),
         apiDocumentPaths = listOf("tools/hyper-edge-to-edge.md"),
-        content = { ThemeMaterialDemo() }
+        content = { SystemSafeAreaDemo() }
     ),
     ComponentDemo(id = "update_tool", group = "工具", title = "检查更新",
         description = "Android 静态 latest.json 检查、系统下载、真实进度和安装；此处只模拟交互，不访问 Gitee。",

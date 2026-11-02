@@ -70,8 +70,8 @@ fun HyperEmptyState(
                     LocalHyperIconSize provides 24.dp
                 ) {
                     Box(Modifier.size(56.dp).hyperFrostedSurface(
-                        hyperGlass.surfaceSubtle, RoundedCornerShape(24.dp), elevation = 0.dp,
-                        border = androidx.compose.foundation.BorderStroke(1.dp, HyperColors.fieldBorder), blur = hyperGlass.blur
+                        hyperSurfaces.surfaceSubtle, RoundedCornerShape(24.dp), elevation = 0.dp,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, HyperColors.fieldBorder)
                     ), contentAlignment = Alignment.Center) { icon() }
                 }
                 Spacer(Modifier.height(12.dp))

@@ -31,7 +31,9 @@ HyperDialog(visible, { visible = false }, title = "确认") { HyperText("正文"
 
 **样式约定**
 
-最大宽 420dp、窗口外间距 24dp、radius 26dp、strong 材质。默认 padding 18dp，标题 20sp/600，正文间隔 10dp，操作区距离 18dp、按钮间隔 8dp；250ms 淡入与 0.96 → 1 缩放。
+最大宽 420dp、窗口外间距 24dp、radius 26dp、固定玻璃面板，默认无普通描边。默认 padding 18dp，标题 20sp/600，正文间隔 10dp，操作区距离 18dp、按钮间隔 8dp；保留 250ms 淡入与 0.96 → 1 缩放。
+
+面板固定采样 HyperBackdrop 的背景，浅色/深色模糊为 16/8dp，折射边缘 24dp、位移 48dp，带深度折射；浅色亮度增加 0.2，饱和度 1.5，文字与按钮独立绘制。显式 colors.containerColor 和 border 覆盖继续生效。
 
 面板最大可用宽度使用真实窗口测量：min(maxWidth, 实际窗口宽度 − 48dp)。例如窗口宽 350dp 时面板不超过 302dp，320dp 时不超过 272dp；maxWidth 调整内容上限，两侧窗口留白仍保留。正文的 fillMaxWidth 只填充面板内部空间。
 
@@ -68,7 +70,7 @@ fun HyperDialog(
     dismissOnClickOutside: Boolean = true,
     showScrollIndicator: Boolean = HyperDialogDefaults.ShowScrollIndicator,
     actions: (@Composable RowScope.() -> Unit)? = null,
-    border: BorderStroke? = HyperDialogDefaults.border(),
+    border: BorderStroke? = null,
     contentPadding: androidx.compose.foundation.layout.PaddingValues = HyperDialogDefaults.ContentPadding,
     content: @Composable ColumnScope.() -> Unit
 )
@@ -92,7 +94,7 @@ fun HyperDialog(
 | dismissOnClickOutside | Boolean | 否 | true | 点击外部时是否请求关闭。 |
 | showScrollIndicator | Boolean | 否 | HyperDialogDefaults.ShowScrollIndicator | 内容滚动时是否显示滚动提示。 |
 | actions | (@Composable RowScope.() -&gt; Unit)? | 否 | null | 导航栏操作项内容。 |
-| border | BorderStroke? | 否 | HyperDialogDefaults.border() | 容器边框配置。 |
+| border | BorderStroke? | 否 | null | 可选面板描边；默认使用材质高光。 |
 | contentPadding | androidx.compose.foundation.layout.PaddingValues | 否 | HyperDialogDefaults.ContentPadding | 主体内容的内部留白。 |
 | content | @Composable ColumnScope.() -&gt; Unit | 是 | — | 组件主体内容，由调用方提供。 |
 

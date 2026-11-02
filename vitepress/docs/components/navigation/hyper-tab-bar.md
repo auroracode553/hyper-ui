@@ -38,11 +38,15 @@ HyperTabBar(items, selectedIndex = selectedIndex, onChanged = { selectedIndex = 
 
 **样式约定**
 
-type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬浮胶囊：multiple 默认高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 20dp、top 8dp、bottom 20dp。floating=false 仅用于 multiple，默认零外间距，全宽平直页面表面，无胶囊、圆角或浮层阴影，底部安全区位于表面内部。图标 23dp、文字 12sp、间距 1dp。single 使用固定直径 48dp 的圆形玻璃、22dp 图标、16dp 角标。
+type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬浮胶囊：multiple 默认高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 20dp、top 8dp、bottom 20dp。floating=false 仅用于 multiple，默认零外间距，全宽平直页面表面，无胶囊、圆角或浮层阴影，底部安全区位于表面内部。图标 23dp、文字 12sp、间距 1dp。single 使用固定直径 48dp 的圆形玻璃表面、22dp 图标、16dp 角标。
 
 非悬浮形态直接放入 HyperScaffold.bottomBar；悬浮和贴底多项按钮组均以 56dp 为默认内容高度，仅按钮组按标签字体在库内扩展。single 独立入口固定为 48dp，不随按钮组高度或标签字体放大。安全区与外边距不计入内容尺寸，不再额外叠加系统底部 inset、固定留白或业务 height；宿主让正文经过底栏后方。
 
 **状态归属**
+
+悬浮容器固定使用 8dp 背景模糊、24dp 边缘深度及 24dp 折射位移。选中镜片合成容器与主题色标签的独立录制层，按压时从灰色选中底面过渡到透镜：折射边缘 0→10dp、位移 0→14dp，七波段色散、方向高光和 0→8dp 内阴影随按压进度变化。镜片位于标签上方，图标文字会随镜片边缘折射；原插槽只组合一次，点击与语义不重复。
+
+拖动按手指位置连续预览，点击与松手吸附使用临界阻尼弹簧（stiffness 1000、dampingRatio 1），不放大容器或选中块。选中、取消与外部 selectedIndex 更新共用同一视觉位置；取消返回受控值，拖动松手才通知 onChanged。原高度、宽度测量、外边距、安全区和正文滚动范围保持独立。
 
 multiple 至少 2 项，single 恰好 1 项。itemLabel 必须与实际显示文字一致。320..430dp 内父约束优先；选中值由调用方管理。
 
@@ -132,3 +136,5 @@ Row(Modifier.padding(HyperTabBarDefaults.FloatingMargin),
 | HyperTabBarDefaults.FloatingMargin | PaddingValues | 否 | start/end 20dp，top 8dp、bottom 20dp | 独立悬浮导航默认外边距；并排布局由共同 Row 消费一次 |
 
 正文末尾余量优先消费 HyperScaffold 测量的 bottom padding，不能用另一套手写底栏高度。
+
+背景由 HyperBackdrop.background 提供，组件放在 content 中；这只定义取样来源，不是材质开关。未提供背景源时保留半透明底色与按压反馈。Android 13+ 执行折射、Android 12/12L 仅背景模糊，旧系统保留底色和交互。文档 Wasm 使用 Skia 执行同一模型。

@@ -43,7 +43,7 @@ import hyper_ui.HyperEmptyState
 import hyper_ui.HyperPopover
 import hyper_ui.HyperLevelCapsule
 import hyper_ui.HyperLevelCapsuleDefaults
-import hyper_ui.HyperBatteryIndicator
+import hyper_ui.HyperBattery
 import hyper_ui.HyperProgressDefaults
 import hyper_ui.HyperTextField
 
@@ -270,13 +270,13 @@ fun BatteryIndicatorDemo() {
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            HyperBatteryIndicator(
+            HyperBattery(
                 percentage = percentage,
                 charging = charging,
                 contentDescription = "电量 $percentage%"
             )
-            HyperBatteryIndicator(percentage = 16, charging = false)
-            HyperBatteryIndicator(percentage = 82, charging = true)
+            HyperBattery(percentage = 16, charging = false)
+            HyperBattery(percentage = 82, charging = true)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             HyperButton(
@@ -318,6 +318,7 @@ fun LoadingProgressDemo() {
 
 @Composable
 fun HyperDialogDemo() {
+    // 复用正式液态面板，保留输入框、窗口避让与关闭操作以检查材质分层。
     var visible by remember { mutableStateOf(false) }
     var draft by remember { mutableStateOf("输入内容验证窗口稳定") }
 

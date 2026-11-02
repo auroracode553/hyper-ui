@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Immutable
-data class HyperBatteryIndicatorColors(
+data class HyperBatteryColors(
     val containerColor: Color,
     val levelColor: Color,
     val lowLevelColor: Color,
@@ -51,26 +51,26 @@ data class HyperBatteryIndicatorColors(
  * 系统电量监听属于调用方职责，组件只渲染传入状态。
  */
 @Composable
-fun HyperBatteryIndicator(
+fun HyperBattery(
     percentage: Int,
     charging: Boolean,
     modifier: Modifier = Modifier,
     showPercentage: Boolean = true,
     contentDescription: String? = null,
-    shape: Shape = HyperBatteryIndicatorDefaults.Shape,
-    colors: HyperBatteryIndicatorColors = HyperBatteryIndicatorDefaults.colors()
+    shape: Shape = HyperBatteryDefaults.Shape,
+    colors: HyperBatteryColors = HyperBatteryDefaults.colors()
 ) {
     val resolvedPercentage = percentage.coerceIn(0, 100)
     val resolvedContentDescription = contentDescription
     val fillColor = when {
         charging -> colors.chargingLevelColor
-        resolvedPercentage <= HyperBatteryIndicatorDefaults.LowLevelThreshold -> colors.lowLevelColor
+        resolvedPercentage <= HyperBatteryDefaults.LowLevelThreshold -> colors.lowLevelColor
         else -> colors.levelColor
     }
 
     Row(
         modifier = modifier
-            .defaultMinSize(minHeight = HyperBatteryIndicatorDefaults.Height)
+            .defaultMinSize(minHeight = HyperBatteryDefaults.Height)
             .semantics {
                 progressBarRangeInfo = ProgressBarRangeInfo(
                     current = resolvedPercentage.toFloat(),
@@ -80,34 +80,34 @@ fun HyperBatteryIndicator(
                     this.contentDescription = resolvedContentDescription
                 }
             },
-        horizontalArrangement = Arrangement.spacedBy(HyperBatteryIndicatorDefaults.ElementSpacing),
+        horizontalArrangement = Arrangement.spacedBy(HyperBatteryDefaults.ElementSpacing),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(HyperBatteryIndicatorDefaults.TerminalSpacing),
+            horizontalArrangement = Arrangement.spacedBy(HyperBatteryDefaults.TerminalSpacing),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .width(HyperBatteryIndicatorDefaults.BodyWidth)
-                    .height(HyperBatteryIndicatorDefaults.Height)
+                    .width(HyperBatteryDefaults.BodyWidth)
+                    .height(HyperBatteryDefaults.Height)
                     .hyperGlassSurface(
                         shape = shape,
                         visuals = hyperGlassSurfaceVisuals(
                             containerColor = colors.containerColor,
-                            elevation = HyperBatteryIndicatorDefaults.Elevation,
+                            elevation = HyperBatteryDefaults.Elevation,
 
                         )
                     )
-                    .padding(HyperBatteryIndicatorDefaults.BodyInset)
+                    .padding(HyperBatteryDefaults.BodyInset)
             ) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .fillMaxHeight()
                         .fillMaxWidth(resolvedPercentage / 100f)
-                        .clip(HyperBatteryIndicatorDefaults.LevelShape)
-                        .background(fillColor, HyperBatteryIndicatorDefaults.LevelShape)
+                        .clip(HyperBatteryDefaults.LevelShape)
+                        .background(fillColor, HyperBatteryDefaults.LevelShape)
                 )
                 if (showPercentage) {
                     HyperText(
@@ -130,13 +130,13 @@ fun HyperBatteryIndicator(
             }
             Box(
                 modifier = Modifier
-                    .width(HyperBatteryIndicatorDefaults.TerminalWidth)
-                    .height(HyperBatteryIndicatorDefaults.TerminalHeight)
+                    .width(HyperBatteryDefaults.TerminalWidth)
+                    .height(HyperBatteryDefaults.TerminalHeight)
                     .hyperGlassSurface(
-                        shape = HyperBatteryIndicatorDefaults.TerminalShape,
+                        shape = HyperBatteryDefaults.TerminalShape,
                         visuals = hyperGlassSurfaceVisuals(
                             containerColor = colors.terminalColor,
-                            elevation = HyperBatteryIndicatorDefaults.TerminalElevation,
+                            elevation = HyperBatteryDefaults.TerminalElevation,
 
                         )
                     )
@@ -149,8 +149,8 @@ fun HyperBatteryIndicator(
             ) {
                 HyperIcon(Lucide.Zap, null,
                     modifier = Modifier.size(
-                        width = HyperBatteryIndicatorDefaults.ChargingIconWidth,
-                        height = HyperBatteryIndicatorDefaults.ChargingIconHeight
+                        width = HyperBatteryDefaults.ChargingIconWidth,
+                        height = HyperBatteryDefaults.ChargingIconHeight
                     )
                 )
             }
@@ -158,7 +158,7 @@ fun HyperBatteryIndicator(
     }
 }
 
-object HyperBatteryIndicatorDefaults {
+object HyperBatteryDefaults {
     val BodyWidth = 38.dp
     val Height = 18.dp
     val Shape: Shape = RoundedCornerShape(4.dp)
@@ -184,10 +184,10 @@ object HyperBatteryIndicatorDefaults {
         percentageColor: Color = Color.Unspecified,
         terminalColor: Color = Color.Unspecified,
         chargingIconColor: Color = Color.Unspecified
-    ): HyperBatteryIndicatorColors = HyperBatteryIndicatorColors(
+    ): HyperBatteryColors = HyperBatteryColors(
         containerColor = resolveHyperContainerColor(
             containerColor,
-            hyperGlass.surfaceSubtle
+            hyperSurfaces.surfaceSubtle
         ),
         levelColor = resolveHyperContainerColor(
             levelColor,
@@ -207,7 +207,7 @@ object HyperBatteryIndicatorDefaults {
         ),
         terminalColor = resolveHyperContainerColor(
             terminalColor,
-            hyperGlass.surfaceSubtle
+            hyperSurfaces.surfaceSubtle
         ),
         chargingIconColor = resolveHyperContainerColor(
             chargingIconColor,

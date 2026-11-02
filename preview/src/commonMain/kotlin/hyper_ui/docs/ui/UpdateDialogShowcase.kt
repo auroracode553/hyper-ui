@@ -108,7 +108,7 @@ private fun UpdatePreviewTag(label: String, selected: Boolean, onPressed: () -> 
         Color(1f, 1f, 1f, 1f) else Color(0f, 0f, 0f, 1f)
     Box(Modifier.defaultMinSize(minHeight = 30.dp)
         .hyperNoRippleClickable(onClick = onPressed)
-        .background(if (selected) color else hyperGlass.surfaceSubtle, shape)
+        .background(if (selected) color else hyperSurfaces.surfaceSubtle, shape)
         .border(1.dp, if (selected) color else HyperColors.fieldBorder, shape)
         .padding(horizontal = 13.dp, vertical = 4.dp), contentAlignment = Alignment.Center) {
         HyperText(label, color = foreground, fontSize = 13.sp, lineHeight = 15.6.sp,

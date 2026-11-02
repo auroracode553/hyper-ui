@@ -66,13 +66,13 @@ HyperTabBar 的 single 独立圆形动作入口固定直径 48dp，multiple 悬�
 ## 页面组合
 
 - 顶部页面操作使用 `HyperNavBar`，底部主导航使用 `HyperTabBar`。
-- 设置和少量操作使用 `HyperMenuGroup`；连续数据使用 `HyperList` 或 `HyperSectionedList`。
+- 设置和少量操作使用 `HyperMenuGroup`；连续数据使用 `HyperList` 或 `HyperGroupedList`。
 - 对话框、抽屉和 Popup 只承载当前任务，网络请求、权限申请和路由仍由调用方处理。
 
 ## 相关文档
 
 - [接入与最小配置](getting-started.md)
-- [主题配置](theme.md)
+- [主题配置](getting-started.md)
 - [组件索引](component-index.md)
 - [状态与架构边界](state-model.md)
 

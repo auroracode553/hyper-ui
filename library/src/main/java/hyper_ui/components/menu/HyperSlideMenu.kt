@@ -97,7 +97,7 @@ fun HyperSlideMenu(
     }
     Box(modifier
         .hyperSurfaceShadow(shape, hyperSurfaceDepthVisuals(HyperSurfaceDepthRole.ContentCard, 12.dp))
-        .clip(shape).background(hyperGlass.controlTrack)
+        .clip(shape).background(hyperSurfaces.controlTrack)
         .semantics {
             if (enabled) customActions = buildList {
                 if (startActions.isNotEmpty()) add(CustomAccessibilityAction("展开起始侧操作") {
@@ -142,7 +142,7 @@ fun HyperSlideMenu(
                     dragging = false
                 }
             )
-            .hyperCardSurface(hyperGlass.surface, shape, elevation = 0.dp)) {
+            .hyperCardSurface(hyperSurfaces.surface, shape, elevation = 0.dp)) {
             CompositionLocalProvider(LocalHyperSurfacePresent provides true) { child() }
             if (!dragging && kotlin.math.abs(offset) > 1f) Box(Modifier.matchParentSize()
                 .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {

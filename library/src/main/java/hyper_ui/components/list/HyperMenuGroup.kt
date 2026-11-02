@@ -29,7 +29,7 @@ data class HyperMenuGroupColors(
 /**
  * 简单菜单列表。
  *
- * 仅用于少量菜单、设置项和操作入口；页面级动态数据使用 HyperList 或 HyperSectionedList。
+ * 仅用于少量菜单、设置项和操作入口；页面级动态数据使用 HyperList 或 HyperGroupedList。
  * modifier 控制菜单外壳，contentModifier 控制容器内部内容布局。
  * 组件不提供边框参数；需要外层描边时由调用方通过 modifier 组合。
  */
@@ -46,7 +46,7 @@ fun <T> HyperMenuGroup(
 ) {
     HyperMenuGroupHeading(title, subtitle) {
 
-    val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surface)
+    val containerColor = resolveHyperContainerColor(colors.containerColor, hyperSurfaces.surface)
     val shape = HyperMenuGroupDefaults.Shape
     Column(
         modifier = modifier
@@ -99,7 +99,7 @@ fun HyperMenuGroup(
 ) {
     HyperMenuGroupHeading(title, subtitle) {
 
-    val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surface)
+    val containerColor = resolveHyperContainerColor(colors.containerColor, hyperSurfaces.surface)
     CompositionLocalProvider(
         LocalHyperListTileDividerSuppressed provides false,
         LocalHyperListTileContainerColor provides containerColor
@@ -127,7 +127,7 @@ object HyperMenuGroupDefaults {
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperMenuGroupColors = HyperMenuGroupColors(
-        containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surface)
+        containerColor = resolveHyperContainerColor(containerColor, hyperSurfaces.surface)
     )
 }
 

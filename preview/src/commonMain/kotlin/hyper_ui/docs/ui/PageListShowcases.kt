@@ -64,7 +64,7 @@ fun HyperListDemo() {
 private data class PreviewFileSection(val id: String, val title: String, val entries: List<String>)
 
 @Composable
-fun HyperSectionedListDemo() {
+fun HyperGroupedListDemo() {
     val groups = remember {
         listOf(
             PreviewFileSection("today", "今天", listOf("项目周报.docx", "会议记录.txt", "设计稿.pdf")),
@@ -75,7 +75,7 @@ fun HyperSectionedListDemo() {
     var selected by remember { mutableStateOf<String?>(null) }
     // Preview 作为调用方显式提供一次页面水平留白。
     Column(Modifier.fillMaxSize().padding(horizontal = HyperSpacing.PageHorizontal), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        HyperSectionedList(
+        HyperGroupedList(
             modifier = Modifier.weight(1f),
             sections = groups,
             items = { it.entries },

@@ -65,8 +65,8 @@ fun <T> HyperFilterBar(
             val accent = HyperColors.accent
             val divider = HyperColors.divider
             val background by animateColorAsState(
-                if (selected) accent.copy(alpha = 0.08f).compositeOver(hyperGlass.surfaceSubtle)
-                else hyperGlass.surfaceSubtle,
+                if (selected) accent.copy(alpha = 0.08f).compositeOver(hyperSurfaces.surfaceSubtle)
+                else hyperSurfaces.surfaceSubtle,
                 tween(HyperMotionSpec.StateDuration, easing = HyperMotionSpec.EaseOutCubic),
                 label = "HyperFilterBarSelection",
             )

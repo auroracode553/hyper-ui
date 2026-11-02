@@ -1,5 +1,7 @@
 # HyperUI
 
+[HyperTabBar](vitepress/docs/components/navigation/hyper-tab-bar.md)、[HyperSlider](vitepress/docs/components/form/hyper-slider.md)、[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 和 [HyperDialog](vitepress/docs/components/feedback/hyper-dialog.md) 固定使用库内玻璃绘制，保留按压反馈与弹簧动效。保持 48dp 单入口、56dp 按钮组、20dp 滑块和原弹窗尺寸。Compose Preview 使用 1.12.0。
+
 设置页面使用 HyperMenuGroup(title = ...) 与 HyperListTile 的默认排版及卡片留白；独立标题使用 [HyperSectionTitle](vitepress/docs/components/list/hyper-section-title.md)，不在应用中覆写菜单字号或另用 HyperCard 包装设置行。页面水平、垂直和组间留白分别读取 HyperSpacing.PageHorizontal / PageVertical / SectionVertical（14 / 12 / 16dp）。
 
 维护组件前必读 [UI 样式与功能实现基线](vitepress/docs/style-reference.md)：记录 Android 当前材质、尺寸、功能、状态及专用样式保留清单。已有样式默认保持不动，用途不明或可能影响交互的变化先向使用者确认，禁止批量替换。
@@ -42,11 +44,13 @@ Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义
 
 `HyperDatePicker.date` 对齐 `D:/my_project/flutter_project/flutter-hyper-ui/ui/lib/src/components/hyper_date_picker.dart` 的单日期模式和底部面板：30dp 圆角、16dp 内边距、42dp 日期行、36dp 选中圆、12 个月及年份跳转。公开日期类型为 Android 原生 `LocalDate`；默认范围为 1900-01-01 至 2100-12-31，临时选择在确定并关闭面板后提交。无新增依赖。完整签名、状态约定与交互示例见 [日期选择器](vitepress/docs/components/form/hyper-date-picker.md)。
 
-默认视觉与 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 的同名组件对齐。默认材质为 `HyperMaterial.Solid`，同时提供 `Soft`、`Clear`；已有颜色、字号、行高、圆角、间距、图标和动效按当前基线维护，不因参考差异自动重写。每类组件只保留一套默认规格：按钮高度 38dp，输入框圆角 20dp，分段 HyperTabs 高 40dp，横向分类 HyperFilterBar 最小高 32dp，TabBar 的 single 固定直径 48dp、multiple 按钮组默认高 56dp。完整规则见 [样式与功能实现基线](vitepress/docs/style-reference.md)。
+默认视觉与 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 的同名组件对齐。普通组件固定为实色表面；TabBar、Slider、Switch、Dialog 内置固定玻璃效果；已有颜色、字号、行高、圆角、间距、图标和动效按当前基线维护，不因参考差异自动重写。每类组件只保留一套默认规格：按钮高度 38dp，输入框圆角 20dp，分段 HyperTabs 高 40dp，横向分类 HyperFilterBar 最小高 32dp，TabBar 的 single 固定直径 48dp、multiple 按钮组默认高 56dp。完整规则见 [样式与功能实现基线](vitepress/docs/style-reference.md)。
 
-`HyperDropdown` 使用 options/value/onChanged 管理选择；width 省略时按文案自动取 160–240dp，菜单匹配字段宽度。`HyperPopover` 的 visible / onClose 由调用方控制，child 提供锚点并自行触发；默认宽 180dp，width 可显式指定，maxWidth 只限制上限。`HyperTabBar.type` 为 single/multiple，不提供整体或单项禁用状态；`HyperCheckbox.value` 为可空三态值。更新弹窗通过 status、展示数据与操作回调接入业务服务。
+`HyperDropdown` 使用 options/value/onChanged 管理选择；width 省略时按文案自动取 160–240dp，菜单匹配字段宽度。`HyperPopover` 的 visible / onClose 由调用方控制，child 提供锚点并自行触发；默认宽 180dp，width 可显式指定，maxWidth 只限制上限。`HyperTabBar.type` 为 single/multiple，itemEnabled 控制单项禁用；`HyperCheckbox.value` 为可空三态值。更新弹窗通过 status、展示数据与操作回调接入业务服务。
 
 `HyperCheckbox`、`HyperRadio`、`HyperSwitch` 的 label 使用 plain 行，不自动附带卡片背景、外框或阴影；基础预览直接展示控件与标签。
+
+[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 保留 52×32dp 轨道、22dp 可见滑块与标签行布局；固定玻璃滑块保留按压折射、高光和弹簧切换，禁用及颜色覆盖继续生效。
 
 `HyperNavBar` 的滚动背景覆盖状态栏，只有操作行避让顶部安全区。真机读取系统 Insets；文档预览注入模拟 Insets，导航与正文共用且只计算一次，与 Flutter 的背景及安全区层级一致。
 
@@ -73,7 +77,7 @@ HyperThemeConfig {
 HyperListTile 预览直接展示条目和状态，不额外套 HyperCard；弹窗中的只读详情使用 HyperListTile(type = "plain") 的标签与说明槽，不逐项包装卡片。
 HyperRadio 的标签行由整行处理点击，默认最小高度 46dp；放进列表行只展示时省略 onChanged，圆环占 21dp，不额外撑高行。无标签独立交互控件保留 44dp 触摸区。
 
-三选项主题设置使用 [HyperThemeModeDialog](vitepress/docs/components/feedback/hyper-theme-mode-dialog.md)：选项最小行高 36dp、上下内边距 4dp，选择后请求关闭。value 为 null / false / true，分别表示跟随系统 / 浅色 / 深色；应用负责保存并应用主题。
+三选项主题设置使用 [HyperThemeDialog](vitepress/docs/components/feedback/hyper-theme-dialog.md)：选项最小行高 36dp、上下内边距 4dp，选择后请求关闭。value 为 null / false / true，分别表示跟随系统 / 浅色 / 深色；应用负责保存并应用主题。
 
 ## 先看结论
 
@@ -265,13 +269,13 @@ HyperIcon 继续负责插槽尺寸与颜色继承，图形由图标库提供；�
 
 ## 组件范围
 
-- 主题与材质：`HyperThemeConfig`、`HyperTheme`、`HyperColors`、`HyperGlassTokens`、`HyperBackdrop`、`HyperSoftBackground`。
+- 基础外观与背景：`HyperThemeConfig`、`HyperTheme`、`HyperColors`、`HyperBackdrop`、`HyperBackground`。
 - 基础与表单：`HyperText`、`HyperIcon`、`HyperDivider`、`HyperButton`（含 `type = "icon"`）、`HyperTextField`、`HyperSwitch`（清晰的关闭态中性轨道）、`HyperCheckbox`、`HyperRadio`、`HyperTabs`、`HyperSlider`。
-- 容器与列表：`HyperCard`、`HyperColorPicker`、`HyperList`、`HyperSectionedList`、`HyperMenuGroup`、`HyperListTile`。
+- 容器与列表：`HyperCard`、`HyperColorPicker`（连续 HSV 调色板）、`HyperList`、`HyperGroupedList`、`HyperMenuGroup`、`HyperListTile`。
 - 导航与操作：`HyperNavBar`（顶部透明；宿主通过 `scrollState` 自动监听正文位置，滚入时用 160ms 过渡显示主题渐变，在状态栏顶部至导航底部内渐隐至透明，没有分隔线，固定顶部状态栏避让；通过 `layout = custom/backOnly/titleOnly/backWithTitle/more/edit` 选择固定布局，`custom` 提供完整插槽；搭配 `HyperNavBarPage` 让正文滚到导航栏后方并提供全屏正文宿主）、`HyperDrawer`、`HyperSlideMenu`（侧滑操作）、`HyperFilterBar`（横向分类）、`HyperTabBar`（文档页分别提供单动作与多标签交互预览）。
 - 浮层与反馈：`HyperTooltip`、`HyperEmptyState`、`HyperPopover`、`HyperDialog`、`HyperAlertDialog`、`HyperUpdateDialog`、`HyperDropdown`、`HyperToast`（自适应宽度和语义色）、`HyperLoading`（type 选择十款原生动画，默认随机，固定 2× 节奏）、进度和播放速度组件。
 
-`HyperSectionedList` 固定使用 8dp 紧凑分段间距，选择状态由调用方管理。
+`HyperGroupedList` 固定使用 8dp 紧凑分段间距，选择状态由调用方管理。
 
 `HyperUpdateDialog` 的错误状态采用简洁布局，展示错误原因、重试与关闭。
 更新弹窗的关闭、取消和稍后再说省略 `type`，使用 `HyperButton` 默认描边样式；主操作显式使用 `type = "filled"` 和 `colorStyle = "primary"`。
@@ -280,6 +284,7 @@ HyperIcon 继续负责插槽尺寸与颜色继承，图形由图标库提供；�
 按钮配色与显示形态独立：`type` 仅支持 `filled`、`icon`，省略时默认白色描边；`colorStyle` 支持 `primary`、`success`、`info`、`warning`、`danger`，自定义 `color` 优先于预设配色。按钮预览以 Flutter ButtonsExample 为基准，分组、文案、图标和 8/16dp 间距一致，保留单个禁用文字示例；手机外框、白色背景和 52dp 顶部留白同步，不添加额外状态栏、分组标题、开关或点击计数。库内组件和 Preview 均使用这些标准类型，并与 `D:/my_project/flutter_project/doc_ui_kit` 同步维护。
 
 Preview 使用合并 Roboto 与 Noto Sans SC 的独立字体，避免 Wasm 中文回退失效并保持 Flutter 的拉丁字符宽度。生成工具位于 `preview/tools/generate-preview-font.py`，仅重新生成字体时需要 fontTools；正常构建直接使用已保存的字体，不需要 Python 或新依赖。Android 与 Preview 的按钮阴影分别由 `HyperButtonShadowRadius.kt` 与 `PreviewButtonShadowRadius.kt` 换算后端单位，公开按钮 API 不变。
+- 状态反馈：`HyperBattery` 展示电量，`HyperSpeedScale` 展示倍速刻度，`HyperSpeedPanel` / `HyperSpeedPanelOverlay` 提供倍速选择面板与浮层宿主。
 - Android 系统工具：`hyperToast`、`HyperBatteryState`、`readHyperBatteryState`、`rememberHyperBatteryState`。它们不进入 Preview 的跨平台编译链，真实调用仅限 Android。
 
 所有公开 API 位于 `hyper_ui` 包；`hyper_ui.core` 仅供库内部使用。详细签名和默认值以[组件索引](vitepress/docs/component-index.md)及各组件页为准。
@@ -447,11 +452,11 @@ TabBar 尺寸由库按形态管理：single 独立入口固定直径 48dp，mult
 按需安全区统一使用 HyperSafeArea（Top / Bottom）。根画布继续全面屏；竖屏底部取导航区／缺口与库内最小 20dp 的最大值，横屏只保留实际系统区，同侧嵌套只消费一次。输入法只扩展自身面板底部，不处理宿主 IME Insets；页面不得自行复制安全区高度。
 
 
-页面数据列表：`HyperList` 与 `HyperSectionedList` 使用无卡片的简约平铺样式，不绘制卡片背景、阴影或分组圆角；保留分隔线与行选中反馈。设置菜单的 `HyperMenuGroup` 和独立 `HyperListTile` 表面规则保持独立。
+页面数据列表：`HyperList` 与 `HyperGroupedList` 使用无卡片的简约平铺样式，不绘制卡片背景、阴影或分组圆角；保留分隔线与行选中反馈。设置菜单的 `HyperMenuGroup` 和独立 `HyperListTile` 表面规则保持独立。
 
-页面水平外边距由调用方通过 HyperSpacing.PageHorizontal（14dp）统一提供。HyperList、HyperSectionedList 不额外增加页面缩进；独立 plain 与 glass 行保留左右各 14dp 行内留白，复用 MenuGroup 或已有父表面的 plain 行共享父级留白，不重复叠加。组件保留垂直触控留白、内容间距和选中反馈。
+页面水平外边距由调用方通过 HyperSpacing.PageHorizontal（14dp）统一提供。HyperList、HyperGroupedList 不额外增加页面缩进；独立 plain 与 glass 行保留左右各 14dp 行内留白，复用 MenuGroup 或已有父表面的 plain 行共享父级留白，不重复叠加。组件保留垂直触控留白、内容间距和选中反馈。
 
-共用页面尺寸参见 [HyperSpacing API](vitepress/docs/theme.md#hyperspacing-api)，调用方直接使用 HyperSpacing.PageHorizontal，不在各项目维护副本。
+共用页面尺寸参见 [HyperSpacing API](vitepress/docs/getting-started.md#hyperspacing-api)，调用方直接使用 HyperSpacing.PageHorizontal，不在各项目维护副本。
 
 卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。
 

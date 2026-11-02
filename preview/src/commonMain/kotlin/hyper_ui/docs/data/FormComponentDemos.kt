@@ -123,7 +123,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "switch",
         group = GROUP_FORM,
         title = "HyperSwitch",
-        description = "受控开关直接使用无卡片标签行；关闭态保留中性轨道和细描边，覆盖开启、关闭与禁用状态。",
+        description = "52×32dp 受控开关、22dp 玻璃滑块，按压高光、弹簧切换；展示标签行、禁用与独立控件。",
         code = """
             HyperSwitch(
                 value = enabled,
@@ -131,8 +131,9 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("开启", "checked = true", "主题实色轨道"),
-            DemoVariant("关闭", "checked = false", "中性轨道、细描边与固定尺寸滑块"),
+            DemoVariant("开启", "value = true", "主题轨道与滑块共用临界阻尼弹簧进度"),
+            DemoVariant("关闭", "value = false", "中性轨道、细描边与固定尺寸滑块"),
+            DemoVariant("按压", "按压进度", "仅滑块显示按压高光，不放大轨道或滑块"),
             DemoVariant("禁用", "enabled = false", "分别展示禁用开启与禁用关闭")
         ),
         apiDocumentPaths = listOf("form/hyper-switch.md"),
@@ -156,7 +157,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant(
                 "默认连续",
                 "min = 0f, max = 100f, showValue = true",
-                "44dp 触摸高度、6dp 轨道、20dp 手柄、2dp 描边"
+                "44dp 触摸高度、6dp 轨道、20dp 玻璃手柄，按压高光与弹簧定位"
             ),
             DemoVariant("分段", "divisions = 5, showSegmentMarkers = true", "吸附并显示全部分段点"),
             DemoVariant("指定标记", "segmentValues", "只展示业务主刻度"),

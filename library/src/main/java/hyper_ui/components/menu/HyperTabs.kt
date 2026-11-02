@@ -78,7 +78,7 @@ fun <T> HyperTabs(
             .then(if (equalWidth) Modifier.fillMaxWidth() else Modifier)
             .height(HyperTabsDefaults.Height)
             .hyperGlassSurface(shape, hyperGlassSurfaceVisuals(colors.containerColor,
-                HyperTabsDefaults.ContainerElevation, blur = hyperGlass.blur))
+                HyperTabsDefaults.ContainerElevation))
             .padding(containerPadding)
     ) {
         if (equalWidth && tabs.isNotEmpty() && selectedIndex >= 0) {
@@ -134,11 +134,11 @@ object HyperTabsDefaults {
     ): HyperTabsColors {
         val resolvedContainerColor = resolveHyperContainerColor(
             containerColor,
-            hyperGlass.surfaceSubtle
+            hyperSurfaces.surfaceSubtle
         )
         val resolvedSelectedItemColor = resolveHyperContainerColor(
             selectedItemColor,
-            hyperGlass.selection
+            hyperSurfaces.selection
         )
 
         return HyperTabsColors(

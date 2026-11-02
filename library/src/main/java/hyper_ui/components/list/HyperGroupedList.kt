@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Immutable
-data class HyperSectionedListColors(
+data class HyperGroupedListColors(
     val headerContentColor: Color,
     val dividerColor: Color
 )
@@ -33,18 +33,18 @@ data class HyperSectionedListColors(
  * 分组之间固定使用 8dp 紧凑间距，调用方只负责分组数据、稳定 key、标题和单行内容。
  */
 @Composable
-fun <S, T> HyperSectionedList(
+fun <S, T> HyperGroupedList(
     sections: List<S>,
     items: (S) -> List<T>,
     sectionKey: (S) -> Any,
     itemKey: (S, T) -> Any,
     modifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
-    contentPadding: PaddingValues = HyperSectionedListDefaults.ContentPadding,
-    firstSectionTopSpacing: Dp = HyperSectionedListDefaults.FirstSectionTopSpacing,
-    headerBottomSpacing: Dp = HyperSectionedListDefaults.HeaderBottomSpacing,
+    contentPadding: PaddingValues = HyperGroupedListDefaults.ContentPadding,
+    firstSectionTopSpacing: Dp = HyperGroupedListDefaults.FirstSectionTopSpacing,
+    headerBottomSpacing: Dp = HyperGroupedListDefaults.HeaderBottomSpacing,
     dividerModifier: Modifier = Modifier,
-    colors: HyperSectionedListColors = HyperSectionedListDefaults.colors(),
+    colors: HyperGroupedListColors = HyperGroupedListDefaults.colors(),
     headerContent: @Composable (section: S) -> Unit,
     itemContent: @Composable (section: S, item: T) -> Unit
 ) {
@@ -81,7 +81,7 @@ fun <S, T> HyperSectionedList(
                 ) {
                     CompositionLocalProvider(
                         LocalHyperContentColor provides headerContentColor,
-                        LocalHyperTextStyle provides HyperSectionedListDefaults.HeaderTextStyle
+                        LocalHyperTextStyle provides HyperGroupedListDefaults.HeaderTextStyle
                     ) {
                         headerContent(section)
                     }
@@ -93,7 +93,7 @@ fun <S, T> HyperSectionedList(
                     key = itemKey(section, sectionItem),
                     contentType = HyperSectionItemContentType
                 ) {
-                    HyperSectionedListItemContainer(
+                    HyperGroupedListItemContainer(
                         itemIndex = itemIndex,
                         lastItemIndex = sectionItems.lastIndex,
                         dividerColor = dividerColor,
@@ -107,7 +107,7 @@ fun <S, T> HyperSectionedList(
     }
 }
 
-object HyperSectionedListDefaults {
+object HyperGroupedListDefaults {
     val FirstSectionTopSpacing = 0.dp
     val HeaderBottomSpacing = 8.dp
     /** 分组标题和数据行共用调用方传入的页面留白，库不添加水平缩进。 */
@@ -124,8 +124,8 @@ object HyperSectionedListDefaults {
     fun colors(
         headerContentColor: Color = Color.Unspecified,
         dividerColor: Color = Color.Unspecified
-    ): HyperSectionedListColors {
-        return HyperSectionedListColors(
+    ): HyperGroupedListColors {
+        return HyperGroupedListColors(
             headerContentColor = resolveHyperContainerColor(headerContentColor, HyperColors.secondaryText),
             dividerColor = resolveHyperContainerColor(dividerColor, HyperColors.divider)
         )
@@ -133,7 +133,7 @@ object HyperSectionedListDefaults {
 }
 
 @Composable
-private fun HyperSectionedListItemContainer(
+private fun HyperGroupedListItemContainer(
     itemIndex: Int,
     lastItemIndex: Int,
     dividerColor: Color,

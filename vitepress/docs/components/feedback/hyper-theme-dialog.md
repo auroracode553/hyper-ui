@@ -2,14 +2,14 @@
 description: 跟随系统、浅色、深色三选项的紧凑主题弹窗。
 ---
 
-# HyperThemeModeDialog
+# HyperThemeDialog
 
 统一三选项主题设置。选项最小行高 36dp、垂直内边距 4dp，无额外行间距和关闭按钮；圆环为 21dp。大字体可自然撑高行，弹窗正文可滚动。
 
 <WasmPreview demo="theme-mode-dialog" title="主题设置" />
 
 ```kotlin
-HyperThemeModeDialog(
+HyperThemeDialog(
     visible = visible,
     value = darkTheme,
     onChanged = { darkTheme = it },
@@ -25,7 +25,7 @@ value 为 null 表示跟随系统、false 为浅色、true 为深色，与 Hyper
 
 ```kotlin
 @Composable
-fun HyperThemeModeDialog(
+fun HyperThemeDialog(
     visible: Boolean,
     value: Boolean?,
     onChanged: (Boolean?) -> Unit,

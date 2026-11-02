@@ -8,7 +8,6 @@ import hyper_ui.docs.data.ComponentDemo
 import hyper_ui.docs.LocalThemeColor
 import hyper_ui.HyperTheme
 import hyper_ui.HyperThemeConfig
-import hyper_ui.docs.theme.docsGlassTokens
 
 @Composable
 internal fun EmbeddedComponentPreview(demo: ComponentDemo) {
@@ -21,8 +20,6 @@ internal fun EmbeddedComponentPreview(demo: ComponentDemo) {
         darkTheme = settings.darkTheme,
         typography = typography,
         shapes = shapes,
-        material = settings.material,
-        glass = docsGlassTokens(settings.darkTheme, settings.material)
     ) {
         ComponentPreviewViewport(demo, Modifier.fillMaxSize(), deviceSafeAreas = true)
     }

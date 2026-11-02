@@ -58,7 +58,7 @@ fun HyperListTile(
     val plain = type == "plain" || (type == "auto" && hasParentSurface)
     val rowShape = RoundedCornerShape(if (plain) 12.dp else 15.dp)
     val selectedBackground by androidx.compose.animation.animateColorAsState(
-        if (selected) hyperGlass.selection else Color.Transparent,
+        if (selected) hyperSurfaces.selection else Color.Transparent,
         androidx.compose.animation.core.tween(HyperMotionSpec.MenuDuration, easing = HyperMotionSpec.EaseOutCubic),
         label = "HyperListTileSelection")
     val hasLeading = leading != null || leadingIcon != null
@@ -67,7 +67,7 @@ fun HyperListTile(
         .then(if (onPressed != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
             onClick = onPressed) else Modifier)
         .hyperCardSurface(
-        if (selected) hyperGlass.surfaceStrong else hyperGlass.surface,
+        if (selected) hyperSurfaces.surfaceStrong else hyperSurfaces.surface,
         RoundedCornerShape(18.dp),
         border = if (selected) BorderStroke(1.dp, HyperColors.accent) else null
     ).padding(vertical = 3.dp)
@@ -86,7 +86,7 @@ fun HyperListTile(
                     LocalHyperIconSize provides 18.dp) {
                     if (leading != null) leading() else Box(
                         Modifier.size(34.dp).hyperSolidSurface(leadingColor.copy(alpha = 28 / 255f),
-                            RoundedCornerShape(11.dp), border = BorderStroke(1.dp, hyperGlass.border)),
+                            RoundedCornerShape(11.dp), border = BorderStroke(1.dp, hyperSurfaces.border)),
                         contentAlignment = Alignment.Center
                     ) { HyperIcon(leadingIcon!!, null, color = leadingColor) }
                 }

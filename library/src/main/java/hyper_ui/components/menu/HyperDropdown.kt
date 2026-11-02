@@ -58,7 +58,7 @@ fun <T> HyperDropdown(
                 Row(Modifier.fillMaxWidth().onGloballyPositioned { anchor = it.boundsInWindow() }
                     .defaultMinSize(minHeight = 48.dp)
                     .hyperNoRippleClickable(enabled = active, onClick = { expanded = !expanded })
-                    .hyperFrostedSurface(hyperGlass.surfaceSubtle, RoundedCornerShape(16.dp), elevation = 0.dp,
+                    .hyperFrostedSurface(hyperSurfaces.surfaceSubtle, RoundedCornerShape(16.dp), elevation = 0.dp,
                         border = BorderStroke(1.dp, HyperColors.fieldBorder))
                     .padding(horizontal = 14.dp, vertical = 11.dp), verticalAlignment = Alignment.CenterVertically) {
                     HyperText(selected?.label ?: placeholder, Modifier.weight(1f),

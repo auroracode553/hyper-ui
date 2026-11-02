@@ -72,11 +72,11 @@ fun HyperToast(
         "error" -> HyperColors.danger
         else -> error("不支持的 HyperToast type: $type")
     })
-    val surfaceColor = toneColor.copy(alpha = 10 / 255f).compositeOver(hyperGlass.surfaceStrong)
+    val surfaceColor = toneColor.copy(alpha = 10 / 255f).compositeOver(hyperSurfaces.surfaceStrong)
     Row(
         modifier.widthIn(min = 180.dp, max = 420.dp)
             .hyperFrostedSurface(
-                surfaceColor, RoundedCornerShape(18.dp), blur = hyperGlass.blurStrong,
+                surfaceColor, RoundedCornerShape(18.dp),
                 border = BorderStroke(1.dp, toneColor.copy(alpha = 105 / 255f))
             )
             .semantics { liveRegion = LiveRegionMode.Polite }

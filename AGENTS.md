@@ -1,5 +1,7 @@
 ## 全面屏与悬浮栏约束
 
+- 全局主题不提供材质档位，普通组件保持实色；TabBar、Slider、Switch、Dialog 在组件内部固定使用参考项目的玻璃绘制。不得因删除全局配置而删除组件玻璃效果；保留品牌色、字体与深浅色，尺寸和布局不因材质改变。
+
 - Activity 使用 `enableHyperEdgeToEdge()`，根 `HyperThemeConfig.useSystemSafeArea = false`。根画布、滚动视口和 WebView 保持全屏，正文可滚入顶部状态栏与底部 TabBar 后方。
 - 禁止用固定高度、`Spacer`、根布局系统栏 padding、滚动容器外的栏高 padding、扣减屏幕高度或裁切，为状态栏、导航栏、悬浮 TabBar 建立永久占位；禁止把悬浮栏放进 `Column` 挤占正文。不得把 `HyperScaffold` 返回的上下净空直接用于滚动视口的 `Modifier.padding`。
 - 顶部操作区由 `HyperNavBar` 或局部操作容器根据真实窗口 Insets 保护一次。首屏顶部净空与末尾底部净空只进入 `LazyColumn` / `LazyGrid` 的 `contentPadding` 或 `verticalScroll(...).padding(...)` 内部，随正文滚动；不能在视口外固定留空。

@@ -66,7 +66,7 @@ internal fun HyperAnchoredSurface(
                 scaleY = scaleX
                 transformOrigin = origin
             }.width(width.coerceAtMost(availableWidth)).heightIn(max = availableHeight)
-                .hyperFrostedSurface(hyperGlass.surfaceStrong, RoundedCornerShape(18.dp), blur = hyperGlass.blurStrong)
+                .hyperFrostedSurface(hyperSurfaces.surfaceStrong, RoundedCornerShape(18.dp))
                 .padding(padding)
                 .then(if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier)) {
                 CompositionLocalProvider(LocalHyperSurfacePresent provides true) { content() }

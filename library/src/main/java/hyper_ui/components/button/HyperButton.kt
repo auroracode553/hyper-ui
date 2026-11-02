@@ -96,7 +96,7 @@ fun HyperButton(
                 modifier = Modifier.size(if (isIconType)
                     (HyperButtonDefaults.iconSize(iconOnly = true) - 2.dp).coerceAtLeast(12.dp) else 16.dp),
                 strokeWidth = 2.dp,
-                colors = HyperProgressDefaults.colors(hyperGlass.controlTrack, foreground)
+                colors = HyperProgressDefaults.colors(hyperSurfaces.controlTrack, foreground)
             )
             if (!isIconType || !loading) content()
         }
@@ -138,8 +138,8 @@ object HyperButtonDefaults {
         val hasTone = color != Color.Unspecified || colorStyle != null
         val fill = when (type) {
             "filled" -> tone
-            "icon" -> hyperGlass.surface
-            null -> hyperGlass.surfaceSubtle
+            "icon" -> hyperSurfaces.surface
+            null -> hyperSurfaces.surfaceSubtle
             else -> error("不支持的 HyperButton type: $type")
         }
         val foreground = if (type == "filled" && hasTone) {
@@ -148,7 +148,7 @@ object HyperButtonDefaults {
         return HyperButtonColors(
             resolveHyperContainerColor(containerColor, fill),
             resolveHyperContainerColor(contentColor, foreground),
-            resolveHyperContainerColor(disabledContainerColor, hyperGlass.controlTrack),
+            resolveHyperContainerColor(disabledContainerColor, hyperSurfaces.controlTrack),
             resolveHyperContainerColor(disabledContentColor, HyperColors.secondaryText.copy(alpha = 150 / 255f))
         )
     }
@@ -162,7 +162,7 @@ object HyperButtonDefaults {
             "info" -> HyperColors.info
             "warning" -> HyperColors.warning
             "danger" -> HyperColors.danger
-            null -> hyperGlass.surfaceStrong
+            null -> hyperSurfaces.surfaceStrong
             else -> error("不支持的 HyperButton colorStyle: $colorStyle")
         }
         return resolveHyperContainerColor(color, preset)
@@ -180,7 +180,7 @@ object HyperButtonDefaults {
             type == "filled" -> Color(1f, 1f, 1f, 45 / 255f)
             color != Color.Unspecified || colorStyle != null -> tone(color, colorStyle).copy(alpha = 0.35f)
             type == null -> HyperColors.divider
-            else -> hyperGlass.edgeHighlight
+            else -> hyperSurfaces.edgeHighlight
         }
         return if (fallback.alpha == 0f) null else BorderStroke(1.dp, fallback)
     }

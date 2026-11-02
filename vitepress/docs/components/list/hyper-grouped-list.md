@@ -2,7 +2,7 @@
 description: 按日期或分类组织页面数据，标题与数据行独立懒加载，使用无卡片平铺行并自动管理组内分隔线。
 ---
 
-# HyperSectionedList
+# HyperGroupedList
 
 按日期或分类组织页面数据，标题与数据行独立懒加载，使用无卡片平铺行并自动管理组内分隔线。分组之间固定使用 8dp 紧凑间距，不提供间距切换或 sectionSpacing 参数。
 
@@ -10,7 +10,7 @@ description: 按日期或分类组织页面数据，标题与数据行独立懒�
 
 ## 交互示例
 
-<WasmPreview demo="hyper_sectioned_list" title="HyperSectionedList 交互预览" />
+<WasmPreview demo="hyper_sectioned_list" title="HyperGroupedList 交互预览" />
 
 ## 使用方式
 
@@ -22,7 +22,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import hyper_ui.*
 
-HyperSectionedList(
+HyperGroupedList(
     modifier = Modifier.fillMaxSize(),
     sections = groups,
     items = { it.entries },
@@ -50,25 +50,25 @@ Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后�
 
 ## 公开 API
 
-### HyperSectionedList
+### HyperGroupedList
 
 <details class="component-doc__details">
 <summary>查看公开签名</summary>
 
 ```kotlin
 @Composable
-fun <S, T> HyperSectionedList(
+fun <S, T> HyperGroupedList(
     sections: List<S>,
     items: (S) -> List<T>,
     sectionKey: (S) -> Any,
     itemKey: (S, T) -> Any,
     modifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
-    contentPadding: PaddingValues = HyperSectionedListDefaults.ContentPadding,
-    firstSectionTopSpacing: Dp = HyperSectionedListDefaults.FirstSectionTopSpacing,
-    headerBottomSpacing: Dp = HyperSectionedListDefaults.HeaderBottomSpacing,
+    contentPadding: PaddingValues = HyperGroupedListDefaults.ContentPadding,
+    firstSectionTopSpacing: Dp = HyperGroupedListDefaults.FirstSectionTopSpacing,
+    headerBottomSpacing: Dp = HyperGroupedListDefaults.HeaderBottomSpacing,
     dividerModifier: Modifier = Modifier,
-    colors: HyperSectionedListColors = HyperSectionedListDefaults.colors(),
+    colors: HyperGroupedListColors = HyperGroupedListDefaults.colors(),
     headerContent: @Composable (section: S) -> Unit,
     itemContent: @Composable (section: S, item: T) -> Unit
 )
@@ -84,10 +84,10 @@ fun <S, T> HyperSectionedList(
 | itemKey | (S, T) -&gt; Any | 是 | — | 为列表项生成稳定键。 |
 | modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
 | state | LazyListState | 否 | rememberLazyListState() | 组件使用的状态对象，由调用方提供或记忆。 |
-| contentPadding | PaddingValues | 否 | HyperSectionedListDefaults.ContentPadding | 主体内容的内部留白。 |
-| firstSectionTopSpacing | Dp | 否 | HyperSectionedListDefaults.FirstSectionTopSpacing | 第一分组顶部的间距。 |
-| headerBottomSpacing | Dp | 否 | HyperSectionedListDefaults.HeaderBottomSpacing | 分组标题下方间距。 |
+| contentPadding | PaddingValues | 否 | HyperGroupedListDefaults.ContentPadding | 主体内容的内部留白。 |
+| firstSectionTopSpacing | Dp | 否 | HyperGroupedListDefaults.FirstSectionTopSpacing | 第一分组顶部的间距。 |
+| headerBottomSpacing | Dp | 否 | HyperGroupedListDefaults.HeaderBottomSpacing | 分组标题下方间距。 |
 | dividerModifier | Modifier | 否 | Modifier | 分隔线的布局修饰符，默认无缩进。 |
-| colors | HyperSectionedListColors | 否 | HyperSectionedListDefaults.colors() | 组件各状态的颜色配置。 |
+| colors | HyperGroupedListColors | 否 | HyperGroupedListDefaults.colors() | 组件各状态的颜色配置。 |
 | headerContent | @Composable (section: S) -&gt; Unit | 是 | — | 每个分组的标题内容。 |
 | itemContent | @Composable (section: S, item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |

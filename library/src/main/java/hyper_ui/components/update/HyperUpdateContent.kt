@@ -44,8 +44,8 @@ internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, man
             val shape = RoundedCornerShape(16.dp)
             Box(Modifier.size(40.dp)
                 .dropShadow(shape, Shadow(radius = 16.dp, color = view.color.copy(alpha = 18 / 255f), offset = DpOffset(0.dp, 6.dp)))
-                .background(Brush.linearGradient(listOf(view.color.copy(alpha = 28 / 255f).compositeOver(hyperGlass.surface),
-                    view.color.copy(alpha = 10 / 255f).compositeOver(hyperGlass.surface))), shape)
+                .background(Brush.linearGradient(listOf(view.color.copy(alpha = 28 / 255f).compositeOver(hyperSurfaces.surface),
+                    view.color.copy(alpha = 10 / 255f).compositeOver(hyperSurfaces.surface))), shape)
                 .hyperSolidSurface(Color.Transparent, shape, border = BorderStroke(1.dp, view.color.copy(alpha = 35 / 255f))),
                 contentAlignment = Alignment.Center) {
                 HyperIcon(view.icon, null, Modifier.size(20.dp), color = view.color)
@@ -147,7 +147,7 @@ private fun HyperUpdateProgressBadges(installing: Boolean) {
 
 @Composable
 private fun HyperUpdateBadge(label: String, color: Color, icon: ImageVector? = null) {
-    Row(Modifier.background(color.copy(alpha = 31 / 255f).compositeOver(hyperGlass.surfaceSubtle),
+    Row(Modifier.background(color.copy(alpha = 31 / 255f).compositeOver(hyperSurfaces.surfaceSubtle),
         RoundedCornerShape(50)).padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         if (icon != null) HyperIcon(icon, null, Modifier.size(13.dp), color = color)

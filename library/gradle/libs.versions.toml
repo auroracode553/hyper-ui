@@ -2,7 +2,7 @@
 agp = "9.4.0"
 kotlin = "2.4.10"
 composeBom = "2026.08.00"
-composeMultiplatform = "1.11.1"
+composeMultiplatform = "1.12.0"
 kotlinxBrowser = "0.5.0"
 lucideIcons = "2.2.1"
 

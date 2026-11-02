@@ -115,7 +115,7 @@ object HyperCardDefaults {
     fun colors(containerColor: Color = Color.Unspecified, selected: Boolean = false): HyperCardColors = HyperCardColors(
         containerColor = resolveHyperContainerColor(
             containerColor = containerColor,
-            fallbackColor = if (selected) hyperGlass.surfaceStrong else hyperGlass.surface
+            fallbackColor = if (selected) hyperSurfaces.surfaceStrong else hyperSurfaces.surface
         )
     )
 

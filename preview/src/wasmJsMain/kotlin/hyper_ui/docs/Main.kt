@@ -12,10 +12,11 @@ fun main() {
         .removePrefix("#")
         .trim()
         .takeIf { it.isNotEmpty() }
-    val embeddedPreview = window.location.search
+    val options = window.location.search
         .removePrefix("?")
         .split("&")
-        .any { it == "embedded=1" }
+        .associate { it.substringBefore("=") to it.substringAfter("=", "") }
+    val embeddedPreview = options["embedded"] == "1"
 
     ComposeViewport(viewportContainerId = "hyper-ui-preview-root") {
         HyperDocsRoot(initialSelectedId = initialSelectedId, embeddedPreview = embeddedPreview)

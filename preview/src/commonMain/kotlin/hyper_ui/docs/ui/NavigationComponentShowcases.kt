@@ -229,6 +229,7 @@ fun ScaffoldDemo() {
 
 @Composable
 private fun TabBarDemo(single: Boolean, floating: Boolean = true, actions: Boolean = false) {
+    // 使用正式组件的连续跟手与固定玻璃，保留原示例尺寸和状态提交方式。
     var selectedId by remember { mutableStateOf("home") }
     var count by remember { mutableStateOf(if (actions) 0 else 3) }
     val items = listOf(
@@ -237,12 +238,13 @@ private fun TabBarDemo(single: Boolean, floating: Boolean = true, actions: Boole
         DemoNavItem("notice", "消息", Lucide.Bell),
         DemoNavItem("settings", "设置", Lucide.Settings)
     )
-    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        if (single) HyperButton({ count = if (count == 0) 3 else 0 }) { HyperText("切换角标") }
-        Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        if (single) HyperButton({ count = if (count == 0) 3 else 0 }, modifier = Modifier.align(Alignment.TopCenter)) { HyperText("切换角标") }
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             HyperText(if (actions) "最近动作：${items.first { it.id == selectedId }.label} · $count 次" else "当前页面：${items.first { it.id == selectedId }.label}")
         }
         HyperTabBar(
+            modifier = Modifier.align(Alignment.BottomCenter),
             items = if (single) listOf(items.first()) else items,
             onChanged = { selectedId = items[it].id; if (single || actions) count++ },
             type = if (single) "single" else "multiple",

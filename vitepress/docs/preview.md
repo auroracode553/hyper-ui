@@ -2,7 +2,7 @@
 
 Preview 是文档维护工具，用来操作真实 Compose 组件。它不是 Android 应用依赖，也不改变 HyperUI 的手机端支持范围。
 
-Preview 的主题设置与参考项目保持一致，提供浅深色、LTR/RTL、背景、品牌色和 `实色 / 柔和 / 清透` 三种材质预览。组件页不再提供重复的设置按钮。
+Preview 提供浅深色、LTR/RTL、背景与品牌色预览，普通组件使用实色表面，TabBar、Slider、Switch、Dialog 固定使用内置玻璃。组件页不再提供重复的设置按钮。
 
 组件直接渲染在预览宿主的手机视口内。手机外壳只由 `WasmPreview` 绘制一次；共享主题和玻璃背景采样由预览宿主提供，示例不会再叠加手机边框或通用展示卡片。
 文档手机外壳绘制模拟的时间、信号、电量和手势条；这些状态信息不属于 Compose 组件，也不替代 Android 的系统状态栏。
@@ -20,8 +20,8 @@ Preview 的主题设置与参考项目保持一致，提供浅深色、LTR/RTL�
 ## 滚动归属
 
 - 普通组件示例由 ComponentPreviewViewport 统一滚动，内容按实际高度测量。
-- 页面级列表、导航页和抽屉示例使用 fullScreenPreview，获得有限的完整视口并自行管理滚动。HyperList 与 HyperSectionedList 在顶部控件下方使用 Modifier.weight(1f)，不限制为固定 280/340dp 高度，也不再套一层 verticalScroll。
-- HyperSectionedList 的 16dp 横向留白由组件提供；外层宿主不重复添加。
+- 页面级列表、导航页和抽屉示例使用 fullScreenPreview，获得有限的完整视口并自行管理滚动。HyperList 与 HyperGroupedList 在顶部控件下方使用 Modifier.weight(1f)，不限制为固定 280/340dp 高度，也不再套一层 verticalScroll。
+- HyperGroupedList 默认水平留白为 0dp；页面通过 contentPadding 或父容器统一提供一次水平留白。
 - 嵌入、手机和桌面 Preview 共用同一套视口规则，切换组件会重置旧的示例状态和滚动位置。
 
 文档预览工具栏可选择 320/350/390/430dp 手机宽度，默认 350×680。宽度变化不使用 CSS 缩放，窄文档区域可以横向滚动；重置按钮重新加载当前示例。参数表在自身区域横向滚动，不会拉宽手机视口。

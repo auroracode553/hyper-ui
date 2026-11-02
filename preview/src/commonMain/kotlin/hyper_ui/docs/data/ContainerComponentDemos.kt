@@ -19,19 +19,10 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         apiDocumentPaths = listOf("container/hyper-safe-area.md"), content = { SafeAreaDemo() }
     ),
     ComponentDemo(
-        id = "glass_material", group = GROUP_CONTAINER, title = "HyperBackdrop / HyperGlassTokens",
-        description = "背景采样与 Solid、Soft、Clear 三档材质；观察 subtle、regular、strong 表面层级。",
-        code = """
-            HyperThemeConfig {
-                HyperBackdrop {
-                    HyperCard { HyperText("玻璃容器") }
-                }
-            }
-        """.trimIndent(),
-        variants = listOf(
-            DemoVariant("材质重量", "glass.surfaceSubtle / surface / surfaceStrong / cardContainer", "不同表面使用同一背景采样"),
-            DemoVariant("透明度", "glass.surface.alpha", "材质令牌通过主题注入")
-        ),
+        id = "surface", group = GROUP_CONTAINER, title = "HyperBackdrop",
+        description = "HyperBackground 提供静态渐变，HyperBackdrop 组合背景与实色内容。",
+        code = "HyperBackdrop { HyperCard { HyperText(\"实色容器\") } }",
+        variants = listOf(DemoVariant("背景组合", "background / content", "背景与内容独立组合")),
         apiDocumentPaths = listOf("container/hyper-backdrop.md"),
         content = { hyper_ui.docs.ui.GlassMaterialDemo() }
     ),
@@ -40,16 +31,16 @@ internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
         id = "color-picker",
         group = GROUP_CONTAINER,
         title = "HyperColorPicker",
-        description = "主题色选择板，色块默认带细描边，选中状态由调用方管理。",
+        description = "连续 HSV 调色板，支持点击、拖动取色与禁用，颜色由调用方管理。",
         code = """
             HyperColorPicker(
-                selectedId = selectedColorId,
-                onChanged = { option -> selectedColorId = option.id }
+                value = color,
+                onChanged = { color = it }
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("预设色板", "options = presetOptions", "圆形色块、选中环与文字标签"),
-            DemoVariant("自定义布局", "colorSize / spacing", "尺寸与横纵间距可调")
+            DemoVariant("连续取色", "value / onChanged", "渐变选色区、色相条与颜色值"),
+            DemoVariant("禁用", "enabled = false", "保留颜色并停止取色")
         ),
         apiDocumentPaths = listOf("container/hyper-color-picker.md"),
         content = { ColorPickerDemo() }

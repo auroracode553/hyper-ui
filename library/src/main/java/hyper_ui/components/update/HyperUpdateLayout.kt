@@ -34,7 +34,7 @@ internal fun HyperUpdateLayout(
     }
     val transition = hyperOverlayProgress(true)
     HyperDialogHost(onDismissRequest = { if (!locked) onClose?.invoke() }, dismissOnBackPress = !locked) {
-        Box(Modifier.fillMaxSize().background(hyperGlass.scrim.copy(alpha = hyperGlass.scrim.alpha * transition))) {
+        Box(Modifier.fillMaxSize().background(hyperSurfaces.scrim.copy(alpha = hyperSurfaces.scrim.alpha * transition))) {
             // 对齐 Flutter show 的 SafeArea + 20dp 外间距，避免通用 Dialog 的尺寸约定介入。
             Box(Modifier.fillMaxSize().windowInsetsPadding(HyperTheme.systemSafeAreaInsets).padding(20.dp),
                 contentAlignment = Alignment.Center) {
@@ -66,7 +66,7 @@ private fun HyperUpdatePanel(
         BoxWithConstraints(modifier.widthIn(max = maxWidth).fillMaxWidth()) {
             val boundedHeight = constraints.hasBoundedHeight
             Column(Modifier.fillMaxWidth().hyperFrostedSurface(
-                containerColor = hyperGlass.surfaceStrong, shape = shape, blur = hyperGlass.blurStrong)) {
+                containerColor = hyperSurfaces.surfaceStrong, shape = shape)) {
                 val bodyModifier = if (boundedHeight) {
                     Modifier.weight(1f, fill = false).verticalScroll(scrollState)
                 } else Modifier // 内嵌示例由 Preview 外层滚动，不能在无限高度下再套滚动容器。

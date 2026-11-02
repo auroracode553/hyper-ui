@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.abs
 
 @Immutable
-data class HyperPlaybackSpeedScaleColors(
+data class HyperSpeedScaleColors(
     val containerColor: Color,
     val trackColor: Color,
     val activeTrackColor: Color,
@@ -48,32 +48,32 @@ data class HyperPlaybackSpeedScaleColors(
  * 播放倍速刻度反馈。组件只渲染速度选项和当前选择，长按与横向拖动由调用方处理。
  */
 @Composable
-fun HyperPlaybackSpeedScale(
+fun HyperSpeedScale(
     value: Float,
     modifier: Modifier = Modifier,
-    options: List<Float> = HyperPlaybackSpeedScaleDefaults.SpeedOptions,
-    shape: Shape = HyperPlaybackSpeedScaleDefaults.Shape,
-    colors: HyperPlaybackSpeedScaleColors = HyperPlaybackSpeedScaleDefaults.colors(),
+    options: List<Float> = HyperSpeedScaleDefaults.SpeedOptions,
+    shape: Shape = HyperSpeedScaleDefaults.Shape,
+    colors: HyperSpeedScaleColors = HyperSpeedScaleDefaults.colors(),
     leading: (@Composable () -> Unit)? = null
 ) {
-    val resolvedOptions = options.ifEmpty { HyperPlaybackSpeedScaleDefaults.SpeedOptions }
+    val resolvedOptions = options.ifEmpty { HyperSpeedScaleDefaults.SpeedOptions }
     val selectedIndex = resolvedOptions.indices.minByOrNull { index ->
         abs(resolvedOptions[index] - value)
     } ?: 0
 
     Box(
         modifier = modifier
-            .widthIn(max = HyperPlaybackSpeedScaleDefaults.MaxWidth)
-            .fillMaxWidth(HyperPlaybackSpeedScaleDefaults.WidthFraction)
+            .widthIn(max = HyperSpeedScaleDefaults.MaxWidth)
+            .fillMaxWidth(HyperSpeedScaleDefaults.WidthFraction)
             .hyperGlassSurface(
                 shape = shape,
                 visuals = hyperGlassSurfaceVisuals(
                     containerColor = colors.containerColor,
-                    elevation = HyperPlaybackSpeedScaleDefaults.Elevation,
+                    elevation = HyperSpeedScaleDefaults.Elevation,
 
                 )
             )
-            .padding(HyperPlaybackSpeedScaleDefaults.ContentPadding)
+            .padding(HyperSpeedScaleDefaults.ContentPadding)
             .semantics {
                 progressBarRangeInfo = ProgressBarRangeInfo(
                     current = selectedIndex.toFloat(),
@@ -97,7 +97,7 @@ private fun CompactSpeedScaleContent(
     options: List<Float>,
     selectedIndex: Int,
     value: Float,
-    colors: HyperPlaybackSpeedScaleColors,
+    colors: HyperSpeedScaleColors,
     leading: (@Composable () -> Unit)?
 ) {
     BoxWithConstraints(
@@ -107,7 +107,7 @@ private fun CompactSpeedScaleContent(
     ) {
         val endpointAreaWidth = minOf(EndpointAreaWidth, maxWidth * 0.25f)
         val trackWidth = (maxWidth - endpointAreaWidth * 2f).coerceAtLeast(0.dp)
-        val thumbSize = HyperPlaybackSpeedScaleDefaults.TrackThumbSize
+        val thumbSize = HyperSpeedScaleDefaults.TrackThumbSize
         val markerTravelWidth = (trackWidth - thumbSize).coerceAtLeast(0.dp)
 
         options.forEachIndexed { index, speed ->
@@ -122,13 +122,13 @@ private fun CompactSpeedScaleContent(
             val markerCenter = endpointAreaWidth + thumbSize * 0.5f +
                 markerTravelWidth * fraction
             val labelOffset = if (isOnlyOption) {
-                (maxWidth - HyperPlaybackSpeedScaleDefaults.LabelWidth) * 0.5f
+                (maxWidth - HyperSpeedScaleDefaults.LabelWidth) * 0.5f
             } else if (index == 0) {
                 0.dp
             } else if (index == options.lastIndex) {
                 maxWidth - endpointAreaWidth
             } else {
-                markerCenter - HyperPlaybackSpeedScaleDefaults.LabelWidth * 0.5f
+                markerCenter - HyperSpeedScaleDefaults.LabelWidth * 0.5f
             }
 
             SpeedLabel(
@@ -144,7 +144,7 @@ private fun CompactSpeedScaleContent(
                         if (isEndpoint) {
                             endpointAreaWidth
                         } else {
-                            HyperPlaybackSpeedScaleDefaults.LabelWidth
+                            HyperSpeedScaleDefaults.LabelWidth
                         }
                     )
             )
@@ -174,7 +174,7 @@ private fun CompactSpeedScaleContent(
 private fun SpeedLabel(
     speed: Float,
     selected: Boolean,
-    colors: HyperPlaybackSpeedScaleColors,
+    colors: HyperSpeedScaleColors,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
@@ -193,7 +193,7 @@ private fun SpeedLabel(
 private fun SpeedTrack(
     itemCount: Int,
     selectedIndex: Int,
-    colors: HyperPlaybackSpeedScaleColors,
+    colors: HyperSpeedScaleColors,
     modifier: Modifier = Modifier
 ) {
     val sliderMaximum = (itemCount - 1).coerceAtLeast(1).toFloat()
@@ -207,10 +207,10 @@ private fun SpeedTrack(
         divisions = (itemCount - 1).coerceAtLeast(1),
         showSegmentMarkers = true,
         segmentValues = List(itemCount) { index -> index.toFloat() },
-        minimumTouchHeight = HyperPlaybackSpeedScaleDefaults.TrackHeight,
-        trackHeight = HyperPlaybackSpeedScaleDefaults.TrackStrokeWidth,
-        thumbSize = HyperPlaybackSpeedScaleDefaults.TrackThumbSize,
-        segmentMarkerSize = HyperPlaybackSpeedScaleDefaults.TrackMarkerSize,
+        minimumTouchHeight = HyperSpeedScaleDefaults.TrackHeight,
+        trackHeight = HyperSpeedScaleDefaults.TrackStrokeWidth,
+        thumbSize = HyperSpeedScaleDefaults.TrackThumbSize,
+        segmentMarkerSize = HyperSpeedScaleDefaults.TrackMarkerSize,
         colors = HyperSliderDefaults.colors(
             trackColor = colors.trackColor,
             activeTrackColor = colors.activeTrackColor,
@@ -223,7 +223,7 @@ private fun SpeedTrack(
 @Composable
 private fun CurrentSpeedValue(
     value: Float,
-    colors: HyperPlaybackSpeedScaleColors,
+    colors: HyperSpeedScaleColors,
     leading: (@Composable () -> Unit)?,
     modifier: Modifier = Modifier
 ) {
@@ -233,13 +233,13 @@ private fun CurrentSpeedValue(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = Modifier.size(HyperPlaybackSpeedScaleDefaults.LeadingIconSize),
+            modifier = Modifier.size(HyperSpeedScaleDefaults.LeadingIconSize),
             contentAlignment = Alignment.Center
         ) {
             CompositionLocalProvider(LocalHyperContentColor provides colors.valueColor) {
                 if (leading == null) {
                     HyperIcon(Lucide.FastForward, null,
-                        Modifier.size(HyperPlaybackSpeedScaleDefaults.LeadingIconSize)
+                        Modifier.size(HyperSpeedScaleDefaults.LeadingIconSize)
                     )
                 } else {
                     leading()
@@ -257,7 +257,7 @@ private fun CurrentSpeedValue(
     }
 }
 
-object HyperPlaybackSpeedScaleDefaults {
+object HyperSpeedScaleDefaults {
     val SpeedOptions = listOf(0.25f, 0.5f, 1f, 1.5f, 2f, 2.5f, 3f, 4f)
     val DragStep = 42.dp
     val MaxWidth = 360.dp
@@ -292,13 +292,13 @@ object HyperPlaybackSpeedScaleDefaults {
         labelColor: Color = Color.Unspecified,
         selectedLabelColor: Color = Color.Unspecified,
         valueColor: Color = Color.Unspecified
-    ): HyperPlaybackSpeedScaleColors {
+    ): HyperSpeedScaleColors {
         val accent = HyperColors.accent
         val primaryContent = HyperColors.primaryText
-        return HyperPlaybackSpeedScaleColors(
+        return HyperSpeedScaleColors(
             containerColor = resolveHyperContainerColor(
                 containerColor,
-                hyperGlass.surfaceStrong
+                hyperSurfaces.surfaceStrong
             ),
             trackColor = resolveHyperContainerColor(
                 trackColor,

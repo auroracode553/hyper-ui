@@ -1,4 +1,4 @@
-/** 文件职责：基于 Compose Dialog 提供无窗口动画的模态窗口和可复用实色面板。 */
+/** 文件职责：提供全屏模态宿主与液态面板，内容布局、遮罩和键盘避让保持独立。 */
 package hyper_ui
 
 import androidx.compose.foundation.BorderStroke
@@ -54,7 +54,7 @@ fun HyperDialog(
     dismissOnClickOutside: Boolean = true,
     showScrollIndicator: Boolean = HyperDialogDefaults.ShowScrollIndicator,
     actions: (@Composable RowScope.() -> Unit)? = null,
-    border: BorderStroke? = HyperDialogDefaults.border(),
+    border: BorderStroke? = null,
     contentPadding: androidx.compose.foundation.layout.PaddingValues = HyperDialogDefaults.ContentPadding,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -64,7 +64,7 @@ fun HyperDialog(
     if (!visible && transitionProgress == 0f) return
 
     val currentOnDismissRequest by rememberUpdatedState(onClose)
-    val containerColor = resolveHyperContainerColor(colors.containerColor, hyperGlass.surfaceStrong)
+    val containerColor = colors.containerColor
 
     HyperDialogHost(
         onDismissRequest = onClose,
@@ -72,7 +72,7 @@ fun HyperDialog(
     ) {
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize()
-                .background(hyperGlass.scrim.copy(alpha = hyperGlass.scrim.alpha * transitionProgress)),
+                .background(hyperSurfaces.scrim.copy(alpha = hyperSurfaces.scrim.alpha * transitionProgress)),
             contentAlignment = Alignment.Center
         ) {
             if (dismissOnClickOutside) {
@@ -124,6 +124,7 @@ fun HyperDialog(
                     actionArrangement = actionArrangement,
                     showScrollIndicator = showScrollIndicator,
                     actions = actions,
+                    dialogSurface = true,
                     content = content
                 )
             }
@@ -144,9 +145,9 @@ object HyperDialogDefaults {
 
     @Composable
     fun colors(containerColor: Color = Color.Unspecified): HyperDialogColors = HyperDialogColors(
-        containerColor = resolveHyperContainerColor(containerColor, hyperGlass.surfaceStrong)
+        containerColor = resolveHyperContainerColor(containerColor, hyperControlContainer(HyperControlSurfaceRole.Dialog))
     )
 
     @Composable
-    fun border(color: Color = Color.Unspecified): BorderStroke = BorderStroke(1.dp, resolveHyperContainerColor(color, hyperGlass.border))
+    fun border(color: Color = Color.Unspecified): BorderStroke = BorderStroke(1.dp, resolveHyperContainerColor(color, hyperSurfaces.border))
 }

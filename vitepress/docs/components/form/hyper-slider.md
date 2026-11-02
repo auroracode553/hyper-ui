@@ -29,7 +29,9 @@ HyperSlider(value, { value = it })
 
 **样式约定**
 
-默认值域 0..100，显示数值，44dp 触摸高、6dp 轨道、20dp 白色圆形滑块和 2dp 品牌描边。滑块中心沿完整轨道移动，并在边缘限制可见滑块。
+默认值域 0..100，显示数值，44dp 触摸高、6dp 轨道、20dp 圆形玻璃滑块，默认不绘制品牌描边。滑块中心沿完整轨道移动，并在边缘限制可见滑块。显式 thumbBorder 和 thumbColor 仍可覆盖。
+
+滑块固定为玻璃，按下时白色底面逐渐透明；独立录制背景与轨道，模糊从 8dp 变为 0，折射边缘 0→10dp、位移 0→14dp，并显示色散与高光；松开恢复。点击或程序更新由临界阻尼弹簧（stiffness 1000、dampingRatio 1）平滑定位，拖动直接跟手，不放大滑块、不改变命中范围。
 
 **状态归属**
 
@@ -68,7 +70,7 @@ fun HyperSlider(
     thumbShape: Shape = HyperSliderDefaults.ThumbShape,
     colors: HyperSliderColors = HyperSliderDefaults.colors(),
     trackBorder: BorderStroke? = null,
-    thumbBorder: BorderStroke? = HyperSliderDefaults.thumbBorder()
+    thumbBorder: BorderStroke? = null
 )
 ```
 
@@ -97,7 +99,7 @@ fun HyperSlider(
 | thumbShape | Shape | 否 | HyperSliderDefaults.ThumbShape | 滑块手柄的形状。 |
 | colors | HyperSliderColors | 否 | HyperSliderDefaults.colors() | 组件各状态的颜色配置。 |
 | trackBorder | BorderStroke? | 否 | null | 进度轨道的边框配置。 |
-| thumbBorder | BorderStroke? | 否 | HyperSliderDefaults.thumbBorder() | 滑块手柄的边框配置。 |
+| thumbBorder | BorderStroke? | 否 | null | 可选手柄描边；默认由材质高光表达边缘。 |
 
 <details class="component-doc__details component-doc__advanced">
 <summary>默认配置与数据类型</summary>

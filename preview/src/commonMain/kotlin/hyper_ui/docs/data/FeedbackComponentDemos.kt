@@ -168,10 +168,10 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "playback_speed_panel",
         group = GROUP_FEEDBACK,
-        title = "HyperPlaybackSpeedPanel",
+        title = "HyperSpeedPanel",
         description = "紧凑型主题玻璃播放器倍速面板与覆盖层；速度、显示状态和自定义速度流程均由调用方持有。",
         code = """
-            HyperPlaybackSpeedPanelOverlay(
+            HyperSpeedPanelOverlay(
                 visible = panelVisible,
                 value = playbackSpeed,
                 onChanged = { playbackSpeed = it },
@@ -186,18 +186,18 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("预设档位", "options", "默认 0.25x、1x、2x、3x、4x"),
             DemoVariant("自定义入口", "onCustomPressed", "仅分发事件，不承载输入业务"),
             DemoVariant("Lucide 默认图标", "leading 等", "Android 默认语义图标统一由 Lucide 提供，也可通过 Slot 替换"),
-            DemoVariant("自定义配色", "HyperPlaybackSpeedPanelDefaults.colors", "Preview 可切换容器与强调色")
+            DemoVariant("自定义配色", "HyperSpeedPanelDefaults.colors", "Preview 可切换容器与强调色")
         ),
-        apiDocumentPaths = listOf("feedback/hyper-playback-speed-panel.md"),
+        apiDocumentPaths = listOf("feedback/hyper-speed-panel.md"),
         content = { PlaybackSpeedPanelDemo() }
     ),
     ComponentDemo(
         id = "playback_speed_scale",
         group = GROUP_FEEDBACK,
-        title = "HyperPlaybackSpeedScale",
+        title = "HyperSpeedScale",
         description = "播放器长按临时加速使用的紧凑型主题玻璃刻度，两端标签让出轨道上方空间。",
         code = """
-            HyperPlaybackSpeedScale(
+            HyperSpeedScale(
                 value = temporarySpeed,
                 leading = {
                     HyperIcon(fastForwardIcon, contentDescription = null)
@@ -210,21 +210,21 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("当前速度", "value", "高亮最近的速度刻度"),
             DemoVariant("主题玻璃", "默认配色", "不跟随应用浅色/深色模式切换"),
             DemoVariant("图标插槽", "leading", "Android 默认使用 Lucide fast-forward，也可替换"),
-            DemoVariant("自定义配色", "HyperPlaybackSpeedScaleDefaults.colors", "容器、轨道、刻度与文案；不暴露硬边框")
+            DemoVariant("自定义配色", "HyperSpeedScaleDefaults.colors", "容器、轨道、刻度与文案；不暴露硬边框")
         ),
-        apiDocumentPaths = listOf("feedback/hyper-playback-speed-scale.md"),
+        apiDocumentPaths = listOf("feedback/hyper-speed-scale.md"),
         content = { PlaybackSpeedScaleDemo() }
     ),
     ComponentDemo(
         id = "battery_indicator",
         group = GROUP_FEEDBACK,
-        title = "HyperBatteryIndicator",
+        title = "HyperBattery",
         description = "紧凑系统电池图标；Android 端可用 rememberHyperBatteryState 自动订阅电量，Preview 使用按钮模拟状态。",
         code = """
             val batteryState by rememberHyperBatteryState()
 
             if (batteryState.isAvailable) {
-                HyperBatteryIndicator(
+                HyperBattery(
                     percentage = batteryState.percentage,
                     charging = batteryState.isCharging
                 )
@@ -237,7 +237,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             DemoVariant("隐藏数字", "showPercentage = false", "仅展示图形电量")
         ),
         apiDocumentPaths = listOf(
-            "feedback/hyper-battery-indicator.md",
+            "feedback/hyper-battery.md",
             "tools/hyper-battery-state.md"
         ),
         content = { BatteryIndicatorDemo() }
@@ -246,7 +246,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "面板使用实际窗口宽度减去两侧各 24dp，最大宽 420dp，保持居中并固定底部操作。",
+        description = "固定玻璃面板，两侧各 24dp、最大宽 420dp，保持原有居中、输入与固定操作区。",
         code = """
             HyperDialog(
                 visible = visible,

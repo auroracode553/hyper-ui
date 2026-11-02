@@ -134,7 +134,7 @@ object HyperLevelCapsuleDefaults {
         }
         return HyperLevelCapsuleColors(
             containerColor = if (containerColor == Color.Unspecified) {
-                hyperGlass.surfaceSubtle
+                hyperSurfaces.surfaceSubtle
             } else {
                 containerColor
             },

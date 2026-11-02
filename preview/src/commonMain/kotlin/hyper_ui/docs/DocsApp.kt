@@ -11,7 +11,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.Color
 import hyper_ui.rgba
 import hyper_ui.docs.theme.DefaultDocsThemeColor
-import hyper_ui.HyperMaterial
 import hyper_ui.docs.theme.HyperDocsTheme
 import hyper_ui.docs.ui.HyperDocsApp
 
@@ -19,7 +18,9 @@ val LocalThemeColor = compositionLocalOf<ThemeColorController> {
     error("ThemeColorController not provided. Wrap content with HyperDocsApp or supply a value.")
 }
 
-class ThemeColorController(initial: Color) {
+class ThemeColorController(
+    initial: Color
+) {
     var color by mutableStateOf(initial)
         private set
 
@@ -35,8 +36,6 @@ class ThemeColorController(initial: Color) {
     var customAccent by mutableStateOf(false)
         private set
 
-    var material by mutableStateOf(HyperMaterial.Solid)
-        private set
 
     fun update(newColor: Color) {
         color = newColor
@@ -53,7 +52,6 @@ class ThemeColorController(initial: Color) {
         update(if (customAccent) DefaultDocsThemeColor else rgba(154, 130, 215))
     }
 
-    fun updateMaterial(newMaterial: HyperMaterial) { material = newMaterial }
 }
 
 @Composable
@@ -70,14 +68,16 @@ private fun ThemeColorController.setInitialDarkTheme(value: Boolean) {
 
 /** Shared document root used by the Desktop window and the browser viewport. */
 @Composable
-fun HyperDocsRoot(initialSelectedId: String? = null, embeddedPreview: Boolean = false) {
+fun HyperDocsRoot(
+    initialSelectedId: String? = null,
+    embeddedPreview: Boolean = false
+) {
     val themeColorController = rememberThemeColorController(
         initialDarkTheme = if (embeddedPreview) false else isSystemInDarkTheme()
     )
     HyperDocsTheme(
         themeColor = themeColorController.color,
         darkTheme = themeColorController.darkTheme,
-        material = themeColorController.material,
         patternedBackground = themeColorController.patternedBackground
     ) {
         HyperDocsApp(

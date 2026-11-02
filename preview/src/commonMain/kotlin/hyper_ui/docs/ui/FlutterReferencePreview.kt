@@ -8,7 +8,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import hyper_ui.*
 import hyper_ui.docs.LocalThemeColor
 import hyper_ui.docs.theme.LocalDocsColorScheme
-import hyper_ui.docs.theme.docsGlassTokens
 
 @Composable
 internal fun FlutterReferencePreview(content: @Composable () -> Unit) {
@@ -19,8 +18,6 @@ internal fun FlutterReferencePreview(content: @Composable () -> Unit) {
         themeColor = accent,
         darkTheme = dark,
         typography = HyperTheme.typography,
-        material = settings.material,
-        glass = docsGlassTokens(dark, settings.material)
     ) {
         val scheme = LocalDocsColorScheme.current.copy(
             background = HyperColors.pageBackground,
