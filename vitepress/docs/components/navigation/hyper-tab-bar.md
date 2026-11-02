@@ -12,6 +12,8 @@ description: 提供悬浮、非悬浮贴底导航与可重复触发的动作入�
 
 <WasmPreview demo="tab-bar-multiple" title="HyperTabBar 交互预览" />
 
+栏内为首页、最近、列表、发现、设置五项导航，消息以 48dp 独立入口放在栏外；两端示例以此 Kotlin 文档及对应 Preview 为基准。
+
 <WasmPreview demo="tab-bar-docked" title="非悬浮动作栏：重复点击与禁用项" />
 
 ## 使用方式
@@ -38,7 +40,7 @@ HyperTabBar(items, selectedIndex = selectedIndex, onChanged = { selectedIndex = 
 
 **样式约定**
 
-type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬浮胶囊：multiple 默认高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 20dp、top 8dp、bottom 20dp。floating=false 仅用于 multiple，默认零外间距，全宽平直页面表面，无胶囊、圆角或浮层阴影，底部安全区位于表面内部。图标 23dp、文字 12sp、间距 1dp。single 使用固定直径 48dp 的圆形玻璃表面、22dp 图标、16dp 角标。
+type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬浮胶囊：multiple 默认高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 12dp、top 8dp、bottom 20dp。floating=false 仅用于 multiple，默认零外间距，全宽平直页面表面，无胶囊、圆角或浮层阴影，底部安全区位于表面内部。图标 23dp、文字 12sp、间距 1dp。选中镜片保持按钮组内容高度减 8dp，默认可见高 48dp、上下各 4dp；点击区域覆盖整项，不单独压缩镜片高度。single 使用固定直径 48dp 的圆形玻璃表面、22dp 图标、16dp 角标。
 
 非悬浮形态直接放入 HyperScaffold.bottomBar；悬浮和贴底多项按钮组均以 56dp 为默认内容高度，仅按钮组按标签字体在库内扩展。single 独立入口固定为 48dp，不随按钮组高度或标签字体放大。安全区与外边距不计入内容尺寸，不再额外叠加系统底部 inset、固定留白或业务 height；宿主让正文经过底栏后方。
 
@@ -46,9 +48,11 @@ type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬�
 
 悬浮容器固定使用 8dp 背景模糊、24dp 边缘深度及 24dp 折射位移。选中镜片合成容器与主题色标签的独立录制层，按压时从灰色选中底面过渡到透镜：折射边缘 0→10dp、位移 0→14dp，七波段色散、方向高光和 0→8dp 内阴影随按压进度变化。镜片位于标签上方，图标文字会随镜片边缘折射；原插槽只组合一次，点击与语义不重复。
 
-拖动按手指位置连续预览，点击与松手吸附使用临界阻尼弹簧（stiffness 1000、dampingRatio 1），不放大容器或选中块。选中、取消与外部 selectedIndex 更新共用同一视觉位置；取消返回受控值，拖动松手才通知 onChanged。原高度、宽度测量、外边距、安全区和正文滚动范围保持独立。
+拖动按手指位置连续预览，点击与松手吸附使用临界阻尼弹簧（stiffness 1000、dampingRatio 1）。有效按下及切换途中，悬浮 Bar 在绘制层按 1 + 16dp / 栏宽 × 按压进度轻微舒展；镜片以 78/56 为按压缩放目标，横纵弹簧分别为 dampingRatio 0.6/0.7、stiffness 250，并随移动速度产生横向拉伸和纵向压缩。镜片距目标小于总行程的 2.5% 后释放，回弹至原形。
 
-multiple 至少 2 项，single 恰好 1 项。itemLabel 必须与实际显示文字一致。320..430dp 内父约束优先；选中值由调用方管理。
+横向拖动带动悬浮 Bar 与镜片同向偏移：按累计位移 / 栏宽经 EaseOut 缓动映射到最多 ±4dp，松手或取消使用 dampingRatio 1、stiffness 300 回正；柔和交互高光跟随镜片中心。贴底形态不舒展或偏移整条栏。以上仅改变瞬时绘制，不修改测量和布局；single 48dp、multiple 默认 56dp、外边距、安全区、点击区域及正文滚动范围保持原值。选中、取消与外部 selectedIndex 更新共用同一视觉位置；取消返回受控值，拖动松手才通知 onChanged，禁用项不触发按压动效。
+
+multiple 只接受 2–5 项，single 恰好 1 项，超出范围抛出 IllegalArgumentException，不静默截断。itemLabel 必须与实际显示文字一致。320..430dp 内父约束优先；选中值由调用方管理。
 
 itemEnabled 返回 false 的项目降低透明度并停止点击及拖动提交。single 点击时调用 onChanged(0)；multiple 在 selectedIndex 非空时仍采用选择模式，重复点击当前项不回调，拖动松手才提交。
 
@@ -86,7 +90,7 @@ fun <T> HyperTabBar(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| items | List&lt;T&gt; | 是 | — | 由调用方提供的选项或列表数据。 |
+| items | List&lt;T&gt; | 是 | — | 由调用方提供的选项；multiple 为 2–5 项，single 为 1 项。 |
 | onChanged | (Int) -&gt; Unit | 是 | — | 用户修改值或选择项时通知调用方。 |
 | selectedIndex | Int? | 是 | — | 当前选中索引；null 为可重复点击的动作模式。 |
 | modifier | Modifier | 否 | Modifier | 外部宽度、位置和间距；高度与直径由库管理。 |
@@ -95,7 +99,7 @@ fun <T> HyperTabBar(
 | badgeCount | Int | 否 | 0 | 单动作角标数量，0 隐藏，超过 99 显示 99+。 |
 | safeArea | Boolean | 否 | false | 是否避开底部系统安全区。 |
 | floating | Boolean | 否 | true | true 为悬浮胶囊；false 为全宽非悬浮 multiple 底栏。 |
-| margin | PaddingValues | 否 | 非悬浮与 single 为零；悬浮 multiple 为 start/end 20dp、top 8dp、bottom 20dp | 导航容器外部间距。 |
+| margin | PaddingValues | 否 | 非悬浮与 single 为零；悬浮 multiple 为 start/end 12dp、top 8dp、bottom 20dp | 导航容器外部间距。 |
 | color | Color | 否 | HyperColors.accent | 自定义颜色，覆盖默认配色。 |
 | itemEnabled | (T) -&gt; Boolean | 否 | { true } | 每项是否可交互，禁用项透明度为 0.4。 |
 | itemContent | @Composable HyperTabBarItemScope.(item: T) -&gt; Unit | 是 | — | 每个数据项的自定义内容。 |
@@ -114,7 +118,7 @@ class HyperTabBarItemScope internal constructor(val selected: Boolean)
 
 ## 默认尺寸与并排操作
 
-业务调用不得给 HyperTabBar 或它的包裹容器设置 height、requiredHeight、size 等限制高度的修饰符，也不能通过缩放替代库默认规格。single 必须保持库内固定的 48dp 直径，multiple 按钮组默认高 56dp；禁止为“并排等高”将独立入口扩大为 56dp。宽度、页面位置与组合间距由宿主控制，同一 Row 使用 Alignment.CenterVertically，保留两种形态的尺寸差异。
+业务调用不得给 HyperTabBar 或它的包裹容器设置 height、requiredHeight、size 等限制高度的修饰符，也不能通过缩放替代库默认规格。single 必须保持库内固定的 48dp 直径，multiple 按钮组默认高 56dp；禁止为“并排等高”将独立入口扩大为 56dp。宽度、页面位置与组合间距由宿主控制，同一 Row 使用 Alignment.CenterVertically，保留两种形态的尺寸差异。组合示例的独立入口与导航间距为 8dp；导航胶囊内部最多 5 项，胶囊外最多另放 1 个独立入口，两者分别计数；消息入口在胶囊外，不替换或删减导航项。
 
 <WasmPreview demo="tab-bar-trailing" title="56dp 主导航与 48dp 独立操作居中并排" />
 
@@ -133,7 +137,7 @@ Row(Modifier.padding(HyperTabBarDefaults.FloatingMargin),
 | --- | --- | --- | --- | --- |
 | HyperTabBarDefaults.SingleDiameter | Dp | 否 | 48dp | single 独立入口的固定直径，不与按钮组等高 |
 | HyperTabBarDefaults.Height | Dp | 否 | 56dp | multiple 悬浮 / 贴底按钮组默认内容高度；字体扩展由组件内部负责 |
-| HyperTabBarDefaults.FloatingMargin | PaddingValues | 否 | start/end 20dp，top 8dp、bottom 20dp | 独立悬浮导航默认外边距；并排布局由共同 Row 消费一次 |
+| HyperTabBarDefaults.FloatingMargin | PaddingValues | 否 | start/end 12dp，top 8dp、bottom 20dp | 独立悬浮导航默认外边距；并排布局由共同 Row 消费一次 |
 
 正文末尾余量优先消费 HyperScaffold 测量的 bottom padding，不能用另一套手写底栏高度。
 

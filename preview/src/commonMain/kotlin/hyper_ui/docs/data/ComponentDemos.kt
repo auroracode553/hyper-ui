@@ -32,7 +32,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos()) // HyperText 按需观察布局，默认保留普通字符串路径； button 使用 content 主体插槽，默认外观与状态对齐 Flutter。
     addAll(formComponentDemos()) // Switch 的 52×32dp/22dp 与 Slider 的 20dp 尺寸保持稳定，展示液态按下与弹簧定位。
     addAll(containerComponentDemos()) // HyperColorPicker 展示连续调色板，HyperBackground 提供静态渐变；按需安全区与内容表面的展示规则保持一致。
-    addAll(navigationComponentDemos()) // TabBar 的 48dp/56dp 尺寸保持不变，展示固定玻璃、连续跟手与松手提交。
+    addAll(navigationComponentDemos()) // TabBar 支持 2–5 项、左右 12dp 留白，48dp/56dp 规格保持不变，展示固定玻璃、整栏按压舒展、镜片回弹、拖动回正与松手提交。
     addAll(listComponentDemos()) // HyperGroupedList 与设置菜单共用标题样式；HyperSpacing 由页面消费一次；页面列表无卡片。
     addAll(feedbackComponentDemos()) // 包含 HyperBattery、HyperSpeedScale 与 HyperSpeedPanel；Dialog 遮罩全屏，面板独立避让系统栏与键盘。
     addAll(toolsComponentDemos()) // Android 更新工具只在 Preview 模拟流程，不引入平台网络或下载。

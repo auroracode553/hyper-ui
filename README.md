@@ -1,6 +1,6 @@
 # HyperUI
 
-[HyperTabBar](vitepress/docs/components/navigation/hyper-tab-bar.md)、[HyperSlider](vitepress/docs/components/form/hyper-slider.md)、[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 和 [HyperDialog](vitepress/docs/components/feedback/hyper-dialog.md) 固定使用库内玻璃绘制，保留按压反馈与弹簧动效。保持 48dp 单入口、56dp 按钮组、20dp 滑块和原弹窗尺寸。Compose Preview 使用 1.12.0。
+[HyperTabBar](vitepress/docs/components/navigation/hyper-tab-bar.md)、[HyperSlider](vitepress/docs/components/form/hyper-slider.md)、[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 和 [HyperDialog](vitepress/docs/components/feedback/hyper-dialog.md) 固定使用库内玻璃绘制，TabBar 增加按下舒展、镜片弹性回弹与拖动偏移回正，仅变换绘制层。TabBar 栏内限制 2–5 项，栏外最多另放一个独立入口；两端示例以 Kotlin 文档为基准，默认左右留白 12dp、镜片可见高 48dp；保持 48dp 单入口、56dp 按钮组、20dp 滑块和原弹窗尺寸。Compose Preview 使用 1.12.0。
 
 设置页面使用 HyperMenuGroup(title = ...) 与 HyperListTile 的默认排版及卡片留白；独立标题使用 [HyperSectionTitle](vitepress/docs/components/list/hyper-section-title.md)，不在应用中覆写菜单字号或另用 HyperCard 包装设置行。页面水平、垂直和组间留白分别读取 HyperSpacing.PageHorizontal / PageVertical / SectionVertical（14 / 12 / 16dp）。
 

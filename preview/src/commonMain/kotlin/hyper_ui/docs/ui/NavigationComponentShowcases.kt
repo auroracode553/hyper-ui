@@ -4,6 +4,8 @@ package hyper_ui.docs.ui
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.FolderOpen
 import com.composables.icons.lucide.Bell
+import com.composables.icons.lucide.Compass
+import com.composables.icons.lucide.List
 import com.composables.icons.lucide.House
 import com.composables.icons.lucide.Info
 import com.composables.icons.lucide.Settings
@@ -186,10 +188,7 @@ fun TrailingActionTabBarDemo() {
             }
             HyperTabBar(items = listOf("打开"), type = "single", selectedIndex = null,
                 onChanged = { actionCount++ }, itemLabel = { it }) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    HyperIcon(Lucide.FolderOpen, it)
-                    HyperText(it)
-                }
+                HyperIcon(Lucide.FolderOpen, it)
             }
         }
     }
@@ -229,27 +228,26 @@ fun ScaffoldDemo() {
 
 @Composable
 private fun TabBarDemo(single: Boolean, floating: Boolean = true, actions: Boolean = false) {
-    // 使用正式组件的连续跟手与固定玻璃，保留原示例尺寸和状态提交方式。
+    // 导航项与栏外消息入口分别组合；不把外置动作计入导航项的最多五项限制。
     var selectedId by remember { mutableStateOf("home") }
     var count by remember { mutableStateOf(if (actions) 0 else 3) }
     val items = listOf(
         DemoNavItem("home", "首页", Lucide.House),
         DemoNavItem("recent", "最近", Lucide.Info),
-        DemoNavItem("notice", "消息", Lucide.Bell),
+        DemoNavItem("list", "列表", Lucide.List),
+        DemoNavItem("discover", "发现", Lucide.Compass),
         DemoNavItem("settings", "设置", Lucide.Settings)
     )
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        if (single) HyperButton({ count = if (count == 0) 3 else 0 }, modifier = Modifier.align(Alignment.TopCenter)) { HyperText("切换角标") }
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            HyperText(if (actions) "最近动作：${items.first { it.id == selectedId }.label} · $count 次" else "当前页面：${items.first { it.id == selectedId }.label}")
-        }
+    val message = DemoNavItem("message", "消息", Lucide.Bell)
+    val drawBar: @Composable (Modifier) -> Unit = { barModifier ->
         HyperTabBar(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            items = if (single) listOf(items.first()) else items,
-            onChanged = { selectedId = items[it].id; if (single || actions) count++ },
+            modifier = barModifier,
+            items = if (single) listOf(message) else items,
+            onChanged = { if (!single) selectedId = items[it].id; if (single || actions) count++ },
             type = if (single) "single" else "multiple",
             selectedIndex = if (actions) null else if (single) 0 else items.indexOfFirst { it.id == selectedId },
             floating = floating,
+            margin = PaddingValues(0.dp),
             itemEnabled = { !actions || it.id != "recent" },
             itemLabel = { it.label },
             badgeCount = count
@@ -259,6 +257,21 @@ private fun TabBarDemo(single: Boolean, floating: Boolean = true, actions: Boole
                 if (!single) HyperText(item.label, maxLines = 1)
             }
         }
+    }
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        if (single) HyperButton({ count = if (count == 0) 3 else 0 }, modifier = Modifier.align(Alignment.TopCenter)) { HyperText("切换角标") }
+        HyperText(if (actions) "最近动作：${items.first { it.id == selectedId }.label} · $count 次"
+            else "当前页面：${if (single) message.label else items.first { it.id == selectedId }.label}")
+        if (!single && floating && !actions) {
+            Row(Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(HyperTabBarDefaults.FloatingMargin),
+                horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                HyperTabBar(items = listOf(message), type = "single", selectedIndex = null,
+                    onChanged = { count++ }, badgeCount = count, margin = PaddingValues(0.dp)) {
+                    HyperIcon(it.icon, it.label)
+                }
+                drawBar(Modifier.weight(1f, fill = false))
+            }
+        } else drawBar(Modifier.align(Alignment.BottomCenter))
     }
 }
 

@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -46,7 +47,7 @@ fun <T> HyperTabBar(
     itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
 ) {
     require(type in setOf("multiple", "single")) { "type 必须为 multiple 或 single" }
-    require(if (type == "single") items.size == 1 else items.size >= 2) { "single 需要 1 项，multiple 至少需要 2 项" }
+    require(if (type == "single") items.size == 1 else items.size in 2..5) { "single 需要 1 项，multiple 需要 2 至 5 项" }
     require(selectedIndex == null || selectedIndex in items.indices) { "selectedIndex 超出 items 范围" }
     require(floating || type == "multiple") { "非悬浮底栏使用 multiple 形态" }
     val density = androidx.compose.ui.platform.LocalDensity.current
@@ -60,15 +61,13 @@ fun <T> HyperTabBar(
     // 单动作固定为 48dp 圆形入口；只有多项按钮组按标签字体扩展默认高度。
     val height = if (type == "single") HyperTabBarDefaults.SingleDiameter else
         maxOf(HyperTabBarDefaults.Height, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
+    val selectionHeight = height - 8.dp
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     var dragPosition by remember(items.size, selectedIndex == null, floating, rtl) { mutableStateOf<Float?>(null) }
     var pressed by remember { mutableStateOf(false) }
-    val pressProgress = animateFloatAsState(if (pressed) 1f else 0f,
-        spring(dampingRatio = 1f, stiffness = 1000f), label = "HyperTabBarGlassPress")
+    var pointerTravel by remember { mutableStateOf(0f) }
     val logicalSelected = selectedIndex
     val visualSelectedIndex = dragPosition ?: logicalSelected?.let { if (rtl) items.lastIndex - it else it }?.toFloat() ?: 0f
-    val position by animateFloatAsState(visualSelectedIndex, spring(dampingRatio = 1f, stiffness = 1000f),
-        label = "HyperTabBarSelection")
     val latestLogicalSelected by rememberUpdatedState(logicalSelected)
     val latestOnClick by rememberUpdatedState(onChanged)
     val latestItemEnabled by rememberUpdatedState(itemEnabled)
@@ -77,6 +76,8 @@ fun <T> HyperTabBar(
         .then(if (safeArea) Modifier.windowInsetsPadding(safeInsets.only(WindowInsetsSides.Bottom)) else Modifier)
         .padding(margin)) {
         if (type == "single") {
+            val pressProgress = animateFloatAsState(if (pressed) 1f else 0f,
+                spring(dampingRatio = 1f, stiffness = 1000f), label = "HyperTabBarGlassPress")
             val item = items.single()
             val enabled = itemEnabled(item)
             Box(Modifier.size(height)
@@ -99,6 +100,7 @@ fun <T> HyperTabBar(
                     fontSize = 10.sp, lineHeight = 10.sp, fontWeight = FontWeight.SemiBold)
             }
         } else {
+            val motion = rememberHyperTabBarMotion(visualSelectedIndex, items.size, pressed, pointerTravel)
             val panelSource = rememberHyperGlassSource()
             val labelsSource = rememberHyperGlassSource()
             val surfaceModifier = if (floating) {
@@ -106,7 +108,11 @@ fun <T> HyperTabBar(
             } else Modifier.fillMaxWidth()
             val inset = if (floating) 4.dp else 0.dp
             BoxWithConstraints(surfaceModifier.height(height)
-                .hyperObservePress { pressed = it }
+                .hyperTabBarPointer(items.size, rtl, with(density) { inset.toPx() },
+                    enabled = { latestItemEnabled(items[it]) }) { down, travel ->
+                    pressed = down
+                    pointerTravel = travel
+                }
                 .pointerInput(items, rtl, floating, selectedIndex == null) {
                     // 动作模式没有选中项，不将横向滑动转换为后退、菜单等业务操作。
                     if (selectedIndex == null) return@pointerInput
@@ -131,9 +137,16 @@ fun <T> HyperTabBar(
                     )
                 }) {
                 val cellWidth = (maxWidth - inset * 2) / items.size
-                Box(Modifier.fillMaxSize().hyperGlassSource(panelSource)
-                    .then(if (floating) Modifier.hyperControlSurface(RoundedCornerShape(height / 2),
-                        HyperControlSurfaceRole.Navigation) else Modifier)) {
+                val panelOffset = if (floating) motion.panelOffset(with(density) { maxWidth.toPx() },
+                    with(density) { 4.dp.toPx() }) else 0f
+                val panelScale = if (floating) 1f + 16.dp / maxWidth * motion.progress else 1f
+                Box(Modifier.fillMaxSize()
+                    .graphicsLayer { translationX = panelOffset; scaleX = panelScale; scaleY = panelScale }) {
+                    // 背景不包含前景标签，镜片只合成一次标签副本，缩放时不会出现双重字形。
+                    Box(Modifier.fillMaxSize().hyperGlassSource(panelSource)
+                        .then(if (floating) Modifier.hyperControlSurface(RoundedCornerShape(height / 2),
+                            HyperControlSurfaceRole.Navigation) else Modifier)
+                        .hyperTabBarHighlight(motion.progress, motion.position, items.size, with(density) { inset.toPx() }))
                     Row(Modifier.fillMaxSize().hyperGlassSource(labelsSource, tint = color).padding(horizontal = inset)) {
                         items.forEachIndexed { index, item ->
                             val selected = index == selectedIndex
@@ -153,10 +166,12 @@ fun <T> HyperTabBar(
                         }
                     }
                 }
-                if (selectedIndex != null) Box(Modifier.absoluteOffset(x = inset + 1.dp + cellWidth * position, y = 4.dp)
-                    .width((cellWidth - 2.dp).coerceAtLeast(0.dp)).height(height - 8.dp)
-                    .hyperControlSurface(RoundedCornerShape(height / 2), HyperControlSurfaceRole.Selection,
-                        progress = { pressProgress.value }, sources = listOf(panelSource, labelsSource)))
+                if (selectedIndex != null) Box(Modifier.absoluteOffset(x = inset + 1.dp + cellWidth * motion.position,
+                    y = (height - selectionHeight) / 2)
+                    .width((cellWidth - 2.dp).coerceAtLeast(0.dp)).height(selectionHeight)
+                    .graphicsLayer { translationX = panelOffset; scaleX = motion.scaleX; scaleY = motion.scaleY }
+                    .hyperControlSurface(RoundedCornerShape(selectionHeight / 2), HyperControlSurfaceRole.Selection,
+                        progress = { motion.progress }, sources = listOf(panelSource, labelsSource)))
             }
         }
     }
@@ -168,6 +183,6 @@ object HyperTabBarDefaults {
     /** 悬浮和贴底多项按钮组的默认内容高度，组件内可随字体扩展。 */
     val Height = 56.dp
     /** 组件视觉间距，与根布局系统安全区独立；并排入口由共同的 Row 只消费一次。 */
-    val FloatingMargin = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp,
+    val FloatingMargin = PaddingValues(start = 12.dp, top = 8.dp, end = 12.dp,
         bottom = HyperSafeAreaDefaults.MinimumBottomSpacing)
 }

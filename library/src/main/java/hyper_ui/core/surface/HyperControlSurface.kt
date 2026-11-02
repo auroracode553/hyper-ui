@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlin.math.ceil
@@ -93,12 +92,9 @@ internal fun Modifier.hyperControlSurface(
                 backgroundSources.forEach { source ->
                     val origin = source.coordinates
                     if (origin?.isAttached == true) {
-                        val offset = try { origin.localPositionOf(actual) } catch (_: IllegalArgumentException) {
-                            actual.positionInWindow()-origin.positionInWindow()
-                        }
                         val factor = sampleScale?.invoke(source) ?: Offset(1f,1f)
                         if (factor.x > 0f && factor.y > 0f) scale(factor.x,factor.y) {
-                            translate(padding-offset.x,padding-offset.y) { drawLayer(source.layer) }
+                            drawHyperGlassSource(source, actual, padding)
                         }
                     }
                 }
@@ -107,10 +103,7 @@ internal fun Modifier.hyperControlSurface(
         } else if (role == HyperControlSurfaceRole.Selection && actual?.isAttached == true) {
             // 旧系统也重绘独立标签副本，镜片位于标签上层时不会遮挡文字。
             backgroundSources.forEach { source ->
-                source.coordinates?.takeIf { it.isAttached }?.let { origin ->
-                    val offset = origin.localPositionOf(actual)
-                    translate(-offset.x,-offset.y) { drawLayer(source.layer) }
-                }
+                drawHyperGlassSource(source, actual)
             }
         }
         when (role) {

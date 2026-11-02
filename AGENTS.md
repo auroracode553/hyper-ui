@@ -64,7 +64,7 @@
 
 ## 组件与 Preview 规范
 
-- 对应组件预览以 `D:/my_project/flutter_project/flutter-hyper-ui` 为视觉基准；手机外框、背景、安全区、分组顺序、文案、图标、尺寸、间距与展示状态保持一致，不添加仅 Compose 端存在的标题、控制项或计数。
+- Kotlin 与 Flutter 的组件示例统一以本仓库 `vitepress/docs/` 的文档示例及对应 Compose Preview 为视觉基准；手机外框、背景、安全区、分组顺序、文案、图标、尺寸、间距与展示状态保持一致。不得反过来用 Flutter 示例覆盖 Kotlin 示例，也不得自行增删入口或改变选中块尺寸。
 
 - 本项目与 `D:/my_project/flutter_project/flutter-hyper-ui` 的对应组件保持默认 UI 一致。修改默认布局、尺寸、按钮类型或状态展示规则时，同时更新另一端的实现、文档与预览示例；框架 API 差异不能导致默认视觉规则分叉。
 
