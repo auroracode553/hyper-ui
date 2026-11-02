@@ -56,7 +56,7 @@ fun UpdateDialogDemo() {
         }
         Spacer(Modifier.height(20.dp))
         HyperText("状态预览")
-        HyperText("检查中隐藏版本；其他版本信息不套卡片。标识块 40、图标 20、加载环 30；错误仅保留原因与操作，次操作使用默认描边按钮。")
+        HyperText("检查中隐藏版本；其他版本信息不套卡片。标识块 40、图标 20、加载环 30；错误仅保留原因与操作，次操作使用默认玻璃按钮。")
         Spacer(Modifier.height(8.dp))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperUpdateStatus.entries.forEach { status ->

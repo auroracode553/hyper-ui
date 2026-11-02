@@ -1,6 +1,6 @@
 # HyperUI
 
-[HyperTabBar](vitepress/docs/components/navigation/hyper-tab-bar.md)、[HyperSlider](vitepress/docs/components/form/hyper-slider.md)、[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 和 [HyperDialog](vitepress/docs/components/feedback/hyper-dialog.md) 固定使用库内玻璃绘制，TabBar 增加按下舒展、镜片弹性回弹与拖动偏移回正，仅变换绘制层。TabBar 栏内限制 2–5 项，栏外最多另放一个独立入口；两端示例以 Kotlin 文档为基准，默认左右留白 12dp、镜片可见高 48dp；保持 48dp 单入口、56dp 按钮组、20dp 滑块和原弹窗尺寸。Compose Preview 使用 1.12.0。
+[HyperButton](vitepress/docs/components/basic/hyper-button.md)、[HyperTabBar](vitepress/docs/components/navigation/hyper-tab-bar.md)、[HyperSlider](vitepress/docs/components/form/hyper-slider.md)、[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 和 [HyperDialog](vitepress/docs/components/feedback/hyper-dialog.md) 固定使用库内玻璃绘制，TabBar 增加按下舒展、镜片弹性回弹与拖动偏移回正，仅变换绘制层。TabBar 栏内限制 2–5 项，栏外最多另放一个独立入口；两端示例以 Kotlin 文档为基准，默认左右留白 12dp、镜片可见高 48dp；保持 48dp 单入口、56dp 按钮组、20dp 滑块和原弹窗尺寸。Compose Preview 使用 1.12.0。
 
 设置页面使用 HyperMenuGroup(title = ...) 与 HyperListTile 的默认排版及卡片留白；独立标题使用 [HyperSectionTitle](vitepress/docs/components/list/hyper-section-title.md)，不在应用中覆写菜单字号或另用 HyperCard 包装设置行。页面水平、垂直和组间留白分别读取 HyperSpacing.PageHorizontal / PageVertical / SectionVertical（14 / 12 / 16dp）。
 
@@ -44,7 +44,7 @@ Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义
 
 `HyperDatePicker.date` 对齐 `D:/my_project/flutter_project/flutter-hyper-ui/ui/lib/src/components/hyper_date_picker.dart` 的单日期模式和底部面板：30dp 圆角、16dp 内边距、42dp 日期行、36dp 选中圆、12 个月及年份跳转。公开日期类型为 Android 原生 `LocalDate`；默认范围为 1900-01-01 至 2100-12-31，临时选择在确定并关闭面板后提交。无新增依赖。完整签名、状态约定与交互示例见 [日期选择器](vitepress/docs/components/form/hyper-date-picker.md)。
 
-默认视觉与 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 的同名组件对齐。普通组件固定为实色表面；TabBar、Slider、Switch、Dialog 内置固定玻璃效果；已有颜色、字号、行高、圆角、间距、图标和动效按当前基线维护，不因参考差异自动重写。每类组件只保留一套默认规格：按钮高度 38dp，输入框圆角 20dp，分段 HyperTabs 高 40dp，横向分类 HyperFilterBar 最小高 32dp，TabBar 的 single 固定直径 48dp、multiple 按钮组默认高 56dp。完整规则见 [样式与功能实现基线](vitepress/docs/style-reference.md)。
+默认视觉与 `D:/my_project/flutter_project/flutter-hyper-ui/ui` 的同名组件对齐。普通组件固定为实色表面；Button、TabBar、Slider、Switch、Dialog 内置固定玻璃效果；已有颜色、字号、行高、圆角、间距、图标和动效按当前基线维护，不因参考差异自动重写。每类组件只保留一套默认规格：按钮高度 38dp，输入框圆角 20dp，分段 HyperTabs 高 40dp，横向分类 HyperFilterBar 最小高 32dp，TabBar 的 single 固定直径 48dp、multiple 按钮组默认高 56dp。完整规则见 [样式与功能实现基线](vitepress/docs/style-reference.md)。
 
 `HyperDropdown` 使用 options/value/onChanged 管理选择；width 省略时按文案自动取 160–240dp，菜单匹配字段宽度。`HyperPopover` 的 visible / onClose 由调用方控制，child 提供锚点并自行触发；默认宽 180dp，width 可显式指定，maxWidth 只限制上限。`HyperTabBar.type` 为 single/multiple，itemEnabled 控制单项禁用；`HyperCheckbox.value` 为可空三态值。更新弹窗通过 status、展示数据与操作回调接入业务服务。
 

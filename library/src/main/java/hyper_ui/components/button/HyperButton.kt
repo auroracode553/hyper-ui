@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,7 +47,7 @@ fun HyperButton(
     type: String? = null,
     color: Color = Color.Unspecified,
     colorStyle: String? = null,
-    colors: HyperButtonColors = HyperButtonDefaults.colors(type, color = color, colorStyle = colorStyle),
+    colors: HyperButtonColors? = null,
     border: BorderStroke? = HyperButtonDefaults.border(type, enabled && onPressed != null, color = color, colorStyle = colorStyle),
     shape: Shape = HyperButtonDefaults.shape(),
     contentPadding: PaddingValues = HyperButtonDefaults.contentPadding(),
@@ -65,8 +65,13 @@ fun HyperButton(
     }
     val isIconType = type == "icon"
     val isEnabled = enabled && onPressed != null
-    val container = if (isEnabled) colors.containerColor else colors.disabledContainerColor
-    val foreground = if (isEnabled) colors.contentColor else colors.disabledContentColor
+    val resolvedColors = colors ?: HyperButtonDefaults.colors(type, color = color, colorStyle = colorStyle)
+    val container = if (isEnabled) resolvedColors.containerColor else resolvedColors.disabledContainerColor
+    val foreground = if (isEnabled) resolvedColors.contentColor else resolvedColors.disabledContentColor
+    var pressed by remember { mutableStateOf(false) }
+    val progress by animateFloatAsState(if (pressed && isEnabled && !loading) 1f else 0f,
+        tween(if (pressed) HyperMotionSpec.PressInDuration else HyperMotionSpec.PressOutDuration,
+            easing = HyperMotionSpec.OverlayCurve), label = "HyperButtonGlassPress")
     Row(
         modifier = modifier
             .then(
@@ -78,8 +83,10 @@ fun HyperButton(
                         .height(resolvedHeight)
                 }
             )
-            .hyperNoRippleClickable(enabled = isEnabled && !loading, role = role, onClick = { onPressed?.invoke() })
-            .hyperButtonSurface(container, shape, type, isEnabled, border)
+            .hyperNoRippleClickable(enabled = isEnabled && !loading, role = role,
+                onPressChanged = { pressed = it }, onClick = { onPressed?.invoke() })
+            .hyperButtonSurface(container, shape, type, isEnabled, border,
+                defaultContainer = colors == null, progress = { progress })
             .semantics { if (loading) stateDescription = "正在处理" }
             .then(if (isIconType) Modifier else Modifier.padding(contentPadding).padding(1.dp)),
         horizontalArrangement = horizontalArrangement,
@@ -177,11 +184,10 @@ object HyperButtonDefaults {
     ): BorderStroke? {
         val fallback = when {
             !enabled -> HyperColors.divider.copy(alpha = 110 / 255f)
-            type == "filled" -> Color(1f, 1f, 1f, 45 / 255f)
+            type == "filled" -> return null
             color != Color.Unspecified || colorStyle != null -> tone(color, colorStyle).copy(alpha = 0.35f)
-            type == null -> HyperColors.divider
-            else -> hyperSurfaces.edgeHighlight
+            else -> return null
         }
-        return if (fallback.alpha == 0f) null else BorderStroke(1.dp, fallback)
+        return if (fallback.alpha == 0f) null else BorderStroke(if (enabled) 0.5.dp else 1.dp, fallback)
     }
 }

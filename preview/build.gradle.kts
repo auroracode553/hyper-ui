@@ -60,8 +60,6 @@ kotlin {
             kotlin.exclude("**/tools/update/android/**")
             // Android Dialog 窗口动画配置由跨平台 Preview 使用同包宿主替代。
             kotlin.exclude("**/HyperDialogHost.kt")
-            // Android 与 Preview 的阴影后端使用不同单位，复用按钮但替换内部换算。
-            kotlin.exclude("**/HyperButtonShadowRadius.kt")
             // Android RuntimeShader 后端由 Preview 的 Skia 实现替换，共用本地折射算法。
             kotlin.exclude("**/HyperGlassShader.android.kt")
             // 日期入口使用 Android 的 LocalDate；Preview 直接复用内部月历和面板。

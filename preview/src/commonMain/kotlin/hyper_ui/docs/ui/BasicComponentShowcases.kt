@@ -33,11 +33,12 @@ import hyper_ui.*
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ButtonDemo() {
-    // 与 Flutter ButtonsExample 保持相同分组、顺序、文案、状态及 8/16dp 间距。
+    // 两端沿用 Kotlin 示例分组和 8/16dp 间距，默认按钮切换处理中状态以核对回调与加载拦截。
+    var processing by remember { mutableStateOf(true) }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(onPressed = {}, content = { HyperText("默认按钮") })
-            HyperButton({}, loading = true) { HyperText("处理中") }
+            HyperButton(onPressed = { processing = !processing }, content = { HyperText("默认按钮") })
+            HyperButton({ processing = true }, loading = processing) { HyperText("处理中") }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperButton({}, type = "filled", colorStyle = "primary") { HyperText("Primary") }
@@ -62,7 +63,7 @@ fun ButtonDemo() {
             }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton({}, colorStyle = "success") { HyperText("默认描边") }
+            HyperButton({}, colorStyle = "success") { HyperText("默认玻璃") }
             HyperButton({}, type = "filled", colorStyle = "success") { HyperText("填充") }
             HyperButton({}, type = "icon", colorStyle = "success") { HyperIcon(Lucide.Check, "成功") }
             HyperButton({}, type = "filled", colorStyle = "danger", color = HyperColors.accent) { HyperText("自定义颜色优先") }

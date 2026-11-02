@@ -354,7 +354,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("状态", "HyperUpdateStatus", "检查/更新/下载/安装/完成/错误"),
             DemoVariant("错误反馈", "status = error / message", "仅展示原因、重试与关闭，不展示图标、标题和版本框"),
-            DemoVariant("操作样式", "HyperButton.type", "主操作 type = filled / colorStyle = primary，关闭、取消和稍后再说省略 type，使用默认描边"),
+            DemoVariant("操作样式", "HyperButton.type", "主操作 type = filled / colorStyle = primary，关闭、取消和稍后再说省略 type，使用默认玻璃"),
             DemoVariant("标识与版本", "受控状态布局", "40dp 标识块、20dp 图标；检查中无版本，其他版本信息不嵌套卡片"),
             DemoVariant("尺寸与排版", "maxWidth = 420.dp", "弹层安全区外间距 20dp，内容 24dp，圆角 28dp；正文滚动、底部操作固定"),
             DemoVariant("必要更新", "mandatory", "安装与必要更新阶段锁定关闭"),

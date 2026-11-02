@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlin.math.ceil
 
-internal enum class HyperControlSurfaceRole { Navigation, Selection, Thumb, SwitchThumb, Dialog }
+internal enum class HyperControlSurfaceRole { Navigation, Button, Selection, Thumb, SwitchThumb, Dialog }
 
 internal fun Modifier.hyperControlSurface(
     shape: Shape,
@@ -45,8 +45,10 @@ internal fun Modifier.hyperControlSurface(
     DisposableEffect(shader) { onDispose { shader.close() } }
     val interactive = role == HyperControlSurfaceRole.Selection || role == HyperControlSurfaceRole.Thumb || role == HyperControlSurfaceRole.SwitchThumb
     val shadowRadius = when (role) {
+        HyperControlSurfaceRole.Navigation -> HyperGlassStyles.Navigation.shadow
         HyperControlSurfaceRole.Dialog -> 16.dp
         HyperControlSurfaceRole.Thumb, HyperControlSurfaceRole.SwitchThumb -> 4.dp
+        HyperControlSurfaceRole.Button -> HyperGlassStyles.button(progress().coerceIn(0f, 1f)).shadow
         else -> 8.dp
     }
     this.onGloballyPositioned { coordinates = it }.dropShadow(shape) {
@@ -59,19 +61,21 @@ internal fun Modifier.hyperControlSurface(
         val strength = if (interactive) pressed else 1f
         val outline = shape.createOutline(size, layoutDirection, this)
         val actual = coordinates
+        val controlStyle = if (role == HyperControlSurfaceRole.Button) HyperGlassStyles.button(pressed) else HyperGlassStyles.Navigation
         val blur = when (role) {
-            HyperControlSurfaceRole.Navigation -> 8.dp.toPx()
+            HyperControlSurfaceRole.Navigation, HyperControlSurfaceRole.Button -> controlStyle.blur.toPx()
             HyperControlSurfaceRole.Selection -> 0f
             HyperControlSurfaceRole.Thumb, HyperControlSurfaceRole.SwitchThumb -> 8.dp.toPx() * (1f-pressed)
             HyperControlSurfaceRole.Dialog -> (if (light) 16.dp else 8.dp).toPx()
         }
         val edge = when (role) {
-            HyperControlSurfaceRole.Navigation, HyperControlSurfaceRole.Dialog -> 24.dp
+            HyperControlSurfaceRole.Navigation, HyperControlSurfaceRole.Button -> controlStyle.edge
+            HyperControlSurfaceRole.Dialog -> 24.dp
             HyperControlSurfaceRole.SwitchThumb -> 5.dp
             else -> 10.dp
         }.toPx()*strength
         val amount = when (role) {
-            HyperControlSurfaceRole.Navigation -> 24.dp
+            HyperControlSurfaceRole.Navigation, HyperControlSurfaceRole.Button -> controlStyle.amount
             HyperControlSurfaceRole.Dialog -> 48.dp
             HyperControlSurfaceRole.SwitchThumb -> 10.dp
             else -> 14.dp
@@ -86,7 +90,7 @@ internal fun Modifier.hyperControlSurface(
                 if (role == HyperControlSurfaceRole.Dialog) 1f else 0f,blur,
                 if (role == HyperControlSurfaceRole.Dialog) 1.5f else 1f,
                 if (role == HyperControlSurfaceRole.Dialog && light) 0.2f else 0f,
-                strength,0.5.dp.toPx()))
+                if (role == HyperControlSurfaceRole.Button) controlStyle.highlight * 2f else strength,0.5.dp.toPx()))
             layer.record(size = IntSize(ceil(size.width+padding*2).toInt(),ceil(size.height+padding*2).toInt())) {
                 drawRect(background)
                 backgroundSources.forEach { source ->
@@ -108,6 +112,7 @@ internal fun Modifier.hyperControlSurface(
         }
         when (role) {
             HyperControlSurfaceRole.Navigation -> drawRect(if (containerColor != Color.Unspecified) containerColor else tint, alpha = 0.4f)
+            HyperControlSurfaceRole.Button -> drawRect(if (containerColor != Color.Unspecified) containerColor else tint.copy(alpha = tint.alpha * 0.4f))
             HyperControlSurfaceRole.Selection -> {
                 drawRect(if (light) black else white,alpha = 0.1f*(1f-pressed))
                 drawRect(black,alpha = 0.03f*pressed)
@@ -118,7 +123,9 @@ internal fun Modifier.hyperControlSurface(
                 alpha = if (containerColor != Color.Unspecified) 1f else if (light) 0.6f else 0.8f)
         }
         drawContent()
-        val intensity = if (interactive) pressed else 0.5f
+        val intensity = if (role == HyperControlSurfaceRole.Button) {
+            if (border == null) controlStyle.highlight else 0f
+        } else if (interactive) pressed else HyperGlassStyles.Navigation.highlight
         if (intensity > 0f) drawOutline(outline,Brush.linearGradient(listOf(
             white.copy(alpha = 0.6f*intensity),white.copy(alpha = 0.04f*intensity),white.copy(alpha = 0.5f*intensity)),
             Offset.Zero,Offset(size.width,size.height)),style = Stroke(0.5.dp.toPx()))

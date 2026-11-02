@@ -21,7 +21,7 @@ internal fun ComponentPreviewViewport(
 ) {
     // 切换组件时销毁旧的滚动位置和演示状态，避免短页面继承长页面的偏移。
     key(demo.id) {
-        PreviewSceneBackdrop(modifier.fillMaxSize(), glassScene = demo.id.startsWith("tab-bar-") || demo.id in setOf("slider", "switch", "dialog", "hyper_dialog")) {
+        PreviewSceneBackdrop(modifier.fillMaxSize(), glassScene = demo.id.startsWith("tab-bar-") || demo.id in setOf("button", "slider", "switch", "dialog", "hyper_dialog")) {
             val top = if (deviceSafeAreas && !demo.fillsTopSafeArea) PreviewTopSafeArea else 0.dp
             // 与 Flutter 预览一致：手势条覆盖在整屏内容上，宿主不预留底部安全区。
             Box(Modifier.fillMaxSize().padding(top = top)) {

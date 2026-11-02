@@ -46,7 +46,7 @@ Android 手机端目标为 320–430dp 竖屏；Desktop/Wasm 仅用于文档 Pre
 
 ## 主题、材质与交互令牌
 
-TabBar、Slider、Switch 与 Dialog 的固定玻璃集中在 core/surface/HyperControlSurface.kt；HyperGlassSource.kt 只录制独立背景，HyperGlassOptics.kt 提供圆角距离场、圆弧折射与七波段色散，Android RuntimeShader 和 Preview Skia 使用同一源码。无需外部玻璃依赖，不恢复主题材质枚举。
+Button、TabBar、Slider、Switch 与 Dialog 的固定玻璃集中在 core/surface/HyperControlSurface.kt；HyperGlassStyle.kt 管理导航与按钮的内部绘制参数，HyperGlassSource.kt 只录制独立背景，HyperGlassOptics.kt 提供圆角距离场、圆弧折射与七波段色散，Android RuntimeShader 和 Preview Skia 使用同一源码。无需外部玻璃依赖，不恢复主题材质枚举。
 
 TabBar 的连续拖动与点击／松手吸附、Slider 的点击／外部值定位使用 stiffness 1000、dampingRatio 1 的临界阻尼弹簧；按下立即显示高光，取消恢复受控值，TabBar 松手才提交。TabBar 在有效按下及切换途中仅做绘制层舒展（1 + 16dp / 栏宽 × 进度），镜片横纵弹簧为 0.6/0.7、stiffness 250、按压目标 78/56；接近目标后回弹。拖动整栏最多偏移 ±4dp，释放用 1/300 弹簧回正；贴底栏不做整栏变换。动画不改变测量、命中范围和回调时机；镜片默认可见高 48dp，Slider 保持 20dp 滑块且不放大。Dialog 保留现有尺寸、250ms 过渡、遮罩与 IME 链路。
 
@@ -83,16 +83,16 @@ HyperNavBar 与 HyperScrollGradient 只绘制主题画布色的滚动渐变，�
 
 ## HyperButton 默认样式与复用规则
 
-源码为 components/button/HyperButton.kt、HyperButtonSurface.kt；阴影后端换算由 HyperButtonShadowRadius.kt 负责，Preview 使用独立内部换算适配。
+源码为 components/button/HyperButton.kt、HyperButtonSurface.kt；仅保留布局、状态与颜色适配，玻璃样式参数和绘制统一复用 core/surface/HyperGlassStyle.kt、HyperControlSurface.kt。
 
 | 项目 | 当前规则 |
 | --- | --- |
-| type | 省略为默认描边；显式值仅 filled、icon |
+| type | 省略为默认玻璃；显式值仅 filled、icon |
 | colorStyle | primary / success / info / warning / danger；不承担按钮形态含义 |
 | color | 优先于 colorStyle；指定色调也会影响描边，不能只看内容色是否相同 |
-| 默认描边 | surfaceSubtle 背景、primaryText 前景、divider 描边 |
-| 默认图标按钮 | surface 背景、primaryText 前景、edgeHighlight 描边；宽高相等 |
-| filled | 基色渐变、淡描边和阴影；内容色按色调与亮度计算；不用已有 colors 参数推断可删除所有背景覆盖 |
+| 默认玻璃 | 中性半透明底面、primaryText 前景与共用 0.5dp 柔和高光；语义色仅补 0.5dp 色调线框 |
+| 默认图标按钮 | 与默认玻璃共用绘制，primaryText 前景；宽高相等 |
+| filled | 语义基色 alpha ×0.9 与共用折射、高光、阴影；前景按原亮度规则计算，显式 colors 覆盖原样保留 |
 | 禁用 | enabled 为 false 或 onPressed 为空；默认 controlTrack 背景、secondaryText 的 alpha 150/255、divider 的 alpha 110/255 |
 | loading | 停止重复点击；图标按钮替换内容，文字按钮保留内容并显示加载；不自动改成禁用颜色 |
 | 内容与尺寸 | content 为 RowScope 插槽，继承局部文字／图标大小；默认按内容收缩，Modifier 控制宿主布局 |
@@ -144,7 +144,7 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 
 | 组件 | 当前明确入口 |
 | --- | --- |
-| HyperThemeConfig | 颜色、深浅色、排版、形状与系统安全区；普通表面实色；四类控件内置固定玻璃 |
+| HyperThemeConfig | 颜色、深浅色、排版、形状与系统安全区；普通表面实色；Button 等指定控件内置固定玻璃 |
 | HyperDropdown | options: List&lt;HyperOption&lt;T&gt;&gt;，value，onChanged；临时 expanded 在组件内部 |
 | HyperPopover | visible、onClose、child、content；内容贴触发点定位 |
 | HyperActionSheet / HyperAction | visible 与 onClose 受控；自定义 content 或 actions / onChanged 二选一；dismissible 只控制遮罩关闭，返回键仍可关闭；操作先关闭再回传，取消仅关闭 |
@@ -255,7 +255,7 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 | HyperSlideMenu 的操作区 | 全高操作背景、文字／图标和危险色 | 必须填满侧滑宽高；胶囊按钮会改变露出区域与手势目标 |
 | Slider、Progress、Switch、Radio、Checkbox | 自绘轨道、滑块、圆环、方框及禁用态 | 灰色有轨道和状态用途，不能全局删除 controlTrack 或次级色 |
 | HyperBattery / HyperLevelCapsule / HyperSpeedScale | 电量、比例填充、刻度与端点 | 是数值展示专用绘制，不迁移为按钮或统一胶囊皮肤 |
-| HyperDialogHost / HyperButtonShadowRadius | Android 宿主和阴影单位换算 | 正式库与 Preview 后端不同，不能删掉适配以追求文件一致 |
+| HyperDialogHost | Android 弹窗宿主 | 正式库与 Preview 宿主不同，不删除原生窗口适配 |
 | Preview 中的显式主题和自定义色 | 用于演示公开 API 与状态 | 核对用途后保留，不与库内部多余覆盖混为一类 |
 
 ## 生命周期、平台与两端边界
@@ -269,7 +269,7 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 - 日期确认先请求关闭，退出完成再提交一次选中值；取消清除待提交结果，不能在每次点击日期时直接提交业务值。
 - 浮层关闭回调只是请求修改外部状态；保留退出动画与其所需内容，不在外部 visible=false 时提前移除整棵宿主而跳过当前退出路径。
 - HyperDialogHost 禁用平台默认宽度、原生 dim 与窗口动画，由 Compose 内容绘制遮罩和过渡；Preview 使用同包宿主替代 Android 实现，不能把这份替代实现用于 Android 发布物。
-- Preview 的 commonMain 复用 library 源码，但在 preview/build.gradle.kts 中排除 Android Toast、电池广播、Dialog 宿主、阴影换算、LocalDate 日期入口及内嵌月历入口，并用共用内容或模拟替代。不能把 Preview 能运行视为 Android 入口已验证。
+- Preview 的 commonMain 复用 library 源码，但在 preview/build.gradle.kts 中排除 Android Toast、电池广播、Dialog 宿主、平台玻璃着色器、LocalDate 日期入口及内嵌月历入口，并用共用内容或模拟替代。不能把 Preview 能运行视为 Android 入口已验证。
 - 只记录本端实际能力。Flutter 的 Stepper、Pagination、Uploader 等不能据其文档推断 Android 已经存在；本次基线不新增对应组件。也不能把 Flutter 的自动关闭或动作回调时机直接写进 Android Toast。
 - 对应组件的业务参数与默认视觉继续对齐，但 Android 原生日期、Modifier、Composable、窗口与状态宿主差异按本端 API 保留；发现外观差异先列清单，未经授权不顺带修复。
 
