@@ -47,7 +47,7 @@ fun DatePickerDemo() {
     // Preview 模拟本机日期；Android 公开入口会读取 LocalDate.now()。
     val today = HyperCalendarDate(2026, 10, 19)
     Column {
-        HyperText("月历选择日期", modifier = Modifier.padding(bottom = 8.dp))
+        HyperText("月历选择日期 · 玻璃面板", modifier = Modifier.padding(bottom = 8.dp))
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
             HyperButton(onPressed = { visible = true }) {
                 HyperIcon(Lucide.Calendar, null)
@@ -215,6 +215,7 @@ fun TextFieldDemo() {
 
 @Composable
 fun SwitchDemo() {
+    // 标签与纯控件共用 28dp 滑块和 2dp 内侧留白；长按可查看扩张、高光，取消不提交。
     var notifications by remember { mutableStateOf(true) }
     var standalone by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(24.dp)) {

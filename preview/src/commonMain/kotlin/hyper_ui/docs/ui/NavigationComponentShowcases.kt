@@ -110,6 +110,7 @@ fun DrawerDemo() {
     var placement by remember { mutableStateOf(HyperDrawerPlacement.end) }
     var selected by remember { mutableStateOf("尚未选择") }
     var favorites by remember { mutableStateOf(true) }
+    // 贴边玻璃面板共用方向、滚动与滑动关闭链路，不额外包装卡片。
     val filters = placement == HyperDrawerPlacement.start
     Box(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {

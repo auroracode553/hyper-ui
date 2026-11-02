@@ -5,7 +5,7 @@
 - [Complete documentation corpus](./llms-full.txt): all documentation in one plain-text response.
 - [Documentation index](./index.md): AI and developer reading order.
 - [Getting started](./getting-started.md): dependency and minimum setup.
-- [Theme and colors](./theme.md): theme configuration and RGBA color rules.
+- [Theme and colors](./getting-started.md): theme configuration and RGBA color rules.
 - [State and architecture](./state-model.md): state ownership and integration boundaries.
 - [Component index](./component-index.md): links to every component Markdown page.
 - [HTML documentation](./): human-readable website.

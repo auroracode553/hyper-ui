@@ -106,6 +106,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("固定玻璃", "组件内部封装", "贴边全高模糊玻璃，不增加圆角或卡片阴影"),
             DemoVariant("方向", "placement = start/end", "逻辑方向与 RTL 镜像"),
             DemoVariant("宽度", "width = 320.dp", "最多占窗口宽度减 56dp，面板贴边全高"),
             DemoVariant("正文", "contentPadding / scrollable", "默认零间距，正文可独立滚动"),
@@ -131,7 +132,8 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("默认尺寸", "Height = 40.dp", "32dp 分段与 4dp 轨道留白；等宽底板平移 260ms"),
+            DemoVariant("固定玻璃", "组件内部封装", "40dp 共享玻璃，等宽底板采用临界阻尼弹簧"),
+            DemoVariant("默认尺寸", "Height = 40.dp", "32dp 分段与 4dp 轨道留白；等宽玻璃底板临界阻尼弹簧平移"),
             DemoVariant("禁用项", "itemEnabled", "单独禁用指定分段"),
             DemoVariant("自定义颜色", "HyperTabsDefaults.colors", "覆盖选中项和内容色")
         ),

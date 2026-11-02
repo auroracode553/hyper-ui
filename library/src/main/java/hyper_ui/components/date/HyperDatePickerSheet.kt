@@ -78,7 +78,7 @@ internal fun HyperDatePickerSheet(
             Column(
                 modifier = Modifier.fillMaxWidth().heightIn(max = maxHeight * 0.85f)
                     .graphicsLayer { alpha = progress; translationY = 24.dp.toPx() * (1f - progress) }
-                    .hyperFrostedSurface(glass.surfaceStrong, RoundedCornerShape(30.dp), border = BorderStroke(1.dp, glass.border))
+                    .hyperControlSurface(RoundedCornerShape(30.dp), HyperControlSurfaceRole.Dialog)
                     // 面板空白区域参与命中测试，避免穿透至遮罩。
                     .pointerInput(visible) {
                         awaitPointerEventScope {

@@ -2,7 +2,7 @@
 
 两端组件示例统一以本仓库 Kotlin 文档及对应 Compose Preview 为视觉基准；文案、图标、分组、尺寸、间距和状态同步到 Flutter，不用 Flutter 预览反向覆盖本基准。
 
-普通设置菜单统一使用 HyperMenuGroup(title = ...) + HyperListTile 的默认样式；独立标题使用 HyperSectionTitle，与菜单组标题共用 14sp Bold 排版。页面留白由调用方使用 HyperSpacing（水平 14dp、垂直 12dp、组间 16dp）提供一次。不要另以 HyperCard 包装菜单行、覆写标题字号或手画设置开关；必要业务预览与功能绘制独立保留。
+普通设置菜单统一使用 HyperMenuGroup(title = ...) + HyperListTile 的默认样式；独立文字标题由 HyperText 组合，菜单组标题保持 14sp Bold 排版。页面留白由调用方使用 HyperSpacing（水平 14dp、垂直 12dp、组间 16dp）提供一次。不要另以 HyperCard 包装菜单行、覆写标题字号或手画设置开关；必要业务预览与功能绘制独立保留。
 
 三选项主题弹窗统一使用 HyperThemeDialog：跟随系统、浅色、深色；36dp 最小行高、4dp 垂直内边距、无额外行间距，沿用 21dp 单选圆环。普通 HyperRadio 标签行与设置菜单的默认高度保持独立。
 
@@ -46,7 +46,11 @@ Android 手机端目标为 320–430dp 竖屏；Desktop/Wasm 仅用于文档 Pre
 
 ## 主题、材质与交互令牌
 
-Button、TabBar、Slider、Switch 与 Dialog 的固定玻璃集中在 core/surface/HyperControlSurface.kt；HyperGlassStyle.kt 管理导航与按钮的内部绘制参数，HyperGlassSource.kt 只录制独立背景，HyperGlassOptics.kt 提供圆角距离场、圆弧折射与七波段色散，Android RuntimeShader 和 Preview Skia 使用同一源码。无需外部玻璃依赖，不恢复主题材质枚举。
+Button、TabBar、Slider、Switch、Dialog、Checkbox、Radio、DatePicker、Tabs、Drawer、Dropdown、Toast、Progress、LevelCapsule、UpdateDialog 的固定玻璃集中在 core/surface/HyperControlSurface.kt；HyperGlassStyle.kt 管理导航与按钮的内部绘制参数，HyperGlassSource.kt 只录制独立背景，HyperGlassOptics.kt 提供圆角距离场、圆弧折射与七波段色散，Android RuntimeShader 和 Preview Skia 使用同一源码。无需外部玻璃依赖，不恢复主题材质枚举。
+
+固定玻璃按组件用途复用内部 HyperControlSurface，不提供全局材质档位。小型选择标记使用 2dp 模糊、3/4dp 折射；字段与 Tabs 轨道使用 8dp 模糊、8/12dp 折射且无外阴影；进度轨道使用 2dp 模糊、2/3dp 折射且无外阴影；浮层与比例胶囊使用 8dp 模糊、12/18dp 折射、8dp 阴影。日期与更新面板复用 Dialog 的浅/深色 16/8dp 模糊、24/48dp 折射与 16dp 阴影。抽屉只模糊背景，浅/深色 16/8dp；白色底面 alpha 0.85/0.28，不增加圆角、透镜边缘、描边或阴影。默认白色底面、清晰前景与语义状态边界独立绘制；显式颜色和边框保持调用方值。
+
+确定进度、LevelCapsule 和等宽 Tabs 的位置采用 stiffness=1000、dampingRatio=1、阈值 0.001 的临界阻尼弹簧，快速更新从当前值继续；显示值不反向写入业务状态。Toast 使用 125ms、0.97→1 缩放淡入，关闭时保留绘制直到退出完成，duration=0 不自动关闭。选择颜色与圆环粗细仍为 160ms；日期、抽屉与更新路由沿用既有时长及关闭语义。缺少独立背景源或平台着色器不支持时保留材质底面、轮廓与交互，不宣称已执行完整折射。
 
 TabBar 的连续拖动与点击／松手吸附、Slider 的点击／外部值定位使用 stiffness 1000、dampingRatio 1 的临界阻尼弹簧；按下立即显示高光，取消恢复受控值，TabBar 松手才提交。TabBar 在有效按下及切换途中仅做绘制层舒展（1 + 16dp / 栏宽 × 进度），镜片横纵弹簧为 0.6/0.7、stiffness 250、按压目标 78/56；接近目标后回弹。拖动整栏最多偏移 ±4dp，释放用 1/300 弹簧回正；贴底栏不做整栏变换。动画不改变测量、命中范围和回调时机；镜片默认可见高 48dp，Slider 保持 20dp 滑块且不放大。Dialog 保留现有尺寸、250ms 过渡、遮罩与 IME 链路。
 
@@ -117,9 +121,9 @@ HyperNavBar 与 HyperScrollGradient 只绘制主题画布色的滚动渐变，�
 | HyperTextField | radius 20；字号 16sp；padding 18×9dp | 1dp 普通轮廓、1.5dp 聚焦；多行纵向 +3dp |
 | HyperCheckbox | 44dp 触摸、21dp 方框、radius 7、轮廓 1.5 | nullable 三态、勾 15dp、160ms 状态动画 |
 | HyperRadio | 独立交互 44dp 触摸、展示 21dp 圆环、轮廓 1.5 / 6 | 标签行最小 46dp，不叠加触摸留白；160ms 选中颜色和环宽动画 |
-| HyperSwitch | 52×32，原边框 1 与内侧偏移 5；可见滑块 22dp、行程 20dp | 位置和颜色共用 stiffness 1000、dampingRatio 1 弹簧；按压高光，不放大 |
+| HyperSwitch | 52×32、无边框、内侧偏移 2；静止滑块 28dp、行程 20dp | 主题色/中性玻璃轨道，复用 Button 表面；1.5 倍双轴弹性、速度形变与 Ambient；拖动松手提交 |
 | HyperSlider | 44dp 触摸、6dp 轨道、20dp 玻璃滑块，默认无描边 | 默认范围 0..100，showValue=true；按压高光，点击弹簧定位 |
-| HyperTabs | radius 18，padding 4、条目 32，总高 40 | 13sp，选中 600、未选中 500，图标 16dp；等宽底板平移 260ms |
+| HyperTabs | radius 18，padding 4、条目 32，总高 40 | 13sp，选中 600、未选中 500，图标 16dp；等宽玻璃底板按临界阻尼弹簧平移 |
 | HyperFilterBar | 最小高 32dp，项内边距 12×6dp，项间距 6dp | 浅底与 1dp 弱边线；选中 8% 主题色底、18% 主题色细线与主题色文字；无阴影，横向滚动，13sp 文字随字体缩放自然撑高 |
 | HyperTabBar | single 固定直径 48；multiple 悬浮 / 贴底默认内容高 56；悬浮顶部间距 8、底部间距 20 | single / multiple 图标 22 / 23；连续跟手、临界阻尼弹簧吸附；只有多项按钮组按标签字体扩展高度 |
 | HyperNavBar | 高 44，水平 padding 16，标题 16/600 | 透明操作层，标题字距 -0.2sp、副标题 11sp、安全区另计 |
@@ -130,7 +134,7 @@ HyperNavBar 与 HyperScrollGradient 只绘制主题画布色的滚动渐变，�
 | HyperPopover | 默认宽 180，width 可显式指定，maxWidth 280 仅作上限；高窗口 40%，padding 14 | 真实锚点、6dp 间距、12dp 安全边距、自动翻转 |
 | HyperTooltip | radius 12，padding 10×7，12sp/1.3 | 500ms 悬停/长按；焦点即时；125ms 0.97→1 缩放淡入 |
 | HyperDialog | min(maxWidth,实际窗口宽度-48)，maxWidth 420，窗口间距 24，radius 26，padding 18 | 标题 20/600、正文 10、操作区 18、操作间距 8 |
-| HyperDrawer | 贴边全高，默认宽 320，窄屏最大窗口宽减 56，正文默认零间距 | 实色背景，无外侧留白／圆角／描边／卡片阴影；280ms 从面板自身宽度之外平移，遮罩独立淡入 |
+| HyperDrawer | 贴边全高，默认宽 320，窄屏最大窗口宽减 56，正文默认零间距 | 固定模糊玻璃背景，无外侧留白／圆角／描边／卡片阴影；280ms 从面板自身宽度之外平移，遮罩独立淡入 |
 | HyperActionSheet | 贴底全宽，圆角 30、内边距 16、最大高为键盘避让后可用高度的 85% | strong 材质，32×4 顶部指示条；250ms 淡入与 24dp 纵向平移；整体滚动，内部避让底部安全区 |
 | HyperSlideMenu | 每动作 64，边界阻力 0.32，释放阈值 35% | 0.09s 速度投影、stiffness 470/damping 42 |
 | HyperProgress | linear 6dp；circle 64dp、stroke 6dp | showLabel=true；线性动画 1400ms、圆环 1100ms |
@@ -169,6 +173,7 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 - core/icon/HyperIcon.kt 负责尺寸与颜色继承；组件直接引用 Lucide 库图标，不维护本地图形或转接表。
 - core/surface/ 提供实色表面、静态背景与阴影；边框和内容间距分开管理。
 - components/menu/HyperMenuSizing.kt 计算默认紧凑文字宽度；components/popup/HyperAnchoredSurface.kt 共用于 Dropdown、Popover，处理实际字段宽度、安全区、键盘和上下翻转。
+- components/progress/HyperProgressGlass.kt 提供静态填充光泽与空心轨道形状，由 HyperProgress.kt 组合共用玻璃与数值动画；HyperLevelCapsule.kt 保留独立比例展示。
 - components/update/HyperUpdatePresentation.kt 只映射显示数据，HyperUpdateContent.kt 组合正文与操作区，HyperUpdateLayout.kt 共用内嵌面板与模态宿主布局，HyperUpdateDialog.kt 承担受控入口。
 - preview/ui/UpdateDialogShowcase.kt 对齐 Flutter 更新流程与状态预览；UpdateDemoController.kt 只持有页面的模拟任务，关闭弹层不会取消下载。
 - preview 的 ComponentDemos 聚合各分组元数据，*ComponentShowcases 提供可操作的大小、禁用、选中与进度状态。
@@ -177,7 +182,7 @@ Android 与 Preview 直接引用 com.composables:icons-lucide-cmp:2.2.1 的 Luci
 
 ## 组件功能与状态归属
 
-HyperSwitch 的公开接口和尺寸保持独立：标签行与独立控件共用内部 HyperSwitchControl，点击释放时只提交一次 onChanged。玻璃滑块固定执行按压折射、高光与内阴影，禁用继续使用原有静态配色，自定义轨道与滑块颜色继续生效。两端保留原有约束盒与 22dp 可见圆形。
+HyperSwitch 的公开接口和尺寸保持独立：标签行与独立控件共用内部 HyperSwitchControl，点击释放时只提交一次 onChanged。玻璃滑块固定执行按压折射、高光与内阴影，禁用继续使用原有静态配色，自定义轨道与滑块颜色继续生效。两端保留原有约束盒与 28dp 可见圆形。
 
 以下文件均相对于 library/src/main/java/hyper_ui/。尺寸使用前面的对照表；此处补充功能、状态与复用关系，不能据此扩展未公开 API。
 
@@ -225,7 +230,7 @@ HyperSwitch 的公开接口和尺寸保持独立：标签行与独立控件共�
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | components/dialog/HyperAlertDialog.kt | 基于 HyperDialog 组合标题、正文与操作插槽；不自动附加业务按钮或提交表单 |
 | [HyperToast / hyperToast](components/feedback/hyper-toast.md) | components/feedback/HyperToastSurface.kt、HyperToast.kt | Compose 提示 visible 受控，默认 2000ms 后请求 onClose，duration=0 不自动关闭；actionLabel 与 onAction 同时提供才显示主题色文字操作，先请求关闭再回调；action 插槽优先并自行关闭；Android hyperToast 为原生文本／资源提示 |
 | [HyperLoading / HyperLoadingType](components/feedback/hyper-loading.md) | components/loading/HyperLoading.kt、core/loading/ | type 默认 null，实例随机选一款且重组保持稳定；显式 type 固定样式；十款原生平面动画各自固定规格与原始配色，固定 2× 节奏；系统 MotionDurationScale=0 静止 |
-| [HyperProgress](components/feedback/hyper-progress.md) | components/progress/HyperProgress.kt | linear / circular，自绘轨道／圆环；value=null 是不定进度，不伪造百分比；显示文字、尺寸与颜色由现有参数控制 |
+| [HyperProgress](components/feedback/hyper-progress.md) | components/progress/HyperProgress.kt、HyperProgressGlass.kt | linear / circular，自绘轨道／圆环；value=null 是不定进度，不伪造百分比；显示文字、尺寸与颜色由现有参数控制 |
 | [HyperEmptyState](components/feedback/hyper-empty-state.md) | components/feedback/HyperEmptyState.kt | 图标、标题、说明和 action 插槽；只负责空态展示，不请求业务数据或自动生成重试行为 |
 | [HyperLevelCapsule](components/feedback/hyper-level-capsule.md) | components/progress/HyperLevelCapsule.kt | 默认 52×156dp 的竖向比例反馈，progress 收敛至 0–1；保留图标与 label；自身不处理音量／亮度服务或手势 |
 | [HyperSpeedPanel / HyperSpeedPanelOverlay](components/feedback/hyper-speed-panel.md) | components/feedback/HyperSpeedPanel.kt 与 Defaults 文件 | value / onChanged / onClose 受控，Overlay 管宿主显隐；默认 0.25–4 倍滑块、0.05 步进、重置 1 倍；预设点、关闭、重置、自定义和插槽是专用布局，不操作播放器 |
@@ -277,7 +282,7 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 
 ## 视觉核对
 
-两端在相同设备、密度、字号缩放、安全区与字体配置下核对外观。检查浅色和深色、三种材质、320–430dp 宽度，以及禁用、聚焦、错误、选中、加载、键盘展开、RTL 和长文本。
+两端在相同设备、密度、字号缩放、安全区与字体配置下核对外观。检查浅色和深色、固定组件玻璃、320–430dp 宽度，以及禁用、聚焦、错误、选中、加载、键盘展开、RTL 和长文本。
 
 组件预览使用当前源码生成的产物。修改文档正文只更新文档，组件画面由 Preview 产物提供；核对时确认产物版本。列表应能滚动到最后一项，输入框清空与前后缀可同时使用，完整参数表保持可见。
 

@@ -94,7 +94,7 @@ private fun HyperLinearProgress(
     val resolvedHeight = HyperProgressDefaults.LinearHeight
     val coercedProgress = progress?.takeIf { it.isFinite() }?.coerceIn(0f, 1f)
     val displayedProgress by animateFloatAsState(coercedProgress ?: 0f,
-        tween(220, easing = HyperMotionSpec.EaseOutCubic), label = "HyperProgressValue")
+        spring(dampingRatio = 1f, stiffness = 1000f, visibilityThreshold = 0.001f), label = "HyperProgressValue")
     val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperSurfaces.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
     val semanticsInfo = if (coercedProgress == null) {
@@ -107,7 +107,8 @@ private fun HyperLinearProgress(
         modifier = modifier
             .height(resolvedHeight)
             .fillMaxWidth()
-            .hyperSolidSurface(
+            .hyperControlSurface(
+                role = HyperControlSurfaceRole.Track,
                 containerColor = resolvedTrackColor,
                 shape = shape,
                 border = trackBorder
@@ -127,7 +128,9 @@ private fun HyperLinearProgress(
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(displayedProgress)
-                    .background(resolvedIndicatorColor)
+                    .hyperControlSurface(shape, HyperControlSurfaceRole.Track,
+                        containerColor = resolvedIndicatorColor)
+                    .background(hyperProgressGlassBrush(resolvedIndicatorColor), shape)
             )
         }
     }
@@ -145,8 +148,9 @@ private fun HyperCircularProgress(
     val resolvedTrackColor = resolveHyperContainerColor(colors.trackColor, hyperSurfaces.controlTrack)
     val resolvedIndicatorColor = resolveHyperContainerColor(colors.indicatorColor, HyperColors.accent)
     val rotation = if (coercedProgress == null) hyperIndeterminatePhase(1100) * 360f else 0f
-    val displayedProgress = coercedProgress
-        ?: HyperProgressDefaults.CircularIndeterminateSweepFraction
+    val animatedProgress by animateFloatAsState(coercedProgress ?: 0f,
+        spring(dampingRatio = 1f, stiffness = 1000f, visibilityThreshold = 0.001f), label = "HyperProgressArc")
+    val displayedProgress = if (coercedProgress == null) HyperProgressDefaults.CircularIndeterminateSweepFraction else animatedProgress
     val semanticsInfo = if (coercedProgress == null) {
         ProgressBarRangeInfo.Indeterminate
     } else {
@@ -156,6 +160,8 @@ private fun HyperCircularProgress(
     Canvas(
         modifier = modifier
             .size(resolvedSize)
+            .hyperControlSurface(HyperProgressRingShape(strokeWidth), HyperControlSurfaceRole.Track,
+                containerColor = resolvedTrackColor)
             .semantics {
                 progressBarRangeInfo = semanticsInfo
             }
@@ -168,13 +174,8 @@ private fun HyperCircularProgress(
         )
         val sweepAngle = (displayedProgress * 360f).coerceIn(0f, 360f)
 
-        drawCircle(
-            color = resolvedTrackColor,
-            radius = (this.size.minDimension - strokePx) / 2f,
-            style = Stroke(width = strokePx, cap = StrokeCap.Round)
-        )
         drawArc(
-            color = resolvedIndicatorColor,
+            brush = hyperProgressGlassBrush(resolvedIndicatorColor),
             startAngle = -90f + rotation,
             sweepAngle = sweepAngle,
             useCenter = false,
@@ -202,7 +203,8 @@ private fun IndeterminateLinearSegment(
                 .fillMaxHeight()
                 .width(segmentWidth)
                 .offset(x = (maxWidth + segmentWidth) * phase - segmentWidth)
-                .background(indicatorColor)
+                .hyperControlSurface(segmentShape, HyperControlSurfaceRole.Track, containerColor = indicatorColor)
+                .background(hyperProgressGlassBrush(indicatorColor), segmentShape)
         )
     }
 }
@@ -220,7 +222,7 @@ object HyperProgressDefaults {
         trackColor: Color = Color.Unspecified,
         indicatorColor: Color = Color.Unspecified
     ): HyperProgressColors {
-        val resolvedTrackColor = resolveHyperContainerColor(trackColor, hyperSurfaces.controlTrack)
+        val resolvedTrackColor = resolveHyperContainerColor(trackColor, hyperSurfaces.controlTrack.copy(alpha = hyperSurfaces.controlTrack.alpha * 0.65f))
         return HyperProgressColors(
             trackColor = resolvedTrackColor,
             indicatorColor = resolveHyperContainerColor(indicatorColor, HyperColors.accent)

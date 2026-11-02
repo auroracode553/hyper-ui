@@ -58,8 +58,10 @@ fun <T> HyperDropdown(
                 Row(Modifier.fillMaxWidth().onGloballyPositioned { anchor = it.boundsInWindow() }
                     .defaultMinSize(minHeight = 48.dp)
                     .hyperNoRippleClickable(enabled = active, onClick = { expanded = !expanded })
-                    .hyperFrostedSurface(hyperSurfaces.surfaceSubtle, RoundedCornerShape(16.dp), elevation = 0.dp,
+                    .then(if (active) Modifier.hyperControlSurface(RoundedCornerShape(16.dp), HyperControlSurfaceRole.Field,
                         border = BorderStroke(1.dp, HyperColors.fieldBorder))
+                        else Modifier.hyperFrostedSurface(hyperSurfaces.controlTrack, RoundedCornerShape(16.dp), elevation = 0.dp,
+                            border = BorderStroke(1.dp, HyperColors.fieldBorder)))
                     .padding(horizontal = 14.dp, vertical = 11.dp), verticalAlignment = Alignment.CenterVertically) {
                     HyperText(selected?.label ?: placeholder, Modifier.weight(1f),
                         color = if (selected == null) HyperColors.secondaryText else HyperColors.primaryText,
@@ -71,7 +73,7 @@ fun <T> HyperDropdown(
                 }
                 // 菜单以字段最终测量宽度为准，显式父级约束与窄屏缩小时仍保持对齐。
                 val measuredWidth = anchor?.let { with(density) { it.width.toDp() } } ?: triggerWidth
-                HyperAnchoredSurface({ expanded = false }, measuredWidth, menuMaxHeight, PaddingValues(5.dp), anchorBounds = anchor, visible = expanded) {
+                HyperAnchoredSurface({ expanded = false }, measuredWidth, menuMaxHeight, PaddingValues(5.dp), anchorBounds = anchor, visible = expanded, fixedGlass = true) {
                     if (options.isEmpty()) HyperText("暂无选项", Modifier.fillMaxWidth().padding(16.dp),
                         color = HyperColors.secondaryText, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
                     options.forEach { option ->

@@ -36,6 +36,10 @@ HyperLevelCapsule(
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
+**固定玻璃与动效**
+
+默认 52×156dp，3dp 内容内缩，图标 20dp、内容间距 6dp。外壳使用 Panel 固定玻璃（8dp 模糊、12/18dp 折射、8dp 阴影），自定义 containerColor 原值保留。有限 progress 收敛到 0..1，NaN/Infinity 按 0 展示；填充以 stiffness=1000、dampingRatio=1、阈值 0.001 的临界阻尼弹簧追随，语义值仍为目标比例。
+
 ## 公开 API
 
 ### HyperLevelCapsule

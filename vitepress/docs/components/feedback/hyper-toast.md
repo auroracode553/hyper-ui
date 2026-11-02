@@ -29,7 +29,7 @@ HyperToast(visible, "保存成功", { visible = false }, type = "success")
 
 **样式约定**
 
-strong 材质，宽 180..420dp、radius 18dp，语义色 10/255 合成底面、105/255 描边。图标徽章 30dp、图标 17dp；文字 14sp/500、行高 1.35。默认 2000ms。
+固定玻璃材质，宽 180..420dp、radius 18dp，语义色 10/255 合成底面、105/255 描边。图标徽章 30dp、图标 17dp；文字 14sp/500、行高 1.35。默认 2000ms。
 
 actionLabel 与 onAction 同时提供时展示主题色文字操作，无按钮背景或描边；先请求 onClose，再执行 onAction。action 插槽优先，显式插槽自行处理业务与关闭。
 
@@ -38,6 +38,10 @@ actionLabel 与 onAction 同时提供时展示主题色文字操作，无按钮�
 visible 由调用方持有。duration=0 不自动关闭；计时结束只请求关闭。type 支持 neutral/primary/success/info/warning/error。Android 原生 hyperToast 与 Compose 组件分别使用。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+**固定玻璃与动效**
+
+提示表面使用 Panel 固定玻璃（8dp 模糊、12/18dp 折射、8dp 阴影）。125ms、0.97→1 缩放淡入，关闭时反向退出后才停止绘制；计时仍从 visible=true 开始。语义色仅合成底面和现有边界，文字图标保持清晰；Android 原生 hyperToast 保留系统行为。
 
 ## 公开 API
 

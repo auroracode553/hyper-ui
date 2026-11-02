@@ -65,8 +65,7 @@ private fun HyperUpdatePanel(
     ) {
         BoxWithConstraints(modifier.widthIn(max = maxWidth).fillMaxWidth()) {
             val boundedHeight = constraints.hasBoundedHeight
-            Column(Modifier.fillMaxWidth().hyperFrostedSurface(
-                containerColor = hyperSurfaces.surfaceStrong, shape = shape)) {
+            Column(Modifier.fillMaxWidth().hyperControlSurface(shape, HyperControlSurfaceRole.Dialog)) {
                 val bodyModifier = if (boundedHeight) {
                     Modifier.weight(1f, fill = false).verticalScroll(scrollState)
                 } else Modifier // 内嵌示例由 Preview 外层滚动，不能在无限高度下再套滚动容器。

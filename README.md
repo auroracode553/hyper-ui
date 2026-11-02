@@ -2,9 +2,11 @@
 
 [HyperButton](vitepress/docs/components/basic/hyper-button.md)、[HyperTabBar](vitepress/docs/components/navigation/hyper-tab-bar.md)、[HyperSlider](vitepress/docs/components/form/hyper-slider.md)、[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 和 [HyperDialog](vitepress/docs/components/feedback/hyper-dialog.md) 固定使用库内玻璃绘制，TabBar 增加按下舒展、镜片弹性回弹与拖动偏移回正，仅变换绘制层。TabBar 栏内限制 2–5 项，栏外最多另放一个独立入口；两端示例以 Kotlin 文档为基准，默认左右留白 12dp、镜片可见高 48dp；保持 48dp 单入口、56dp 按钮组、20dp 滑块和原弹窗尺寸。Compose Preview 使用 1.12.0。
 
+HyperSwitch 保留 52×32dp 轨道与 28dp 静止滑块，轨道复用 Button 的主题色/中性玻璃，滑块为轻透白色；保留参考 Toggle 的 1.5 倍弹性扩张、速度形变、Ambient 与横向拖动松手吸附。
+
 HyperButton 默认文字以 15.6sp 完整行框垂直居中，保留 38dp 按钮尺寸；中英文、图文和加载态共用同一内容中心线。
 
-设置页面使用 HyperMenuGroup(title = ...) 与 HyperListTile 的默认排版及卡片留白；独立标题使用 [HyperSectionTitle](vitepress/docs/components/list/hyper-section-title.md)，不在应用中覆写菜单字号或另用 HyperCard 包装设置行。页面水平、垂直和组间留白分别读取 HyperSpacing.PageHorizontal / PageVertical / SectionVertical（14 / 12 / 16dp）。
+设置页面使用 HyperMenuGroup(title = ...) 与 HyperListTile 的默认排版及卡片留白；独立文字标题由 HyperText 组合，不在应用中覆写菜单字号或另用 HyperCard 包装设置行。页面水平、垂直和组间留白分别读取 HyperSpacing.PageHorizontal / PageVertical / SectionVertical（14 / 12 / 16dp）。
 
 维护组件前必读 [UI 样式与功能实现基线](vitepress/docs/style-reference.md)：记录 Android 当前材质、尺寸、功能、状态及专用样式保留清单。已有样式默认保持不动，用途不明或可能影响交互的变化先向使用者确认，禁止批量替换。
 
@@ -52,7 +54,7 @@ Compose 与 Flutter 对应组件使用相同的业务参数名称和默认语义
 
 `HyperCheckbox`、`HyperRadio`、`HyperSwitch` 的 label 使用 plain 行，不自动附带卡片背景、外框或阴影；基础预览直接展示控件与标签。
 
-[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 保留 52×32dp 轨道、22dp 可见滑块与标签行布局；固定玻璃滑块保留按压折射、高光和弹簧切换，禁用及颜色覆盖继续生效。
+[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 保留 52×32dp 轨道、28dp 可见滑块与标签行布局；固定玻璃滑块保留按压折射、高光和弹簧切换，禁用及颜色覆盖继续生效。
 
 `HyperNavBar` 的滚动背景覆盖状态栏，只有操作行避让顶部安全区。真机读取系统 Insets；文档预览注入模拟 Insets，导航与正文共用且只计算一次，与 Flutter 的背景及安全区层级一致。
 
@@ -402,7 +404,7 @@ Wasm 静态产物不提交到仓库。使用者手动执行 `preview/` 中的 `p
 
 日常开发也可在 `vitepress/` 手动执行 `npm run dev:watch`：一个命令启动文档，先更新 Kotlin/Wasm npm 锁文件、再后台构建预览，并在 Kotlin 源码或 Wasm 入口资源保存后串行重新发布；预览区域显示四个真实阶段（依赖准备、编译发布、资源加载、组件渲染），产物就绪后自动加载和刷新。阶段条不代表 Gradle 百分比。
 
-若首次构建因访问 GitHub Release 下载 Binaryen 超时，可按 [预览更新流程](vitepress/docs/preview-update-workflow.md#github-连接超时时使用本地-binaryen-压缩包) 设置可选的 `HYPER_UI_BINARYEN_ARCHIVE_DIR`，使用已手动取得并校验的官方压缩包。变量未设置时仍由 Gradle 下载。
+若首次构建因访问 GitHub Release 下载 Binaryen 超时，可按 [预览更新流程](vitepress/docs/preview-update-workflow.md#长时间等待或资源失败) 设置可选的 `HYPER_UI_BINARYEN_ARCHIVE_DIR`，使用已手动取得并校验的官方压缩包。变量未设置时仍由 Gradle 下载。
 
 站点默认部署在域名根路径 `/`。部署到仓库子路径时，在手动启动或构建前设置 `VITEPRESS_BASE`，值必须以 `/` 开头和结尾，例如 `/hyper_ui/`；`WasmPreview` 会使用同一个 base 生成 iframe 地址。
 
@@ -465,3 +467,5 @@ TabBar 尺寸由库按形态管理：single 独立入口固定直径 48dp，mult
 页面宿主与滚动内容的全面屏组合见[业务页面规范](vitepress/docs/mobile-guidelines.md)：状态栏与悬浮 TabBar 不建立固定高度占位，HyperScaffold 的实测上下净空只进入滚动内容，正文视口保持全屏。
 
 分段切换使用 [HyperTabs](vitepress/docs/components/navigation/hyper-tabs.md)，可左右滑动的分类筛选使用 [HyperFilterBar](vitepress/docs/components/navigation/hyper-filter-bar.md)。两者均为受控组件。HyperFilterBar 普通项有浅底和细弱边线，选中项使用淡主题色底与主题色文字，不加阴影。
+
+Checkbox、Radio、DatePicker、Tabs、Drawer、Dropdown、Toast、Progress、LevelCapsule 与 UpdateDialog 按角色复用内部固定玻璃，尺寸与状态归属保持稳定；Tabs 与确定进度采用临界阻尼弹簧，Toast 保留退出绘制。参数与平台回退见各组件页。

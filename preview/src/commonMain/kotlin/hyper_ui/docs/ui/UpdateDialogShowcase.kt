@@ -23,6 +23,7 @@ fun UpdateDialogDemo() {
     val scope = rememberCoroutineScope()
     val controller = remember(scope) { UpdateDemoController(scope) }
     var mandatory by remember { mutableStateOf(false) }
+    // 内嵌状态与模态操作共用固定玻璃面板，下载模拟只由示例控制器持有。
     var dialogOpen by remember { mutableStateOf(false) }
     DisposableEffect(controller) { onDispose { controller.dispose() } }
 

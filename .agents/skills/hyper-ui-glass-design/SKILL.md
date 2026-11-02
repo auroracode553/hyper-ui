@@ -5,21 +5,22 @@ description: Apply HyperUI's approved HyperOS-inspired frosted-glass visual lang
 
 # HyperUI Glass Design
 
-Use the accepted `HyperIconButton` implementation as the material anchor, then adapt its visual weight to the component's size and role. The result should feel calm, soft, and physical—not glossy, outlined, or neumorphic.
+Use `HyperGlassStyles` and `hyperControlSurface` as the material anchor. Read the requested component's current source, documentation and Preview before choosing its existing internal role. Keep the material calm and preserve its semantic state boundaries.
 
 ## Material language
 
 - Build glass from a white translucent base in both themes. Let dark backgrounds mix that white into neutral gray; do not switch the material itself to a near-black fill.
 - Use one continuous face and at most one contextual shadow.
-- Do not draw hard borders, dark outlines, nested rings, isolated specular arcs, caustic streaks, or multiple stacked shadows.
+- Do not add decorative hard borders, nested rings, isolated specular arcs, caustic streaks, or multiple stacked shadows. Preserve Checkbox/Radio state borders, field boundaries, Toast tone borders and caller-provided borders; these replace the default outer highlight.
 - Semantic focus and error indication should use one restrained color cue rather than stacked outlines.
 - Keep icons and text high contrast. Tint the material layer rather than reducing foreground legibility.
 - Avoid stacking a light glass surface directly on another light glass surface. Glass should normally float over page content or a stable opaque background.
 
 ## Hierarchy and state
 
-- Small action controls may float more clearly. The accepted icon-button anchor is 38dp with an 18dp icon, white base alpha `0.72f` in light mode and `0.34f` in dark mode, a 6dp resting shadow, and immediate `0.97f` press scale.
-- Do not copy those values literally onto larger surfaces. Larger or structural components need calmer edges and lower apparent lift so they do not look like oversized buttons.
+- Button keeps its existing 38dp geometry and press-dependent style. Compact marks, fields, tracks, panels, drawers and modal dialogs use their own shared role parameters in `HyperGlassStyle.kt` / `HyperControlSurface.kt`; do not copy button optics onto them.
+- A role with zero shadow omits shadow drawing completely. Drawer stays rectangular, attached to the window edge and full height; a progress ring stays hollow.
+- Preserve theme-token alpha when applying a material multiplier; track and selection tokens are already translucent. Explicit caller colors retain their alpha.
 - Pointer-down, focus, validation, disabled, and read-only feedback must appear immediately. Do not wait for click release and do not add decorative looping motion.
 - Focus should be obvious without adding a second outline. Error state takes precedence over focus color. Disabled state removes lift and lowers material/foreground contrast.
 - Preserve layout stability across states. Focus and validation must not change measured size or padding.
@@ -36,7 +37,7 @@ Use the accepted `HyperIconButton` implementation as the material anchor, then a
 
 1. Inspect the component's existing public API, state ownership, call sites, Preview, and documentation.
 2. Decide whether the component is floating, structural, or modal, then set material opacity and shadow accordingly.
-3. Remove obsolete hard-border APIs and update all repository call sites when a clean breaking refactor is warranted.
+3. Keep public styling overrides and semantic borders. Remove an API only within the user's authorized scope, then update all call sites without compatibility aliases.
 4. Provide interactive Preview coverage for normal, active/focused, custom-color, error, disabled, and relevant size/layout variants.
 5. Synchronize `README.md`, `vitepress/docs/component-index.md`, the component page, and Preview demo metadata.
 6. Perform static consistency checks and run the relevant preview or build to verify visual and API changes when the task calls for it.

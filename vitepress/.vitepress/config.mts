@@ -76,10 +76,10 @@ export default defineConfig({
           { text: 'Switch', link: '/components/form/hyper-switch' },
           { text: 'Checkbox', link: '/components/form/hyper-checkbox' },
           { text: 'Radio', link: '/components/form/hyper-radio' },
-          { text: 'SectionTitle', link: '/components/list/hyper-section-title' },
-          { text: 'SegmentedControl', link: '/components/form/hyper-segmented-control' },
           { text: 'Slider', link: '/components/form/hyper-slider' },
-          { text: 'DatePicker', link: '/components/form/hyper-date-picker' }
+          { text: 'DatePicker', link: '/components/form/hyper-date-picker' },
+          { text: 'CalendarDay', link: '/components/form/hyper-calendar-day' },
+          { text: 'CalendarMonth', link: '/components/form/hyper-calendar-month' }
         ]
       },
       {
@@ -99,6 +99,7 @@ export default defineConfig({
           { text: 'Drawer', link: '/components/navigation/hyper-drawer' },
           { text: 'SlideMenu', link: '/components/navigation/hyper-slide-menu' },
           { text: 'Tabs', link: '/components/navigation/hyper-tabs' },
+          { text: 'FilterBar', link: '/components/navigation/hyper-filter-bar' },
           { text: 'TabBar', link: '/components/navigation/hyper-tab-bar' },
           { text: 'Scaffold', link: '/components/navigation/hyper-scaffold' }
         ]
@@ -121,9 +122,9 @@ export default defineConfig({
           { text: 'Loading', link: '/components/feedback/hyper-loading' },
           { text: 'Progress', link: '/components/feedback/hyper-progress' },
           { text: 'LevelCapsule', link: '/components/feedback/hyper-level-capsule' },
-          { text: 'PlaybackSpeedPanel', link: '/components/feedback/hyper-playback-speed-panel' },
-          { text: 'PlaybackSpeedScale', link: '/components/feedback/hyper-playback-speed-scale' },
-          { text: 'BatteryIndicator', link: '/components/feedback/hyper-battery-indicator' },
+          { text: 'SpeedPanel', link: '/components/feedback/hyper-speed-panel' },
+          { text: 'SpeedScale', link: '/components/feedback/hyper-speed-scale' },
+          { text: 'Battery', link: '/components/feedback/hyper-battery' },
           { text: 'Tooltip', link: '/components/feedback/hyper-tooltip' },
           { text: 'Popover', link: '/components/feedback/hyper-popover' },
           { text: 'Dialog', link: '/components/feedback/hyper-dialog' },
@@ -136,6 +137,7 @@ export default defineConfig({
       {
         text: '工具',
         items: [
+          { text: '全面屏窗口', link: '/components/tools/hyper-edge-to-edge' },
           { text: '检查更新', link: '/components/tools/hyper-update' },
           { text: '电量状态', link: '/components/tools/hyper-battery-state' }
         ]

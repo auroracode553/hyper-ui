@@ -1,4 +1,4 @@
-/** 文件职责：所有轻量点击控件共享 HyPressable 的按压反馈与键盘语义。 */
+/** 文件职责：为库内轻量点击控件提供共享按压反馈与键盘语义。 */
 package hyper_ui.core.interaction
 
 import hyper_ui.HyperMotionSpec

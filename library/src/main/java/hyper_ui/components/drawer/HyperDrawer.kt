@@ -75,7 +75,7 @@ fun HyperDrawer(
             Column(Modifier.align(if (placement == HyperDrawerPlacement.start) Alignment.CenterStart else Alignment.CenterEnd)
                 .width(drawerWidth).fillMaxHeight()
                 .graphicsLayer { translationX = sign * (widthPx * (1f - progress) + drag.value) }
-                .background(HyperColors.cardContainer)
+                .hyperControlSurface(androidx.compose.ui.graphics.RectangleShape, HyperControlSurfaceRole.Drawer)
                 .pointerInput(open) {
                     // 面板空白处也命中面板，不能穿透到遮罩。
                     awaitPointerEventScope {

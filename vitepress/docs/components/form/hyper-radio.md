@@ -31,7 +31,7 @@ HyperRadio(value = "option", groupValue = selectedValue, onChanged = { selectedV
 
 标签行不附带卡片背景、描边或阴影，基础示例不额外包裹 HyperCard。
 
-圆环为 21dp。无标签且 onChanged 非 null 的独立控件占 44dp 触摸区；onChanged 为 null 的展示控件只占圆环尺寸。提供 label 时使用 plain 列表行，由整行承载点击，圆环不再叠加独立触摸留白；单行文字采用列表行默认排版与 46dp 最小高度。选中为 6dp 品牌色环，未选中为 1.5dp 输入轮廓；内部保持 subtle 材质。
+圆环为 21dp。无标签且 onChanged 非 null 的独立控件占 44dp 触摸区；onChanged 为 null 的展示控件只占圆环尺寸。提供 label 时使用 plain 列表行，由整行承载点击，圆环不再叠加独立触摸留白；单行文字采用列表行默认排版与 46dp 最小高度。选中为 6dp 品牌色环，未选中为 1.5dp 输入轮廓；内部保持中性玻璃底面。
 
 **状态归属**
 
@@ -40,6 +40,10 @@ HyperRadio(value = "option", groupValue = selectedValue, onChanged = { selectedV
 组合 HyperListTile 时，如点击由整行处理，leading/trailing 中的 HyperRadio 应省略 onChanged，让圆环只展示。无需在应用中覆盖控件大小或列表行内边距。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+**固定玻璃与动效**
+
+圆环内部复用 Compact 固定玻璃（模糊 2dp、折射边缘/位移 3/4dp、阴影 1dp）；1.5→6dp 状态圆环仍以 160ms 过渡，不叠加第二道装饰轮廓。enabled=false 使用实色轨道且不采样、不投影。
 
 ## 公开 API
 

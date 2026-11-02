@@ -50,6 +50,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("固定玻璃", "组件内部封装", "Dialog 玻璃面板；退出后提交日期"),
             DemoVariant("日期", "initialDate", "36dp 选中圆形、42dp 日期行；今日描边"),
             DemoVariant("月份与年份", "点击年月标题", "十二个月、前后一年和十年跳转"),
             DemoVariant("边界", "firstDate / lastDate", "范围外日期、月份与翻页按钮禁用"),
@@ -68,7 +69,8 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
                 label = "跟随系统", onChanged = { selectedMode = it })
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("选中", "value == groupValue", "21dp 圆环，选中环宽 6dp、内部 subtle 表面"),
+            DemoVariant("固定玻璃", "组件内部封装", "21dp 玻璃圆环，保留 1.5→6dp 轮廓过渡"),
+            DemoVariant("选中", "value == groupValue", "21dp 圆环，选中环宽 6dp、内部中性玻璃表面"),
             DemoVariant("未选中", "value != groupValue", "21dp 圆环，普通轮廓 1.5dp"),
             DemoVariant("禁用", "onChanged = null", "标签行保留库默认高度，圆环只展示"),
             DemoVariant("展示", "label = null / onChanged = null", "21dp 圆环不分配独立触摸区"),
@@ -90,8 +92,9 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("固定玻璃", "组件内部封装", "21dp 玻璃方框，保留三态、状态边框与禁用展示"),
             DemoVariant("标签行", "label", "plain 行承载点击，21dp 方框不叠加 44dp 触摸区，无卡片外观"),
-            DemoVariant("选中", "value = true", "主题实色与 Lucide check 图标"),
+            DemoVariant("选中", "value = true", "主题玻璃底色与 Lucide check 图标"),
             DemoVariant("未选中", "value = false", "21dp 方框，普通轮廓 1.5dp"),
             DemoVariant("三态", "tristate = true", "false → true → null → false"),
             DemoVariant("禁用", "onChanged = null", "保留选中与未选中展示")
@@ -123,7 +126,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         id = "switch",
         group = GROUP_FORM,
         title = "HyperSwitch",
-        description = "52×32dp 受控开关、22dp 玻璃滑块，按压高光、弹簧切换；展示标签行、禁用与独立控件。",
+        description = "52×32dp 轨道、28dp 滑块与 2dp 内侧留白；Button 共用玻璃轨道、双轴扩张、速度形变、Ambient 与按住连续拖动。",
         code = """
             HyperSwitch(
                 value = enabled,
@@ -133,7 +136,8 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
         variants = listOf(
             DemoVariant("开启", "value = true", "主题轨道与滑块共用临界阻尼弹簧进度"),
             DemoVariant("关闭", "value = false", "中性轨道、细描边与固定尺寸滑块"),
-            DemoVariant("按压", "按压进度", "仅滑块显示按压高光，不放大轨道或滑块"),
+            DemoVariant("按压", "按压进度", "只对滑块做 1.5 倍弹性扩张、速度形变与 Ambient，测量尺寸不变"),
+            DemoVariant("横向拖动", "松手提交", "立即跟随拖动目标，0.5 阈值吸附；取消恢复受控值"),
             DemoVariant("禁用", "enabled = false", "分别展示禁用开启与禁用关闭")
         ),
         apiDocumentPaths = listOf("form/hyper-switch.md"),

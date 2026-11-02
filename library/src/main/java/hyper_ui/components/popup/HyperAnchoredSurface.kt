@@ -30,6 +30,7 @@ internal fun HyperAnchoredSurface(
     heightFraction: Float? = null,
     visible: Boolean = true,
     scrollable: Boolean = true,
+    fixedGlass: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val progress = hyperOverlayProgress(visible, durationMillis = HyperMotionSpec.MenuDuration)
@@ -66,7 +67,8 @@ internal fun HyperAnchoredSurface(
                 scaleY = scaleX
                 transformOrigin = origin
             }.width(width.coerceAtMost(availableWidth)).heightIn(max = availableHeight)
-                .hyperFrostedSurface(hyperSurfaces.surfaceStrong, RoundedCornerShape(18.dp))
+                .then(if (fixedGlass) Modifier.hyperControlSurface(RoundedCornerShape(18.dp), HyperControlSurfaceRole.Panel)
+                    else Modifier.hyperFrostedSurface(hyperSurfaces.surfaceStrong, RoundedCornerShape(18.dp)))
                 .padding(padding)
                 .then(if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier)) {
                 CompositionLocalProvider(LocalHyperSurfacePresent provides true) { content() }

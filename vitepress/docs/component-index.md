@@ -30,10 +30,9 @@ HyperButton 的默认、filled、icon 统一使用内部共用玻璃样式与按
 | 组件 | 用途 |
 | --- | --- |
 | [HyperTextField](components/form/hyper-text-field.md) | 文本、密码和多行输入 |
-| [HyperSwitch](components/form/hyper-switch.md) | 52×32dp 开关、22dp 玻璃滑块；按压高光与弹簧切换，plain 标签行不附带卡片 |
+| [HyperSwitch](components/form/hyper-switch.md) | 52×32dp 开关、28dp 静止玻璃滑块；与 Button 共用玻璃轨道，弹性扩张、速度形变、Ambient 和拖动吸附，plain 标签行不附带卡片 |
 | [HyperCheckbox](components/form/hyper-checkbox.md) | 多选；plain 标签行不附带卡片 |
 | [HyperRadio](components/form/hyper-radio.md) | 单选；标签行承载点击，展示圆环不叠加触摸留白 |
-| [HyperSectionTitle](components/list/hyper-section-title.md) | 与菜单分组共用的 14sp Bold 标题，无默认外边距 |
 | [HyperThemeDialog](components/feedback/hyper-theme-dialog.md) | 跟随系统、浅色、深色；36dp 紧凑选项，选择后请求关闭 |
 | [HyperSlider](components/form/hyper-slider.md) | 6dp 轨道、20dp 玻璃手柄，连续或分段值调节，按压高光反馈 |
 | [HyperDatePicker](components/form/hyper-date-picker.md) | 底部单日期月历、月份选择与年份跳转；默认 1900–2100 年 |
@@ -120,3 +119,5 @@ TabBar 的整栏舒展、镜片弹性和拖动回正仅作用于绘制层，不�
 卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。
 
 HyperScaffold / HyperNavBarPage 的净空仅用于滚动内容内部，禁止用固定栏高或视口外 padding 截短正文；悬浮 TabBar 覆盖全屏内容。用法见[页面宿主](components/navigation/hyper-scaffold.md)与[业务页面规范](mobile-guidelines.md)。
+
+Checkbox、Radio、DatePicker、Tabs、Drawer、Dropdown、Toast、Progress、LevelCapsule 与 UpdateDialog 按角色复用内部固定玻璃，尺寸与状态归属保持稳定；Tabs 与确定进度采用临界阻尼弹簧，Toast 保留退出绘制。参数与平台回退见各组件页。

@@ -85,6 +85,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 value = selected, onChanged = { selected = it }, label = "范围")
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("固定玻璃", "组件内部封装", "字段与锚点菜单分别复用 Field/Panel 玻璃"),
             DemoVariant("受控值", "value / onChanged", "选项选择后收起"),
             DemoVariant("禁用", "enabled / HyperOption.enabled", "关闭交互"),
             DemoVariant("浮层", "menuMaxHeight", "默认最大 320dp"),
@@ -133,6 +134,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             HyperProgress(value = null, type = "circular", showLabel = false)
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("固定玻璃", "组件内部封装", "6dp 玻璃轨道与空心圆环，确定值弹簧跟随"),
             DemoVariant("线性尺寸", "size", "4 / 6 / 12dp"),
             DemoVariant("圆形尺寸", "size", "48 / 64 / 80dp，stroke 4 / 6 / 8dp"),
             DemoVariant("不确定", "progress = null", "移动条 1400ms，圆环 1100ms"),
@@ -156,6 +158,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("固定玻璃", "组件内部封装", "52×156dp 玻璃壳，比例填充弹簧跟随"),
             DemoVariant("实时比例", "progress: Float", "从底部填充并限制在 0..1"),
             DemoVariant("百分比文案", "label", "居中单行反馈"),
             DemoVariant("图标插槽", "iconContent", "亮度、音量或业务状态图标"),
@@ -352,6 +355,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 onDownload = onDownload, onInstall = onInstall)
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("固定玻璃", "组件内部封装", "Dialog 玻璃面板，保留更新状态与关闭限制"),
             DemoVariant("状态", "HyperUpdateStatus", "检查/更新/下载/安装/完成/错误"),
             DemoVariant("错误反馈", "status = error / message", "仅展示原因、重试与关闭，不展示图标、标题和版本框"),
             DemoVariant("操作样式", "HyperButton.type", "主操作 type = filled / colorStyle = primary，关闭、取消和稍后再说省略 type，使用默认玻璃"),

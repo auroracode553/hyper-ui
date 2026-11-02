@@ -1,6 +1,6 @@
 ## 全面屏与悬浮栏约束
 
-- 全局主题不提供材质档位，普通组件保持实色；Button、TabBar、Slider、Switch、Dialog 在组件内部固定使用参考项目的玻璃绘制。不得因删除全局配置而删除组件玻璃效果；保留品牌色、字体与深浅色，尺寸和布局不因材质改变。
+- 全局主题不提供材质档位，普通组件保持实色；Button、TabBar、Slider、Switch、Dialog、Checkbox、Radio、DatePicker、Tabs、Drawer、Dropdown、Toast、Progress、LevelCapsule、UpdateDialog 在组件内部固定使用参考项目的玻璃绘制。不得因删除全局配置而删除组件玻璃效果；保留品牌色、字体与深浅色，尺寸和布局不因材质改变。
 
 - Activity 使用 `enableHyperEdgeToEdge()`，根 `HyperThemeConfig.useSystemSafeArea = false`。根画布、滚动视口和 WebView 保持全屏，正文可滚入顶部状态栏与底部 TabBar 后方。
 - 禁止用固定高度、`Spacer`、根布局系统栏 padding、滚动容器外的栏高 padding、扣减屏幕高度或裁切，为状态栏、导航栏、悬浮 TabBar 建立永久占位；禁止把悬浮栏放进 `Column` 挤占正文。不得把 `HyperScaffold` 返回的上下净空直接用于滚动视口的 `Modifier.padding`。
@@ -63,6 +63,8 @@
 - 示例：`Color(1f, 0f, 0f, 1f)` 表示红色，`Color(0.2f, 0.6f, 1f, 1f)` 表示蓝色。
 
 ## 组件与 Preview 规范
+
+- 预览手机样式是固定验收基线：保留原有 48px 圆角、外框、350×680 默认屏幕、灵动岛、摄像头、底部指示条、背景及安全区。未经用户明确要求，禁止随组件美化、重构、适配或响应式调整修改手机外观；窄窗口也不得把手机圆角改为小圆角或直角。组件改动只作用于屏幕内目标组件。
 
 - Kotlin 与 Flutter 的组件示例统一以本仓库 `vitepress/docs/` 的文档示例及对应 Compose Preview 为视觉基准；手机外框、背景、安全区、分组顺序、文案、图标、尺寸、间距与展示状态保持一致。不得反过来用 Flutter 示例覆盖 Kotlin 示例，也不得自行增删入口或改变选中块尺寸。
 

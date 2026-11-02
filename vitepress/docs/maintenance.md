@@ -19,7 +19,7 @@ vitepress/.vitepress/           导航、主题和文档站配置
 2. 更新 `vitepress/docs/components/` 对应组件页。
 3. 更新 `vitepress/docs/component-index.md`。
 4. 更新对应分组的 `*ComponentDemos.kt` 和 `*ComponentShowcases.kt`。
-5. 必要时更新 `vitepress/.vitepress/config.mts`、根目录 `README.md` 和 `AGENTS.md`。
+5. 更新 `vitepress/.vitepress/config.mts` 的侧栏名称和路径、根目录 `README.md`；协作约束变化时再更新 `AGENTS.md`。
 
 每个组件页必须包含：
 
@@ -47,7 +47,11 @@ Wasm/Desktop 预览只用于浏览器或维护者操作真实组件。它们不�
 
 ## 文档检查
 
-只改 Markdown 时，检查链接、代码块、签名、Props 表格和目录导航。更新签名后运行 `python tools/sync-component-api-tables.py`；仅检查时运行 `python tools/sync-component-api-tables.py --check`。修改组件或 Preview 时，至少执行：
+只改 Markdown 时，检查链接、代码块、签名、Props 表格和目录导航。更新签名后运行 `python tools/sync-component-api-tables.py`；仅检查时运行 `python tools/sync-component-api-tables.py --check`。
+
+侧栏的站内路径必须能对应到 `vitepress/docs/` 下的 `.md` 页面或目录 `index.md`；组件索引、正文链接与 Preview 的 `apiDocumentPaths` 使用同一份实际路径。删除组件时同时删除独立页面、侧栏和预览入口；重命名后直接使用当前名称与路径，不保留失效入口。`vitepress/public/llms.txt` 的静态入口也要指向现存文档；生产构建生成的 AI 索引由 `ai-docs.mts` 从当前 Markdown 派生。
+
+修改组件或 Preview 时，至少执行：
 
 ```powershell
 git diff --check

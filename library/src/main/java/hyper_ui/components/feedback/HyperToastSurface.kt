@@ -62,7 +62,8 @@ fun HyperToast(
     LaunchedEffect(visible, message, duration) {
         if (visible && duration > 0) { delay(duration); dismiss() }
     }
-    if (!visible) return
+    val transition = hyperOverlayProgress(visible, HyperMotionSpec.TooltipDuration)
+    if (!visible && transition == 0f) return
     val toneColor = resolveHyperContainerColor(color, when (type) {
         "neutral" -> HyperColors.secondaryText
         "primary" -> HyperColors.accent
@@ -72,11 +73,13 @@ fun HyperToast(
         "error" -> HyperColors.danger
         else -> error("不支持的 HyperToast type: $type")
     })
-    val surfaceColor = toneColor.copy(alpha = 10 / 255f).compositeOver(hyperSurfaces.surfaceStrong)
+    val surfaceColor = toneColor.copy(alpha = 10 / 255f).compositeOver(
+        Color(1f, 1f, 1f, if (HyperColors.isLight) 0.6f else 0.272f))
     Row(
         modifier.widthIn(min = 180.dp, max = 420.dp)
-            .hyperFrostedSurface(
-                surfaceColor, RoundedCornerShape(18.dp),
+            .hyperOverlayMotion(transition, beginScale = 0.97f)
+            .hyperControlSurface(
+                RoundedCornerShape(18.dp), HyperControlSurfaceRole.Panel, containerColor = surfaceColor,
                 border = BorderStroke(1.dp, toneColor.copy(alpha = 105 / 255f))
             )
             .semantics { liveRegion = LiveRegionMode.Polite }
@@ -95,7 +98,7 @@ fun HyperToast(
                 action.invoke(this)
             } else if (actionLabel != null && onAction != null) {
                 HyperText(actionLabel,
-                    modifier = Modifier.hyperNoRippleClickable(onClick = {
+                    modifier = Modifier.hyperNoRippleClickable(enabled = visible, onClick = {
                         onClose()
                         onAction()
                     }).padding(horizontal = 8.dp, vertical = 6.dp),

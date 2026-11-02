@@ -134,7 +134,7 @@ fun ProgressDemo() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 HyperText(
-                    text = "确定进度 · 实色轨道",
+                    text = "确定进度 · 玻璃轨道",
                     color = LocalDocsColorScheme.current.onSurface,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold

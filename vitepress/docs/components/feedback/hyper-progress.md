@@ -30,13 +30,17 @@ HyperProgress(type = "circular", value = null, showLabel = false)
 
 **样式约定**
 
-linear 高度 4/6/12dp，确定值 220ms easeOutCubic；circular 直径 48/64/80dp、stroke 4/6/8dp。不确定线性段宽 32%、周期 1400ms；圆环占 72%、周期 1100ms。
+linear 默认高度 6dp；circular 默认直径 64dp、stroke 6dp。确定值使用临界阻尼弹簧。不确定线性段宽 32%、周期 1400ms；圆环占 72%、周期 1100ms。
 
 **状态归属**
 
 调用方持有 value。有限值收敛 0..1；非有限值按不确定处理。showLabel 默认 true，圆环标签 12sp。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+**固定玻璃与动效**
+
+轨道使用 Track 固定玻璃（2dp 模糊、2/3dp 折射、无外阴影），默认轨道色 alpha ×0.65；填充叠加静态柔和光泽，不添加循环扫光。线性与圆环确定值共用 stiffness=1000、dampingRatio=1、阈值 0.001 的临界阻尼弹簧。圆环只绘制空心轨道，不增加圆盘底板；百分比仍反映受控目标值。
 
 ## 公开 API
 

@@ -39,6 +39,10 @@ value 为 Boolean?。两态必须非 null；三态按 false → true → null �
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
+**固定玻璃与动效**
+
+方框内部复用 Compact 固定玻璃（模糊 2dp、折射边缘/位移 3/4dp、阴影 1dp）；默认选中底色为品牌色 alpha 0.9。保留 160ms 颜色和标记过渡、1.5dp 语义边框；enabled=false 使用实色轨道且不采样、不投影。
+
 ## 公开 API
 
 ### HyperCheckbox

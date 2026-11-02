@@ -1,6 +1,9 @@
 /** 文件职责：提供用于亮度、音量等连续比例反馈的竖向胶囊组件。 */
 package hyper_ui
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,20 +52,15 @@ fun HyperLevelCapsule(
     colors: HyperLevelCapsuleColors = HyperLevelCapsuleDefaults.colors(),
     iconContent: (@Composable () -> Unit)? = null
 ) {
-    val coercedProgress = progress.coerceIn(0f, 1f)
+    val coercedProgress = if (progress.isFinite()) progress.coerceIn(0f, 1f) else 0f
+    val displayedProgress by animateFloatAsState(coercedProgress,
+        spring(dampingRatio = 1f, stiffness = 1000f, visibilityThreshold = 0.001f), label = "HyperLevelCapsuleValue")
 
     Box(
         modifier = modifier
             .width(HyperLevelCapsuleDefaults.Width)
             .height(HyperLevelCapsuleDefaults.Height)
-            .hyperGlassSurface(
-                shape = shape,
-                visuals = hyperGlassSurfaceVisuals(
-                    containerColor = colors.containerColor,
-                    elevation = HyperLevelCapsuleDefaults.Elevation,
-
-                )
-            )
+            .hyperControlSurface(shape, HyperControlSurfaceRole.Panel, containerColor = colors.containerColor)
             .padding(HyperLevelCapsuleDefaults.ContentInset)
             .semantics {
                 progressBarRangeInfo = ProgressBarRangeInfo(coercedProgress, 0f..1f)
@@ -72,7 +70,7 @@ fun HyperLevelCapsule(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .fillMaxHeight(coercedProgress)
+                .fillMaxHeight(displayedProgress.coerceIn(0f, 1f))
                 .clip(shape)
                 .background(
                     Brush.verticalGradient(
@@ -134,7 +132,7 @@ object HyperLevelCapsuleDefaults {
         }
         return HyperLevelCapsuleColors(
             containerColor = if (containerColor == Color.Unspecified) {
-                hyperSurfaces.surfaceSubtle
+                Color.Unspecified
             } else {
                 containerColor
             },

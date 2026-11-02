@@ -29,15 +29,19 @@ HyperTabs(tabs, selectedIndex, { selectedIndex = it }) { HyperText(it) }
 
 **样式约定**
 
-共享 subtle 表面 radius 18dp、内部 padding 4dp，总高 40dp。条目高 32dp、radius 16dp、padding 12dp；文字 13sp，选中 600、普通 500；选中底面使用 selection。
+共享 Field 玻璃表面 radius 18dp、内部 padding 4dp，总高 40dp。条目高 32dp、radius 16dp、padding 12dp；文字 13sp，选中 600、普通 500；选中底面使用 selection alpha ×0.75。
 
-等宽模式的选中底板按 260ms selectionCurve 连续平移；内容宽度模式按 160ms 过渡底色。
+等宽模式的选中底板按临界阻尼弹簧连续平移；内容宽度模式保留 160ms 底色过渡。
 
 **状态归属**
 
 调用方持有从 0 开始的 selectedIndex；重复点击当前项不回调；equalWidth=false 按内容收缩。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
+
+**固定玻璃与动效**
+
+轨道使用 Field 玻璃（8dp 模糊、8/12dp 折射、无外阴影）；选中底板使用 Compact 玻璃与 selection alpha ×0.75。等宽底板使用 stiffness=1000、dampingRatio=1、阈值 0.001 的临界阻尼弹簧，快速切换从当前位置续动，标签保持固定；不改变 40dp 总高和点击提交时机。显式 colors 保留原值。
 
 ## 公开 API
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.spring
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
@@ -71,20 +72,20 @@ fun <T> HyperTabs(
     require(selectedIndex in tabs.indices) { "selectedIndex 超出 tabs 范围" }
     val visualIndex = if (LocalLayoutDirection.current == LayoutDirection.Rtl)
         tabs.lastIndex - selectedIndex else selectedIndex
-    val selectionPosition by animateFloatAsState(visualIndex.toFloat(), tween(HyperMotionSpec.SelectionDuration, easing = curve),
+    val selectionPosition by animateFloatAsState(visualIndex.toFloat(), spring(dampingRatio = 1f, stiffness = 1000f, visibilityThreshold = 0.001f),
         label = "HyperTabsPosition")
     BoxWithConstraints(
         modifier = modifier
             .then(if (equalWidth) Modifier.fillMaxWidth() else Modifier)
             .height(HyperTabsDefaults.Height)
-            .hyperGlassSurface(shape, hyperGlassSurfaceVisuals(colors.containerColor,
-                HyperTabsDefaults.ContainerElevation))
+            .hyperControlSurface(shape, HyperControlSurfaceRole.Field, containerColor = colors.containerColor)
             .padding(containerPadding)
     ) {
         if (equalWidth && tabs.isNotEmpty() && selectedIndex >= 0) {
             val cellWidth = maxWidth / tabs.size
             Box(Modifier.absoluteOffset(x = cellWidth * selectionPosition)
-                .width(cellWidth).fillMaxHeight().background(colors.selectedItemColor, itemShape))
+                .width(cellWidth).fillMaxHeight().hyperControlSurface(itemShape,
+                    HyperControlSurfaceRole.Compact, containerColor = colors.selectedItemColor))
         }
         Row(Modifier.fillMaxHeight().then(if (equalWidth) Modifier.fillMaxWidth() else Modifier)) {
             tabs.forEachIndexed { index, item ->
@@ -95,7 +96,9 @@ fun <T> HyperTabs(
                     tween(HyperMotionSpec.StateDuration, easing = curve), label = "HyperTabsItemBackground")
                 Box(Modifier.then(if (equalWidth) Modifier.weight(1f) else Modifier).fillMaxHeight()
                     .hyperNoRippleClickable(enabled = actualEnabled, role = Role.Tab, onClick = { if (index != selectedIndex) onChanged(index) })
-                    .background(itemBackground, itemShape).padding(itemContentPadding),
+                    .then(if (!equalWidth && selected) Modifier.hyperControlSurface(itemShape,
+                        HyperControlSurfaceRole.Compact, containerColor = itemBackground)
+                        else Modifier.background(itemBackground, itemShape)).padding(itemContentPadding),
                     contentAlignment = Alignment.Center
                 ) {
                     androidx.compose.runtime.CompositionLocalProvider(
@@ -134,11 +137,11 @@ object HyperTabsDefaults {
     ): HyperTabsColors {
         val resolvedContainerColor = resolveHyperContainerColor(
             containerColor,
-            hyperSurfaces.surfaceSubtle
+            Color.Unspecified
         )
         val resolvedSelectedItemColor = resolveHyperContainerColor(
             selectedItemColor,
-            hyperSurfaces.selection
+            hyperSurfaces.selection.copy(alpha = hyperSurfaces.selection.alpha * 0.75f)
         )
 
         return HyperTabsColors(
