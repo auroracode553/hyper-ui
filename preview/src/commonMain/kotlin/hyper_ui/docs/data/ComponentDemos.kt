@@ -29,7 +29,7 @@ data class ComponentDemo(
 
 /** 聚合稳定 Preview ID；分组示例同步参考展示结构，页面示例自行滚动，普通示例由统一视口滚动。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
-    addAll(basicComponentDemos()) // HyperText 按需观察布局，默认保留普通字符串路径； Button 使用 content 插槽及共用玻璃样式，两端按 Kotlin 示例核对按压与加载状态。
+    addAll(basicComponentDemos()) // Button 使用完整文字行框与共用玻璃样式，示例覆盖中英文、图文及加载态中心线。
     addAll(formComponentDemos()) // Switch 的 52×32dp/22dp 与 Slider 的 20dp 尺寸保持稳定，展示液态按下与弹簧定位。
     addAll(containerComponentDemos()) // HyperColorPicker 展示连续调色板，HyperBackground 提供静态渐变；按需安全区与内容表面的展示规则保持一致。
     addAll(navigationComponentDemos()) // TabBar 支持 2–5 项、左右 12dp 留白，48dp/56dp 规格保持不变，展示固定玻璃、整栏按压舒展、镜片回弹、拖动回正与松手提交。

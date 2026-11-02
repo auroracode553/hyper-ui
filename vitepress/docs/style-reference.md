@@ -102,6 +102,8 @@ HyperNavBar 与 HyperScrollGradient 只绘制主题画布色的滚动渐变，�
 | --- | --- | --- | --- | --- | --- | --- |
 | 按钮 | 38dp | 68dp | 14dp | 13sp | 20dp | 17dp |
 
+默认按钮文字以 15.6sp 完整行框居中，LineHeightStyle 为 Alignment.Proportional / Trim.None；单行不裁去首尾行距，避免合并字体的度量造成可见文字偏下。只限定按钮默认文字样式，不改变全局正文排版或自定义插槽对齐。
+
 表中水平内边距为 Defaults 的 contentPadding；非图标按钮当前还会追加 1dp 内容留白，图标按钮忽略文字按钮内边距。圆角为高度的一半。取消／关闭等普通操作沿用默认按钮，主操作按既有用途显式 filled 与 primary，危险操作按既有用途使用 danger；不得批量把业务配色清空。
 
 ## 同名组件参数

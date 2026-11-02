@@ -10,7 +10,7 @@ HyperList 与 HyperGroupedList 使用整屏视口，顶部控件下方的列表�
 HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读详情使用 HyperListTile(type = "plain") 的文字插槽，不逐项包装卡片。
 手机预览的底部手势条悬浮覆盖在内容上，宿主不预留底部安全区，与 Flutter 参考预览一致。
 
-HyperButton 的默认、filled、icon 统一使用内部共用玻璃样式与按压反馈，保留 38dp 规格、禁用和加载语义；详见 [HyperButton](components/basic/hyper-button.md)。
+HyperButton 的默认、filled、icon 统一使用内部共用玻璃样式与按压反馈，默认文字以 15.6sp 完整行框垂直居中，保留 38dp 规格、禁用和加载语义；详见 [HyperButton](components/basic/hyper-button.md)。
 
 ## 基础
 
@@ -19,7 +19,7 @@ HyperButton 的默认、filled、icon 统一使用内部共用玻璃样式与按
 | [HyperText](components/basic/hyper-text.md) | 继承宿主排版，按需观察布局结果 |
 | [HyperIcon](components/basic/hyper-icon.md) | 18 / 24 / 32dp 图标与插槽继承 |
 | [HyperDivider](components/basic/hyper-divider.md) | 实线、虚线和方向缩进 |
-| [HyperButton](components/basic/hyper-button.md) | 默认白色描边；type 控制 filled/icon，color/colorStyle 控制配色；预览分组与 Flutter 一致，禁用态保留单个示例 |
+| [HyperButton](components/basic/hyper-button.md) | 默认中性玻璃；type 控制 filled/icon，color/colorStyle 控制配色；完整文字行框居中，禁用态保留单个示例 |
 
 ## 表单
 
