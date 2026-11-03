@@ -240,6 +240,7 @@ private fun TabBarDemo(single: Boolean, floating: Boolean = true, actions: Boole
         DemoNavItem("settings", "设置", Lucide.Settings)
     )
     val message = DemoNavItem("message", "消息", Lucide.Bell)
+    // 点击、按住及快速切换时整栏保持原比例，镜片滑动与回弹使用正式组件。
     val drawBar: @Composable (Modifier) -> Unit = { barModifier ->
         HyperTabBar(
             modifier = barModifier,

@@ -174,7 +174,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tab-bar-multiple",
         group = GROUP_NAVIGATION,
         title = "HyperTabBar · 多标签",
-        description = "56dp 玻璃导航内部五项，外置一个 48dp 消息入口；原选中高度、按压舒展与回弹。",
+        description = "56dp 玻璃导航内部五项，外置一个 48dp 消息入口；点击时整栏保持原比例，镜片保留弹性回弹。",
         code = """
             HyperTabBar(items = tabs, itemLabel = { it.label }, selectedIndex = tabs.indexOfFirst { it.id == selectedId },
                 onChanged = { selectedId = tabs[it].id }) { item ->

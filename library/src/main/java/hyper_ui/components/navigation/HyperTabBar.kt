@@ -139,9 +139,9 @@ fun <T> HyperTabBar(
                 val cellWidth = (maxWidth - inset * 2) / items.size
                 val panelOffset = if (floating) motion.panelOffset(with(density) { maxWidth.toPx() },
                     with(density) { 4.dp.toPx() }) else 0f
-                val panelScale = if (floating) 1f + 16.dp / maxWidth * motion.progress else 1f
+                // 整栏只保留拖动偏移；按压缩放仅作用于选中镜片。
                 Box(Modifier.fillMaxSize()
-                    .graphicsLayer { translationX = panelOffset; scaleX = panelScale; scaleY = panelScale }) {
+                    .graphicsLayer { translationX = panelOffset }) {
                     // 背景不包含前景标签，镜片只合成一次标签副本，缩放时不会出现双重字形。
                     Box(Modifier.fillMaxSize().hyperGlassSource(panelSource)
                         .then(if (floating) Modifier.hyperControlSurface(RoundedCornerShape(height / 2),
