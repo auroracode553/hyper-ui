@@ -45,17 +45,19 @@ internal fun rememberHyperTabBarMotion(
     val active = pressed || abs(position.value - target) > (count - 1) * 0.025f
     val progress by animateFloatAsState(if (active) 1f else 0f,
         spring(1f, 1000f, visibilityThreshold = 0.001f), label = "TabBarPress")
-    val scaleX by animateFloatAsState(if (active) 78f / 56f else 1f,
-        spring(0.6f, 250f, visibilityThreshold = 0.001f), label = "TabBarLensX")
-    val scaleY by animateFloatAsState(if (active) 78f / 56f else 1f,
-        spring(0.7f, 250f, visibilityThreshold = 0.001f), label = "TabBarLensY")
+    val scaleX by animateFloatAsState(if (active) 1.04f else 1f,
+        spring(0.85f, 400f, visibilityThreshold = 0.001f), label = "TabBarLensX")
+    val scaleY by animateFloatAsState(if (active) 1.08f else 1f,
+        spring(0.9f, 400f, visibilityThreshold = 0.001f), label = "TabBarLensY")
     val velocity by animateFloatAsState(if (active) position.velocity / (count - 1).coerceAtLeast(1) else 0f,
-        spring(0.5f, 300f, visibilityThreshold = 0.01f), label = "TabBarVelocity")
+        spring(0.85f, 400f, visibilityThreshold = 0.01f), label = "TabBarVelocity")
     val panelTravel by animateFloatAsState(if (pressed) travel else 0f,
         if (pressed) snap() else spring(1f, 300f, visibilityThreshold = 0.5f), label = "TabBarTravel")
+    // 形变只取速度大小，双向一致；按压与速度叠加后仍限制幅度，避免跨项切换时拉长镜片。
+    val speed = (abs(velocity) / 10f).coerceIn(0f, 1f)
     return HyperTabBarMotion(position.value, progress,
-        scaleX / (1f - (velocity / 10f * 0.75f).coerceIn(-0.2f, 0.2f)),
-        scaleY * (1f - (velocity / 10f * 0.25f).coerceIn(-0.2f, 0.2f)), panelTravel)
+        (scaleX * (1f + 0.03f * speed)).coerceIn(0.98f, 1.08f),
+        (scaleY * (1f - 0.015f * speed)).coerceIn(0.98f, 1.10f), panelTravel)
 }
 
 /** 在 Initial pass 旁观首根手指，不消费点击或改变拖动提交时机。 */

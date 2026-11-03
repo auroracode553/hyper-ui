@@ -1,6 +1,6 @@
 # HyperUI
 
-[HyperButton](vitepress/docs/components/basic/hyper-button.md)、[HyperTabBar](vitepress/docs/components/navigation/hyper-tab-bar.md)、[HyperSlider](vitepress/docs/components/form/hyper-slider.md)、[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 和 [HyperDialog](vitepress/docs/components/feedback/hyper-dialog.md) 固定使用库内玻璃绘制，TabBar 点击时整栏保持原比例，保留镜片弹性回弹与拖动偏移回正，仅变换绘制层。TabBar 栏内限制 2–5 项，栏外最多另放一个独立入口；两端示例以 Kotlin 文档为基准，默认左右留白 12dp、镜片可见高 48dp；保持 48dp 单入口、56dp 按钮组、20dp 滑块和原弹窗尺寸。Compose Preview 使用 1.12.0。
+[HyperButton](vitepress/docs/components/basic/hyper-button.md)、[HyperTabBar](vitepress/docs/components/navigation/hyper-tab-bar.md)、[HyperSlider](vitepress/docs/components/form/hyper-slider.md)、[HyperSwitch](vitepress/docs/components/form/hyper-switch.md) 和 [HyperDialog](vitepress/docs/components/feedback/hyper-dialog.md) 固定使用库内玻璃绘制，TabBar 点击时整栏保持原比例，保留镜片轻微放大与短回弹（横向增幅最多 8%）、拖动偏移回正，仅变换绘制层。TabBar 栏内限制 2–5 项，栏外最多另放一个独立入口；两端示例以 Kotlin 文档为基准，默认左右留白 12dp、镜片可见高 48dp；保持 48dp 单入口、56dp 按钮组、20dp 滑块和原弹窗尺寸。Compose Preview 使用 1.12.0。
 
 HyperSwitch 保留 52×32dp 轨道与 28dp 静止滑块，轨道复用 Button 的主题色/中性玻璃，滑块为轻透白色；保留参考 Toggle 的 1.5 倍弹性扩张、速度形变、Ambient 与横向拖动松手吸附。
 

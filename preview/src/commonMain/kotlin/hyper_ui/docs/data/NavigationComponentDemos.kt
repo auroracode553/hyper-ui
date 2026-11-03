@@ -174,7 +174,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "tab-bar-multiple",
         group = GROUP_NAVIGATION,
         title = "HyperTabBar · 多标签",
-        description = "56dp 玻璃导航内部五项，外置一个 48dp 消息入口；点击时整栏保持原比例，镜片保留弹性回弹。",
+        description = "56dp 玻璃导航内部五项，外置一个 48dp 消息入口；点击时整栏保持原比例，镜片轻微放大与短回弹，横向增幅最多 8%。",
         code = """
             HyperTabBar(items = tabs, itemLabel = { it.label }, selectedIndex = tabs.indexOfFirst { it.id == selectedId },
                 onChanged = { selectedId = tabs[it].id }) { item ->
@@ -186,7 +186,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         """.trimIndent(),
         variants = listOf(
             DemoVariant("多标签", "type = multiple", "2–5 项，单元格最小 76dp，外侧 12dp 间距"),
-            DemoVariant("选中", "selectedIndex", "默认 48dp 高镜片，保留原高度、弹性回弹与整项命中范围"),
+            DemoVariant("选中", "selectedIndex", "默认 48dp 高镜片，按压横向 1.04、纵向 1.08，横向增幅最多 8%，整项命中"),
             DemoVariant("拖动", "onChanged", "拖动整栏轻移，松手回正并通知调用方"),
             DemoVariant("底部安全区", "safeArea", "避让系统手势区域")
         ),
