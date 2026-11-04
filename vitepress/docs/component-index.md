@@ -83,7 +83,7 @@ HyperFilterBar 使用独立的 filter-bar 交互预览。组件预览在编译�
 | [HyperToast](components/feedback/hyper-toast.md) | 短暂反馈 |
 | [HyperLoading / HyperLoadingType](components/feedback/hyper-loading.md) | 默认随机与十款原生动画，固定 2× 节奏 |
 | [HyperProgress](components/feedback/hyper-progress.md) | 线性和圆形进度 |
-| [HyperDialog](components/feedback/hyper-dialog.md) | 实色面板；全屏遮罩覆盖系统栏，面板独立避让键盘，两侧各 24dp、最大宽 420dp |
+| [HyperDialog](components/feedback/hyper-dialog.md) | 高遮蔽玻璃面板；全屏遮罩覆盖系统栏，面板独立避让键盘，两侧各 24dp、最大宽 420dp |
 | [HyperActionSheet / HyperAction](components/feedback/hyper-action-sheet.md) | 底部自定义内容与操作列表，受控显隐、危险／禁用／选中项与取消操作 |
 | [HyperAlertDialog](components/feedback/hyper-alert-dialog.md) | 确认和危险操作 |
 | [HyperTooltip](components/feedback/hyper-tooltip.md) | 补充提示 |
@@ -92,7 +92,7 @@ HyperFilterBar 使用独立的 filter-bar 交互预览。组件预览在编译�
 | [HyperSpeedPanel](components/feedback/hyper-speed-panel.md) | 播放速度面板 |
 | [HyperSpeedScale](components/feedback/hyper-speed-scale.md) | 播放速度刻度 |
 | [HyperPopover](components/feedback/hyper-popover.md) | visible / onClose 受控，child 自行触发；默认宽 180dp，width 可显式指定、maxWidth 限制上限；scrollable 可交由有界子列表滚动 |
-| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 与 Flutter 共用视觉规则：420dp 最大宽、20dp 弹层外间距、216dp 圆角、24dp 内容边距；统一更新流程与状态预览 |
+| [HyperUpdateDialog](components/feedback/hyper-update-dialog.md) | 共用 Dialog 高遮蔽玻璃；420dp 最大宽、20dp 弹层外间距、28dp 圆角、24dp 内容边距；统一更新流程与状态预览 |
 
 统一材质、尺寸和 API 约定见 [样式对照](style-reference.md)。
 

@@ -249,7 +249,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "hyper_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperDialog",
-        description = "固定玻璃面板，两侧各 24dp、最大宽 420dp，保持原有居中、输入与固定操作区。",
+        description = "高遮蔽玻璃面板，两侧各 24dp、最大宽 420dp，支持输入与固定操作区。",
         code = """
             HyperDialog(
                 visible = visible,
@@ -266,6 +266,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
+            DemoVariant("面板材质", "默认底色", "仅混入少量模糊取样，无法取样时使用不透明主题底色"),
             DemoVariant("Dialog 宿主", "Compose Dialog", "全屏透明窗口；遮罩覆盖上下系统栏，不受根安全区开关裁短"),
             DemoVariant("稳定根节点", "fillMaxSize", "面板始终在固定窗口内居中"),
             DemoVariant("手机宽度", "maxWidth", "窗口 350dp 时面板不超过 302dp；显式上限仍服从窗口留白"),
@@ -300,7 +301,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dialog",
         group = GROUP_FEEDBACK,
         title = "HyperAlertDialog",
-        description = "Alert 结构化对话框直接居中显示；高度服从平台窗口约束，长正文可滚动。",
+        description = "复用 Dialog 高遮蔽玻璃面板，居中显示。高度服从窗口约束，长正文可滚动。",
         code = """
             HyperAlertDialog(
                 visible = visible,
@@ -355,7 +356,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
                 onDownload = onDownload, onInstall = onInstall)
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("固定玻璃", "组件内部封装", "Dialog 玻璃面板，保留更新状态与关闭限制"),
+            DemoVariant("固定玻璃", "组件内部封装", "与 Dialog 共用高遮蔽面板，可用「已是最新」查看模态效果"),
             DemoVariant("状态", "HyperUpdateStatus", "检查/更新/下载/安装/完成/错误"),
             DemoVariant("错误反馈", "status = error / message", "仅展示原因、重试与关闭，不展示图标、标题和版本框"),
             DemoVariant("操作样式", "HyperButton.type", "主操作 type = filled / colorStyle = primary，关闭、取消和稍后再说省略 type，使用默认玻璃"),

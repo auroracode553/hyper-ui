@@ -318,7 +318,7 @@ fun LoadingProgressDemo() {
 
 @Composable
 fun HyperDialogDemo() {
-    // 复用正式液态面板，保留输入框、窗口避让与关闭操作以检查材质分层。
+    // 用现有输入示例查看玻璃面板对背后说明文字的遮蔽。
     var visible by remember { mutableStateOf(false) }
     var draft by remember { mutableStateOf("输入内容验证窗口稳定") }
 

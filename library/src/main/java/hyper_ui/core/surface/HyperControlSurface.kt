@@ -37,7 +37,9 @@ internal fun Modifier.hyperControlSurface(
     sampleScale: ((HyperGlassSource) -> Offset)? = null
 ): Modifier = composed {
     val light = HyperColors.isLight
-    val background = HyperColors.pageBackground
+    val defaultDialog = role == HyperControlSurfaceRole.Dialog && containerColor == Color.Unspecified
+    val pageBackground = HyperColors.pageBackground
+    val background = if (defaultDialog) pageBackground.copy(alpha = 1f) else pageBackground
     val white = Color(1f, 1f, 1f, 1f)
     val black = Color(0f, 0f, 0f, 1f)
     val tint = if (light) white else white.copy(alpha = 0.34f)
@@ -86,7 +88,11 @@ internal fun Modifier.hyperControlSurface(
             HyperControlSurfaceRole.SwitchThumb -> 10.dp
             else -> fixedStyle?.amount ?: 14.dp
         }.toPx()*strength
-        if (shader.supported && actual?.isAttached == true && backgroundSources.isNotEmpty()) {
+        val samplingTarget = actual?.takeIf {
+            it.isAttached && shader.supported && backgroundSources.isNotEmpty() &&
+                (!defaultDialog || backgroundSources.any { source -> source.coordinates?.isAttached == true })
+        }
+        if (samplingTarget != null) {
             // 参考 Toggle 的首个 Clamp blur 不扩展采样画布，其他控件沿用原范围。
             val padding = if (role == HyperControlSurfaceRole.SwitchThumb) 0f else ceil(blur*3f+edge)
             val radii = if (outline is Outline.Rounded) with(outline.roundRect) {
@@ -106,7 +112,7 @@ internal fun Modifier.hyperControlSurface(
                     if (origin?.isAttached == true) {
                         val factor = sampleScale?.invoke(source) ?: Offset(1f,1f)
                         if (factor.x > 0f && factor.y > 0f) scale(factor.x,factor.y) {
-                            drawHyperGlassSource(source, actual, padding)
+                            drawHyperGlassSource(source, samplingTarget, padding)
                         }
                     }
                 }
@@ -129,8 +135,16 @@ internal fun Modifier.hyperControlSurface(
                 drawRect(if (containerColor != Color.Unspecified) containerColor else white,alpha = 0.92f - 0.72f*pressed)
             HyperControlSurfaceRole.Thumb ->
                 drawRect(if (containerColor != Color.Unspecified) containerColor else white,alpha = 1f-pressed)
-            HyperControlSurfaceRole.Dialog -> drawRect(if (containerColor != Color.Unspecified) containerColor else tint,
-                alpha = if (containerColor != Color.Unspecified) 1f else if (light) 0.6f else 0.8f)
+            HyperControlSurfaceRole.Dialog -> {
+                if (containerColor != Color.Unspecified) {
+                    drawRect(containerColor)
+                } else {
+                    // 只让模糊后的画面参与混色，避免在无法采样时直接透出页面文字。
+                    val base = white.copy(alpha = if (light) 0.88f else 0.14f)
+                        .compositeOver(background)
+                    drawRect(base, alpha = if (samplingTarget != null) 0.88f else 1f)
+                }
+            }
             else -> drawRect(if (containerColor != Color.Unspecified) containerColor else tint.copy(
                 alpha = if (role == HyperControlSurfaceRole.Drawer) { if (light) 0.85f else 0.28f }
                 else if (role == HyperControlSurfaceRole.Panel) { if (light) 0.6f else 0.272f }

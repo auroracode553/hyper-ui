@@ -4,7 +4,7 @@ description: 跟随系统、浅色、深色三选项的紧凑主题弹窗。
 
 # HyperThemeDialog
 
-统一三选项主题设置。选项最小行高 36dp、垂直内边距 4dp，无额外行间距和关闭按钮；圆环为 21dp。大字体可自然撑高行，弹窗正文可滚动。
+统一三选项主题设置。选项最小行高 36dp、垂直内边距 4dp，无额外行间距和关闭按钮；圆环为 21dp。大字体可自然撑高行，弹窗正文可滚动。面板复用 [HyperDialog 的高遮蔽玻璃](hyper-dialog.md#使用约定)。
 
 <WasmPreview demo="theme-mode-dialog" title="主题设置" />
 

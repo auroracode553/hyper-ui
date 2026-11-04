@@ -33,7 +33,7 @@ HyperDialog(visible, { visible = false }, title = "确认") { HyperText("正文"
 
 最大宽 420dp、窗口外间距 24dp、radius 26dp、固定玻璃面板，默认无普通描边。默认 padding 18dp，标题 20sp/600，正文间隔 10dp，操作区距离 18dp、按钮间隔 8dp；保留 250ms 淡入与 0.96 → 1 缩放。
 
-面板固定采样 HyperBackdrop 的背景，浅色/深色模糊为 16/8dp，折射边缘 24dp、位移 48dp，带深度折射；浅色亮度增加 0.2，饱和度 1.5，文字与按钮独立绘制。显式 colors.containerColor 和 border 覆盖继续生效。
+面板可使用 HyperBackdrop 的背景，浅色/深色模糊为 16/8dp，折射边缘 24dp、位移 48dp，带深度折射。浅色亮度增加 0.2，饱和度 1.5。默认底色覆盖大部分模糊取样，无法取样时使用不透明主题底色，保持弹窗文字清晰。显式 colors.containerColor 按原色和透明度绘制，border 可覆盖边界样式。
 
 面板最大可用宽度使用真实窗口测量：min(maxWidth, 实际窗口宽度 − 48dp)。例如窗口宽 350dp 时面板不超过 302dp，320dp 时不超过 272dp；maxWidth 调整内容上限，两侧窗口留白仍保留。正文的 fillMaxWidth 只填充面板内部空间。
 

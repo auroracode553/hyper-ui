@@ -15,7 +15,7 @@ internal fun themeComponentDemos(): List<ComponentDemo> = listOf(
         id = "theme-mode-dialog",
         group = GROUP_THEME,
         title = "HyperThemeDialog",
-        description = "跟随系统、浅色、深色三选项；36dp 紧凑行，选中后请求关闭。",
+        description = "高遮蔽玻璃面板内显示跟随系统、浅色、深色三选项，选中后请求关闭。",
         code = """
             HyperThemeDialog(visible = visible, value = darkTheme,
                 onChanged = { darkTheme = it }, onClose = { visible = false })

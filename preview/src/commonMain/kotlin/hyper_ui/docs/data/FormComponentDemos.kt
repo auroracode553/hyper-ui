@@ -50,7 +50,7 @@ internal fun formComponentDemos(): List<ComponentDemo> = listOf(
             )
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("固定玻璃", "组件内部封装", "Dialog 玻璃面板；退出后提交日期"),
+            DemoVariant("固定玻璃", "组件内部封装", "与 Dialog 共用高遮蔽面板，退出后提交日期"),
             DemoVariant("日期", "initialDate", "36dp 选中圆形、42dp 日期行；今日描边"),
             DemoVariant("月份与年份", "点击年月标题", "十二个月、前后一年和十年跳转"),
             DemoVariant("边界", "firstDate / lastDate", "范围外日期、月份与翻页按钮禁用"),

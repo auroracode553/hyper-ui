@@ -30,7 +30,7 @@ HyperAlertDialog(visible, { visible = false }, title = "确认删除", content =
 
 **样式约定**
 
-复用 HyperDialog 的 26dp 圆角、420dp 最大宽与 250ms 淡入与 0.96 → 1 缩放。标题、可滚动正文、固定操作区通过明确插槽组成。
+复用 [HyperDialog 的高遮蔽玻璃面板](hyper-dialog.md#使用约定)，圆角 26dp、最大宽 420dp，采用 250ms 淡入与 0.96 → 1 缩放。标题、可滚动正文和固定操作区通过明确插槽组成。
 
 正文默认继承主题主文字色；取消操作省略 type 使用默认描边按钮，危险操作使用 danger。
 

@@ -36,21 +36,27 @@ fun SafeAreaDemo() {
             }
             HyperButton(onPressed = { portrait = !portrait }) { HyperText(if (portrait) "方向规则：竖屏" else "方向规则：横屏") }
             HyperText("操作区直接贴在手机${if (top) "顶部" else "底部"}，背景延伸到屏幕边缘。")
-            HyperText("同侧嵌套不重复；竖屏底部至少 20dp。操作 $count 次")
-            HyperText("方向仅模拟计算规则，不旋转手机；关闭系统区可对比零 Insets。")
+            HyperText(if (systemArea) "同侧嵌套只避让一次。操作 $count 次" else "贴边对照：操作区直接到达屏幕边缘。操作 $count 次")
         }
-        CompositionLocalProvider(LocalHyperSafeAreaWindowInsets provides
-            WindowInsets(top = if (systemArea) PreviewTopSafeArea else 0.dp,
-                bottom = if (systemArea) 28.dp else 0.dp),
-            LocalHyperSafeAreaPortraitOverride provides portrait) {
-            val action: @Composable BoxScope.() -> Unit = {
-                HyperButton(onPressed = { count++ }) { HyperText("操作按钮") }
-            }
-            HyperSafeArea(edge, Modifier.align(if (top) Alignment.TopCenter else Alignment.BottomCenter)
-                .fillMaxWidth().background(HyperColors.softContainer)) {
-                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    if (nested) HyperSafeArea(edge, content = action) else action()
+        val action: @Composable BoxScope.() -> Unit = {
+            HyperButton(onPressed = { count++ }) { HyperText("操作按钮") }
+        }
+        Box(
+            Modifier.align(if (top) Alignment.TopCenter else Alignment.BottomCenter)
+                .fillMaxWidth().background(HyperColors.softContainer),
+            contentAlignment = Alignment.Center
+        ) {
+            if (systemArea) {
+                CompositionLocalProvider(
+                    LocalHyperSafeAreaWindowInsets provides WindowInsets(top = PreviewTopSafeArea, bottom = 28.dp),
+                    LocalHyperSafeAreaPortraitOverride provides portrait
+                ) {
+                    HyperSafeArea(edge) {
+                        if (nested) HyperSafeArea(edge, content = action) else action()
+                    }
                 }
+            } else {
+                action()
             }
         }
     }

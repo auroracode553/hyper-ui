@@ -38,7 +38,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(containerComponentDemos()) // HyperSafeArea 直接在整屏手机边缘演示；HyperColorPicker 展示连续调色板，HyperBackground 提供静态渐变。
     addAll(navigationComponentDemos()) // filter-bar 精确对应 FilterBarDemo；Tabs 使用玻璃轨道与位置弹簧，Drawer 保留贴边全高；TabBar 支持 2–5 项、左右 12dp 留白，点击时整栏保持原比例，展示固定玻璃、镜片受限轻放大与短回弹、拖动回正与松手提交；非悬浮动作栏按图文与 HyperSafeArea 测量，56dp 为含安全区的整体最小高度。
     addAll(listComponentDemos()) // HyperGroupedList 与设置菜单共用标题样式；HyperSpacing 由页面消费一次；页面列表无卡片。
-    addAll(feedbackComponentDemos()) // Dropdown/Toast/Progress/LevelCapsule/UpdateDialog 复用角色玻璃、完整退出与数值过渡；包含 HyperBattery、HyperSpeedScale 与 HyperSpeedPanel；Dialog 遮罩全屏，面板独立避让系统栏与键盘。
+    addAll(feedbackComponentDemos()) // Dialog 与 UpdateDialog 展示高遮蔽玻璃面板和全屏遮罩。其他反馈组件按角色绘制玻璃并保留状态过渡。
     addAll(toolsComponentDemos()) // Android 更新工具只在 Preview 模拟流程，不引入平台网络或下载。
     addAll(themeComponentDemos()) // HyperThemeDialog 展示三选项主题设置；全面屏入口见组件文档。
 }
