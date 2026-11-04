@@ -1,5 +1,5 @@
-// 文件职责：采集 Gradle 输出并原子发布真实编译状态；由 dev-watch.mjs 注入路径和构建批次。
-import { renameSync, writeFileSync } from 'node:fs';
+// 文件职责：采集 Gradle 输出；由 dev-watch.mjs 注入路径和批次，preview-status-writer.mjs 负责可靠写入。
+import { createPreviewStatusWriter } from './preview-status-writer.mjs';
 
 const OUTPUT_LIMIT = 360;
 const WRITE_INTERVAL_MS = 250;
@@ -14,6 +14,7 @@ function describeTask(task, fallback) {
 }
 
 export function createPreviewBuildProgress({ statusFile, attempt }) {
+  const writer = createPreviewStatusWriter(statusFile);
   const startedAt = Date.now();
   let lastWriteAt = 0;
   let phaseMessage = '';
@@ -27,10 +28,7 @@ export function createPreviewBuildProgress({ statusFile, attempt }) {
     const now = Date.now();
     if (!force && now - lastWriteAt < WRITE_INTERVAL_MS) return;
     status.updatedAt = now;
-    // 读取端始终得到完整 JSON，避免实时输出时读到半个状态文件。
-    const temporaryFile = `${statusFile}.tmp`;
-    writeFileSync(temporaryFile, `${JSON.stringify(status)}\n`);
-    renameSync(temporaryFile, statusFile);
+    writer.enqueue(`${JSON.stringify(status)}\n`);
     lastWriteAt = now;
   }
 
@@ -69,5 +67,6 @@ export function createPreviewBuildProgress({ statusFile, attempt }) {
       publish(Boolean(task));
     },
     heartbeat() { publish(true); },
+    flush() { return writer.flush(); },
   };
 }

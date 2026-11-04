@@ -321,7 +321,9 @@ HyperTextField(
 )
 ```
 
-HyperTabBar 默认保留悬浮样式；`floating = false` 使用库内全宽非悬浮底栏，默认内容高 56dp，默认不增加底部系统安全区。浏览器类动作入口传 `selectedIndex = null`，允许重复点击并禁用横向拖动，通过 `itemEnabled` 控制各项可用性；参见 [TabBar API](vitepress/docs/components/navigation/hyper-tab-bar.md)。页面布局由 [HyperScaffold](vitepress/docs/components/navigation/hyper-scaffold.md) 统一承载，不需要 Material 页面宿主。
+HyperTabBar 默认保留悬浮样式；`floating = false` 使用库内全宽非悬浮底栏，56dp 操作行固定由 `HyperSafeArea(Bottom)` 抬出系统手势区，竖屏采用真实导航区与最小 20dp 的最大值，底色延伸到底边。同侧嵌套只消费一次；`safeArea` 仅控制悬浮栏，不关闭非悬浮栏的保护。正文视口仍全屏，末尾净空只使用宿主实测遮挡量。浏览器类动作入口传 `selectedIndex = null`，允许重复点击并禁用横向拖动，通过 `itemEnabled` 控制各项可用性；参见 [TabBar API](vitepress/docs/components/navigation/hyper-tab-bar.md)。页面布局由 [HyperScaffold](vitepress/docs/components/navigation/hyper-scaffold.md) 统一承载，不需要 Material 页面宿主。
+
+非悬浮动作模式（floating = false、selectedIndex = null）的图文贴近安全区上沿排列，消除行内居中产生的额外底部空隙；操作行与命中区域仍为默认 56dp，系统安全区由 HyperSafeArea 保留。
 
 ## 文档与交互预览架构
 

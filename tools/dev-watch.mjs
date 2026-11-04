@@ -91,16 +91,23 @@ async function runPublish() {
   const progress = createPreviewBuildProgress({ statusFile: buildStatusFile, attempt: buildAttempt });
   activeBuildProgress = progress;
   progress.setPhase('preparing', '正在准备 Wasm 依赖与包锁文件');
-  if (!(await runGradleTask('kotlinWasmUpgradePackageLock', progress))) {
+  const prepared = await runGradleTask('kotlinWasmUpgradePackageLock', progress);
+  if (shuttingDown) return false;
+  if (!prepared) {
     progress.setPhase('error', 'Wasm 依赖准备失败');
+    await progress.flush();
     return false;
   }
   progress.setPhase('compiling', '正在编译并发布 Wasm 组件预览');
-  if (!(await runGradleTask('publishWasmToVitePress', progress))) {
+  const published = await runGradleTask('publishWasmToVitePress', progress);
+  if (shuttingDown) return false;
+  if (!published) {
     progress.setPhase('error', 'Kotlin/Wasm 预览编译失败');
+    await progress.flush();
     return false;
   }
   progress.setPhase('ready', 'Wasm 预览产物已发布');
+  await progress.flush();
   console.log('Wasm 预览产物已更新，浏览器中的预览将自动重载。');
   return true;
 }
@@ -156,7 +163,7 @@ const watchers = [libraryDirectory, previewDirectory].map((directory) =>
 );
 
 let shuttingDown = false;
-function shutdown(exitCode = 0) {
+async function shutdown(exitCode = 0) {
   if (shuttingDown) return;
   shuttingDown = true;
   clearTimeout(debounceTimer);
@@ -164,6 +171,7 @@ function shutdown(exitCode = 0) {
   for (const watcher of watchers) watcher.close();
   stopProcessTree(activeGradleChild);
   stopProcessTree(vitepress);
+  await activeBuildProgress?.flush();
   process.exit(exitCode);
 }
 

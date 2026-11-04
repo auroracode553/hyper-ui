@@ -16,6 +16,7 @@ description: 复用顶部和底部安全区布局，统一最小底部空间，�
 - 使用 Compose Insets 消费机制，同侧嵌套不会重复添加系统区或最小留白。
 - 不包含 IME Insets。普通页面继续由宿主处理 imePadding；输入法只包裹自身面板，保留按键区配置高度。
 - 滚动页面首屏净空仍放入滚动内容，标准导航使用 HyperNavBarPage；不要把整个滚动视口套成固定顶部留白。
+- 非悬浮 HyperTabBar 内部已使用 Bottom 保护操作行，底色延伸到手势区；页面不需要再包裹安全区，正文视口保持全屏。
 
 ```kotlin
 HyperSafeArea { NumericKeypad() }

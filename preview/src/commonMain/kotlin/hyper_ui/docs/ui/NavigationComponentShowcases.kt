@@ -196,7 +196,10 @@ fun TrailingActionTabBarDemo() {
 }
 
 @Composable
-fun DockedTabBarDemo() { TabBarDemo(single = false, floating = false, actions = true) }
+fun DockedTabBarDemo() {
+    // 动作内容贴近 HyperSafeArea 上沿，消除行内下留白；示例不补底部占位。
+    TabBarDemo(single = false, floating = false, actions = true)
+}
 
 @Composable
 fun ScaffoldDemo() {

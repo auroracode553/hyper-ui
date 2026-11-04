@@ -10,7 +10,7 @@
 
 模态宿主的窗口固定全面屏透明，与根主题的安全区开关独立；遮罩覆盖上下系统栏，禁止为弹窗根画布增加安全区 padding。居中面板在遮罩内部单独避让系统栏与 IME，系统栏图标跟随实际明暗主题。Activity 和 Dialog 共用窗口透明与系统对比度配置，保留 Compose 遮罩令牌和动画。
 
-Android Activity 统一使用 enableHyperEdgeToEdge()，根主题 useSystemSafeArea 默认为 false。HyperTheme.systemSafeAreaInsets 为组件的唯一系统安全区来源，默认返回零；Scaffold、TabBar 不增加根系统安全区。Navbar 和自定义固定顶栏独立保护顶部交互区域一次；HyperNavBarPage 将测量净空放进滚动正文，页面背景和滚动视口保持全屏。首末净空必须位于滚动内容内部；禁止固定系统栏/悬浮栏占位、滚动视口外栏高 padding、扣减窗口高度或裁切。底部遮挡量按宿主实测整个栏及边距的高度提供，不以默认栏高或固定 dp 估算。键盘 Insets、业务组件高度和控件本身的间距继续保留。
+Android Activity 统一使用 enableHyperEdgeToEdge()，根主题 useSystemSafeArea 默认为 false。HyperTheme.systemSafeAreaInsets 表示根系统安全区策略，默认返回零；Scaffold 不增加根系统安全区，悬浮 TabBar 保留既有策略。非悬浮 TabBar 在自身表面内部固定使用 HyperSafeArea(Bottom) 保护操作行，独立于根开关，底色延伸到底边且同侧嵌套只消费一次。Navbar 和自定义固定顶栏独立保护顶部交互区域一次；HyperNavBarPage 将测量净空放进滚动正文，页面背景和滚动视口保持全屏。首末净空必须位于滚动内容内部；禁止固定系统栏/悬浮栏占位、滚动视口外栏高 padding、扣减窗口高度或裁切。底部遮挡量按宿主实测整个栏及边距的高度提供，不以默认栏高或固定 dp 估算。键盘 Insets、业务组件高度和控件本身的间距继续保留。
 
 本文依据当前 library/src/main/java/hyper_ui/ 实现整理，基线日期为 2026-10-21，复用本页已有的样式对照作为持续维护入口。对应 Flutter 仓库为 D:/my_project/flutter_project/flutter-hyper-ui，维护时同时参考其 vitepress/guide/design-system.md；以各端实际源码核对功能，不能把另一端 API 直接当成本端已有实现。
 
@@ -214,7 +214,7 @@ HyperSwitch 的公开接口和尺寸保持独立：标签行与独立控件共�
 | [HyperGroupedList](components/list/hyper-grouped-list.md) | components/list/HyperGroupedList.kt | 分组标题与数据行分别懒加载，调用方给稳定 key；跳过空分组，组间固定 8dp；无卡片平铺行，组件管理组内分割线 |
 | [HyperNavBar / HyperNavBarPage](components/navigation/hyper-nav-bar.md) | components/navigation/HyperNavBar.kt、HyperScrollGradient.kt、HyperNavBarScrollScope.kt | standard 的固定 layout 与 custom 插槽校验互斥；安全区位于背景内部，背景从屏幕顶部覆盖状态栏，只有操作行避让；预览注入 52dp 模拟 Insets，导航与正文共用且只计一次；库内观察主滚动状态并驱动背景，页面宿主叠放导航并传递 padding，不自行接管业务路由 |
 | [HyperFilterBar](components/navigation/hyper-filter-bar.md) | components/navigation/HyperFilterBar.kt | items / selectedIndex / onChanged 受控；横向滚动与选中项可见性由库管理，重复点击不回调，支持整栏和单项禁用 |
-| [HyperTabBar](components/navigation/hyper-tab-bar.md) | components/navigation/HyperTabBar.kt | single / multiple；floating 默认 true 保留原悬浮样式，false 为零默认外间距的全宽贴底平直表面；selectedIndex=null 为无选中块、可重复点击且不响应拖动的动作模式；itemEnabled 控制单项禁用。选择模式仍按拖动预览、松手提交，保留标签测宽与安全区 |
+| [HyperTabBar](components/navigation/hyper-tab-bar.md) | components/navigation/HyperTabBar.kt | single / multiple；floating 默认 true 保留原悬浮样式，false 为零默认外间距的全宽贴底平直表面，内部固定使用 HyperSafeArea(Bottom) 抬起操作行，56dp 内容高不含安全区；safeArea 仅控制悬浮栏；selectedIndex=null 为无选中块、可重复点击且不响应拖动的动作模式；itemEnabled 控制单项禁用。选择模式仍按拖动预览、松手提交，保留标签测宽 |
 | [HyperScaffold](components/navigation/hyper-scaffold.md) | components/navigation/HyperScaffold.kt | 使用 Compose 基础布局承载页面、上下栏和悬浮操作；正文消费实际测量净空，不依赖 Material，也不接管业务滚动或导航监听 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | components/menu/HyperSlideMenu.kt | reveal 为 Closed / Start / End，调用方响应 onRevealChange；内部持有拖动偏移，松手时速度投影与弹簧共用释放速度；操作区填满侧滑空间，危险和自定义色保留；先请求关闭再执行操作 |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | components/drawer/HyperDrawer.kt | 独立模态层，open 与 onClose 受控；默认 start，RTL 换边；正文 content、内边距 contentPadding 默认零；安全区／键盘避让在背景内；标题页脚固定；懒列表设 scrollable=false；滑动超过宽度 30% 或速度达 400dp/s 请求关闭，否则 180ms 复位；遮罩、返回键与滑动分别控制 |
@@ -295,6 +295,8 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 导航滚动监听统一由 HyperNavBarPage.scrollState / HyperNavBarScrollScope 管理，Navbar 自动读取；消费页面不得重复声明导航专用 derivedStateOf、snapshotFlow 或 scrolledUnder 判断。库测量实际导航区高度，顶部净空放进滚动内容；主滚动状态保留在容器，嵌套列表不代替主状态。
 
 TabBar 多项支持 2–5 项，默认左右外边距为 12dp，组合入口间距为 8dp；镜片可见高度为按钮组内容高度减 8dp，默认 48dp、上下各 4dp，命中范围覆盖整项；栏外最多另放 1 个独立入口，与内部最多 5 项分别计数，不删除导航项。TabBar 尺寸由库按形态管理：`type = "single"` 是固定直径 48dp 的独立圆形动作入口；`type = "multiple"` 的按钮组（悬浮或贴底）默认内容高度 56dp，只有按钮组按标签字体在库内扩展高度。单独入口必须比按钮组小，禁止为“统一高度”将 single 改成 56dp，也禁止业务页面通过 size、height 或缩放实现 48dp。并排时放在共同 Row 中垂直居中，保留各自默认尺寸；悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp。正文采用宿主实测底部净空，不按上述默认尺寸估算占位。
+
+非悬浮 TabBar 的动作模式（floating=false、selectedIndex=null）将图文贴近 HyperSafeArea 上沿排列，消除行内居中产生的额外下留白。操作行与整项命中区域保留默认 56dp，真实系统 Insets 与最小安全区不缩减；悬浮及选择模式仍居中。
 
 按需安全区统一使用 HyperSafeArea（Top / Bottom）。根画布继续全面屏；竖屏底部取导航区／缺口与库内最小 20dp 的最大值，横屏只保留实际系统区，同侧嵌套只消费一次。输入法只扩展自身面板底部，不处理宿主 IME Insets；页面不得自行复制安全区高度。
 

@@ -42,7 +42,20 @@ HyperTabBar(items, selectedIndex = selectedIndex, onChanged = { selectedIndex = 
 
 type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬浮胶囊：multiple 默认高 56dp，单元格为 max(76dp, 最宽 12sp 粗体标签 +32dp)，容器另加 8dp；外间距 start/end 12dp、top 8dp、bottom 20dp。floating=false 仅用于 multiple，默认零外间距，全宽平直页面表面，无胶囊、圆角或浮层阴影，底部安全区位于表面内部。图标 23dp、文字 12sp、间距 1dp。选中镜片保持按钮组内容高度减 8dp，默认可见高 48dp、上下各 4dp；点击区域覆盖整项，不单独压缩镜片高度。single 使用固定直径 48dp 的圆形玻璃表面、22dp 图标、16dp 角标。
 
-非悬浮形态直接放入 HyperScaffold.bottomBar；悬浮和贴底多项按钮组均以 56dp 为默认内容高度，仅按钮组按标签字体在库内扩展。single 独立入口固定为 48dp，不随按钮组高度或标签字体放大。安全区与外边距不计入内容尺寸，不再额外叠加系统底部 inset、固定留白或业务 height；宿主让正文经过底栏后方。
+非悬浮形态直接放入 HyperScaffold.bottomBar，内部固定通过 HyperSafeArea(edge = HyperSafeAreaEdge.Bottom) 保护操作行，独立于根 useSystemSafeArea 开关和 safeArea 参数。竖屏底部取真实导航栏／缺口与最小 20dp 的最大值，横屏只避让实际底部系统区；同侧嵌套只消费一次，不包含 IME。safeArea 参数仅控制悬浮栏的系统区避让。
+
+悬浮和贴底多项按钮组均以 56dp 为默认内容高度，仅按钮组按标签字体在库内扩展。single 独立入口固定为 48dp，不随按钮组高度或标签字体放大。非悬浮栏的底色连同安全区延伸到底边，只有操作行抬到手势条上方；安全区与外边距不计入内容尺寸。调用方不再额外叠加系统底部 inset、固定留白或业务 height；宿主让正文经过底栏后方，末尾余量只放进滚动内容。
+
+```kotlin
+HyperScaffold(bottomBar = {
+    HyperTabBar(items = actions, floating = false, selectedIndex = null,
+        onChanged = onAction, itemLabel = { it.label }) { HyperText(it.label) }
+}) { padding ->
+    LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = padding) {
+        // 正文；padding 已包含实测底栏及其安全区，不再叠加底部 Insets。
+    }
+}
+```
 
 **状态归属**
 
@@ -57,6 +70,8 @@ multiple 只接受 2–5 项，single 恰好 1 项，超出范围抛出 IllegalA
 itemEnabled 返回 false 的项目降低透明度并停止点击及拖动提交。single 点击时调用 onChanged(0)；multiple 在 selectedIndex 非空时仍采用选择模式，重复点击当前项不回调，拖动松手才提交。
 
 selectedIndex=null 表示动作模式：没有常驻选中块，每次有效点击都会调用 onChanged，且横向拖动不触发动作。浏览器的前进、后退、标签管理和菜单应采用此模式，不能伪造固定选中项。
+
+非悬浮动作模式（floating=false 且 selectedIndex=null）将图文对齐到操作行底部、贴近 HyperSafeArea 上沿，消除行内居中产生的额外下留白。56dp 默认内容高度和整项命中区域保持完整；真实系统 Insets 与安全区最小留白照常生效，页面不再通过 offset 或额外 padding 调整。悬浮栏与有选中值的导航模式继续居中。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -97,8 +112,8 @@ fun <T> HyperTabBar(
 | type | String | 否 | &quot;multiple&quot; | multiple 为默认高 56dp 的多项按钮组；single 为固定直径 48dp 的独立圆形入口。 |
 | itemLabel | (T) -&gt; String | 否 | { &quot;&quot; } | 每个导航项的文字。 |
 | badgeCount | Int | 否 | 0 | 单动作角标数量，0 隐藏，超过 99 显示 99+。 |
-| safeArea | Boolean | 否 | false | 是否避开底部系统安全区。 |
-| floating | Boolean | 否 | true | true 为悬浮胶囊；false 为全宽非悬浮 multiple 底栏。 |
+| safeArea | Boolean | 否 | false | 仅控制悬浮栏的底部系统区避让；非悬浮栏固定通过 HyperSafeArea 保护操作行，不受此值影响。 |
+| floating | Boolean | 否 | true | true 为悬浮胶囊；false 为全宽非悬浮 multiple 底栏，内部包含底部安全区。 |
 | margin | PaddingValues | 否 | 非悬浮与 single 为零；悬浮 multiple 为 start/end 12dp、top 8dp、bottom 20dp | 导航容器外部间距。 |
 | color | Color | 否 | HyperColors.accent | 自定义颜色，覆盖默认配色。 |
 | itemEnabled | (T) -&gt; Boolean | 否 | { true } | 每项是否可交互，禁用项透明度为 0.4。 |

@@ -29,7 +29,7 @@ import kotlin.math.roundToInt
 
 class HyperTabBarItemScope internal constructor(val selected: Boolean)
 
-/** 选择值由调用方持有；itemLabel 用于与参考实现相同的内容宽度测量。 */
+/** 选择值由调用方持有；itemLabel 用于内容宽度测量。safeArea 仅控制悬浮栏，贴底栏内置 HyperSafeArea。 */
 @Composable
 fun <T> HyperTabBar(
     items: List<T>,
@@ -57,7 +57,6 @@ fun <T> HyperTabBar(
     val itemWidth = items.maxOf { item ->
         with(density) { textMeasurer.measure(itemLabel(item), labelStyle).size.width.toDp() } + 32.dp
     }.coerceAtLeast(76.dp)
-    val safeInsets = HyperTheme.systemSafeAreaInsets
     // 单动作固定为 48dp 圆形入口；只有多项按钮组按标签字体扩展默认高度。
     val height = if (type == "single") HyperTabBarDefaults.SingleDiameter else
         maxOf(HyperTabBarDefaults.Height, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
@@ -71,10 +70,7 @@ fun <T> HyperTabBar(
     val latestLogicalSelected by rememberUpdatedState(logicalSelected)
     val latestOnClick by rememberUpdatedState(onChanged)
     val latestItemEnabled by rememberUpdatedState(itemEnabled)
-    // 贴底表面连同底部安全区由库绘制，调用方不再叠加底板或二次避让。
-    Box(modifier.then(if (floating) Modifier else Modifier.fillMaxWidth().background(HyperColors.pageBackground))
-        .then(if (safeArea) Modifier.windowInsetsPadding(safeInsets.only(WindowInsetsSides.Bottom)) else Modifier)
-        .padding(margin)) {
+    HyperTabBarContainer(modifier, floating, safeArea, margin) {
         if (type == "single") {
             val pressProgress = animateFloatAsState(if (pressed) 1f else 0f,
                 spring(dampingRatio = 1f, stiffness = 1000f), label = "HyperTabBarGlassPress")
@@ -155,7 +151,9 @@ fun <T> HyperTabBar(
                                 .alpha(if (enabled) 1f else 0.4f)
                                 .hyperNoRippleClickable(enabled = enabled, role = if (selectedIndex == null) Role.Button else Role.Tab, pressedScale = 1f,
                                     onClick = { if (index != selectedIndex) onChanged(index) })
-                                .then(if (selectedIndex == null) Modifier else Modifier.semantics { this.selected = selected }), contentAlignment = Alignment.Center) {
+                                .then(if (selectedIndex == null) Modifier else Modifier.semantics { this.selected = selected }),
+                                // 贴底动作贴近安全区上沿，避免行内下留白与 HyperSafeArea 叠加。
+                                contentAlignment = if (!floating && selectedIndex == null) Alignment.BottomCenter else Alignment.Center) {
                                 CompositionLocalProvider(
                                     LocalHyperContentColor provides if (selected) color else HyperColors.primaryText,
                                     LocalHyperTextStyle provides labelStyle.copy(lineHeight = 12.96.sp,
@@ -173,6 +171,31 @@ fun <T> HyperTabBar(
                     .hyperControlSurface(RoundedCornerShape(selectionHeight / 2), HyperControlSurfaceRole.Selection,
                         progress = { motion.progress }, sources = listOf(panelSource, labelsSource)))
             }
+        }
+    }
+}
+
+/** 贴底栏只抬起操作内容，背景延伸至底边；悬浮栏保留原有 Insets 与间距策略。 */
+@Composable
+private fun HyperTabBarContainer(
+    modifier: Modifier,
+    floating: Boolean,
+    safeArea: Boolean,
+    margin: PaddingValues,
+    content: @Composable BoxScope.() -> Unit
+) {
+    if (floating) {
+        Box(modifier
+            .then(if (safeArea) Modifier.windowInsetsPadding(
+                HyperTheme.systemSafeAreaInsets.only(WindowInsetsSides.Bottom)) else Modifier)
+            .padding(margin), content = content)
+    } else {
+        // 独立于根安全区开关；同侧 Insets 由 HyperSafeArea 消费，嵌套时不叠加。
+        HyperSafeArea(
+            edge = HyperSafeAreaEdge.Bottom,
+            modifier = modifier.fillMaxWidth().background(HyperColors.pageBackground)
+        ) {
+            Box(Modifier.padding(margin), content = content)
         }
     }
 }
