@@ -44,7 +44,9 @@ type 为 multiple 或 single。floating 默认 true，保留内容收缩的悬�
 
 非悬浮形态直接放入 HyperScaffold.bottomBar，内部固定通过 HyperSafeArea(edge = HyperSafeAreaEdge.Bottom) 保护操作行，独立于根 useSystemSafeArea 开关和 safeArea 参数。竖屏底部取真实导航栏／缺口与最小 20dp 的最大值，横屏只避让实际底部系统区；同侧嵌套只消费一次，不包含 IME。safeArea 参数仅控制悬浮栏的系统区避让。
 
-悬浮和贴底多项按钮组均以 56dp 为默认内容高度，仅按钮组按标签字体在库内扩展。single 独立入口固定为 48dp，不随按钮组高度或标签字体放大。非悬浮栏的底色连同安全区延伸到底边，只有操作行抬到手势条上方；安全区与外边距不计入内容尺寸。调用方不再额外叠加系统底部 inset、固定留白或业务 height；宿主让正文经过底栏后方，末尾余量只放进滚动内容。
+悬浮多项与贴底选择模式以 56dp 为默认内容高度，按标签字体在库内扩展。非悬浮动作模式（floating=false、selectedIndex=null）按图文实际高度测量，56dp 作为包含安全区的整栏最小高度；默认零 margin 时，总高为 max(56dp, 图文高度 + 未消费的底部安全区)，字号较大时最小高度也随原字号规则扩展。single 独立入口固定为 48dp，不随按钮组高度或标签字体放大。
+
+非悬浮栏的底色连同安全区延伸到底边，可点击内容只位于安全区上方。调用方不再额外叠加系统底部 inset、固定留白或业务 height；宿主让正文经过底栏后方，末尾余量只放进滚动内容。
 
 ```kotlin
 HyperScaffold(bottomBar = {
@@ -71,7 +73,7 @@ itemEnabled 返回 false 的项目降低透明度并停止点击及拖动提交�
 
 selectedIndex=null 表示动作模式：没有常驻选中块，每次有效点击都会调用 onChanged，且横向拖动不触发动作。浏览器的前进、后退、标签管理和菜单应采用此模式，不能伪造固定选中项。
 
-非悬浮动作模式（floating=false 且 selectedIndex=null）将图文对齐到操作行底部、贴近 HyperSafeArea 上沿，消除行内居中产生的额外下留白。56dp 默认内容高度和整项命中区域保持完整；真实系统 Insets 与安全区最小留白照常生效，页面不再通过 offset 或额外 padding 调整。悬浮栏与有选中值的导航模式继续居中。
+非悬浮动作模式按同一行中最高的插槽测量内容，各项共享内容行高和点击区域，不强制在安全区上方保留 56dp。真实系统 Insets 与最小安全区照常生效，系统手势区不接收菜单点击；悬浮栏与有选中值的导航模式继续使用原有居中布局。
 
 Desktop/Wasm 仅用于文档 Preview。显式覆盖尺寸、颜色或排版后，画面会随调用方配置变化。
 
@@ -109,7 +111,7 @@ fun <T> HyperTabBar(
 | onChanged | (Int) -&gt; Unit | 是 | — | 用户修改值或选择项时通知调用方。 |
 | selectedIndex | Int? | 是 | — | 当前选中索引；null 为可重复点击的动作模式。 |
 | modifier | Modifier | 否 | Modifier | 外部宽度、位置和间距；高度与直径由库管理。 |
-| type | String | 否 | &quot;multiple&quot; | multiple 为默认高 56dp 的多项按钮组；single 为固定直径 48dp 的独立圆形入口。 |
+| type | String | 否 | &quot;multiple&quot; | multiple 默认高 56dp；非悬浮动作模式以此为含安全区的整栏最小高度。single 为固定直径 48dp 的独立圆形入口。 |
 | itemLabel | (T) -&gt; String | 否 | { &quot;&quot; } | 每个导航项的文字。 |
 | badgeCount | Int | 否 | 0 | 单动作角标数量，0 隐藏，超过 99 显示 99+。 |
 | safeArea | Boolean | 否 | false | 仅控制悬浮栏的底部系统区避让；非悬浮栏固定通过 HyperSafeArea 保护操作行，不受此值影响。 |
@@ -151,7 +153,7 @@ Row(Modifier.padding(HyperTabBarDefaults.FloatingMargin),
 | 默认值 | 类型 | 必填 | 值 | 用途 |
 | --- | --- | --- | --- | --- |
 | HyperTabBarDefaults.SingleDiameter | Dp | 否 | 48dp | single 独立入口的固定直径，不与按钮组等高 |
-| HyperTabBarDefaults.Height | Dp | 否 | 56dp | multiple 悬浮 / 贴底按钮组默认内容高度；字体扩展由组件内部负责 |
+| HyperTabBarDefaults.Height | Dp | 否 | 56dp | multiple 默认内容高度；非悬浮动作模式为含安全区的整栏最小高度；字体扩展由组件内部负责 |
 | HyperTabBarDefaults.FloatingMargin | PaddingValues | 否 | start/end 12dp，top 8dp、bottom 20dp | 独立悬浮导航默认外边距；并排布局由共同 Row 消费一次 |
 
 正文末尾余量优先消费 HyperScaffold 测量的 bottom padding，不能用另一套手写底栏高度。

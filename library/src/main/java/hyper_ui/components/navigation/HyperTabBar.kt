@@ -21,6 +21,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,7 +58,8 @@ fun <T> HyperTabBar(
     val itemWidth = items.maxOf { item ->
         with(density) { textMeasurer.measure(itemLabel(item), labelStyle).size.width.toDp() } + 32.dp
     }.coerceAtLeast(76.dp)
-    // 单动作固定为 48dp 圆形入口；只有多项按钮组按标签字体扩展默认高度。
+    val dockedActions = !floating && selectedIndex == null
+    // 动作栏将安全区纳入整体最小高度；其余形态保留原有内容尺寸。
     val height = if (type == "single") HyperTabBarDefaults.SingleDiameter else
         maxOf(HyperTabBarDefaults.Height, with(density) { 12.sp.toDp() } * 1.08f + 36.dp)
     val selectionHeight = height - 8.dp
@@ -70,7 +72,8 @@ fun <T> HyperTabBar(
     val latestLogicalSelected by rememberUpdatedState(logicalSelected)
     val latestOnClick by rememberUpdatedState(onChanged)
     val latestItemEnabled by rememberUpdatedState(itemEnabled)
-    HyperTabBarContainer(modifier, floating, safeArea, margin) {
+    HyperTabBarContainer(modifier, floating, safeArea, margin,
+        minimumHeight = if (dockedActions) height else 0.dp) {
         if (type == "single") {
             val pressProgress = animateFloatAsState(if (pressed) 1f else 0f,
                 spring(dampingRatio = 1f, stiffness = 1000f), label = "HyperTabBarGlassPress")
@@ -95,6 +98,18 @@ fun <T> HyperTabBar(
                 HyperText(if (badgeCount > 99) "99+" else "$badgeCount", color = Color(1f, 1f, 1f, 1f),
                     fontSize = 10.sp, lineHeight = 10.sp, fontWeight = FontWeight.SemiBold)
             }
+        } else if (dockedActions) {
+            val motion = rememberHyperTabBarMotion(visualSelectedIndex, items.size, pressed, pointerTravel)
+            // 按真实插槽测量图文，不在 HyperSafeArea 内再放一条固定 56dp 的操作行。
+            HyperTabBarItems(items, onChanged, selectedIndex, itemEnabled, color, labelStyle,
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)
+                    .hyperTabBarPointer(items.size, rtl, 0f,
+                        enabled = { latestItemEnabled(items[it]) }) { down, travel ->
+                        pressed = down
+                        pointerTravel = travel
+                    }
+                    .hyperTabBarHighlight(motion.progress, motion.position, items.size, 0f),
+                itemContent = itemContent)
         } else {
             val motion = rememberHyperTabBarMotion(visualSelectedIndex, items.size, pressed, pointerTravel)
             val panelSource = rememberHyperGlassSource()
@@ -143,26 +158,9 @@ fun <T> HyperTabBar(
                         .then(if (floating) Modifier.hyperControlSurface(RoundedCornerShape(height / 2),
                             HyperControlSurfaceRole.Navigation) else Modifier)
                         .hyperTabBarHighlight(motion.progress, motion.position, items.size, with(density) { inset.toPx() }))
-                    Row(Modifier.fillMaxSize().hyperGlassSource(labelsSource, tint = color).padding(horizontal = inset)) {
-                        items.forEachIndexed { index, item ->
-                            val selected = index == selectedIndex
-                            val enabled = itemEnabled(item)
-                            Box(Modifier.weight(1f).fillMaxHeight()
-                                .alpha(if (enabled) 1f else 0.4f)
-                                .hyperNoRippleClickable(enabled = enabled, role = if (selectedIndex == null) Role.Button else Role.Tab, pressedScale = 1f,
-                                    onClick = { if (index != selectedIndex) onChanged(index) })
-                                .then(if (selectedIndex == null) Modifier else Modifier.semantics { this.selected = selected }),
-                                // 贴底动作贴近安全区上沿，避免行内下留白与 HyperSafeArea 叠加。
-                                contentAlignment = if (!floating && selectedIndex == null) Alignment.BottomCenter else Alignment.Center) {
-                                CompositionLocalProvider(
-                                    LocalHyperContentColor provides if (selected) color else HyperColors.primaryText,
-                                    LocalHyperTextStyle provides labelStyle.copy(lineHeight = 12.96.sp,
-                                        fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium),
-                                    LocalHyperIconSize provides 23.dp
-                                ) { HyperTabBarItemScope(selected).itemContent(item) }
-                            }
-                        }
-                    }
+                    HyperTabBarItems(items, onChanged, selectedIndex, itemEnabled, color, labelStyle,
+                        modifier = Modifier.fillMaxSize().hyperGlassSource(labelsSource, tint = color).padding(horizontal = inset),
+                        itemContent = itemContent)
                 }
                 if (selectedIndex != null) Box(Modifier.absoluteOffset(x = inset + 1.dp + cellWidth * motion.position,
                     y = (height - selectionHeight) / 2)
@@ -175,6 +173,39 @@ fun <T> HyperTabBar(
     }
 }
 
+/** 两种多项布局共用状态、命中与插槽，动作栏允许按图文实际高度测量。 */
+@Composable
+private fun <T> HyperTabBarItems(
+    items: List<T>,
+    onChanged: (Int) -> Unit,
+    selectedIndex: Int?,
+    itemEnabled: (T) -> Boolean,
+    color: Color,
+    labelStyle: TextStyle,
+    modifier: Modifier,
+    itemContent: @Composable HyperTabBarItemScope.(item: T) -> Unit
+) {
+    Row(modifier) {
+        items.forEachIndexed { index, item ->
+            val selected = index == selectedIndex
+            val enabled = itemEnabled(item)
+            Box(Modifier.weight(1f).fillMaxHeight()
+                .alpha(if (enabled) 1f else 0.4f)
+                .hyperNoRippleClickable(enabled = enabled, role = if (selectedIndex == null) Role.Button else Role.Tab,
+                    pressedScale = 1f, onClick = { if (index != selectedIndex) onChanged(index) })
+                .then(if (selectedIndex == null) Modifier else Modifier.semantics { this.selected = selected }),
+                contentAlignment = Alignment.Center) {
+                CompositionLocalProvider(
+                    LocalHyperContentColor provides if (selected) color else HyperColors.primaryText,
+                    LocalHyperTextStyle provides labelStyle.copy(lineHeight = 12.96.sp,
+                        fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium),
+                    LocalHyperIconSize provides 23.dp
+                ) { HyperTabBarItemScope(selected).itemContent(item) }
+            }
+        }
+    }
+}
+
 /** 贴底栏只抬起操作内容，背景延伸至底边；悬浮栏保留原有 Insets 与间距策略。 */
 @Composable
 private fun HyperTabBarContainer(
@@ -182,6 +213,7 @@ private fun HyperTabBarContainer(
     floating: Boolean,
     safeArea: Boolean,
     margin: PaddingValues,
+    minimumHeight: Dp,
     content: @Composable BoxScope.() -> Unit
 ) {
     if (floating) {
@@ -193,9 +225,9 @@ private fun HyperTabBarContainer(
         // 独立于根安全区开关；同侧 Insets 由 HyperSafeArea 消费，嵌套时不叠加。
         HyperSafeArea(
             edge = HyperSafeAreaEdge.Bottom,
-            modifier = modifier.fillMaxWidth().background(HyperColors.pageBackground)
+            modifier = modifier.fillMaxWidth().heightIn(min = minimumHeight).background(HyperColors.pageBackground)
         ) {
-            Box(Modifier.padding(margin), content = content)
+            Box(Modifier.align(Alignment.BottomStart).padding(margin), content = content)
         }
     }
 }
@@ -203,7 +235,7 @@ private fun HyperTabBarContainer(
 object HyperTabBarDefaults {
     /** 单独动作入口的固定直径，不与多项按钮组等高。 */
     val SingleDiameter = 48.dp
-    /** 悬浮和贴底多项按钮组的默认内容高度，组件内可随字体扩展。 */
+    /** 多项按钮组默认高；非悬浮动作模式作为含安全区的整体最小高度。 */
     val Height = 56.dp
     /** 组件视觉间距，与根布局系统安全区独立；并排入口由共同的 Row 只消费一次。 */
     val FloatingMargin = PaddingValues(start = 12.dp, top = 8.dp, end = 12.dp,

@@ -2,6 +2,8 @@
 package hyper_ui.docs.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,25 +19,36 @@ fun SafeAreaDemo() {
     var systemArea by remember { mutableStateOf(true) }
     var count by remember { mutableStateOf(0) }
     val edge = if (top) HyperSafeAreaEdge.Top else HyperSafeAreaEdge.Bottom
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            HyperButton(onPressed = { top = !top }) { HyperText(if (top) "顶部" else "底部") }
-            HyperButton(onPressed = { nested = !nested }) { HyperText(if (nested) "嵌套：开" else "嵌套：关") }
+    // 整个手机屏幕就是演示窗口，安全区不再落在页面中间的局部画框上。
+    Box(Modifier.fillMaxSize()) {
+        Column(
+            Modifier.align(Alignment.Center).fillMaxWidth()
+                .verticalScroll(rememberScrollState()).padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            HyperText("手机边缘安全区")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                HyperButton(onPressed = { top = !top }) { HyperText(if (top) "顶部" else "底部") }
+                HyperButton(onPressed = { nested = !nested }) { HyperText(if (nested) "嵌套：开" else "嵌套：关") }
+            }
+            HyperButton(onPressed = { systemArea = !systemArea }) {
+                HyperText(if (systemArea) "系统区：开" else "系统区：关")
+            }
+            HyperButton(onPressed = { portrait = !portrait }) { HyperText(if (portrait) "方向规则：竖屏" else "方向规则：横屏") }
+            HyperText("操作区直接贴在手机${if (top) "顶部" else "底部"}，背景延伸到屏幕边缘。")
+            HyperText("同侧嵌套不重复；竖屏底部至少 20dp。操作 $count 次")
+            HyperText("方向仅模拟计算规则，不旋转手机；关闭系统区可对比零 Insets。")
         }
-        HyperButton(onPressed = { systemArea = !systemArea }) {
-            HyperText(if (systemArea) "系统区：开" else "系统区：关")
-        }
-        HyperButton(onPressed = { portrait = !portrait }) { HyperText(if (portrait) "竖屏" else "横屏") }
-        HyperText("嵌套不重复；竖屏底部最小 20dp，横屏只避系统区；操作 $count 次")
         CompositionLocalProvider(LocalHyperSafeAreaWindowInsets provides
-            WindowInsets(top = if (systemArea) 48.dp else 0.dp,
+            WindowInsets(top = if (systemArea) PreviewTopSafeArea else 0.dp,
                 bottom = if (systemArea) 28.dp else 0.dp),
             LocalHyperSafeAreaPortraitOverride provides portrait) {
-            Box(Modifier.fillMaxWidth().height(220.dp).background(HyperColors.softContainer)) {
-                val action: @Composable BoxScope.() -> Unit = {
-                    HyperButton(onPressed = { count++ }) { HyperText("操作按钮") }
-                }
-                HyperSafeArea(edge, Modifier.align(if (top) Alignment.TopCenter else Alignment.BottomCenter)) {
+            val action: @Composable BoxScope.() -> Unit = {
+                HyperButton(onPressed = { count++ }) { HyperText("操作按钮") }
+            }
+            HyperSafeArea(edge, Modifier.align(if (top) Alignment.TopCenter else Alignment.BottomCenter)
+                .fillMaxWidth().background(HyperColors.softContainer)) {
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     if (nested) HyperSafeArea(edge, content = action) else action()
                 }
             }

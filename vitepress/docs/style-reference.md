@@ -125,7 +125,7 @@ HyperNavBar 与 HyperScrollGradient 只绘制主题画布色的滚动渐变，�
 | HyperSlider | 44dp 触摸、6dp 轨道、20dp 玻璃滑块，默认无描边 | 默认范围 0..100，showValue=true；按压高光，点击弹簧定位 |
 | HyperTabs | radius 18，padding 4、条目 32，总高 40 | 13sp，选中 600、未选中 500，图标 16dp；等宽玻璃底板按临界阻尼弹簧平移 |
 | HyperFilterBar | 最小高 32dp，项内边距 12×6dp，项间距 6dp | 浅底与 1dp 弱边线；选中 8% 主题色底、18% 主题色细线与主题色文字；无阴影，横向滚动，13sp 文字随字体缩放自然撑高 |
-| HyperTabBar | single 固定直径 48；multiple 悬浮 / 贴底默认内容高 56；悬浮顶部间距 8、底部间距 20 | single / multiple 图标 22 / 23；连续跟手、临界阻尼弹簧吸附；只有多项按钮组按标签字体扩展高度 |
+| HyperTabBar | single 固定直径 48；multiple 默认高 56，非悬浮动作模式为含安全区的整栏最小高度；悬浮顶部间距 8、底部间距 20 | single / multiple 图标 22 / 23；连续跟手、临界阻尼弹簧吸附；只有多项按钮组按标签字体扩展高度 |
 | HyperNavBar | 高 44，水平 padding 16，标题 16/600 | 透明操作层，标题字距 -0.2sp、副标题 11sp、安全区另计 |
 | HyperListTile | 最小 46，独立 plain/glass 水平留白 14、复用父表面时 0，垂直 8；外层 glass 仅垂直留白 3 | auto/plain/glass，标题 14/600、说明 12、meta 11，图标块 34 |
 | HyperMenuGroup | radius 18，padding 4，分隔缩进 14 | items 入口自动分隔；自由内容入口显式组合分隔 |
@@ -214,7 +214,7 @@ HyperSwitch 的公开接口和尺寸保持独立：标签行与独立控件共�
 | [HyperGroupedList](components/list/hyper-grouped-list.md) | components/list/HyperGroupedList.kt | 分组标题与数据行分别懒加载，调用方给稳定 key；跳过空分组，组间固定 8dp；无卡片平铺行，组件管理组内分割线 |
 | [HyperNavBar / HyperNavBarPage](components/navigation/hyper-nav-bar.md) | components/navigation/HyperNavBar.kt、HyperScrollGradient.kt、HyperNavBarScrollScope.kt | standard 的固定 layout 与 custom 插槽校验互斥；安全区位于背景内部，背景从屏幕顶部覆盖状态栏，只有操作行避让；预览注入 52dp 模拟 Insets，导航与正文共用且只计一次；库内观察主滚动状态并驱动背景，页面宿主叠放导航并传递 padding，不自行接管业务路由 |
 | [HyperFilterBar](components/navigation/hyper-filter-bar.md) | components/navigation/HyperFilterBar.kt | items / selectedIndex / onChanged 受控；横向滚动与选中项可见性由库管理，重复点击不回调，支持整栏和单项禁用 |
-| [HyperTabBar](components/navigation/hyper-tab-bar.md) | components/navigation/HyperTabBar.kt | single / multiple；floating 默认 true 保留原悬浮样式，false 为零默认外间距的全宽贴底平直表面，内部固定使用 HyperSafeArea(Bottom) 抬起操作行，56dp 内容高不含安全区；safeArea 仅控制悬浮栏；selectedIndex=null 为无选中块、可重复点击且不响应拖动的动作模式；itemEnabled 控制单项禁用。选择模式仍按拖动预览、松手提交，保留标签测宽 |
+| [HyperTabBar](components/navigation/hyper-tab-bar.md) | components/navigation/HyperTabBar.kt | single / multiple；floating 默认 true，false 为零默认外间距的全宽贴底平直表面，内部固定使用 HyperSafeArea(Bottom)；非悬浮动作模式以 56dp 为含安全区的整栏最小高度，图文按实际高度测量；safeArea 仅控制悬浮栏；selectedIndex=null 为无选中块、可重复点击且不响应拖动的动作模式；itemEnabled 控制单项禁用。选择模式仍按拖动预览、松手提交，保留标签测宽 |
 | [HyperScaffold](components/navigation/hyper-scaffold.md) | components/navigation/HyperScaffold.kt | 使用 Compose 基础布局承载页面、上下栏和悬浮操作；正文消费实际测量净空，不依赖 Material，也不接管业务滚动或导航监听 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | components/menu/HyperSlideMenu.kt | reveal 为 Closed / Start / End，调用方响应 onRevealChange；内部持有拖动偏移，松手时速度投影与弹簧共用释放速度；操作区填满侧滑空间，危险和自定义色保留；先请求关闭再执行操作 |
 | [HyperDrawer](components/navigation/hyper-drawer.md) | components/drawer/HyperDrawer.kt | 独立模态层，open 与 onClose 受控；默认 start，RTL 换边；正文 content、内边距 contentPadding 默认零；安全区／键盘避让在背景内；标题页脚固定；懒列表设 scrollable=false；滑动超过宽度 30% 或速度达 400dp/s 请求关闭，否则 180ms 复位；遮罩、返回键与滑动分别控制 |
@@ -296,9 +296,11 @@ Defaults、Colors 和各 ItemScope 继续各司其职：Defaults 解析默认值
 
 TabBar 多项支持 2–5 项，默认左右外边距为 12dp，组合入口间距为 8dp；镜片可见高度为按钮组内容高度减 8dp，默认 48dp、上下各 4dp，命中范围覆盖整项；栏外最多另放 1 个独立入口，与内部最多 5 项分别计数，不删除导航项。TabBar 尺寸由库按形态管理：`type = "single"` 是固定直径 48dp 的独立圆形动作入口；`type = "multiple"` 的按钮组（悬浮或贴底）默认内容高度 56dp，只有按钮组按标签字体在库内扩展高度。单独入口必须比按钮组小，禁止为“统一高度”将 single 改成 56dp，也禁止业务页面通过 size、height 或缩放实现 48dp。并排时放在共同 Row 中垂直居中，保留各自默认尺寸；悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp。正文采用宿主实测底部净空，不按上述默认尺寸估算占位。
 
-非悬浮 TabBar 的动作模式（floating=false、selectedIndex=null）将图文贴近 HyperSafeArea 上沿排列，消除行内居中产生的额外下留白。操作行与整项命中区域保留默认 56dp，真实系统 Insets 与最小安全区不缩减；悬浮及选择模式仍居中。
+非悬浮 TabBar 的动作模式（floating=false、selectedIndex=null）按图文实际高度测量，56dp 为包含 HyperSafeArea 的整栏最小高度；默认零 margin 时总高取该最小值与“图文高度 + 未消费的安全区”的较大值，不另叠加固定 56dp 操作行。大字体沿用原最小高度扩展规则；命中区域只覆盖安全区上方，真实系统 Insets 与最小安全区不缩减。悬浮及选择模式仍保留原有居中布局。
 
 按需安全区统一使用 HyperSafeArea（Top / Bottom）。根画布继续全面屏；竖屏底部取导航区／缺口与库内最小 20dp 的最大值，横屏只保留实际系统区，同侧嵌套只消费一次。输入法只扩展自身面板底部，不处理宿主 IME Insets；页面不得自行复制安全区高度。
+
+HyperSafeArea Preview 使用整屏手机视口，操作区直接贴屏幕顶部或底部，背景延伸至边缘；不以页面中部的小画框替代窗口。控制项位于中部，方向开关只模拟计算规则，保留手机外框和系统装饰。
 
 
 页面数据列表：`HyperList` 与 `HyperGroupedList` 使用无卡片的简约平铺样式，不绘制卡片背景、阴影或分组圆角；保留分隔线与行选中反馈。设置菜单的 `HyperMenuGroup` 和独立 `HyperListTile` 表面规则保持独立。

@@ -210,7 +210,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
     ),
     ComponentDemo(
         id = "tab-bar-docked", group = GROUP_NAVIGATION, title = "HyperTabBar · 非悬浮",
-        description = "56dp 动作行内的图文贴近 HyperSafeArea 上沿，减少底部空隙；底色延伸到底边，支持重复点击与禁用项。",
+        description = "56dp 为含安全区的整栏最小高度；图文与 HyperSafeArea 按需撑高，底色延伸到底边，支持重复点击与禁用项。",
         code = """
             HyperTabBar(items = actions, floating = false, selectedIndex = null,
                 itemEnabled = { it.enabled }, onChanged = onAction, itemLabel = { it.label }) {
@@ -221,7 +221,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
             }
         """.trimIndent(),
         variants = listOf(
-            DemoVariant("非悬浮动作", "floating = false / selectedIndex = null", "图文贴近安全区上沿，不叠加行内下留白；56dp 命中区域保持完整"),
+            DemoVariant("非悬浮动作", "floating = false / selectedIndex = null", "整体最小 56dp，图文按实际高度测量，安全区计入总高"),
             DemoVariant("底部安全区", "HyperSafeArea(Bottom)", "竖屏至少 20dp，按真实导航区扩展；嵌套只消费一次"),
             DemoVariant("重复动作", "selectedIndex = null", "不显示选中块，不响应拖动"),
             DemoVariant("禁用项", "itemEnabled", "最近入口禁用，连续点击其他入口可观察计数")

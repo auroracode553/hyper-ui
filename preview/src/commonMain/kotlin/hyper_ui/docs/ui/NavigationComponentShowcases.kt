@@ -197,7 +197,7 @@ fun TrailingActionTabBarDemo() {
 
 @Composable
 fun DockedTabBarDemo() {
-    // 动作内容贴近 HyperSafeArea 上沿，消除行内下留白；示例不补底部占位。
+    // 图文与 HyperSafeArea 共同决定整栏高度，不在安全区上方另撑 56dp；示例不补占位。
     TabBarDemo(single = false, floating = false, actions = true)
 }
 

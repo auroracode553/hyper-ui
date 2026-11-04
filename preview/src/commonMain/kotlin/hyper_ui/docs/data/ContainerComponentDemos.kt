@@ -12,11 +12,12 @@ private const val GROUP_CONTAINER = "容器组件"
 internal fun containerComponentDemos(): List<ComponentDemo> = listOf(
     ComponentDemo(
         id = "safe-area", group = GROUP_CONTAINER, title = "HyperSafeArea",
-        description = "按需保护顶部或底部内容，统一底部最小 20dp，并避免嵌套重复留白。",
+        description = "在整屏手机边缘预览顶部或底部保护，统一底部最小 20dp，并避免嵌套重复留白。",
         code = "HyperSafeArea { BottomControls() }",
         variants = listOf(DemoVariant("方向", "edge = Top / Bottom", "背景保持全面屏；只保护内容"),
             DemoVariant("嵌套", "同侧消费一次", "系统区与最小留白均不叠加")),
-        apiDocumentPaths = listOf("container/hyper-safe-area.md"), content = { SafeAreaDemo() }
+        apiDocumentPaths = listOf("container/hyper-safe-area.md"), content = { SafeAreaDemo() },
+        fullScreenPreview = true, fillsTopSafeArea = true
     ),
     ComponentDemo(
         id = "surface", group = GROUP_CONTAINER, title = "HyperBackdrop",

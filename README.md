@@ -321,9 +321,9 @@ HyperTextField(
 )
 ```
 
-HyperTabBar 默认保留悬浮样式；`floating = false` 使用库内全宽非悬浮底栏，56dp 操作行固定由 `HyperSafeArea(Bottom)` 抬出系统手势区，竖屏采用真实导航区与最小 20dp 的最大值，底色延伸到底边。同侧嵌套只消费一次；`safeArea` 仅控制悬浮栏，不关闭非悬浮栏的保护。正文视口仍全屏，末尾净空只使用宿主实测遮挡量。浏览器类动作入口传 `selectedIndex = null`，允许重复点击并禁用横向拖动，通过 `itemEnabled` 控制各项可用性；参见 [TabBar API](vitepress/docs/components/navigation/hyper-tab-bar.md)。页面布局由 [HyperScaffold](vitepress/docs/components/navigation/hyper-scaffold.md) 统一承载，不需要 Material 页面宿主。
+HyperTabBar 默认保留悬浮样式；`floating = false` 使用库内全宽非悬浮底栏，内部由 `HyperSafeArea(Bottom)` 保护操作内容，竖屏采用真实导航区与最小 20dp 的最大值，底色延伸到底边。同侧嵌套只消费一次；`safeArea` 仅控制悬浮栏，不关闭非悬浮栏的保护。正文视口仍全屏，末尾净空只使用宿主实测遮挡量。浏览器类动作入口传 `selectedIndex = null`，允许重复点击并禁用横向拖动，通过 `itemEnabled` 控制各项可用性；参见 [TabBar API](vitepress/docs/components/navigation/hyper-tab-bar.md)。页面布局由 [HyperScaffold](vitepress/docs/components/navigation/hyper-scaffold.md) 统一承载，不需要 Material 页面宿主。
 
-非悬浮动作模式（floating = false、selectedIndex = null）的图文贴近安全区上沿排列，消除行内居中产生的额外底部空隙；操作行与命中区域仍为默认 56dp，系统安全区由 HyperSafeArea 保留。
+非悬浮动作模式（floating = false、selectedIndex = null）以 56dp 为包含安全区的整栏最小高度，图文按实际高度测量；总高取该最小值与“图文高度 + 安全区”的较大值，不另叠加 56dp 操作行。可点击区只覆盖安全区上方，系统手势区不接收菜单点击。
 
 ## 文档与交互预览架构
 
@@ -458,6 +458,8 @@ Android 库与 Desktop Preview 在各自的 `build.gradle.kts` 中设置 `-Xback
 TabBar 尺寸由库按形态管理：single 独立入口固定直径 48dp，multiple 悬浮 / 贴底按钮组默认高 56dp，仅按钮组按标签字体在库内扩展。并排时在共同 Row 中垂直居中，禁止为等高将 single 改为 56dp，也不在业务层覆写尺寸或缩放。悬浮多项默认顶部视觉间距 8dp、底部视觉间距 20dp；正文采用宿主实测底部净空。
 
 按需安全区统一使用 HyperSafeArea（Top / Bottom）。根画布继续全面屏；竖屏底部取导航区／缺口与库内最小 20dp 的最大值，横屏只保留实际系统区，同侧嵌套只消费一次。输入法只扩展自身面板底部，不处理宿主 IME Insets；页面不得自行复制安全区高度。
+
+HyperSafeArea 文档示例直接在预览手机的屏幕顶部／底部展示操作区，可切换位置、系统区、嵌套与方向计算规则；手机外框保持不变。
 
 
 页面数据列表：`HyperList` 与 `HyperGroupedList` 使用无卡片的简约平铺样式，不绘制卡片背景、阴影或分组圆角；保留分隔线与行选中反馈。设置菜单的 `HyperMenuGroup` 和独立 `HyperListTile` 表面规则保持独立。
