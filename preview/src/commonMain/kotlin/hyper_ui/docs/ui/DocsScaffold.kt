@@ -41,6 +41,7 @@ import hyper_ui.docs.LocalThemeColor
 import hyper_ui.docs.ThemeColorController
 import hyper_ui.docs.data.ComponentDemo
 import hyper_ui.docs.data.componentDemos
+import hyper_ui.docs.data.findComponentDemo
 import hyper_ui.docs.theme.DocsCodeBackground
 import hyper_ui.docs.theme.DocsCodeText
 import hyper_ui.docs.theme.LocalDocsColorScheme
@@ -61,13 +62,18 @@ fun HyperDocsApp(
     ) {
         val demos = remember { componentDemos() }
         var selectedId by remember(initialSelectedId) {
-            mutableStateOf(
-                initialSelectedId
-                    ?.takeIf { candidateId -> demos.any { it.id == candidateId } }
-                    ?: demos.first().id
-            )
+            mutableStateOf(initialSelectedId ?: if (embeddedPreview) "" else demos.first().id)
         }
-        val selectedDemo = demos.firstOrNull { it.id == selectedId } ?: demos.first()
+        val selectedDemo = findComponentDemo(demos, selectedId)
+        if (selectedDemo == null) {
+            Box(Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    HyperText("未找到组件预览：$selectedId")
+                    HyperText("请使用当前源码重新生成 Preview 产物。", color = HyperColors.secondaryText)
+                }
+            }
+            return@CompositionLocalProvider
+        }
 
         if (embeddedPreview) {
             EmbeddedComponentPreview(demo = selectedDemo)

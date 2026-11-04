@@ -142,7 +142,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
     ),
     ComponentDemo(
         id = "filter-bar", group = GROUP_NAVIGATION, title = "HyperFilterBar",
-        description = "浅底细线的紧凑分类按钮，淡主题色选中态，最小高度 32dp，支持横向滑动。",
+        description = "浅底细线的紧凑分类按钮，淡主题色选中态，最小高度 32dp，支持横向滑动；独立 filter-bar 交互预览。",
         code = "HyperFilterBar(items = categories, selectedIndex = selected, onChanged = { selected = it }) { HyperText(it) }",
         variants = listOf(
             DemoVariant("轻量按钮", "默认样式", "普通项浅底细线；选中淡主题底色与主题色文字；无阴影"),

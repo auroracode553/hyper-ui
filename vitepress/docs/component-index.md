@@ -6,6 +6,8 @@ Android 窗口统一使用 [全面屏入口](components/tools/hyper-edge-to-edge
 
 所有组件从 `hyper_ui` 包导入。组件页按用途、交互示例、最小调用、使用约定和公开 API 组织。长签名与辅助配置可以展开查看，五列 Props 表完整保留；手机预览支持切换 320/350/390/430dp 宽度和重置。
 
+维护者编译组件源码或 Preview 时，资源配置与 JVM/Wasm 的并行范围见[预览编译资源](preview-update-workflow.md#编译资源与并行范围)。
+
 HyperList 与 HyperGroupedList 使用整屏视口，顶部控件下方的列表独自滚动；HyperMenuGroup 和 HyperListTile 按内容测量，由预览宿主负责整页滚动。
 HyperListTile 预览直接展示条目，不额外套 HyperCard；弹窗只读详情使用 HyperListTile(type = "plain") 的文字插槽，不逐项包装卡片。
 手机预览的底部手势条悬浮覆盖在内容上，宿主不预留底部安全区，与 Flutter 参考预览一致。
@@ -60,6 +62,8 @@ HyperButton 的默认、filled、icon 统一使用内部共用玻璃样式与按
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表项侧滑操作 |
 | [HyperTabs](components/navigation/hyper-tabs.md) | 40dp 分段切换，选中底板平移 |
 | [HyperFilterBar](components/navigation/hyper-filter-bar.md) | 最小 32dp 的浅底细线分类按钮，支持横向滑动 |
+
+HyperFilterBar 使用独立的 filter-bar 交互预览。组件预览在编译期间显示实时任务、输出与耗时，发布后严格核对组件 ID；缺失或过期时提示更新，不使用其他组件补位。见[预览更新与验收](preview-update-workflow.md)。
 
 ## 列表
 

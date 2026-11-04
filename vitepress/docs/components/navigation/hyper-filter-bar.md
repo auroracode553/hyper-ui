@@ -10,6 +10,8 @@ description: 紧凑、可左右滑动的受控分类筛选栏。
 
 <WasmPreview demo="filter-bar" title="横向分类筛选栏" />
 
+交互预览使用独立 ID filter-bar，对应 FilterBarDemo。编译期间显示当前 Kotlin/Wasm 构建任务、输出和耗时，成功发布且组件 ID 匹配后显示筛选栏；产物缺失或过期时提示更新，不回退到按钮示例。见[预览更新与验收](../../preview-update-workflow.md)。
+
 ## 使用方式
 
 ```kotlin

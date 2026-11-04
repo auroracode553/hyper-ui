@@ -31,7 +31,12 @@ System.getenv("HYPER_UI_BINARYEN_ARCHIVE_DIR")?.takeIf { it.isNotBlank() }?.let 
 }
 
 kotlin {
-    jvm("desktop")
+    jvm("desktop") {
+        compilerOptions {
+            // 仅 JVM 后端支持此选项，不能放到 Wasm 或公共 compilerOptions 中。
+            freeCompilerArgs.add("-Xbackend-threads=0")
+        }
+    }
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
@@ -140,9 +145,12 @@ tasks.register<Copy>("publishWasmToVitePress") {
         }
         readinessFile.writeText("{\"version\":\"${System.currentTimeMillis()}\"}\n")
         // 手动生成成功也要清除 watcher 的旧错误，避免完整新产物被错误遮罩挡住。
-        output.resolve("preview-build-status.json").writeText(
-            "{\"phase\":\"ready\",\"message\":\"组件预览已更新\",\"updatedAt\":${System.currentTimeMillis()}}\n"
-        )
+        // 监听构建由进程输出采集器统一发布结束状态，避免覆盖其任务、耗时与错误信息。
+        if (System.getenv("HYPER_UI_PREVIEW_PROGRESS") != "1") {
+            output.resolve("preview-build-status.json").writeText(
+                "{\"phase\":\"ready\",\"message\":\"组件预览已更新\",\"updatedAt\":${System.currentTimeMillis()}}\n"
+            )
+        }
         println("Wasm 产物已复制到 vitepress/public/wasm-preview/")
         println("刷新 VitePress 页面即可在文档中看到交互预览")
     }

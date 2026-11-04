@@ -4,6 +4,13 @@ plugins {
     id("maven-publish")
 }
 
+kotlin {
+    compilerOptions {
+        // JVM 代码生成按可用 CPU 线程并行；0 由编译器自动读取处理器数量。
+        freeCompilerArgs.add("-Xbackend-threads=0")
+    }
+}
+
 android {
     namespace = "hyper_ui"
     compileSdk = 37

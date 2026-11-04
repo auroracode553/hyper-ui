@@ -1,10 +1,12 @@
 // 文件职责：启动 VitePress 并串行发布 Wasm 预览；Kotlin 与 Wasm 入口资源变化后重新发布。
 // WasmPreview 读取 Gradle 发布任务写入的 preview-ready.json 并自动加载新版本。
-// 手动运行：在 vitepress/ 目录执行 `npm run dev:watch`，按 Ctrl+C 停止全部进程。
+// 手动运行：在 vitepress/ 目录执行 `npm run dev`，按 Ctrl+C 停止全部进程。
 import { spawn, spawnSync } from 'node:child_process';
-import { existsSync, watch, writeFileSync } from 'node:fs';
+import { existsSync, watch } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createInterface } from 'node:readline';
+import { createPreviewBuildProgress } from './preview-build-progress.mjs';
 
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(scriptDirectory, '..');
@@ -23,16 +25,7 @@ for (const directory of [libraryDirectory, previewDirectory, vitepressDirectory]
 // 当前正在执行的 Gradle 子进程（首次构建与增量重建共用），退出时统一清理，避免残留僵尸进程。
 let activeGradleChild = null;
 let buildAttempt = 0;
-
-function updateBuildStatus(phase, message) {
-  // 浏览器只读取阶段与结果；Gradle 的真实输出仍在当前终端，避免伪造百分比。
-  writeFileSync(buildStatusFile, JSON.stringify({
-    phase,
-    message,
-    attempt: buildAttempt,
-    updatedAt: Date.now(),
-  }));
-}
+let activeBuildProgress = null;
 
 function stopProcessTree(child) {
   if (!child?.pid || child.exitCode !== null) return;
@@ -46,39 +39,47 @@ function stopProcessTree(child) {
   }
 }
 
-function runGradleTask(taskName) {
+function runGradleTask(taskName, progress) {
   console.log(`执行 ${taskName} …`);
   const startedAt = Date.now();
-  // Gradle 下载依赖或编译 Wasm 时可能长时间无输出，显示进程仍在运行。
+  progress.startCommand(taskName);
+  // 心跳只确认进程存活；输出时间独立记录，不把无输出伪装成任务推进。
   const heartbeat = setInterval(() => {
-    const seconds = Math.round((Date.now() - startedAt) / 1000);
-    console.log(`  …${taskName} 仍在运行，已耗时 ${seconds}s`);
-  }, 15000);
+    progress.heartbeat();
+  }, 1000);
 
   return new Promise((resolvePromise) => {
     // Windows 通过 cmd 执行固定的 .bat 命令，避免 shell:true 参数拼接警告。
     const command = process.platform === 'win32' ? (process.env.ComSpec || 'cmd.exe') : './gradlew';
     const args = process.platform === 'win32'
-      ? ['/d', '/s', '/c', `.\\gradlew.bat ${taskName}`]
-      : [taskName];
+      ? ['/d', '/s', '/c', `.\\gradlew.bat ${taskName} --console=plain`]
+      : [taskName, '--console=plain'];
     const child = spawn(command, args, {
       cwd: previewDirectory,
-      stdio: 'inherit',
+      stdio: ['inherit', 'pipe', 'pipe'],
       windowsHide: true,
+      env: { ...process.env, HYPER_UI_PREVIEW_PROGRESS: '1' },
     });
     activeGradleChild = child;
+    // 保留完整终端输出，同时按行消费分块数据，浏览器只展示当前任务与最新一行。
+    for (const [stream, output] of [[child.stdout, process.stdout], [child.stderr, process.stderr]]) {
+      stream.pipe(output, { end: false });
+      createInterface({ input: stream, crlfDelay: Infinity }).on('line', (line) => progress.recordOutput(line));
+    }
     child.on('close', (code) => {
       clearInterval(heartbeat);
       if (activeGradleChild === child) activeGradleChild = null;
       if (code === 0) {
         resolvePromise(true);
       } else {
-        console.error(`${taskName} 失败（退出码 ${code ?? '未知'}）。文档仍可访问；检查 Gradle 日志后再重试。`);
+        const seconds = Math.round((Date.now() - startedAt) / 1000);
+        console.error(`${taskName} 失败（退出码 ${code ?? '未知'}，耗时 ${seconds}s）。请查看 Gradle 日志。`);
         resolvePromise(false);
       }
     });
     child.on('error', (error) => {
       clearInterval(heartbeat);
+      progress.recordOutput(`error: ${error.message}`);
       console.error(`${taskName} 无法启动：${error.message}`);
       resolvePromise(false);
     });
@@ -87,17 +88,19 @@ function runGradleTask(taskName) {
 
 async function runPublish() {
   buildAttempt += 1;
-  updateBuildStatus('preparing', '正在准备 Wasm 依赖与包锁文件');
-  if (!(await runGradleTask('kotlinWasmUpgradePackageLock'))) {
-    updateBuildStatus('error', '依赖准备失败，请查看 dev:watch 终端日志');
+  const progress = createPreviewBuildProgress({ statusFile: buildStatusFile, attempt: buildAttempt });
+  activeBuildProgress = progress;
+  progress.setPhase('preparing', '正在准备 Wasm 依赖与包锁文件');
+  if (!(await runGradleTask('kotlinWasmUpgradePackageLock', progress))) {
+    progress.setPhase('error', 'Wasm 依赖准备失败');
     return false;
   }
-  updateBuildStatus('compiling', '正在编译并发布 Wasm 组件预览');
-  if (!(await runGradleTask('publishWasmToVitePress'))) {
-    updateBuildStatus('error', '组件编译失败，请查看 dev:watch 终端日志');
+  progress.setPhase('compiling', '正在编译并发布 Wasm 组件预览');
+  if (!(await runGradleTask('publishWasmToVitePress', progress))) {
+    progress.setPhase('error', 'Kotlin/Wasm 预览编译失败');
     return false;
   }
-  updateBuildStatus('ready', 'Wasm 预览产物已发布');
+  progress.setPhase('ready', 'Wasm 预览产物已发布');
   console.log('Wasm 预览产物已更新，浏览器中的预览将自动重载。');
   return true;
 }
@@ -112,7 +115,7 @@ const vitepress = spawn(process.execPath, [
   stdio: 'inherit',
   windowsHide: true,
   // 此命令负责静态产物发布，避免继承另一个终端的开发服务器地址。
-  env: { ...process.env, VITE_HYPER_UI_PREVIEW_DEV_URL: '', VITE_HYPER_UI_DEV_WATCH: '1' },
+  env: { ...process.env, VITE_HYPER_UI_PREVIEW_DEV_URL: '' },
 });
 
 // 构建期间的文件变化先记账，构建结束后补跑一次，避免并发调用 Gradle。
@@ -157,6 +160,7 @@ function shutdown(exitCode = 0) {
   if (shuttingDown) return;
   shuttingDown = true;
   clearTimeout(debounceTimer);
+  if (building) activeBuildProgress?.setPhase('stopped', '预览编译已停止');
   for (const watcher of watchers) watcher.close();
   stopProcessTree(activeGradleChild);
   stopProcessTree(vitepress);

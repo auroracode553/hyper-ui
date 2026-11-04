@@ -56,8 +56,12 @@
             return null;
         };
         const reportReady = () => {
-            if (acknowledged || !findCanvas(previewRoot)) return;
-            window.parent.postMessage({ type: 'hyper-ui-preview:ready' }, '*');
+            if (acknowledged) return;
+            const canvas = findCanvas(previewRoot);
+            if (!canvas || canvas.width <= 0 || canvas.height <= 0) return;
+            const demoId = previewRoot.getAttribute('data-preview-demo');
+            if (demoId === null) return;
+            window.parent.postMessage({ type: 'hyper-ui-preview:ready', demoId }, '*');
         };
         const readyObserver = new MutationObserver(reportReady);
         readyObserver.observe(previewRoot, { childList: true, subtree: true });
