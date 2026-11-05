@@ -40,7 +40,7 @@ fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(listComponentDemos()) // HyperGroupedList 与设置菜单共用标题样式；HyperSpacing 由页面消费一次；页面列表无卡片。
     addAll(feedbackComponentDemos()) // Dialog 与 UpdateDialog 展示高遮蔽玻璃面板和全屏遮罩。其他反馈组件按角色绘制玻璃并保留状态过渡。
     addAll(toolsComponentDemos()) // Android 更新工具只在 Preview 模拟流程，不引入平台网络或下载。
-    addAll(themeComponentDemos()) // HyperThemeDialog 展示三选项主题设置；全面屏入口见组件文档。
+    addAll(themeComponentDemos()) // HyperThemeDialog 展示三选项主题设置；HyperSpacing 展示三种内容间距开关；全面屏入口见组件文档。
 }
 .map { demo ->
     if (demo.useReferencePreview) {

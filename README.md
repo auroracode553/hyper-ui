@@ -466,7 +466,7 @@ HyperSafeArea 文档示例直接在预览手机的屏幕顶部／底部展示操
 
 页面水平外边距由调用方通过 HyperSpacing.PageHorizontal（14dp）统一提供。HyperList、HyperGroupedList 不额外增加页面缩进；独立 plain 与 glass 行保留左右各 14dp 行内留白，复用 MenuGroup 或已有父表面的 plain 行共享父级留白，不重复叠加。组件保留垂直触控留白、内容间距和选中反馈。
 
-共用页面尺寸参见 [HyperSpacing API](vitepress/docs/getting-started.md#hyperspacing-api)，调用方直接使用 HyperSpacing.PageHorizontal，不在各项目维护副本。
+共用页面尺寸与三项开关预览见 [HyperSpacing API](vitepress/docs/components/container/hyper-spacing.md)。
 
 卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。
 

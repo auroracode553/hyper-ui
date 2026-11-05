@@ -118,7 +118,7 @@ TabBar 点击时整栏保持原比例；镜片横向增幅最多 8%，轻微放�
 
 页面水平外边距由调用方通过 HyperSpacing.PageHorizontal（14dp）统一提供。HyperList、HyperGroupedList 不额外增加页面缩进；独立 plain 与 glass 行保留左右各 14dp 行内留白，复用 MenuGroup 或已有父表面的 plain 行共享父级留白，不重复叠加。组件保留垂直触控留白、内容间距和选中反馈。
 
-共用页面尺寸：[HyperSpacing.PageHorizontal（14dp）](getting-started.md#hyperspacing-api)，由页面显式使用，列表与行不自动叠加。
+共用页面尺寸及交互预览见 [HyperSpacing](components/container/hyper-spacing.md)，包含水平 14dp、首尾 12dp、组间 16dp。
 
 卡片边界：页面外边距与卡片内边距不能互相替代。HyperMenuGroup 为内容提供水平 14dp 内边距；独立 glass 列表行同样保留内部 14dp；plain 行不绘制卡片，使用父页面或父卡片已经提供的留白。
 

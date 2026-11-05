@@ -39,6 +39,8 @@ HyperMenuGroup(items = settings) { item ->
 
 regular 玻璃 radius 18dp，卡片内部水平 padding 为 HyperSpacing.PageHorizontal（14dp）、垂直 4dp。组内 plain 行不重复添加水平留白；页面外边距由调用方单独提供。泛型 items 入口自动在项之间绘制无缩进分隔线。
 
+modifier 只作用于卡片。标题与卡片的共同外边距放在父容器，使用 [HyperSpacing.PageHorizontal](../container/hyper-spacing.md)。
+
 菜单组按内容测量高度；页面滚动由调用方容器承担，较多数据使用 HyperList。
 
 **状态归属**
@@ -73,7 +75,7 @@ fun <T> HyperMenuGroup(
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
 | items | List&lt;T&gt; | 是 | — | 由调用方提供的选项或列表数据。 |
-| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| modifier | Modifier | 否 | Modifier | 卡片表面的尺寸、位置和间距修饰符，不包含外部标题与副标题。 |
 | contentModifier | Modifier | 否 | Modifier.padding(HyperMenuGroupDefaults.ContentPadding) | 内部内容区域的布局修饰符。 |
 | verticalArrangement | Arrangement.Vertical | 否 | Arrangement.spacedBy(0.dp) | 子项的垂直排列方式。 |
 | colors | HyperMenuGroupColors | 否 | HyperMenuGroupDefaults.colors() | 组件各状态的颜色配置。 |
@@ -103,7 +105,7 @@ fun HyperMenuGroup(
 
 | 参数 | 类型 | 必填 | 默认值 | 作用 |
 | --- | --- | --- | --- | --- |
-| modifier | Modifier | 否 | Modifier | 组件外部尺寸、位置和间距修饰符。 |
+| modifier | Modifier | 否 | Modifier | 卡片表面的尺寸、位置和间距修饰符，不包含外部标题与副标题。 |
 | contentModifier | Modifier | 否 | Modifier.padding(HyperMenuGroupDefaults.ContentPadding) | 内部内容区域的布局修饰符。 |
 | verticalArrangement | Arrangement.Vertical | 否 | Arrangement.spacedBy(0.dp) | 子项的垂直排列方式。 |
 | colors | HyperMenuGroupColors | 否 | HyperMenuGroupDefaults.colors() | 组件各状态的颜色配置。 |

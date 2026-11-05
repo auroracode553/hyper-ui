@@ -15,7 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import hyper_ui.*
 
 @Composable
@@ -30,10 +29,13 @@ fun SettingsScreen() {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(contentPadding)
-                .padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(
+                    horizontal = HyperSpacing.PageHorizontal,
+                    vertical = HyperSpacing.PageVertical
+                ),
+            verticalArrangement = Arrangement.spacedBy(HyperSpacing.SectionVertical)
         ) {
-            HyperMenuGroup {
+            HyperMenuGroup(title = "通知") {
                 HyperListTile(
                     title = { HyperText("推送通知") },
                     subtitle = { HyperText("接收重要消息提醒") },

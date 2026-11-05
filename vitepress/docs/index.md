@@ -53,6 +53,7 @@ HyperButton(
 
 - [UI 样式与功能实现基线](style-reference.md)：维护组件前必读；已有样式保留，涉及用途不明的变化先确认
 - [接入与最小配置](getting-started.md)
+- [HyperSpacing 页面间距](components/container/hyper-spacing.md)，包含水平、垂直、组间距及带标题菜单组示例
 - [移动端规范](mobile-guidelines.md)
 - [主题配置](getting-started.md)
 - [状态与架构边界](state-model.md)

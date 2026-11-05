@@ -55,6 +55,7 @@ export default defineConfig({
         text: '开始使用',
         items: [
           { text: '接入与最小配置', link: '/getting-started' },
+          { text: 'HyperSpacing 页面间距', link: '/components/container/hyper-spacing' },
           { text: 'Android 手机端规范', link: '/mobile-guidelines' },
           { text: '样式与功能基线', link: '/style-reference' },
           { text: '组件索引', link: '/component-index' }

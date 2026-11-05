@@ -1,7 +1,8 @@
-/** 文件职责：主题模式弹窗的交互预览。 */
+/** 文件职责：主题模式与共用页面间距的交互预览入口。 */
 package hyper_ui.docs.data
 
 import hyper_ui.docs.ui.ThemeDialogDemo
+import hyper_ui.docs.ui.HyperSpacingDemo
 import hyper_ui.*
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,36 @@ import androidx.compose.ui.unit.dp
 private const val GROUP_THEME = "反馈组件"
 
 internal fun themeComponentDemos(): List<ComponentDemo> = listOf(
+    ComponentDemo(
+        id = "hyper-spacing",
+        group = "基础配置",
+        title = "HyperSpacing",
+        description = "切换页面水平、正文首尾和分组间距，比较标题与卡片的对齐。",
+        code = """
+            Column(
+                modifier = Modifier.padding(
+                    horizontal = HyperSpacing.PageHorizontal,
+                    vertical = HyperSpacing.PageVertical
+                ),
+                verticalArrangement = Arrangement.spacedBy(HyperSpacing.SectionVertical)
+            ) {
+                HyperMenuGroup(title = "网站显示") {
+                    HyperListTile(title = { HyperText("网页深色模式") })
+                }
+                HyperMenuGroup(title = "管理") {
+                    HyperListTile(title = { HyperText("网站权限") })
+                }
+            }
+        """.trimIndent(),
+        variants = listOf(
+            DemoVariant("页面水平", "PageHorizontal = 14.dp", "标题和卡片共享父容器留白"),
+            DemoVariant("正文首尾", "PageVertical = 12.dp", "随正文滚动"),
+            DemoVariant("分组间距", "SectionVertical = 16.dp", "完整菜单组之间的距离")
+        ),
+        apiDocumentPaths = listOf("container/hyper-spacing.md"),
+        content = { HyperSpacingDemo() },
+        fullScreenPreview = true
+    ),
     ComponentDemo(
         id = "theme-mode-dialog",
         group = GROUP_THEME,
