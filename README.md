@@ -142,6 +142,8 @@ HyperUI 面向 Android Compose 项目，提供按钮、输入框、列表分组�
 
 `HyperDrawer` 是贴边全高的独立模态层；调用方持有 open 并响应 onClose，正文通过 content 提供，默认零内边距。默认从 start 侧展开，支持遮罩、系统返回键及横向滑动关闭，固定标题与页脚；完整 API 见[抽屉文档](vitepress/docs/components/navigation/hyper-drawer.md)。
 
+抽屉内部使用 HyperSafeArea(Top) 保护标题、关闭按钮和正文，不依赖根全面屏开关；内部列表行保留左右各 14dp 的内容留白，调用方不重复添加顶部安全区。
+
 底部菜单使用 [HyperActionSheet](vitepress/docs/components/feedback/hyper-action-sheet.md)，支持自定义正文或 HyperAction 操作列表；不使用侧边 HyperDrawer 承载底部菜单。
 
 不适合的场景：

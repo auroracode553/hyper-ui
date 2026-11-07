@@ -60,7 +60,7 @@ HyperButton 的默认、filled、icon 统一使用内部共用玻璃样式与按
 | [HyperNavBar](components/navigation/hyper-nav-bar.md) | 库内观察同一主滚动状态，active 停用隐藏或空视口，仅导航读取派生值；背景在状态栏顶部至导航底部内渐隐，不改页面布局 |
 | [HyperTabBar](components/navigation/hyper-tab-bar.md) | single 固定直径 48dp；multiple 默认高 56dp，非悬浮动作模式以此为含安全区的整栏最小高度；固定玻璃、连续跟手与弹簧吸附，支持动作及禁用项 |
 | [HyperScaffold](components/navigation/hyper-scaffold.md) | 基础页面宿主；实际栏高、正文净空与悬浮操作，不依赖 Material |
-| [HyperDrawer](components/navigation/hyper-drawer.md) | 贴边全高模态抽屉；固定标题／页脚，支持遮罩、返回键与滑动关闭 |
+| [HyperDrawer](components/navigation/hyper-drawer.md) | 贴边全高模态抽屉；顶部 HyperSafeArea 保护标题和关闭按钮，列表行保留内容留白；支持遮罩、返回键与滑动关闭 |
 | [HyperSlideMenu](components/navigation/hyper-slide-menu.md) | 列表项侧滑操作 |
 | [HyperTabs](components/navigation/hyper-tabs.md) | 40dp 分段切换，选中底板平移 |
 | [HyperFilterBar](components/navigation/hyper-filter-bar.md) | 最小 32dp 的浅底细线分类按钮，支持横向滑动 |

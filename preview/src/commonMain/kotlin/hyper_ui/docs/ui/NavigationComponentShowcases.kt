@@ -22,9 +22,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -112,7 +114,7 @@ fun DrawerDemo() {
     var placement by remember { mutableStateOf(HyperDrawerPlacement.end) }
     var selected by remember { mutableStateOf("尚未选择") }
     var favorites by remember { mutableStateOf(true) }
-    // 贴边玻璃面板共用方向、滚动与滑动关闭链路，不额外包装卡片。
+    // 根全面屏时仍由抽屉保护顶部，重开后核对选中底色内的行内留白。
     val filters = placement == HyperDrawerPlacement.start
     Box(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -123,6 +125,8 @@ fun DrawerDemo() {
             HyperText("左侧抽屉与固定底部操作区")
             HyperButton(onPressed = { placement = HyperDrawerPlacement.start; open = true }) { HyperText("左侧筛选") }
         }
+        // 模态窗口不会继承外层的视觉 Padding，单独传入手机外框对应的模拟 Insets。
+        CompositionLocalProvider(LocalHyperSafeAreaWindowInsets provides WindowInsets(top = PreviewTopSafeArea)) {
         HyperDrawer(
             open = open,
             onClose = { open = false },
@@ -141,9 +145,11 @@ fun DrawerDemo() {
             } else {
                 listOf("产品设计", "移动端", "文档站").forEach { workspace ->
                     HyperListTile(title = { HyperText(workspace) },
+                        selected = selected == workspace,
                         onPressed = { selected = workspace; open = false })
                 }
             }
+        }
         }
     }
 }

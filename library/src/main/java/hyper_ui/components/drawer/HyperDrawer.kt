@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 
 enum class HyperDrawerPlacement { start, end }
 
-/** 安全区和键盘避让位于面板背景内部；contentPadding 只影响正文。 */
+/** 顶部按需安全区保护标题和正文，不依赖根全面屏开关；contentPadding 只影响正文。 */
 @Composable
 fun HyperDrawer(
     open: Boolean,
@@ -72,7 +72,8 @@ fun HyperDrawer(
                 .pointerInput(open, dismissOnClickOutside) {
                     detectTapGestures { if (dismissOnClickOutside) dismiss() }
                 })
-            Column(Modifier.align(if (placement == HyperDrawerPlacement.start) Alignment.CenterStart else Alignment.CenterEnd)
+            HyperSafeArea(edge = HyperSafeAreaEdge.Top,
+                modifier = Modifier.align(if (placement == HyperDrawerPlacement.start) Alignment.CenterStart else Alignment.CenterEnd)
                 .width(drawerWidth).fillMaxHeight()
                 .graphicsLayer { translationX = sign * (widthPx * (1f - progress) + drag.value) }
                 .hyperControlSurface(androidx.compose.ui.graphics.RectangleShape, HyperControlSurfaceRole.Drawer)
@@ -101,27 +102,31 @@ fun HyperDrawer(
                         }
                     }
                 )
-                .windowInsetsPadding(HyperTheme.systemSafeAreaInsets)
+                // 顶部交给独立按需安全区，其余系统区保持原有宿主策略。
+                .windowInsetsPadding(HyperTheme.systemSafeAreaInsets.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom))
             ) {
-                CompositionLocalProvider(LocalHyperSurfacePresent provides true,
-                    LocalHyperContentColor provides HyperColors.primaryText) {
-                    if (title != null) Row(
-                        Modifier.fillMaxWidth().padding(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        HyperText(title, Modifier.weight(1f), fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                        HyperTooltip("关闭") {
-                            HyperButton(onPressed = dismiss, type = "icon") {
-                                HyperIcon(Lucide.X, null)
+                Column(Modifier.fillMaxSize()) {
+                    CompositionLocalProvider(LocalHyperSurfacePresent provides true,
+                        LocalHyperSurfaceSharesPadding provides false,
+                        LocalHyperContentColor provides HyperColors.primaryText) {
+                        if (title != null) Row(
+                            Modifier.fillMaxWidth().padding(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            HyperText(title, Modifier.weight(1f), fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                            HyperTooltip("关闭") {
+                                HyperButton(onPressed = dismiss, type = "icon") {
+                                    HyperIcon(Lucide.X, null)
+                                }
                             }
                         }
-                    }
-                    Column(Modifier.weight(1f).fillMaxWidth()
-                        .then(if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier)
-                        .padding(contentPadding), content = content)
-                    if (footer != null) {
-                        HyperDivider()
-                        Column(Modifier.fillMaxWidth().padding(16.dp), content = footer)
+                        Column(Modifier.weight(1f).fillMaxWidth()
+                            .then(if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier)
+                            .padding(contentPadding), content = content)
+                        if (footer != null) {
+                            HyperDivider()
+                            Column(Modifier.fillMaxWidth().padding(16.dp), content = footer)
+                        }
                     }
                 }
             }

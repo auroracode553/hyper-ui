@@ -1,5 +1,7 @@
 # UI 样式与功能实现基线
 
+HyperDrawer 内部通过 HyperSafeArea(Top) 保护标题、关闭按钮与正文，不依赖根全面屏开关；背景保持全高。抽屉只标记共用表面，内部 HyperListTile 保留左右各 14dp 行内留白，选中底色继续保留；底部系统区与其他组件的布局规则不随之改变。
+
 Dropdown 浮层的 5dp 外框与选项左右各 14dp 内容留白独立保留。无语义配色的 filled 与 icon 使用同一中性玻璃着色。Button、悬浮 TabBar 与 Drawer 在背景源缺失、脱离布局或着色器不可用时先绘制不透明主题底色，再保留原有着色和高光；有效源继续使用固定模糊。正文采样通过 HyperBackdrop.background 提供，玻璃前景放入 content，禁止录制自身。
 
 两端组件示例统一以本仓库 Kotlin 文档及对应 Compose Preview 为视觉基准；文案、图标、分组、尺寸、间距和状态同步到 Flutter，不用 Flutter 预览反向覆盖本基准。
