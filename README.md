@@ -1,5 +1,7 @@
 # HyperUI
 
+UpdateDialog 的模态与内嵌面板均按窗口安全高度收缩；长日志在面板内上下滚动，底部操作固定。预览提供「长更新日志」开关。
+
 Dropdown、Popover、Tooltip 和居中弹窗独立读取窗口安全区，不依赖根全面屏开关；遮罩和背景覆盖整屏。Field／Panel 在无有效玻璃采样时保留主题底色。文档预览统一传递顶部模拟 Insets，柔色／纹理背景开关同时覆盖相关组件的无采样回退与正常采样。
 
 Dropdown 保留浮层外框 5dp 与行内水平 14dp 留白。Button、Drawer 与悬浮 TabBar 在缺少有效采样时保留主题底色；有正文模糊需求时使用 HyperBackdrop 分离背景与玻璃前景。无语义配色的 filled 与 icon 共用中性玻璃着色。

@@ -349,7 +349,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "update_dialog",
         group = GROUP_FEEDBACK,
         title = "HyperUpdateDialog",
-        description = "与 Flutter 相同的更新流程、状态预览和 2.7.3 → 2.8.0 示例；共用 28dp 圆角面板与固定操作区。",
+        description = "与 Flutter 相同的更新流程、状态预览和 2.7.3 → 2.8.0 示例；共用 28dp 圆角面板、长日志内部滚动与固定操作区。",
         code = """
             HyperUpdateDialog(status = status, currentVersion = "2.7.3", release = release,
                 onClose = onClose, onLater = onClose, onRetry = onRetry,

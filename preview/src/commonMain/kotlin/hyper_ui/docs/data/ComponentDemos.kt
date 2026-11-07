@@ -31,7 +31,7 @@ data class ComponentDemo(
 internal fun findComponentDemo(demos: List<ComponentDemo>, id: String?): ComponentDemo? =
     if (id == null) demos.firstOrNull() else demos.firstOrNull { it.id == id }
 
-/** 聚合稳定 Preview ID；共用宿主传递窗口安全区，浮层验证边界，固定玻璃覆盖无采样回退。 */
+/** 聚合稳定 Preview ID；共用宿主传递窗口安全区，更新面板验证长日志内部滚动，固定玻璃覆盖无采样回退。 */
 fun componentDemos(): List<ComponentDemo> = buildList<ComponentDemo> {
     addAll(basicComponentDemos()) // Button 使用完整文字行框与共用玻璃样式，示例覆盖中英文、图文及加载态中心线。
     addAll(formComponentDemos()) // TextField 单行与多行共用 16dp 圆角；Checkbox/Radio/DatePicker 复用分层玻璃与原有状态；Switch 为 52×32dp/28dp、内侧 2dp，核对弹性、速度形变、拖动与 Ambient；Slider 保留 20dp。

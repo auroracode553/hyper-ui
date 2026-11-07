@@ -25,6 +25,8 @@ fun UpdateDialogDemo() {
     var mandatory by remember { mutableStateOf(false) }
     // 「已是最新」可查看文字背景上的高遮蔽面板，内嵌状态共用同一材质。
     var dialogOpen by remember { mutableStateOf(false) }
+    // 同时核对页面内嵌和模态入口的长日志内部滚动。
+    var longContent by remember { mutableStateOf(false) }
     DisposableEffect(controller) { onDispose { controller.dispose() } }
 
     fun open(latest: Boolean = false, fail: Boolean = false) {
@@ -74,22 +76,39 @@ fun UpdateDialogDemo() {
             trailing = { HyperSwitch(controller.unknownTotal, controller::updateUnknownTotal) }
         )
         Spacer(Modifier.height(20.dp))
+        HyperListTile(
+            title = { HyperText("长更新日志") },
+            subtitle = { HyperText("在弹窗内滚动查看完整日志，底部操作保持可见") },
+            trailing = { HyperSwitch(longContent, if (dialogOpen) null else ({ longContent = it })) }
+        )
+        Spacer(Modifier.height(20.dp))
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
             CompositionLocalProvider(LocalHyperUpdateDialogInlinePreview provides true) {
-                UpdatePreviewDialog(controller, mandatory)
+                UpdatePreviewDialog(controller, mandatory, longContent = longContent)
             }
         }
         Spacer(Modifier.height(12.dp))
         HyperText("示例任务由页面持有。关闭弹窗后下载继续，重新打开可查看进度；取消按钮终止下载。")
     }
     // 模态入口独立验证安全区，不能用内嵌状态的正常外观代替窗口验证。
-    if (dialogOpen) UpdatePreviewDialog(controller, mandatory, onClose = { dialogOpen = false })
+    if (dialogOpen) UpdatePreviewDialog(controller, mandatory, onClose = { dialogOpen = false }, longContent = longContent)
 }
 
+/** 使用相同版本数据和长日志配置创建内嵌或模态更新面板。 */
 @Composable
-private fun UpdatePreviewDialog(controller: UpdateDemoController, mandatory: Boolean, onClose: (() -> Unit)? = null) {
+private fun UpdatePreviewDialog(
+    controller: UpdateDemoController,
+    mandatory: Boolean,
+    onClose: (() -> Unit)? = null,
+    longContent: Boolean = false,
+) {
+    val release = if (longContent) controller.release.copy(
+        highlights = controller.release.highlights + (1..20).map { index ->
+            "更新说明 $index：优化功能与交互细节，向下滚动可查看全部日志。"
+        }
+    ) else controller.release
     HyperUpdateDialog(
-        status = controller.status, currentVersion = controller.currentVersion, release = controller.release,
+        status = controller.status, currentVersion = controller.currentVersion, release = release,
         progress = controller.installProgress,
         downloadProgress = controller.downloadProgress.takeIf { controller.status == HyperUpdateStatus.downloading },
         mandatory = mandatory, onCheck = { controller.check() }, onDownload = controller::download,

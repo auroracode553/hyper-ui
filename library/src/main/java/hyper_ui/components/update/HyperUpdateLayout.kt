@@ -11,6 +11,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -45,6 +47,7 @@ internal fun HyperUpdateLayout(
     }
 }
 
+/** 模态和内嵌面板共用窗口高度上限，正文独立滚动，操作区保持固定。 */
 @Composable
 private fun HyperUpdatePanel(
     view: HyperUpdatePresentation,
@@ -56,6 +59,14 @@ private fun HyperUpdatePanel(
 ) {
     val shape = RoundedCornerShape(28.dp)
     val scrollState = rememberScrollState()
+    val density = LocalDensity.current
+    val safe = hyperWindowSafeAreaInsets()
+    val windowHeight = with(density) { LocalWindowInfo.current.containerSize.height.toDp() }
+    val safeHeight = with(density) {
+        (safe.getTop(this) + maxOf(safe.getBottom(this), WindowInsets.ime.getBottom(this))).toDp()
+    }
+    // 即使调用方提供无限高度，也只使用窗口安全区内扣除既有 20dp 外间距的空间。
+    val panelMaxHeight = (windowHeight - safeHeight - 40.dp).coerceAtLeast(0.dp)
     CompositionLocalProvider(
         LocalHyperSurfacePresent provides true,
         LocalHyperContentColor provides HyperColors.primaryText,
@@ -63,12 +74,9 @@ private fun HyperUpdatePanel(
         LocalHyperTextStyle provides HyperTheme.typography.bodyMedium.copy(
             fontSize = 14.sp, lineHeight = 19.6.sp, fontWeight = FontWeight.Normal, letterSpacing = 0.sp)
     ) {
-        BoxWithConstraints(modifier.widthIn(max = maxWidth).fillMaxWidth()) {
-            val boundedHeight = constraints.hasBoundedHeight
+        Box(modifier.widthIn(max = maxWidth).heightIn(max = panelMaxHeight).fillMaxWidth()) {
             Column(Modifier.fillMaxWidth().hyperControlSurface(shape, HyperControlSurfaceRole.Dialog)) {
-                val bodyModifier = if (boundedHeight) {
-                    Modifier.weight(1f, fill = false).verticalScroll(scrollState)
-                } else Modifier // 内嵌示例由 Preview 外层滚动，不能在无限高度下再套滚动容器。
+                val bodyModifier = Modifier.weight(1f, fill = false).verticalScroll(scrollState)
                 Box(bodyModifier.fillMaxWidth().padding(24.dp)) {
                     HyperUpdateBody(view, locked, mandatory, onClose)
                 }
