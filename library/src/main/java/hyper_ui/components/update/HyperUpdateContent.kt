@@ -27,33 +27,41 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/** 固定在面板顶部的页头；锁定状态沿用原有关闭限制。 */
 @Composable
-internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, mandatory: Boolean, onClose: (() -> Unit)?) {
+internal fun HyperUpdateHeader(locked: Boolean, onClose: (() -> Unit)?) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        HyperText("软件更新", Modifier.weight(1f), color = HyperColors.secondaryText,
+            fontSize = 12.sp, lineHeight = 16.8.sp, fontWeight = FontWeight.Medium)
+        if (!locked && onClose != null) HyperButton(onClose, type = "icon") {
+            HyperIcon(Lucide.X, "关闭")
+        }
+    }
+}
+
+/** 可滚动正文：状态图标与标题同行，版本、日志和进度仍按状态展示。 */
+@Composable
+internal fun HyperUpdateBody(view: HyperUpdatePresentation, locked: Boolean, mandatory: Boolean) {
     val isError = view.status == HyperUpdateStatus.error
     Column(Modifier.fillMaxWidth()) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            HyperText("软件更新", Modifier.weight(1f), color = HyperColors.secondaryText,
-                fontSize = 12.sp, lineHeight = 16.8.sp, fontWeight = FontWeight.Medium)
-            if (!locked && onClose != null) HyperButton(onClose, type = "icon") {
-                HyperIcon(Lucide.X, "关闭")
-            }
-        }
-        Spacer(Modifier.height(20.dp))
         // 错误状态仅保留具体原因和操作，不重复展示状态标题与当前版本。
         if (!isError) {
-            val shape = RoundedCornerShape(16.dp)
-            Box(Modifier.size(40.dp)
-                .dropShadow(shape, Shadow(radius = 16.dp, color = view.color.copy(alpha = 18 / 255f), offset = DpOffset(0.dp, 6.dp)))
-                .background(Brush.linearGradient(listOf(view.color.copy(alpha = 28 / 255f).compositeOver(hyperSurfaces.surface),
-                    view.color.copy(alpha = 10 / 255f).compositeOver(hyperSurfaces.surface))), shape)
-                .hyperSolidSurface(Color.Transparent, shape, border = BorderStroke(1.dp, view.color.copy(alpha = 35 / 255f))),
-                contentAlignment = Alignment.Center) {
-                HyperIcon(view.icon, null, Modifier.size(20.dp), color = view.color)
-                if (view.busy) HyperProgress(modifier = Modifier.size(30.dp), type = "circular", showLabel = false,
-                    strokeWidth = 1.5.dp, colors = HyperProgressColors(view.color.copy(alpha = 12 / 255f), view.color))
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                HyperText(view.title, Modifier.weight(1f), fontSize = 24.sp,
+                    lineHeight = 28.8.sp, fontWeight = FontWeight.SemiBold)
+                Spacer(Modifier.width(12.dp))
+                val shape = RoundedCornerShape(16.dp)
+                Box(Modifier.size(40.dp)
+                    .dropShadow(shape, Shadow(radius = 16.dp, color = view.color.copy(alpha = 18 / 255f), offset = DpOffset(0.dp, 6.dp)))
+                    .background(Brush.linearGradient(listOf(view.color.copy(alpha = 28 / 255f).compositeOver(hyperSurfaces.surface),
+                        view.color.copy(alpha = 10 / 255f).compositeOver(hyperSurfaces.surface))), shape)
+                    .hyperSolidSurface(Color.Transparent, shape, border = BorderStroke(1.dp, view.color.copy(alpha = 35 / 255f))),
+                    contentAlignment = Alignment.Center) {
+                    HyperIcon(view.icon, null, Modifier.size(20.dp), color = view.color)
+                    if (view.busy) HyperProgress(modifier = Modifier.size(30.dp), type = "circular", showLabel = false,
+                        strokeWidth = 1.5.dp, colors = HyperProgressColors(view.color.copy(alpha = 12 / 255f), view.color))
+                }
             }
-            Spacer(Modifier.height(20.dp))
-            HyperText(view.title, fontSize = 24.sp, lineHeight = 28.8.sp, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(8.dp))
         }
         HyperText(view.message,

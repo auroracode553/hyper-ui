@@ -47,7 +47,7 @@ internal fun HyperUpdateLayout(
     }
 }
 
-/** 模态和内嵌面板共用窗口高度上限，正文独立滚动，操作区保持固定。 */
+/** 模态和内嵌面板共用窗口高度上限，固定页头与操作区，仅中间正文滚动。 */
 @Composable
 private fun HyperUpdatePanel(
     view: HyperUpdatePresentation,
@@ -59,6 +59,8 @@ private fun HyperUpdatePanel(
 ) {
     val shape = RoundedCornerShape(28.dp)
     val scrollState = rememberScrollState()
+    // 面板继续采样页面；内部按钮只采样独立录制的面板背景，不包含按钮自身。
+    val pageSources = listOfNotNull(LocalHyperGlassSource.current)
     val density = LocalDensity.current
     val safe = hyperWindowSafeAreaInsets()
     val windowHeight = with(density) { LocalWindowInfo.current.containerSize.height.toDp() }
@@ -75,14 +77,25 @@ private fun HyperUpdatePanel(
             fontSize = 14.sp, lineHeight = 19.6.sp, fontWeight = FontWeight.Normal, letterSpacing = 0.sp)
     ) {
         Box(modifier.widthIn(max = maxWidth).heightIn(max = panelMaxHeight).fillMaxWidth()) {
-            Column(Modifier.fillMaxWidth().hyperControlSurface(shape, HyperControlSurfaceRole.Dialog)) {
-                val bodyModifier = Modifier.weight(1f, fill = false).verticalScroll(scrollState)
-                Box(bodyModifier.fillMaxWidth().padding(24.dp)) {
-                    HyperUpdateBody(view, locked, mandatory, onClose)
+            HyperBackdrop(
+                modifier = Modifier.fillMaxWidth(),
+                background = {
+                    Box(Modifier.matchParentSize().hyperControlSurface(
+                        shape, HyperControlSurfaceRole.Dialog, sources = pageSources))
                 }
-                if (hyperUpdateHasActions(view)) {
-                    Box(Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, bottom = 24.dp)) {
-                        HyperUpdateActions(view)
+            ) {
+                Column(Modifier.fillMaxWidth()) {
+                    Box(Modifier.fillMaxWidth().padding(start = 24.dp, top = 24.dp, end = 24.dp, bottom = 20.dp)) {
+                        HyperUpdateHeader(locked, onClose)
+                    }
+                    val bodyModifier = Modifier.weight(1f, fill = false).verticalScroll(scrollState)
+                    Box(bodyModifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, bottom = 24.dp)) {
+                        HyperUpdateBody(view, locked, mandatory)
+                    }
+                    if (hyperUpdateHasActions(view)) {
+                        Box(Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, bottom = 24.dp)) {
+                            HyperUpdateActions(view)
+                        }
                     }
                 }
             }

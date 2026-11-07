@@ -27,6 +27,8 @@ fun UpdateDialogDemo() {
     var dialogOpen by remember { mutableStateOf(false) }
     // 同时核对页面内嵌和模态入口的长日志内部滚动。
     var longContent by remember { mutableStateOf(false) }
+    // 只收起内嵌预览，不改变页面持有的更新任务。
+    var inlineVisible by remember { mutableStateOf(true) }
     DisposableEffect(controller) { onDispose { controller.dispose() } }
 
     fun open(latest: Boolean = false, fail: Boolean = false) {
@@ -35,6 +37,7 @@ fun UpdateDialogDemo() {
             controller.check(latest, fail)
         }
         dialogOpen = true
+        inlineVisible = true
     }
 
     Column(Modifier.fillMaxWidth()) {
@@ -63,7 +66,10 @@ fun UpdateDialogDemo() {
         Spacer(Modifier.height(8.dp))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             HyperUpdateStatus.entries.forEach { status ->
-                UpdatePreviewTag(updateStatusLabel(status), controller.status == status) { controller.preview(status) }
+                UpdatePreviewTag(updateStatusLabel(status), controller.status == status) {
+                    inlineVisible = true
+                    controller.preview(status)
+                }
             }
         }
         Spacer(Modifier.height(12.dp))
@@ -78,13 +84,14 @@ fun UpdateDialogDemo() {
         Spacer(Modifier.height(20.dp))
         HyperListTile(
             title = { HyperText("长更新日志") },
-            subtitle = { HyperText("在弹窗内滚动查看完整日志，底部操作保持可见") },
+            subtitle = { HyperText("页头和操作固定，正文内滚动查看完整日志") },
             trailing = { HyperSwitch(longContent, if (dialogOpen) null else ({ longContent = it })) }
         )
         Spacer(Modifier.height(20.dp))
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
             CompositionLocalProvider(LocalHyperUpdateDialogInlinePreview provides true) {
-                UpdatePreviewDialog(controller, mandatory, longContent = longContent)
+                if (inlineVisible) UpdatePreviewDialog(controller, mandatory,
+                    onClose = { inlineVisible = false }, longContent = longContent)
             }
         }
         Spacer(Modifier.height(12.dp))
