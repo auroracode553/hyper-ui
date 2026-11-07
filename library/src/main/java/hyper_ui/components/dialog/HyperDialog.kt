@@ -12,10 +12,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
@@ -88,7 +84,7 @@ fun HyperDialog(
             // 遮罩留在全屏根层；只有面板避让系统栏与 IME，长表单仍可滚动。
             BoxWithConstraints(
                 modifier = Modifier.fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.safeDrawing.exclude(WindowInsets.ime))
+                    .windowInsetsPadding(hyperWindowSafeAreaInsets())
                     .imePadding(),
                 contentAlignment = Alignment.Center
             ) {

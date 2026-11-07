@@ -1,5 +1,7 @@
 # 组件索引
 
+菜单、Tooltip 和居中弹窗独立避让窗口安全区；文档预览传递模拟 Insets。Dropdown、Tabs、Toast、LevelCapsule 在无采样场景保留主题底色，详见对应组件页。
+
 Dropdown 的浮层外框与行内留白独立保留；Button、Drawer 与悬浮 TabBar 无有效背景采样时保留主题底色。需要正文模糊时通过 HyperBackdrop 分离正文采样与玻璃前景，详见对应组件页。
 
 Android 窗口统一使用 [全面屏入口](components/tools/hyper-edge-to-edge.md)。HyperThemeConfig.useSystemSafeArea 默认 false，所有组件共用全局策略，IME 输入避让独立保留。

@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
@@ -25,6 +28,11 @@ object HyperSafeAreaDefaults {
 // 文档预览模拟窗口几何；正式应用默认直接读取当前窗口，不维护应用级高度缓存。
 internal val LocalHyperSafeAreaWindowInsets = staticCompositionLocalOf<WindowInsets?> { null }
 internal val LocalHyperSafeAreaPortraitOverride = staticCompositionLocalOf<Boolean?> { null }
+
+/** 浮层独立读取窗口安全区；预览可注入模拟值，不受根全面屏开关影响，也不包含 IME。 */
+@Composable
+internal fun hyperWindowSafeAreaInsets(): WindowInsets =
+    LocalHyperSafeAreaWindowInsets.current ?: WindowInsets.safeDrawing.exclude(WindowInsets.ime)
 
 @Composable
 internal fun hyperSafeAreaInsets(edge: HyperSafeAreaEdge): WindowInsets {

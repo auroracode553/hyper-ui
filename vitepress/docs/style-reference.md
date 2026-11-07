@@ -12,6 +12,10 @@ Dropdown 浮层的 5dp 外框与选项左右各 14dp 内容留白独立保留。
 
 ## 全面屏与系统安全区
 
+菜单、Tooltip 和居中面板使用独立窗口安全区，不通过根 useSystemSafeArea 开关判断是否保护交互内容。Tooltip 的翻转、位置和尺寸同时受系统区与键盘约束；Dialog 和 UpdateDialog 只在面板内部避让，遮罩继续覆盖整屏。文档预览统一向独立 Dialog／Popup 注入顶部模拟 Insets，外层视觉 Padding 不能替代窗口数据。
+
+Field／Panel 在缺少有效采样或着色器不可用时先绘制不透明主题底色，再叠加现有着色；Dropdown、Tabs、Toast、LevelCapsule 不直接透出底层文字。有效采样、尺寸、状态色和回调保持原规则。对应预览复用现有柔色／纹理背景切换，分别验证无采样回退和正常采样，不新增控制项。
+
 模态宿主的窗口固定全面屏透明，与根主题的安全区开关独立；遮罩覆盖上下系统栏，禁止为弹窗根画布增加安全区 padding。居中面板在遮罩内部单独避让系统栏与 IME，系统栏图标跟随实际明暗主题。Activity 和 Dialog 共用窗口透明与系统对比度配置，保留 Compose 遮罩令牌和动画。
 
 Android Activity 统一使用 enableHyperEdgeToEdge()，根主题 useSystemSafeArea 默认为 false。HyperTheme.systemSafeAreaInsets 表示根系统安全区策略，默认返回零；Scaffold 不增加根系统安全区，悬浮 TabBar 保留既有策略。非悬浮 TabBar 在自身表面内部固定使用 HyperSafeArea(Bottom) 保护操作行，独立于根开关，底色延伸到底边且同侧嵌套只消费一次。Navbar 和自定义固定顶栏独立保护顶部交互区域一次；HyperNavBarPage 将测量净空放进滚动正文，页面背景和滚动视口保持全屏。首末净空必须位于滚动内容内部；禁止固定系统栏/悬浮栏占位、滚动视口外栏高 padding、扣减窗口高度或裁切。底部遮挡量按宿主实测整个栏及边距的高度提供，不以默认栏高或固定 dp 估算。键盘 Insets、业务组件高度和控件本身的间距继续保留。

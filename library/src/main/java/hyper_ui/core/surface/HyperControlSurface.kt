@@ -128,11 +128,13 @@ internal fun Modifier.hyperControlSurface(
         }
         // 未接入采样、源已脱离布局或系统不支持着色器时，先绘制主题底色。
         // 保留玻璃着色与高光，避免抽屉和底栏直接透出未模糊的正文或原生视频。
-        if (samplingTarget == null && containerColor == Color.Unspecified && (
+        // 字段和提示面板即使有显式半透明着色，也必须先铺稳定底色。
+        val stableFallback = role == HyperControlSurfaceRole.Field || role == HyperControlSurfaceRole.Panel
+        if (samplingTarget == null && (stableFallback || containerColor == Color.Unspecified && (
                 role == HyperControlSurfaceRole.Navigation ||
                 role == HyperControlSurfaceRole.Button ||
                 role == HyperControlSurfaceRole.Drawer
-            )) drawRect(background.copy(alpha = 1f))
+            ))) drawRect(background.copy(alpha = 1f))
         when (role) {
             HyperControlSurfaceRole.Navigation -> drawRect(if (containerColor != Color.Unspecified) containerColor else tint, alpha = 0.4f)
             HyperControlSurfaceRole.Button -> drawRect(if (containerColor != Color.Unspecified) containerColor else tint.copy(alpha = tint.alpha * 0.4f))

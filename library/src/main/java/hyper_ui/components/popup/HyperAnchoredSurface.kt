@@ -38,13 +38,13 @@ internal fun HyperAnchoredSurface(
     var origin by remember { mutableStateOf(TransformOrigin(0.5f, 0f)) }
     val density = LocalDensity.current
     val direction = LocalLayoutDirection.current
-    val safe = HyperTheme.systemSafeAreaInsets
+    val safe = hyperWindowSafeAreaInsets()
     val ime = WindowInsets.ime
     val inset = with(density) { 12.dp.roundToPx() }
     val left = safe.getLeft(density, direction) + inset
     val right = safe.getRight(density, direction) + inset
     val top = safe.getTop(density) + inset
-    val bottom = safe.getBottom(density) + ime.getBottom(density) + inset
+    val bottom = maxOf(safe.getBottom(density), ime.getBottom(density)) + inset
     val gap = with(density) { 6.dp.roundToPx() }
     Popup(
         popupPositionProvider = HyperAnchoredPositionProvider(left, top, right, bottom, gap, anchorBounds) { origin = it },

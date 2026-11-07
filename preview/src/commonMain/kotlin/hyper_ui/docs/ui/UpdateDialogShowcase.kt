@@ -82,6 +82,7 @@ fun UpdateDialogDemo() {
         Spacer(Modifier.height(12.dp))
         HyperText("示例任务由页面持有。关闭弹窗后下载继续，重新打开可查看进度；取消按钮终止下载。")
     }
+    // 模态入口独立验证安全区，不能用内嵌状态的正常外观代替窗口验证。
     if (dialogOpen) UpdatePreviewDialog(controller, mandatory, onClose = { dialogOpen = false })
 }
 

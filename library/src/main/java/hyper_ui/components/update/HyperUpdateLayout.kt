@@ -36,7 +36,7 @@ internal fun HyperUpdateLayout(
     HyperDialogHost(onDismissRequest = { if (!locked) onClose?.invoke() }, dismissOnBackPress = !locked) {
         Box(Modifier.fillMaxSize().background(hyperSurfaces.scrim.copy(alpha = hyperSurfaces.scrim.alpha * transition))) {
             // 对齐 Flutter show 的 SafeArea + 20dp 外间距，避免通用 Dialog 的尺寸约定介入。
-            Box(Modifier.fillMaxSize().windowInsetsPadding(HyperTheme.systemSafeAreaInsets).padding(20.dp),
+            Box(Modifier.fillMaxSize().windowInsetsPadding(hyperWindowSafeAreaInsets()).imePadding().padding(20.dp),
                 contentAlignment = Alignment.Center) {
                 HyperUpdatePanel(view, locked, mandatory, onClose, maxWidth,
                     modifier.hyperOverlayMotion(transition, beginScale = 0.96f))

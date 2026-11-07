@@ -4,6 +4,8 @@ description: 展示版本信息、下载进度和安装阶段；更新任务由�
 
 # HyperUpdateDialog
 
+真实模态入口独立避让窗口安全区与键盘，不依赖根 useSystemSafeArea；保留 20dp 外间距及全屏遮罩。长更新说明或大字号下，标题与关闭按钮仍位于安全范围。使用现有“检查更新”等入口验证窗口，页面内嵌状态只验证面板自身。
+
 展示版本信息、下载进度和安装阶段；更新任务由调用方执行。
 
 <p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>

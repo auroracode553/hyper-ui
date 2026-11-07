@@ -9,6 +9,7 @@ import hyper_ui.*
 
 @Composable
 internal fun HyperTooltipDemo() {
+    // 复用长文案切换验证方向翻转和窗口边界，不增加预览控制项。
     var enabled by remember { mutableStateOf(true) }
     var longText by remember { mutableStateOf(false) }
     var delayMillis by remember { mutableStateOf(500L) }
@@ -19,7 +20,7 @@ internal fun HyperTooltipDemo() {
         HyperButton({ delayMillis = if (delayMillis == 500L) 0L else 500L }) {
             HyperText("悬停延迟 ${delayMillis}ms")
         }
-        HyperTooltip(if (longText) "这是较长的补充提示，最大宽度为 240dp，内容会自动换行。" else "这是一个提示",
+        HyperTooltip(if (longText) "较长的补充提示会自动换行，顶部空间不足时向下显示，内容始终限制在窗口安全区域内。".repeat(8) else "这是一个提示",
             enabled = enabled, hoverDelay = delayMillis) {
             HyperButton({ clicks += 1 }) { HyperText("悬停或长按查看") }
         }

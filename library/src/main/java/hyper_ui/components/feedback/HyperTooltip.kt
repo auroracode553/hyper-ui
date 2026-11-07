@@ -2,6 +2,10 @@
 package hyper_ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.focusable
@@ -24,6 +28,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
@@ -88,21 +93,35 @@ fun HyperTooltip(
     val progress = if (focused && visible) 1f else hyperOverlayProgress(visible, durationMillis = HyperMotionSpec.TooltipDuration)
     val bounds = anchorBounds
     if (enabled && (visible || progress > 0f) && message.isNotBlank() && bounds != null) {
+        val safe = hyperWindowSafeAreaInsets()
+        val direction = LocalLayoutDirection.current
+        val margin = with(density) { 12.dp.roundToPx() }
+        val left = safe.getLeft(density, direction) + margin
+        val top = safe.getTop(density) + margin
+        val right = safe.getRight(density, direction) + margin
+        val bottom = maxOf(safe.getBottom(density), WindowInsets.ime.getBottom(density)) + margin
+        val tooltipMaxWidth = maxWidth
         Popup(
-            popupPositionProvider = HyperTooltipPositionProvider(bounds, with(density) { 8.dp.roundToPx() }),
+            popupPositionProvider = HyperTooltipPositionProvider(
+                bounds, with(density) { 8.dp.roundToPx() }, left, top, right, bottom),
             onDismissRequest = { visible = false },
             properties = PopupProperties(focusable = false),
         ) {
-            HyperText(
-                text = message,
-                modifier = Modifier
-                    .hyperOverlayMotion(progress, beginScale = 0.97f)
-                    .widthIn(max = maxWidth)
-                    .hyperFrostedSurface(hyperSurfaces.surfaceStrong, RoundedCornerShape(12.dp))
-                    .padding(horizontal = 10.dp, vertical = 7.dp),
-                color = HyperColors.primaryText,
-                style = HyperTheme.typography.bodySmall.copy(fontSize = 12.sp, lineHeight = 15.6.sp),
-            )
+            BoxWithConstraints {
+                val availableWidth = (this.maxWidth - with(density) { (left + right).toDp() }).coerceAtLeast(0.dp)
+                val availableHeight = (this.maxHeight - with(density) { (top + bottom).toDp() }).coerceAtLeast(0.dp)
+                HyperText(
+                    text = message,
+                    modifier = Modifier
+                        .hyperOverlayMotion(progress, beginScale = 0.97f)
+                        .widthIn(max = tooltipMaxWidth.coerceAtMost(availableWidth))
+                        .heightIn(max = availableHeight)
+                        .hyperFrostedSurface(hyperSurfaces.surfaceStrong, RoundedCornerShape(12.dp))
+                        .padding(horizontal = 10.dp, vertical = 7.dp),
+                    color = HyperColors.primaryText,
+                    style = HyperTheme.typography.bodySmall.copy(fontSize = 12.sp, lineHeight = 15.6.sp),
+                )
+            }
         }
     }
 }
@@ -110,6 +129,14 @@ fun HyperTooltip(
 private class HyperTooltipPositionProvider(
     private val anchor: Rect,
     private val gap: Int,
+    /// 提示可用区域的左侧边界，包含横向系统区和外间距。
+    private val left: Int,
+    /// 提示可用区域的顶部边界，包含状态栏和挖孔。
+    private val top: Int,
+    /// 右侧系统区和外间距。
+    private val right: Int,
+    /// 底部系统区、键盘和外间距的合并值。
+    private val bottom: Int,
 ) : PopupPositionProvider {
     override fun calculatePosition(
         anchorBounds: IntRect,
@@ -120,10 +147,10 @@ private class HyperTooltipPositionProvider(
         val centerX = anchor.center.x.toInt() - popupContentSize.width / 2
         val above = anchor.top.toInt() - popupContentSize.height - gap
         val below = anchor.bottom.toInt() + gap
-        val y = if (above >= gap * 3 / 2) above else below
+        val y = if (above >= top) above else below
         return IntOffset(
-            centerX.coerceIn(gap * 3 / 2, (windowSize.width - popupContentSize.width - gap * 3 / 2).coerceAtLeast(gap * 3 / 2)),
-            y.coerceIn(gap * 3 / 2, (windowSize.height - popupContentSize.height - gap * 3 / 2).coerceAtLeast(gap * 3 / 2)),
+            centerX.coerceIn(left, (windowSize.width - popupContentSize.width - right).coerceAtLeast(left)),
+            y.coerceIn(top, (windowSize.height - popupContentSize.height - bottom).coerceAtLeast(top)),
         )
     }
 }

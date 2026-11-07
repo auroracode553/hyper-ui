@@ -4,6 +4,8 @@ description: 用于确认、删除等需要明确结果的操作，提供标题�
 
 # HyperAlertDialog
 
+安全区与键盘避让由共用 Dialog 宿主管理，遮罩覆盖整屏；业务不重复包顶部安全区。长消息在受约束的内容区域内滚动，文档预览同样传递模拟窗口 Insets。
+
 用于确认、删除等需要明确结果的操作，提供标题、说明和操作插槽。
 
 <p class="component-doc__meta">包名 hyper_ui · Android 手机竖屏 320–430dp</p>

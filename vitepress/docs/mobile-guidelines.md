@@ -4,6 +4,8 @@
 
 ## 全局全面屏约定
 
+Dropdown、Popover、Tooltip、Dialog 与 UpdateDialog 内部独立保护窗口安全区和必要的键盘空间。业务不为修复浮层而打开根安全区、复制固定状态栏高度或缩短模态遮罩；文档预览同样通过窗口 Insets 传递模拟缺口，不能只给示例外侧加 Padding。
+
 所有应用 Activity 统一调用 enableHyperEdgeToEdge()，根 HyperThemeConfig.useSystemSafeArea = false（默认值）。根布局不补系统安全区；HyperNavBar 的顶部操作区仍避让可见状态栏与挖孔一次，正文首屏净空位于滚动内容内部，可随上滑进入状态栏。自定义固定顶栏使用 Compose 窗口布局，IME 仍由输入宿主避让。上下净空只属于滚动内容，禁止固定 Spacer、视口外栏高 padding、扣减窗口高度或裁切。悬浮 TabBar 通过覆盖布局显示，末尾净空使用整个栏及边距的实测遮挡量，禁止以默认栏高或固定 dp 估算占位。下文有关保留旧布局的要求不能用于保留会截短视口的占位。
 
 HyperUI 当前只面向 Android 手机端。组件公开 API、默认尺寸和交互反馈以手机竖屏为基准；Preview 的 Desktop/Wasm 运行方式只服务于文档验收。
