@@ -31,6 +31,8 @@ HyperButton(onPressed = onConfirm, colorStyle = "success") { HyperText("确认")
 
 **样式约定**
 
+无 color / colorStyle 的 filled 与 icon 使用同一中性玻璃着色。缺少有效采样源或系统不支持着色器时，玻璃先绘制主题底色，再合成着色与高光，避免未模糊内容直接透出；显式 colors、语义色及禁用态保留原规则。
+
 按钮统一高度 38dp，圆角为高度一半。省略 type 时使用默认玻璃表面；显式类型仅支持 filled/icon。主操作使用 filled 与 colorStyle = primary，独立图标入口使用 icon。默认文字 13sp、图标 17dp（纯图标按钮 20dp）。按下缩放 0.975、透明度 0.92，进入 85ms、恢复 180ms。
 
 默认文字行高为 15.6sp，使用 LineHeightStyle.Alignment.Proportional 与 Trim.None，单行也保留完整行框，再由按钮的 verticalAlignment 居中。文字与图标、加载指示器共用内容中心线；不通过固定像素偏移调整字形，显式文字样式与对齐覆盖仍由调用方决定。

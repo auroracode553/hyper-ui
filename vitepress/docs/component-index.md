@@ -1,5 +1,7 @@
 # 组件索引
 
+Dropdown 的浮层外框与行内留白独立保留；Button、Drawer 与悬浮 TabBar 无有效背景采样时保留主题底色。需要正文模糊时通过 HyperBackdrop 分离正文采样与玻璃前景，详见对应组件页。
+
 Android 窗口统一使用 [全面屏入口](components/tools/hyper-edge-to-edge.md)。HyperThemeConfig.useSystemSafeArea 默认 false，所有组件共用全局策略，IME 输入避让独立保留。
 
 修改组件前必须阅读 [UI 样式与功能实现基线](style-reference.md)，核对已有专用样式、状态归属和平台差异。不得仅因“统一”替换当前布局或操作样式；拿不准时先向使用者确认。

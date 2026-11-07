@@ -69,6 +69,7 @@ fun <T> HyperMenuGroup(
 
             ) {
                 CompositionLocalProvider(
+                    LocalHyperSurfaceSharesPadding provides true,
                     LocalHyperListTileDividerSuppressed provides true,
                     LocalHyperListTileContainerColor provides containerColor
                 ) {
@@ -101,6 +102,7 @@ fun HyperMenuGroup(
 
     val containerColor = resolveHyperContainerColor(colors.containerColor, hyperSurfaces.surface)
     CompositionLocalProvider(
+        LocalHyperSurfaceSharesPadding provides true,
         LocalHyperListTileDividerSuppressed provides false,
         LocalHyperListTileContainerColor provides containerColor
     ) {

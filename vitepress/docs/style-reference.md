@@ -1,5 +1,7 @@
 # UI 样式与功能实现基线
 
+Dropdown 浮层的 5dp 外框与选项左右各 14dp 内容留白独立保留。无语义配色的 filled 与 icon 使用同一中性玻璃着色。Button、悬浮 TabBar 与 Drawer 在背景源缺失、脱离布局或着色器不可用时先绘制不透明主题底色，再保留原有着色和高光；有效源继续使用固定模糊。正文采样通过 HyperBackdrop.background 提供，玻璃前景放入 content，禁止录制自身。
+
 两端组件示例统一以本仓库 Kotlin 文档及对应 Compose Preview 为视觉基准；文案、图标、分组、尺寸、间距和状态同步到 Flutter，不用 Flutter 预览反向覆盖本基准。
 
 普通设置菜单统一使用 HyperMenuGroup(title = ...) + HyperListTile 的默认样式；独立文字标题由 HyperText 组合，菜单组标题保持 14sp Bold 排版。页面留白由调用方使用 HyperSpacing（水平 14dp、垂直 12dp、组间 16dp）提供一次。不要另以 HyperCard 包装菜单行、覆写标题字号或手画设置开关；必要业务预览与功能绘制独立保留。

@@ -22,11 +22,13 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlin.math.ceil
 
+/** 共用玻璃表面的绘制角色，布局规格仍由各组件管理。 */
 internal enum class HyperControlSurfaceRole {
     Navigation, Button, Selection, Thumb, SwitchThumb, Dialog,
     Compact, Field, Track, Panel, Drawer
 }
 
+/** 按角色合成有效背景采样、主题底色、着色与高光，返回不改变测量的修饰符。 */
 internal fun Modifier.hyperControlSurface(
     shape: Shape,
     role: HyperControlSurfaceRole,
@@ -90,7 +92,7 @@ internal fun Modifier.hyperControlSurface(
         }.toPx()*strength
         val samplingTarget = actual?.takeIf {
             it.isAttached && shader.supported && backgroundSources.isNotEmpty() &&
-                (!defaultDialog || backgroundSources.any { source -> source.coordinates?.isAttached == true })
+                backgroundSources.any { source -> source.coordinates?.isAttached == true }
         }
         if (samplingTarget != null) {
             // 参考 Toggle 的首个 Clamp blur 不扩展采样画布，其他控件沿用原范围。
@@ -124,6 +126,13 @@ internal fun Modifier.hyperControlSurface(
                 drawHyperGlassSource(source, actual)
             }
         }
+        // 未接入采样、源已脱离布局或系统不支持着色器时，先绘制主题底色。
+        // 保留玻璃着色与高光，避免抽屉和底栏直接透出未模糊的正文或原生视频。
+        if (samplingTarget == null && containerColor == Color.Unspecified && (
+                role == HyperControlSurfaceRole.Navigation ||
+                role == HyperControlSurfaceRole.Button ||
+                role == HyperControlSurfaceRole.Drawer
+            )) drawRect(background.copy(alpha = 1f))
         when (role) {
             HyperControlSurfaceRole.Navigation -> drawRect(if (containerColor != Color.Unspecified) containerColor else tint, alpha = 0.4f)
             HyperControlSurfaceRole.Button -> drawRect(if (containerColor != Color.Unspecified) containerColor else tint.copy(alpha = tint.alpha * 0.4f))

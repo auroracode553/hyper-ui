@@ -104,8 +104,10 @@ private data class DemoNavItem(
     val icon: androidx.compose.ui.graphics.vector.ImageVector
 )
 
+/** 展示双侧抽屉与关闭反馈，同时覆盖无采样背景的面板底色。 */
 @Composable
 fun DrawerDemo() {
+    // 此示例无背景采样，浅深主题均应保留面板底色，不直接透出未模糊正文。
     var open by remember { mutableStateOf(false) }
     var placement by remember { mutableStateOf(HyperDrawerPlacement.end) }
     var selected by remember { mutableStateOf("尚未选择") }

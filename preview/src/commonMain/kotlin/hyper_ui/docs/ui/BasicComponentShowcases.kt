@@ -31,8 +31,10 @@ import androidx.compose.ui.unit.dp
 import hyper_ui.*
 
 @OptIn(ExperimentalLayoutApi::class)
+/** 展示按钮配色、图标、加载与禁用态，保留既有分组以核对共用玻璃。 */
 @Composable
 fun ButtonDemo() {
+    // 白色画布同时核对默认胶囊、图标和无配色 filled 的共用玻璃底色。
     // 保留中英文、图文和加载态供核对中心线；两端分组与 8/16dp 间距保持一致。
     var processing by remember { mutableStateOf(true) }
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {

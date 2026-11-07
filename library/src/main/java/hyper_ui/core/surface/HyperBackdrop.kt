@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.compositeOver
 
+/** 仅向前景提供正文采样源；background 不采样自身，content 不进入背景录制。 */
 @Composable
 fun HyperBackdrop(
     modifier: Modifier = Modifier,
@@ -17,9 +18,12 @@ fun HyperBackdrop(
     content: @Composable BoxScope.() -> Unit
 ) {
     val source = rememberHyperGlassSource()
-    CompositionLocalProvider(LocalHyperGlassSource provides source) {
-        Box(modifier) {
-            Box(Modifier.matchParentSize().hyperGlassSource(source), content = background)
+    Box(modifier) {
+        Box(Modifier.matchParentSize().hyperGlassSource(source)) {
+            // 正文内部的按钮使用自身主题底色，避免回读正在录制的祖先图层。
+            CompositionLocalProvider(LocalHyperGlassSource provides null) { background() }
+        }
+        CompositionLocalProvider(LocalHyperGlassSource provides source) {
             content()
         }
     }

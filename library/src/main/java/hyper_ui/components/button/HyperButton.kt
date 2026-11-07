@@ -87,7 +87,9 @@ fun HyperButton(
             .hyperNoRippleClickable(enabled = isEnabled && !loading, role = role,
                 onPressChanged = { pressed = it }, onClick = { onPressed?.invoke() })
             .hyperButtonSurface(container, shape, type, isEnabled, border,
-                defaultContainer = colors == null, progress = { progress })
+                defaultContainer = colors == null,
+                hasTone = color != Color.Unspecified || colorStyle != null,
+                progress = { progress })
             .semantics { if (loading) stateDescription = "正在处理" }
             .then(if (isIconType) Modifier else Modifier.padding(contentPadding).padding(1.dp)),
         horizontalArrangement = horizontalArrangement,

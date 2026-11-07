@@ -76,9 +76,9 @@ fun HyperListTile(
             .then(if (plain && onPressed != null) Modifier.hyperNoRippleClickable(enabled = enabled, role = Role.Button,
                 pressedScale = 0.992f, onClick = onPressed) else Modifier)
             .background(selectedBackground, rowShape)
-            // 仅复用父表面时共享其留白，独立平铺行仍保护选中背景内的内容。
+            // 表面复用不代表已有内容留白；浮层外框与行内缩进独立保留。
             .then(contentModifier ?: Modifier.padding(
-                if (plain && hasParentSurface) HyperListTileDefaults.ContentPadding
+                if (plain && hasParentSurface && LocalHyperSurfaceSharesPadding.current) HyperListTileDefaults.ContentPadding
                 else HyperListTileDefaults.CardContentPadding
             )), verticalAlignment = Alignment.CenterVertically) {
             if (hasLeading) {

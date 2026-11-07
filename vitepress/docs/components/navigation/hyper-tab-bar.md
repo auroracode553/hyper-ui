@@ -18,6 +18,8 @@ description: 提供悬浮、非悬浮贴底导航与可重复触发的动作入�
 
 ## 使用方式
 
+需要模糊正文时，将正文放入 HyperBackdrop.background，将悬浮 TabBar 放入同一 HyperBackdrop 的 content，背景只组合一次且不包含底栏自身。缺少有效采样或着色器不可用时，库内绘制主题底色并保留着色与高光，避免未模糊正文直接透出；此规则不改变栏高、边距、安全区或正文滚动范围。
+
 <details class="component-doc__details">
 <summary>最小调用</summary>
 

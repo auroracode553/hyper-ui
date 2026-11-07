@@ -99,7 +99,7 @@ internal fun navigationComponentDemos(): List<ComponentDemo> = listOf(
         id = "drawer",
         group = GROUP_NAVIGATION,
         title = "HyperDrawer",
-        description = "贴边全高的模态抽屉，正文零额外间距，支持遮罩、返回键与滑动关闭。",
+        description = "贴边全高的模态抽屉，无背景采样时保留主题底色；正文零额外间距，支持遮罩、返回键与滑动关闭。",
         code = """
             HyperDrawer(open = open, onClose = { open = false }, title = "导航") {
                 HyperListTile(title = { HyperText("首页") }, onPressed = onHome)

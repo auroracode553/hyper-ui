@@ -79,7 +79,7 @@ internal fun feedbackComponentDemos(): List<ComponentDemo> = listOf(
         id = "dropdown",
         group = GROUP_FEEDBACK,
         title = "HyperDropdown",
-        description = "默认按文案收敛到 160–240dp，菜单跟随字段实际宽度；支持显式宽度、长文案、禁用与空选项。",
+        description = "默认按文案收敛到 160–240dp，菜单跟随字段实际宽度；外框 5dp 与行内左右 14dp 留白独立保留，支持显式宽度、长文案、禁用与空选项。",
         code = """
             HyperDropdown(options = listOf(HyperOption("all", "全部"), HyperOption("favorite", "收藏")),
                 value = selected, onChanged = { selected = it }, label = "范围")

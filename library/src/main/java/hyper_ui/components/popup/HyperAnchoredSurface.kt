@@ -71,7 +71,10 @@ internal fun HyperAnchoredSurface(
                     else Modifier.hyperFrostedSurface(hyperSurfaces.surfaceStrong, RoundedCornerShape(18.dp)))
                 .padding(padding)
                 .then(if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier)) {
-                CompositionLocalProvider(LocalHyperSurfacePresent provides true) { content() }
+                CompositionLocalProvider(
+                    LocalHyperSurfacePresent provides true,
+                    LocalHyperSurfaceSharesPadding provides false
+                ) { content() }
             }
         }
     }

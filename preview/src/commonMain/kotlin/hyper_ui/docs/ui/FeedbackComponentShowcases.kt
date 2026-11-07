@@ -70,8 +70,10 @@ fun EmptyStateDemo() {
     }
 }
 
+/** 展示下拉选择与禁用、长文案状态，核对浮层和行内留白。 */
 @Composable
 fun DropdownMenuDemo() {
+    // 切换选项时核对勾选与文字距选中背景边缘各 14dp，外框仍为 5dp。
     var sort by remember { mutableStateOf<String?>("recent") }
     var owner by remember { mutableStateOf<String?>(null) }
     var pageSize by remember { mutableStateOf<Int?>(20) }
